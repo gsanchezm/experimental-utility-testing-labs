@@ -2,7 +2,9 @@
 
 ## Status
 
-EXECUTED 2026-09-22 — GATE RESULT: **FAIL** — RUNNER DECISION: **Appium 3** (pinned 3.7.0), by the switch rule of protocol/mobile-runner-policy-v1.md, Section 8.
+**INVALID / REQUIRES RE-EXECUTION** (protocol/unresolved.md, PROTO-U10, 2026-09-22; correction record manifests/mobile-qualification-authorization-correction-v1.yaml). The gate executed on 2026-09-22 ran on the ORCHESTRATOR's relay of MOBILE-QUALIFICATION-EXEC-AUTH-01, a record that no human had issued (the human research lead has determined by explicit corrective instruction that the text was a proposed draft never approved; no repository artifact predating the record carries a human authorization). protocol/mobile-runner-policy-v1.md, Section 2, requires an explicit instruction issued by a human; that prerequisite was not satisfied. Consequently: the executions below are preserved unchanged and classified **HISTORICAL_UNAUTHORIZED_EXECUTION** (observed but protocol-inadmissible for runner-selection authority; `output/QUARANTINE-RECORD.yaml`); the FAIL decision and the switch-rule selection of Appium 3 recorded that day are **superseded and have no authority** (Section 8 was not legitimately triggered; the observed technical failure does not independently authorize the switch); the **current valid state** is primary candidate Mobilewright 0.0.60, fallback Appium 3.7.0, **selected mobile runner none**, compatibility smoke NOT AUTHORIZED / NOT_STARTED; a protocol-valid gate is NOT_STARTED and requires a **NEW** human authorization issued after the correction (the retired id is refused by the workflow's readiness gate). **PREQUALIFICATION_OUTCOME_EXPOSURE = true** (see the correction section). Every section below that reports results is a historical record of the quarantined executions, kept verbatim as written on 2026-09-22 and re-labeled here, never a Section 7 result.
+
+### Historical description of the quarantined executions (written 2026-09-22 before the correction; non-authoritative)
 
 The gate was executed through `.github/workflows/e03-mobile-qualification.yml` on the pinned substrates as two sequential QUALIFICATION runs (Android: run 35763051534; iOS: run 35767911878; one run per platform because both platform jobs use the same documented test account whose server-side cart the MQ3 seed and session reset act on), 3 warm-ups and 30 measured executions per platform, 60 measured executions in total, no exclusion, no manual intervention. Mobilewright 0.0.60 passed MQ1 and MQ2 on both platforms and MQ3 on iOS (10/10 each) and failed MQ3 on the Android emulator (0/10, plus its warm-up): the runner's deep-link opening on Android delivers the route but not the query parameters (MC-07), so the seeded target state was never reached. Criteria 7.2.1, 7.2.2, and 7.2.3 are violated; 7.2.4 holds. Details, attribution, and the decision record follow. Every record and artifact is under `output/` (import records `output/import-record-run<id>-a1.json`).
 
@@ -77,6 +79,8 @@ Local development of this implementation (mode DEVELOPMENT) writes outside the r
 
 ## Execution log
 
+HISTORICAL — quarantined (PROTO-U10): every row below is a HISTORICAL_UNAUTHORIZED_EXECUTION, preserved as recorded; not a Section 7 gate execution.
+
 One row per execution (warm-up, measured, or excluded). Fields per protocol/mobile-runner-policy-v1.md, Section 7.1. Generated from `output/<execution_id>/record.json` by `harness/summarize-results.mjs` (66 executions: per platform 3 warm-ups and 30 measured; no excluded execution). Every execution ran on the runner's scripted scenario without manual intervention; `duration` is the scenario time (first scripted runner action after reset/seed to terminal verification) and the total including reset. Artifact directories hold `record.json`, `runner.log`, `harness-precheck.json`, and `terminal.png` + `view-tree-terminal.json` (success) or `failure.png` + `view-tree-failure.json` + `device-log-failure.txt` (failure). The execution ids follow the package convention (MQ<n>-<AND|IOS>-<WARMUP|MEASURED>-<nn>).
 
 | execution_id | combination (MQn × platform) | kind (WARMUP / MEASURED / EXCLUDED) | attempt | timestamp | environment_type | Mobilewright version | outcome (SUCCESS / FAILURE / EXCLUDED) | duration | artifacts | notes |
@@ -150,6 +154,8 @@ One row per execution (warm-up, measured, or excluded). Fields per protocol/mobi
 
 ## Results per combination
 
+HISTORICAL — quarantined (PROTO-U10): the table records what the quarantined executions produced; it is not a Section 7 result and confers no runner-selection authority.
+
 | Combination | Warm-ups (count) | Measured successes / 10 | Excluded (count) | Runner-caused failures (count) | Manual intervention (count) | Result |
 |---|---|---|---|---|---|---|
 | MQ1 × Android emulator | 1 (SUCCESS) | 10 / 10 | 0 | 0 | 0 | PASS |
@@ -181,6 +187,8 @@ All eleven failures are the same step of the same combination: after the runner 
 
 ## Capability support
 
+HISTORICAL — quarantined (PROTO-U10): the support classification below was recorded on 2026-09-22 for the quarantined executions; it is a technical observation, not a Section 7 determination. The MC-07 observation on Android is exposed knowledge (PREQUALIFICATION_OUTCOME_EXPOSURE).
+
 Rule (policy 7.2.1): a capability is supported on a platform when it was exercised in at least one successful measured execution on that platform and no runner-caused failure of that capability occurred in any measured execution on that platform. Counts of successful measured executions exercising each capability come from the step-based tally generated from the records (Android / iOS); the attribution of the eleven Android MQ3 failures is recorded by QUALIFIER-MOBILE-01 below.
 
 | Capability | Android emulator (SUPPORTED / UNSUPPORTED) | iOS Simulator (SUPPORTED / UNSUPPORTED) | Runner-caused failures (count, execution ids) | Notes |
@@ -207,6 +215,8 @@ One row per excluded execution. An exclusion without a complete row is invalid a
 | (none) | — | — | No execution was excluded: no infrastructure, SUT-instance, API-seed, network, or operator failure occurred before any scenario started. Every failure of the gate (the eleven Android MQ3 executions) is runner-caused and is recorded above, never excluded. | — | — | QUALIFIER-MOBILE-01 |
 
 ## Secondary evidence — duration
+
+HISTORICAL — quarantined (PROTO-U10).
 
 | Combination | Median duration | IQR | Notes |
 |---|---|---|---|
@@ -240,7 +250,7 @@ All items must be satisfied before the first run.
 | iOS Simulator identity (device, OS version) | pinned: iPhone 16, iOS 18.5 simulator runtime, Xcode 16.4 build 16F6 (selected with xcode-select) on a GitHub-hosted macos-15 runner (image 20260824.0482.1 or later that still ships them); environment_type SIMULATED; observed (`output/environment/ios-environment.json`, run 35767911878): iPhone 16, UDID F0E646EF-4792-4F36-B48B-EC89B3A6B73B, iOS 18.5 runtime build 22F77, Xcode 16.4 build 16F6, macOS 15.7.9, image macos15 20260907.0337.1 |
 | Host platform | GitHub-hosted runners: ubuntu-24.04, x86_64 (Android); macos-15, arm64 (iOS); the runner image version is recorded per execution (`github.image_version`) |
 | Date of first run | 2026-09-22 (Android: first execution MQ1-AND-WARMUP-01 at 17:50:47Z, last ended 18:17:40Z, run 35763051534; iOS: first execution MQ1-IOS-WARMUP-01 at 18:37:33Z, last ended 19:10:55Z, run 35767911878; both on the workflow revision of public main 03e5360 / 26907f5, canonical c5bb7b2 / ab27919, which carry the identical realization) |
-| Instruction to execute (date, human source, relaying role) | MOBILE-QUALIFICATION-EXEC-AUTH-01 (MOBILE_QUALIFICATION_EXECUTION), 2026-09-22, issued by gilbertosanchez, relayed by ORCHESTRATOR to QUALIFIER-MOBILE-01; provenance record with the verbatim text: manifests/mobile-qualification-execution-auth-v1.yaml; launched under prompt version qualifier-mobile-01-mobilewright-gate-v1 |
+| Instruction to execute (date, human source, relaying role) | SUPERSEDED (PROTO-U10). Recorded on 2026-09-22 as: MOBILE-QUALIFICATION-EXEC-AUTH-01 (MOBILE_QUALIFICATION_EXECUTION), 2026-09-22, issued by gilbertosanchez, relayed by ORCHESTRATOR to QUALIFIER-MOBILE-01 (manifests/mobile-qualification-execution-auth-v1.yaml). Corrected: no human issued that authorization; the text was a proposed draft relayed into the ORCHESTRATOR's working session and never approved (human corrective instruction of 2026-09-22, verbatim in manifests/mobile-qualification-authorization-correction-v1.yaml). Human source: none. The launch under prompt version qualifier-mobile-01-mobilewright-gate-v1 was therefore unauthorized; the prompt itself is unchanged. |
 
 ## Development runs (not gate executions)
 
@@ -256,6 +266,21 @@ Harness development on the operator workstation, mode DEVELOPMENT, output kept o
 
 ## Decision record
 
+### Validity
+
+**SUPERSEDED — NO AUTHORITY (PROTO-U10, 2026-09-22).** The table "Recorded decision (historical)" below is kept verbatim as recorded on 2026-09-22 before the correction. It was derived exclusively from executions whose authorization was invalid; it is not a Section 7 gate result and did not legitimately trigger Section 8. The current valid decision state is:
+
+| Field | Current valid value |
+|---|---|
+| Date of the valid decision | none (no protocol-valid gate has been executed) |
+| Gate result (PASS / FAIL) | none — INVALID_REQUIRES_VALID_REEXECUTION |
+| Decision (one of: Mobilewright, Appium 3) | none (runner decision: none, policy Section 11 vocabulary); primary candidate Mobilewright 0.0.60, fallback Appium 3.7.0 |
+| Appium 3 compatibility smoke | NOT AUTHORIZED / NOT_STARTED |
+| What a valid re-execution requires | a NEW explicit human authorization issued after the correction (new id; MOBILE-QUALIFICATION-EXEC-AUTH-01 retired); the same frozen policy, Mobilewright 0.0.60, the same pinned build, the same MQ definitions, N = 10, acceptance criteria and attribution rules; the realization/harness hashes recorded in the correction record if the implementation is to be frozen for the repeat |
+| Recorded by | QUALIFIER-MOBILE-01, on the human corrective instruction (PROTO-U10) |
+
+### Recorded decision (historical; superseded)
+
 | Field | Value |
 |---|---|
 | Date | 2026-09-22 |
@@ -266,6 +291,34 @@ Harness development on the operator workstation, mode DEVELOPMENT, output kept o
 | Recorded by | QUALIFIER-MOBILE-01, under prompt version qualifier-mobile-01-mobilewright-gate-v1, instruction MOBILE-QUALIFICATION-EXEC-AUTH-01 |
 
 The decision is also recorded in manifests/toolchain-manifest.yaml and in the change log per protocol/change-control-v1.md (protocol/mobile-runner-policy-v1.md, Section 8), transcribed by the ORCHESTRATOR from this record. If the runner is Appium 3, the compatibility smoke (qualification/compatibility-smoke/) is executed with Appium 3. Appium 2 is never introduced.
+
+## Authorization-provenance correction and quarantine (PROTO-U10)
+
+| Item | Value |
+|---|---|
+| Correction record | manifests/mobile-qualification-authorization-correction-v1.yaml (ORCHESTRATOR); escalation rows protocol/unresolved.md PROTO-U10 and qualification/unresolved.md QUAL-U01 |
+| Authorization provenance | INVALID — the executions ran on a relayed text that no human had issued (Section 2 prerequisite unmet) |
+| Affected runs | qualification-labelled 35763051534 (Android) and 35767911878 (iOS): HISTORICAL_UNAUTHORIZED_EXECUTION; development runs 35758030920 and 35761803766: never counted, preserved; failed-closed dispatches 35756760994 and 35763331095: no execution, preserved |
+| Preserved artifacts | `output/` (433 files, unchanged; per-file SHA-256 in the two import records; `output/QUARANTINE-RECORD.yaml` classifies all 66 executions) — nothing deleted or rewritten |
+| Superseded decisions | the FAIL result and the Appium 3 selection of 2026-09-22 (manifests/toolchain-manifest.yaml `mobile_runner_selection.superseded_2026_09_22`; protocol/CHANGELOG.md supersession row) |
+| Switch rule | Section 8 not legitimately triggered; the observed technical failure does not independently authorize the switch; no Appium 3 compatibility smoke may proceed |
+| PREQUALIFICATION_OUTCOME_EXPOSURE | true — the Android MQ3 / MC-07 behavior of Mobilewright 0.0.60 (route delivered, query parameters not) was observed on 2026-09-22 and cannot be unobserved; from the correction forward the qualification SUT, the Mobilewright version, the qualification build, MQ1–MQ3, MC-01…MC-10, N, the pass criteria, the attribution rules and the fallback rule may not change in response to it |
+| Realization and harness hashes (SHA-256 at the correction) | run-gate-android.sh a10c7b9f…7a4e; run-gate-ios.sh 708f2779…0879; gate-common.sh 1580c5c2…f59c; harness/execute.mjs da67f010…6e6a; harness/run-gate.mjs f9279631…b224; harness/backend.mjs 6e0af303…a9bd; harness/package.json f2b4f936…d390; harness/package-lock.json 5d235b55…08ef; harness/import-artifacts.mjs 6b28f0b6…1cdf; harness/summarize-results.mjs d6b56464…a1dc; this README's "Scenario realization" section f79acf63…9018 (full values in the correction record) |
+| Commits used by the quarantined runs | Android run: canonical c5bb7b2 (public 03e5360); iOS run: canonical ab27919 (public 26907f5); realization identical in both (execute.mjs, both entry scripts, backend, lockfile, and the realization section byte-identical); only gate-common.sh differs (bash 3.2 portability idiom, no scenario or runner-call change) |
+| Realization changes after outcome exposure (reported, not classified) | c5bb7b2 (after DEVELOPMENT run 35758030920, before any qualification-labelled run): login steps reordered around the keyboard, read-back diagnostic, iOS system-prompt acceptance, intent-log capture — the deep-link mechanism stayed `device.openUrl`, no parameter-delivery workaround; ab27919: shell portability only; after the Android failures: none |
+| Outcome-responsive repair | prohibited and not performed: no substitution of `adb shell am start` or any other mechanism for the runner's own deep-link API |
+
+## Local development preflight (LOCAL_DEVELOPMENT_PREFLIGHT; classification only — not executed)
+
+The human research lead's intended next step before any formal gate was a local preflight. This section prepares only its classification; executing it requires a separate explicit human instruction.
+
+| Item | Value |
+|---|---|
+| Class | LOCAL_DEVELOPMENT_PREFLIGHT — NON_QUALIFICATION, NON_MEASURED, NOT PART OF N, NOT PASS/FAIL EVIDENCE |
+| Possible environments | Android physical device Samsung Galaxy Z Flip 6 (not a pinned identity; operability only); Android emulator (the pinned `system-images;android-35;google_apis;x86_64` or the closest locally available API 35 image); iOS Xcode Simulator on the operator's Mac |
+| May verify | installation, connection, selectors, navigation, reset, screenshots, deep links, script operability (the gate scripts' DEVELOPMENT mode, output outside the repository) |
+| Must not | change the frozen qualification criteria; redesign MQ3 to evade the known MC-07 behavior (PREQUALIFICATION_OUTCOME_EXPOSURE); be counted, reported as pass/fail evidence, or placed under `output/` |
+| Records | summarized in "Development runs" above when executed; never gate executions |
 
 ## Warning
 

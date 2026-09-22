@@ -23,6 +23,10 @@
 # harness on the same pinned substrates with N = 1 and no warm-up, every record labeled DEVELOPMENT, output
 # kept outside the checkout and uploaded as E03-DEVELOPMENT-*; never a gate execution, never imported under
 # qualification/mobilewright/output, never counted toward N. Mode QUALIFICATION is the gate itself.
+#
+# PROTO-U10 (2026-09-22): the authorization record must not carry record_validity INVALID and the retired id
+# MOBILE-QUALIFICATION-EXEC-AUTH-01 is refused; a future gate needs a new human authorization record with a
+# new id (manifests/mobile-qualification-authorization-correction-v1.yaml).
 name: E03 Mobile Qualification
 
 on:
@@ -117,6 +121,9 @@ jobs:
           auth_path = 'manifests/mobile-qualification-execution-auth-v1.yaml'
           auth = yaml.safe_load(open(auth_path)) if os.path.exists(auth_path) else {}
           gate('human authorization record present and matching the instruction id', auth.get('authorization_id') == instruction and auth.get('authorization_type') == 'MOBILE_QUALIFICATION_EXECUTION', str(auth.get('authorization_id')))
+          # PROTO-U10: a record whose validity was corrected to INVALID is retired; its id is refused for dispatch.
+          gate('authorization record validity is not INVALID (a retired or superseded record is refused)', str(auth.get('record_validity', 'VALID')).upper() not in ('INVALID', 'SUPERSEDED', 'RETIRED'), str(auth.get('record_validity', 'VALID')))
+          gate('authorization record is not the retired id MOBILE-QUALIFICATION-EXEC-AUTH-01', instruction != 'MOBILE-QUALIFICATION-EXEC-AUTH-01')
           prompt = (auth.get('launch_prompt') or {}).get('frozen_copy') or ''
           gate('frozen launch prompt present', bool(prompt) and os.path.isfile(prompt), prompt)
           rd = open('qualification/mobilewright/README.md').read()

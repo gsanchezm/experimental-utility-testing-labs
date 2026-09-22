@@ -8,12 +8,13 @@
 # ORCHESTRATOR only (protocol/agent-governance-v2.md, section 4).
 # This is a TOOL-QUALIFICATION authorization. It produces no evidence about any system under test (SUT),
 # starts no campaign, authorizes no measured E03 execution, and authorizes no compatibility smoke.
+record_validity: INVALID  # PROTO-U10 (protocol/unresolved.md; manifests/mobile-qualification-authorization-correction-v1.yaml), corrected 2026-09-22. This record does NOT document a human-issued authorization. The human research lead has determined by explicit corrective instruction that the text below was a PROPOSED authorization drafted by the research advisor and never approved; no repository artifact predating this record carries a human-issued MOBILE_QUALIFICATION_EXECUTION authorization; the human origin of the relayed text is not established by any artifact. The authorization id MOBILE-QUALIFICATION-EXEC-AUTH-01 is RETIRED: it must not be reused, and the qualification workflow's readiness gate refuses it. The executions dispatched under it are quarantined as HISTORICAL_UNAUTHORIZED_EXECUTION (see execution_log.correction below). The superseded field values are kept in place below, annotated, per the repository's correction convention (PROTO-U07 precedent); nothing in this file is deleted.
 study_id: EUS-2026-001
-authorization_id: MOBILE-QUALIFICATION-EXEC-AUTH-01
-authorization_type: MOBILE_QUALIFICATION_EXECUTION
-issued_by: gilbertosanchez
-issued_at: "2026-09-22"
-received_and_relayed_by: ORCHESTRATOR
+authorization_id: MOBILE-QUALIFICATION-EXEC-AUTH-01  # RETIRED (PROTO-U10): never issued by a human; not reusable
+authorization_type: MOBILE_QUALIFICATION_EXECUTION  # claimed; INVALID (PROTO-U10)
+issued_by: gilbertosanchez  # SUPERSEDED VALUE, INCORRECT PROVENANCE (PROTO-U10): recorded by the ORCHESTRATOR without independent evidence and contradicted by the human's corrective instruction of 2026-09-22; kept in place for the correction trail; a correct reading is "issued_by: null (no human issued this authorization)"
+issued_at: "2026-09-22"  # SUPERSEDED VALUE (PROTO-U10): the date the ORCHESTRATOR recorded the relayed text, not the date of a human authorization (none exists)
+received_and_relayed_by: ORCHESTRATOR  # true: the ORCHESTRATOR received the text in its working session and relayed it; the defect is that it treated a relayed proposal as an issued human instruction (PROTO-U10)
 relayed_to: QUALIFIER-MOBILE-01
 governing_policy: protocol/mobile-runner-policy-v1.md  # FROZEN-PRE-DATA; pass criteria section 7, switch rule section 8
 governance_in_force: protocol/agent-governance-v2.md  # FROZEN-PRE-DATA 2026-09-22; QUALIFIER-MOBILE-01 writes qualification/** only
@@ -82,13 +83,22 @@ execution_log:  # appended by ORCHESTRATOR as runs occur; run ids only, outcomes
     - {run_id: 35763051534, date: "2026-09-22", mode: QUALIFICATION, platform: android, public_main: 03e5360d79655a6e6df72f411695c96db6a8157e, outcome: "the gate, Android: 3 warm-ups + 30 measured executions; artifacts imported under qualification/mobilewright/output (canonical commit ea9a70e)"}
     - {run_id: 35763331095, date: "2026-09-22", mode: QUALIFICATION, platform: ios, public_main: 03e5360d79655a6e6df72f411695c96db6a8157e, outcome: "failed closed in the gate script before any execution (bash 3.2 empty-array expansion under set -u); no iOS execution; corrected in canonical commit ab27919"}
     - {run_id: 35767911878, date: "2026-09-22", mode: QUALIFICATION, platform: ios, public_main: 26907f5969d369cfc8122352facd867ee46abf5b, outcome: "the gate, iOS: 3 warm-ups + 30 measured executions; artifacts imported under qualification/mobilewright/output (canonical commit d63d585)"}
-  outcome:
+  outcome:  # SUPERSEDED BLOCK (PROTO-U10): kept verbatim as the historical record of what was recorded on 2026-09-22 before the correction; it has NO authority
     gate_result: FAIL
     decision: "Appium 3 (pinned 3.7.0)"
     decided_on: "2026-09-22"
     decision_record: "qualification/mobilewright/README.md, Decision record (QUALIFIER-MOBILE-01)"
     transcriptions: ["manifests/toolchain-manifest.yaml (mobile_runner_selection; Mobilewright observed install; qualification_status FAILED)", "protocol/CHANGELOG.md (row 2026-09-22, mobile runner selection)", "manifests/study-manifest.yaml (status note)"]
     summary: "MQ1 and MQ2 10/10 on both platforms; MQ3 10/10 on iOS, 0/10 on the Android emulator (MC-07 unsupported: the runner delivers the deep link's route but not its query parameters); criteria 7.2.1, 7.2.2, 7.2.3 violated, 7.2.4 held; no exclusion; no manual intervention"
+  correction:  # PROTO-U10, 2026-09-22
+    authorization_provenance: INVALID
+    classification_of_runs_35763051534_and_35767911878: HISTORICAL_UNAUTHORIZED_EXECUTION  # observed but protocol-inadmissible for runner-selection authority; artifacts preserved unchanged under qualification/mobilewright/output/ with QUARANTINE-RECORD.yaml
+    development_runs_35758030920_and_35761803766: "never counted; preserved as recorded"
+    failed_closed_dispatches_35756760994_and_35763331095: "no execution; preserved as recorded"
+    gate_result_status: INVALID_REQUIRES_VALID_REEXECUTION
+    runner_selection_status: "none (the Appium 3 selection derived from this record is superseded; protocol/mobile-runner-policy-v1.md section 8 was not legitimately triggered because section 2's human-instruction prerequisite was not satisfied)"
+    prequalification_outcome_exposure: true
+    correction_record: manifests/mobile-qualification-authorization-correction-v1.yaml
   platform_sequencing: "the gate is dispatched as one run per platform, sequentially, because both platform jobs use the same documented test account whose server-side cart the MQ3 seed and session reset act on"
 
 authorization_text_verbatim: |

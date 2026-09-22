@@ -12,7 +12,7 @@ This directory holds qualification of study tooling. Tool qualification is separ
 |---|---|---|
 | qualification/mobilewright/ | Mobilewright qualification gate (MQ1 Login → Catalog; MQ2 Catalog → Product Interaction; MQ3 API State Seed → Deep Link → Target UI State; on Android emulator and iOS Simulator; qualification SUT OmniPizza; N = 10 measured executions per combination) and the runner decision record | protocol/mobile-runner-policy-v1.md, Sections 2–8 |
 | qualification/compatibility-smoke/ | Per-SUT compatibility smoke of the selected runner on every mobile-capable ecosystem before mobile campaigns | protocol/mobile-runner-policy-v1.md, Section 9 |
-| qualification/unresolved.md | Escalations raised by QUALIFIER-MOBILE-01, for example a discrepancy between the pinned qualification build and the build obtained; created on first use, same table format as the audit unresolved.md files; not created — the gate raised no escalation (both build digests matched the pins; no conflict between the instruction and the frozen policy arose) | protocol/agent-governance-v1.md, section 6 |
+| qualification/unresolved.md | Escalations raised in this workspace, same table format as the audit unresolved.md files; created 2026-09-22 (first use) with QUAL-U01, the execution-authorization conflict of the 2026-09-22 gate (mirrored as protocol/unresolved.md PROTO-U10) | protocol/agent-governance-v1.md, section 6 |
 
 The gate definition, mandatory capabilities, pass criteria, exclusion and attribution rules, switch rule to Appium 3, compatibility smoke, and scope limit are defined in protocol/mobile-runner-policy-v1.md and are not restated here. Execution of the gate or the smoke requires an explicit instruction issued by a human and relayed by the ORCHESTRATOR (protocol/agent-governance-v1.md, section 2, rule 6).
 
@@ -36,7 +36,9 @@ Qualification outputs are NOT experimental data about any SUT. They are not plac
 
 | Item | State |
 |---|---|
-| Qualification gate | EXECUTED 2026-09-22 (authorization MOBILE-QUALIFICATION-EXEC-AUTH-01; qualification/mobilewright/README.md) — result FAIL; runner decision: Appium 3 (switch rule, protocol/mobile-runner-policy-v1.md, Section 8) |
-| Compatibility smoke | NOT STARTED (applies to Appium 3; requires a separate explicit human authorization) |
-| Runs executed | Mobilewright gate: 60 measured executions + 6 warm-ups on the pinned GitHub-hosted substrates (Android run 35763051534, iOS run 35767911878); records under qualification/mobilewright/output/ |
-| Tool versions | Mobilewright 0.0.60 observed (mobilecli 1.0.13; on-device agent DeviceKit 0.0.27 on iOS), installed 2026-09-22; Appium 3 pinned 3.7.0, not installed (manifests/toolchain-manifest.yaml) |
+| Qualification gate | INVALID / REQUIRES RE-EXECUTION (PROTO-U10, 2026-09-22): the gate executed on 2026-09-22 ran without a valid human authorization; its executions are preserved and quarantined (qualification/mobilewright/output/QUARANTINE-RECORD.yaml); the FAIL decision and the Appium 3 selection derived from it are superseded; a protocol-valid gate is NOT STARTED and requires a NEW human authorization (qualification/mobilewright/README.md; manifests/mobile-qualification-authorization-correction-v1.yaml) |
+| Compatibility smoke | NOT AUTHORIZED / NOT STARTED (no runner is selected) |
+| Runs executed | protocol-valid gate: none. Quarantined HISTORICAL_UNAUTHORIZED_EXECUTION: 60 measured executions + 6 warm-ups (Android run 35763051534, iOS run 35767911878), preserved under qualification/mobilewright/output/; historical, non-authoritative observation: MQ1/MQ2 10/10 on both platforms, MQ3 10/10 on iOS, MQ3 0/10 on the Android emulator (MC-07) |
+| Tool versions | none installed for study use (manifests/toolchain-manifest.yaml: Mobilewright 0.0.60 pinned candidate, Appium 3.7.0 pinned fallback; the versions observed during the quarantined executions are kept as historical observations) |
+| Selected mobile runner | none (primary candidate Mobilewright 0.0.60; fallback Appium 3.7.0; Appium 2 never) |
+| Escalations | qualification/unresolved.md QUAL-U01 (RESOLVED, PROTO-U10) |

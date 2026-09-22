@@ -1,0 +1,847 @@
+# manifests/mobile-qualification-authorization-correction-v1.yaml
+# Correction record PROTO-U10 (protocol/unresolved.md), EUS-2026-001: authorization-provenance defect of the
+# Mobilewright qualification gate executed on 2026-09-22, quarantine of the affected executions, and
+# restoration of the pre-qualification runner-decision state. Modeled on manifests/e01-proto-u07-correction.yaml
+# and manifests/e03-cs002-exclusion-v1.yaml (verbatim human text). Editable by ORCHESTRATOR only
+# (protocol/agent-governance-v2.md, section 4). CORRECTIVE GOVERNANCE / PROVENANCE OPERATION: no new
+# qualification execution, no compatibility smoke, no E03 START, no executor launch, no H2 analysis, no history
+# rewrite, no deletion of any artifact.
+change_id: PROTO-U10
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-09-22"
+noticed_by: "human research lead (gilbertosanchez), explicit corrective instruction of 2026-09-22 (verbatim below)"
+classification:
+  category: "PROVENANCE / EXECUTION-AUTHORIZATION VIOLATION"
+  fabricated_data: false  # the executions physically occurred and every artifact is preserved unchanged
+  methodological_change: false  # no protocol document, scenario definition, capability, N, criterion, or rule changes
+  scientific_result_affected: false  # E01, both human rulings, the adjudicated matrix, and H1 are untouched; no E02-E12 data exists
+  tooling_decision_affected: true  # the Mobilewright FAIL decision and the Appium 3 selection derived from it lose all authority
+head_before_correction: e9ceaac54f8dba08f0531d7752d11a6997504535
+working_tree_clean_before_correction: true
+
+audit_of_the_authorization_record:  # section 3 of the corrective instruction
+  record: manifests/mobile-qualification-execution-auth-v1.yaml
+  creation_commit: c3b9fa1142cbefcf32cd3f704681fb65a8646dcc
+  creation_commit_author_identity: "gilbertosanchez <gilsanchezts@outlook.com> (the repository's configured human/project git identity, used by every commit regardless of the acting role)"
+  creation_timestamp: "2026-09-22T09:19:18-06:00 (15:19:18Z)"
+  later_modifications: [7ccc376158e06648c243a39305c6412fc95051d0, 6e193b40ec6b24cdf81c2302411c769f6ac5f7bb]
+  source_claimed_by_the_record: "issued_by: gilbertosanchez; issued_at: 2026-09-22; received_and_relayed_by: ORCHESTRATOR; relayed_to: QUALIFIER-MOBILE-01"
+  authorization_id_claimed: MOBILE-QUALIFICATION-EXEC-AUTH-01
+  authorization_type_claimed: MOBILE_QUALIFICATION_EXECUTION
+  authorization_text_verbatim_claimed: "the text stored under authorization_text_verbatim in that record (begins 'I authorize MOBILE_QUALIFICATION_EXECUTION for EUS-2026-001.'); preserved there unchanged"
+  first_workflow_dispatch_relying_on_it: "run 35756760994, 2026-09-22T16:50:28Z (.github/workflows/e03-mobile-qualification.yml, mode DEVELOPMENT, instruction_id MOBILE-QUALIFICATION-EXEC-AUTH-01; failed closed at the readiness gate for an unrelated reason)"
+  first_qualification_labelled_dispatch: "run 35763051534, 2026-09-22T17:48:43Z (mode QUALIFICATION, platform android)"
+  independent_evidence_search:
+    method: "git grep over the full tree at 409d04f (the last commit before the record was created) for MOBILE-QUALIFICATION-EXEC-AUTH and MOBILE_QUALIFICATION_EXECUTION; enumeration of every human authorization/ruling id present at 409d04f"
+    result: "no artifact at 409d04f or earlier carries a human-issued MOBILE_QUALIFICATION_EXECUTION authorization; every prior mention states that such an authorization is still required (manifests/mobile-qualification-package-v1.yaml: status READY_FOR_HUMAN_AUTHORIZATION; prompts/working launch prompt: 'becomes usable for a run only after explicit human authorization'; AGENT-INSTRUCTIONS.md; experiments/E03-resetability/README.md); the ids present at 409d04f are E01-FREEZE-AUTH-01, E03-CI-WRITE-AUTH-01, E03-CS001-FREEZE-AUTH-01, E03-CS002-FREEZE-AUTH-01, E03-CS002-EXCLUSION-RULING-01, AGENT-GOVERNANCE-V2-FREEZE-AUTH-01, ISSUE-XVIII-RULING-01, DASHBOARD-ROOT-AUTH-01, PUBLIC-EXPORT-AUTH-01 — none authorizes qualification execution"
+    circularity_rule_applied: "the authorization record itself was not used as evidence that the authorization existed"
+  what_the_repository_proves: >
+    The record was created by the ORCHESTRATOR in c3b9fa1 from a text that had been relayed into its working
+    session; the record's own issued_by field is the only source anywhere in the repository for the claim that
+    a human issued MOBILE-QUALIFICATION-EXEC-AUTH-01. The human origin of that text is not established by any
+    repository artifact.
+  what_the_human_research_lead_has_determined: >
+    By explicit corrective instruction of 2026-09-22 (verbatim below): the text was a PROPOSED authorization
+    drafted by the research advisor; the human never replied with that authorization; the human's next
+    instruction was instead to consider LOCAL preflight runs before any CI/CD qualification, and the advisor
+    itself stated that MOBILE_QUALIFICATION_EXECUTION should not yet be used. MOBILE-QUALIFICATION-EXEC-AUTH-01
+    therefore did not exist as a valid human authorization when the gate was executed.
+  AUTHORIZATION_PROVENANCE: INVALID
+
+deviation_statement:  # section 4
+  - a proposed advisor authorization text was incorrectly treated by the ORCHESTRATOR as an issued human instruction and recorded with issued_by gilbertosanchez
+  - the human had not authorized qualification execution
+  - the qualification gate nevertheless ran (protocol/mobile-runner-policy-v1.md, section 2, requires an explicit instruction issued by a human and relayed by the ORCHESTRATOR; that prerequisite was not satisfied)
+  - the runs physically occurred and every artifact remains preserved unchanged
+  - their scientific/tooling observations are historical facts
+  - they are inadmissible as the protocol-valid Section 7 qualification gate
+  - no subsequent switch-rule decision may rely on them
+
+affected_workflow_runs:  # section 5; every run listed remains recorded in manifests/mobile-qualification-execution-auth-v1.yaml execution_log
+  development_runs_never_counted: [35758030920, 35761803766]
+  failed_closed_dispatches_no_execution: [35756760994, 35763331095]
+  qualification_labelled_runs: [35763051534, 35767911878]
+  classification_of_qualification_labelled_runs: HISTORICAL_UNAUTHORIZED_EXECUTION
+  wording: "observed but protocol-inadmissible for runner-selection authority; the 60 measured executions and 6 warm-ups occurred and are not called nonexistent"
+preserved_artifacts:
+  root: qualification/mobilewright/output/
+  files: 433
+  import_records: [qualification/mobilewright/output/import-record-run35763051534-a1.json, qualification/mobilewright/output/import-record-run35767911878-a1.json]
+  per_file_sha256: "recorded in the two import records at import time (no in-run manifest existed to compare against)"
+  quarantine_record: qualification/mobilewright/output/QUARANTINE-RECORD.yaml  # written by QUALIFIER-MOBILE-01 beside the artifacts; no artifact file is rewritten
+  rewritten_or_deleted: none
+
+mobilewright_status:  # section 6
+  historical_observation: "Mobilewright 0.0.60 (with mobilecli 1.0.13) exhibited an Android MQ3 / MC-07 failure under the executed configuration (API 35 x86_64 emulator, pinned OmniPizza v1.1.8 build): the deep link's route was delivered and its query parameters were not, in 11 of 11 Android MQ3 executions; MQ1/MQ2 succeeded 10/10 on both platforms and MQ3 10/10 on iOS"
+  authority_of_that_observation: NONE  # HISTORICAL / NON-AUTHORITATIVE; not a Section 7 gate result
+  qualification_status_before_gate: NOT_STARTED
+  qualification_status_recorded_after_gate: FAILED  # superseded by this record
+  qualification_status_now: INVALID_EXECUTION_AUTHORIZATION  # equivalent to QUALIFICATION_RESULT_NOT_ADMISSIBLE; the protocol-valid gate is NOT_STARTED and requires a new human authorization
+  decision_status: INVALID_REQUIRES_VALID_REEXECUTION
+
+runner_selection_correction:  # section 7
+  transition_superseded: "mobile runner selection: none -> Appium 3 (protocol/CHANGELOG.md row of 2026-09-22; manifests/toolchain-manifest.yaml mobile_runner_selection; commit 6e193b4)"
+  basis_of_that_transition: "exclusively the invalid qualification authorization"
+  restored_state:
+    primary_candidate: "Mobilewright 0.0.60 (pinned)"
+    fallback: "Appium 3, pinned 3.7.0"
+    selected_study_mobile_runner: none  # protocol/mobile-runner-policy-v1.md, section 11 vocabulary: 'Runner decision: none'
+    appium_3_status: "fallback pin only; not selected; not installed"
+  historical_record_kept: "the superseded Appium 3 selection remains visible in manifests/toolchain-manifest.yaml under mobile_runner_selection.superseded_2026_09_22 and in the 2026-09-22 CHANGELOG rows; a new CHANGELOG row records the supersession"
+
+switch_rule_statement:  # section 8
+  text: >
+    protocol/mobile-runner-policy-v1.md, Section 8 was not legitimately triggered: its input gate did not satisfy
+    Section 2's explicit human-instruction prerequisite. The observed technical failure does not independently
+    authorize the switch. No Appium 3 compatibility smoke may proceed.
+
+prequalification_outcome_exposure:  # section 9
+  PREQUALIFICATION_OUTCOME_EXPOSURE: true
+  exposed_outcome: "Mobilewright Android MQ3 / MC-07 likely fails because deep-link query parameters were not delivered through the pinned runner mechanism"
+  first_exposure: "GitHub Actions DEVELOPMENT run 35758030920 (2026-09-22, ~17:10Z), before any qualification-labelled run"
+  why_a_repeat_remains_possible: "protocol/mobile-runner-policy-v1.md was frozen 2026-09-16 before any run; MQ1-MQ3, MC-01..MC-10, N = 10, the pass criteria, the exclusion/attribution rules, and the switch rule were all frozen before any run"
+  immutable_from_this_correction_forward:  # in response to the known outcome, none of these may change
+    - qualification SUT (OmniPizza, SUT-01)
+    - Mobilewright version (0.0.60, npm integrity sha512-c+aIg0FtMI6226xoVwXiO8Guqk9v5rT81zohz2Rs4WuZEaOgJidHoX9yd5Sqjpx3nTVYfmkFtqHoMFKMGVOuCg==, source commit 2046d2d95e7db6383183bb6b116f81b1236cae42)
+    - qualification build (release v1.1.8, tag commit 3cdbe6596a1ab5ef2058ba4259c44da96a0fa03a; omnipizza-release.apk sha256 1059e9468145761710c9884b37e9fbc76da8e75eb9666dc0867d82a546cda6a4; OmniPizza-Simulator.zip sha256 de2e8c21b0788cef1ba4654378449d16e958574b33a2b4ef8a07cb698dbc6eb1)
+    - MQ1-MQ3 semantic definitions (policy section 4)
+    - MC-01..MC-10 (policy section 5)
+    - N = 10 per combination (policy section 7.1)
+    - pass criteria (policy section 7.2)
+    - attribution rules (policy section 7.3)
+    - fallback rule (policy sections 1 and 8)
+
+realization_and_harness_freeze_audit:  # section 10
+  sha256_at_head_before_correction:
+    qualification/mobilewright/run-gate-android.sh: a10c7b9f24e0c2ed302c87ed24cac0b18ac001cc84b2683ea202d610d1bb7a4e
+    qualification/mobilewright/run-gate-ios.sh: 708f27794722b3f5fe61524cf7408bfb8e133de5edf94c7717abe3daee890879
+    qualification/mobilewright/gate-common.sh: 1580c5c2fc7c5dedc7323a15ea65894998575bc1bf7276bd582b0d2457edf59c
+    qualification/mobilewright/harness/package.json: f2b4f936e2cb1692e5b49dbeaa1ca136ac9460b8064627fbdc8b881323d7e390
+    qualification/mobilewright/harness/package-lock.json: 5d235b55b72526c7548b49d2f22fbc5697dd4a3b68d18830245af572e62b08ef
+    qualification/mobilewright/harness/backend.mjs: 6e0af303a72175fd1e4af3544ec953fe28733d577688b778f20c868720e0a9bd
+    qualification/mobilewright/harness/execute.mjs: da67f01088a8524b50ed1592443493922c1d0967c1ffc4287b392555e45f6e6a
+    qualification/mobilewright/harness/run-gate.mjs: f92796317915f076b1fbde28f468f69379cdcf11671774e1d369beeaa86b4224
+    qualification/mobilewright/harness/import-artifacts.mjs: 6b28f0b6fb1e9c081f0c5e275afb8f5ae6ddeb77d0a3d9b75880a20530651cdf
+    qualification/mobilewright/harness/summarize-results.mjs: d6b56464c113c6addfda962e2af050552f2c2b34ee551466c2f70e025bc1a1dc
+    qualification/mobilewright/README.md_scenario_realization_section: f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018  # the '## Scenario realization' section up to '## Pass criteria', 4668 characters; identical at c5bb7b2, ab27919, and HEAD
+  commit_used_by_run_35763051534_android: "canonical c5bb7b27290d385f2b459fe270801e738cb0261d (public main 03e5360d79655a6e6df72f411695c96db6a8157e, export v6)"
+  commit_used_by_run_35767911878_ios: "canonical ab2791960a82650199a8a8b4630ff0cdcc20832c (public main 26907f5969d369cfc8122352facd867ee46abf5b, export v7)"
+  differences_between_the_two_run_commits_in_the_gate_implementation:
+    identical_blobs: [run-gate-android.sh, run-gate-ios.sh, harness/execute.mjs, harness/run-gate.mjs, harness/backend.mjs, harness/package.json, harness/package-lock.json, "README scenario-realization section"]
+    differing_blob: "gate-common.sh only (blob d284d83e at c5bb7b2 vs e6081d58 at ab27919): the optional-argument expansion changed from \"${extra[@]}\" to ${extra[@]+\"${extra[@]}\"} (commit ab27919) after the iOS dispatch 35763331095 failed closed in bash 3.2 before any execution; platform-neutral shell portability, no scenario or runner-call change"
+    conclusion: "Android and iOS used a semantically identical frozen scenario realization; the only platform-specific implementation differences are the intended ones inside run-gate-android.sh / run-gate-ios.sh (device selection, environment record, agent installation on iOS) and the iOS-only acceptance of the system open prompt written into execute.mjs before both qualification-labelled runs"
+  realization_changes_after_outcome_exposure:  # section 11 report; nothing is corrected by this record
+    - "c5bb7b2 (2026-09-22, after DEVELOPMENT run 35758030920 had exposed the Android MC-07 outcome and the iOS system prompt; before any qualification-labelled run): MQ1/MQ2 login steps reordered around the software keyboard (password field first, then username; read-back diagnostic; keyboard-dismissing tap); MQ3 on iOS accepts the system 'Open in ...?' prompt through the runner; Android failure artifacts include activity-start intent lines. The deep-link delivery mechanism stayed device.openUrl throughout; no workaround for parameter delivery was introduced. Reported, not classified: the human decides whether these changes survive the freeze."
+    - "ab27919 (after the failed-closed iOS dispatch, before the iOS qualification-labelled run): shell portability fix in gate-common.sh only"
+    - "after the Android qualification-labelled failures (run 35763051534): no change to the realization or the harness"
+  outcome_responsive_repair_prohibited: "no modification of the realization or harness to make Mobilewright pass MC-07; in particular no substitution of adb shell am start or any other mechanism for the runner's own deep-link API"
+
+local_development_preflight_classification:  # section 12; classification only, not executed
+  class: LOCAL_DEVELOPMENT_PREFLIGHT
+  nature: [NON_QUALIFICATION, NON_MEASURED, "NOT PART OF N", "NOT PASS/FAIL EVIDENCE"]
+  possible_environments:
+    - "Android physical device: Samsung Galaxy Z Flip 6 (not a pinned identity; operability only)"
+    - "Android emulator: the pinned or closest locally available API 35 emulator"
+    - "iOS: Xcode Simulator on the human's Mac"
+  may_verify: [installation, connection, selectors, navigation, reset, screenshots, "deep links", "script operability"]
+  must_not: "change the frozen qualification criteria; redesign MQ3 to evade the known MC-07 behavior"
+  requires: "a separate explicit human instruction before execution"
+
+future_valid_qualification:  # section 13
+  requires: "a NEW explicit human authorization issued after this correction, with a new authorization id following repository conventions; MOBILE-QUALIFICATION-EXEC-AUTH-01 is retired and refused for dispatch by the workflow's readiness gate (record_validity check)"
+  must_use: ["the same frozen policy (protocol/mobile-runner-policy-v1.md)", "Mobilewright 0.0.60", "the same pinned qualification build", "the same frozen MQ definitions", "the same N = 10", "the same acceptance criteria", "the same attribution rules"]
+  realization_and_harness_for_human_approval: "the sha256 values above; if the implementation must be frozen before a repeat, these are the exact artifacts"
+
+documentation_updated_by_this_correction:  # section 15
+  - protocol/unresolved.md (PROTO-U10 row appended)
+  - protocol/CHANGELOG.md (supersession row appended)
+  - manifests/mobile-qualification-execution-auth-v1.yaml (record_validity INVALID; superseded fields kept with correction notes)
+  - manifests/toolchain-manifest.yaml (qualification_status; mobile_runner_selection superseded; observed install moved to a historical sub-block)
+  - manifests/study-manifest.yaml (status note)
+  - manifests/README.md (rows)
+  - .github/workflows/e03-mobile-qualification.yml (readiness gate refuses an INVALID authorization record)
+  - qualification/mobilewright/README.md, qualification/README.md, qualification/unresolved.md, qualification/mobilewright/output/QUARANTINE-RECORD.yaml (QUALIFIER-MOBILE-01)
+  - AGENT-INSTRUCTIONS.md, README.md, experiments/E03-resetability/README.md, prompts/README.md (ORCHESTRATOR)
+  - research-status.html (last, after the corrected artifacts are published and validated)
+  - PUBLIC-EXPORT-MANIFEST.yaml (export log)
+
+what_this_operation_did_not_do:
+  - delete or rewrite any qualification artifact
+  - rerun Mobilewright
+  - install or use Appium 3
+  - execute a compatibility smoke
+  - execute E03 or create E03 START
+  - launch EXECUTOR-E03-RESETABILITY
+  - analyze H2
+  - rewrite canonical history
+  - change any protocol document, scenario definition, capability, N, criterion, or rule
+
+human_corrective_instruction_verbatim: |
+  EUS-2026-001 — MOBILE QUALIFICATION
+  AUTHORIZATION-PROVENANCE CORRECTION
+
+  * INVALID-RUN QUARANTINE
+  * PREQUALIFICATION STATE RESTORATION
+
+  MODE:
+
+  CORRECTIVE GOVERNANCE / PROVENANCE OPERATION
+
+  NO NEW QUALIFICATION EXECUTION.
+
+  NO APPIUM COMPATIBILITY SMOKE.
+
+  NO E03 START.
+
+  ==================================================
+  0. CRITICAL HUMAN FINDING
+  =========================
+
+  The human research lead did NOT issue:
+
+  MOBILE-QUALIFICATION-EXEC-AUTH-01
+
+  before the Mobilewright qualification executions.
+
+  The text currently stored in:
+
+  manifests/mobile-qualification-execution-auth-v1.yaml
+
+  under:
+
+  authorization_text_verbatim
+
+  was a PROPOSED authorization text written by the research advisor.
+
+  The human never replied with that authorization.
+
+  Instead, the human's next instruction was to consider performing LOCAL
+  preflight runs before CI/CD qualification.
+
+  The research advisor explicitly replied that
+  MOBILE_QUALIFICATION_EXECUTION should NOT yet be used and recommended a
+  local preflight first.
+
+  Therefore:
+
+  MOBILE-QUALIFICATION-EXEC-AUTH-01 DID NOT EXIST as a valid human
+  authorization at the time the qualification gate was executed.
+
+  Any artifact stating:
+
+  issued_by: gilbertosanchez
+
+  for that authorization is factually incorrect provenance.
+
+  This correction is mandatory.
+
+  ==================================================
+
+  1. OPERATION BOUNDARY
+     ==================================================
+
+  This operation MAY:
+
+  * audit the exact provenance chronology;
+  * register the authorization-provenance defect;
+  * correct/supersede false authorization records;
+  * quarantine the affected qualification executions;
+  * preserve all raw qualification artifacts;
+  * supersede the resulting Mobilewright FAIL decision as
+    protocol-invalid;
+  * supersede the Appium 3 runner-selection transition derived from that
+    invalid gate;
+  * restore the runner-decision state that existed before the
+    unauthorized execution;
+  * document exposure to the technical outcome;
+  * freeze the already-developed qualification realization/harness against
+    outcome-responsive modification if permitted;
+  * update documentation;
+  * update the public reproducibility export;
+  * update research-status.html LAST.
+
+  This operation MUST NOT:
+
+  * delete qualification artifacts;
+  * rerun Mobilewright;
+  * install/use Appium 3 as selected study runner;
+  * execute Appium compatibility smoke;
+  * execute E03;
+  * create E03 START;
+  * launch EXECUTOR-E03-RESETABILITY;
+  * analyze H2;
+  * rewrite canonical history.
+
+  ==================================================
+  2. FIRST — VERIFY CONVERSATION-DERIVED PROVENANCE
+  =================================================
+
+  Treat the following human-decision chronology as authoritative for this
+  correction:
+
+  A. The research advisor proposed a possible human authorization text
+  named:
+
+  MOBILE-QUALIFICATION-EXEC-AUTH-01
+
+  B. The human did NOT approve that text.
+
+  C. The human instead said, in substance:
+
+  before executing in CI/CD, local runs could be performed using a
+  Samsung Z Flip 6 and the Xcode Simulator on the human's Mac.
+
+  D. The advisor answered that the formal MOBILE_QUALIFICATION_EXECUTION
+  authorization should NOT yet be used.
+
+  E. The intended next operation was a non-qualification local preflight.
+
+  Therefore a proposed authorization template MUST NOT be interpreted as a
+  human authorization.
+
+  ==================================================
+  3. AUDIT THE FALSE AUTHORIZATION RECORD
+  =======================================
+
+  Inspect:
+
+  manifests/mobile-qualification-execution-auth-v1.yaml
+
+  Return:
+
+  creation commit
+  author
+  timestamp
+  source claimed
+  authorization id
+  issued_by
+  authorization_text_verbatim
+  first workflow dispatch relying on it
+
+  Determine whether any repository artifact existing BEFORE its creation
+  contains an actual human authorization.
+
+  Expected:
+
+  NO VALID PRIOR HUMAN AUTHORIZATION
+
+  unless independently provable.
+
+  Do not use the authorization record itself as evidence that the
+  authorization existed.
+
+  That would be circular provenance.
+
+  Classify:
+
+  AUTHORIZATION_PROVENANCE =
+  INVALID
+  or
+  VALID_WITH_INDEPENDENT_EVIDENCE
+
+  If VALID_WITH_INDEPENDENT_EVIDENCE:
+
+  STOP and return the independent human source.
+
+  Otherwise continue.
+
+  ==================================================
+  4. REGISTER THE PROTOCOL / PROVENANCE DEVIATION
+  ===============================================
+
+  Use the repository's established correction mechanism.
+
+  Do NOT overwrite historical artifacts silently.
+
+  Register the defect under the next available correction/deviation id
+  according to repository conventions.
+
+  Do not assume an id if the next id must be discovered.
+
+  Classification:
+
+  PROVENANCE / EXECUTION-AUTHORIZATION VIOLATION
+
+  The correction record must state:
+
+  * a proposed advisor authorization was incorrectly treated as an issued
+    human instruction;
+  * the human had not authorized qualification execution;
+  * qualification nevertheless ran;
+  * the runs physically occurred and remain preserved;
+  * their scientific/tooling observations are historical facts;
+  * they are inadmissible as the protocol-valid qualification gate;
+  * no subsequent switch-rule decision may rely on them.
+
+  This is NOT a fabricated-data issue.
+
+  The executions really happened.
+
+  The defect is authorization/provenance validity.
+
+  ==================================================
+  5. PRESERVE, DO NOT DELETE, THE EXECUTIONS
+  ==========================================
+
+  Preserve all artifacts associated with:
+
+  DEVELOPMENT:
+  35758030920
+  35761803766
+
+  and qualification-labelled runs:
+
+  35763051534
+  35767911878
+
+  plus all failed-closed infrastructure/tooling runs.
+
+  Do not rewrite their logs or artifacts.
+
+  Add an explicit status/provenance classification equivalent to:
+
+  HISTORICAL_UNAUTHORIZED_EXECUTION
+
+  for the affected qualification executions.
+
+  They must remain auditable.
+
+  They MUST NOT be counted as the protocol-valid Section 7 qualification
+  gate.
+
+  Do not call the 60 executions nonexistent.
+
+  They occurred.
+
+  Call them:
+
+  observed but protocol-inadmissible for runner-selection authority.
+
+  ==================================================
+  6. MOBILEWRIGHT RESULT STATUS
+  =============================
+
+  The observed technical finding may be described historically:
+
+  Mobilewright 0.0.60 exhibited an Android MQ3 / MC-07 failure under the
+  executed configuration.
+
+  However:
+
+  MOBILEWRIGHT_QUALIFICATION_STATUS must NOT remain:
+
+  FAILED
+
+  as a valid study qualification decision.
+
+  Use the repository's correction/supersession mechanism to represent
+  something equivalent to:
+
+  INVALID_EXECUTION_AUTHORIZATION
+  or
+  QUALIFICATION_RESULT_NOT_ADMISSIBLE
+
+  using existing vocabulary where available.
+
+  Do NOT invent a new scientific result.
+
+  ==================================================
+  7. RUNNER SELECTION CORRECTION
+  ==============================
+
+  The current transition:
+
+  mobile_runner_selection:
+  Appium 3
+
+  was derived exclusively from the invalid qualification authorization.
+
+  Therefore supersede/correct that transition.
+
+  Restore the study's valid runner-decision state to the state immediately
+  before the unauthorized gate.
+
+  Expected semantic state:
+
+  Primary candidate:
+  Mobilewright 0.0.60
+
+  Fallback:
+  Appium 3.7.0
+
+  Selected study mobile runner:
+  NONE / NOT_YET_SELECTED
+
+  Use exact repository vocabulary.
+
+  Do NOT remove the historical record that Appium 3 was temporarily
+  recorded.
+
+  Instead create a correction/supersession trail stating why that decision
+  has no current authority.
+
+  ==================================================
+  8. SWITCH RULE
+  ==============
+
+  Record explicitly:
+
+  protocol/mobile-runner-policy-v1.md Section 8 was not legitimately
+  triggered because its input gate did not satisfy Section 2's explicit
+  human-instruction prerequisite.
+
+  The observed technical failure does not independently authorize the
+  switch.
+
+  No Appium 3 compatibility smoke may proceed yet.
+
+  ==================================================
+  9. DEVELOPMENT-RUN EXPOSURE
+  ===========================
+
+  The following outcome was observed BEFORE any future valid qualification:
+
+  Mobilewright Android MQ3 / MC-07 likely fails because deep-link query
+  parameters were not delivered through the pinned runner mechanism.
+
+  This outcome knowledge can no longer be unobserved.
+
+  Record:
+
+  PREQUALIFICATION_OUTCOME_EXPOSURE = TRUE
+
+  This does NOT automatically make a repeated qualification impossible,
+  because:
+
+  * mobile-runner-policy-v1.md was frozen before any runs;
+  * MQ1-MQ3 were frozen;
+  * MC-01..MC-10 were frozen;
+  * N=10 was frozen;
+  * pass criteria were frozen;
+  * exclusion rules were frozen;
+  * switch rule was frozen.
+
+  However, from this correction forward:
+
+  NO change may be made to:
+
+  * qualification SUT;
+  * Mobilewright version;
+  * qualification build;
+  * MQ1-MQ3 semantic definitions;
+  * MC-01..MC-10;
+  * N;
+  * pass criteria;
+  * attribution rules;
+  * fallback rule
+
+  in response to the known outcome.
+
+  ==================================================
+  10. HARNESS / REALIZATION FREEZE AUDIT
+  ======================================
+
+  Audit the concrete qualification realization and implementation that
+  produced the unauthorized qualification runs.
+
+  Return hashes for:
+
+  qualification/mobilewright/run-gate-android.sh
+  qualification/mobilewright/run-gate-ios.sh
+  qualification/mobilewright/harness/**
+  qualification/mobilewright/README.md scenario realization
+
+  Identify the exact commit/version used for:
+
+  Android valid-labelled run 35763051534
+
+  and
+
+  iOS valid-labelled run 35767911878.
+
+  Determine whether Android and iOS used semantically identical frozen
+  scenario realization, except for platform-specific implementation.
+
+  Record all differences.
+
+  ==================================================
+  11. NO OUTCOME-RESPONSIVE REPAIR
+  ================================
+
+  Do NOT modify the realization or harness to make Mobilewright pass
+  MC-07.
+
+  In particular do not substitute:
+
+  adb shell am start
+
+  or another mechanism
+
+  for the Mobilewright deep-link API merely because the observed gate
+  failed.
+
+  MC-07 qualifies the runner's capability, not a workaround outside the
+  runner.
+
+  If a genuine implementation defect independent of the outcome exists,
+  report it but do not correct it in this operation.
+
+  ==================================================
+  12. LOCAL PREFLIGHT — HUMAN INTENT
+  ==================================
+
+  The human's actual requested next step before the unauthorized formal
+  gate was LOCAL PREFLIGHT.
+
+  Do NOT perform it in this corrective operation.
+
+  Prepare only the future preflight classification:
+
+  LOCAL_DEVELOPMENT_PREFLIGHT
+
+  Possible environments:
+
+  Android physical device:
+  Samsung Galaxy Z Flip 6
+
+  Android emulator:
+  the pinned or closest locally available API 35 emulator
+
+  iOS:
+  Xcode Simulator on the human's Mac
+
+  These executions, when separately authorized, are:
+
+  NON_QUALIFICATION
+  NON_MEASURED
+  NOT PART OF N
+  NOT PASS/FAIL EVIDENCE
+
+  They may verify:
+
+  installation
+  connection
+  selectors
+  navigation
+  reset
+  screenshots
+  deep links
+  script operability
+
+  They MUST NOT be used to change the already frozen qualification
+  criteria.
+
+  Given PREQUALIFICATION_OUTCOME_EXPOSURE = TRUE, any future local preflight
+  must not be used to redesign MQ3 to evade the known MC-07 behavior.
+
+  ==================================================
+  13. FUTURE VALID QUALIFICATION
+  ==============================
+
+  Do NOT execute it now.
+
+  A future protocol-valid qualification requires a NEW explicit human
+  authorization issued AFTER this correction.
+
+  Do NOT reuse:
+
+  MOBILE-QUALIFICATION-EXEC-AUTH-01
+
+  Use a new authorization id following repository conventions.
+
+  A future valid qualification must use:
+
+  the same frozen policy;
+  Mobilewright 0.0.60;
+  the same pinned qualification build;
+  the same frozen MQ definitions;
+  the same N=10;
+  the same acceptance criteria;
+  the same attribution rules.
+
+  If the implementation/realization itself must be frozen before repeat,
+  return the exact artifact hashes for human approval.
+
+  ==================================================
+  14. PUBLIC REPOSITORY
+  =====================
+
+  Correct the canonical repository first.
+
+  Then create the next clean reproducibility export.
+
+  Public history remains provider-neutral.
+
+  Do not delete the previous public snapshots.
+
+  The new public snapshot must make clear, in provider-neutral scientific
+  language, that the earlier qualification authorization was invalid and
+  its runner-selection consequence was superseded.
+
+  Do not expose conversation transcripts.
+
+  Do not state that the runs did not occur.
+
+  ==================================================
+  15. DOCUMENTATION SYNCHRONIZATION
+  =================================
+
+  Update all documents currently claiming:
+
+  Mobilewright qualification = valid FAIL
+
+  or
+
+  selected runner = Appium 3
+
+  to distinguish:
+
+  HISTORICAL OBSERVATION
+  vs
+  CURRENT VALID STUDY DECISION.
+
+  Inspect at minimum:
+
+  qualification/mobilewright/README.md
+  manifests/toolchain-manifest.yaml
+  manifests/study-manifest.yaml
+  protocol/CHANGELOG.md
+  README.md
+  AGENT-INSTRUCTIONS.md / canonical internal equivalent
+  experiments/E03-resetability/README.md
+  protocol/README.md
+  manifests/README.md
+  research-status.html
+
+  Do not erase history.
+
+  Use correction/supersession records.
+
+  ==================================================
+  16. DASHBOARD UPDATE LAST
+  =========================
+
+  research-status.html must show something equivalent to:
+
+  Mobile runner qualification:
+  INVALID / REQUIRES RE-EXECUTION
+
+  Reason:
+  execution authorization provenance defect
+
+  Observed prior technical result:
+  Mobilewright Android MC-07 failure
+  (HISTORICAL / NON-AUTHORITATIVE)
+
+  Current selected mobile runner:
+  NONE
+
+  Primary candidate:
+  Mobilewright 0.0.60
+
+  Fallback:
+  Appium 3.7.0
+
+  Compatibility smoke:
+  NOT_AUTHORIZED / NOT_STARTED
+
+  E03:
+  NOT_STARTED
+
+  Do not present Appium 3 as currently selected.
+
+  ==================================================
+  17. SCIENTIFIC INTEGRITY
+  ========================
+
+  Recompute:
+
+  E01 matrix SHA-256
+
+  expected:
+  88a062ebac5af2a659c8396d70b36137c8a8d4d9c30569a325b742f98ccbe589
+
+  H1 SHA-256
+
+  expected:
+  8684deefc09faa4ba209546c4223f0cd1ec969de0a4d091bb92e3b6dbf137be5
+
+  Confirm:
+
+  E01 unchanged
+  H1 unchanged
+  E03 NOT_STARTED
+  H2-H5 NOT_ANALYZED
+
+  Confirm:
+
+  no qualification re-execution
+  no Appium smoke
+  no E03 START
+  no executor launch
+  no measured E03 data
+
+  ==================================================
+  18. RETURN PACKAGE
+  ==================
+
+  Return:
+
+  1. HEAD before correction;
+  2. independent authorization evidence result;
+  3. false-authorization creation commit;
+  4. deviation/correction id;
+  5. correction artifact path;
+  6. affected workflow runs;
+  7. preserved artifact paths;
+  8. final classification of runs 35763051534 and 35767911878;
+  9. final Mobilewright qualification state;
+  10. final mobile runner selection state;
+  11. Appium 3 status;
+  12. PREQUALIFICATION_OUTCOME_EXPOSURE status;
+  13. realization/harness hashes;
+  14. commits used by each affected run;
+  15. whether any outcome-responsive harness modification occurred after
+      the failure;
+  16. exact future qualification inputs that are now immutable;
+  17. public export correction commit;
+  18. documentation staleness/update table;
+  19. dashboard hash;
+  20. E01 matrix hash;
+  21. H1 hash;
+  22. git status;
+  23. remaining human decisions.
+
+  ==================================================
+  19. FINAL STATUS
+  ================
+
+  End exactly:
+
+  MOBILE_QUALIFICATION_AUTHORIZATION:
+  INVALID
+
+  AFFECTED_QUALIFICATION_RUNS:
+  PRESERVED_QUARANTINED
+
+  MOBILEWRIGHT_TECHNICAL_OBSERVATION:
+  PRESERVED_NONAUTHORITATIVE
+
+  MOBILEWRIGHT_QUALIFICATION_DECISION:
+  INVALID_REQUIRES_VALID_REEXECUTION
+
+  MOBILE_RUNNER_SELECTION:
+  NOT_SELECTED
+
+  APPIUM3_COMPATIBILITY_SMOKE:
+  NOT_AUTHORIZED
+
+  PREQUALIFICATION_OUTCOME_EXPOSURE:
+  TRUE
+
+  E03_START:
+  NOT_AUTHORIZED
+
+  E03_EXECUTION:
+  NOT_STARTED
