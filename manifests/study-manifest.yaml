@@ -221,3 +221,15 @@ notes: |
   recorded in qualification/mobilewright/README.md and transcribed into manifests/toolchain-manifest.yaml
   and protocol/CHANGELOG.md by the ORCHESTRATOR after the gate. E01 results, both human rulings, the
   adjudicated matrix, and H1 unchanged; E03-resetability remains NOT_STARTED; E03 START not authorized.
+  2026-09-22 (mobile qualification executed): the Mobilewright qualification gate ran under
+  MOBILE-QUALIFICATION-EXEC-AUTH-01 through .github/workflows/e03-mobile-qualification.yml on the pinned
+  GitHub-hosted substrates (Android run 35763051534, iOS run 35767911878; 6 warm-ups, 60 measured executions,
+  no exclusion, no manual intervention; records under qualification/mobilewright/output/). Result FAIL:
+  MQ1/MQ2 10/10 on both platforms and MQ3 10/10 on iOS, but MQ3 0/10 on the Android emulator (MC-07, deep
+  link with parameters, unsupported: the runner delivers the route but not the query parameters). Switch
+  rule applied (protocol/mobile-runner-policy-v1.md section 8): the study's mobile runner is Appium 3
+  (pinned 3.7.0, not yet installed; manifests/toolchain-manifest.yaml mobile_runner_selection;
+  protocol/CHANGELOG.md row). Compatibility smoke NOT_STARTED (applies to Appium 3; separate authorization
+  required). Tool qualification only: no SUT evidence, no E03 raw-data, no H2 input. E01 results, both human
+  rulings, the adjudicated matrix, and H1 unchanged; E03-resetability remains NOT_STARTED; E03 START not
+  authorized; Appium 2 never.

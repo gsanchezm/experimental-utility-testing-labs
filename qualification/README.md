@@ -12,7 +12,7 @@ This directory holds qualification of study tooling. Tool qualification is separ
 |---|---|---|
 | qualification/mobilewright/ | Mobilewright qualification gate (MQ1 Login → Catalog; MQ2 Catalog → Product Interaction; MQ3 API State Seed → Deep Link → Target UI State; on Android emulator and iOS Simulator; qualification SUT OmniPizza; N = 10 measured executions per combination) and the runner decision record | protocol/mobile-runner-policy-v1.md, Sections 2–8 |
 | qualification/compatibility-smoke/ | Per-SUT compatibility smoke of the selected runner on every mobile-capable ecosystem before mobile campaigns | protocol/mobile-runner-policy-v1.md, Section 9 |
-| qualification/unresolved.md | Escalations raised by QUALIFIER-MOBILE-01, for example a discrepancy between the pinned qualification build and the build obtained; created on first use, same table format as the audit unresolved.md files; does not exist yet | protocol/agent-governance-v1.md, section 6 |
+| qualification/unresolved.md | Escalations raised by QUALIFIER-MOBILE-01, for example a discrepancy between the pinned qualification build and the build obtained; created on first use, same table format as the audit unresolved.md files; not created — the gate raised no escalation (both build digests matched the pins; no conflict between the instruction and the frozen policy arose) | protocol/agent-governance-v1.md, section 6 |
 
 The gate definition, mandatory capabilities, pass criteria, exclusion and attribution rules, switch rule to Appium 3, compatibility smoke, and scope limit are defined in protocol/mobile-runner-policy-v1.md and are not restated here. Execution of the gate or the smoke requires an explicit instruction issued by a human and relayed by the ORCHESTRATOR (protocol/agent-governance-v1.md, section 2, rule 6).
 
@@ -36,7 +36,7 @@ Qualification outputs are NOT experimental data about any SUT. They are not plac
 
 | Item | State |
 |---|---|
-| Qualification gate | NOT STARTED |
-| Compatibility smoke | NOT STARTED |
-| Runs executed | none |
-| Tool versions | null (manifests/toolchain-manifest.yaml) |
+| Qualification gate | EXECUTED 2026-09-22 (authorization MOBILE-QUALIFICATION-EXEC-AUTH-01; qualification/mobilewright/README.md) — result FAIL; runner decision: Appium 3 (switch rule, protocol/mobile-runner-policy-v1.md, Section 8) |
+| Compatibility smoke | NOT STARTED (applies to Appium 3; requires a separate explicit human authorization) |
+| Runs executed | Mobilewright gate: 60 measured executions + 6 warm-ups on the pinned GitHub-hosted substrates (Android run 35763051534, iOS run 35767911878); records under qualification/mobilewright/output/ |
+| Tool versions | Mobilewright 0.0.60 observed (mobilecli 1.0.13; on-device agent DeviceKit 0.0.27 on iOS), installed 2026-09-22; Appium 3 pinned 3.7.0, not installed (manifests/toolchain-manifest.yaml) |

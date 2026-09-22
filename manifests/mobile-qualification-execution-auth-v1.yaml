@@ -73,7 +73,23 @@ orchestrator_actions_under_this_authorization:
   - "after the gate: transcription of the observed runner install and the runner decision into manifests/toolchain-manifest.yaml and protocol/CHANGELOG.md (policy section 8), never before QUALIFIER-MOBILE-01 has recorded them"
 
 execution_log:  # appended by ORCHESTRATOR as runs occur; run ids only, outcomes live in qualification/mobilewright/README.md
-  runs: []
+  workflow: .github/workflows/e03-mobile-qualification.yml
+  public_repository: https://github.com/gsanchezm/experimental-utility-testing-labs
+  runs:
+    - {run_id: 35756760994, date: "2026-09-22", mode: DEVELOPMENT, platform: both, public_main: 05eacb369986a0e4e842dea4dfbdd630b4610b47, outcome: "readiness gate failed closed (exported gate scripts had lost their executable bit); no execution"}
+    - {run_id: 35758030920, date: "2026-09-22", mode: DEVELOPMENT, platform: both, public_main: f93be545958b636ed60f5ca1504cbdd84cb96a47, outcome: "harness validation, 6 executions, never counted; realization refined afterwards (README, Development runs)"}
+    - {run_id: 35761803766, date: "2026-09-22", mode: DEVELOPMENT, platform: both, public_main: 03e5360d79655a6e6df72f411695c96db6a8157e, outcome: "harness validation of the frozen realization, 6 executions, never counted"}
+    - {run_id: 35763051534, date: "2026-09-22", mode: QUALIFICATION, platform: android, public_main: 03e5360d79655a6e6df72f411695c96db6a8157e, outcome: "the gate, Android: 3 warm-ups + 30 measured executions; artifacts imported under qualification/mobilewright/output (canonical commit ea9a70e)"}
+    - {run_id: 35763331095, date: "2026-09-22", mode: QUALIFICATION, platform: ios, public_main: 03e5360d79655a6e6df72f411695c96db6a8157e, outcome: "failed closed in the gate script before any execution (bash 3.2 empty-array expansion under set -u); no iOS execution; corrected in canonical commit ab27919"}
+    - {run_id: 35767911878, date: "2026-09-22", mode: QUALIFICATION, platform: ios, public_main: 26907f5969d369cfc8122352facd867ee46abf5b, outcome: "the gate, iOS: 3 warm-ups + 30 measured executions; artifacts imported under qualification/mobilewright/output (canonical commit d63d585)"}
+  outcome:
+    gate_result: FAIL
+    decision: "Appium 3 (pinned 3.7.0)"
+    decided_on: "2026-09-22"
+    decision_record: "qualification/mobilewright/README.md, Decision record (QUALIFIER-MOBILE-01)"
+    transcriptions: ["manifests/toolchain-manifest.yaml (mobile_runner_selection; Mobilewright observed install; qualification_status FAILED)", "protocol/CHANGELOG.md (row 2026-09-22, mobile runner selection)", "manifests/study-manifest.yaml (status note)"]
+    summary: "MQ1 and MQ2 10/10 on both platforms; MQ3 10/10 on iOS, 0/10 on the Android emulator (MC-07 unsupported: the runner delivers the deep link's route but not its query parameters); criteria 7.2.1, 7.2.2, 7.2.3 violated, 7.2.4 held; no exclusion; no manual intervention"
+  platform_sequencing: "the gate is dispatched as one run per platform, sequentially, because both platform jobs use the same documented test account whose server-side cart the MQ3 seed and session reset act on"
 
 authorization_text_verbatim: |
   I authorize MOBILE_QUALIFICATION_EXECUTION for EUS-2026-001.

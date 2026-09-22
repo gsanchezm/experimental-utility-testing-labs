@@ -20,7 +20,7 @@ tools:
     notes: null
   mobile_primary_candidate:
     candidate: Mobilewright
-    qualification_status: NOT_STARTED
+    qualification_status: FAILED  # gate executed 2026-09-22 under MOBILE-QUALIFICATION-EXEC-AUTH-01 (manifests/mobile-qualification-execution-auth-v1.yaml); decision record: qualification/mobilewright/README.md; runs: Android 35763051534, iOS 35767911878 (.github/workflows/e03-mobile-qualification.yml, mode QUALIFICATION); criteria 7.2.1 (MC-07 unsupported on the Android emulator), 7.2.2 (MQ3 x Android 0/10), 7.2.3 (MC-07 blocked in 11 executions) violated; 7.2.4 held; MQ1/MQ2 10/10 on both platforms, MQ3 10/10 on iOS. Switch rule (protocol/mobile-runner-policy-v1.md section 8) applied: see mobile_runner_selection below
     qualification_sut: SUT-01  # OmniPizza; designated qualification SUT (protocol/mobile-runner-policy-v1.md section 3); build provenance pinned by ORCHESTRATOR under qualification_build below and copied by QUALIFIER-MOBILE-01 into qualification/mobilewright/README.md
     qualification_platforms: [android_emulator, ios_simulator]
     qualification_build:  # pinned by ORCHESTRATOR before the gate (protocol/mobile-runner-policy-v1.md section 3); QUALIFIER-MOBILE-01 copies it verbatim into qualification/mobilewright/README.md
@@ -40,11 +40,20 @@ tools:
       engines: "node >=22.12.0"
       pinned_by: ORCHESTRATOR
       pinned_at: "2026-09-22"
-    compatibility_smoke_status: NOT_STARTED  # per-SUT smoke after runner selection (protocol/mobile-runner-policy-v1.md section 9)
-    version: null
-    install_date: null
-    platform: null
-    notes: null
+    compatibility_smoke_status: NOT_STARTED  # per-SUT smoke after runner selection (protocol/mobile-runner-policy-v1.md section 9); applies to the selected runner (Appium 3), requires a separate explicit human authorization
+    version: "0.0.60"  # observed by QUALIFIER-MOBILE-01 at gate start on both platform hosts (qualification/mobilewright/output/environment/<platform>-runner-install.json): mobilewright 0.0.60, mobilecli 1.0.13 (driver-mobilecli 0.0.60, core 0.0.60, playwright 1.63.0); on-device agent DeviceKit 0.0.27 on the iOS simulator; pin and observed version match
+    install_date: "2026-09-22"
+    platform: "GitHub-hosted runners for the gate only: Linux x86_64 (ubuntu-24.04 image 20260907.300.1; Node.js v22.23.2, npm 10.9.8) and Darwin arm64 (macos-15 image 20260907.0337.1; Node.js v22.23.2, npm 10.9.8); installed by npm ci from qualification/mobilewright/harness/package-lock.json; not installed on the operator workstation for study use"
+    notes: "Qualification gate FAILED 2026-09-22 (qualification/mobilewright/README.md, Decision record); Mobilewright is NOT the study's mobile runner. Its records remain tool-qualification records, never evidence about any SUT."
+  mobile_runner_selection:  # the study's single mobile runner for every ecosystem in every mobile campaign (protocol/mobile-runner-policy-v1.md sections 1 and 8); transcribed by ORCHESTRATOR from qualification/mobilewright/README.md, Decision record
+    selected_runner: "Appium 3"
+    selected_version_pin: "3.7.0"  # tools.mobile_fallback.pinned_candidate_version; the install record below stays null until Appium 3 is actually installed for an authorized use
+    selected_on: "2026-09-22"
+    basis: "switch rule, protocol/mobile-runner-policy-v1.md section 8: the Mobilewright gate failed because mandatory capability MC-07 (deep link carrying parameters) is unsupported on the Android emulator under Mobilewright 0.0.60 and criterion 7.2.3 is violated; recorded in qualification/mobilewright/README.md (decision record), here, and protocol/CHANGELOG.md"
+    decided_by_role: QUALIFIER-MOBILE-01
+    human_authorization: MOBILE-QUALIFICATION-EXEC-AUTH-01  # the authorization prescribed the application of the frozen switch rule
+    next_step: "per-SUT compatibility smoke with Appium 3 (policy section 9; qualification/compatibility-smoke/), only under a separate explicit human authorization; required before E03-CS001-SUT02-ANDROID and E03-CS001-SUT02-IOS"
+    appium_2: "never introduced under any outcome"
   mobile_fallback:
     candidate: "Appium 3"
     pinned_candidate_version:  # a pin for the switch rule (protocol/mobile-runner-policy-v1.md section 8), not an install record
@@ -58,7 +67,7 @@ tools:
     version: null
     install_date: null
     platform: null
-    notes: "Appium 3 only; Appium 2 is never introduced (protocol/mobile-runner-policy-v1.md section 1)"
+    notes: "Appium 3 only; Appium 2 is never introduced (protocol/mobile-runner-policy-v1.md section 1). SELECTED as the study's mobile runner on 2026-09-22 by the switch rule (mobile_runner_selection above); not yet installed: version/install_date/platform stay null until an authorized use installs it"
   accessibility:
     candidate: axe-core
     version: null

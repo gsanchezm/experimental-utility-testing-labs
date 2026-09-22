@@ -2,7 +2,9 @@
 
 ## Status
 
-AUTHORIZED — PRE-RUN PREPARATION RECORDED; no gate execution has occurred yet.
+EXECUTED 2026-09-22 — GATE RESULT: **FAIL** — RUNNER DECISION: **Appium 3** (pinned 3.7.0), by the switch rule of protocol/mobile-runner-policy-v1.md, Section 8.
+
+The gate was executed through `.github/workflows/e03-mobile-qualification.yml` on the pinned substrates as two sequential QUALIFICATION runs (Android: run 35763051534; iOS: run 35767911878; one run per platform because both platform jobs use the same documented test account whose server-side cart the MQ3 seed and session reset act on), 3 warm-ups and 30 measured executions per platform, 60 measured executions in total, no exclusion, no manual intervention. Mobilewright 0.0.60 passed MQ1 and MQ2 on both platforms and MQ3 on iOS (10/10 each) and failed MQ3 on the Android emulator (0/10, plus its warm-up): the runner's deep-link opening on Android delivers the route but not the query parameters (MC-07), so the seeded target state was never reached. Criteria 7.2.1, 7.2.2, and 7.2.3 are violated; 7.2.4 holds. Details, attribution, and the decision record follow. Every record and artifact is under `output/` (import records `output/import-record-run<id>-a1.json`).
 
 Owner: QUALIFIER-MOBILE-01 (protocol/agent-governance-v2.md, section 3.4, unchanged from v1), acting under frozen prompt version `qualifier-mobile-01-mobilewright-gate-v1` (prompts/frozen/qualifier-mobile-01-mobilewright-gate-v1.md). Governing policy: protocol/mobile-runner-policy-v1.md (FROZEN-PRE-DATA). Frozen inputs: manifests/mobile-qualification-package-v1.yaml; pins in manifests/toolchain-manifest.yaml. Nothing recorded here is evidence about any system under test (SUT); every record produced under this directory carries `record_class: QUALIFICATION` (or `DEVELOPMENT` for the harness development runs of the section "Development runs", which are not gate executions). No result, attribution, or decision field below is filled before a run has actually occurred.
 
@@ -75,36 +77,126 @@ Local development of this implementation (mode DEVELOPMENT) writes outside the r
 
 ## Execution log
 
-One row per execution (warm-up, measured, or excluded). Fields per protocol/mobile-runner-policy-v1.md, Section 7.1. No row exists.
+One row per execution (warm-up, measured, or excluded). Fields per protocol/mobile-runner-policy-v1.md, Section 7.1. Generated from `output/<execution_id>/record.json` by `harness/summarize-results.mjs` (66 executions: per platform 3 warm-ups and 30 measured; no excluded execution). Every execution ran on the runner's scripted scenario without manual intervention; `duration` is the scenario time (first scripted runner action after reset/seed to terminal verification) and the total including reset. Artifact directories hold `record.json`, `runner.log`, `harness-precheck.json`, and `terminal.png` + `view-tree-terminal.json` (success) or `failure.png` + `view-tree-failure.json` + `device-log-failure.txt` (failure). The execution ids follow the package convention (MQ<n>-<AND|IOS>-<WARMUP|MEASURED>-<nn>).
 
 | execution_id | combination (MQn × platform) | kind (WARMUP / MEASURED / EXCLUDED) | attempt | timestamp | environment_type | Mobilewright version | outcome (SUCCESS / FAILURE / EXCLUDED) | duration | artifacts | notes |
 |---|---|---|---|---|---|---|---|---|---|---|
+| MQ1-AND-WARMUP-01 | MQ1 × Android emulator | WARMUP | 1 | 2026-09-22T17:50:47.335Z | EMULATED | 0.0.60 | SUCCESS | scenario 26.1 s; total 35.4 s | `output/MQ1-AND-WARMUP-01/` |  |
+| MQ1-AND-MEASURED-01 | MQ1 × Android emulator | MEASURED | 1 | 2026-09-22T17:51:22.976Z | EMULATED | 0.0.60 | SUCCESS | scenario 23.3 s; total 32.3 s | `output/MQ1-AND-MEASURED-01/` |  |
+| MQ1-AND-MEASURED-02 | MQ1 × Android emulator | MEASURED | 2 | 2026-09-22T17:51:55.447Z | EMULATED | 0.0.60 | SUCCESS | scenario 18.2 s; total 26.1 s | `output/MQ1-AND-MEASURED-02/` |  |
+| MQ1-AND-MEASURED-03 | MQ1 × Android emulator | MEASURED | 3 | 2026-09-22T17:52:21.650Z | EMULATED | 0.0.60 | SUCCESS | scenario 15.1 s; total 21.0 s | `output/MQ1-AND-MEASURED-03/` |  |
+| MQ1-AND-MEASURED-04 | MQ1 × Android emulator | MEASURED | 4 | 2026-09-22T17:52:42.745Z | EMULATED | 0.0.60 | SUCCESS | scenario 14.8 s; total 19.4 s | `output/MQ1-AND-MEASURED-04/` |  |
+| MQ1-AND-MEASURED-05 | MQ1 × Android emulator | MEASURED | 5 | 2026-09-22T17:53:02.193Z | EMULATED | 0.0.60 | SUCCESS | scenario 14.4 s; total 18.7 s | `output/MQ1-AND-MEASURED-05/` |  |
+| MQ1-AND-MEASURED-06 | MQ1 × Android emulator | MEASURED | 6 | 2026-09-22T17:53:21.014Z | EMULATED | 0.0.60 | SUCCESS | scenario 14.6 s; total 19.1 s | `output/MQ1-AND-MEASURED-06/` |  |
+| MQ1-AND-MEASURED-07 | MQ1 × Android emulator | MEASURED | 7 | 2026-09-22T17:53:40.235Z | EMULATED | 0.0.60 | SUCCESS | scenario 14.3 s; total 19.2 s | `output/MQ1-AND-MEASURED-07/` |  |
+| MQ1-AND-MEASURED-08 | MQ1 × Android emulator | MEASURED | 8 | 2026-09-22T17:53:59.748Z | EMULATED | 0.0.60 | SUCCESS | scenario 14.3 s; total 19.7 s | `output/MQ1-AND-MEASURED-08/` |  |
+| MQ1-AND-MEASURED-09 | MQ1 × Android emulator | MEASURED | 9 | 2026-09-22T17:54:19.521Z | EMULATED | 0.0.60 | SUCCESS | scenario 13.2 s; total 18.4 s | `output/MQ1-AND-MEASURED-09/` |  |
+| MQ1-AND-MEASURED-10 | MQ1 × Android emulator | MEASURED | 10 | 2026-09-22T17:54:37.991Z | EMULATED | 0.0.60 | SUCCESS | scenario 14.0 s; total 19.3 s | `output/MQ1-AND-MEASURED-10/` |  |
+| MQ2-AND-WARMUP-01 | MQ2 × Android emulator | WARMUP | 1 | 2026-09-22T17:54:57.349Z | EMULATED | 0.0.60 | SUCCESS | scenario 9.0 s; total 28.3 s | `output/MQ2-AND-WARMUP-01/` |  |
+| MQ2-AND-MEASURED-01 | MQ2 × Android emulator | MEASURED | 1 | 2026-09-22T17:55:25.727Z | EMULATED | 0.0.60 | SUCCESS | scenario 13.1 s; total 31.9 s | `output/MQ2-AND-MEASURED-01/` |  |
+| MQ2-AND-MEASURED-02 | MQ2 × Android emulator | MEASURED | 2 | 2026-09-22T17:55:57.701Z | EMULATED | 0.0.60 | SUCCESS | scenario 8.9 s; total 27.0 s | `output/MQ2-AND-MEASURED-02/` |  |
+| MQ2-AND-MEASURED-03 | MQ2 × Android emulator | MEASURED | 3 | 2026-09-22T17:56:24.809Z | EMULATED | 0.0.60 | SUCCESS | scenario 14.6 s; total 33.3 s | `output/MQ2-AND-MEASURED-03/` |  |
+| MQ2-AND-MEASURED-04 | MQ2 × Android emulator | MEASURED | 4 | 2026-09-22T17:56:58.258Z | EMULATED | 0.0.60 | SUCCESS | scenario 7.5 s; total 25.7 s | `output/MQ2-AND-MEASURED-04/` |  |
+| MQ2-AND-MEASURED-05 | MQ2 × Android emulator | MEASURED | 5 | 2026-09-22T17:57:24.049Z | EMULATED | 0.0.60 | SUCCESS | scenario 9.1 s; total 27.9 s | `output/MQ2-AND-MEASURED-05/` |  |
+| MQ2-AND-MEASURED-06 | MQ2 × Android emulator | MEASURED | 6 | 2026-09-22T17:57:52.060Z | EMULATED | 0.0.60 | SUCCESS | scenario 9.8 s; total 28.8 s | `output/MQ2-AND-MEASURED-06/` |  |
+| MQ2-AND-MEASURED-07 | MQ2 × Android emulator | MEASURED | 7 | 2026-09-22T17:58:20.950Z | EMULATED | 0.0.60 | SUCCESS | scenario 9.0 s; total 28.7 s | `output/MQ2-AND-MEASURED-07/` |  |
+| MQ2-AND-MEASURED-08 | MQ2 × Android emulator | MEASURED | 8 | 2026-09-22T17:58:49.763Z | EMULATED | 0.0.60 | SUCCESS | scenario 8.9 s; total 28.3 s | `output/MQ2-AND-MEASURED-08/` |  |
+| MQ2-AND-MEASURED-09 | MQ2 × Android emulator | MEASURED | 9 | 2026-09-22T17:59:18.174Z | EMULATED | 0.0.60 | SUCCESS | scenario 9.3 s; total 27.9 s | `output/MQ2-AND-MEASURED-09/` |  |
+| MQ2-AND-MEASURED-10 | MQ2 × Android emulator | MEASURED | 10 | 2026-09-22T17:59:46.168Z | EMULATED | 0.0.60 | SUCCESS | scenario 8.5 s; total 27.4 s | `output/MQ2-AND-MEASURED-10/` |  |
+| MQ3-AND-WARMUP-01 | MQ3 × Android emulator | WARMUP | 1 | 2026-09-22T18:00:13.673Z | EMULATED | 0.0.60 | FAILURE | total 95.5 s | `output/MQ3-AND-WARMUP-01/` | failed step: checkout screen visible (MC-06, MC-08) |
+| MQ3-AND-MEASURED-01 | MQ3 × Android emulator | MEASURED | 1 | 2026-09-22T18:01:49.317Z | EMULATED | 0.0.60 | FAILURE | total 95.0 s | `output/MQ3-AND-MEASURED-01/` | failed step: checkout screen visible (MC-06, MC-08) |
+| MQ3-AND-MEASURED-02 | MQ3 × Android emulator | MEASURED | 2 | 2026-09-22T18:03:24.518Z | EMULATED | 0.0.60 | FAILURE | total 95.0 s | `output/MQ3-AND-MEASURED-02/` | failed step: checkout screen visible (MC-06, MC-08) |
+| MQ3-AND-MEASURED-03 | MQ3 × Android emulator | MEASURED | 3 | 2026-09-22T18:04:59.678Z | EMULATED | 0.0.60 | FAILURE | total 94.9 s | `output/MQ3-AND-MEASURED-03/` | failed step: checkout screen visible (MC-06, MC-08) |
+| MQ3-AND-MEASURED-04 | MQ3 × Android emulator | MEASURED | 4 | 2026-09-22T18:06:34.841Z | EMULATED | 0.0.60 | FAILURE | total 95.0 s | `output/MQ3-AND-MEASURED-04/` | failed step: checkout screen visible (MC-06, MC-08) |
+| MQ3-AND-MEASURED-05 | MQ3 × Android emulator | MEASURED | 5 | 2026-09-22T18:08:10.028Z | EMULATED | 0.0.60 | FAILURE | total 95.0 s | `output/MQ3-AND-MEASURED-05/` | failed step: checkout screen visible (MC-06, MC-08) |
+| MQ3-AND-MEASURED-06 | MQ3 × Android emulator | MEASURED | 6 | 2026-09-22T18:09:45.143Z | EMULATED | 0.0.60 | FAILURE | total 95.0 s | `output/MQ3-AND-MEASURED-06/` | failed step: checkout screen visible (MC-06, MC-08) |
+| MQ3-AND-MEASURED-07 | MQ3 × Android emulator | MEASURED | 7 | 2026-09-22T18:11:20.423Z | EMULATED | 0.0.60 | FAILURE | total 95.0 s | `output/MQ3-AND-MEASURED-07/` | failed step: checkout screen visible (MC-06, MC-08) |
+| MQ3-AND-MEASURED-08 | MQ3 × Android emulator | MEASURED | 8 | 2026-09-22T18:12:55.582Z | EMULATED | 0.0.60 | FAILURE | total 94.9 s | `output/MQ3-AND-MEASURED-08/` | failed step: checkout screen visible (MC-06, MC-08) |
+| MQ3-AND-MEASURED-09 | MQ3 × Android emulator | MEASURED | 9 | 2026-09-22T18:14:30.701Z | EMULATED | 0.0.60 | FAILURE | total 95.0 s | `output/MQ3-AND-MEASURED-09/` | failed step: checkout screen visible (MC-06, MC-08) |
+| MQ3-AND-MEASURED-10 | MQ3 × Android emulator | MEASURED | 10 | 2026-09-22T18:16:05.953Z | EMULATED | 0.0.60 | FAILURE | total 94.9 s | `output/MQ3-AND-MEASURED-10/` | failed step: checkout screen visible (MC-06, MC-08) |
+| MQ1-IOS-WARMUP-01 | MQ1 × iOS Simulator | WARMUP | 1 | 2026-09-22T18:37:33.702Z | SIMULATED | 0.0.60 | SUCCESS | scenario 75.8 s; total 86.2 s | `output/MQ1-IOS-WARMUP-01/` |  |
+| MQ1-IOS-MEASURED-01 | MQ1 × iOS Simulator | MEASURED | 1 | 2026-09-22T18:39:01.574Z | SIMULATED | 0.0.60 | SUCCESS | scenario 55.4 s; total 83.1 s | `output/MQ1-IOS-MEASURED-01/` |  |
+| MQ1-IOS-MEASURED-02 | MQ1 × iOS Simulator | MEASURED | 2 | 2026-09-22T18:40:25.259Z | SIMULATED | 0.0.60 | SUCCESS | scenario 45.0 s; total 55.4 s | `output/MQ1-IOS-MEASURED-02/` |  |
+| MQ1-IOS-MEASURED-03 | MQ1 × iOS Simulator | MEASURED | 3 | 2026-09-22T18:41:20.922Z | SIMULATED | 0.0.60 | SUCCESS | scenario 44.6 s; total 53.6 s | `output/MQ1-IOS-MEASURED-03/` |  |
+| MQ1-IOS-MEASURED-04 | MQ1 × iOS Simulator | MEASURED | 4 | 2026-09-22T18:42:14.856Z | SIMULATED | 0.0.60 | SUCCESS | scenario 39.9 s; total 47.3 s | `output/MQ1-IOS-MEASURED-04/` |  |
+| MQ1-IOS-MEASURED-05 | MQ1 × iOS Simulator | MEASURED | 5 | 2026-09-22T18:43:02.406Z | SIMULATED | 0.0.60 | SUCCESS | scenario 50.2 s; total 58.6 s | `output/MQ1-IOS-MEASURED-05/` |  |
+| MQ1-IOS-MEASURED-06 | MQ1 × iOS Simulator | MEASURED | 6 | 2026-09-22T18:44:01.243Z | SIMULATED | 0.0.60 | SUCCESS | scenario 54.8 s; total 67.0 s | `output/MQ1-IOS-MEASURED-06/` |  |
+| MQ1-IOS-MEASURED-07 | MQ1 × iOS Simulator | MEASURED | 7 | 2026-09-22T18:45:08.549Z | SIMULATED | 0.0.60 | SUCCESS | scenario 58.6 s; total 68.8 s | `output/MQ1-IOS-MEASURED-07/` |  |
+| MQ1-IOS-MEASURED-08 | MQ1 × iOS Simulator | MEASURED | 8 | 2026-09-22T18:46:17.622Z | SIMULATED | 0.0.60 | SUCCESS | scenario 58.5 s; total 69.1 s | `output/MQ1-IOS-MEASURED-08/` |  |
+| MQ1-IOS-MEASURED-09 | MQ1 × iOS Simulator | MEASURED | 9 | 2026-09-22T18:47:27.065Z | SIMULATED | 0.0.60 | SUCCESS | scenario 60.5 s; total 70.0 s | `output/MQ1-IOS-MEASURED-09/` |  |
+| MQ1-IOS-MEASURED-10 | MQ1 × iOS Simulator | MEASURED | 10 | 2026-09-22T18:48:37.391Z | SIMULATED | 0.0.60 | SUCCESS | scenario 56.1 s; total 66.2 s | `output/MQ1-IOS-MEASURED-10/` |  |
+| MQ2-IOS-WARMUP-01 | MQ2 × iOS Simulator | WARMUP | 1 | 2026-09-22T18:49:43.809Z | SIMULATED | 0.0.60 | SUCCESS | scenario 24.7 s; total 93.8 s | `output/MQ2-IOS-WARMUP-01/` |  |
+| MQ2-IOS-MEASURED-01 | MQ2 × iOS Simulator | MEASURED | 1 | 2026-09-22T18:51:17.916Z | SIMULATED | 0.0.60 | SUCCESS | scenario 16.7 s; total 71.9 s | `output/MQ2-IOS-MEASURED-01/` |  |
+| MQ2-IOS-MEASURED-02 | MQ2 × iOS Simulator | MEASURED | 2 | 2026-09-22T18:52:30.019Z | SIMULATED | 0.0.60 | SUCCESS | scenario 23.3 s; total 74.1 s | `output/MQ2-IOS-MEASURED-02/` |  |
+| MQ2-IOS-MEASURED-03 | MQ2 × iOS Simulator | MEASURED | 3 | 2026-09-22T18:53:44.575Z | SIMULATED | 0.0.60 | SUCCESS | scenario 19.8 s; total 82.2 s | `output/MQ2-IOS-MEASURED-03/` |  |
+| MQ2-IOS-MEASURED-04 | MQ2 × iOS Simulator | MEASURED | 4 | 2026-09-22T18:55:07.091Z | SIMULATED | 0.0.60 | SUCCESS | scenario 21.1 s; total 75.9 s | `output/MQ2-IOS-MEASURED-04/` |  |
+| MQ2-IOS-MEASURED-05 | MQ2 × iOS Simulator | MEASURED | 5 | 2026-09-22T18:56:23.296Z | SIMULATED | 0.0.60 | SUCCESS | scenario 18.0 s; total 70.4 s | `output/MQ2-IOS-MEASURED-05/` |  |
+| MQ2-IOS-MEASURED-06 | MQ2 × iOS Simulator | MEASURED | 6 | 2026-09-22T18:57:33.979Z | SIMULATED | 0.0.60 | SUCCESS | scenario 21.6 s; total 79.5 s | `output/MQ2-IOS-MEASURED-06/` |  |
+| MQ2-IOS-MEASURED-07 | MQ2 × iOS Simulator | MEASURED | 7 | 2026-09-22T18:58:54.102Z | SIMULATED | 0.0.60 | SUCCESS | scenario 25.3 s; total 100.0 s | `output/MQ2-IOS-MEASURED-07/` |  |
+| MQ2-IOS-MEASURED-08 | MQ2 × iOS Simulator | MEASURED | 8 | 2026-09-22T19:00:34.822Z | SIMULATED | 0.0.60 | SUCCESS | scenario 25.9 s; total 88.0 s | `output/MQ2-IOS-MEASURED-08/` |  |
+| MQ2-IOS-MEASURED-09 | MQ2 × iOS Simulator | MEASURED | 9 | 2026-09-22T19:02:03.617Z | SIMULATED | 0.0.60 | SUCCESS | scenario 23.7 s; total 83.6 s | `output/MQ2-IOS-MEASURED-09/` |  |
+| MQ2-IOS-MEASURED-10 | MQ2 × iOS Simulator | MEASURED | 10 | 2026-09-22T19:03:28.000Z | SIMULATED | 0.0.60 | SUCCESS | scenario 26.2 s; total 94.1 s | `output/MQ2-IOS-MEASURED-10/` |  |
+| MQ3-IOS-WARMUP-01 | MQ3 × iOS Simulator | WARMUP | 1 | 2026-09-22T19:05:03.426Z | SIMULATED | 0.0.60 | SUCCESS | scenario 17.8 s; total 35.4 s | `output/MQ3-IOS-WARMUP-01/` | system open prompt accepted |
+| MQ3-IOS-MEASURED-01 | MQ3 × iOS Simulator | MEASURED | 1 | 2026-09-22T19:05:39.659Z | SIMULATED | 0.0.60 | SUCCESS | scenario 22.9 s; total 37.3 s | `output/MQ3-IOS-MEASURED-01/` |  |
+| MQ3-IOS-MEASURED-02 | MQ3 × iOS Simulator | MEASURED | 2 | 2026-09-22T19:06:17.618Z | SIMULATED | 0.0.60 | SUCCESS | scenario 22.3 s; total 35.4 s | `output/MQ3-IOS-MEASURED-02/` |  |
+| MQ3-IOS-MEASURED-03 | MQ3 × iOS Simulator | MEASURED | 3 | 2026-09-22T19:06:53.605Z | SIMULATED | 0.0.60 | SUCCESS | scenario 22.8 s; total 33.3 s | `output/MQ3-IOS-MEASURED-03/` |  |
+| MQ3-IOS-MEASURED-04 | MQ3 × iOS Simulator | MEASURED | 4 | 2026-09-22T19:07:27.267Z | SIMULATED | 0.0.60 | SUCCESS | scenario 20.5 s; total 29.9 s | `output/MQ3-IOS-MEASURED-04/` |  |
+| MQ3-IOS-MEASURED-05 | MQ3 × iOS Simulator | MEASURED | 5 | 2026-09-22T19:07:57.636Z | SIMULATED | 0.0.60 | SUCCESS | scenario 21.6 s; total 30.4 s | `output/MQ3-IOS-MEASURED-05/` |  |
+| MQ3-IOS-MEASURED-06 | MQ3 × iOS Simulator | MEASURED | 6 | 2026-09-22T19:08:28.933Z | SIMULATED | 0.0.60 | SUCCESS | scenario 21.0 s; total 31.4 s | `output/MQ3-IOS-MEASURED-06/` |  |
+| MQ3-IOS-MEASURED-07 | MQ3 × iOS Simulator | MEASURED | 7 | 2026-09-22T19:09:00.776Z | SIMULATED | 0.0.60 | SUCCESS | scenario 21.1 s; total 30.3 s | `output/MQ3-IOS-MEASURED-07/` |  |
+| MQ3-IOS-MEASURED-08 | MQ3 × iOS Simulator | MEASURED | 8 | 2026-09-22T19:09:31.335Z | SIMULATED | 0.0.60 | SUCCESS | scenario 19.8 s; total 27.5 s | `output/MQ3-IOS-MEASURED-08/` |  |
+| MQ3-IOS-MEASURED-09 | MQ3 × iOS Simulator | MEASURED | 9 | 2026-09-22T19:09:59.349Z | SIMULATED | 0.0.60 | SUCCESS | scenario 19.9 s; total 26.9 s | `output/MQ3-IOS-MEASURED-09/` |  |
+| MQ3-IOS-MEASURED-10 | MQ3 × iOS Simulator | MEASURED | 10 | 2026-09-22T19:10:26.552Z | SIMULATED | 0.0.60 | SUCCESS | scenario 21.0 s; total 28.7 s | `output/MQ3-IOS-MEASURED-10/` |  |
 
 ## Results per combination
 
 | Combination | Warm-ups (count) | Measured successes / 10 | Excluded (count) | Runner-caused failures (count) | Manual intervention (count) | Result |
 |---|---|---|---|---|---|---|
-| MQ1 × Android emulator | | | | | | |
-| MQ1 × iOS Simulator | | | | | | |
-| MQ2 × Android emulator | | | | | | |
-| MQ2 × iOS Simulator | | | | | | |
-| MQ3 × Android emulator | | | | | | |
-| MQ3 × iOS Simulator | | | | | | |
+| MQ1 × Android emulator | 1 (SUCCESS) | 10 / 10 | 0 | 0 | 0 | PASS |
+| MQ1 × iOS Simulator | 1 (SUCCESS) | 10 / 10 | 0 | 0 | 0 | PASS |
+| MQ2 × Android emulator | 1 (SUCCESS) | 10 / 10 | 0 | 0 | 0 | PASS |
+| MQ2 × iOS Simulator | 1 (SUCCESS) | 10 / 10 | 0 | 0 | 0 | PASS |
+| MQ3 × Android emulator | 1 (FAILURE, runner-caused, MC-07) | 0 / 10 | 0 | 10 measured (MQ3-AND-MEASURED-01 … -10) + 1 warm-up, all attributed to MC-07 (see Capability support) | 0 | FAIL |
+| MQ3 × iOS Simulator | 1 (SUCCESS; the system "Open in OmniPizza?" prompt appeared once, in the warm-up, and was accepted through the runner; it did not reappear in the ten measured executions) | 10 / 10 | 0 | 0 | 0 | PASS |
+
+No execution was excluded: the harness precheck (backend health, MQ3 seed and verification) succeeded before every execution (backend health answered on the first attempt every time; last-attempt latency at most 526 ms). Manual intervention is structurally impossible in the scripted scenarios and none occurred. Criterion 7.2.2 (10 of 10 for every combination) is therefore violated by MQ3 × Android emulator only.
+
+### Failed steps in executions of any kind (criterion 7.2.3 input, generated)
+
+| execution_id | kind | failed step | capabilities carried by the step | error (first line) |
+|---|---|---|---|---|
+| MQ3-AND-WARMUP-01 | WARMUP | checkout screen visible (MC-06, MC-08) | MC-06, MC-08 | ExpectError: Expected element to be visible, but it was not |
+| MQ3-AND-MEASURED-01 | MEASURED | checkout screen visible (MC-06, MC-08) | MC-06, MC-08 | ExpectError: Expected element to be visible, but it was not |
+| MQ3-AND-MEASURED-02 | MEASURED | checkout screen visible (MC-06, MC-08) | MC-06, MC-08 | ExpectError: Expected element to be visible, but it was not |
+| MQ3-AND-MEASURED-03 | MEASURED | checkout screen visible (MC-06, MC-08) | MC-06, MC-08 | ExpectError: Expected element to be visible, but it was not |
+| MQ3-AND-MEASURED-04 | MEASURED | checkout screen visible (MC-06, MC-08) | MC-06, MC-08 | ExpectError: Expected element to be visible, but it was not |
+| MQ3-AND-MEASURED-05 | MEASURED | checkout screen visible (MC-06, MC-08) | MC-06, MC-08 | ExpectError: Expected element to be visible, but it was not |
+| MQ3-AND-MEASURED-06 | MEASURED | checkout screen visible (MC-06, MC-08) | MC-06, MC-08 | ExpectError: Expected element to be visible, but it was not |
+| MQ3-AND-MEASURED-07 | MEASURED | checkout screen visible (MC-06, MC-08) | MC-06, MC-08 | ExpectError: Expected element to be visible, but it was not |
+| MQ3-AND-MEASURED-08 | MEASURED | checkout screen visible (MC-06, MC-08) | MC-06, MC-08 | ExpectError: Expected element to be visible, but it was not |
+| MQ3-AND-MEASURED-09 | MEASURED | checkout screen visible (MC-06, MC-08) | MC-06, MC-08 | ExpectError: Expected element to be visible, but it was not |
+| MQ3-AND-MEASURED-10 | MEASURED | checkout screen visible (MC-06, MC-08) | MC-06, MC-08 | ExpectError: Expected element to be visible, but it was not |
+
+All eleven failures are the same step of the same combination: after the runner opened the MQ3 deep link, the Checkout route rendered in its empty-cart state (`screen-checkout-empty`, `text-cart-empty` in every failure view tree) and the pre-declared `screen-checkout` state never appeared within 90 s, while the harness's cart re-read after each failure still returned the seeded line (pizza_id p01, quantity 2, size large; `harness.cart_after_failure` in each record). Criterion 7.2.3 (no mandatory capability blocked by a runner-caused failure in two or more executions of any kind) is therefore violated for MC-07.
 
 ## Capability support
 
+Rule (policy 7.2.1): a capability is supported on a platform when it was exercised in at least one successful measured execution on that platform and no runner-caused failure of that capability occurred in any measured execution on that platform. Counts of successful measured executions exercising each capability come from the step-based tally generated from the records (Android / iOS); the attribution of the eleven Android MQ3 failures is recorded by QUALIFIER-MOBILE-01 below.
+
 | Capability | Android emulator (SUPPORTED / UNSUPPORTED) | iOS Simulator (SUPPORTED / UNSUPPORTED) | Runner-caused failures (count, execution ids) | Notes |
 |---|---|---|---|---|
-| MC-01 Install and launch | | | | |
-| MC-02 Locate by stable identifier | | | | |
-| MC-03 Text entry | | | | |
-| MC-04 Tap / press native control | | | | |
-| MC-05 Scroll / swipe | | | | |
-| MC-06 Screen navigation and verification | | | | |
-| MC-07 Deep link with parameters | | | | |
-| MC-08 Read UI state | | | | |
-| MC-09 App state reset between executions | | | | |
-| MC-10 Artifact capture | | | | |
+| MC-01 Install and launch | SUPPORTED (20 successful measured executions) | SUPPORTED (30) | 0 | install of the pinned build through the runner at every execution (MQ3 launches through the deep link) |
+| MC-02 Locate by stable identifier | SUPPORTED (20) | SUPPORTED (30) | 0 | the app's testIDs resolved as resource-id on Android and as accessibility identifier on iOS in every execution |
+| MC-03 Text entry | SUPPORTED (20) | SUPPORTED (20) | 0 | fill (tap, select-all chord, backspace, type) of the two login fields; the read-back diagnostic matched the credentials in all 40 executions; the select-all flakiness seen once in the first development run did not recur |
+| MC-04 Tap / press native control | SUPPORTED (20) | SUPPORTED (30) | 0 | market selector, keyboard-dismissing tap, Sign In, product open, size control; on iOS also the system prompt's Open button (warm-up of MQ3) |
+| MC-05 Scroll / swipe | SUPPORTED (10) | SUPPORTED (10) | 0 | `screen.swipe('up')` plus scroll-into-view of the last catalog entry (MQ2) |
+| MC-06 Screen navigation and verification | SUPPORTED (20) | SUPPORTED (30) | 0 attributed (see note) | the eleven Android MQ3 failures occurred at the step labeled "checkout screen visible (MC-06, MC-08)"; QUALIFIER-MOBILE-01 attributes them to MC-07, not MC-06/MC-08: the runner did navigate to the deep link's route (the Checkout route rendered, in its empty state) and did read that state correctly, and the same navigation-and-verification operations succeeded in all 20 MQ1/MQ2 measured executions on the same platform; the target state was missing because the link's parameters were not delivered. Applying the step label strictly instead would additionally mark MC-06 and MC-08 as failing on Android and would not change the gate outcome. |
+| MC-07 Deep link with parameters | **UNSUPPORTED** (0 successful; 11 runner-caused failures) | SUPPORTED (10) | 11 (MQ3-AND-WARMUP-01, MQ3-AND-MEASURED-01 … MQ3-AND-MEASURED-10) | Android: `device.openUrl` (mobilecli `device.url`) delivered the route (`checkout`) but not the query parameters (market, hydrateCart, accessToken), so the app opened Checkout unauthenticated with an empty cart while the server-side cart held the seeded line (verified before and re-read after every failure). Demonstrating artifacts: `output/MQ3-AND-*/failure.png`, `view-tree-failure.json` (`screen-checkout-empty`), `harness-precheck.json` (seed verified), `record.json` (`harness.cart_after_failure`), `runner.log` (the full URL passed to the device server), and the deep-link attribution experiment of the "Development runs" section (same URL through adb delivers every parameter). iOS: the same links, opened through the same API from a cold state, landed on the seeded Checkout state in 10 of 10 measured executions. |
+| MC-08 Read UI state | SUPPORTED (20) | SUPPORTED (30) | 0 attributed (see MC-06) | element presence and text oracles (`text-estimated-total-value` `$15.99` → `$19.99`; `2x Margherita`; `$33.98`) verified through the runner |
+| MC-09 App state reset between executions | SUPPORTED (20) | SUPPORTED (30) | 0 | uninstall (when installed), install of the pinned build, and verification through the runner before every execution (median reset 3.3–3.4 s on Android, 5.2–5.8 s on iOS) |
+| MC-10 Artifact capture | SUPPORTED (20) | SUPPORTED (30) | 0 | runner log and screenshot (plus view tree) for every execution, including the failed ones |
+
+Criterion 7.2.1 (100% support of MC-01 … MC-10 on both platforms) is therefore violated: MC-07 is unsupported on the Android emulator under Mobilewright 0.0.60 as pinned. Criterion 7.2.4 (no manual intervention) holds.
 
 ## Attribution records (excluded executions)
 
@@ -112,17 +204,20 @@ One row per excluded execution. An exclusion without a complete row is invalid a
 
 | execution_id | combination | timestamp | failure description | attributed cause (INFRASTRUCTURE / SUT_INSTANCE / API_SEED / OPERATOR / OTHER) | demonstrating artifacts | recorded_by |
 |---|---|---|---|---|---|---|
+| (none) | — | — | No execution was excluded: no infrastructure, SUT-instance, API-seed, network, or operator failure occurred before any scenario started. Every failure of the gate (the eleven Android MQ3 executions) is runner-caused and is recorded above, never excluded. | — | — | QUALIFIER-MOBILE-01 |
 
 ## Secondary evidence — duration
 
 | Combination | Median duration | IQR | Notes |
 |---|---|---|---|
-| MQ1 × Android emulator | | | |
-| MQ1 × iOS Simulator | | | |
-| MQ2 × Android emulator | | | |
-| MQ2 × iOS Simulator | | | |
-| MQ3 × Android emulator | | | |
-| MQ3 × iOS Simulator | | | |
+| MQ1 × Android emulator | 14.5 s | 0.8 s (Q1 14.3 s, Q3 15.1 s) | n = 10 successful measured executions; scenario time only (reset and MQ2 precondition excluded) |
+| MQ2 × Android emulator | 9.0 s | 0.9 s (Q1 8.9 s, Q3 9.8 s) | n = 10 successful measured executions; scenario time only (reset and MQ2 precondition excluded) |
+| MQ3 × Android emulator | — | — | n = 0 successful measured executions (all failed); the failed executions ran 95 s in total each (median), dominated by the 90 s wait for the terminal state |
+| MQ1 × iOS Simulator | 55.1 s | 13.5 s (Q1 45.0 s, Q3 58.5 s) | n = 10 successful measured executions; scenario time only (reset and MQ2 precondition excluded) |
+| MQ2 × iOS Simulator | 22.4 s | 5.5 s (Q1 19.8 s, Q3 25.3 s) | n = 10 successful measured executions; scenario time only (reset and MQ2 precondition excluded) |
+| MQ3 × iOS Simulator | 21.0 s | 1.8 s (Q1 20.5 s, Q3 22.3 s) | n = 10 successful measured executions; scenario time only (reset and MQ2 precondition excluded) |
+
+Duration is secondary evidence only (policy 7.4); it entered no criterion and cannot offset the failed criteria. Whole-execution medians including the reset (Android / iOS): MQ1 19.3 s / 66.6 s; MQ2 28.1 s / 80.8 s (its login precondition alone: 14.3 s / 49.9 s); MQ3 (iOS) 30.3 s.
 
 ## Prerequisites
 
@@ -139,12 +234,12 @@ All items must be satisfied before the first run.
 
 | Field | Value |
 |---|---|
-| Mobilewright version | pinned 0.0.60 (npm `mobilewright`, integrity sha512-c+aIg0FtMI6226xoVwXiO8Guqk9v5rT81zohz2Rs4WuZEaOgJidHoX9yd5Sqjpx3nTVYfmkFtqHoMFKMGVOuCg==, source tag v0.0.60, commit 2046d2d95e7db6383183bb6b116f81b1236cae42, engines node >= 22.12.0); observed installed version, install date, and host platform: recorded at gate start in `output/environment/<platform>-runner-install.json` (pending — no gate run yet) |
+| Mobilewright version | pinned 0.0.60 (npm `mobilewright`, integrity sha512-c+aIg0FtMI6226xoVwXiO8Guqk9v5rT81zohz2Rs4WuZEaOgJidHoX9yd5Sqjpx3nTVYfmkFtqHoMFKMGVOuCg==, source tag v0.0.60, commit 2046d2d95e7db6383183bb6b116f81b1236cae42, engines node >= 22.12.0). Observed (`output/environment/<platform>-runner-install.json`): mobilewright 0.0.60 with mobilecli 1.0.13 (driver-mobilecli 0.0.60, core 0.0.60, playwright 1.63.0), installed 2026-09-22 by `npm ci` from the committed lockfile with Node.js v22.23.2 / npm 10.9.8 on both hosts: Linux x86_64 (GitHub ubuntu-24.04 image 20260907.300.1) for Android and Darwin arm64 (GitHub macos-15 image 20260907.0337.1) for iOS; on-device agent DeviceKit 0.0.27 (`com.mobilenext.devicekit-iosUITests.xctrunner`) on the simulator. Pin and observed version match on both platforms. |
 | Appium 3 version (fallback pin) | 3.7.0 (npm `appium`, source commit b67de03966155ff052076c11c1c8f20cc2ba9134); not installed; used only if the switch rule fires; Appium 2 never |
-| Android emulator identity (device profile, OS image) | pinned: `system-images;android-35;google_apis;x86_64`, API 35, profile pixel_7, provisioned by ReactiveCircus/android-emulator-runner v2.38.0 at commit a421e43855164a8197daf9d8d40fe71c6996bb0d on a GitHub-hosted ubuntu-24.04 runner (image 20260907.300.1 or later, KVM enabled); environment_type EMULATED; observed serial, Android release, AVD name, build fingerprint, emulator and adb versions: `output/environment/android-environment.json` (pending) |
-| iOS Simulator identity (device, OS version) | pinned: iPhone 16, iOS 18.5 simulator runtime, Xcode 16.4 build 16F6 (selected with xcode-select) on a GitHub-hosted macos-15 runner (image 20260824.0482.1 or later that still ships them); environment_type SIMULATED; observed UDID, runtime build, Xcode and macOS versions: `output/environment/ios-environment.json` (pending) |
+| Android emulator identity (device profile, OS image) | pinned: `system-images;android-35;google_apis;x86_64`, API 35, profile pixel_7, provisioned by ReactiveCircus/android-emulator-runner v2.38.0 at commit a421e43855164a8197daf9d8d40fe71c6996bb0d on a GitHub-hosted ubuntu-24.04 runner (image 20260907.300.1 or later, KVM enabled); environment_type EMULATED; observed (`output/environment/android-environment.json`, run 35763051534): serial emulator-5554, AVD eus-qualification-pixel7-api35, Android 15 (API 35), model sdk_gphone64_x86_64, build fingerprint google/sdk_gphone64_x86_64/emu64xa:15/AE3A.240806.043/12960925:userdebug/dev-keys, adb 1.0.41, screen 1080 × 2400, image ubuntu24 20260907.300.1; the emulator binary version string was not captured by the environment step (empty field) — the emulator-runner action at the pinned commit provisioned it |
+| iOS Simulator identity (device, OS version) | pinned: iPhone 16, iOS 18.5 simulator runtime, Xcode 16.4 build 16F6 (selected with xcode-select) on a GitHub-hosted macos-15 runner (image 20260824.0482.1 or later that still ships them); environment_type SIMULATED; observed (`output/environment/ios-environment.json`, run 35767911878): iPhone 16, UDID F0E646EF-4792-4F36-B48B-EC89B3A6B73B, iOS 18.5 runtime build 22F77, Xcode 16.4 build 16F6, macOS 15.7.9, image macos15 20260907.0337.1 |
 | Host platform | GitHub-hosted runners: ubuntu-24.04, x86_64 (Android); macos-15, arm64 (iOS); the runner image version is recorded per execution (`github.image_version`) |
-| Date of first run | pending — no gate run yet |
+| Date of first run | 2026-09-22 (Android: first execution MQ1-AND-WARMUP-01 at 17:50:47Z, last ended 18:17:40Z, run 35763051534; iOS: first execution MQ1-IOS-WARMUP-01 at 18:37:33Z, last ended 19:10:55Z, run 35767911878; both on the workflow revision of public main 03e5360 / 26907f5, canonical c5bb7b2 / ab27919, which carry the identical realization) |
 | Instruction to execute (date, human source, relaying role) | MOBILE-QUALIFICATION-EXEC-AUTH-01 (MOBILE_QUALIFICATION_EXECUTION), 2026-09-22, issued by gilbertosanchez, relayed by ORCHESTRATOR to QUALIFIER-MOBILE-01; provenance record with the verbatim text: manifests/mobile-qualification-execution-auth-v1.yaml; launched under prompt version qualifier-mobile-01-mobilewright-gate-v1 |
 
 ## Development runs (not gate executions)
@@ -163,12 +258,12 @@ Harness development on the operator workstation, mode DEVELOPMENT, output kept o
 
 | Field | Value |
 |---|---|
-| Date | |
-| Gate result (PASS / FAIL) | |
-| Failed criteria and capabilities (if FAIL) | |
-| Decision (one of: Mobilewright, Appium 3) | |
-| Rationale | |
-| Recorded by | |
+| Date | 2026-09-22 |
+| Gate result (PASS / FAIL) | FAIL |
+| Failed criteria and capabilities (if FAIL) | 7.2.1 — capability MC-07 (deep link carrying parameters) unsupported on the Android emulator (0 successful measured executions, 11 runner-caused failures); 7.2.2 — MQ3 × Android emulator 0 of 10 successful measured executions (the other five combinations 10 of 10); 7.2.3 — the same mandatory capability (MC-07) blocked by a runner-caused failure in 11 executions of any kind (1 warm-up + 10 measured). 7.2.4 holds (no manual intervention). |
+| Decision (one of: Mobilewright, Appium 3) | Appium 3 (pinned 3.7.0; manifests/toolchain-manifest.yaml `tools.mobile_fallback.pinned_candidate_version`) |
+| Rationale | protocol/mobile-runner-policy-v1.md, Section 8: the gate failed because a required capability (MC-07) is unsupported under Mobilewright 0.0.60 on one of the two mandatory platforms and criterion 7.2.3 is violated; the switch to Appium 3 is therefore mandatory. The study uses one mobile runner for all ecosystems (Section 1), so Mobilewright's full support on iOS and its support of MC-01 … MC-06 and MC-08 … MC-10 on Android do not qualify it. Duration (secondary evidence) plays no role. The switch changes the study's tooling only. Appium 2 is never introduced. The per-SUT compatibility smoke (Section 9) then applies to Appium 3 and requires a separate explicit human authorization. |
+| Recorded by | QUALIFIER-MOBILE-01, under prompt version qualifier-mobile-01-mobilewright-gate-v1, instruction MOBILE-QUALIFICATION-EXEC-AUTH-01 |
 
 The decision is also recorded in manifests/toolchain-manifest.yaml and in the change log per protocol/change-control-v1.md (protocol/mobile-runner-policy-v1.md, Section 8), transcribed by the ORCHESTRATOR from this record. If the runner is Appium 3, the compatibility smoke (qualification/compatibility-smoke/) is executed with Appium 3. Appium 2 is never introduced.
 
