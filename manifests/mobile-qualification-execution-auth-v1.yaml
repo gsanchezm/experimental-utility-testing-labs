@@ -36,7 +36,7 @@ launch_prompt:
     INSTRUCTION_DATE: "2026-09-22"
     PROMPT_VERSION_ID: qualifier-mobile-01-mobilewright-gate-v1
 
-authorized_scope:
+authorized_scope:  # SUPERSEDED (PROTO-U10): describes what the invalid record purported to authorize; nothing in this block is an authorization
   runner_under_qualification: "Mobilewright 0.0.60 (primary candidate; npm mobilewright@0.0.60, source tag v0.0.60, commit 2046d2d95e7db6383183bb6b116f81b1236cae42)"
   fallback_on_switch_rule: "Appium 3, pinned 3.7.0 (protocol/mobile-runner-policy-v1.md, section 8); Appium 2 never"
   qualification_sut: "OmniPizza (SUT-01), pinned qualification build release v1.1.8 (tag commit 3cdbe6596a1ab5ef2058ba4259c44da96a0fa03a)"
@@ -56,7 +56,7 @@ authorized_scope:
   recording: "warm-ups, measured executions, exclusions with attribution records, artifacts, capability support MC-01..MC-10 per platform, durations (secondary), and the runner decision, exactly as protocol/mobile-runner-policy-v1.md sections 7-8 require"
   record_class: QUALIFICATION  # tool qualification; never SUT evidence; never E03 raw-data; never H2 input
 
-not_authorized:
+not_authorized:  # still true; the list is kept as recorded
   - E03 campaign START
   - E03 measured experimental execution
   - EXECUTOR-E03-RESETABILITY launch
@@ -66,7 +66,7 @@ not_authorized:
   - modification of frozen scientific results
   - Appium 2 under any circumstance
 
-orchestrator_actions_under_this_authorization:
+orchestrator_actions_under_this_authorization:  # SUPERSEDED (PROTO-U10): historical list of actions taken on the invalid relay; nothing here was authorized by a human
   - "prompts/frozen/qualifier-mobile-01-mobilewright-gate-v1.md created (byte-identical copy, sha256 above)"
   - "prompts/README.md status updated"
   - ".github/workflows/e03-mobile-qualification.yml maintained under E03-CI-WRITE-AUTH-01 (mobile-qualification preparation): pinned emulator provisioning and Xcode selection added; the readiness gate corrected to read the runner pin (tools.mobile_primary_candidate.pinned_candidate_version.version) instead of the install record, which stays null until QUALIFIER-MOBILE-01 records the observed install; frozen prompt and this record added to the gate"
