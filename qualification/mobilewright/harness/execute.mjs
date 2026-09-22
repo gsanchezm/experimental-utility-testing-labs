@@ -27,6 +27,7 @@ const REALIZATION = {
   MQ1: {
     login_screen: 'screen-login', username: 'input-username', password: 'input-password',
     market_control: 'btn-market-US', login_button: 'btn-login',
+    keyboard_dismiss_target: 'text-welcome-title',   // a non-interactive text above the fields; a tap outside the inputs closes the keyboard (React Native ScrollView default)
     terminal: ['screen-catalog', 'view-bottom-nav'],
   },
   MQ2: {
@@ -38,6 +39,7 @@ const REALIZATION = {
     seed: { pizza_id: 'p01', quantity: 2, size: 'large', toppings: [] },
     deep_link_path: 'checkout', deep_link_params: { market: MARKET, hydrateCart: 'true' },
     checkout_screen: 'screen-checkout', expected_title: '2x Margherita', expected_line_total: '$33.98',
+    ios_open_prompt_button: 'Open',   // iOS asks "Open in <app>?" for a custom-scheme link opened from a cold state; the runner accepts it
   },
 };
 
@@ -92,7 +94,9 @@ function deviceLog(platform, deviceId) {
   // Demonstrating artifact on failure (attribution support, policy section 7.3); harness-side, outside the runner.
   try {
     if (platform === 'android') {
-      return execFileSync('adb', ['-s', serial, 'logcat', '-d', '-t', '600'], { encoding: 'utf8', timeout: 60000, maxBuffer: 16 * 1024 * 1024 });
+      const intents = execFileSync('adb', ['-s', serial, 'logcat', '-d', '-s', 'ActivityTaskManager:I', 'ActivityManager:I'], { encoding: 'utf8', timeout: 60000, maxBuffer: 16 * 1024 * 1024 });
+      const tail = execFileSync('adb', ['-s', serial, 'logcat', '-d', '-t', '800'], { encoding: 'utf8', timeout: 60000, maxBuffer: 16 * 1024 * 1024 });
+      return '===== activity-start intents (ActivityTaskManager / ActivityManager) =====\n' + intents + '\n===== last 800 logcat lines =====\n' + tail;
     }
     return execFileSync('xcrun', ['simctl', 'spawn', deviceId, 'log', 'show', '--last', '3m', '--style', 'compact', '--predicate', 'process == "OmniPizza" OR eventMessage CONTAINS "omnipizza"'], { encoding: 'utf8', timeout: 90000, maxBuffer: 16 * 1024 * 1024 });
   } catch (e) {
@@ -269,8 +273,14 @@ try {
     await step('launch the app (MC-01)', ['MC-01'], () => device.launchApp(B));
     await step('login screen visible (MC-02, MC-06, MC-08)', ['MC-02', 'MC-06', 'MC-08'], () => expect(screen.getByTestId(REALIZATION.MQ1.login_screen)).toBeVisible({ timeout: T.screen }));
     await step('select market US (MC-02, MC-04)', ['MC-02', 'MC-04'], () => screen.getByTestId(REALIZATION.MQ1.market_control).tap());
-    await step('enter username (MC-02, MC-03)', ['MC-02', 'MC-03'], () => screen.getByTestId(REALIZATION.MQ1.username).fill(ACCOUNT.username));
+    // The lower field first, while the keyboard is closed; the upper field stays visible above the keyboard.
     await step('enter password (MC-02, MC-03)', ['MC-02', 'MC-03'], () => screen.getByTestId(REALIZATION.MQ1.password).fill(ACCOUNT.password));
+    await step('enter username (MC-02, MC-03)', ['MC-02', 'MC-03'], () => screen.getByTestId(REALIZATION.MQ1.username).fill(ACCOUNT.username));
+    await step('read back the entered values (MC-08; diagnostic, not an oracle)', ['MC-08'], async () => {
+      const u = screen.getByTestId(REALIZATION.MQ1.username), pw = screen.getByTestId(REALIZATION.MQ1.password);
+      rec.harness.entered = { username_text: await u.getText(), username_value: await u.getValue(), password_masked_length: (await pw.getText()).length, password_value_length: (await pw.getValue()).length };
+    });
+    await step('dismiss the keyboard by tapping outside the inputs (MC-02, MC-04)', ['MC-02', 'MC-04'], () => screen.getByTestId(REALIZATION.MQ1.keyboard_dismiss_target).tap());
     await step('tap Sign In (MC-02, MC-04)', ['MC-02', 'MC-04'], async () => {
       const b = screen.getByTestId(REALIZATION.MQ1.login_button);
       await b.scrollIntoViewIfNeeded({ maxSwipes: 5 });
@@ -306,6 +316,14 @@ try {
     rec.harness.deep_link = redact(url);
     const tS = Date.now();
     await step('open the deep link from a cold state (MC-07)', ['MC-07'], () => device.openUrl(url));
+    if (spec.platform === 'ios') {
+      await step('accept the system "Open in ...?" prompt if shown (iOS platform behavior; MC-02, MC-04)', ['MC-02', 'MC-04'], async () => {
+        const open = screen.getByText(R.ios_open_prompt_button);
+        const shown = await open.isVisible({ timeout: 15000 });
+        rec.harness.ios_open_prompt_shown = shown;
+        if (shown) await open.tap();
+      });
+    }
     await step('checkout screen visible (MC-06, MC-08)', ['MC-06', 'MC-08'], () => expect(screen.getByTestId(R.checkout_screen)).toBeVisible({ timeout: T.screen }));
     await step(`seeded line "${R.expected_title}" visible (MC-08)`, ['MC-08'], () => expect(screen.getByText(R.expected_title)).toBeVisible({ timeout: T.expect }));
     await step(`seeded line total "${R.expected_line_total}" visible (MC-08)`, ['MC-08'], () => expect(screen.getByText(R.expected_line_total)).toBeVisible({ timeout: T.expect }));
