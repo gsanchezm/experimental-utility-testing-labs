@@ -1,0 +1,271 @@
+{
+  "record_class": "QUALIFICATION",
+  "execution_id": "MQ1-AND-MEASURED-05",
+  "combination": "MQ1 × Android emulator",
+  "scenario": "MQ1",
+  "platform": "android",
+  "kind": "MEASURED",
+  "attempt": 5,
+  "timestamp": "2026-09-22T17:53:02.193Z",
+  "timestamp_end": "2026-09-22T17:53:20.912Z",
+  "environment_type": "EMULATED",
+  "runner": {
+    "candidate": "Mobilewright",
+    "version": "0.0.60",
+    "mobilecli_version": "1.0.13"
+  },
+  "device": {
+    "serial": "emulator-5554",
+    "kind": "Android emulator",
+    "android_release": "15",
+    "api_level": "35",
+    "model": "sdk_gphone64_x86_64",
+    "abi": "x86_64",
+    "avd_name": "eus-qualification-pixel7-api35",
+    "build_fingerprint": "google/sdk_gphone64_x86_64/emu64xa:15/AE3A.240806.043/12960925:userdebug/dev-keys",
+    "is_emulator": true,
+    "adb_version": "Android Debug Bridge version 1.0.41",
+    "emulator_version": "",
+    "security_patch": "2024-09-05",
+    "pinned_identity": "system-images;android-35;google_apis;x86_64, API 35, profile pixel_7 (manifests/toolchain-manifest.yaml environments.android_emulator)"
+  },
+  "instruction_id": "MOBILE-QUALIFICATION-EXEC-AUTH-01",
+  "prompt_version_id": "qualifier-mobile-01-mobilewright-gate-v1",
+  "github": {
+    "run_id": "35763051534",
+    "run_attempt": "1",
+    "image_os": "ubuntu24",
+    "image_version": "20260907.300.1",
+    "workflow_ref": "gsanchezm/experimental-utility-testing-labs/.github/workflows/e03-mobile-qualification.yml@refs/heads/main",
+    "sha": "03e5360d79655a6e6df72f411695c96db6a8157e"
+  },
+  "realization": {
+    "bundle_id": "com.omnipizza.app",
+    "scheme": "omnipizza",
+    "account": "standard_user",
+    "market": "US",
+    "MQ1": {
+      "login_screen": "screen-login",
+      "username": "input-username",
+      "password": "input-password",
+      "market_control": "btn-market-US",
+      "login_button": "btn-login",
+      "keyboard_dismiss_target": "text-welcome-title",
+      "terminal": [
+        "screen-catalog",
+        "view-bottom-nav"
+      ]
+    },
+    "MQ2": {
+      "first_card": "card-pizza-p01",
+      "target_product": "p12",
+      "target_open_control": "btn-add-pizza-p12",
+      "product_screen": "screen-pizza-builder",
+      "total_text": "text-estimated-total-value",
+      "initial_total": "$15.99",
+      "size_control": "btn-size-large",
+      "total_after": "$19.99"
+    },
+    "MQ3": {
+      "seed": {
+        "pizza_id": "p01",
+        "quantity": 2,
+        "size": "large",
+        "toppings": []
+      },
+      "deep_link_path": "checkout",
+      "deep_link_params": {
+        "market": "US",
+        "hydrateCart": "true"
+      },
+      "checkout_screen": "screen-checkout",
+      "expected_title": "2x Margherita",
+      "expected_line_total": "$33.98",
+      "ios_open_prompt_button": "Open"
+    }
+  },
+  "outcome": "SUCCESS",
+  "duration_ms": {
+    "reset": 3309,
+    "precondition": null,
+    "scenario": 14366,
+    "total": 18719
+  },
+  "capabilities_exercised": [
+    "MC-01",
+    "MC-02",
+    "MC-03",
+    "MC-04",
+    "MC-06",
+    "MC-08",
+    "MC-09",
+    "MC-10"
+  ],
+  "failed_step": null,
+  "exclusion_proposal": null,
+  "harness": {
+    "backend_health_attempts": 1,
+    "backend_health_last_latency_ms": 127,
+    "seed_verified": null,
+    "entered": {
+      "username_text": "standard_user",
+      "username_value": "",
+      "password_masked_length": 8,
+      "password_value_length": 0
+    }
+  },
+  "artifacts": [
+    "harness-precheck.json",
+    "terminal.png",
+    "view-tree-terminal.json",
+    "record.json",
+    "runner.log"
+  ],
+  "steps": [
+    {
+      "name": "connect the runner to the pinned device (explicit id)",
+      "capabilities": [],
+      "started_at": "2026-09-22T17:53:02.320Z",
+      "status": "OK",
+      "duration_ms": 593
+    },
+    {
+      "name": "reset: uninstall any previous install (MC-09)",
+      "capabilities": [
+        "MC-09"
+      ],
+      "started_at": "2026-09-22T17:53:02.913Z",
+      "status": "OK",
+      "duration_ms": 952
+    },
+    {
+      "name": "reset: install the pinned build (MC-09, MC-01)",
+      "capabilities": [
+        "MC-09",
+        "MC-01"
+      ],
+      "started_at": "2026-09-22T17:53:03.865Z",
+      "status": "OK",
+      "duration_ms": 2288
+    },
+    {
+      "name": "reset: verify the pinned build is installed (MC-09)",
+      "capabilities": [
+        "MC-09"
+      ],
+      "started_at": "2026-09-22T17:53:06.153Z",
+      "status": "OK",
+      "duration_ms": 69
+    },
+    {
+      "name": "launch the app (MC-01)",
+      "capabilities": [
+        "MC-01"
+      ],
+      "started_at": "2026-09-22T17:53:06.222Z",
+      "status": "OK",
+      "duration_ms": 1583
+    },
+    {
+      "name": "login screen visible (MC-02, MC-06, MC-08)",
+      "capabilities": [
+        "MC-02",
+        "MC-06",
+        "MC-08"
+      ],
+      "started_at": "2026-09-22T17:53:07.805Z",
+      "status": "OK",
+      "duration_ms": 939
+    },
+    {
+      "name": "select market US (MC-02, MC-04)",
+      "capabilities": [
+        "MC-02",
+        "MC-04"
+      ],
+      "started_at": "2026-09-22T17:53:08.744Z",
+      "status": "OK",
+      "duration_ms": 1305
+    },
+    {
+      "name": "enter password (MC-02, MC-03)",
+      "capabilities": [
+        "MC-02",
+        "MC-03"
+      ],
+      "started_at": "2026-09-22T17:53:10.049Z",
+      "status": "OK",
+      "duration_ms": 2137
+    },
+    {
+      "name": "enter username (MC-02, MC-03)",
+      "capabilities": [
+        "MC-02",
+        "MC-03"
+      ],
+      "started_at": "2026-09-22T17:53:12.186Z",
+      "status": "OK",
+      "duration_ms": 3703
+    },
+    {
+      "name": "read back the entered values (MC-08; diagnostic, not an oracle)",
+      "capabilities": [
+        "MC-08"
+      ],
+      "started_at": "2026-09-22T17:53:15.889Z",
+      "status": "OK",
+      "duration_ms": 929
+    },
+    {
+      "name": "dismiss the keyboard by tapping outside the inputs (MC-02, MC-04)",
+      "capabilities": [
+        "MC-02",
+        "MC-04"
+      ],
+      "started_at": "2026-09-22T17:53:16.818Z",
+      "status": "OK",
+      "duration_ms": 318
+    },
+    {
+      "name": "tap Sign In (MC-02, MC-04)",
+      "capabilities": [
+        "MC-02",
+        "MC-04"
+      ],
+      "started_at": "2026-09-22T17:53:17.136Z",
+      "status": "OK",
+      "duration_ms": 883
+    },
+    {
+      "name": "catalog screen visible (MC-06, MC-08)",
+      "capabilities": [
+        "MC-06",
+        "MC-08"
+      ],
+      "started_at": "2026-09-22T17:53:18.019Z",
+      "status": "OK",
+      "duration_ms": 1344
+    },
+    {
+      "name": "bottom navigation visible (MC-02, MC-08)",
+      "capabilities": [
+        "MC-02",
+        "MC-08"
+      ],
+      "started_at": "2026-09-22T17:53:19.363Z",
+      "status": "OK",
+      "duration_ms": 1225
+    },
+    {
+      "name": "capture terminal screenshot and view tree (MC-10)",
+      "capabilities": [
+        "MC-10"
+      ],
+      "started_at": "2026-09-22T17:53:20.588Z",
+      "status": "OK",
+      "duration_ms": 324
+    }
+  ],
+  "notes": [],
+  "build_file": "omnipizza-release.apk"
+}

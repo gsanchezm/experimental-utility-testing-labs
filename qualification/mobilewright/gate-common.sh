@@ -143,8 +143,11 @@ PY
 
 # gate_run: runs the orchestrator for this platform (all combinations, sequentially).
 gate_run() {
+  # macOS ships bash 3.2, where expanding an empty array with "${extra[@]}" aborts under `set -u`
+  # (the iOS QUALIFICATION dispatch 35763331095 failed here before any execution); the
+  # ${extra[@]+"${extra[@]}"} idiom is safe in every bash version.
   local extra=()
   if [[ "$GATE_MODE" == "DEVELOPMENT" ]]; then extra=(--mode=DEVELOPMENT "--n=$GATE_N" "--warmups=$GATE_WARMUPS"); fi
   if [[ -n "${GATE_ADB_SERIAL:-}" ]]; then extra+=("--adb-serial=$GATE_ADB_SERIAL"); fi
-  node "$GATE_HARNESS/run-gate.mjs" "--platform=$GATE_PLATFORM" "--device=$GATE_DEVICE_ID" "--build=$GATE_BUILD" "--out=$GATE_OUT" "--scenarios=$GATE_SCENARIOS" "${extra[@]}"
+  node "$GATE_HARNESS/run-gate.mjs" "--platform=$GATE_PLATFORM" "--device=$GATE_DEVICE_ID" "--build=$GATE_BUILD" "--out=$GATE_OUT" "--scenarios=$GATE_SCENARIOS" ${extra[@]+"${extra[@]}"}
 }
