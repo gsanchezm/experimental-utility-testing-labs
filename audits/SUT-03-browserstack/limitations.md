@@ -1,0 +1,37 @@
+# SUT-03 — BrowserStack Demo Ecosystem — Limitations
+
+| Field | Value |
+|---|---|
+| SUT id | SUT-03 |
+| Auditor role | AUDITOR-SUT03-BROWSERSTACK |
+| Audit status | SUBMITTED |
+
+## Purpose
+
+Records, neutrally and descriptively, what bounds the audit of the system under test (SUT) SUT-03: what the ecosystem intentionally does not cover, what the auditor could not verify and why, environment constraints, and environment considerations. Entries are cross-referenced from audit.md (structural_scope_note column and section 6) and from evidence.csv notes. Nothing here is a score, a finding, or a ranking input.
+
+Intentionally narrow scope is not a penalty. An ecosystem that deliberately does not cover a modality is described here in neutral terms; the corresponding row in audit.md section 3 carries a structural_scope_note, the score remains the rubric score (Score 0 for a structurally absent surface; no N/A level), and the capability rubric (protocol/capability-rubric-v1.md) is applied unchanged. Experimental Breadth and Modality Depth answer different questions (protocol/study-design-v1.md, section 11).
+
+## Scope limitations of the ecosystem (intentional)
+
+- SUT-03 (BrowserStack Demo Ecosystem) is pinned, for this study, to a single repository (`browserstack/browserstack-demo-app`) that documents itself as "a shopping application to demonstrate real-world usage of BrowserStack testing methods, patterns, and workflows" (Web + same-origin API only). No Android or iOS demo repository was named for this study (manifests/e01-source-provenance.yaml), and source inspection independently confirms no mobile code exists at the pinned commit (SUT03-EV-0010, SUT03-EV-0011; audit.md section 3, `NO_MOBILE_SURFACE`). Scope was not expanded to any of BrowserStack's other public sample, SDK-example, or App-Automate demonstration repositories, per the component-eligibility rule recorded in the manifest and in this campaign's launch instructions.
+- The pinned application has no documented locale/language-switching feature and no currency other than USD anywhere in the evaluated commit (SUT03-EV-0027, SUT03-EV-0028); this is recorded as a Score-1 finding for Localization / i18n in audit.md, not as an intentional-scope exclusion, since nothing in the app's own documentation frames this as an intentional design boundary the way the mobile-surface exclusion is.
+
+## Evaluation limitations (what the auditor could not verify and why)
+
+1. **No EXECUTION_VERIFIED evidence was obtained in this audit.** This auditor cloned the pinned commit read-only to `../e01-sut-sources/SUT-03-browserstack/` (confirmed `git rev-parse HEAD` = `7ab934d733f2f74d4b912e94e86f59ae0f6b7609`, matching the pin exactly) and attempted `yarn install` there, as a lightweight, non-destructive, LOCAL-environment step toward answering one specific unresolved claim (whether the documented `/sut/login` flow actually establishes a session usable by the "API Metric Control Endpoints"). The command was denied by this session's own tool-permission policy before any dependency was installed or any process was started ("Permission for this action was denied by the automated execution harness's permission classifier. Reason: [Code from External]"). This is an environment/tooling limitation of this audit session — a restriction this session's own harness places on executing externally-sourced package-install scripts — and is not a finding about SUT-03's capability or deployability.
+   - This limitation did not, in the end, leave the underlying question unresolved: full-repository source tracing (grep for every write/read of the `sessions` object touched by `checkSutAuth`) established with certainty, from source alone, that the client-side-only login handler never reaches the server-side session store — a basic fact about browser-vs-server code execution, not something execution would have added confidence to (see SUT03-EV-0018; audit.md section 5).
+   - Every Score 3 determination in this audit rests on SOURCE_VERIFIED evidence, which protocol/capability-rubric-v1.md ("Score 3 confirmation") treats as an equally sufficient confirming status to EXECUTION_VERIFIED. No cell in this audit was left at `confirmation_state = UNCONFIRMED_SCORE_3` for lack of execution, and none of the DOCUMENTED-only records in evidence.csv were used, on their own, to support any cell's `confirmed_score`.
+   - `audit.md` section 1's `environment_types_used` is therefore empty, and no `verifications/` or `artifacts/` directory was created (E01's write boundary permits creating these only when EXECUTION_VERIFIED evidence is actually produced).
+2. **`controlled_instance_available` is left `null / TBD`** in audit.md section 1, for the same reason as (1): protocol/study-design-v1.md, section 10.5 states this field "is null until verified and is never inferred," and this audit did not execute a local run of the pinned commit, so it is not verified. Source analysis gives reasonable expectation that a controlled instance is achievable (standard `yarn dev` / `yarn build` / `yarn start` scripts in `package.json`; README.md's own documented Docker- and Node.js-based local run instructions; no external database dependency found anywhere in source, consistent with README.md's own claim "Zero database dependencies"), but this audit deliberately does not convert that expectation into a verified `true`, per the "never inferred" rule. See unresolved.md row 3 (non-blocking): a future session able to actually execute the install should confirm it before the ORCHESTRATOR transcribes any value into `manifests/sut-manifest.yaml`.
+3. **API component provenance** (audit.md section 2): `manifests/sut-manifest.yaml` and `manifests/e01-source-provenance.yaml` record no independently-pinned repository/commit for SUT-03-api (both null, "No component named for this study"). This audit confirmed the api logical surface is present by inspecting the pinned SUT-03-web commit itself (`pages/api/*.js`) and, per `manifests/e01-source-provenance.yaml`'s own terminology ("one provenance artifact may back more than one logical surface"), cited the SUT-03-web provenance artifact for it rather than leaving api provenance unrecorded. See unresolved.md row 1 (non-blocking; only the ORCHESTRATOR may edit the manifests).
+4. **No hosted endpoint was searched for or guessed.** `manifests/sut-manifest.yaml` records `endpoint: null` for SUT-03-web with the note "No hosted endpoint is documented in the repository; none is recorded here to avoid guessing one." This audit made no attempt to locate or infer a public hosted deployment, per protocol/evidence-rules-v1.md ("Provenance values are never invented").
+5. **Evidence ceiling does not apply to SUT-03.** Unlike a closed-source or hosted-only component, every surface of SUT-03 (web + same-origin api) is fully open source at the pinned commit, so SOURCE_VERIFIED evidence was obtainable throughout; no cell's evidence status was capped by unavailability of source.
+
+## Environment limitations
+
+No LOCAL, SELF_HOSTED, EMULATED, SIMULATED, or PUBLIC_HOSTED execution of any kind was performed against SUT-03 in this audit (see Evaluation limitations, item 1). All evidence is DOCUMENTED or SOURCE_VERIFIED.
+
+## Environment considerations
+
+SUT-03 has no documented PUBLIC_HOSTED endpoint (see Evaluation limitations, item 4), so no shared-public-instance interference consideration applies to this audit. `environment_types_used` (audit.md section 1) is empty.
