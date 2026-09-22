@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eus-2026-001:schemas:adjudicated-matrix:v2",
+  "title": "E01 Adjudicated Capability Matrix",
+  "description": "Validates the derived E01 adjudicated capability matrix (protocol/unresolved.md, PROTO-U05, corrected by PROTO-U06), written to derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json. A purely representational, deterministic materialization of the 6x9 = 54 already-decided E01 cells: the immutable auditor confirmed_score/provisional_score (audits/<SUT>/audit.md at the pinned auditor result commit) for every CONFIRMED cell, and the human_effective_confirmed_score of derived-data/adjudication-rulings/*.json for the two DISPUTED-then-ruled cells. Introduces no new rubric level, evidence status, or adjudication outcome beyond those already defined by protocol/capability-rubric-v1.md and schemas/adjudication.schema.json (which this schema does not modify); resolution_source and resolution_source_id are provenance-only fields distinguishing which of those two already-authorized paths produced effective_confirmed_score. Contains no composite, weighted, or aggregated score, index, rank, or winner (protocol/statistical-analysis-plan-v1.md; derived-data/README.md rule 5; analysis/README.md rule 6). v2 supersedes v1 (schemas/adjudicated-matrix.schema.json, urn:eus-2026-001:schemas:adjudicated-matrix:v1) per PROTO-U06 (protocol/unresolved.md): v1 conflated the literal audits/<SUT>/audit.md confirmed_score column (blank on some rows) with the fallback-derived value used for effective_confirmed_score, storing the fallback in confirmed_score_as_stored and losing the fact that the source row was blank. v2 corrects only this representation; it changes no cell's effective_confirmed_score, no rubric level, no evidence status, and no adjudication outcome. v1 instance data (git history, commit 77216f610a341fe87fb3c90c4035de73d66ca29d) remains valid against schemas/adjudicated-matrix.schema.json (schemas/README.md, 'Changing a schema': 'Data produced under an earlier schema version stays valid against that version').",
+  "type": "object",
+  "properties": {
+    "study_id": {
+      "type": "string",
+      "enum": ["EUS-2026-001"]
+    },
+    "campaign_id": {
+      "type": "string",
+      "enum": ["E01-capability-audit"]
+    },
+    "generated_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "Calendar date (YYYY-MM-DD) this matrix was generated, per analysis/e01-adjudicated-matrix/generate-matrix.js."
+    },
+    "sources": {
+      "type": "object",
+      "description": "Provenance of every input this matrix was deterministically derived from. No field here is scientific content.",
+      "properties": {
+        "auditor_result_commits": {
+          "type": "object",
+          "description": "Ecosystem id to immutable auditor result commit SHA (audits/<SUT>/audit.md at that commit).",
+          "propertyNames": { "enum": ["SUT-01", "SUT-02", "SUT-03", "SUT-04", "SUT-05", "SUT-06"] },
+          "additionalProperties": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+          "minProperties": 6,
+          "maxProperties": 6
+        },
+        "adjudication_first_run": {
+          "type": "object",
+          "description": "Ecosystem id to the immutable first-run ADJUDICATOR-EU-01 output file this matrix read, and its SHA-256.",
+          "propertyNames": { "enum": ["SUT-01", "SUT-02", "SUT-03", "SUT-04", "SUT-05", "SUT-06"] },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "path": { "type": "string" },
+              "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+            },
+            "required": ["path", "sha256"],
+            "additionalProperties": false
+          },
+          "minProperties": 6,
+          "maxProperties": 6
+        },
+        "human_rulings": {
+          "type": "object",
+          "description": "ruling_id to the human-ruling record this matrix read, and its SHA-256.",
+          "propertyNames": { "pattern": "^E01-HR-[0-9]{2}$" },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "path": { "type": "string" },
+              "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+              "ecosystem_id": { "type": "string", "enum": ["SUT-01", "SUT-02", "SUT-03", "SUT-04", "SUT-05", "SUT-06"] },
+              "modality": { "type": "string" }
+            },
+            "required": ["path", "sha256", "ecosystem_id", "modality"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["auditor_result_commits", "adjudication_first_run", "human_rulings"],
+      "additionalProperties": false
+    },
+    "cells": {
+      "type": "array",
+      "description": "Exactly 54 entries: 6 ecosystems x 9 frozen E01 modalities (protocol/study-design-v1.md), no duplicate, no missing.",
+      "minItems": 54,
+      "maxItems": 54,
+      "items": {
+        "type": "object",
+        "properties": {
+          "ecosystem_id": {
+            "type": "string",
+            "enum": ["SUT-01", "SUT-02", "SUT-03", "SUT-04", "SUT-05", "SUT-06"]
+          },
+          "modality": {
+            "type": "string",
+            "enum": [
+              "Web UI Functional",
+              "API",
+              "Android Native",
+              "iOS Native",
+              "Performance",
+              "Accessibility — Web only",
+              "Visual Testing",
+              "Security Testing",
+              "Localization / i18n"
+            ]
+          },
+          "effective_confirmed_score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3,
+            "description": "The score this matrix records for the cell. When original_adjudicator_outcome is CONFIRMED: confirmed_score_as_stored when it is non-null, otherwise provisional_score (protocol/capability-rubric-v1.md's own stated fallback for a blank confirmed_score column; analysis/README.md rule 7 -- the same, already-frozen fallback rule, not a new one introduced by PROTO-U06). When original_adjudicator_outcome is DISPUTED-then-ruled: the human ruling's effective score. Never summed, averaged, weighted, or aggregated across cells (protocol/capability-rubric-v1.md)."
+          },
+          "confirmed_score_as_stored": {
+            "type": ["integer", "null"],
+            "minimum": 0,
+            "maximum": 3,
+            "description": "The literal value recorded in the immutable audits/<SUT>/audit.md confirmed_score column (protocol/capability-rubric-v1.md, Tie-break rule) at the pinned auditor result commit, unmodified by any human ruling. null means that column was left blank in that row -- protocol/capability-rubric-v1.md's own ordinary case where confirmed_score equals provisional_score and the auditor did not repeat it (observed, by direct inspection: all 9 SUT-02 cells, all 9 SUT-06 cells, and the SUT-03 Android Native / iOS Native cells; protocol/unresolved.md, PROTO-U06). A non-null value is the auditor's explicitly recorded literal, including the two DISPUTED cells' pre-ruling values (SUT-01 Visual Testing = 2; SUT-04 Security Testing = 2). PROTO-U06 corrected this field's semantics: v1 (schemas/adjudicated-matrix.schema.json) stored the fallback-derived value here instead of null, losing the fact that the source row was blank."
+          },
+          "provisional_score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3,
+            "description": "The auditor's provisional_score exactly as recorded in audits/<SUT>/audit.md."
+          },
+          "confirmation_state": {
+            "type": ["string", "null"],
+            "enum": ["CONFIRMED", "UNCONFIRMED_SCORE_3", null],
+            "description": "protocol/capability-rubric-v1.md, Score 3 confirmation, exactly as recorded in audits/<SUT>/audit.md. Null when provisional_score is not 3, or when the step-3 gap is not an evidence-status question (SUT-01 Visual Testing). Independent of, and never inferable from, confirmed_score_as_stored: a cell can have confirmation_state = null with a non-null confirmed_score_as_stored (e.g. SUT-02 Accessibility — Web only, confirmed_score_as_stored = 2), or confirmation_state = CONFIRMED with a null confirmed_score_as_stored (e.g. SUT-02 Web UI Functional)."
+          },
+          "structural_scope_note": {
+            "type": ["string", "null"],
+            "description": "Carried through unmodified from audits/<SUT>/audit.md (protocol/study-design-v1.md, section 11 and line 254): a Score 0 cell is never hidden or converted to N/A."
+          },
+          "original_adjudicator_outcome": {
+            "type": "string",
+            "enum": ["CONFIRMED", "DISPUTED", "UNSUPPORTED"],
+            "description": "The first-run ADJUDICATOR-EU-01 outcome for this cell (schemas/adjudication.schema.json), preserved and never overwritten by a human ruling. UNSUPPORTED is part of the frozen first-run adjudication vocabulary and is representable by this schema version, but no cell in the current E01 data has that outcome and no downstream effective-score precedence rule has been defined for it (protocol/unresolved.md, PROTO-U06); analysis/e01-adjudicated-matrix/generate-matrix.js fails loudly rather than guess if one is ever actually observed."
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^SUT0[1-6]-EV-[0-9]{4}$" },
+            "uniqueItems": true,
+            "description": "evidence_id values cited by the first-run adjudication record for this cell (protocol/evidence-rules-v1.md). Never a CSV row or line number."
+          },
+          "resolution_source": {
+            "type": "string",
+            "enum": ["AUDITOR_ADJUDICATION", "HUMAN_RULING"],
+            "description": "Provenance category for effective_confirmed_score, not a new scientific status: AUDITOR_ADJUDICATION when the auditor's confirmed_score was upheld by ADJUDICATOR-EU-01 (CONFIRMED); HUMAN_RULING when a human ruling on a DISPUTED cell (derived-data/adjudication-rulings/) supplied the effective score."
+          },
+          "resolution_source_id": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$|^E01-HR-[0-9]{2}$",
+            "description": "The immutable auditor result commit SHA (resolution_source AUDITOR_ADJUDICATION) or ruling_id (resolution_source HUMAN_RULING) that is the source reference for effective_confirmed_score."
+          }
+        },
+        "required": [
+          "ecosystem_id",
+          "modality",
+          "effective_confirmed_score",
+          "confirmed_score_as_stored",
+          "provisional_score",
+          "confirmation_state",
+          "structural_scope_note",
+          "original_adjudicator_outcome",
+          "evidence_ids",
+          "resolution_source",
+          "resolution_source_id"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["study_id", "campaign_id", "generated_at", "sources", "cells"],
+  "additionalProperties": false
+}

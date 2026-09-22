@@ -1,0 +1,151 @@
+# manifests/e01-pre-adjudication-snapshot-v1.yaml
+# Pre-adjudication integrity snapshot for E01 Capability Audit, EUS-2026-001. Operational provenance
+# record written by ORCHESTRATOR / INTEGRITY REVIEWER after all six independent E01 audits completed.
+# References, never rewrites, the six immutable auditor commits: no auditor branch is merged here, no
+# evidence is copied into main, no score is changed or adjudicated. Narrative counterpart:
+# experiments/E01-capability-audit/pre-adjudication-integrity.md. Editable by ORCHESTRATOR only
+# (protocol/agent-governance-v1.md).
+study_id: EUS-2026-001
+campaign: E01-capability-audit
+e01_start_commit: 89b23f2787c7717f357b8031a798389c2b9ca335
+integrity_review_timestamp: "2026-09-17T10:50:29Z"
+frozen_prompt:
+  prompt_id: E01-CAPABILITY-AUDITOR-V1
+  path: prompts/frozen/e01-capability-auditor-v1.md
+  sha256: b504b5f720a6fe8b2a7255b3fe0509d8d18a244fb8114b485c9a2e4fbfe6c358
+  byte_length: 17057
+  verified_unchanged_after_all_six_audits: true
+
+auditors:
+  - auditor_id: AUDITOR-SUT01-OMNIPIZZA
+    sut_id: SUT-01
+    branch: audit/e01-sut01-omnipizza
+    result_commit: fa807da45c3210e4659c231a7326890ed0a5dbb8
+    parent_commit_valid: true
+    worktree_clean: true
+    changed_files_valid: true
+    evidence_row_count: 30
+    evidence_csv_sha256: a5b36c1bf446b10472bd705c64e634dc519f1f0904e35c5cc3ff0de1c7c23fcd
+    evidence_counts_by_status: {DOCUMENTED: 8, SOURCE_VERIFIED: 22, EXECUTION_VERIFIED: 0, INFERRED: 0}
+    confirmed_score3_cells: 8
+    divergent_cells: 1  # Visual Testing 3->2
+    independence_established: true
+    independence_note: "Subject of incident 2 (a fragment of SUT-03's real content -- repository, commit SHA, one evidence row's modality/score/mechanism -- was surfaced to it via an automatic file-change notification, after its own evidence.csv was already finalized and before its audit.md narrative was written). Exposure was real, not dismissed as harmless; final committed output independently verified to contain zero cross-SUT references. Independence established for its scored content -- see pre-adjudication-integrity.md section 6."
+  - auditor_id: AUDITOR-SUT02-SAUCELABS
+    sut_id: SUT-02
+    branch: audit/e01-sut02-saucelabs
+    result_commit: bdef52b12bbdad3ca1746c0f4c74f0d9ca248226
+    parent_commit_valid: true
+    worktree_clean: true
+    changed_files_valid: true
+    evidence_row_count: 21
+    evidence_csv_sha256: e595f2710b816ff7e55c4d49ca0af22adfa1096fe74a47d01feceb20f38a6d1a
+    evidence_counts_by_status: {DOCUMENTED: 0, SOURCE_VERIFIED: 21, EXECUTION_VERIFIED: 0, INFERRED: 0}
+    confirmed_score3_cells: 6  # confirmation_state=CONFIRMED used as fallback; confirmed_score column is blank in the committed table -- see data_quality_flags
+    divergent_cells: null  # cannot be mechanically computed; confirmed_score column blank on every row
+    independence_established: true
+    data_quality_flags: ["confirmed_score column blank on all 9 rows despite confirmation_state=CONFIRMED on 6"]
+    provenance_flags: ["ios commit_sha (031358f5...) is a git tag object, dereferences deterministically to ede6fa4b7f57a75bc31f626b6ca531339e83d5c0 -- independently re-verified"]
+  - auditor_id: AUDITOR-SUT03-BROWSERSTACK
+    sut_id: SUT-03
+    branch: audit/e01-sut03-browserstack
+    result_commit: f04fe3fc5e25b2c9f4660b2e425a3eba08382986
+    parent_commit_valid: true
+    worktree_clean: true
+    changed_files_valid: true
+    evidence_row_count: 32
+    evidence_csv_sha256: 895a6e74a43719360e37570eeaa2c451c03e35246bc4011b49c6f662b97d5d39
+    evidence_counts_by_status: {DOCUMENTED: 2, SOURCE_VERIFIED: 30, EXECUTION_VERIFIED: 0, INFERRED: 0}
+    confirmed_score3_cells: 4
+    divergent_cells: 0
+    independence_established: true
+    independence_note: "Subject of incident 1 (its own evidence.csv content, 100% self-authored, was physically written via SUT-05's shell due to a scratchpad race; SUT-03 independently and deliberately re-ran its own script twice afterward, reproducing the identical content). Independence established -- see pre-adjudication-integrity.md section 6."
+  - auditor_id: AUDITOR-SUT04-RESTFULBOOKER
+    sut_id: SUT-04
+    branch: audit/e01-sut04-restful-booker
+    result_commit: 97ecae19151e8232f9992ee12f0944ce3120dbbb
+    parent_commit_valid: true
+    worktree_clean: true
+    changed_files_valid: true
+    evidence_row_count: 31
+    evidence_csv_sha256: 6dd7d46ff45ff32ce1f457e9ca93da09d69c1dce187e094ccf52fa307c266954
+    evidence_counts_by_status: {DOCUMENTED: 8, SOURCE_VERIFIED: 23, EXECUTION_VERIFIED: 0, INFERRED: 0}
+    confirmed_score3_cells: 2
+    divergent_cells: 1  # Security Testing 3->2
+    independence_established: true
+  - auditor_id: AUDITOR-SUT05-JUICESHOP
+    sut_id: SUT-05
+    branch: audit/e01-sut05-juice-shop
+    result_commit: 57a82d43307eeb8f4ab5ba413cacd97ddd25297a
+    parent_commit_valid: true
+    worktree_clean: true
+    changed_files_valid: true
+    evidence_row_count: 29
+    evidence_csv_sha256: 6e629bf7914c738111d1d3015609bb44bcf79e255b350b762645d5b915500e30
+    evidence_counts_by_status: {DOCUMENTED: 4, SOURCE_VERIFIED: 25, EXECUTION_VERIFIED: 0, INFERRED: 0}
+    confirmed_score3_cells: 4
+    divergent_cells: 0
+    independence_established: true
+    independence_note: "Party that accidentally executed SUT-03's script (incident 1) due to a scratchpad race; never authored, edited, or used any of that content, did not persist or revert it, reported it factually, and switched remaining work to direct-write-with-readback. Final committed evidence.csv/audit.md contain zero SUT-03/BrowserStack references (independently grepped). Independence established -- see pre-adjudication-integrity.md section 6."
+  - auditor_id: AUDITOR-SUT06-WEBDRIVERIO
+    sut_id: SUT-06
+    branch: audit/e01-sut06-webdriverio
+    result_commit: 2bb26399f82f4bc1841d712b50fe8c1679dacd36
+    parent_commit_valid: true
+    worktree_clean: true
+    changed_files_valid: true
+    evidence_row_count: 29
+    evidence_csv_sha256: 65f7b083ca7ac3be706ac0f1103e1e9c79ebb0e9bdd164c68959afc9f3c5fe51
+    evidence_counts_by_status: {DOCUMENTED: 7, SOURCE_VERIFIED: 22, EXECUTION_VERIFIED: 0, INFERRED: 0}
+    confirmed_score3_cells: 2  # confirmation_state=CONFIRMED used as fallback; confirmed_score column is blank -- see data_quality_flags
+    divergent_cells: null  # cannot be mechanically computed; confirmed_score column blank on every row
+    independence_established: true
+    independence_note: "Not a party to either operational incident (see AUDITOR-SUT01-OMNIPIZZA and AUDITOR-SUT05-JUICESHOP/AUDITOR-SUT03-BROWSERSTACK entries above for the two incidents)."
+    data_quality_flags:
+      - "confirmed_score column blank on all 9 rows despite confirmation_state=CONFIRMED on 2"
+      - "Localization/i18n Score-0 cell has no structural_scope_note token (auditor states this is a deliberate reading: plain capability absence, not structural surface absence -- interpretive flag, not a data-entry omission)"
+    provenance_flags: ["android/ios commit_sha (470b89ec...) is a git tag object, dereferences deterministically to 4770f471177fecfe2b4e01f4cffee65aaa663060 -- independently re-verified"]
+
+evidence_totals:
+  grand_total_rows: 172
+  by_status: {DOCUMENTED: 29, SOURCE_VERIFIED: 143, EXECUTION_VERIFIED: 0, INFERRED: 0}
+  prior_report_163_figure: "plain arithmetic error, superseded by this recomputation (30+21+32+31+29+29=172); see pre-adjudication-integrity.md section 2"
+  global_evidence_id_collisions: []
+  cross_sut_evidence_id_or_content_leakage_found: false
+
+score_structure:
+  scored_cells_total: 54
+  divergent_cells_mechanically_countable: 2  # SUT-01 Visual Testing, SUT-04 Security Testing (SUT-02/06 uncountable -- see data_quality_flags)
+  confirmed_score3_cells_total: 26
+  confirmed_score3_cells_all_source_or_execution_verified: true
+
+known_unresolved_scientific_flags:
+  - "SUT-01 Visual Testing provisional=3 confirmed=2 (tie-break)"
+  - "SUT-04 Security Testing provisional=3 confirmed=2 (tie-break)"
+  - "SUT-06 Android/iOS Native Score 3 rests on a contestable 'test hook vs end-user path' reading (SUT-06-U05)"
+  - "SUT-03 documented API Metric Control Endpoints always 401 -- doc-vs-implementation contradiction, excluded from Performance score"
+  - "SUT-02/SUT-06 confirmed_score table column blank -- data-hygiene flag"
+  - "SUT-06 Localization/i18n structural_scope_note interpretive question"
+  - "SUT-02 iOS / SUT-06 android-ios commit_sha fields are tag-object ids, not raw commit SHAs -- manifest field-naming flag, no evidentiary ambiguity"
+  - "Shared-scratchpad execution/exposure incidents (independence established for both, exposure was real for SUT-01) -- see independence section"
+  - "All six auditors flagged the frozen prompt's own stale 'Status: WORKING. Not yet frozen' header as a known, already-logged, non-blocking inconsistency"
+
+operational_incidents:
+  - id: INCIDENT-1-SUT05-WRONG-TARGET
+    parties: [AUDITOR-SUT05-JUICESHOP, AUDITOR-SUT03-BROWSERSTACK]
+    root_cause: "Shared, non-unique scratchpad filename (gen_evidence.py) across concurrently-running auditor subagents in one Workflow run; a write-then-run race caused SUT-05's execution to run SUT-03's script."
+    content_contamination_found: false
+    independence_established_for_both_parties: true
+    disposition: "No repository state altered by this review; both auditors' own factual accounts stand in their respective unresolved.md files."
+  - id: INCIDENT-2-SUT01-SCRATCHPAD-COLLISION
+    parties: [AUDITOR-SUT01-OMNIPIZZA, AUDITOR-SUT03-BROWSERSTACK]
+    root_cause: "Same shared scratchpad filename; SUT-01's copy was overwritten by SUT-03's, and a fragment of SUT-03's real content (repository, commit SHA, one evidence row's modality/score/mechanism) was surfaced to SUT-01 via an automatic file-change notification, after SUT-01's own evidence.csv was already finalized and before its audit.md narrative was written."
+    content_contamination_found: false
+    independence_established_for_scored_content: true
+    exposure_was_real: true
+    disposition: "Not characterized as harmless outright; final committed output independently verified to contain zero cross-SUT references."
+
+frozen_integrity_confirmed_unchanged: [protocol, RQs, hypotheses, rubric, frozen_auditor_prompt, source_provenance, campaign_configuration]
+
+decision_gate: PASSED
+decision_statement: "E01 PRE-ADJUDICATION INTEGRITY PASSED -- auditor provenance, independence, and structural evidence integrity are established; adjudicator-prompt review may begin."

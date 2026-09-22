@@ -1,0 +1,55 @@
+# manifests/provisioning/SUT-02/SUT02-PROV-0001.yaml
+# One-time provisioning record (protocol/setup-effort-v2.md, section 8; manifests/provisioning/README.md).
+# Descriptive reproducibility metadata only: never counted in Required Actions, never a score, never a
+# measured observation. Authored by ORCHESTRATOR from the provisioning it performed itself under the
+# explicit human authorization of 2026-09-22 (NON-MEASURED PRE-START provisioning, CS-001 conditions).
+provisioning_id: SUT02-PROV-0001
+sut_id: SUT-02
+environment_type: LOCAL
+instance_identifier: "operator workstation; web instance at 127.0.0.1:4302 (vite preview of the production build)"
+sut_provenance:
+  component: web
+  repository: https://github.com/saucelabs/sample-app-web
+  commit_sha: 60fdd634bb111c092282fa07977513a0a7765593  # manifests/sut-manifest.yaml, SUT-02 web, PINNED_SOURCE
+  lockfile: "package-lock.json at the pinned commit, sha256 c51343e73b22c29564244eb8148f2df6038f1aad2fa73fccc2e3d3a429939f84"
+steps:
+  - sut_id: SUT-02
+    component: web
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "git 2.48.1; Node.js 24.21.0 and npm 11.19.0 (installed with nvm; the pinned package.json declares engines node >=24.9.0)"
+    installation_or_build_step: "git clone; git checkout 60fdd634bb111c092282fa07977513a0a7765593 (HEAD verified equal to the pin)"
+    required_external_dependency: "github.com"
+    estimated_or_observed_duration: "about 20 s"
+    automation_classification: AUTOMATED
+    provenance: "git 2.48.1"
+    notes: null
+  - sut_id: SUT-02
+    component: web
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "clone at the pinned commit"
+    installation_or_build_step: "npm ci (from the repository's package-lock.json)"
+    required_external_dependency: "npm registry"
+    estimated_or_observed_duration: "about 1 min"
+    automation_classification: AUTOMATED
+    provenance: "npm 11.19.0; package-lock.json sha256 c51343e7...9f84"
+    notes: "npm reported install scripts of five transitive packages as not yet approved (npm 11 policy warning); no script was blocked in a way that affected the build"
+  - sut_id: SUT-02
+    component: web
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "dependencies installed"
+    installation_or_build_step: "npm run build (vite build); npx vite preview --host 127.0.0.1 --port 4302 --strictPort"
+    required_external_dependency: null
+    estimated_or_observed_duration: "about 1 min"
+    automation_classification: AUTOMATED
+    provenance: "vite via the pinned package.json"
+    notes: null
+duration: "about 3 min end to end (descriptive only)"
+performed_by: ORCHESTRATOR
+date: "2026-09-22"
+campaigns_served: []  # none yet: E03-resetability is NOT_STARTED; this instance served PRE-START environment verification only (E03-CS001-SUT02-WEB)
+notes: >
+  Environment verification record: experiments/E03-resetability/environment-verification/SUT-02-web.json
+  (VERIFIED: GET / 200; the 'Reset App State' control, SUT02-EV-0002, present in the pinned source).
+  The instance is a workstation instance (LOCAL, protocol/study-design-v1.md, section 10.1); the
+  GitHub Actions job "E03 Environment Verification SUT-02 web" reproduces these steps on an ubuntu-24.04
+  runner (SELF_HOSTED) and is the verification route required before measured execution.

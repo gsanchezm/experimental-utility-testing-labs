@@ -1,0 +1,73 @@
+# manifests/e01-adjudicator-prompt-freeze-v2.yaml
+# Prompt provenance record for the frozen E01 adjudicator prompt version 2, EUS-2026-001. Modeled on
+# manifests/e01-adjudicator-prompt-freeze.yaml (V1). This is a provenance record, not a second protocol: the
+# prompt's own content is authoritative in prompts/frozen/; this file only certifies it. Companion
+# change-control record: manifests/e01-adjudicator-v2-correction.yaml (PROTO-U03). Editable by ORCHESTRATOR
+# only (protocol/agent-governance-v1.md).
+study_id: EUS-2026-001
+campaign: E01-capability-audit
+adjudicator_id: ADJUDICATOR-EU-01
+prompt_id: E01-ADJUDICATOR-V2
+prompt_version: v2
+change_control_id: PROTO-U03
+change_control_record: manifests/e01-adjudicator-v2-correction.yaml
+working_prompt_path: prompts/working/e01-adjudicator-v2.md
+frozen_prompt_path: prompts/frozen/e01-adjudicator-v2.md
+prompt_sha256: e4f27dfe6748b81cb8987b19fe3a76ac5f38b4d0d1bd806083215490a320d508
+prompt_byte_size: 3150
+working_frozen_byte_equivalent: true  # `cmp` confirms prompts/working/e01-adjudicator-v2.md and prompts/frozen/e01-adjudicator-v2.md are byte-identical at freeze time
+freeze_timestamp: "2026-09-17T16:16:53Z"
+freeze_approved_by: gilbertosanchez
+predecessor:
+  prompt_id: E01-ADJUDICATOR-V1
+  frozen_prompt_path: prompts/frozen/e01-adjudicator-v1.md
+  prompt_sha256: f93e82ab339b32b84883951ad0d15f31301b9f23ddd89090072109de05f92bc4
+  prompt_byte_size: 3475
+  status: "FROZEN, retained unchanged as immutable historical provenance; not edited in place; not superseded/deleted (prompts/README.md rule 4: a change creates a new version, the earlier version stays on disk unchanged)"
+diff_from_predecessor:
+  method: "node paragraph-split + unified diff, v1 frozen copy vs v2 working copy"
+  hunk_count: 1
+  hunk_1_description: >
+    Line 3 Status statement paragraph replaced in full. Old: "Status: WORKING SKELETON. Not yet frozen, not
+    yet complete, and not usable: ... it is not reviewed, not approved, and not to be used to adjudicate
+    anything." New: "Status: ADJUDICATION TASK PROMPT. Execution is authorized only from a formally frozen
+    copy after the required pre-launch gates pass."
+  title_v1_identifier_evaluated_and_left_unchanged: >
+    Line 1 title, "# E01 Adjudicator — working prompt skeleton v1," retains its embedded "v1" token.
+    Evaluated whether updating it to "v2" was mechanically required for version consistency; judged not
+    required (no code, schema, or manifest parses this heading string for version identity -- this file and
+    the frozen file path are the authoritative version identifiers) and left untouched, per instruction to
+    alter no additional line beyond the Status statement and any version identifier truly required.
+  no_other_content_difference: true
+temporal_provenance: POST-DATA_MODIFIED_UNDER_APPROVED_CHANGE_CONTROL
+temporal_provenance_basis: >
+  V2 was created and frozen after E01 START (89b23f2) and after the V1 freeze (d7f0f25), following the
+  ADJUDICATOR-EU-01 final pre-launch preflight's discovery of the self-disqualifying Status statement in V1
+  (reported PRE-LAUNCH BLOCKED / E01 ADJUDICATOR EXECUTION BLOCKED). ADJUDICATOR-EU-01 had not executed, and
+  no adjudication output existed, at or after V2's creation.
+methodology_decision_semantics_changed: false
+evidence_or_scoring_semantics_changed: false
+status: FROZEN
+adjudication_output_schema:
+  schema_path: schemas/adjudication.schema.json
+  schema_sha256: f552f485bc349a507df7d2fb202d72332ae221c8ef524c1517be984f44c39ec8
+  schema_byte_size: 3818
+  change_control_id: PROTO-U01
+  note: "Unchanged by this V2 correction; re-verified byte-identical at V2 freeze time."
+proto_u02_status: OPEN_NON_BLOCKING
+proto_u02_basis: "Unchanged from manifests/e01-adjudicator-prompt-freeze.yaml; not addressed by this record. See protocol/unresolved.md, PROTO-U02."
+review_summary: |
+  Reviewed V2 against V1 by mechanical diff (paragraph-split + unified diff): exactly one hunk, the Status
+  statement, matching exactly the correction specified in the accepted PROTO-U03 human ruling. No
+  result-specific instruction, SUT-specific language, ranking, global utility score, new evidence status, or
+  new scoring concept was found or introduced. Adjudicator scope remains consistency review only; evidence
+  invention remains prohibited; original audit commits remain immutable and unread by this operation; write
+  scope unchanged (derived-data/adjudication/** only); every examined cell still has a defined
+  CONFIRMED/DISPUTED/UNSUPPORTED output referenced by evidence_id, validated against
+  schemas/adjudication.schema.json (unchanged).
+notes: |
+  This is the only frozen copy of E01-ADJUDICATOR-V2. prompts/frozen/e01-adjudicator-v1.md is retained
+  unchanged as the immutable V1 provenance record; this file never describes a different prompt. No file
+  under audits/** was read or modified to produce this record. None of the six immutable auditor result
+  commits or their scientific contents was read, inspected, or summarized. ADJUDICATOR-EU-01 has not executed
+  before, during, or after this freeze and remains NOT_STARTED.

@@ -1,0 +1,136 @@
+# manifests/e01-campaign-freeze-v1.yaml
+# Provenance record of the E01 Capability Audit campaign freeze (protocol/change-control-v1.md, section 7,
+# "Campaign freeze (IN_PROGRESS -> FROZEN)"). Modeled on manifests/e01-campaign-start-v1.yaml (the analogous
+# record for campaign start) and manifests/protocol-freeze-v1.yaml (the analogous record for the protocol
+# freeze). This is a provenance record, not a second campaign-configuration record: the campaign
+# configuration itself remains authoritative and locked in experiments/E01-capability-audit/README.md,
+# "Campaign configuration" (unchanged by this freeze). Editable by ORCHESTRATOR only
+# (protocol/agent-governance-v1.md).
+study_id: EUS-2026-001
+campaign_id: E01-capability-audit
+transition: "IN_PROGRESS -> FROZEN"
+previous_status: IN_PROGRESS
+new_status: FROZEN
+freeze_timestamp: "2026-09-18T20:01:45Z"
+human_authorization_id: E01-FREEZE-AUTH-01
+freeze_approved_by: gilbertosanchez
+frozen_by: ORCHESTRATOR
+trigger: >
+  protocol/change-control-v1.md, section 7: "every planned run of the campaign (all ecosystems, all
+  conditions, the recorded N) has been executed." E01's own campaign configuration
+  (experiments/E01-capability-audit/README.md, "Sample size per condition") defines no repeated-execution
+  N: E01 is a per-ecosystem capability/evidence audit over 54 (ecosystem x modality) cells (6 SUTs x 9
+  modalities, protocol/capability-rubric-v1.md). All 54 cells are complete: six independent SUT audits,
+  pre-adjudication integrity review, independent adjudication (ADJUDICATOR-EU-01), two human rulings on
+  the two DISPUTED cells, and the final corrected adjudicated matrix (PROTO-U06).
+e01_closure_chain:
+  protocol_freeze:
+    commit: 38b82fda8282e2e068a27a45eef458f0e085def8
+    tag: eus-2026-001-protocol-v1-pre-data
+  e01_campaign_start:
+    commit: 89b23f2787c7717f357b8031a798389c2b9ca335
+    record: manifests/e01-campaign-start-v1.yaml
+  auditor_result_commits:  # PROTO-U07 correction, 2026-09-21: renamed from "six_auditor_result_commits"/"commit" (singular) — see "correction" below
+    SUT-01: fa807da45c3210e4659c231a7326890ed0a5dbb8
+    SUT-02: bdef52b12bbdad3ca1746c0f4c74f0d9ca248226
+    SUT-03: f04fe3fc5e25b2c9f4660b2e425a3eba08382986
+    SUT-04: 97ecae19151e8232f9992ee12f0944ce3120dbbb
+    SUT-05: 57a82d43307eeb8f4ab5ba413cacd97ddd25297a
+    SUT-06: 2bb26399f82f4bc1841d712b50fe8c1679dacd36
+    note: >
+      Each SHA is that SUT's own SUBMITTED audit commit (audit_status: SUBMITTED, submitted_at: 2026-09-17,
+      verified directly against each audit.md at its commit), on that SUT's own independent auditor branch
+      (branches below), none merged into main. These are the same six commits already cited throughout
+      derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json (sources.auditor_result_commits,
+      resolution_source_id) and derived-data/h1-analysis/H1-result.json (resolution_source_id) — this
+      correction brings this record into agreement with those already-correct artifacts; it changes nothing
+      in them.
+    branches:
+      SUT-01: audit/e01-sut01-omnipizza
+      SUT-02: audit/e01-sut02-saucelabs
+      SUT-03: audit/e01-sut03-browserstack
+      SUT-04: audit/e01-sut04-restful-booker
+      SUT-05: audit/e01-sut05-juice-shop
+      SUT-06: audit/e01-sut06-webdriverio
+    paths:
+      - audits/SUT-01-omnipizza/
+      - audits/SUT-02-saucelabs/
+      - audits/SUT-03-browserstack/
+      - audits/SUT-04-restful-booker/
+      - audits/SUT-05-juice-shop/
+      - audits/SUT-06-webdriverio/
+    correction: >
+      PROTO-U07 (protocol/unresolved.md, RESOLVED 2026-09-21): this field previously read "commit:
+      b87c67c7df7810b3d5ff770e3ddadfe7cd3eb70a" with the note "all six audits/SUT-XX-.../ directories last
+      touched at this single commit; unchanged since" — true of main, but wrong as a representation of "the
+      six auditor result commits." b87c67c is the 2026-09-16T11:13:33-06:00 pre-freeze checklist-closure
+      commit ("docs(protocol): close final freeze checklist definitions"), roughly 12.5 hours before E01
+      campaign start (commit 89b23f2787c7717f357b8031a798389c2b9ca335, 2026-09-16T23:42:49-06:00), and
+      touches only the six placeholder "Template only. Audit status: NOT_STARTED" audit.md files. main's
+      audits/SUT-0N-.../ directories were never updated past that template state, because the real SUBMITTED
+      audits were committed on the six independent branches above and never merged into main — that
+      unmerged-branch fact, not a b87c67c citation, is the accurate provenance. Corrected by explicit human
+      ruling on PROTO-U07, 2026-09-21; full record manifests/e01-proto-u07-correction.yaml. Provenance/
+      representation only: zero change to any effective_confirmed_score, human ruling, matrix cell, or H1
+      result — none of those ever referenced b87c67c; all already cited these same six branch SHAs.
+  pre_adjudication_integrity:
+    path: experiments/E01-capability-audit/pre-adjudication-integrity.md
+  adjudicator_first_run_preservation:
+    commit: d6939deacdbfe26624b90e60d288888e12787bd9
+    note: all six derived-data/adjudication/SUT-0N/adjudication.json files last touched at this single commit; unchanged since
+    sha256:
+      SUT-01: 989e728ad7fba848d655aa1722cc01ec910953f91d3f2a78ff1992f1d03f5981
+      SUT-02: 3785205d7090c7c66395be1ad7db719f59da8f2912327b7d066fb6f5ca49bd9b
+      SUT-03: 054de3bd2338c85a3d9f63975d4594d151a1e0a1a4311903fa4de5934c445a1d
+      SUT-04: 70083fce6db33fb5ec1b6bfce65fe4565471c72d060c12a66154b32d49b2b897
+      SUT-05: d838675ae2293314b26ef7f9e841d115df85afc7e0a4025f48fefaec8f58d1a6
+      SUT-06: 43d5380c1092bae59057d340783d827207713c5ec0b3a522fb3ce5748159bfc2
+  human_rulings:
+    commit: 1270bc1c7b2b9aff715dea8dbe271fc603910d11
+    paths:
+      - derived-data/adjudication-rulings/E01-HR-01.json
+      - derived-data/adjudication-rulings/E01-HR-02.json
+  final_adjudicated_matrix:
+    path: derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json
+    sha256: 88a062ebac5af2a659c8396d70b36137c8a8d4d9c30569a325b742f98ccbe589
+    commit: 0722773b9090163b5c882fc5a5c9f748db1b0d19
+    correction_record: manifests/e01-proto-u06-correction.yaml
+  h1_confirmatory_analysis:
+    path: derived-data/h1-analysis/H1-result.json
+    sha256: 8684deefc09faa4ba209546c4223f0cd1ec969de0a4d091bb92e3b6dbf137be5
+    commit: ea01afd13fcbd7d69aefaf5b2c0d849a3069c9a5
+  post_h1_operational_closeout:
+    commits: [6c1f4efcac32124cd5ac6dda3718332c6564ce58, 62858f00e3a3994ee7d0004ec8d60dc33f38fb48]
+pre_freeze_head: 62858f00e3a3994ee7d0004ec8d60dc33f38fb48  # main HEAD immediately before this operation's mutations
+changelog_row: protocol/CHANGELOG.md, 2026-09-18, document experiments/E01-capability-audit/README.md, "campaign IN_PROGRESS -> FROZEN"
+resulting_freeze_commit: null  # cannot self-reference this commit's own SHA; the commit that includes this file is the authoritative resulting-freeze commit once made
+raw_data_effect: >
+  protocol/change-control-v1.md, section 7, states that campaign freeze makes raw-data/<campaign-id>/
+  append-only. This effect is vacuous for E01: E01 is an audit, not an execution campaign
+  (experiments/E01-capability-audit/README.md, "Objective"), and no raw-data/E01-capability-audit/
+  directory exists or was created by this record. No such directory is invented here.
+statement: >
+  From this freeze timestamp, E01's scientific inputs and results -- the six audits/<SUT>/ directories, the
+  six derived-data/adjudication/<SUT>/adjudication.json first-run outputs, the two human rulings
+  (E01-HR-01, E01-HR-02), the final corrected adjudicated matrix, and the H1 confirmatory result -- are
+  closed to ordinary modification (protocol/change-control-v1.md, section 7). Any further change to any of
+  them follows protocol/change-control-v1.md, section 5, in full (new version file, rationale, affected
+  campaigns, change-log row), the same procedure already used for PROTO-U01 through PROTO-U06. This freeze
+  does not authorize E02 or any later campaign (AGENT-INSTRUCTIONS.md, rule 15); it also does not perform, and is not,
+  H2-H5 analysis.
+notes: |
+  E01 is an audit campaign with no repeated-execution sample size (experiments/E01-capability-audit/README.md,
+  "Sample size per condition": N/A) -- the freeze trigger here is "every planned run... executed" read
+  against E01's own campaign-configuration definition of what a "run" is: one audit per ecosystem (6),
+  covering all nine modalities each (54 cells total), all now complete and adjudicated.
+  Deferred issues (xviii) and (xix) do not apply to E01 (manifests/protocol-freeze-v1.yaml, deferred_issues)
+  and are unaffected by this freeze. PROTO-U02 (audit_status: ADJUDICATED write authority) remains
+  OPEN -- deferred and non-blocking; unaffected by this freeze.
+  No campaign freeze tag was created: the one existing repository tag (eus-2026-001-protocol-v1-pre-data)
+  is for the protocol freeze (protocol/change-control-v1.md, section 6), a different, once-per-study
+  milestone; a single instance of tagging a different kind of freeze is not an established convention for
+  per-campaign freezes, so none is invented here.
+  E02-E12 remain NOT_STARTED. No campaign-configuration record exists yet for any of them
+  (experiments/<campaign-id>/README.md carries only its placeholder). experiments/scenario-mappings/ does
+  not exist at all (not merely empty); FROZEN mapping records are a hard prerequisite for E02-E07 before
+  execution (experiments/README.md, "Common rules for all campaigns"), independent of this freeze.

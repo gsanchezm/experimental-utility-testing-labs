@@ -1,0 +1,136 @@
+# manifests/toolchain-manifest.yaml
+# Intended toolchain candidates for EUS-2026-001. Nothing is installed at initialization.
+# Candidates are not frozen; entries marked TBD are open choices, not omissions.
+# Mobile runner policy and qualification gate: protocol/mobile-runner-policy-v1.md.
+# Unknown values are null, never a guess. Editable by ORCHESTRATOR only (protocol/agent-governance-v1.md).
+manifest_version: v1
+installed: false
+policy: >
+  No tool is installed at initialization. All version fields are null and must be
+  recorded (exact version, install date, platform) before the first run that uses
+  the tool. Mobilewright must pass the qualification gate in
+  protocol/mobile-runner-policy-v1.md before experimental use.
+  Appium 2 must not be used.
+tools:
+  web_runner:
+    candidate: Playwright
+    version: null
+    install_date: null
+    platform: null
+    notes: null
+  mobile_primary_candidate:
+    candidate: Mobilewright
+    qualification_status: NOT_STARTED
+    qualification_sut: SUT-01  # OmniPizza; designated qualification SUT (protocol/mobile-runner-policy-v1.md section 3); build provenance pinned by ORCHESTRATOR under qualification_build below and copied by QUALIFIER-MOBILE-01 into qualification/mobilewright/README.md
+    qualification_platforms: [android_emulator, ios_simulator]
+    qualification_build:  # pinned by ORCHESTRATOR before the gate (protocol/mobile-runner-policy-v1.md section 3); QUALIFIER-MOBILE-01 copies it verbatim into qualification/mobilewright/README.md
+      repository: https://github.com/gsanchezm/OmniPizza
+      commit_sha_or_release: "release v1.1.8 (tag commit 3cdbe6596a1ab5ef2058ba4259c44da96a0fa03a, published 2026-07-22T02:00:52Z) — the same pinned identity as manifests/sut-manifest.yaml SUT-01 android/ios"
+      android_build_identity: "omnipizza-release.apk, 84930726 bytes, sha256 1059e9468145761710c9884b37e9fbc76da8e75eb9666dc0867d82a546cda6a4 (release asset of v1.1.8)"
+      ios_build_identity: "OmniPizza-Simulator.zip, 26921522 bytes, sha256 de2e8c21b0788cef1ba4654378449d16e958574b33a2b4ef8a07cb698dbc6eb1 (release asset of v1.1.8; simulator-only build per the repository README)"
+      pinned_by: ORCHESTRATOR
+      pinned_at: "2026-09-22"
+      notes: "asset sizes and digests read from the GitHub release record on 2026-09-22; the binaries were not downloaded by the ORCHESTRATOR; QUALIFIER-MOBILE-01 downloads them at gate start and verifies both digests before any execution (a mismatch is recorded in qualification/unresolved.md, never corrected here). No qualification run has occurred."
+    pinned_candidate_version:  # a pin for the gate, not an install record: version/install_date/platform below stay null until QUALIFIER-MOBILE-01 installs the runner at gate start and records the observed values
+      package: mobilewright  # npm registry
+      version: "0.0.60"
+      npm_integrity: "sha512-c+aIg0FtMI6226xoVwXiO8Guqk9v5rT81zohz2Rs4WuZEaOgJidHoX9yd5Sqjpx3nTVYfmkFtqHoMFKMGVOuCg=="
+      source_repository: https://github.com/mobile-next/mobilewright
+      source_commit: 2046d2d95e7db6383183bb6b116f81b1236cae42  # tag v0.0.60, published 2026-09-21T18:12:23Z
+      engines: "node >=22.12.0"
+      pinned_by: ORCHESTRATOR
+      pinned_at: "2026-09-22"
+    compatibility_smoke_status: NOT_STARTED  # per-SUT smoke after runner selection (protocol/mobile-runner-policy-v1.md section 9)
+    version: null
+    install_date: null
+    platform: null
+    notes: null
+  mobile_fallback:
+    candidate: "Appium 3"
+    pinned_candidate_version:  # a pin for the switch rule (protocol/mobile-runner-policy-v1.md section 8), not an install record
+      package: appium  # npm registry
+      version: "3.7.0"
+      npm_integrity: "sha512-2AWajtPbjYGTJmVqpavGctO7zK9M7Q74L3vK9lFKPs6qr3N3/xy3STHnkXJk/wgaZ+BDgeKD68zQQ5sAP6A/cA=="
+      source_commit: b67de03966155ff052076c11c1c8f20cc2ba9134
+      engines: "node ^20.19.0 || ^22.12.0 || >=24.0.0; npm >=10"
+      pinned_by: ORCHESTRATOR
+      pinned_at: "2026-09-22"
+    version: null
+    install_date: null
+    platform: null
+    notes: "Appium 3 only; Appium 2 is never introduced (protocol/mobile-runner-policy-v1.md section 1)"
+  accessibility:
+    candidate: axe-core
+    version: null
+    install_date: null
+    platform: null
+    notes: null
+  visual:
+    candidate: "Playwright screenshots + Pixelmatch"
+    version: null
+    install_date: null
+    platform: null
+    notes: null
+  security:
+    candidate: "OWASP ZAP"
+    version: null
+    install_date: null
+    platform: null
+    notes: null
+  performance:
+    candidate: "TBD between appropriate open-source tools"
+    version: null
+    install_date: null
+    platform: null
+    notes: null
+  api:
+    candidate: TBD
+    version: null
+    install_date: null
+    platform: null
+    notes: null
+  schema_contract:
+    candidate: "optional / TBD"
+    version: null
+    install_date: null
+    platform: null
+    notes: null
+  schema_validator:
+    candidate: Ajv  # frozen by explicit human decision, 2026-09-16 (schemas/README.md); validates schemas/*.json (JSON Schema Draft 2020-12) against instance data
+    target_major_version: 8
+    version: null  # exact version pinned here before the first campaign or validation operation that depends on schema validation; not installed at this phase
+    install_date: null
+    platform: null
+    notes: null
+  scripting_runtime:
+    candidate: Node.js  # analysis/README.md, rule 3: "recorded in manifests/toolchain-manifest.yaml with exact versions before the first script runs"
+    version: v23.6.1
+    install_date: "2026-09-18"
+    platform: Darwin x86_64
+    notes: >
+      Corrected by PROTO-U06 (protocol/unresolved.md): this field previously read "Recorded before
+      analysis/e01-adjudicated-matrix/generate-matrix.js's first run (protocol/unresolved.md, PROTO-U05)" --
+      factually incorrect. The actual v1 chronology, established by the PROTO-U06 semantic/provenance
+      review: the generator script was written; its first execution failed; the script was corrected; the
+      successful v1 matrix generation then occurred; only after that successful run was this entry
+      populated. The v1 matrix (git commit 77216f610a341fe87fb3c90c4035de73d66ca29d) was therefore generated
+      before this runtime pin was recorded, in violation of analysis/README.md rule 3 ("recorded... with
+      exact versions before the first script runs"). Assessed non-contaminating: generate-matrix.js's
+      standard-library-only usage (fs, path, crypto, child_process) involves no runtime-version-sensitive
+      behavior the v1 output could have depended on, and no scientific determination rests on it. This entry
+      is pinned, in a committed state, before the PROTO-U06-corrected generator is run; the corrected matrix
+      (schemas/adjudicated-matrix.schema.v2.json contract) is generated only after that commit exists,
+      unlike v1.
+environments:  # qualification-gate identities, recorded by ORCHESTRATOR (protocol/mobile-runner-policy-v1.md section 6) and copied verbatim by QUALIFIER-MOBILE-01; identical for every gate execution
+  android_emulator:
+    image: "system-images;android-35;google_apis;x86_64"
+    api_level: 35
+    device_profile: pixel_7
+    substrate: "GitHub-hosted runner ubuntu-24.04 (image version 20260907.300.1 or later with KVM), emulator provisioned by ReactiveCircus/android-emulator-runner v2.38.0 pinned at commit a421e43855164a8197daf9d8d40fe71c6996bb0d; environment_type EMULATED; the emulator binary version is recorded by the gate's first step before any measured execution"
+  ios_simulator:
+    runtime: "iOS 18.5 simulator runtime (Xcode 16.4, build 16F6, the image default; selected explicitly with xcode-select at gate start)"
+    device_profile: "iPhone 16"
+    substrate: "GitHub-hosted runner macos-15 (image version 20260824.0482.1 or later that still ships Xcode 16.4 build 16F6 and the iOS 18.5 runtime; an image rotation that removes either is an INFRASTRUCTURE exclusion under section 7.3); environment_type SIMULATED"
+  host:
+    os: "GitHub-hosted runners: ubuntu-24.04 (Android), macos-15 (iOS); the runner image version is recorded per execution"
+    arch: "x86_64 (ubuntu-24.04); arm64 (macos-15)"

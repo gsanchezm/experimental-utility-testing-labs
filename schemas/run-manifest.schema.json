@@ -1,0 +1,516 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eus-2026-001:schemas:run-manifest:v1",
+  "title": "Run Manifest",
+  "description": "Provenance and outcome record for one experimental run of one campaign against one system under test (SUT), and, with the conventions of protocol/evidence-rules-v1.md ('Execution verification records'), for one E01 execution verification. Required on every run: campaign_id, experiment_id, sut_id, timestamp, sut_provenance, environment_type, platform, attempt, outcome, protocol_version, run_id, toolchain, prompt_version, artifacts. Optional because not applicable to every run: seed, scenario, condition, modality, environment, notes, agent_role, related_evidence_ids, and the campaign-specific fields actions, target_state_id, starting_state_id, establishment_mechanisms, reset_mechanisms, behavior_class, source_layer, verification_layer. Campaign READMEs and protocol documents may make an optional field mandatory for their runs (E01 verification records make modality and related_evidence_ids mandatory; E02 runs make establishment_mechanisms mandatory; E03 runs make reset_mechanisms mandatory).",
+  "type": "object",
+  "properties": {
+    "campaign_id": {
+      "type": "string",
+      "description": "Campaign directory name under experiments/, for example E01-capability-audit or E04-repeatability.",
+      "pattern": "^E(0[1-9]|1[0-2])-[a-z0-9-]+$"
+    },
+    "experiment_id": {
+      "type": "string",
+      "description": "Identifier of the experiment or condition set within the campaign, as defined in that campaign's experiment plan. For an E01 execution verification record: 'verification'.",
+      "minLength": 1
+    },
+    "sut_id": {
+      "type": "string",
+      "description": "Identifier of the evaluated ecosystem (system under test) the run was executed against.",
+      "enum": [
+        "SUT-01",
+        "SUT-02",
+        "SUT-03",
+        "SUT-04",
+        "SUT-05",
+        "SUT-06"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "description": "Start time of the run as an RFC 3339 date-time with timezone offset.",
+      "format": "date-time"
+    },
+    "sut_provenance": {
+      "type": "object",
+      "description": "Exact identity of the ecosystem components the run was executed against.",
+      "properties": {
+        "ecosystem_id": {
+          "type": "string",
+          "description": "Identifier of the ecosystem; must equal sut_id.",
+          "enum": [
+            "SUT-01",
+            "SUT-02",
+            "SUT-03",
+            "SUT-04",
+            "SUT-05",
+            "SUT-06"
+          ]
+        },
+        "components": {
+          "type": "array",
+          "description": "Every ecosystem component the run touched (for example a web front end, an API, an Android app, an iOS app), each with its exact provenance.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "component": {
+                "type": "string",
+                "description": "Component name as listed in the ecosystem's manifest under manifests/.",
+                "minLength": 1
+              },
+              "repository": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Repository or artifact source of the component. Null when unknown or not applicable."
+              },
+              "commit_sha_or_release": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Exact commit SHA or release tag of the component used in this run. Null when unknown or not applicable. Never approximate."
+              },
+              "endpoint": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Base URL, package identifier, or other locator of the deployed component. Null when unknown or not applicable."
+              },
+              "environment_type": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "PUBLIC_HOSTED",
+                  "SELF_HOSTED",
+                  "LOCAL",
+                  "EMULATED",
+                  "SIMULATED",
+                  "OTHER",
+                  null
+                ],
+                "description": "Environment type of this component in this run (protocol/study-design-v1.md, section 10.1), when it differs from the run-level environment_type or when the run touched components in several environments. Null when the run-level value applies."
+              }
+            },
+            "required": [
+              "component"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "ecosystem_id",
+        "components"
+      ],
+      "additionalProperties": false
+    },
+    "environment_type": {
+      "type": "string",
+      "enum": [
+        "PUBLIC_HOSTED",
+        "SELF_HOSTED",
+        "LOCAL",
+        "EMULATED",
+        "SIMULATED",
+        "OTHER"
+      ],
+      "description": "Environment provenance classification of the surface exercised in this run (protocol/study-design-v1.md, section 10.1): PUBLIC_HOSTED (vendor-operated public instance, uncontrolled), SELF_HOSTED (study-deployed instance of the pinned version), LOCAL (pinned version on the operator's workstation), EMULATED (Android emulator), SIMULATED (iOS Simulator), OTHER (described in notes). Required on every run and every E01 verification record. An experimental-control fact, never a utility score."
+    },
+    "toolchain": {
+      "type": "object",
+      "description": "Every tool used in the run with its exact version, keyed by the toolchain role (for example web_runner, mobile_primary_candidate, accessibility). Roles follow manifests/ toolchain naming. Required for every run: every tool used with its exact version; a null version is permitted only with a justification in notes (AGENT-INSTRUCTIONS.md rule 9).",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "tool": {
+            "type": "string",
+            "description": "Tool name.",
+            "minLength": 1
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Exact version string as reported by the tool. Null only when the version cannot be determined; the reason must then be given in notes."
+          }
+        },
+        "required": [
+          "tool",
+          "version"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "platform": {
+      "type": "string",
+      "description": "Platform layer the run exercised.",
+      "enum": [
+        "web",
+        "api",
+        "android",
+        "ios"
+      ]
+    },
+    "environment": {
+      "type": "object",
+      "description": "Execution environment of the run. The listed keys are conventional; additional keys are allowed.",
+      "properties": {
+        "os": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Operating system and version of the host that executed the run."
+        },
+        "device": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Physical or virtual device identifier for mobile runs."
+        },
+        "emulator_or_simulator": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Emulator or simulator image and version for mobile runs."
+        },
+        "runtime": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Browser, language runtime, or app runtime and version."
+        },
+        "network": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Network condition applied during the run (for example unthrottled, or a named throttling profile)."
+        },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Locale or language setting active during the run."
+        }
+      },
+      "additionalProperties": true
+    },
+    "scenario": {
+      "type": "string",
+      "description": "Name of the scenario executed, as defined in the campaign's experiment plan; for campaigns that use canonical scenarios, the canonical_scenario_id (protocol/equivalent-scenario-mapping-v1.md). For an E01 execution verification record: the scenario or probe executed, stated so that it can be repeated."
+    },
+    "condition": {
+      "type": "string",
+      "description": "Name of the experimental condition applied to the scenario, as defined in the campaign's experiment plan."
+    },
+    "modality": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "Web UI Functional",
+        "API",
+        "Android Native",
+        "iOS Native",
+        "Performance",
+        "Accessibility — Web only",
+        "Visual Testing",
+        "Security Testing",
+        "Localization / i18n",
+        null
+      ],
+      "description": "Frozen modality the run or verification concerns (protocol/study-design-v1.md, section 7). Mandatory for E01 execution verification records; null when not applicable."
+    },
+    "attempt": {
+      "type": "integer",
+      "description": "1-based index of this attempt within the repeated executions of the same condition.",
+      "minimum": 1
+    },
+    "seed": {
+      "type": [
+        "integer",
+        "string",
+        "null"
+      ],
+      "description": "Random seed or seed-like input controlling the run, when the condition uses one. Null when not applicable."
+    },
+    "outcome": {
+      "type": "object",
+      "description": "Result of the run as observed by the runner.",
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "Terminal status of the run. SUCCESS and FAILURE describe the scenario outcome; ERROR describes a runner or infrastructure fault; INCONCLUSIVE means the outcome could not be classified; ABORTED means the run was stopped before completion.",
+          "enum": [
+            "SUCCESS",
+            "FAILURE",
+            "ERROR",
+            "INCONCLUSIVE",
+            "ABORTED"
+          ]
+        },
+        "expected": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Expected observable result stated before the run. Null when the condition has no predefined expectation."
+        },
+        "observed": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Observed result. Null when nothing could be observed."
+        },
+        "matches_expected": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Whether observed matched expected. Null when no expectation was defined or the comparison could not be made."
+        },
+        "outcome_category": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Pre-declared categorical outcome label assigned to this execution (E04/E05; protocol/repeatability-determinism-v1.md section 4). Categories are defined before execution; null when not applicable."
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "artifacts": {
+      "type": "array",
+      "description": "Files produced by the run and stored under raw-data/ (logs, screenshots, traces, reports), or, for an E01 execution verification record, under audits/<SUT>/artifacts/. May be empty only for a run that produced no artifact, with the reason in notes.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Kind of artifact, for example log, screenshot, trace, report, video.",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "description": "Repository-relative path of the artifact.",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Lowercase hexadecimal SHA-256 digest of the artifact file. Null when not computed.",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "type",
+          "path"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Free-text observations about the run, including any deviation from the experiment plan, and, where applicable, the provisioning record used (convention: provisioning=SUT0n-PROV-nnnn, referencing a record under manifests/provisioning/; protocol/setup-effort-v1.md, section 8)."
+    },
+    "related_evidence_ids": {
+      "type": "array",
+      "description": "evidence_id values (protocol/evidence-rules-v1.md) that this record supports or refutes. Mandatory and non-empty for E01 execution verification records; may be empty elsewhere.",
+      "items": {
+        "type": "string",
+        "pattern": "^SUT0[1-6]-EV-[0-9]{4}$"
+      },
+      "uniqueItems": true
+    },
+    "agent_role": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Agent role that executed or supervised the run, from protocol/agent-governance-v1.md. Null when executed by a human without an agent role."
+    },
+    "prompt_version": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Version identifier of the frozen agent prompt under which the run was executed (prompts/frozen/, prompts/README.md rule 5). Required for every run; null only for a run executed by a human operator without an agent prompt, with the operator recorded in agent_role and the reason in notes (prompts/README.md rule 5)."
+    },
+    "protocol_version": {
+      "type": "string",
+      "description": "Protocol version under which the run was executed, for example v1.",
+      "pattern": "^v[1-9][0-9]*$"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of this run, unique within the campaign; must equal the <run-id> directory name under raw-data/<campaign-id>/<sut-id>/ (raw-data/README.md). For an E01 execution verification record it is the verification_id, format SUT0n-VR-nnnn (pattern ^SUT0[1-6]-VR-[0-9]{4}$), and equals the file name under audits/<SUT>/verifications/ (protocol/evidence-rules-v1.md)."
+    },
+    "actions": {
+      "type": "array",
+      "description": "Ordered list of the Required Actions performed in this run, classified per protocol/setup-effort-v1.md section 4 (Action classes). Mandatory for E02 and E03 runs; optional elsewhere.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "position": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "1-based sequence position of the action within the run."
+          },
+          "class": {
+            "type": "string",
+            "enum": [
+              "API action",
+              "UI action",
+              "navigation action",
+              "state/configuration action",
+              "reset action",
+              "manual action"
+            ],
+            "description": "Action class per protocol/setup-effort-v1.md section 4 (Action classes)."
+          },
+          "description": {
+            "type": "string",
+            "description": "What was done, stated neutrally."
+          },
+          "is_retry": {
+            "type": "boolean",
+            "description": "True when this action repeats a previous failed action."
+          },
+          "manual_reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Required for a manual action: why manual intervention was needed."
+          }
+        },
+        "required": [
+          "position",
+          "class",
+          "description"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "target_state_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Identifier of the target state from the state catalogue (E02/E04). For campaigns that use canonical scenarios, the target state defined by the scenario's frozen mapping record (protocol/equivalent-scenario-mapping-v1.md), while `scenario` always carries the canonical_scenario_id itself. The exact convention for this identifier (for example, equal to canonical_scenario_id when the scenario defines one target state) is a per-run technical detail fixed in the campaign configuration of the first campaign that assigns it (protocol/change-control-v1.md, section 7), the same way canonical scenario ids themselves are locked at campaign start. Null when not applicable."
+    },
+    "starting_state_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Identifier of the declared starting state (E02/E03); null when not applicable."
+    },
+    "establishment_mechanisms": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "One or more mechanisms used to establish the target state in this run (E02; protocol/setup-effort-v1.md, 'Establishment and reset mechanism vocabulary'). Multiple mechanisms may combine in one run (for example PREDEFINED_ACCOUNT + API_SEED + DEEP_LINK). Mandatory and non-empty for E02 runs; null when not applicable.",
+      "items": {
+        "type": "string",
+        "pattern": "^(UI_FLOW|API_SEED|DIRECT_ROUTE|DEEP_LINK|FIXTURE|PREDEFINED_ACCOUNT|CONFIGURATION|APP_STATE_CONTROL|NONE)$|^OTHER: .+$"
+      },
+      "uniqueItems": true
+    },
+    "reset_mechanisms": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "One or more mechanisms used to reset the ecosystem in this run (E03; protocol/setup-effort-v1.md, 'Establishment and reset mechanism vocabulary'). MANUAL is valid evidence and must not be hidden. Multiple mechanisms may combine in one run. Mandatory and non-empty for E03 runs; null when not applicable.",
+      "items": {
+        "type": "string",
+        "pattern": "^(API_RESET|SESSION_RESET|APP_RELAUNCH|APP_DATA_CLEAR|FIXTURE_RESTORE|ENVIRONMENT_RESTART|REDEPLOY|MANUAL|NONE)$|^OTHER: .+$"
+      },
+      "uniqueItems": true
+    },
+    "behavior_class": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "deterministic",
+        "stochastic",
+        "time-dependent",
+        "external dependency",
+        null
+      ],
+      "description": "Behavior class of the condition declared before execution (protocol/cross-cutting-properties-v1.md, Determinism); used by E05."
+    },
+    "source_layer": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "web",
+        "api",
+        "android",
+        "ios",
+        null
+      ],
+      "description": "Layer through which the state or entity was established (E07)."
+    },
+    "verification_layer": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "web",
+        "api",
+        "android",
+        "ios",
+        null
+      ],
+      "description": "Layer through which the state or entity was verified (E07)."
+    }
+  },
+  "required": [
+    "campaign_id",
+    "experiment_id",
+    "sut_id",
+    "timestamp",
+    "sut_provenance",
+    "environment_type",
+    "platform",
+    "attempt",
+    "outcome",
+    "protocol_version",
+    "run_id",
+    "toolchain",
+    "prompt_version",
+    "artifacts"
+  ],
+  "additionalProperties": false
+}

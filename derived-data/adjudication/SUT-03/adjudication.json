@@ -1,0 +1,61 @@
+{
+  "adjudicator_role": "ADJUDICATOR-EU-01",
+  "ecosystem_id": "SUT-03",
+  "cell_outcomes": [
+    {
+      "modality": "Web UI Functional",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT03-EV-0001", "SUT03-EV-0002", "SUT03-EV-0003", "SUT03-EV-0004", "SUT03-EV-0005"],
+      "note": "Score 3, confirmation_state CONFIRMED. Five named, deterministic accounts (src/constants/users.js) each producing a distinct, pre-defined state match the rubric's 'deterministic test account' example."
+    },
+    {
+      "modality": "API",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT03-EV-0006", "SUT03-EV-0007", "SUT03-EV-0008", "SUT03-EV-0009"],
+      "note": "Score 3, confirmation_state CONFIRMED. userName-keyed selection of a pre-built response on /api/products, /api/orders, /api/checkout is 'API-based state seeding'. The api provenance question in unresolved.md (SUT-03-U01) is a manifest question, not a scoring question, and is outside this adjudicator's scope."
+    },
+    {
+      "modality": "Android Native",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT03-EV-0010"],
+      "note": "Score 0, structural_scope_note NO_MOBILE_SURFACE. Full-tree and package.json search found no Android code, build config, or cross-platform framework dependency."
+    },
+    {
+      "modality": "iOS Native",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT03-EV-0011"],
+      "note": "Score 0, structural_scope_note NO_MOBILE_SURFACE. Same basis as Android Native."
+    },
+    {
+      "modality": "Performance",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT03-EV-0012", "SUT03-EV-0013", "SUT03-EV-0014", "SUT03-EV-0015"],
+      "note": "Score 3, confirmation_state CONFIRMED, resting only on the /sut/ui/* pages and the Network-Information-API branch, which are genuinely reachable via the app's own documented /sut/login client-side-cookie flow. The auditor correctly excluded the documented but structurally unreachable 'API Metric Control Endpoints' family (SUT03-EV-0016, SUT03-EV-0017, SUT03-EV-0018) from the score, per protocol/capability-rubric-v1.md ('the evaluated version must already expose it') -- source-verified (SUT03-EV-0018) that the client-side-only login handler can never write to the server-side sessions object any code path reads. This is a well-reasoned, correctly-excluded documentation-vs-implementation contradiction (audit.md section 5), not a scoring gap."
+    },
+    {
+      "modality": "Accessibility — Web only",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT03-EV-0019", "SUT03-EV-0020"],
+      "note": "Score 2. Stable, reasonably semantic markup exercised from a reproducible starting point (step 2 yes); no documented/known accessibility violation with a pre-declared outcome found (step 3 no)."
+    },
+    {
+      "modality": "Visual Testing",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT03-EV-0021", "SUT03-EV-0022", "SUT03-EV-0023"],
+      "note": "Score 3, confirmation_state CONFIRMED. isImageNotLoadingUser() forcing every product thumbnail to fail to render, gated on a fixed account, matches the rubric's 'controlled visual condition' example verbatim. Cited as sibling precedent in the SUT-01 Visual Testing DISPUTED finding (derived-data/adjudication/SUT-01/adjudication.json): this mechanism is structurally the same kind of account-gated, deterministic, forced-broken-image condition SUT-01 declined to credit at Score 3 for a comparable mechanism (SUT01-EV-0020)."
+    },
+    {
+      "modality": "Security Testing",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT03-EV-0024", "SUT03-EV-0025", "SUT03-EV-0026"],
+      "note": "Score 2. The auditor self-flagged this boundary (unresolved.md, SUT-03-U02: 'a different auditor could reasonably read the same evidence as Score 1'). This adjudicator's review finds the Score 2 determination (real, SUT-specific, stable authentication/authorization logic beyond generic reachability, step 2 yes; no documented intentional vulnerability, step 3 no, SUT03-EV-0025) consistent with SUT-02's identical treatment of a directly comparable fact pattern (SUT02-EV-0018/0019). No cross-SUT inconsistency found; the repository-CI Semgrep finding (SUT03-EV-0026) was correctly excluded as not an application-level capability (AGENT-INSTRUCTIONS.md rule 4)."
+    },
+    {
+      "modality": "Localization / i18n",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT03-EV-0027", "SUT03-EV-0028", "SUT03-EV-0029"],
+      "note": "Score 1. No non-USD currency or i18n mechanism exists (step 2 no for a locale-differentiated ground truth); /api/offers is geolocation-gated but returns identical content for every matched city (SUT03-EV-0029), so it provides no locale-differentiated ground truth and does not meet the 'explicit market/locale selection' example. Correctly capped at Score 1 (generic tool reachability via geolocation override), not Score 0, since the endpoint itself is a reasonable, reachable surface."
+    }
+  ],
+  "notes": "Operational incident 1 (a shared-scratchpad script-write race with AUDITOR-SUT05-JUICESHOP) was already reviewed by the pre-adjudication integrity review (manifests/e01-pre-adjudication-snapshot-v1.yaml, decision_gate PASSED; independence_established_for_both_parties true) and is not re-opened here. Two manifest-provenance questions (SUT-03-U01, api component provenance; SUT-03-U03, controlled_instance_available) are outside this adjudicator's scope and are properly addressed to the ORCHESTRATOR. All nine cells are CONFIRMED; this SUT's evidence and rubric application were found consistent with the rest of the corpus, including on the one self-flagged interpretive question (Security Testing)."
+}

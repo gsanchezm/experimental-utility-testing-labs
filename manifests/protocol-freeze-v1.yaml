@@ -1,0 +1,56 @@
+# manifests/protocol-freeze-v1.yaml
+# Provenance record of the protocol v1 pre-data freeze for EUS-2026-001. This is a provenance record,
+# not a second protocol: the protocol itself is defined under protocol/; this file only records that the
+# freeze happened, when, on what basis, and what remains open. Editable by ORCHESTRATOR only
+# (protocol/agent-governance-v1.md), and, once written, immutable in the same sense as a frozen protocol
+# document (protocol/change-control-v1.md, section 2) except for a non-substantive correction.
+study_id: EUS-2026-001
+protocol_version: v1
+freeze_state: FROZEN-PRE-DATA
+freeze_date: "2026-09-16"
+freeze_approved_by: gilbertosanchez
+freeze_procedure: protocol/change-control-v1.md, section 6
+pre_freeze_baseline_commit: b87c67c7df7810b3d5ff770e3ddadfe7cd3eb70a  # last commit before this freeze; the git tag eus-2026-001-protocol-v1-pre-data on the freeze commit is the authoritative frozen-state pointer, not any SHA recorded here
+open_issue_count: 0
+deferred_before_campaign_count: 2
+data_collection_started: false
+frozen_documents:
+  - protocol/study-design-v1.md
+  - protocol/capability-rubric-v1.md
+  - protocol/evidence-rules-v1.md
+  - protocol/cross-cutting-properties-v1.md
+  - protocol/setup-effort-v1.md
+  - protocol/repeatability-determinism-v1.md
+  - protocol/statistical-analysis-plan-v1.md
+  - protocol/equivalent-scenario-mapping-v1.md
+  - protocol/mobile-runner-policy-v1.md
+  - protocol/agent-governance-v1.md
+  - protocol/change-control-v1.md
+deferred_issues:
+  - issue_id: "(xviii)"
+    status: DEFERRED-BEFORE-CAMPAIGN
+    description: "E02/E03 Setup Effort counting details (whether target-state verification counts as an action; treatment of a partially successful action)."
+    blocks_campaigns: [E02-state-establishment, E03-resetability]
+    source: protocol/study-design-v1.md, section 13
+  - issue_id: "(xix)"
+    status: DEFERRED-BEFORE-CAMPAIGN
+    description: "E04/E05 tooling-vs-SUT attribution rule for deviations caused by the test runner, driver, device, or infrastructure rather than by the SUT."
+    blocks_campaigns: [E04-repeatability, E05-determinism]
+    source: protocol/study-design-v1.md, section 13
+notes: |
+  Deferred issues (xviii) and (xix) do not block E01 Capability Audit, which uses neither Setup Effort
+  counting rules nor E04/E05 attribution rules. Each deferred issue must be resolved and campaign-frozen
+  (protocol/change-control-v1.md, section 7) before its own affected campaigns begin; until then, neither
+  E02, E03, E04, nor E05 may leave status NOT_STARTED.
+  No experiment or audit data existed at protocol freeze: all six audits/<SUT>/evidence.csv files contain
+  only the header row, no capability score has been assigned in any audits/<SUT>/audit.md, no run manifest
+  exists under raw-data/, and no qualification run exists under qualification/.
+  This freeze does not select a mobile test runner. Mobilewright remains the primary candidate and
+  Appium 3 the fallback (protocol/mobile-runner-policy-v1.md); the qualification gate remains NOT_STARTED
+  and neither runner has been executed.
+  This freeze does not authorize data collection. data_collection_started in manifests/study-manifest.yaml
+  remains false and requires a separate, explicit human authorization (manifests/README.md,
+  "Data-collection gate") in addition to this freeze.
+  The final frozen-commit SHA is not recorded in this file: it does not exist until the freeze commit is
+  made. The authoritative pointer to the frozen commit is the annotated git tag
+  eus-2026-001-protocol-v1-pre-data, created on that commit.

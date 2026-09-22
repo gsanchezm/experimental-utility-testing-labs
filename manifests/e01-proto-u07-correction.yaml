@@ -1,0 +1,137 @@
+# manifests/e01-proto-u07-correction.yaml
+# Post-data-collection change-control record for PROTO-U07 (protocol/unresolved.md), EUS-2026-001.
+# Corrects a single provenance-representation defect in manifests/e01-campaign-freeze-v1.yaml: the
+# "six_auditor_result_commits" field incorrectly named a pre-E01 template/checklist commit as if it were
+# the six independent auditor-result commits. Prospective correction only: does not revisit any of the 54
+# scientific cell determinations, does not revisit E01-HR-01 or E01-HR-02, does not perform H1-H5 analysis,
+# and does not relaunch any auditor or ADJUDICATOR-EU-01. Editable by ORCHESTRATOR only
+# (protocol/agent-governance-v1.md).
+change_id: PROTO-U07
+study_id: EUS-2026-001
+discovery_point: >
+  Discovered during a post-E01-freeze provenance sanity check (verification operation, 2026-09-18):
+  manifests/e01-campaign-freeze-v1.yaml's six_auditor_result_commits field and the corresponding
+  parenthetical in protocol/CHANGELOG.md's 2026-09-18 E01-freeze row cited commit
+  b87c67c7df7810b3d5ff770e3ddadfe7cd3eb70a as representing the six auditors' result commits, with the note
+  "all six audits/SUT-XX-.../ directories last touched at this single commit; unchanged since." Direct
+  inspection (git show --stat, git log on each audits/SUT-0N-.../ path on main, git log -1 on each
+  audit/e01-sut0N-* branch, git merge-base --is-ancestor, and reading each of the twelve relevant audit.md
+  files — six at b87c67c, six at their real auditor commits) found the citation incorrect.
+classification:
+  category: "PROVENANCE"
+  methodological: false
+  representation_defect: false
+  blocking_authorization_of_e01_matrix_or_h1: false
+  invalidates_54_cell_scientific_determinations: false
+  invalidates_e01_hr_01_or_e01_hr_02: false
+  requires_re_adjudication: false
+  note: >
+    Human ruling (this operation, 2026-09-21): "PROTO-U07 is classified as a PROVENANCE defect only."
+    Addresses exactly one thing: the identity of the commit(s) manifests/e01-campaign-freeze-v1.yaml cites
+    as "the six auditor result commits." No other issue belongs in PROTO-U07.
+human_ruling: >
+  Classification ACCEPTED as instructed: PROVENANCE defect only. b87c67c7df7810b3d5ff770e3ddadfe7cd3eb70a
+  is a pre-E01 checklist/template commit and MUST NOT be represented as the six independent E01
+  auditor-result commits. The authoritative auditor-result commits are exactly the six listed in
+  ground_truth_established_by_direct_inspection, below. No E01 effective score, adjudication result, human
+  ruling, final matrix cell, or H1 result may change. Approved by gilbertosanchez.
+pre_correction_immutability_gate:
+  head_before_correction: e8c616a7208197284049f2e521b5e3a63038e229
+  working_tree_clean: true
+  final_matrix_sha256: 88a062ebac5af2a659c8396d70b36137c8a8d4d9c30569a325b742f98ccbe589
+  h1_result_sha256: 8684deefc09faa4ba209546c4223f0cd1ec969de0a4d091bb92e3b6dbf137be5
+  b87c67c_present_in_matrix_or_h1_json: false  # grepped derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json, derived-data/h1-analysis/H1-result.json, derived-data/adjudication-rulings/E01-HR-01.json, derived-data/adjudication-rulings/E01-HR-02.json — zero occurrences in all four
+  result: PASS — the correction touches only manifests/e01-campaign-freeze-v1.yaml, protocol/CHANGELOG.md (append), and protocol/unresolved.md (append to existing row); no scientific artifact is in the diff.
+defect_a:
+  title: six_auditor_result_commits cited the wrong commit
+  problem: >
+    manifests/e01-campaign-freeze-v1.yaml's e01_closure_chain.six_auditor_result_commits.commit field held
+    b87c67c7df7810b3d5ff770e3ddadfe7cd3eb70a, with note "all six audits/SUT-XX-.../ directories last touched
+    at this single commit; unchanged since." protocol/CHANGELOG.md's 2026-09-18 campaign-freeze row repeated
+    this as "six independent SUT audits (commit b87c67c)." Both readers would reasonably conclude b87c67c is
+    where the six auditors' actual results are recorded. It is not.
+  ground_truth_established_by_direct_inspection: >
+    b87c67c7df7810b3d5ff770e3ddadfe7cd3eb70a: commit dated 2026-09-16T11:13:33-06:00, message "docs(protocol):
+    close final freeze checklist definitions," ~12.5 hours before E01 campaign start (commit
+    89b23f2787c7717f357b8031a798389c2b9ca335, 2026-09-16T23:42:49-06:00; git merge-base --is-ancestor confirms
+    b87c67c is an ancestor of 89b23f2). Touches 30 files including all six audits/SUT-0N-.../audit.md, each
+    read directly at that commit and found to read "Template only. Audit status: NOT_STARTED. No cell below
+    is populated..." with audit_status=NOT_STARTED and submitted_at empty, for all six SUTs without exception.
+    main's audits/SUT-0N-.../ directories were never touched again after b87c67c — true, but only because the
+    real audits were never merged, not because b87c67c contains them.
+    The six real, independent, SUBMITTED audit-result commits, each read directly and confirmed
+    audit_status=SUBMITTED, submitted_at=2026-09-17, populated evidence tables:
+      SUT-01: fa807da45c3210e4659c231a7326890ed0a5dbb8 (branch audit/e01-sut01-omnipizza, 2026-09-17T03:37:53-06:00)
+      SUT-02: bdef52b12bbdad3ca1746c0f4c74f0d9ca248226 (branch audit/e01-sut02-saucelabs, 2026-09-17T03:47:55-06:00)
+      SUT-03: f04fe3fc5e25b2c9f4660b2e425a3eba08382986 (branch audit/e01-sut03-browserstack, 2026-09-17T03:29:25-06:00)
+      SUT-04: 97ecae19151e8232f9992ee12f0944ce3120dbbb (branch audit/e01-sut04-restful-booker, 2026-09-17T03:37:05-06:00)
+      SUT-05: 57a82d43307eeb8f4ab5ba413cacd97ddd25297a (branch audit/e01-sut05-juice-shop, 2026-09-17T03:33:21-06:00)
+      SUT-06: 2bb26399f82f4bc1841d712b50fe8c1679dacd36 (branch audit/e01-sut06-webdriverio, 2026-09-17T03:37:36-06:00)
+    None of these six branches is an ancestor of main (git merge-base --is-ancestor, all six: false) — they
+    were never merged. All six SHAs already appear as resolution_source_id throughout
+    derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json (sources.auditor_result_commits and every
+    cell) and derived-data/h1-analysis/H1-result.json (every confirmed_score_3_modalities entry) — the
+    scientific pipeline always cited these six correctly; only e01-campaign-freeze-v1.yaml and the CHANGELOG
+    parenthetical cited b87c67c instead.
+  required_semantics: >
+    "The six auditor result commits" means exactly the six SUBMITTED commits on the six independent auditor
+    branches, one per SUT, never a single shared commit on main. b87c67c remains a true and separately
+    meaningful fact (it is also, coincidentally, manifests/protocol-freeze-v1.yaml's/study-manifest.yaml's
+    pre_freeze_baseline_commit for the unrelated protocol freeze) but is not an auditor-result commit and is
+    not cited as one anywhere after this correction.
+  validation:
+    all_six_shas_match_resolution_source_id_in_matrix_and_h1: true
+    all_six_branches_confirmed_not_merged_into_main: true
+    all_six_audit_md_at_pinned_commit_confirmed_submitted: true
+    all_six_audit_md_at_b87c67c_confirmed_not_started_template: true
+    b87c67c_is_ancestor_of_e01_start_commit: true
+resolution: >
+  manifests/e01-campaign-freeze-v1.yaml's e01_closure_chain.six_auditor_result_commits block is corrected in
+  place (non-substantive correction, protocol/change-control-v1.md section 2, applied by extension per this
+  record's own header) to auditor_result_commits: a per-SUT map of the six real SHAs, plus a new branches map
+  and a correction note stating exactly what the field previously said and why it was wrong — the superseded
+  text is not silently erased. protocol/CHANGELOG.md is append-only: the historical 2026-09-18
+  "campaign IN_PROGRESS -> FROZEN" row (containing "commit b87c67c") is left byte-for-byte unedited; a new
+  2026-09-21 row is appended under "## Non-substantive corrections" stating the correction and quoting the
+  superseded text in full. protocol/unresolved.md's existing PROTO-U07 row is updated only in its permitted
+  way (append human decision + date to the same row, per that file's own header rule) — no new row, no edit
+  to the row's factual description of what was discovered.
+scope_boundary: >
+  This correction touches exactly: manifests/e01-campaign-freeze-v1.yaml (one field block, in place),
+  protocol/CHANGELOG.md (one new appended row), protocol/unresolved.md (human decision + date appended to the
+  existing PROTO-U07 row), manifests/e01-proto-u07-correction.yaml (this new file). It does not touch
+  audits/**, derived-data/adjudication/**, derived-data/adjudication-rulings/**,
+  derived-data/e01-adjudicated-matrix/**, derived-data/h1-analysis/**, any schemas/**, any protocol/*-v1.md
+  document's methodological content, or research-status.html.
+implementation_files:
+  - manifests/e01-proto-u07-correction.yaml  # new file (this record)
+  - manifests/e01-campaign-freeze-v1.yaml  # six_auditor_result_commits -> auditor_result_commits, corrected in place
+  - protocol/CHANGELOG.md  # non-substantive-correction row appended
+  - protocol/unresolved.md  # PROTO-U07 row: human decision + date appended only
+affected_campaign: E01-capability-audit
+affected_phase: post-freeze provenance-record correction only
+collected_evidence_affected: false
+scoring_semantics_affected: false
+evidence_admissibility_affected: false
+hypotheses_affected: false
+rqs_affected: false
+cross_sut_comparisons_affected: false
+final_matrix_sha256_unchanged: true
+h1_result_sha256_unchanged: true
+rerun_required: false
+prospective_only: true
+adjudicator_relaunched_by_this_record: false
+audits_directory_modified: false
+derived_data_adjudication_modified: false
+adjudication_rulings_modified: false
+matrix_or_h1_modified: false
+h1_or_hypothesis_analysis_performed: false
+approved_by: gilbertosanchez
+notes: |
+  This record follows the same preserve-history discipline used for PROTO-U05/PROTO-U06: the incorrect
+  prior text is quoted in full in both this record and the CHANGELOG row, never silently deleted. No new
+  Git tag or campaign-freeze re-authorization is created or implied by this correction; E01 remains FROZEN
+  under the original human_authorization_id E01-FREEZE-AUTH-01 (freeze_timestamp unchanged:
+  2026-09-18T20:01:45Z), and freeze_timestamp/human_authorization_id/freeze_approved_by/frozen_by/trigger/
+  transition/previous_status/new_status fields in manifests/e01-campaign-freeze-v1.yaml are all unchanged by
+  this correction.

@@ -1,0 +1,99 @@
+# experiments/E03-resetability/controlled-instance-status.yaml
+# Machine-readable per-condition controlled-instance status for E03-resetability, maintained by the
+# ORCHESTRATOR from provisioning records (manifests/provisioning/) and environment-verification records
+# (experiments/E03-resetability/environment-verification/). Read by the measured-execution gate of
+# .github/workflows/e03-measured-execution.yml. Narrative: controlled-instance-determination.md.
+# Vocabulary: status CONTROLLED (a controlled instance of the pinned version has been established and
+# verified in at least one controlled environment) or NOT_EXECUTABLE_WITHOUT_CONTROLLED_INSTANCE
+# (protocol/study-design-v1.md, section 10.3). A verified workstation instance makes a condition
+# CONTROLLED; measured execution additionally requires a VERIFIED GitHub Actions record for the
+# condition (the measured run executes on a GitHub-hosted runner) and every other campaign gate.
+# Nothing here is a measurement, a score, or an execution authorization. Unknown values are null.
+study_id: EUS-2026-001
+campaign_id: E03-resetability
+scenario: CS-001
+updated: "2026-09-22"
+campaign_status: NOT_STARTED
+measured_execution_prerequisites_common: [campaign START, locked campaign configuration, agent-governance-v2 frozen, frozen executor prompt and implementation, GitHub Actions environment verification VERIFIED per condition]
+conditions:
+  E03-CS001-SUT01-WEB:
+    sut_id: SUT-01
+    surface: WEB
+    status: CONTROLLED
+    workstation_verification: {status: VERIFIED, environment_type: LOCAL, record: experiments/E03-resetability/environment-verification/SUT-01-web-api.json, provisioning_id: SUT01-PROV-0001, date: "2026-09-22"}
+    github_actions_verification: {status: NOT_RUN, environment_type: SELF_HOSTED, workflow: .github/workflows/e03-environment-verification.yml, job: sut-01-web-api, run_id: null, run_attempt: null}
+    mobile_qualification_applicable: false
+    measured_execution_readiness: NOT_READY
+  E03-CS001-SUT01-API:
+    sut_id: SUT-01
+    surface: API
+    status: CONTROLLED
+    workstation_verification: {status: VERIFIED, environment_type: LOCAL, record: experiments/E03-resetability/environment-verification/SUT-01-web-api.json, provisioning_id: SUT01-PROV-0001, date: "2026-09-22"}
+    github_actions_verification: {status: NOT_RUN, environment_type: SELF_HOSTED, workflow: .github/workflows/e03-environment-verification.yml, job: sut-01-web-api, run_id: null, run_attempt: null}
+    mobile_qualification_applicable: false
+    measured_execution_readiness: NOT_READY
+  E03-CS001-SUT02-WEB:
+    sut_id: SUT-02
+    surface: WEB
+    status: CONTROLLED
+    workstation_verification: {status: VERIFIED, environment_type: LOCAL, record: experiments/E03-resetability/environment-verification/SUT-02-web.json, provisioning_id: SUT02-PROV-0001, date: "2026-09-22"}
+    github_actions_verification: {status: NOT_RUN, environment_type: SELF_HOSTED, workflow: .github/workflows/e03-environment-verification.yml, job: sut-02-web, run_id: null, run_attempt: null}
+    mobile_qualification_applicable: false
+    measured_execution_readiness: NOT_READY
+  E03-CS001-SUT02-ANDROID:
+    sut_id: SUT-02
+    surface: ANDROID
+    status: CONTROLLED
+    workstation_verification: {status: VERIFIED, environment_type: EMULATED, record: experiments/E03-resetability/environment-verification/SUT-02-android.json, provisioning_id: SUT02-PROV-0002, date: "2026-09-22"}
+    github_actions_verification: {status: NOT_RUN, environment_type: EMULATED, workflow: .github/workflows/e03-environment-verification.yml, job: sut-02-android, run_id: null, run_attempt: null}
+    mobile_qualification_applicable: true
+    mobile_qualification_status: NOT_STARTED
+    measured_execution_readiness: NOT_READY
+  E03-CS001-SUT02-IOS:
+    sut_id: SUT-02
+    surface: IOS
+    status: NOT_EXECUTABLE_WITHOUT_CONTROLLED_INSTANCE
+    workstation_verification: {status: NOT_VERIFIED, environment_type: SIMULATED, record: experiments/E03-resetability/environment-verification/SUT-02-ios.json, provisioning_id: SUT02-PROV-0003, date: "2026-09-22", blocking_condition: HOST_SIMULATOR_SERVICE_UNRESPONSIVE}
+    github_actions_verification: {status: NOT_RUN, environment_type: SIMULATED, workflow: .github/workflows/e03-environment-verification.yml, job: sut-02-ios, run_id: null, run_attempt: null}
+    mobile_qualification_applicable: true
+    mobile_qualification_status: NOT_STARTED
+    measured_execution_readiness: NOT_READY
+  E03-CS001-SUT03-WEB:
+    sut_id: SUT-03
+    surface: WEB
+    status: CONTROLLED
+    workstation_verification: {status: VERIFIED, environment_type: LOCAL, record: experiments/E03-resetability/environment-verification/SUT-03-web.json, provisioning_id: SUT03-PROV-0001, date: "2026-09-22"}
+    github_actions_verification: {status: NOT_RUN, environment_type: SELF_HOSTED, workflow: .github/workflows/e03-environment-verification.yml, job: sut-03-web, run_id: null, run_attempt: null}
+    mobile_qualification_applicable: false
+    measured_execution_readiness: NOT_READY
+  E03-CS001-SUT04-WEB:
+    sut_id: SUT-04
+    surface: WEB
+    status: CONTROLLED
+    workstation_verification: {status: VERIFIED, environment_type: LOCAL, record: experiments/E03-resetability/environment-verification/SUT-04-web-api.json, provisioning_id: SUT04-PROV-0001, date: "2026-09-22"}
+    github_actions_verification: {status: NOT_RUN, environment_type: SELF_HOSTED, workflow: .github/workflows/e03-environment-verification.yml, job: sut-04-web-api, run_id: null, run_attempt: null}
+    mobile_qualification_applicable: false
+    measured_execution_readiness: NOT_READY
+  E03-CS001-SUT04-API:
+    sut_id: SUT-04
+    surface: API
+    status: CONTROLLED
+    workstation_verification: {status: VERIFIED, environment_type: LOCAL, record: experiments/E03-resetability/environment-verification/SUT-04-web-api.json, provisioning_id: SUT04-PROV-0001, date: "2026-09-22"}
+    github_actions_verification: {status: NOT_RUN, environment_type: SELF_HOSTED, workflow: .github/workflows/e03-environment-verification.yml, job: sut-04-web-api, run_id: null, run_attempt: null}
+    mobile_qualification_applicable: false
+    measured_execution_readiness: NOT_READY
+  E03-CS001-SUT05-API:
+    sut_id: SUT-05
+    surface: API
+    status: CONTROLLED
+    workstation_verification: {status: VERIFIED, environment_type: LOCAL, record: experiments/E03-resetability/environment-verification/SUT-05-api.json, provisioning_id: SUT05-PROV-0001, date: "2026-09-22"}
+    github_actions_verification: {status: NOT_RUN, environment_type: SELF_HOSTED, workflow: .github/workflows/e03-environment-verification.yml, job: sut-05-api, run_id: null, run_attempt: null}
+    mobile_qualification_applicable: false
+    measured_execution_readiness: NOT_READY
+summary:
+  conditions: 9
+  controlled: 8
+  not_executable_without_controlled_instance: 1  # E03-CS001-SUT02-IOS
+  github_actions_verified: 0
+  measured_execution_ready: 0
+  sut06_note: "SUT-06 remains in the six-SUT population; NOT_COMPARABLE on CS-001; no condition, so no instance was provisioned"

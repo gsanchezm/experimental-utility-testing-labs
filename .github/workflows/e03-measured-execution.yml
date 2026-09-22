@@ -1,0 +1,360 @@
+# E03 Measured Execution
+# Study EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems).
+# Authored by ORCHESTRATOR under E03-CI-WRITE-AUTH-01 (AGENT-INSTRUCTIONS.md, "E03 CI/CD infrastructure").
+#
+# The ONLY path through which an E03-resetability MEASURED_EXPERIMENT may ever run. It is manually
+# dispatched, one condition, one execution, one attempt per run, and it FAILS CLOSED: the gate job
+# verifies every frozen input and every campaign gate against the checked-out repository before the
+# measured job is allowed to start. As of its creation (2026-09-22) E03 is NOT_STARTED, no campaign
+# configuration is locked, no executor prompt or executor implementation is frozen, and mobile
+# qualification has not run, so this workflow cannot execute a measured condition; that is the
+# intended state until a human starts the campaign. (Agent governance v2 was frozen 2026-09-22.)
+#
+# Execution/attempt model: campaign -> SUT -> scenario -> condition -> execution -> attempt. Attempt 1
+# is immutable; a retry is a new dispatch with attempt+1. GitHub-native re-runs of a measured run are
+# refused (github.run_attempt must be 1). Artifacts are uploaded with overwrite disabled, so an
+# attempt's bundle can never be replaced. Nothing is ever committed by this workflow (permissions:
+# contents: read); the artifact bundle is imported into the canonical repository under ORCHESTRATOR
+# coordination with hash verification (experiments/E03-resetability/ci-cd-execution-model.md).
+#
+# Read isolation: the measured job checks out only the common frozen inputs and the assigned SUT's own
+# raw-data/E03-resetability/<SUT>/ subtree; no other SUT's measured outputs are present in the
+# workspace (protocol/agent-governance-v2.md, section 3.5, READ boundary).
+name: E03 Measured Execution
+
+on:
+  workflow_dispatch:
+    inputs:
+      condition_id:
+        description: "Condition to execute (one of the nine CS-001 conditions)"
+        required: true
+        type: choice
+        options:
+          - E03-CS001-SUT01-WEB
+          - E03-CS001-SUT01-API
+          - E03-CS001-SUT02-WEB
+          - E03-CS001-SUT02-ANDROID
+          - E03-CS001-SUT02-IOS
+          - E03-CS001-SUT03-WEB
+          - E03-CS001-SUT04-WEB
+          - E03-CS001-SUT04-API
+          - E03-CS001-SUT05-API
+      assigned_sut:
+        description: "SUT assigned to this executor instantiation (must match the condition)"
+        required: true
+        type: choice
+        options: [SUT-01, SUT-02, SUT-03, SUT-04, SUT-05]
+      execution_id:
+        description: "Execution id within the condition, format EXnnnn (for example EX0001)"
+        required: true
+        type: string
+      attempt:
+        description: "1-based attempt number of this execution (a retry is a new dispatch with attempt+1)"
+        required: true
+        default: "1"
+        type: string
+      campaign_start_authorization_id:
+        description: "Human authorization id of the E03 campaign START (must appear in the protocol/CHANGELOG.md campaign NOT_STARTED -> IN_PROGRESS row)"
+        required: true
+        type: string
+      executor_prompt_version:
+        description: "Frozen executor prompt version id (file prompts/frozen/<id>.md must exist)"
+        required: true
+        type: string
+      executor_implementation_sha256:
+        description: "SHA-256 of experiments/E03-resetability/executor/run-condition.sh as recorded in the locked campaign configuration"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e03-measured-${{ inputs.condition_id }}
+  cancel-in-progress: false
+
+env:
+  TZ: UTC
+  RECORD_CLASS: MEASURED_EXPERIMENT
+  RUN_ID: ${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}
+  ARTIFACT_RETENTION_DAYS: "90"
+  TIMEOUT_POLICY: "job timeout-minutes as declared; no step retry; no automatic re-run"
+  RETRY_POLICY: "none: a further attempt is a new dispatch with attempt+1; github.run_attempt must be 1"
+  CONCURRENCY_POLICY: "one run per condition at a time; never cancel in progress"
+
+jobs:
+  gate:
+    name: E03 Measured Execution Gate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      all_gates_passed: ${{ steps.gates.outputs.all_gates_passed }}
+      configuration_sha256: ${{ steps.gates.outputs.configuration_sha256 }}
+      cs001_sha256: ${{ steps.gates.outputs.cs001_sha256 }}
+      schema_v2_sha256: ${{ steps.gates.outputs.schema_v2_sha256 }}
+      executor_prompt_sha256: ${{ steps.gates.outputs.executor_prompt_sha256 }}
+      governance_sha256: ${{ steps.gates.outputs.governance_sha256 }}
+      workflow_sha256: ${{ steps.gates.outputs.workflow_sha256 }}
+      environment_type: ${{ steps.gates.outputs.environment_type }}
+      canonical_source_commit: ${{ steps.gates.outputs.canonical_source_commit }}
+    steps:
+      - name: Check out frozen inputs only (no raw-data of any SUT)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            protocol
+            manifests
+            experiments
+            schemas
+            prompts
+            qualification
+            .github/workflows
+          sparse-checkout-cone-mode: true
+      - name: Refuse anything but a first attempt of a dispatch on the default branch
+        run: |
+          set -euo pipefail
+          test "${{ github.ref }}" = "refs/heads/main" || { echo "measured execution runs only from refs/heads/main (got ${{ github.ref }})"; exit 1; }
+          test "${{ github.run_attempt }}" = "1" || { echo "GitHub-native re-run refused: dispatch a new run with attempt+1 instead"; exit 1; }
+      - name: Verify every campaign gate against the repository (fail closed)
+        id: gates
+        run: |
+          set -euo pipefail
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - <<'PY'
+          import hashlib, os, re, subprocess, sys, yaml
+          cond = '${{ inputs.condition_id }}'; sut = '${{ inputs.assigned_sut }}'; attempt = '${{ inputs.attempt }}'
+          auth = '${{ inputs.campaign_start_authorization_id }}'; pv = '${{ inputs.executor_prompt_version }}'; impl_sha = '${{ inputs.executor_implementation_sha256 }}'
+          failures = []
+          def gate(name, ok, detail=''):
+              print(('PASS ' if ok else 'FAIL ') + name + (': ' + detail if detail else ''))
+              if not ok: failures.append(name)
+          def sha(p): return hashlib.sha256(open(p, 'rb').read()).hexdigest()
+          # G-A inputs are self-consistent
+          gate('condition matches assigned SUT', cond.split('-')[2] == sut.replace('-', ''), f'{cond} vs {sut}')
+          gate('execution_id format', bool(re.fullmatch(r'EX[0-9]{4}', '${{ inputs.execution_id }}')))
+          gate('attempt is a positive integer', attempt.isdigit() and int(attempt) >= 1, attempt)
+          # G-1 campaign START exists
+          sm = yaml.safe_load(open('manifests/study-manifest.yaml'))
+          st = {c['id']: c['status'] for c in sm['campaigns']}
+          gate('E03 campaign status IN_PROGRESS', st.get('E03-resetability') == 'IN_PROGRESS', str(st.get('E03-resetability')))
+          chg = open('protocol/CHANGELOG.md').read()
+          start_rows = [l for l in chg.splitlines() if 'experiments/E03-resetability/README.md' in l and 'campaign NOT_STARTED -> IN_PROGRESS' in l]
+          gate('campaign START change-log row exists', len(start_rows) == 1)
+          gate('campaign START row carries the authorization id', bool(start_rows) and auth and auth in start_rows[0])
+          # G-2 configuration frozen
+          readme = open('experiments/E03-resetability/README.md').read()
+          m = re.search(r'\n## Campaign configuration\n(.*?)(\n## |\Z)', readme, re.S)
+          gate('locked "Campaign configuration" record exists', m is not None)
+          cfg = m.group(1) if m else ''
+          gate('configuration names the condition', cond in cfg)
+          gate('configuration names run-manifest schema v2', 'run-manifest.schema.v2.json' in cfg)
+          gate('configuration names the executor prompt version', pv in cfg)
+          gate('configuration names the executor implementation hash', impl_sha in cfg)
+          # G-3 CS-001 frozen and active; G-4 CS-002 excluded
+          cs1 = yaml.safe_load(open('experiments/scenario-mappings/CS-001.yaml'))
+          gate('CS-001 mapping FROZEN', cs1.get('mapping_status') == 'FROZEN')
+          entry = next((e for e in cs1['mappings'] if e['sut_id'] == sut), None)
+          gate('assigned SUT COMPARABLE on CS-001 for this surface', entry is not None and entry['comparability'] == 'COMPARABLE' and cond.split('-')[3] in entry['surfaces_used'])
+          gate('configuration cites CS-001 and no CS-002 condition', 'CS-001' in cfg and 'E03-CS002' not in cfg)
+          gate('CS-002 excluded in change log', 'CS-002.yaml | 1 | 1 | mapping FROZEN -> EXCLUDED_FROM_CAMPAIGN' in chg)
+          cat = open('experiments/E03-resetability/canonical-scenario-catalogue.md').read()
+          gate('catalogue active = CS-001 only', 'Active catalogue: 1 scenario (CS-001)' in cat)
+          # G-5 schema version
+          import json
+          v2 = json.load(open('schemas/run-manifest.schema.v2.json'))
+          gate('schema v2 present with v2 id', v2.get('$id', '').endswith(':run-manifest:v2'))
+          # G-6 governance frozen
+          gov = open('protocol/agent-governance-v2.md').read()
+          gm = re.search(r'\| Protocol state \| ([A-Z-]+) \|', gov)
+          gate('agent-governance-v2 frozen', gm is not None and gm.group(1) in ('FROZEN-PRE-DATA', 'AMENDED'), gm.group(1) if gm else 'no header')
+          # G-7 mobile qualification for mobile cells
+          surface = cond.split('-')[3]
+          if surface in ('ANDROID', 'IOS'):
+              tm = yaml.safe_load(open('manifests/toolchain-manifest.yaml'))['tools']
+              mp = tm['mobile_primary_candidate']; fb = tm['mobile_fallback']
+              qual = mp.get('qualification_status') == 'PASSED' and mp.get('compatibility_smoke_status') == 'PASSED'
+              gate('mobile qualification gate PASSED and compatibility smoke PASSED', qual, f"{mp.get('qualification_status')}/{mp.get('compatibility_smoke_status')}")
+              gate('selected mobile runner version recorded', bool(mp.get('version')) or bool(fb.get('version')))
+              gate('Appium 2 never selected', str(fb.get('candidate')) == 'Appium 3' and 'Appium 2' not in str(fb.get('version')))
+          # G-8 controlled instance verified for this condition on GitHub Actions
+          try:
+              cis = yaml.safe_load(open('experiments/E03-resetability/controlled-instance-status.yaml'))
+              c = cis['conditions'][cond]
+              gate('controlled instance status CONTROLLED', c.get('status') == 'CONTROLLED', str(c.get('status')))
+              gate('GitHub Actions environment verification VERIFIED', c.get('github_actions_verification', {}).get('status') == 'VERIFIED', str(c.get('github_actions_verification', {}).get('status')))
+              env_type = c.get('github_actions_verification', {}).get('environment_type') or 'UNKNOWN'
+          except Exception as e:
+              gate('controlled-instance-status record readable', False, repr(e)); env_type = 'UNKNOWN'
+          # G-9 executor prompt frozen; G-10 executor implementation frozen and pinned
+          pp = f'prompts/frozen/{pv}.md'
+          gate('executor prompt frozen file exists', os.path.exists(pp), pp)
+          ip = 'experiments/E03-resetability/executor/run-condition.sh'
+          gate('executor implementation exists', os.path.exists(ip), ip)
+          gate('executor implementation hash matches configuration', os.path.exists(ip) and sha(ip) == impl_sha)
+          # G-11 pinned revisions
+          wf = '.github/workflows/e03-measured-execution.yml'
+          out = {
+              'all_gates_passed': 'true' if not failures else 'false',
+              'configuration_sha256': sha('experiments/E03-resetability/README.md'),
+              'cs001_sha256': sha('experiments/scenario-mappings/CS-001.yaml'),
+              'schema_v2_sha256': sha('schemas/run-manifest.schema.v2.json'),
+              'executor_prompt_sha256': sha(pp) if os.path.exists(pp) else 'absent',
+              'governance_sha256': sha('protocol/agent-governance-v2.md'),
+              'workflow_sha256': sha(wf),
+              'environment_type': env_type,
+          }
+          msg = subprocess.run(['git', 'log', '-1', '--format=%(trailers:key=Canonical-Source-Commit,valueonly)'], capture_output=True, text=True).stdout.strip()
+          out['canonical_source_commit'] = msg or 'none (this repository is the canonical repository)'
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              for k, v in out.items(): f.write(f'{k}={v}\n')
+          print(json.dumps(out, indent=2))
+          if failures:
+              print('GATES FAILED (' + str(len(failures)) + '): ' + '; '.join(failures)); sys.exit(1)
+          print('ALL GATES PASSED')
+          PY
+
+  provenance:
+    name: E03 Provenance Capture
+    needs: gate
+    if: ${{ needs.gate.outputs.all_gates_passed == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out frozen inputs only
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            manifests
+            .github/workflows
+          sparse-checkout-cone-mode: true
+      - name: Write the CI reproducibility contract (no secret values)
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - <<'PY'
+          import json, os, datetime, yaml
+          cond = '${{ inputs.condition_id }}'; sut = '${{ inputs.assigned_sut }}'; surface = cond.split('-')[3]
+          sm = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts'][sut]['components'][surface.lower()]
+          tm = yaml.safe_load(open('manifests/toolchain-manifest.yaml'))
+          rec = {
+            'record_class': os.environ['RECORD_CLASS'], 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability', 'scenario': 'CS-001',
+            'condition_id': cond, 'sut_id': sut, 'surface': surface, 'execution_id': '${{ inputs.execution_id }}', 'attempt': int('${{ inputs.attempt }}'), 'run_id': os.environ['RUN_ID'],
+            'repository': {'sha': '${{ github.sha }}', 'ref': '${{ github.ref }}', 'canonical_source_commit': '${{ needs.gate.outputs.canonical_source_commit }}'},
+            'workflow': {'ref': '${{ github.workflow_ref }}', 'file_sha256': '${{ needs.gate.outputs.workflow_sha256 }}'},
+            'frozen_input_hashes': {'e03_configuration_sha256': '${{ needs.gate.outputs.configuration_sha256 }}', 'cs001_mapping_sha256': '${{ needs.gate.outputs.cs001_sha256 }}', 'run_manifest_schema_v2_sha256': '${{ needs.gate.outputs.schema_v2_sha256 }}', 'executor_prompt_sha256': '${{ needs.gate.outputs.executor_prompt_sha256 }}', 'executor_prompt_version': '${{ inputs.executor_prompt_version }}', 'executor_implementation_sha256': '${{ inputs.executor_implementation_sha256 }}', 'agent_governance_v2_sha256': '${{ needs.gate.outputs.governance_sha256 }}'},
+            'sut_version': {'repository': sm.get('repository'), 'commit_sha': sm.get('commit_sha'), 'release': sm.get('release')},
+            'environment_type': '${{ needs.gate.outputs.environment_type }}',
+            'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'note': 'the measured job records its own runner and runtime versions in runtime-environment.json; this job records the gate-time contract'},
+            'mobile_runner': {'candidate': tm['tools']['mobile_primary_candidate']['candidate'], 'version': tm['tools']['mobile_primary_candidate']['version'], 'fallback': tm['tools']['mobile_fallback']['candidate'], 'fallback_version': tm['tools']['mobile_fallback']['version']},
+            'emulator_configuration': tm.get('environments', {}).get('android_emulator'), 'simulator_configuration': tm.get('environments', {}).get('ios_simulator'),
+            'timezone': 'UTC', 'timeout_policy': os.environ['TIMEOUT_POLICY'], 'retry_policy': os.environ['RETRY_POLICY'], 'concurrency_policy': os.environ['CONCURRENCY_POLICY'], 'artifact_retention_days': int(os.environ['ARTIFACT_RETENTION_DAYS']),
+            'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'run_number': '${{ github.run_number }}', 'job': '${{ github.job }}', 'actor': 'not recorded (agent role, not a person identity, is the provenance unit)'},
+            'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            'secrets': 'none used; none recorded',
+          }
+          json.dump(rec, open('ci-provenance.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+      - name: Upload the provenance record
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-MEASURED_EXPERIMENT-${{ inputs.condition_id }}-${{ inputs.execution_id }}-A${{ inputs.attempt }}-provenance
+          path: ci-provenance.json
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: error
+
+  measured-execution:
+    name: E03 Measured Execution ${{ inputs.condition_id }} ${{ inputs.execution_id }} A${{ inputs.attempt }}
+    needs: [gate, provenance]
+    if: ${{ needs.gate.outputs.all_gates_passed == 'true' }}
+    runs-on: ${{ contains(inputs.condition_id, '-IOS') && 'macos-15' || 'ubuntu-24.04' }}
+    timeout-minutes: 90
+    steps:
+      - name: Check out common frozen inputs and only the assigned SUT's raw-data subtree
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            protocol
+            manifests
+            experiments
+            schemas
+            prompts
+            raw-data/E03-resetability/${{ inputs.assigned_sut }}
+          sparse-checkout-cone-mode: true
+      - name: Assert read isolation (no other SUT's measured outputs in the workspace)
+        run: |
+          set -euo pipefail
+          for d in raw-data/E03-resetability/*/; do
+            case "$d" in raw-data/E03-resetability/${{ inputs.assigned_sut }}/) ;; *) echo "isolation violated: $d present"; exit 1;; esac
+          done
+          test ! -e "raw-data/E03-resetability/${{ inputs.assigned_sut }}/${RUN_ID}" || { echo "run directory ${RUN_ID} already exists: attempts are immutable"; exit 1; }
+          echo "read isolation ok"
+      - name: Download the provenance record
+        uses: actions/download-artifact@v4
+        with:
+          name: E03-MEASURED_EXPERIMENT-${{ inputs.condition_id }}-${{ inputs.execution_id }}-A${{ inputs.attempt }}-provenance
+          path: provenance
+      - name: Record the runtime environment
+        run: |
+          python3 - <<'PY'
+          import json, os, platform, subprocess, datetime
+          def v(cmd):
+              try: return subprocess.run(cmd, capture_output=True, text=True, timeout=30).stdout.strip()
+              except Exception as e: return f'unavailable: {e.__class__.__name__}'
+          rec = {'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'platform': platform.platform()},
+                 'runtime_versions': {'python': v(['python3', '--version']), 'node': v(['node', '--version']), 'npm': v(['npm', '--version']), 'java': v(['java', '-version']) or v(['bash', '-c', 'java -version 2>&1']), 'docker': v(['docker', '--version']), 'git': v(['git', '--version'])},
+                 'browser_version': {'chrome': v(['bash', '-c', 'google-chrome --version 2>/dev/null || chromium --version 2>/dev/null || echo unavailable'])},
+                 'timezone': os.environ.get('TZ'), 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          json.dump(rec, open('runtime-environment.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+      - name: Execute the condition through the frozen executor implementation
+        env:
+          CONDITION_ID: ${{ inputs.condition_id }}
+          ASSIGNED_SUT: ${{ inputs.assigned_sut }}
+          EXECUTION_ID: ${{ inputs.execution_id }}
+          ATTEMPT: ${{ inputs.attempt }}
+          EXECUTOR_PROMPT_VERSION: ${{ inputs.executor_prompt_version }}
+          OUTPUT_DIR: raw-data/E03-resetability/${{ inputs.assigned_sut }}/${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}
+          PROVENANCE_JSON: provenance/ci-provenance.json
+          RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
+        run: |
+          set -euo pipefail
+          test "$(sha256sum experiments/E03-resetability/executor/run-condition.sh | cut -c1-64)" = "${{ inputs.executor_implementation_sha256 }}"
+          mkdir -p "$OUTPUT_DIR"
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/started-at.txt"
+          set +e
+          bash experiments/E03-resetability/executor/run-condition.sh > "$OUTPUT_DIR/stdout.log" 2> "$OUTPUT_DIR/stderr.log"
+          echo $? > "$OUTPUT_DIR/exit-status.txt"
+          set -e
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/finished-at.txt"
+          cp provenance/ci-provenance.json runtime-environment.json "$OUTPUT_DIR/"
+          echo "executor exit status: $(cat "$OUTPUT_DIR/exit-status.txt")"
+      - name: Validate the run manifest against schema v2 and the E03 campaign convention
+        env:
+          OUTPUT_DIR: raw-data/E03-resetability/${{ inputs.assigned_sut }}/${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}
+        run: |
+          set -euo pipefail
+          test -f "$OUTPUT_DIR/run-manifest.json" || { echo "run-manifest.json missing: the attempt is recorded as ERROR-without-manifest and is not attributable"; exit 1; }
+          npx --yes ajv-cli@5 validate -s schemas/run-manifest.schema.v2.json --spec=draft2020 --allow-union-types -d "$OUTPUT_DIR/run-manifest.json"
+          python3 - "$OUTPUT_DIR" <<'PY'
+          import json, sys, os
+          d = sys.argv[1]; m = json.load(open(os.path.join(d, 'run-manifest.json')))
+          assert m['campaign_id'] == 'E03-resetability' and m['sut_id'] == '${{ inputs.assigned_sut }}'
+          assert m['run_id'] == os.path.basename(d), (m['run_id'], d)
+          assert m['condition'] == '${{ inputs.condition_id }}' and m['scenario'] == 'CS-001'
+          assert int(m['attempt']) == int('${{ inputs.attempt }}')
+          assert m.get('reset_mechanisms'), 'reset_mechanisms mandatory and non-empty for E03'
+          acts = m.get('actions') or []
+          assert acts, 'actions mandatory for E03 runs'
+          assert all('outcome' in a for a in acts), 'E03 campaign convention: every action record carries outcome'
+          assert m.get('prompt_version') == '${{ inputs.executor_prompt_version }}'
+          print('run manifest ok:', m['run_id'], 'actions:', len(acts), 'outcomes:', [a['outcome'] for a in acts])
+          PY
+      - name: Upload the immutable attempt bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-MEASURED_EXPERIMENT-${{ inputs.condition_id }}-${{ inputs.execution_id }}-A${{ inputs.attempt }}
+          path: raw-data/E03-resetability/${{ inputs.assigned_sut }}/${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: error

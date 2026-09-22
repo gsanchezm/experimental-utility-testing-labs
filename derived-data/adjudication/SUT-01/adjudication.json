@@ -1,0 +1,61 @@
+{
+  "adjudicator_role": "ADJUDICATOR-EU-01",
+  "ecosystem_id": "SUT-01",
+  "cell_outcomes": [
+    {
+      "modality": "Web UI Functional",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT01-EV-0001", "SUT01-EV-0002", "SUT01-EV-0003", "SUT01-EV-0004"],
+      "note": "Score 3, confirmation_state CONFIRMED. localStorage token pre-set (SUT01-EV-0002) plus POST /api/cart seeding auto-hydrated on the Checkout page (SUT01-EV-0004) is a source-verified establish+expected-outcome mechanism. No tie-break question."
+    },
+    {
+      "modality": "API",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT01-EV-0005", "SUT01-EV-0006", "SUT01-EV-0007"],
+      "note": "Score 3, confirmation_state CONFIRMED. POST /api/session/reset (SUT01-EV-0006) is an explicit reset endpoint matching the rubric's own Score 3 example verbatim."
+    },
+    {
+      "modality": "Android Native",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT01-EV-0008", "SUT01-EV-0009", "SUT01-EV-0010"],
+      "note": "Score 3, confirmation_state CONFIRMED. omnipizza:// deep-link params (accessToken, market, hydrateCart, resetSession) applied before the target screen renders match the rubric's 'deep link into a prepared state' example, source-verified at the pinned android/ios commit."
+    },
+    {
+      "modality": "iOS Native",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT01-EV-0012", "SUT01-EV-0013"],
+      "note": "Score 3, confirmation_state CONFIRMED. Same shared frontend-mobile codebase and pinned commit as Android Native; restating rather than re-deriving the mechanism is appropriate given the source-verified shared-codebase fact in manifests/e01-source-provenance.yaml. Simulator-only distribution (SUT01-EV-0013) is environment provenance and correctly does not lower the score."
+    },
+    {
+      "modality": "Performance",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT01-EV-0014", "SUT01-EV-0015", "SUT01-EV-0016"],
+      "note": "Score 3, confirmation_state CONFIRMED. performance_glitch_user's exact, deterministic 3.0s delay matches the rubric's 'controlled performance degradation' example."
+    },
+    {
+      "modality": "Accessibility — Web only",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT01-EV-0017", "SUT01-EV-0018", "SUT01-EV-0019"],
+      "note": "Score 3, confirmation_state CONFIRMED. a11y_glitch_user's missing_name mode produces an empty <h2> heading and an empty image alt attribute -- a named, tool-specific (axe-core) detectable violation with a fully-enumerated, known outcome set."
+    },
+    {
+      "modality": "Visual Testing",
+      "outcome": "DISPUTED",
+      "evidence_ids": ["SUT01-EV-0020", "SUT01-EV-0021"],
+      "note": "Auditor applied the tie-break rule (provisional_score=3, confirmed_score=2, confirmation_state null). The stated unresolved verification requirement (evidence.csv, SUT01-EV-0020 notes; audit.md section 3) is stated in concrete, closeable terms -- 'a mechanism that establishes a specifically visual perturbation, or an EXECUTION_VERIFIED screenshot-diff demonstrating this data condition produces a stable, tool-detectable visual difference against a baseline' -- which is exactly the kind of genuine, closeable verification gap the tie-break rule's second bullet contemplates, not plausibility or vendor reputation. The narrower basis for DISPUTED here is that step 3's doubt itself turns on an additional criterion this auditor applied -- that the mechanism must be one 'the SUT itself frames or exposes as a visual-testing condition as such', not merely a data condition that happens to render visibly differently -- and that criterion does not appear in protocol/capability-rubric-v1.md's own text (the rubric's Score 3 definition and its 'controlled visual condition' example impose no such framing requirement). SUT-03's image_not_loading_user forcing every product thumbnail to fail to render (SUT03-EV-0021) and SUT-02's visual_user/visual@example.com deterministic image substitution (SUT02-EV-0016, SUT02-EV-0017) are cited here not as proof this cell is wrong, but as evidence that the framing criterion is not uniformly read into the rubric across this campaign's independent audits -- both were scored Score 3 CONFIRMED without any such framing test being applied to a structurally similar account-gated, forced-image mechanism. Flagged DISPUTED for human decision on a single, narrow question: whether 'the SUT itself frames the mechanism as a visual-testing condition' is part of Decision procedure step 3 under protocol/capability-rubric-v1.md, or an additional, unwritten requirement. confirmed_score=2 is fully supported by the evidence on record either way and is not asserted here to be an undercount; it remains the recorded value pending that decision."
+    },
+    {
+      "modality": "Security Testing",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT01-EV-0022", "SUT01-EV-0023", "SUT01-EV-0024", "SUT01-EV-0025"],
+      "note": "Score 3, confirmation_state CONFIRMED. security_glitch_user's explicit exemption from the order-ownership check (SUT01-EV-0023) is an unambiguous, documented, source-verified IDOR, independently sufficient for Score 3 regardless of the two supplementary, more limited mechanisms (SUT01-EV-0024, SUT01-EV-0025)."
+    },
+    {
+      "modality": "Localization / i18n",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT01-EV-0026", "SUT01-EV-0027", "SUT01-EV-0028"],
+      "note": "Score 3, confirmation_state CONFIRMED. Five markets with server-side currency/tax/language defaults plus an explicit market selector on both web and mobile (SUT01-EV-0027, SUT01-EV-0028) matches the rubric's 'explicit market/locale selection' example."
+    }
+  ],
+  "notes": "SUT-01's own operational note records that a fragment of SUT-03's content was surfaced to this auditor via a shared-scratchpad collision (incident 2) after this SUT's evidence.csv was already finalized. Independence for SUT-01's scored content was already established by the pre-adjudication integrity review (manifests/e01-pre-adjudication-snapshot-v1.yaml, decision_gate PASSED) and is not re-opened here. One cell (Visual Testing) is DISPUTED: the auditor's own tie-break note states a genuine, closeable unresolved verification requirement, but the step-3 doubt behind it rests on a modality-framing criterion not found in protocol/capability-rubric-v1.md's own text, and sibling audits (SUT-02, SUT-03) did not apply that same criterion to comparable account-gated, forced-image mechanisms -- see that cell's note for the precise, narrow question left for human decision. This is a rubric-application-consistency question, not an assertion that confirmed_score=2 is wrong. Every other cell's confirmed_score is upheld as the highest fully-supported level under protocol/capability-rubric-v1.md."
+}

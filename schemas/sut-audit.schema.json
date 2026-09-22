@@ -1,0 +1,412 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eus-2026-001:schemas:sut-audit:v1",
+  "title": "SUT Audit Summary",
+  "description": "Structured summary of the capability audit of one testing laboratory ecosystem, the system under test (SUT), in study EUS-2026-001. Validates the structured summary of audits/<SUT>/audit.md and a future audits/<SUT>/audit.json. Scores are provisional per-modality rubric levels (protocol/capability-rubric-v1.md) and remain provisional until adjudication; no aggregated or weighted score exists. Score 0 cells remain in the summary with their structural_scope_note; there is no N/A level. Cross-cutting properties are descriptive only at v1. Evidence is referenced by evidence_id only. Schema state: DRAFT; changes follow protocol/change-control-v1.md.",
+  "type": "object",
+  "properties": {
+    "ecosystem_id": {
+      "type": "string",
+      "description": "Identifier of the audited ecosystem (system under test).",
+      "enum": [
+        "SUT-01",
+        "SUT-02",
+        "SUT-03",
+        "SUT-04",
+        "SUT-05",
+        "SUT-06"
+      ]
+    },
+    "ecosystem_name": {
+      "type": "string",
+      "description": "Human-readable ecosystem name as listed in protocol/study-design-v1.md."
+    },
+    "role": {
+      "type": "string",
+      "description": "Study role of the ecosystem as listed in protocol/study-design-v1.md (general-purpose candidate, general-purpose baseline, or specialist baseline with its specialty)."
+    },
+    "audit_directory": {
+      "type": "string",
+      "description": "Repository-relative audit directory for this ecosystem.",
+      "pattern": "^audits/SUT-0[1-6]-[a-z0-9-]+$"
+    },
+    "auditor_role": {
+      "type": "string",
+      "description": "Agent role that performed the audit, from protocol/agent-governance-v1.md. Each auditor role is bound to exactly one ecosystem.",
+      "enum": [
+        "AUDITOR-SUT01-OMNIPIZZA",
+        "AUDITOR-SUT02-SAUCELABS",
+        "AUDITOR-SUT03-BROWSERSTACK",
+        "AUDITOR-SUT04-RESTFULBOOKER",
+        "AUDITOR-SUT05-JUICESHOP",
+        "AUDITOR-SUT06-WEBDRIVERIO"
+      ]
+    },
+    "protocol_version": {
+      "type": "string",
+      "description": "Protocol version the audit was conducted under, for example v1.",
+      "pattern": "^v[1-9][0-9]*$"
+    },
+    "rubric_version": {
+      "type": "string",
+      "description": "Version of protocol/capability-rubric-v<n>.md applied, for example v1.",
+      "pattern": "^v[1-9][0-9]*$"
+    },
+    "evidence_rules_version": {
+      "type": "string",
+      "description": "Version of protocol/evidence-rules-v<n>.md applied, for example v1.",
+      "pattern": "^v[1-9][0-9]*$"
+    },
+    "audit_status": {
+      "type": "string",
+      "description": "Lifecycle state of the audit. NOT_STARTED is the only valid state during repository setup.",
+      "enum": [
+        "NOT_STARTED",
+        "IN_PROGRESS",
+        "SUBMITTED",
+        "ADJUDICATED"
+      ]
+    },
+    "started_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "YYYY-MM-DD date at which the audit began. Null while NOT_STARTED.",
+      "format": "date"
+    },
+    "submitted_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "YYYY-MM-DD date at which the auditor submitted the audit for adjudication. Null until SUBMITTED.",
+      "format": "date"
+    },
+    "components": {
+      "type": "array",
+      "description": "Ecosystem components examined during the audit, with their confirmed presence and exact provenance.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "component": {
+            "type": "string",
+            "description": "Component name as listed in the ecosystem's manifest under manifests/.",
+            "minLength": 1
+          },
+          "presence": {
+            "type": "string",
+            "description": "Whether the auditor confirmed the component exists (CONFIRMED), confirmed it does not exist (ABSENT), or could not determine either (UNCONFIRMED).",
+            "enum": [
+              "CONFIRMED",
+              "ABSENT",
+              "UNCONFIRMED"
+            ]
+          },
+          "repository": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Repository or artifact source of the component. Null when unknown or not applicable."
+          },
+          "commit_sha_or_release": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Exact commit SHA, release tag, or the strongest reproducible identifier pinned in manifests/ for the version examined. Null when unknown or not applicable. Never approximate."
+          },
+          "endpoint": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Base URL, package identifier, or other locator of the component. Null when unknown or not applicable."
+          },
+          "verified_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Role that verified this surface's provenance or presence (manifests/README.md provenance sequence)."
+          },
+          "verified_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "description": "Date (YYYY-MM-DD) of that verification."
+          }
+        },
+        "required": [
+          "component",
+          "presence"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "modality_assessments": {
+      "type": "array",
+      "description": "One entry per assessed modality from the frozen v1 modality list. Absent or empty until the audit produces assessments.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "modality": {
+            "type": "string",
+            "description": "Assessed testing modality.",
+            "enum": [
+              "Web UI Functional",
+              "API",
+              "Android Native",
+              "iOS Native",
+              "Performance",
+              "Accessibility — Web only",
+              "Visual Testing",
+              "Security Testing",
+              "Localization / i18n"
+            ]
+          },
+          "provisional_score": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Provisional rubric level for this modality per protocol/capability-rubric-v1.md (0 UNSUPPORTED, 1 TECHNICALLY EXECUTABLE, 2 EXPERIMENTALLY USABLE, 3 EXPERIMENTALLY CONTROLLABLE). Null while not yet assessed. Under the tie-break rule ('Tie-break rule for undecidable adjacent scores', protocol/capability-rubric-v1.md) this is the auditor's candidate level, which may exceed confirmed_score when the evidence only partially supports it.",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "confirmed_score": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "The score entered into every count, frequency table, and comparison (protocol/statistical-analysis-plan-v1.md; analysis/README.md), per protocol/capability-rubric-v1.md, 'Tie-break rule for undecidable adjacent scores': the highest rubric level whose complete requirements are fully supported by the available admissible evidence. Omitted or equal to provisional_score when the tie-break rule was not invoked (the ordinary case, no ambiguity); recorded as a distinct, lower value only when the rule caps the auditor's provisional_score. Never higher than provisional_score.",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "confirmation_state": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Set only when provisional_score is 3 (protocol/capability-rubric-v1.md, 'Score 3 confirmation'; protocol/study-design-v1.md, section 13, issue (x), RESOLVED). Derived from the evidence_status of the supporting evidence records, not chosen independently: UNCONFIRMED_SCORE_3 when the only supporting record is DOCUMENTED; CONFIRMED when at least one SOURCE_VERIFIED or EXECUTION_VERIFIED record supports the mechanism (EXECUTION_VERIFIED is the required confirming status where SOURCE_VERIFIED is unobtainable, protocol/study-design-v1.md, section 10.4). Only a CONFIRMED Score 3 is an adjudicated Score 3 and enters a confirmed Score 3 count (protocol/statistical-analysis-plan-v1.md, section 4.3, H1). Null for provisional_score 0, 1, or 2.",
+            "enum": [
+              "UNCONFIRMED_SCORE_3",
+              "CONFIRMED",
+              null
+            ]
+          },
+          "evidence_status_summary": {
+            "type": "array",
+            "description": "Distinct evidence statuses present among the evidence records supporting this assessment, per protocol/evidence-rules-v1.md.",
+            "items": {
+              "type": "string",
+              "enum": [
+                "DOCUMENTED",
+                "SOURCE_VERIFIED",
+                "EXECUTION_VERIFIED",
+                "INFERRED"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "evidence_record_count": {
+            "type": "integer",
+            "description": "Number of evidence records in audits/<SUT>/evidence.csv that support this assessment.",
+            "minimum": 0
+          },
+          "evidence_refs": {
+            "type": "array",
+            "description": "evidence_id values (protocol/evidence-rules-v1.md) of the supporting evidence records. CSV row or line numbers are never used.",
+            "items": {
+              "type": "string",
+              "pattern": "^SUT0[1-6]-EV-[0-9]{4}$"
+            },
+            "uniqueItems": true
+          },
+          "rationale": {
+            "type": "string",
+            "description": "Auditor's justification for the provisional level, referencing the rubric criteria and the evidence."
+          },
+          "structural_scope_note": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Descriptive only (protocol/capability-rubric-v1.md, 'Structural scope note'): one of NO_WEB_SURFACE, NO_MOBILE_SURFACE, NO_API_SURFACE, INTENTIONAL_SPECIALIST_SCOPE, OTHER_STRUCTURAL_REASON, optionally followed by ': ' and free text; the free text is required for OTHER_STRUCTURAL_REASON. Filled when the modality is absent or narrow for a structural reason; null otherwise. Never replaces or modifies provisional_score; Score 0 remains Score 0 and no N/A level exists.",
+            "pattern": "^((NO_WEB_SURFACE|NO_MOBILE_SURFACE|NO_API_SURFACE|INTENTIONAL_SPECIALIST_SCOPE)(: .+)?|OTHER_STRUCTURAL_REASON: .+)$"
+          },
+          "verification_refs": {
+            "type": "array",
+            "description": "verification_id values (SUT0n-VR-nnnn) of the execution verification records supporting EXECUTION_VERIFIED evidence for this modality (protocol/evidence-rules-v1.md). Empty when none.",
+            "items": {
+              "type": "string",
+              "pattern": "^SUT0[1-6]-VR-[0-9]{4}$"
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "modality",
+          "provisional_score"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "cross_cutting_properties": {
+      "type": "object",
+      "description": "Descriptive assessment of the eight cross-cutting properties defined in protocol/cross-cutting-properties-v1.md. Descriptive only, never scored at v1.",
+      "properties": {
+        "State Controllability": {
+          "type": "string",
+          "description": "Descriptive assessment of State Controllability."
+        },
+        "Resetability": {
+          "type": "string",
+          "description": "Descriptive assessment of Resetability."
+        },
+        "Determinism": {
+          "type": "string",
+          "description": "Descriptive assessment of Determinism."
+        },
+        "Observability": {
+          "type": "string",
+          "description": "Descriptive assessment of Observability."
+        },
+        "Automation Affordances": {
+          "type": "string",
+          "description": "Descriptive assessment of Automation Affordances."
+        },
+        "Cross-platform Scenario Parity": {
+          "type": "string",
+          "description": "Descriptive assessment of Cross-platform Scenario Parity."
+        },
+        "Cross-layer State Continuity": {
+          "type": "string",
+          "description": "Descriptive assessment of Cross-layer State Continuity."
+        },
+        "Functional Complexity": {
+          "type": "string",
+          "description": "Descriptive assessment of Functional Complexity."
+        }
+      },
+      "required": [
+        "State Controllability",
+        "Resetability",
+        "Determinism",
+        "Observability",
+        "Automation Affordances",
+        "Cross-platform Scenario Parity",
+        "Cross-layer State Continuity",
+        "Functional Complexity"
+      ],
+      "additionalProperties": false
+    },
+    "limitations": {
+      "type": "array",
+      "description": "Limitations of the audit itself (access, time, tooling, environment) that qualify its conclusions.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "unresolved": {
+      "type": "array",
+      "description": "Questions the auditor could not settle and that are handed to adjudication.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "adjudication": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Adjudication outcome recorded by the adjudicator role. Null until the audit is ADJUDICATED.",
+      "properties": {
+        "adjudicator_role": {
+          "type": "string",
+          "description": "Agent role that adjudicated the audit, from protocol/agent-governance-v1.md.",
+          "enum": [
+            "ADJUDICATOR-EU-01"
+          ]
+        },
+        "disputed_cells": {
+          "type": "array",
+          "description": "Modality cells of this ecosystem whose provisional level was disputed during adjudication.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "modality": {
+                "type": "string",
+                "description": "Disputed modality.",
+                "enum": [
+                  "Web UI Functional",
+                  "API",
+                  "Android Native",
+                  "iOS Native",
+                  "Performance",
+                  "Accessibility — Web only",
+                  "Visual Testing",
+                  "Security Testing",
+                  "Localization / i18n"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "description": "Nature of the dispute and how it was resolved, or that it remains open."
+              }
+            },
+            "required": [
+              "modality"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Adjudicator's free-text notes."
+        }
+      },
+      "required": [
+        "adjudicator_role"
+      ],
+      "additionalProperties": false
+    },
+    "environment_types_used": {
+      "type": "array",
+      "description": "Distinct environment types (protocol/study-design-v1.md, section 10.1) under which EXECUTION_VERIFIED evidence was collected during the audit. Empty when the audit produced no EXECUTION_VERIFIED record. Provenance only; never a score input.",
+      "items": {
+        "type": "string",
+        "enum": [
+          "PUBLIC_HOSTED",
+          "SELF_HOSTED",
+          "LOCAL",
+          "EMULATED",
+          "SIMULATED",
+          "OTHER"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "controlled_instance_available": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Per-ecosystem fact verified during E01 and transcribed by the ORCHESTRATOR into manifests/sut-manifest.yaml: true when every component surface that E01 confirmed present can be run by the study, from the pinned evaluated version, in a controlled environment (SELF_HOSTED or LOCAL for web and api service components; EMULATED or SIMULATED for android and ios application builds); false otherwise, naming the components that cannot in the audit limitations. Null until verified. An experimental-control fact (protocol/study-design-v1.md, sections 10.1 and 10.5), never a score input."
+    }
+  },
+  "required": [
+    "ecosystem_id",
+    "auditor_role",
+    "protocol_version",
+    "rubric_version",
+    "audit_status"
+  ],
+  "additionalProperties": false
+}

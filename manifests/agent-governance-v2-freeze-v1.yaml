@@ -1,0 +1,63 @@
+# manifests/agent-governance-v2-freeze-v1.yaml
+# Provenance record of the freeze of protocol/agent-governance-v2.md. Modeled on
+# manifests/protocol-freeze-v1.yaml and manifests/issue-xviii-ruling-v1.yaml. Editable by
+# ORCHESTRATOR only; once written, immutable in the same sense as a frozen protocol document
+# except for a non-substantive correction (protocol/change-control-v1.md, section 2).
+study_id: EUS-2026-001
+document: protocol/agent-governance-v2.md
+protocol_version: v2
+freeze_state: FROZEN-PRE-DATA  # no data has been collected under v2 (E03-resetability NOT_STARTED); the successor was created and frozen after data_collection_started became true, so the predecessor transitions to AMENDED (protocol/change-control-v1.md, section 2)
+freeze_date: "2026-09-22"
+freeze_approved_by: gilbertosanchez
+authorization_id: AGENT-GOVERNANCE-V2-FREEZE-AUTH-01
+approval_basis: "explicit human approval of the document at its exact pre-freeze content hash; the approval applied only if the file was byte-identical to that hash, which was recomputed and confirmed immediately before the freeze"
+approved_content_sha256_pre_freeze: 660de9c21ac3e9cb2e7970811248658a81c7f75f7cdd26dd360535a1b7ae9ccf  # the hash the human approved (commit 12c30f1)
+content_sha256_post_freeze: a6334e680dbc03167e468a89227806c82e60aadef581833c96e1f5454d81caae  # differs from the approved hash only by the two header rows below
+changes_made_at_freeze:
+  - "header row `Protocol state`: DRAFT -> FROZEN-PRE-DATA"
+  - "header row `Freeze approval`: the pre-freeze 'none yet' text -> approver, date, authorization id, approved hash, and this record's path"
+  - "nothing else: git diff shows exactly these two rows (4 changed lines); every role, boundary, permission, and prohibition is byte-identical to the approved content"
+body_narration_note: >
+  Section 7 and the closing paragraph still read "state DRAFT", "HUMAN_DECISION_REQUIRED — AGENT-GOVERNANCE-V2
+  FREEZE", and "Until frozen, this document authorizes nothing". That text is retained verbatim as the
+  document's pre-freeze historical snapshot (the same treatment protocol/study-design-v1.md, section 14,
+  received at the protocol v1 freeze); the header rows above, this record, and protocol/CHANGELOG.md are
+  the live lifecycle status. The conditional sentence "Until frozen, this document authorizes nothing" is
+  now satisfied: the document is frozen and in force.
+procedure: "protocol/change-control-v1.md, section 5 (post-data-collection change): new version file (created 2026-09-21, revised 2026-09-22), written rationale (below and in the change log), explicit affected-campaigns statement (below), change-log rows for the successor and the superseded document"
+semantic_content_preserved_at_freeze:
+  - every E01 role (ORCHESTRATOR, AUDITOR-SUT01…SUT06, ADJUDICATOR-EU-01, QUALIFIER-MOBILE-01) unchanged in substance; ORCHESTRATOR gains only the human-granted `.github/workflows/**` path (E03-CI-WRITE-AUTH-01)
+  - explicit EXECUTOR-E03-RESETABILITY READ boundary (section 3.5)
+  - strict cross-SUT measured-output isolation, enforced structurally in GitHub Actions (section 3.5)
+  - EXECUTOR-E03-RESETABILITY WRITE boundary limited to raw-data/E03-resetability/<assigned-SUT>/** (sections 3.5, 4)
+  - executor prohibition on `.github/workflows/**` (sections 3.5, 4)
+  - ORCHESTRATOR-only E03 CI-config write authority (section 4)
+  - executor prohibition on merging pull requests and approving its own changes (section 3.5)
+  - no E02 or E04–E12 executor authority (sections 3.5, 4)
+superseded_document:
+  path: protocol/agent-governance-v1.md
+  new_state: AMENDED
+  header_changes: ["`Protocol state`: FROZEN-PRE-DATA -> AMENDED", "one row added: `| Superseded by | protocol/agent-governance-v2.md |`"]
+  content_sha256_after_header_change: 82f42fe2007a6454455edf088692b7d7f37ffc9bf023a339ddabf0398922bdef
+  rule: "protocol/change-control-v1.md, section 4, rules for the old file after a successor is frozen: nothing else in the file changes"
+affected_campaigns:
+  - id: E01-capability-audit
+    already_collected_data_status: "valid and unaffected: E01 was executed entirely under v1's roles, which v2 carries forward unchanged in substance; no E01 artifact is re-attributed, re-collected, or re-analysed"
+  - id: E03-resetability
+    already_collected_data_status: "none exists (NOT_STARTED); v2 governs E03 execution from this freeze onward"
+  - id: E02-state-establishment and E04–E12
+    already_collected_data_status: "none exists; v2 grants no executor authority for them (section 3.5)"
+effect:
+  - "protocol/agent-governance-v2.md is now the sole agent-governance document in force; EXECUTOR-E03-RESETABILITY is a defined role, not a proposal"
+  - "the measured-execution gate 'agent-governance-v2 frozen' (.github/workflows/e03-measured-execution.yml) is now satisfiable; every other gate (campaign START, locked configuration, GitHub Actions environment verification, mobile qualification, frozen executor prompt and implementation) still fails, so measured execution remains impossible"
+does_not_authorize:
+  - launching any instance of EXECUTOR-E03-RESETABILITY (section 2, rule 6: explicit human instruction relayed by ORCHESTRATOR)
+  - E03 campaign START
+  - mobile qualification execution
+  - an executor prompt freeze
+  - any measured execution
+notes: |
+  Freeze performed by ORCHESTRATOR on explicit human instruction (E03 governance-freeze operation,
+  section 1) after recomputing the content hash and confirming it equal to the approved value. No other
+  protocol document changed. E01's frozen results (matrix sha256 88a062eb...cbe589; H1 sha256
+  8684deef...37be5) are unchanged. E03-resetability remains NOT_STARTED.

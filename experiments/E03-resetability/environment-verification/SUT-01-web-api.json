@@ -1,0 +1,48 @@
+{
+  "record_class": "ENVIRONMENT_VERIFICATION",
+  "measured_experiment": false,
+  "study_id": "EUS-2026-001",
+  "campaign_id": "E03-resetability",
+  "sut_id": "SUT-01",
+  "surfaces": [
+    "WEB",
+    "API"
+  ],
+  "conditions_covered": [
+    "E03-CS001-SUT01-WEB",
+    "E03-CS001-SUT01-API"
+  ],
+  "environment_type": "LOCAL",
+  "sut_provenance": {
+    "repository": "https://github.com/gsanchezm/OmniPizza",
+    "commit_sha": "9ca37674d374e9303912e259641ee86baf3aabe1"
+  },
+  "reset_mechanism_under_verification": "POST /api/session/reset (SUT01-EV-0006); reachability only (declared in the served OpenAPI document at /api/openapi.json; responds with a defined status unauthenticated); no session or cart established",
+  "checks": {
+    "api_health_GET": 200,
+    "api_openapi_declares_/api/session/reset": true,
+    "api_openapi_declares_/api/session": true,
+    "api_POST_/api/session/reset_unauthenticated_status": 403,
+    "api_GET_/api/session_unauthenticated_status": 403,
+    "api_GET_/api/docs_status": 200,
+    "web_GET_/_status": 200,
+    "openapi_title_version": "OmniPizza QA Platform 1.0.0"
+  },
+  "verification_result": "VERIFIED",
+  "host": {
+    "os": "macOS-26.5.2-x86_64-i386-64bit-Mach-O",
+    "arch": "x86_64",
+    "kind": "operator workstation (LOCAL)"
+  },
+  "tool_versions": {
+    "python": "Python 3.12.14",
+    "uvicorn": "Running uvicorn 0.27.0 with CPython 3.12.14 on Darwin",
+    "node": "v24.21.0",
+    "pnpm": "10.34.5"
+  },
+  "performed_by": "ORCHESTRATOR (human-authorized NON-MEASURED PRE-START provisioning, 2026-09-22)",
+  "timestamp": "2026-09-22T10:35:29.910418+00:00",
+  "timezone": "UTC",
+  "instance_identifier": "api 127.0.0.1:8000 (uvicorn); web 127.0.0.1:4301 (vite preview of the production build)",
+  "provisioning_notes": "backend run under a standalone CPython 3.12.14 build (the SUT README requires 3.11 or 3.12; pydantic 2.5.3 has no wheels for 3.13+); frontend installed with pnpm 10 (lockfileVersion 9.0; pnpm 11 failed its dependency-status check); the documented docker-compose path was not used (Docker daemon unavailable on the host during this operation)"
+}

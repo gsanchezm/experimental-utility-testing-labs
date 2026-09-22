@@ -1,0 +1,57 @@
+# manifests/provisioning/SUT-02/SUT02-PROV-0003.yaml
+# One-time provisioning record (protocol/setup-effort-v2.md, section 8; manifests/provisioning/README.md).
+# Descriptive reproducibility metadata only: never counted, never a score, never a measured observation.
+# Authored by ORCHESTRATOR under the explicit human authorization of 2026-09-22 (NON-MEASURED PRE-START).
+# OUTCOME: provisioning attempted; environment verification NOT completed on this host (see notes).
+provisioning_id: SUT02-PROV-0003
+sut_id: SUT-02
+environment_type: SIMULATED
+instance_identifier: "iOS Simulator on the operator workstation: iPhone 16, iOS 18.2 (22C150), udid E83DB502-68D7-4659-8675-898832305C95; Xcode 26.5 (17F42)"
+sut_provenance:
+  component: ios
+  repository: https://github.com/saucelabs/my-demo-app-ios
+  commit_sha: 031358f56903742103a02d086f8af76735bb31a7  # commit underlying release 2.2.2 (manifests/sut-manifest.yaml, PINNED_RELEASE)
+  release: "2.2.2"
+  artifact: "SauceLabs-Demo-App.Simulator.zip, sha256 96b08d5ac74dd817d95fbd8332ae9385bb076af38d56d13d8465345cb1797139 (contains Payload/My Demo App.app)"
+  bundle: "com.saucelabs.mydemo.app.ios (CFBundleShortVersionString 2.2.2; MinimumOSVersion 16.6; built against iphonesimulator17.5)"
+steps:
+  - sut_id: SUT-02
+    component: ios
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "GitHub CLI authenticated"
+    installation_or_build_step: "gh release download 2.2.2 --repo saucelabs/my-demo-app-ios --pattern SauceLabs-Demo-App.Simulator.zip; sha256 recorded; unzip; Info.plist read"
+    required_external_dependency: "github.com release assets"
+    estimated_or_observed_duration: "about 10 s"
+    automation_classification: AUTOMATED
+    provenance: "gh (GitHub CLI); plutil"
+    notes: null
+  - sut_id: SUT-02
+    component: ios
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "Xcode 26.5 with the iOS 18.2 simulator runtime and an existing iPhone 16 device"
+    installation_or_build_step: "xcrun simctl boot E83DB502-68D7-4659-8675-898832305C95 (succeeded; simctl list reported the device Booted)"
+    required_external_dependency: null
+    estimated_or_observed_duration: "about 1 min"
+    automation_classification: AUTOMATED
+    provenance: "xcrun simctl (Xcode 26.5)"
+    notes: null
+  - sut_id: SUT-02
+    component: ios
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "device booted"
+    installation_or_build_step: "xcrun simctl install / launch of the unpacked app — NOT COMPLETED: every subsequent simctl invocation (bootstatus, list, shutdown, boot, install) hung indefinitely on this host, including after restarting the per-user CoreSimulator service"
+    required_external_dependency: null
+    estimated_or_observed_duration: "abandoned after about 60 min of hung invocations"
+    automation_classification: AUTOMATED
+    provenance: "xcrun simctl (Xcode 26.5)"
+    notes: "HOST_SIMULATOR_SERVICE_UNRESPONSIVE; not attributable to the SUT artifact, which was downloaded and unpacked successfully"
+duration: "about 60 min, mostly hung simulator-service calls (descriptive only)"
+performed_by: ORCHESTRATOR
+date: "2026-09-22"
+campaigns_served: []  # none; the instance did not reach verified state
+notes: >
+  Environment verification record: experiments/E03-resetability/environment-verification/SUT-02-ios.json
+  (NOT_VERIFIED; blocking condition HOST_SIMULATOR_SERVICE_UNRESPONSIVE). The condition E03-CS001-SUT02-IOS
+  therefore remains NOT_EXECUTABLE_WITHOUT_CONTROLLED_INSTANCE on this host. The designated verification
+  route is the GitHub Actions job "E03 Environment Verification SUT-02 ios" (macos-15 runner, iPhone 16
+  simulator), plus the mobile qualification gate before any measured execution. No mobile test runner was used.

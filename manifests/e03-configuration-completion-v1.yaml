@@ -1,0 +1,143 @@
+# manifests/e03-configuration-completion-v1.yaml
+# Provenance record of the E03-resetability configuration-completion operation (2026-09-21), which
+# followed: human campaign selection; PRE-START configuration preparation (manifests/e03-pre-start-v1.yaml);
+# a PRE-START integrity audit; and the human ruling on Issue (xviii) (manifests/issue-xviii-ruling-v1.yaml).
+# This operation persisted that ruling, resolved PROTO-U08, completed the PRE-DATA canonical-scenario
+# catalogue, froze two mapping records, determined controlled-instance status by source inspection only,
+# designed (without creating) a CI/CD execution model, reconciled agent-governance-v2.md, synchronized
+# stale documentation, and updated the dashboard. E03 remains NOT_STARTED throughout.
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v1.md).
+study_id: EUS-2026-001
+operation: E03-resetability configuration completion (Issue xviii ruling persistence; CI/CD governance; documentation synchronization)
+operation_date: "2026-09-21"
+pre_operation_head: c20fca68b9da369db178115da093211b7e4517ee  # main HEAD immediately before this operation's mutations (= HEAD after the PRE-START integrity audit, which made no changes)
+
+issue_xviii:
+  ruling: {verification_as_action: A2, partial_success_counting: B1}
+  authorization_id: ISSUE-XVIII-RULING-01
+  persisted_in: protocol/setup-effort-v2.md
+  persisted_state: FROZEN-PRE-DATA
+  superseded: {document: protocol/setup-effort-v1.md, new_state: AMENDED}
+  provenance_record: manifests/issue-xviii-ruling-v1.yaml
+  open_issue_register_live_status: "resolved 19 / open 0 / deferred_before_campaign 1 (manifests/study-manifest.yaml; frozen study-design-v1.md section 13 table text unedited, historical snapshot per AGENT-INSTRUCTIONS.md precedent)"
+
+proto_u08:
+  final_status: RESOLVED
+  resolution_appended_to: protocol/unresolved.md  # row not rewritten in substance, per its own append-only rule
+
+canonical_scenario_catalogue:
+  status: COMPLETE
+  stop_rule_basis: "every distinct (state-class x reset-mechanism-purpose) combination evidenced in all six audits' Resetability sections has exactly one scenario; every SUT has an explicit entry in every scenario"
+  scenarios:
+    - id: CS-001
+      intent: business-object establish-then-reset (cart/basket/booking)
+      path: experiments/scenario-mappings/CS-001.yaml
+      mapping_status: FROZEN
+      frozen_at: "2026-09-21"
+      authorization_id: E03-CS001-FREEZE-AUTH-01
+      comparable_suts: [SUT-01, SUT-02, SUT-03, SUT-04, SUT-05]
+      not_comparable_suts: [SUT-06]
+    - id: CS-002
+      intent: generic application-level persistence-tier establish-then-reset (per-tier Save/Clear)
+      path: experiments/scenario-mappings/CS-002.yaml
+      mapping_status: FROZEN
+      frozen_at: "2026-09-21"
+      authorization_id: E03-CS002-FREEZE-AUTH-01
+      comparable_suts: [SUT-06]
+      not_comparable_suts: [SUT-01, SUT-02, SUT-03, SUT-04, SUT-05]
+  catalogue_document: experiments/E03-resetability/canonical-scenario-catalogue.md
+
+candidate_conditions:
+  count: 11
+  cs001_conditions: 9
+  cs002_conditions: 2
+  path: experiments/E03-resetability/campaign-configuration-draft.md
+
+controlled_instance_determination:
+  method: SOURCE_INSPECTION_ONLY  # no clone/build/execution performed (AGENT-INSTRUCTIONS.md rule 15)
+  execution_verified_conditions: 0
+  default_status_all_conditions: NOT_EXECUTABLE_WITHOUT_CONTROLLED_INSTANCE
+  path: experiments/E03-resetability/controlled-instance-determination.md
+  human_decision_required: PROVISIONING_AUTHORIZATION
+
+mobile_qualification:
+  decision: REQUIRED
+  affected_conditions: [E03-CS001-SUT02-ANDROID, E03-CS001-SUT02-IOS, E03-CS002-SUT06-ANDROID, E03-CS002-SUT06-IOS]
+  qualification_gate_executed: false
+  compatibility_smoke_executed: false
+
+ci_cd:
+  status: BLOCKED
+  path: experiments/E03-resetability/ci-cd-execution-model.md
+  existing_infrastructure: NONE
+  git_remote: NONE
+  new_infrastructure_required: true
+  ci_orchestrator: HUMAN_DECISION_REQUIRED
+  agent_instructions_no_ci_conflict: "flagged, not silently overridden; HUMAN_DECISION_REQUIRED"
+  github_write_boundary: "not granted; proposed only in protocol/agent-governance-v2.md section 4"
+  schema_gap_found:
+    - field: "per-action outcome (SUCCESS/PARTIAL_SUCCESS/FAILURE)"
+      schema: schemas/run-manifest.schema.json
+      location: "actions[] items"
+      needed_for: "protocol/setup-effort-v2.md section 5, rule 9 (human ruling B1)"
+      resolution: "reported only; no schema file modified; HUMAN_DECISION_REQUIRED for a versioned schema v2"
+
+agent_governance_v2:
+  state: DRAFT
+  sha256_of_final_content: c6d96562888af67746f46580993bd6153e6e065e4893950e26fc50724c7579dd
+  new_role: EXECUTOR-E03-RESETABILITY
+  revisions_this_operation:
+    - "issue-xviii citations repointed to protocol/setup-effort-v2.md"
+    - "CI/CD-related permissions added (trigger/read only, never author a workflow)"
+    - "explicit attempt-immutability prohibition added"
+    - "CI-config write-boundary row added to section 4, marked PROPOSED, NOT GRANTED"
+  human_decision_required: "AGENT-GOVERNANCE-V2 FREEZE (approve or decline freezing this exact file content; see this manifest's sha256_of_final_content, and the operation's return package, for the reference hash -- never embedded in the document itself)"
+
+documentation_synchronized:
+  - AGENT-INSTRUCTIONS.md
+  - protocol/README.md
+  - prompts/README.md
+  - experiments/README.md
+  - experiments/E03-resetability/README.md
+  - raw-data/README.md
+  - manifests/README.md
+
+gates:
+  G1_human_campaign_selection: PASS
+  G2_e03_configuration: BLOCKED  # draft complete; blocked by no-execution-verified-controlled-instance + CI/CD blocked, not by issue xviii (resolved) or mapping (frozen)
+  G3_issue_xviii: RESOLVED
+  G4_equivalent_scenario_mapping: FROZEN  # both CS-001 and CS-002
+  G5_mobile_qualification: BLOCKED  # required, not executed
+  G6_e03_executor_governance_role: BLOCKED  # DRAFT, not frozen; HUMAN_DECISION_REQUIRED
+  G7_e03_campaign_start: NOT_AUTHORIZED
+  G8_e03_executor_prompt_freeze: NOT_STARTED
+  G9_executor_launch: NOT_STARTED
+
+human_decisions_required:
+  - id: PROVISIONING_AUTHORIZATION
+    concerns: "actually establishing controlled instances (clone/build/deploy/install) for the eleven candidate conditions"
+  - id: RUN_MANIFEST_SCHEMA_V2
+    concerns: "additive per-action outcome field (SUCCESS/PARTIAL_SUCCESS/FAILURE), schemas/run-manifest.schema.json"
+  - id: CI_ORCHESTRATOR
+    concerns: "which CI/CD platform, if any -- no repository fact resolves this"
+  - id: AGENT_INSTRUCTIONS_NO_CI_RULE
+    concerns: "whether to amend AGENT-INSTRUCTIONS.md's standing 'no CI' style rule, and at what scope"
+  - id: GITHUB_WRITE_BOUNDARY
+    concerns: "whether to grant any role a CI-config write boundary (protocol/agent-governance-v2.md section 4, proposed row)"
+  - id: AGENT_GOVERNANCE_V2_FREEZE
+    concerns: "approve or decline freezing protocol/agent-governance-v2.md as written"
+
+validation:
+  e01_matrix_sha256_unchanged: 88a062ebac5af2a659c8396d70b36137c8a8d4d9c30569a325b742f98ccbe589
+  h1_result_sha256_unchanged: 8684deefc09faa4ba209546c4223f0cd1ec969de0a4d091bb92e3b6dbf137be5
+  e01_campaign_status_unchanged: FROZEN
+  e03_campaign_status_unchanged: NOT_STARTED
+  e02_e12_campaign_status_unchanged: NOT_STARTED
+
+notes: |
+  No file under audits/**, derived-data/**, raw-data/**, qualification/**, or prompts/frozen/** was
+  touched. manifests/study-manifest.yaml was touched only for its open_issue_register counts and an
+  appended, dated notes paragraph (both live-status fields, not historical rewriting).
+  manifests/sut-manifest.yaml and manifests/toolchain-manifest.yaml are unchanged. No experimental
+  execution, mobile qualification run, provisioning, SUT clone, or executor launch occurred. No CI
+  configuration file was created.

@@ -1,0 +1,61 @@
+{
+  "adjudicator_role": "ADJUDICATOR-EU-01",
+  "ecosystem_id": "SUT-02",
+  "cell_outcomes": [
+    {
+      "modality": "Web UI Functional",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT02-EV-0001", "SUT02-EV-0002", "SUT02-EV-0003", "SUT02-EV-0015"],
+      "note": "Score 3, confirmation_state CONFIRMED. Six fixed, source-verified test accounts (locked_out_user with a distinct, deterministic outcome) match the rubric's 'deterministic test account' example."
+    },
+    {
+      "modality": "API",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT02-EV-0004", "SUT02-EV-0005", "SUT02-EV-0006"],
+      "note": "Score 0, structural_scope_note NO_API_SURFACE. All three pinned components (web, android, ios) were independently searched and no business-data API surface was found; the one real outbound telemetry call found (SUT02-EV-0005) is correctly excluded as write-only/undocumented, not a reasonable surface. Well-evidenced negative finding."
+    },
+    {
+      "modality": "Android Native",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT02-EV-0007", "SUT02-EV-0008", "SUT02-EV-0016"],
+      "note": "Score 3, confirmation_state CONFIRMED. alice@example.com locked-out account (SUT02-EV-0007) and Reset App State (SUT02-EV-0008) are both source-verified, deterministic establish/reset mechanisms."
+    },
+    {
+      "modality": "iOS Native",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT02-EV-0009", "SUT02-EV-0017"],
+      "note": "Score 3, confirmation_state CONFIRMED. Reset App State / Log Out (SUT02-EV-0009) and the visual@example.com deterministic mechanism (SUT02-EV-0017) independently satisfy Score 3. The documented-vs-implementation gap on the locked-out account (SUT02-EV-0010, section 5) is correctly recorded as not lowering this cell, since it does not rest on that mechanism; this contradiction is itself relevant to Cross-platform Scenario Parity (cross-cutting, not scored) and is correctly not treated as a scoring issue."
+    },
+    {
+      "modality": "Performance",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT02-EV-0011"],
+      "note": "Score 3, confirmation_state CONFIRMED. performance_glitch_user's fixed 5000ms busy-wait matches the rubric's 'controlled performance degradation' example. The always-on, non-activatable android memory-churn pattern (SUT02-EV-0012) was correctly excluded from supporting this score, consistent with the Decision procedure's activation requirement."
+    },
+    {
+      "modality": "Accessibility — Web only",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT02-EV-0013", "SUT02-EV-0014"],
+      "note": "Score 2. A fixed, reproducible catalog plus deterministic accounts and Reset App State give a stable, meaningful DOM beyond generic reachability (step 2 yes); no documented/known accessibility violation exists (step 3 no, SUT02-EV-0014). Cited in derived-data/adjudication/SUT-05/adjudication.json's top-level notes as part of an audit-scope observation about search-depth variance across sibling audits on this same rubric question; that observation does not call this cell's own outcome into question."
+    },
+    {
+      "modality": "Visual Testing",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT02-EV-0015", "SUT02-EV-0016", "SUT02-EV-0017"],
+      "note": "Score 3, confirmation_state CONFIRMED. visual_user's CSS-class perturbation (web) and deterministic image substitution (android, ios) match the rubric's 'controlled visual condition' example on all three surfaces independently. Cited as sibling precedent in the SUT-01 Visual Testing DISPUTED finding: this cell's account-gated, deterministic image-substitution mechanism (SUT02-EV-0016/0017) is structurally the same kind of evidence SUT-01 declined to credit at Score 3 for a comparable mechanism (SUT01-EV-0020)."
+    },
+    {
+      "modality": "Security Testing",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT02-EV-0018", "SUT02-EV-0019"],
+      "note": "Score 2. Real, stable, multi-step checkout/payment flow reachable deterministically (step 2 yes); no documented intentional vulnerability found anywhere in the three trees (step 3 no, SUT02-EV-0019). Consistent with SUT-03's identical treatment of a comparable fact pattern (SUT03-EV-0024/0025, SUT-03-U02)."
+    },
+    {
+      "modality": "Localization / i18n",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT02-EV-0020", "SUT02-EV-0021"],
+      "note": "Score 3, confirmation_state CONFIRMED, resting on the ios surface alone. LocalizationTest.swift (part of the pinned repository, an 'equivalent artifact of the evaluated version') asserts specific localized product strings under two explicit locale launch arguments -- SOURCE_VERIFIED ground truth, not DOCUMENTED-only. android/web correctly recorded as negative evidence (SUT02-EV-0021), not scored down for the ecosystem as a whole since Score 3 requires only that the evaluated version expose the mechanism somewhere, not on every surface."
+    }
+  ],
+  "notes": "Data-hygiene / rubric-output-convention observation (protocol/agent-governance-v1.md section 3.3, 'inconsistent use of confirmed_score versus provisional_score'): this audit leaves the confirmed_score column blank on every row, reasoning (audit.md section 3) that protocol/capability-rubric-v1.md's Output rule records confirmed_score as a distinct value 'only when the tie-break rule caps it below provisional_score.' This adjudicator finds this the correct, literal reading of that rule: confirmed_score equals provisional_score in every row here by the rubric's own text, no cell in this audit rests on tie-break capping, and no incorrect confirmed_score results. manifests/e01-pre-adjudication-snapshot-v1.yaml recorded this as a 'data_quality_flags' entry ('confirmed_score column blank on all 9 rows despite confirmation_state=CONFIRMED on 6'); that framing is superseded here -- it is not a data-quality defect, only a difference in output convention from SUT-01/SUT-03/SUT-04/SUT-05, which fill confirmed_score in explicitly on every row even when it equals provisional_score. It does not change any outcome in this record. SUT-02-U01 (ios pinned identifier is a tag object, not a raw commit SHA) is a manifest-provenance question outside this adjudicator's scope (protocol/agent-governance-v1.md section 3.3: reads audits/** and protocol/**, writes only derived-data/adjudication/**) and is properly addressed to the ORCHESTRATOR, not adjudicated here."
+}

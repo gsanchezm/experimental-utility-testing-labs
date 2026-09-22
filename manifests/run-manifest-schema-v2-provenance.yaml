@@ -1,0 +1,88 @@
+# manifests/run-manifest-schema-v2-provenance.yaml
+# Provenance and change-control record for schemas/run-manifest.schema.v2.json, the versioned,
+# additive successor of schemas/run-manifest.schema.json (v1). Modeled on the PROTO-U01 and
+# PROTO-U06 additive-schema records (manifests/e01-adjudication-output-contract-v1.yaml,
+# manifests/e01-proto-u06-correction.yaml). Editable by ORCHESTRATOR only
+# (protocol/agent-governance-v1.md). Unknown values are null, never a guess.
+study_id: EUS-2026-001
+subject: schemas/run-manifest.schema.v2.json
+authorization: "explicit human authorization, 2026-09-22 (E03 PRE-START corrective operation instruction, section 1.11: versioned additive successor; only new semantic field actions[].outcome; optional at schema level; mandatory by E02/E03 campaign convention; no unrelated semantics; existing data must not require migration)"
+approved_by: gilbertosanchez
+date: "2026-09-22"
+change_control_path: "protocol/change-control-v1.md, section 5 (post-data-collection change; schemas/ is treated as freeze-locked for EUS-2026-001 per PROTO-U01) — new additive file, written rationale, affected-campaigns statement, changelog row"
+gap_resolved: "protocol/unresolved.md is not a row for this gap: it was reported as SCHEMA_GAP_FOUND in experiments/E03-resetability/ci-cd-execution-model.md, section 6, and manifests/e03-configuration-completion-v1.yaml (ci_cd.schema_gap_found), under protocol/setup-effort-v2.md, section 5, rule 9's own instruction ('reported as a schema gap ... not resolved by inventing an unrecorded convention')"
+v1:
+  path: schemas/run-manifest.schema.json
+  id: "urn:eus-2026-001:schemas:run-manifest:v1"
+  sha256: 3178c51669662e98b3a55215a7d2c64728b597fe2e0d4c64298675d947512609
+  unchanged: true  # byte-identical; remains valid for any instance written under v1
+v2:
+  path: schemas/run-manifest.schema.v2.json
+  id: "urn:eus-2026-001:schemas:run-manifest:v2"
+  sha256: 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757
+  generated_from: "v1, by a deterministic copy-and-modify transformation (no field reordered, removed, or re-typed)"
+exact_delta:
+  semantic:
+    - location: properties.actions.items.properties.outcome
+      change: NEW property
+      type: string
+      enum: [SUCCESS, PARTIAL_SUCCESS, FAILURE]
+      required_at_schema_level: false  # actions[].items.required unchanged: [position, class, description]
+      additionalProperties_on_action_items: false  # unchanged; this is why v1 rejects an instance carrying outcome
+  non_semantic:
+    - location: "$id"
+      change: "urn:eus-2026-001:schemas:run-manifest:v1 -> urn:eus-2026-001:schemas:run-manifest:v2"
+    - location: description (top level)
+      change: "one appended sentence group stating that v2 supersedes v1 by exactly the one optional property above and that every v1-valid instance is v2-valid"
+    - location: properties.notes.description
+      change: "citation protocol/setup-effort-v1.md -> protocol/setup-effort-v2.md (v1 is AMENDED; v2 carries the cited section forward verbatim in substance; same section number)"
+    - location: properties.actions.description
+      change: "citation protocol/setup-effort-v1.md -> protocol/setup-effort-v2.md (same basis)"
+    - location: properties.actions.items.properties.class.description
+      change: "citation protocol/setup-effort-v1.md -> protocol/setup-effort-v2.md (same basis)"
+    - location: properties.establishment_mechanisms.description
+      change: "citation protocol/setup-effort-v1.md -> protocol/setup-effort-v2.md (same basis)"
+    - location: properties.reset_mechanisms.description
+      change: "citation protocol/setup-effort-v1.md -> protocol/setup-effort-v2.md (same basis)"
+  not_changed:
+    - top-level required list (14 fields, identical)
+    - every other property, enumeration, pattern, format, and additionalProperties setting
+    - run-level outcome.status vocabulary (SUCCESS/FAILURE/ERROR/INCONCLUSIVE/ABORTED), which remains a distinct, run-scoped concept
+  explicitly_not_added: ["timestamps", "AI/assistant metadata", "retry fields", "identifiers", "status values", "any field beyond actions[].outcome"]
+backward_compatibility:
+  claim: "every instance valid under v1 is valid under v2 (v2 only adds an optional property inside an object that was already closed with additionalProperties false); an instance that carries actions[].outcome is valid under v2 and invalid under v1"
+  existing_instance_data: "NONE. No run manifest or E01 execution verification record exists on main or on any of the six audit/e01-sut0N-* branches (checked 2026-09-22 with git ls-tree over all seven branches; no audits/<SUT>/verifications/ directory and no run-manifest.json exists). Backward compatibility over real data is therefore vacuous; no migration is required or possible."
+  validation_method: "Ajv v8.20.0 with ajv-formats 3.0.1 (ephemeral scratchpad install; nothing added to the repository; JSON Schema draft 2020-12; strict mode with allowUnionTypes, which the pre-existing v1 union-typed fields such as seed already require) compiling both schema files and checking five synthetic fixtures; the fixtures are scratchpad-only test inputs, explicitly not study data, and are not committed (raw-data/README.md; no fake experimental record is created)"
+  fixture_results:
+    - fixture: "E03-shaped run manifest, actions without outcome"
+      v1: valid
+      v2: valid
+    - fixture: "same, actions carrying outcome SUCCESS / PARTIAL_SUCCESS"
+      v1: invalid  # additionalProperties false on action items: 'outcome' unknown to v1
+      v2: valid
+    - fixture: "same, one action outcome set to a value outside the enum"
+      v1: invalid
+      v2: invalid  # enum enforced
+    - fixture: "E01 execution-verification-shaped record (run_id SUT01-VR-0001, modality, related_evidence_ids), no actions"
+      v1: valid
+      v2: valid
+    - fixture: "retry represented as a further action record (is_retry true) with its own outcome; the failed first attempt keeps outcome FAILURE"
+      v1: invalid
+      v2: valid
+  all_expectations_met: true
+campaign_convention:
+  e03_resetability: "future E03 run manifests conform to v2 (protocol_version, run_id, and the run directory are unchanged; only the schema file cited changes); actions[].outcome is REQUIRED BY CAMPAIGN CONVENTION on every emitted action record; action count and action outcome are recorded and reported separately; a retry is a further action record with is_retry true, never a change to an earlier action's outcome (protocol/setup-effort-v2.md, section 5, rules 4 and 9). Documented in experiments/E03-resetability/README.md."
+  e02_state_establishment: "same convention when E02 is configured; E02 has no configuration yet and this record does not start or configure it"
+affected_campaigns:
+  - id: E03-resetability
+    already_collected_data_status: "none exists; nothing to migrate"
+  - id: E02-state-establishment
+    already_collected_data_status: "none exists; nothing to migrate"
+  - id: E01-capability-audit
+    already_collected_data_status: "unaffected; no E01 execution verification record exists (every E01 evidence record is DOCUMENTED, SOURCE_VERIFIED, or INFERRED per the frozen audits), and v1 remains valid for any such record"
+notes: |
+  The single semantic addition implements protocol/setup-effort-v2.md, section 5, rule 9 (human
+  ruling B1, ISSUE-XVIII-RULING-01), which requires the per-action outcome to be recorded
+  separately from the Required Actions count and explicitly anticipated this schema successor.
+  This record and the new schema file authorize nothing: E03-resetability remains NOT_STARTED
+  and no run manifest is written by this operation.

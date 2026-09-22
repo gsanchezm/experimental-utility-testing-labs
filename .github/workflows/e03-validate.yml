@@ -1,0 +1,236 @@
+# E03 Validate Configuration
+# Study EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems).
+# Authored by ORCHESTRATOR under E03-CI-WRITE-AUTH-01 (AGENT-INSTRUCTIONS.md, "E03 CI/CD infrastructure").
+# Purpose: repository-integrity validation only. Produces no experimental data, executes no
+# system under test (SUT), and never writes under raw-data/. Every job is VALIDATION, never
+# MEASURED_EXPERIMENT.
+name: E03 Validate Configuration
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e03-validate-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  TZ: UTC
+  # Frozen E01 scientific results (manifests/e01-campaign-freeze-v1.yaml). These never change.
+  E01_MATRIX_SHA256: 88a062ebac5af2a659c8396d70b36137c8a8d4d9c30569a325b742f98ccbe589
+  H1_RESULT_SHA256: 8684deefc09faa4ba209546c4223f0cd1ec969de0a4d091bb92e3b6dbf137be5
+
+jobs:
+  schema-validation:
+    name: E03 Schema Validation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Syntax-check every schema file
+        run: |
+          set -euo pipefail
+          for f in schemas/*.json; do python3 -m json.tool "$f" >/dev/null && echo "json ok: $f"; done
+      - name: Compile every schema with Ajv (JSON Schema draft 2020-12)
+        run: |
+          set -euo pipefail
+          for f in schemas/*.json; do
+            npx --yes ajv-cli@5 compile -s "$f" --spec=draft2020 --allow-union-types >/dev/null && echo "ajv compile ok: $f"
+          done
+      - name: Assert run-manifest v1 is preserved and v2 is the only additive successor
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, sys
+          v1 = json.load(open('schemas/run-manifest.schema.json'))
+          v2 = json.load(open('schemas/run-manifest.schema.v2.json'))
+          assert v1['$id'].endswith(':run-manifest:v1'), v1['$id']
+          assert v2['$id'].endswith(':run-manifest:v2'), v2['$id']
+          assert v1['required'] == v2['required'], 'top-level required lists differ'
+          a1 = v1['properties']['actions']['items']; a2 = v2['properties']['actions']['items']
+          assert set(a2['properties']) - set(a1['properties']) == {'outcome'}, 'v2 must add exactly outcome'
+          assert a2['properties']['outcome']['enum'] == ['SUCCESS', 'PARTIAL_SUCCESS', 'FAILURE']
+          assert a1['required'] == a2['required'] and a2['additionalProperties'] is False
+          print('run-manifest v1/v2 relationship ok')
+          PY
+
+  configuration-integrity:
+    name: E03 Configuration Integrity
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Ensure a YAML parser is available
+        run: python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+      - name: Parse every YAML manifest and mapping record
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import glob, yaml
+          files = sorted(glob.glob('manifests/**/*.yaml', recursive=True) + glob.glob('experiments/scenario-mappings/*.yaml') + glob.glob('experiments/E03-resetability/**/*.yaml', recursive=True))
+          for f in files:
+              yaml.safe_load(open(f)); print('yaml ok:', f)
+          print(len(files), 'yaml files parsed')
+          PY
+      - name: Assert frozen E01 results are unchanged
+        run: |
+          set -euo pipefail
+          echo "${E01_MATRIX_SHA256}  derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json" | sha256sum --check
+          echo "${H1_RESULT_SHA256}  derived-data/h1-analysis/H1-result.json" | sha256sum --check
+      - name: Assert the active E03 canonical-scenario catalogue is CS-001 only
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re, yaml
+          cs1 = yaml.safe_load(open('experiments/scenario-mappings/CS-001.yaml'))
+          assert cs1['mapping_status'] == 'FROZEN' and cs1['canonical_scenario_id'] == 'CS-001'
+          assert 'E03-resetability' in cs1['campaigns_using']
+          cat = open('experiments/E03-resetability/canonical-scenario-catalogue.md').read()
+          assert 'Active catalogue: 1 scenario (CS-001)' in cat, 'catalogue must declare CS-001 as the single active scenario'
+          assert 'EXCLUDED_FROM_CAMPAIGN' in cat and 'CS-002' in cat, 'catalogue must record the CS-002 exclusion'
+          chg = open('protocol/CHANGELOG.md').read()
+          assert 'experiments/scenario-mappings/CS-002.yaml | 1 | 1 | mapping FROZEN -> EXCLUDED_FROM_CAMPAIGN' in chg, 'CHANGELOG must carry the CS-002 exclusion row'
+          cfg = open('experiments/E03-resetability/campaign-configuration-draft.md').read()
+          rows = [l for l in cfg.splitlines() if l.startswith('| E03-CS')]
+          ids = [l.split('|')[1].strip() for l in rows]
+          assert all(i.startswith('E03-CS001-') for i in ids), f'a non-CS-001 condition row is present: {ids}'
+          assert len(ids) == 9, f'expected 9 CS-001 condition rows, found {len(ids)}'
+          # recompute from the frozen record: one condition per COMPARABLE SUT x surfaces_used entry
+          exp = [f"E03-CS001-{m['sut_id'].replace('-', '')}-{s}" for m in cs1['mappings'] if m['comparability'] == 'COMPARABLE' for s in m['surfaces_used']]
+          assert sorted(exp) == sorted(ids), f'condition rows {sorted(ids)} != recomputed {sorted(exp)}'
+          print('active catalogue CS-001 only; 9 conditions recomputed from the frozen record; CS-002 excluded')
+          PY
+      - name: Assert campaign-status invariants
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import yaml
+          sm = yaml.safe_load(open('manifests/study-manifest.yaml'))
+          st = {c['id']: c['status'] for c in sm['campaigns']}
+          assert st['E01-capability-audit'] == 'FROZEN', st
+          assert st['E03-resetability'] in ('NOT_STARTED', 'IN_PROGRESS', 'FROZEN'), st
+          readme = open('experiments/E03-resetability/README.md').read()
+          has_cfg = '\n## Campaign configuration\n' in readme
+          if st['E03-resetability'] == 'NOT_STARTED':
+              assert not has_cfg, 'E03 is NOT_STARTED but a "Campaign configuration" heading exists'
+          else:
+              assert has_cfg, 'E03 has started but no "Campaign configuration" heading exists'
+          chg = open('protocol/CHANGELOG.md').read()
+          for line in chg.splitlines():
+              if line.startswith('| 20'):
+                  cells = [c.strip() for c in line.strip().strip('|').split('|')]
+                  assert len(cells) == 8 and cells[-1], f'incomplete change-log row: {line[:80]}'
+          print('campaign-status invariants ok; E03 status =', st['E03-resetability'])
+          PY
+      - name: Assert evidence.csv headers are identical across the six audits
+        run: |
+          set -euo pipefail
+          for f in audits/SUT-0*/evidence.csv; do head -n 1 "$f"; done | sort -u | tee /tmp/headers.txt
+          test "$(wc -l < /tmp/headers.txt)" -eq 1
+
+  publication-hygiene:
+    name: E03 Publication Hygiene
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository with history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Scan tracked files for attribution terms, secrets, and private paths
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re, subprocess, sys
+          # Prohibited vendor/assistant tokens are assembled at runtime from hex fragments so that this
+          # workflow file does not itself carry the literal strings it prohibits. Detection strength is
+          # unchanged: the decoded tokens are matched case-insensitively as substrings, in every tracked file.
+          H = lambda h: bytes.fromhex(h).decode()
+          VENDORS = [H('636c61756465'), H('63686174677074'), H('6f70656e6169'), H('616e7468726f706963'), H('636f70696c6f74')]
+          V = '|'.join(re.escape(v) for v in VENDORS)
+          # An exemption exists only for the agent-instructions file-name convention of the canonical
+          # repository (token immediately followed by ".md" or "_md"); the public export renames that file.
+          term = re.compile(r'co-authored-by:\s*(' + V + r')|' + VENDORS[0] + r'-session|generated by (' + V + r'|ai)|\bai generated\b|\bai-generated\b|(?:' + V + r')(?![._]md)', re.I)
+          secret = re.compile(r'(ghp_[A-Za-z0-9]{20,}|gho_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|xox[baprs]-[A-Za-z0-9-]{10,})')
+          files = subprocess.run(['git', 'ls-files'], capture_output=True, text=True).stdout.split()
+          bad = []
+          for f in files:
+              try: txt = open(f, encoding='utf-8', errors='replace').read()
+              except IsADirectoryError: continue
+              for i, line in enumerate(txt.splitlines(), 1):
+                  if term.search(line): bad.append(f'{f}:{i}: attribution/vendor term')
+                  if secret.search(line): bad.append(f'{f}:{i}: secret-like token')
+                  if re.search(r'/Users/[a-z]|/home/[a-z]', line): bad.append(f'{f}:{i}: private absolute path')
+          if bad:
+              print('\n'.join(bad)); sys.exit(1)
+          print('tracked files clean:', len(files))
+          PY
+      - name: Scan the pushed commits for attribution trailers or session identifiers
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            RANGE="${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+          elif [ -n "${{ github.event.before }}" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ] && git cat-file -e "${{ github.event.before }}" 2>/dev/null; then
+            RANGE="${{ github.event.before }}..${{ github.sha }}"
+          else
+            RANGE="${{ github.sha }}"
+          fi
+          echo "commit range: $RANGE"
+          git log --format='%H %an <%ae>%n%B' "$RANGE" > /tmp/commit-metadata.txt
+          python3 - <<'PY'
+          import re, sys
+          H = lambda h: bytes.fromhex(h).decode()
+          VENDORS = [H('636c61756465'), H('63686174677074'), H('6f70656e6169'), H('616e7468726f706963'), H('636f70696c6f74')]
+          V = '|'.join(re.escape(v) for v in VENDORS)
+          pat = re.compile(r'co-authored-by:.*(' + V + r')|' + VENDORS[0] + r'-session:|generated by (' + V + r'|ai)|^author:.*(' + V + r')|' + VENDORS[0] + r'\.ai/code/session', re.I | re.M)
+          txt = open('/tmp/commit-metadata.txt').read()
+          m = pat.search(txt)
+          if m:
+              print('attribution trailer or session identifier found in commit metadata'); sys.exit(1)
+          print('commit metadata clean')
+          PY
+
+  workflow-lint:
+    name: E03 Workflow Lint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Lint workflow files with actionlint
+        run: |
+          set -euo pipefail
+          bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.7/scripts/download-actionlint.bash) 1.7.7 /tmp
+          /tmp/actionlint -color .github/workflows/*.yml
+      - name: Assert every workflow, job, step, and artifact name is domain-oriented
+        run: |
+          set -euo pipefail
+          # Only name: lines are checked (workflow, job, step, and artifact names). Tokens are decoded at
+          # runtime so that this file carries no literal vendor or generic assistant term that the
+          # tracked-file scan above would itself flag.
+          python3 - <<'PY'
+          import glob, re, sys
+          H = lambda h: bytes.fromhex(h).decode()
+          VENDORS = [H('636c61756465'), H('63686174677074'), H('6f70656e6169'), H('616e7468726f706963'), H('636f70696c6f74')]
+          extra = [H('6169206167656e74'), H('61692067656e657261746564'), H('617373697374616e74'), H('6c6c6d')]  # generic assistant terms, decoded at runtime
+          pat = re.compile(r'^\s*(-\s*)?name:.*(' + '|'.join(re.escape(t) for t in VENDORS + extra) + r')', re.I)
+          bad = []
+          for f in sorted(glob.glob('.github/workflows/*.yml')):
+              for i, line in enumerate(open(f).read().splitlines(), 1):
+                  if pat.search(line): bad.append(f'{f}:{i}: {line.strip()}')
+          if bad:
+              print('\n'.join(bad)); print('disallowed term in a workflow, job, step, or artifact name'); sys.exit(1)
+          print('workflow names clean')
+          PY

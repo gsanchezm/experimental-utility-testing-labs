@@ -1,0 +1,55 @@
+# manifests/provisioning/SUT-05/SUT05-PROV-0001.yaml
+# One-time provisioning record (protocol/setup-effort-v2.md, section 8; manifests/provisioning/README.md).
+# Descriptive reproducibility metadata only: never counted, never a score, never a measured observation.
+# Authored by ORCHESTRATOR under the explicit human authorization of 2026-09-22 (NON-MEASURED PRE-START).
+provisioning_id: SUT05-PROV-0001
+sut_id: SUT-05
+environment_type: LOCAL
+instance_identifier: "operator workstation; single Node.js process at 127.0.0.1:3105 (PORT=3105; serves both the REST/API routes and the web frontend)"
+sut_provenance:
+  components: [api, web]
+  repository: https://github.com/juice-shop/juice-shop
+  commit_sha: 1618a611b173b4bf114028e6e02549950606e29d  # manifests/sut-manifest.yaml, SUT-05 web/api, PINNED_SOURCE (package.json version 20.2.0 at this commit)
+  reported_version: "20.2.0 (GET /rest/admin/application-version)"
+steps:
+  - sut_id: SUT-05
+    component: api/web (single application)
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "git 2.48.1"
+    installation_or_build_step: "git clone; git checkout 1618a611b173b4bf114028e6e02549950606e29d (HEAD verified equal to the pin)"
+    required_external_dependency: "github.com"
+    estimated_or_observed_duration: "about 3 min"
+    automation_classification: AUTOMATED
+    provenance: "git 2.48.1"
+    notes: null
+  - sut_id: SUT-05
+    component: api/web (single application)
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "Node.js 24.21.0 and npm 11.19.0 (installed with nvm; the pinned package.json declares engines node 22 - 26)"
+    installation_or_build_step: "npm install (the pinned postinstall installs and builds the Angular frontend and compiles the server); source build chosen because the v20.2.0 release archives exist only for darwin arm64 and linux/windows, not darwin x86_64, and the source commit is the primary pin"
+    required_external_dependency: "npm registry"
+    estimated_or_observed_duration: "about 32 min"
+    automation_classification: AUTOMATED
+    provenance: "npm 11.19.0; package-lock.json at the pinned commit"
+    notes: "a first attempt was abandoned after its concurrent runtime installation fell back to compiling Node.js from source; the recorded attempt used the already-installed Node.js 24.21.0"
+  - sut_id: SUT-05
+    component: api/web (single application)
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "build complete"
+    installation_or_build_step: "PORT=3105 npm start (node build/app); the reset mechanism under study is this process restart itself (sequelize.sync force on every start, SUT05-EV-0003)"
+    required_external_dependency: null
+    estimated_or_observed_duration: "about 20 s to listening"
+    automation_classification: AUTOMATED
+    provenance: "Node.js 24.21.0"
+    notes: "port 3105 chosen because 3000-3006 were occupied by the SUT-04 instance on the same workstation"
+duration: "about 36 min end to end (descriptive only)"
+performed_by: ORCHESTRATOR
+date: "2026-09-22"
+campaigns_served: []  # none yet: E03-resetability is NOT_STARTED; this instance served PRE-START environment verification only (E03-CS001-SUT05-API)
+notes: >
+  Environment verification record: experiments/E03-resetability/environment-verification/SUT-05-api.json
+  (VERIFIED: application-version 200; login and basket routes answer with defined statuses unauthenticated;
+  stop -> unreachable -> start -> 200 confirms the process-restart reset mechanism is reachable; web GET / 200
+  from the same process). No account was logged in and no basket item was created. The GitHub Actions job
+  "E03 Environment Verification SUT-05 api" reproduces the source build on an ubuntu-24.04 runner (SELF_HOSTED)
+  and is the verification route required before measured execution.

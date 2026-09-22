@@ -1,0 +1,44 @@
+{
+  "record_class": "ENVIRONMENT_VERIFICATION",
+  "measured_experiment": false,
+  "study_id": "EUS-2026-001",
+  "campaign_id": "E03-resetability",
+  "sut_id": "SUT-02",
+  "surfaces": [
+    "IOS"
+  ],
+  "conditions_covered": [
+    "E03-CS001-SUT02-IOS"
+  ],
+  "environment_type": "SIMULATED",
+  "sut_provenance": {
+    "repository": "https://github.com/saucelabs/my-demo-app-ios",
+    "commit_sha": "031358f56903742103a02d086f8af76735bb31a7",
+    "release": "2.2.2",
+    "artifact": "SauceLabs-Demo-App.Simulator.zip",
+    "artifact_sha256": "96b08d5ac74dd817d95fbd8332ae9385bb076af38d56d13d8465345cb1797139"
+  },
+  "reset_mechanism_under_verification": "'Reset App State' in the Menu screen behind a confirmation (SUT02-EV-0009); install and launch on the iOS Simulator could not be completed on this host",
+  "checks": {
+    "simulator_boot_2026-09-22T08:52Z": "xcrun simctl boot E83DB502-... succeeded; xcrun simctl list devices booted reported \"iPhone 16 (E83DB502-68D7-4659-8675-898832305C95) (Booted)\"",
+    "artifact_unpacked": "Payload/My Demo App.app; Info.plist read: CFBundleIdentifier com.saucelabs.mydemo.app.ios, CFBundleShortVersionString 2.2.2, MinimumOSVersion 16.6, DTSDKName iphonesimulator17.5",
+    "install_and_launch": "NOT CONFIRMED: every subsequent simctl call (bootstatus, list, shutdown, boot, install) hung indefinitely on this host, including after restarting the per-user CoreSimulator service; the install/launch/app-container/binary-string checks could not be completed",
+    "reset_string_occurrences_in_binary": "not checked (blocked by the same hang; the binary itself is present in the unpacked artifact)"
+  },
+  "verification_result": "NOT_VERIFIED",
+  "host": {
+    "os": "macOS-26.5.2-x86_64-i386-64bit-Mach-O",
+    "arch": "x86_64",
+    "kind": "operator workstation (LOCAL)"
+  },
+  "tool_versions": {
+    "xcode": "Xcode 26.5 Build version 17F42",
+    "ios_runtime_targeted": "iOS 18.2 (22C150), iPhone 16",
+    "mobile_runner": "none"
+  },
+  "performed_by": "ORCHESTRATOR (human-authorized NON-MEASURED PRE-START provisioning, 2026-09-22)",
+  "timestamp": "2026-09-22T10:20:44.066795+00:00",
+  "timezone": "UTC",
+  "instance_identifier": "iOS Simulator iPhone 16 (iOS 18.2), udid E83DB502-68D7-4659-8675-898832305C95",
+  "blocking_condition": "HOST_SIMULATOR_SERVICE_UNRESPONSIVE (CoreSimulator hang on the operator workstation during this operation); the GitHub Actions macos-15 job of .github/workflows/e03-environment-verification.yml is the designated verification route for this condition"
+}

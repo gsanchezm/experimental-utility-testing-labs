@@ -1,0 +1,61 @@
+{
+  "adjudicator_role": "ADJUDICATOR-EU-01",
+  "ecosystem_id": "SUT-04",
+  "cell_outcomes": [
+    {
+      "modality": "Web UI Functional",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT04-EV-0001", "SUT04-EV-0002", "SUT04-EV-0003", "SUT04-EV-0004"],
+      "note": "Score 3, confirmation_state CONFIRMED. Documented, source-verified admin/password account with a deterministic redirect-on-success / visible-error-on-failure outcome matches the rubric's 'deterministic test account' example."
+    },
+    {
+      "modality": "API",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT04-EV-0005", "SUT04-EV-0006", "SUT04-EV-0007", "SUT04-EV-0008", "SUT04-EV-0009", "SUT04-EV-0010"],
+      "note": "Score 3, confirmation_state CONFIRMED. Full REST CRUD against a deterministic seeded dataset plus the shipped Wirebridge HTTP-to-SQL bridge are both independently sufficient 'API-based state seeding' mechanisms. The documented-vs-implementation jar-filename contradiction (audit.md section 5; SUT04-EV-0030/0031) is correctly recorded as not affecting this score -- it concerns a stale run-instruction filename in five READMEs, not the CRUD/state-seeding mechanism the score rests on."
+    },
+    {
+      "modality": "Android Native",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT04-EV-0011", "SUT04-EV-0012"],
+      "note": "Score 0, structural_scope_note NO_MOBILE_SURFACE. docker-compose.yml's seven services and a full-tree search both confirm no Android surface."
+    },
+    {
+      "modality": "iOS Native",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT04-EV-0013", "SUT04-EV-0014"],
+      "note": "Score 0, structural_scope_note NO_MOBILE_SURFACE. Same basis as Android Native."
+    },
+    {
+      "modality": "Performance",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT04-EV-0015", "SUT04-EV-0016", "SUT04-EV-0017"],
+      "note": "Score 2. A stable, deterministically re-establishable seed dataset gives repeatable response shapes across runs (step 2 yes); no documented performance threshold or controlled-degradation condition exists anywhere in the repository (step 3 no, SUT04-EV-0017)."
+    },
+    {
+      "modality": "Accessibility — Web only",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT04-EV-0018", "SUT04-EV-0019"],
+      "note": "Score 2. aria-label/role/label markup consistently applied on the reservation and admin-login forms (step 2 yes); no documented/source-verified controlled accessibility fault found (step 3 no, SUT04-EV-0019)."
+    },
+    {
+      "modality": "Visual Testing",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT04-EV-0020", "SUT04-EV-0021"],
+      "note": "Score 1. The only test-fixture evidence found is Jest DOM/markup snapshot testing (SUT04-EV-0020), correctly not treated as a pixel-level visual mechanism; no visual-regression tooling, baseline, or perturbation condition exists (SUT04-EV-0021), so step 2 is not met beyond generic reachability."
+    },
+    {
+      "modality": "Security Testing",
+      "outcome": "DISPUTED",
+      "evidence_ids": ["SUT04-EV-0022", "SUT04-EV-0023", "SUT04-EV-0024"],
+      "note": "Auditor applied the tie-break rule (provisional_score=3, confirmed_score=2, confirmation_state null; unresolved.md SUT-04-U01). confirmed_score=2 is well-supported: a real, stable, deterministic token-based authorization boundary (SUT04-EV-0022) independently satisfies step 2. The provisional_score=3 candidate rests on plaintext password storage (SUT04-EV-0024), which is SOURCE_VERIFIED as a fact but is not documented or designed anywhere in the evaluated version as an intentional vulnerability or fault -- unlike every one of the rubric's own Score 3 security examples ('fault injection', 'documented intentional vulnerability') and unlike the comparable, clearly-documented mechanisms in this campaign (SUT-01's security_glitch_user IDOR, explicitly named and described in README.md; SUT-05's 113-entry documented challenge catalog). This adjudicator agrees with the auditor that whether an undocumented, non-pedagogical implementation weakness satisfies Decision procedure step 3's 'known experimental condition' the same way a documented/designed mechanism does is a genuine, unresolved interpretive question, not a matter of missing evidence or auditor plausibility -- the SQL-injection alternative was correctly ruled out by source (parameterized queries, SUT04-EV-0023), so plaintext storage is the only remaining Score-3 candidate and its qualification under the rubric's own examples is undecided. Flagged DISPUTED for human decision, consistent with the auditor's own request. confirmed_score=2 remains the recorded floor; this record does not itself change it."
+    },
+    {
+      "modality": "Localization / i18n",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT04-EV-0025", "SUT04-EV-0026"],
+      "note": "Score 0. No locale/market selector, translation catalog, or i18n library exists anywhere in the evaluated version; the only locale-related code fixes a single hardcoded date-format locale (en-GB). Structural_scope_note observation: this cell carries OTHER_STRUCTURAL_REASON ('single hardcoded date-format locale; no locale/market-selection surface exists'). The open rubric-application question (see this record's top-level notes) is whether protocol/capability-rubric-v1.md's OTHER_STRUCTURAL_REASON token is meant to reach a within-surface feature absence like this one -- as opposed to a whole-surface absence like NO_WEB_SURFACE/NO_API_SURFACE/NO_MOBILE_SURFACE, or a documented ecosystem-level scope decision like INTENTIONAL_SPECIALIST_SCOPE -- or whether it is reserved for those narrower cases. The note never changes a score and this cell's Score 0 is independently, correctly supported by the evidence either way."
+    }
+  ],
+  "notes": "One cell (Security Testing) is DISPUTED, matching the auditor's own request in unresolved.md SUT-04-U01: this is a genuine, unresolved interpretive question about whether an undocumented implementation weakness can satisfy Score 3's 'known experimental condition' requirement, not a case of missing evidence, plausibility, or vendor reputation. A second observation (Localization / i18n structural_scope_note) is noted in that cell but does not change its outcome. Every other cell's confirmed_score is upheld as the highest fully-supported level under protocol/capability-rubric-v1.md."
+}

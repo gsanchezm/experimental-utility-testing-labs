@@ -1,0 +1,58 @@
+# manifests/provisioning/SUT-02/SUT02-PROV-0002.yaml
+# One-time provisioning record (protocol/setup-effort-v2.md, section 8; manifests/provisioning/README.md).
+# Descriptive reproducibility metadata only: never counted, never a score, never a measured observation.
+# Authored by ORCHESTRATOR under the explicit human authorization of 2026-09-22 (NON-MEASURED PRE-START).
+provisioning_id: SUT02-PROV-0002
+sut_id: SUT-02
+environment_type: EMULATED
+instance_identifier: "Android emulator on the operator workstation: AVD Pixel_API35_Test (device profile pixel_8; system image android-35 google_apis x86_64; Android 15, API 35), serial emulator-5554"
+sut_provenance:
+  component: android
+  repository: https://github.com/saucelabs/my-demo-app-android
+  commit_sha: 36b012eecdf6a2b488b9504e16b3d0c3ca9a0e7b  # commit underlying release 2.2.0 (manifests/sut-manifest.yaml, PINNED_RELEASE)
+  release: "2.2.0"
+  artifact: "mda-2.2.0-25.apk, sha256 318ef64bdcaff18e576d962ab1f557e0a2683b9b5210a6bb6b25cb0caeef62b4"
+  package: "com.saucelabs.mydemoapp.android (versionCode 25, versionName 2.2.0; minSdk 21, targetSdk 31)"
+steps:
+  - sut_id: SUT-02
+    component: android
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "GitHub CLI authenticated"
+    installation_or_build_step: "gh release download 2.2.0 --repo saucelabs/my-demo-app-android --pattern mda-2.2.0-25.apk; sha256 recorded"
+    required_external_dependency: "github.com release assets"
+    estimated_or_observed_duration: "about 10 s"
+    automation_classification: AUTOMATED
+    provenance: "gh (GitHub CLI)"
+    notes: null
+  - sut_id: SUT-02
+    component: android
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "Android SDK with emulator, platform-tools (adb 1.0.41), system image android-35 google_apis x86_64, and an existing AVD Pixel_API35_Test"
+    installation_or_build_step: "emulator -avd Pixel_API35_Test -no-window -no-audio -no-boot-anim -no-snapshot-save -accel on -gpu swiftshader_indirect; wait for sys.boot_completed"
+    required_external_dependency: null
+    estimated_or_observed_duration: "a first headless cold boot without -accel did not complete within about 45 min and was abandoned; the second boot with -accel on (Hypervisor.framework, reported available by emulator -accel-check) completed in about 15 min"
+    automation_classification: AUTOMATED
+    provenance: "Android Emulator 36.4.9 (emulator -version)"
+    notes: "cold boot without a saved snapshot"
+  - sut_id: SUT-02
+    component: android
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "emulator booted"
+    installation_or_build_step: "adb install -r mda-2.2.0-25.apk; adb shell monkey -p com.saucelabs.mydemoapp.android -c android.intent.category.LAUNCHER 1"
+    required_external_dependency: null
+    estimated_or_observed_duration: "about 30 s"
+    automation_classification: AUTOMATED
+    provenance: "adb 1.0.41"
+    notes: null
+duration: "about 20 min including the successful emulator boot (descriptive only)"
+performed_by: ORCHESTRATOR
+date: "2026-09-22"
+campaigns_served: []  # none yet: E03-resetability is NOT_STARTED; this instance served PRE-START environment verification only (E03-CS001-SUT02-ANDROID)
+notes: >
+  Environment verification record: experiments/E03-resetability/environment-verification/SUT-02-android.json
+  (VERIFIED: package installed; MainActivity resumed after launch; the 'Reset App State' string, SUT02-EV-0008,
+  present in the installed artifact's resources; UI hierarchy dump and screenshot captured). No mobile test
+  runner was used (Mobilewright qualification remains NOT_STARTED; environment verification is not qualification).
+  The reset control itself was not exercised. Measured execution additionally requires the GitHub Actions
+  verification (ubuntu-24.04 runner with KVM, reactivecircus/android-emulator-runner, API 35 google_apis x86_64,
+  profile pixel_7) and the mobile qualification gate.

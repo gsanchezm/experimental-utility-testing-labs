@@ -1,0 +1,68 @@
+# manifests/e01-adjudicator-prompt-freeze.yaml
+# Prompt provenance record for the frozen E01 adjudicator prompt, EUS-2026-001. Modeled on
+# manifests/e01-prompt-freeze.yaml. This is a provenance record, not a second protocol: the prompt's own
+# content is authoritative in prompts/frozen/; this file only certifies it. Editable by ORCHESTRATOR only
+# (protocol/agent-governance-v1.md).
+study_id: EUS-2026-001
+campaign: E01-capability-audit
+adjudicator_id: ADJUDICATOR-EU-01
+prompt_id: E01-ADJUDICATOR-V1
+prompt_version: v1
+working_prompt_path: prompts/working/e01-adjudicator-v1.md
+frozen_prompt_path: prompts/frozen/e01-adjudicator-v1.md
+prompt_sha256: f93e82ab339b32b84883951ad0d15f31301b9f23ddd89090072109de05f92bc4
+prompt_byte_size: 3475
+working_frozen_byte_equivalent: true  # `diff` and `shasum -a 256` both confirm prompts/working/ and prompts/frozen/ are byte-identical at freeze time
+freeze_timestamp: "2026-09-17T14:43:38Z"
+freeze_approved_by: gilbertosanchez
+original_pre_data_introduction_commit: b5d907ebb1e7532bea4c061a50915db8df029e3c
+original_pre_data_sha256: 7a8b4a997aba3b6ec43d211646f51e8358e30c2c042956883da597c61d70c707
+original_pre_data_byte_size: 3296
+proto_u01_implementation_commit: 2115d049efed4dd6c97d439c086491d5929ff1a4
+category_b_precondition_commit: d7b171bb835a61257a59910e511f81c5ae6dce14
+pre_adjudication_integrity_commit: cb49ba0e44baf19b2c899ae9696c08603a66e1d9
+protocol_freeze_commit: 38b82fda8282e2e068a27a45eef458f0e085def8
+protocol_freeze_tag: eus-2026-001-protocol-v1-pre-data
+e01_start_commit: 89b23f2787c7717f357b8031a798389c2b9ca335
+temporal_provenance: POST-DATA_MODIFIED_UNDER_APPROVED_CHANGE_CONTROL
+temporal_provenance_basis: >
+  git log on prompts/working/e01-adjudicator-v1.md shows exactly three commits, ever:
+  b5d907e (pre-data introduction, ancestor of E01 START 89b23f2), 2115d04 (approved PROTO-U01
+  output-contract binding), and d7b171b (approved Category-B precondition correction). No other
+  modification exists in history. Each of the two post-data commits was diff-verified to change exactly
+  one approved hunk and nothing else (protocol/unresolved.md PROTO-U01; protocol/CHANGELOG.md).
+methodology_decision_semantics_changed: false
+evidence_or_scoring_semantics_changed: false
+status: FROZEN
+adjudication_output_schema:
+  schema_path: schemas/adjudication.schema.json
+  schema_sha256: f552f485bc349a507df7d2fb202d72332ae221c8ef524c1517be984f44c39ec8
+  schema_byte_size: 3818
+  change_control_id: PROTO-U01
+proto_u02_status: OPEN_NON_BLOCKING
+proto_u02_basis: >
+  PROTO-U02 (protocol/unresolved.md) concerns write authority for audit_status: ADJUDICATED and the
+  embedded adjudication object in schemas/sut-audit.schema.json under audits/<SUT>/, which
+  ADJUDICATOR-EU-01 cannot write to (protocol/agent-governance-v1.md, section 3.3). No frozen pre-data
+  artifact requires audit_status = ADJUDICATED as a precondition for adjudication to begin, requires
+  ADJUDICATOR-EU-01 to write it, or gates protocol/statistical-analysis-plan-v1.md's consumption of
+  derived-data/adjudication/** on it (H1 references "the adjudicated matrix" descriptively, not the
+  audit_status field). ADJUDICATOR-EU-01 can satisfy every section 3.3 responsibility by reading
+  audits/** and writing only derived-data/adjudication/** under schemas/adjudication.schema.json.
+  Remains open and unresolved; not addressed by this freeze.
+review_summary: |
+  Reviewed the current working prompt against protocol/agent-governance-v1.md, protocol/capability-rubric-v1.md,
+  protocol/evidence-rules-v1.md, protocol/study-design-v1.md, protocol/statistical-analysis-plan-v1.md,
+  schemas/adjudication.schema.json, and the PROTO-U01 change-control record before freezing. Confirmed the
+  prompt differs from its pre-data version (b5d907e) only through the two approved changes: the
+  PROTO-U01 output-record binding reference and the Category-B execution-precondition correction. No
+  result-specific instruction, SUT-specific language, ranking, global utility score, new evidence status,
+  or new scoring concept was found or introduced. Adjudicator scope remains consistency review only;
+  evidence invention remains prohibited; original audit commits remain immutable (write scope unchanged:
+  derived-data/adjudication/** only); every examined cell now has a defined CONFIRMED/DISPUTED/UNSUPPORTED
+  output referenced by evidence_id, validated against schemas/adjudication.schema.json.
+notes: |
+  This is the only frozen copy of E01-ADJUDICATOR-V1 at this time. Any future substantive change to
+  adjudication methodology creates a new version (E01-ADJUDICATOR-V2 or later) with its own freeze record;
+  this file is never edited to describe a different prompt. No file under audits/** was read or modified
+  to produce this record. ADJUDICATOR-EU-01 has not executed before, during, or after this freeze.

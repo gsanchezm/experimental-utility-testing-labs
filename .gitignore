@@ -1,0 +1,134 @@
+# ---------------------------------------------------------------------------
+# experimental-utility-study — .gitignore
+#
+# Scientific content is NEVER ignored: raw-data/, derived-data/, manifests/,
+# protocol/, prompts/ (frozen/ and working/), audits/, experiments/,
+# qualification/, analysis/, schemas/ and all experimental result metadata
+# are tracked. Only build noise, tool caches,
+# temporary artifacts, IDE/OS metadata, and secrets are excluded.
+#
+# Directory-name patterns that could plausibly appear inside data folders
+# (build/, dist/, logs/, tmp/, target/, out/ ...) are anchored to the
+# repository root on purpose: git cannot re-include a file whose parent
+# directory is excluded. Future tooling directories should carry their own
+# nested .gitignore.
+# ---------------------------------------------------------------------------
+
+# --- Node / JavaScript tooling (future Playwright / Pixelmatch / Mobilewright) ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+.pnpm-store/
+.yarn/cache/
+.yarn/install-state.gz
+
+# --- Python (future analysis) ---
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+*.egg-info/
+.eggs/
+/dist/
+/build/
+
+# --- Java / JVM (future performance or security tooling; no tool is selected) ---
+/target/
+*.class
+*.jar
+*.war
+*.ear
+.gradle/
+/out/
+hs_err_pid*
+
+# --- Mobile build artifacts (Android / iOS) ---
+*.apk
+*.aab
+*.ipa
+*.app/
+*.dSYM/
+*.xcarchive/
+DerivedData/
+xcuserdata/
+local.properties
+/captures/
+*.hprof
+
+# --- Test-tool temporary output (NOT curated evidence; curated artifacts are
+#     copied into raw-data/ with provenance) ---
+/test-results/
+/playwright-report/
+/blob-report/
+playwright/.cache/
+/.tmp/
+/tmp/
+/temp/
+*.tmp
+
+# --- Temporary screenshots / recordings / logs ---
+*.tmp.png
+*.tmp.jpg
+*.tmp.webm
+*.log
+/logs/
+zap-report*.html
+zap-report*.json
+
+# --- Re-include scientific data that the noise patterns above could catch
+#     (order matters: later patterns win; OS files and secrets stay ignored
+#     because they are listed after this block) ---
+!raw-data/**
+!derived-data/**
+!manifests/**
+!protocol/**
+!prompts/frozen/**
+!experiments/**
+!audits/**
+!schemas/**
+!qualification/**
+!analysis/**
+!prompts/working/**
+
+# --- IDE metadata ---
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# --- OS files ---
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- Secrets and environment files ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.keystore
+*.jks
+secrets/
+credentials*.json
+service-account*.json

@@ -1,0 +1,62 @@
+# experiments/E01-capability-audit/adjudication-input-view.yaml
+# Operational routing metadata only: paths to the read-only, git-addressed materialization of the six
+# immutable auditor result commits, prepared by the ORCHESTRATOR so ADJUDICATOR-EU-01 can read the actual
+# submitted audit contents instead of the unfilled templates on main (protocol/agent-governance-v1.md,
+# section 3.3, "Reads: all of audits/** and all of protocol/**"). Contains no score, evidence_id, cell
+# outcome, flag, or other scientific content -- paths, branch names, and commit SHAs only. Not part of the
+# adjudicator's frozen scientific task prompt (prompts/frozen/e01-adjudicator-v2.md), which is supplied
+# unmodified, byte-for-byte, with no prefix or suffix. Editable by ORCHESTRATOR only
+# (protocol/agent-governance-v1.md).
+study_id: EUS-2026-001
+campaign: E01-capability-audit
+purpose: >
+  Read-only materialization index for ADJUDICATOR-EU-01. The six worktrees below already existed on disk
+  from the original auditor launch (git worktree list, confirmed before this record was written); this
+  record does not create them, only documents their paths, and was written before ADJUDICATOR-EU-01 was
+  launched. None of the six auditor branches was merged, rebased, or force-updated. None of the six worktrees
+  was modified by this record.
+materialization_method: "git worktree (each worktree's HEAD is the exact immutable auditor result commit; each worktree is outside this repository's own tracked working tree, a sibling directory, so audits/** on main is untouched)"
+views:
+  - ecosystem_id: SUT-01
+    branch: audit/e01-sut01-omnipizza
+    result_commit: fa807da45c3210e4659c231a7326890ed0a5dbb8
+    worktree_path: ../eus-2026-001-worktrees/e01-sut01-omnipizza
+    verified_head_matches_result_commit: true
+    verified_worktree_clean: true
+  - ecosystem_id: SUT-02
+    branch: audit/e01-sut02-saucelabs
+    result_commit: bdef52b12bbdad3ca1746c0f4c74f0d9ca248226
+    worktree_path: ../eus-2026-001-worktrees/e01-sut02-saucelabs
+    verified_head_matches_result_commit: true
+    verified_worktree_clean: true
+  - ecosystem_id: SUT-03
+    branch: audit/e01-sut03-browserstack
+    result_commit: f04fe3fc5e25b2c9f4660b2e425a3eba08382986
+    worktree_path: ../eus-2026-001-worktrees/e01-sut03-browserstack
+    verified_head_matches_result_commit: true
+    verified_worktree_clean: true
+  - ecosystem_id: SUT-04
+    branch: audit/e01-sut04-restful-booker
+    result_commit: 97ecae19151e8232f9992ee12f0944ce3120dbbb
+    worktree_path: ../eus-2026-001-worktrees/e01-sut04-restful-booker
+    verified_head_matches_result_commit: true
+    verified_worktree_clean: true
+  - ecosystem_id: SUT-05
+    branch: audit/e01-sut05-juice-shop
+    result_commit: 57a82d43307eeb8f4ab5ba413cacd97ddd25297a
+    worktree_path: ../eus-2026-001-worktrees/e01-sut05-juice-shop
+    verified_head_matches_result_commit: true
+    verified_worktree_clean: true
+  - ecosystem_id: SUT-06
+    branch: audit/e01-sut06-webdriverio
+    result_commit: 2bb26399f82f4bc1841d712b50fe8c1679dacd36
+    worktree_path: ../eus-2026-001-worktrees/e01-sut06-webdriverio
+    verified_head_matches_result_commit: true
+    verified_worktree_clean: true
+output_write_scope: "derived-data/adjudication/** only (protocol/agent-governance-v1.md, section 3.3/4)"
+forbidden_write_paths: [audits/, protocol/, schemas/, prompts/, manifests/, experiments/]
+notes: |
+  This record is discoverable by ADJUDICATOR-EU-01 through ordinary repository exploration (git worktree
+  list; this file, under a directory (experiments/) its own frozen prompt's Precondition paragraph already
+  references via manifests/e01-capability-audit.yaml's audit_mode_rules). It supplies no scientific
+  instruction, hint, flag, or evaluative language of any kind.

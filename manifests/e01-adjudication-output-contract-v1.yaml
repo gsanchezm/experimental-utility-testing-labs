@@ -1,0 +1,63 @@
+# manifests/e01-adjudication-output-contract-v1.yaml
+# Post-data-collection change-control record for PROTO-U01 (protocol/unresolved.md), EUS-2026-001.
+# Defines, prospectively, the adjudication output record format for ADJUDICATOR-EU-01. Does not alter
+# evidence admissibility, provisional_score/confirmed_score semantics, Score 0-3 definitions, Score-3
+# confirmation rules, the tie-break rule, any auditor evidence, source provenance, SUT definitions,
+# modalities, RQs, hypotheses, or statistical-analysis rules. Editable by ORCHESTRATOR only
+# (protocol/agent-governance-v1.md).
+change_id: PROTO-U01
+study_id: EUS-2026-001
+discovery_point: "After E01 auditor evidence collection (six audits complete), before adjudication (ADJUDICATOR-EU-01 NOT_STARTED)."
+rationale: >
+  prompts/working/e01-adjudicator-v1.md left the adjudication output record format undefined
+  (protocol/agent-governance-v1.md, section 3.3 requires recording, for every examined cell, whether it
+  is CONFIRMED, DISPUTED, or UNSUPPORTED, referenced by evidence_id, never by CSV row or line number).
+  The only pre-existing candidate -- the DRAFT adjudication object in schemas/sut-audit.schema.json -- is
+  incomplete relative to that requirement (no field records a cell examined and found CONFIRMED or
+  UNSUPPORTED; no evidence_id-pattern field) and resides under audits/<SUT>/, a path ADJUDICATOR-EU-01
+  cannot write to (protocol/agent-governance-v1.md, section 3.3). protocol/unresolved.md, row PROTO-U01,
+  records the full discovery and the human ruling on the schemas/ freeze-status ambiguity underlying this
+  record; row PROTO-U02 records a separate, unresolved write-authority gap (audit_status: ADJUDICATED)
+  that this record does not address.
+freeze_status_ruling: "schemas/ treated as freeze-locked for EUS-2026-001 (protocol/change-control-v1.md, section 7 freeze-locks table; section 6 step 3), superseding the contrary signals of manifests/protocol-freeze-v1.yaml's frozen_documents list and schemas/sut-audit.schema.json's own 'Schema state: DRAFT' label. The full post-data-collection change-control procedure (protocol/change-control-v1.md, section 5) is applied to this change. Approved by gilbertosanchez, protocol/unresolved.md PROTO-U01."
+section_5_compliance:
+  new_version_file: "schemas/adjudication.schema.json (new file; nothing frozen is edited in place -- schemas/sut-audit.schema.json is unchanged, satisfying section 4/5.1 by extension to a genuinely new artifact rather than a modification of an existing one)"
+  written_rationale: "this record's rationale field, above"
+  affected_campaigns_statement:
+    - campaign: E01-capability-audit
+      already_collected_evidence: "remains valid; unaffected by this change (six auditor result commits unmodified)"
+    - campaigns: [E02-state-establishment, E03-resetability, E04-repeatability, E05-determinism, E06-observability, E07-automation-affordances, E08-performance, E09-security, E10-cross-platform-parity, E11-state-continuity, E12-localization-i18n]
+      status: "NOT_STARTED; this schema is not referenced by any of them; not applicable"
+  change_log_entry: "protocol/CHANGELOG.md, PROTO-U01 row"
+affected_campaign: E01-capability-audit
+affected_phase: future adjudication only
+collected_evidence_affected: false
+scoring_semantics_affected: false
+evidence_admissibility_affected: false
+hypotheses_affected: false
+rqs_affected: false
+cross_sut_comparisons_affected: false
+rerun_required: false
+prospective_only: true
+implementation_files:
+  - schemas/adjudication.schema.json  # new, additive; schemas/sut-audit.schema.json left unmodified
+  - prompts/working/e01-adjudicator-v1.md  # binding-reference paragraph only, plus a separate non-substantive precondition correction (see below)
+  - protocol/unresolved.md  # PROTO-U01, PROTO-U02
+  - protocol/CHANGELOG.md
+non_substantive_correction_bundled_separately:
+  file: prompts/working/e01-adjudicator-v1.md
+  description: "Stale execution-precondition text (previously asserted campaign_status PREPARED_NOT_STARTED and template audit.md files) replaced with a state-neutral execution gate. Operational wording correction, not a methodological change; kept logically distinct from PROTO-U01 in protocol/CHANGELOG.md and in this record."
+timestamp: "2026-09-17T14:18:19Z"
+controlling_pre_change_commit: cb49ba0e44baf19b2c899ae9696c08603a66e1d9
+protocol_freeze_commit: 38b82fda8282e2e068a27a45eef458f0e085def8
+protocol_freeze_tag: eus-2026-001-protocol-v1-pre-data
+e01_start_commit: 89b23f2787c7717f357b8031a798389c2b9ca335
+e01_start_timestamp: "2026-09-17T05:32:52Z"
+pre_adjudication_integrity_commit: cb49ba0e44baf19b2c899ae9696c08603a66e1d9
+approved_by: gilbertosanchez
+gap_2_deferred: "audit_status: ADJUDICATED write authority (protocol/unresolved.md, PROTO-U02) is explicitly not resolved by this record. No write authority to audits/** was introduced for any role."
+notes: |
+  This record implements protocol/change-control-v1.md, section 5, by extension to schemas/ under the
+  human ruling recorded in protocol/unresolved.md (PROTO-U01). No file under audits/** and none of the
+  six immutable auditor result commits (fa807da4, bdef52b1, f04fe3fc, 97ecae19, 57a82d43, 2bb26399) is
+  touched by this change. ADJUDICATOR-EU-01 has not executed before, during, or after this record.

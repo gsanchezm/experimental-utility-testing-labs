@@ -1,0 +1,68 @@
+# manifests/issue-xviii-ruling-v1.yaml
+# Provenance record of the human ruling on protocol/study-design-v1.md, section 13, issue (xviii)
+# (Setup Effort counting rules: verification-as-action; partial-success counting).
+# Modeled on manifests/e01-proto-u0N-correction.yaml records. Editable by ORCHESTRATOR only
+# (protocol/agent-governance-v1.md).
+study_id: EUS-2026-001
+issue: "protocol/study-design-v1.md, section 13, issue (xviii)"
+authorization_id: ISSUE-XVIII-RULING-01
+ruled_by: gilbertosanchez
+ruling_date: "2026-09-21"
+prior_classification:
+  status: HUMAN_RULING_REQUIRED
+  analysis_path: experiments/E03-resetability/issue-xviii-analysis.md
+  re_verified_path: "E03 PRE-START integrity audit, Part F (this session, 2026-09-21) — narrowed the partial-success decision set from three alternatives to two (B3 removed as not independently supported by frozen text)"
+ruling:
+  verification_as_action: A2
+  verification_as_action_text: >
+    A post-reset/post-establish verification counts as a Required Action when its underlying
+    mechanism satisfies the frozen Required Action definition. It is not excluded merely because
+    its purpose is verification or observation. The action is classified according to its actual
+    mechanism/action class.
+  partial_success_counting: B1
+  partial_success_counting_text: >
+    A partially successful experimenter-initiated action counts as one ordinary Required Action.
+    Its success / partial-success / failure outcome must be recorded separately. It must not be
+    converted into a retry unless another actual attempt of that action occurs.
+  explicitly_not_created_or_changed:
+    - new metric
+    - modification to H2
+    - modification to any RQ
+    - change to the comparison population
+    - change to E01
+    - reinterpretation of historical E01 evidence
+    - privilege for any SUT
+    - post-hoc scoring
+persistence:
+  new_document: protocol/setup-effort-v2.md
+  new_document_state: FROZEN-PRE-DATA
+  superseded_document: protocol/setup-effort-v1.md
+  superseded_document_new_state: AMENDED
+  change_control_path: "protocol/change-control-v1.md, section 5 (post-data-collection change: new version file, written rationale, affected-campaigns statement, changelog row) — data_collection_started was already true when this ruling was persisted"
+  changelog_rows: 2  # setup-effort-v1 FROZEN-PRE-DATA -> AMENDED; setup-effort-v2 DRAFT -> FROZEN-PRE-DATA
+open_issue_register:
+  source: "protocol/study-design-v1.md, section 13, row (xviii)"
+  register_row_text_unchanged: true  # study-design-v1.md is FROZEN-PRE-DATA; its Register table text is not edited in place (not a non-substantive correction — the row's own status/resolution text would be a substantive change). Frozen as a historical snapshot per the existing AGENT-INSTRUCTIONS.md "Current phase" precedent (already used for the frozen study-design-v1.md section 14 status snapshot).
+  live_status_recorded_in:
+    - manifests/study-manifest.yaml (open_issue_register.resolved/deferred_before_campaign counts, updated below)
+    - AGENT-INSTRUCTIONS.md ("Current phase" section, updated by this operation)
+  resolution_note: >
+    protocol/study-design-v1.md section 13's row (xviii) text ("DEFERRED-BEFORE-CAMPAIGN...
+    requires_human_decision: yes") remains, unedited, as the frozen historical snapshot of the
+    issue's state as of the 2026-09-16 protocol freeze. It is not authoritative for current status,
+    exactly as AGENT-INSTRUCTIONS.md's "Current phase" section already establishes for other frozen snapshots
+    (for example protocol/study-design-v1.md section 14's pre-data text). Current, authoritative
+    status is RESOLVED, recorded here and in AGENT-INSTRUCTIONS.md.
+affected_campaigns:
+  - id: E02-state-establishment
+    already_collected_data_status: "none exists; nothing to re-collect or re-analyze"
+  - id: E03-resetability
+    already_collected_data_status: "none exists; nothing to re-collect or re-analyze; this ruling directly operationalizes E03's Required Actions counting from this point forward"
+  - id: E01-capability-audit
+    already_collected_data_status: "unaffected — E01 does not use Setup Effort / Required Actions (protocol/study-design-v1.md section 4, dimension-to-campaign mapping)"
+notes: |
+  This ruling was solicited via the E03-resetability PRE-START integrity audit's Part F (evidence
+  review without deciding) in the same operational thread. The human ruling text was supplied
+  verbatim in the instruction that authorized this operation (section 0) and is reproduced above
+  without alteration. No alternative was chosen on the human's behalf; both A1/A2 and B1/B2 were
+  returned as live options in the prior audit, with B3 already removed as unsupported.

@@ -1,0 +1,629 @@
+# E03 Environment Verification
+# Study EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems).
+# Authored by ORCHESTRATOR under E03-CI-WRITE-AUTH-01 (AGENT-INSTRUCTIONS.md, "E03 CI/CD infrastructure").
+#
+# Purpose: NON-MEASURED provisioning and environment verification of the controlled instances that
+# the nine E03-resetability candidate conditions (experiments/scenario-mappings/CS-001.yaml) need on
+# GitHub-hosted runners. Every job provisions one system under test (SUT) surface from the version
+# pinned in manifests/sut-manifest.yaml, starts it, verifies that the surface and its reset mechanism
+# are reachable, and uploads an artifact labeled ENVIRONMENT_VERIFICATION. No job establishes and
+# resets business state as an experiment, counts Required Actions, or writes under raw-data/. Nothing
+# here is a MEASURED_EXPERIMENT (protocol/setup-effort-v2.md, section 2: one-time provisioning is never
+# counted; experiments/E03-resetability/ci-cd-execution-model.md).
+#
+# environment_type on a GitHub-hosted runner: SELF_HOSTED for web/api instances (an ephemeral cloud
+# host under the study's control for the duration of the job, protocol/study-design-v1.md, section
+# 10.1), EMULATED for the Android emulator, SIMULATED for the iOS Simulator.
+name: E03 Environment Verification
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Which SUT surface(s) to provision and verify"
+        required: true
+        default: all
+        type: choice
+        options: [all, SUT-01, SUT-02-web, SUT-02-android, SUT-02-ios, SUT-03, SUT-04, SUT-05]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e03-environment-verification
+  cancel-in-progress: false
+
+env:
+  TZ: UTC
+  RECORD_CLASS: ENVIRONMENT_VERIFICATION
+  ARTIFACT_RETENTION_DAYS: 90
+
+jobs:
+  sut-01-web-api:
+    name: E03 Environment Verification SUT-01 web+api
+    if: ${{ inputs.target == 'all' || inputs.target == 'SUT-01' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out study repository
+        uses: actions/checkout@v4
+      - name: Read the pinned SUT-01 provenance
+        id: pin
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import yaml
+          c = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-01']['components']['api']
+          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
+          PY
+      - name: Clone the pinned SUT source
+        run: |
+          set -euo pipefail
+          git clone --quiet "${{ steps.pin.outputs.repo }}" sut
+          git -C sut checkout --quiet "${{ steps.pin.outputs.sha }}"
+          test "$(git -C sut rev-parse HEAD)" = "${{ steps.pin.outputs.sha }}"
+      - name: Set up Python (backend requires 3.11 or 3.12 per the SUT README)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Set up Node.js and pnpm (frontend)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Provision and start the api instance
+        run: |
+          set -euo pipefail
+          cd sut/backend
+          python -m pip install --quiet -r requirements.txt
+          nohup python -m uvicorn main:app --host 127.0.0.1 --port 8000 > "$GITHUB_WORKSPACE/api-stdout.log" 2> "$GITHUB_WORKSPACE/api-stderr.log" &
+          for i in $(seq 1 60); do curl -fsS http://127.0.0.1:8000/health >/dev/null 2>&1 && break; sleep 2; done
+          curl -fsS http://127.0.0.1:8000/health
+      - name: Provision, build, and serve the web instance
+        run: |
+          set -euo pipefail
+          npm install -g pnpm@10 --no-audit --no-fund
+          cd sut/frontend
+          pnpm install --frozen-lockfile
+          VITE_API_URL=http://127.0.0.1:8000 pnpm build
+          nohup pnpm exec vite preview --host 127.0.0.1 --port 3000 --strictPort > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &
+          for i in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
+      - name: Verify surface and reset-mechanism reachability (no state established, nothing measured)
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, datetime, urllib.request, urllib.error
+          def http(method, url, body=None, headers=None):
+              req = urllib.request.Request(url, data=body, method=method, headers=headers or {})
+              try:
+                  with urllib.request.urlopen(req, timeout=15) as r: return r.status
+              except urllib.error.HTTPError as e: return e.code
+              except Exception as e: return f'ERROR:{e.__class__.__name__}'
+          spec = json.load(urllib.request.urlopen('http://127.0.0.1:8000/api/openapi.json'))  # the SUT mounts its OpenAPI document under /api (backend/main.py: openapi_url)
+          paths = spec.get('paths', {})
+          checks = {
+              'api_health_GET': http('GET', 'http://127.0.0.1:8000/health'),
+              'api_openapi_declares_/api/session/reset': '/api/session/reset' in paths,
+              'api_openapi_declares_/api/session': '/api/session' in paths,
+              'api_POST_/api/session/reset_unauthenticated_status': http('POST', 'http://127.0.0.1:8000/api/session/reset', b''),
+              'api_GET_/api/session_unauthenticated_status': http('GET', 'http://127.0.0.1:8000/api/session'),
+              'web_GET_/_status': http('GET', 'http://127.0.0.1:3000/'),
+          }
+          ok = checks['api_health_GET'] == 200 and checks['api_openapi_declares_/api/session/reset'] and checks['web_GET_/_status'] == 200 \
+               and not str(checks['api_POST_/api/session/reset_unauthenticated_status']).startswith('ERROR') \
+               and checks['api_POST_/api/session/reset_unauthenticated_status'] != 404
+          rec = {
+              'record_class': os.environ['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001',
+              'campaign_id': 'E03-resetability', 'sut_id': 'SUT-01', 'surfaces': ['WEB', 'API'],
+              'conditions_covered': ['E03-CS001-SUT01-WEB', 'E03-CS001-SUT01-API'], 'environment_type': 'SELF_HOSTED',
+              'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}', 'commit_sha': '${{ steps.pin.outputs.sha }}'},
+              'reset_mechanism_under_verification': 'POST /api/session/reset (SUT01-EV-0006); reachability only',
+              'checks': checks, 'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
+              'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH')},
+              'tool_versions': {'python': subprocess.run(['python', '--version'], capture_output=True, text=True).stdout.strip(), 'node': subprocess.run(['node', '--version'], capture_output=True, text=True).stdout.strip(), 'pnpm': subprocess.run(['pnpm', '--version'], capture_output=True, text=True).stdout.strip()},
+              'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'job': '${{ github.job }}', 'repository_sha': '${{ github.sha }}', 'workflow_ref': '${{ github.workflow_ref }}'},
+              'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC',
+          }
+          json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          assert ok, 'environment verification failed'
+          PY
+      - name: Upload the ENVIRONMENT_VERIFICATION record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-ENVIRONMENT_VERIFICATION-SUT-01-web-api-run${{ github.run_id }}-a${{ github.run_attempt }}
+          path: |
+            environment-verification.json
+            api-stdout.log
+            api-stderr.log
+            web-stdout.log
+            web-stderr.log
+          retention-days: 90
+          if-no-files-found: error
+
+  sut-02-web:
+    name: E03 Environment Verification SUT-02 web
+    if: ${{ inputs.target == 'all' || inputs.target == 'SUT-02-web' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out study repository
+        uses: actions/checkout@v4
+      - name: Read the pinned SUT-02 web provenance
+        id: pin
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import yaml
+          c = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-02']['components']['web']
+          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
+          PY
+      - name: Clone the pinned SUT source
+        run: |
+          set -euo pipefail
+          git clone --quiet "${{ steps.pin.outputs.repo }}" sut
+          git -C sut checkout --quiet "${{ steps.pin.outputs.sha }}"
+          test "$(git -C sut rev-parse HEAD)" = "${{ steps.pin.outputs.sha }}"
+      - name: Set up Node.js (engines >=24.9.0 at the pinned commit)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Provision, build, and serve the web instance
+        run: |
+          set -euo pipefail
+          cd sut
+          npm ci --no-audit --no-fund
+          npm run build
+          nohup npx vite preview --host 127.0.0.1 --port 3000 --strictPort > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &
+          for i in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
+      - name: Verify surface and reset-mechanism reachability (nothing measured)
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, datetime, urllib.request, urllib.error
+          def http(url):
+              try:
+                  with urllib.request.urlopen(url, timeout=15) as r: return r.status
+              except urllib.error.HTTPError as e: return e.code
+              except Exception as e: return f'ERROR:{e.__class__.__name__}'
+          src_hits = subprocess.run(['grep', '-rl', 'Reset App State', 'sut/src'], capture_output=True, text=True).stdout.split()
+          checks = {'web_GET_/_status': http('http://127.0.0.1:3000/'), 'source_files_containing_Reset_App_State': src_hits}
+          ok = checks['web_GET_/_status'] == 200 and len(src_hits) > 0
+          rec = {'record_class': os.environ['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
+                 'sut_id': 'SUT-02', 'surfaces': ['WEB'], 'conditions_covered': ['E03-CS001-SUT02-WEB'], 'environment_type': 'SELF_HOSTED',
+                 'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}', 'commit_sha': '${{ steps.pin.outputs.sha }}'},
+                 'reset_mechanism_under_verification': "'Reset App State' in-app control (SUT02-EV-0002); presence at source level and served web surface",
+                 'checks': checks, 'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
+                 'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH')},
+                 'tool_versions': {'node': subprocess.run(['node', '--version'], capture_output=True, text=True).stdout.strip(), 'npm': subprocess.run(['npm', '--version'], capture_output=True, text=True).stdout.strip()},
+                 'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'job': '${{ github.job }}', 'repository_sha': '${{ github.sha }}', 'workflow_ref': '${{ github.workflow_ref }}'},
+                 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
+          json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2)); assert ok
+          PY
+      - name: Upload the ENVIRONMENT_VERIFICATION record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-ENVIRONMENT_VERIFICATION-SUT-02-web-run${{ github.run_id }}-a${{ github.run_attempt }}
+          path: |
+            environment-verification.json
+            web-stdout.log
+            web-stderr.log
+          retention-days: 90
+          if-no-files-found: error
+
+  sut-02-android:
+    name: E03 Environment Verification SUT-02 android
+    if: ${{ inputs.target == 'all' || inputs.target == 'SUT-02-android' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out study repository
+        uses: actions/checkout@v4
+      - name: Read the pinned SUT-02 android release
+        id: pin
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import yaml
+          c = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-02']['components']['android']
+          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}"); print(f"release={c['release']}")
+          PY
+      - name: Download the pinned release artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release download "${{ steps.pin.outputs.release }}" --repo "${{ steps.pin.outputs.repo }}" --pattern 'mda-*.apk' --clobber
+          ls -1 mda-*.apk | grep -v androidTest | head -1 > apk-name.txt
+          sha256sum "$(cat apk-name.txt)" | tee apk.sha256
+      - name: Enable KVM for the emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Boot an Android emulator (API 35, google_apis, x86_64) and verify install, launch, and mechanism presence
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7
+          emulator-boot-timeout: 900
+          disable-animations: true
+          script: |
+            set -euo pipefail
+            APK="$(cat apk-name.txt)"
+            adb install -r "$APK"
+            PKG="$(adb shell pm list packages -3 | sed 's/package://' | tr -d '\r' | grep -i sauce | head -1)"
+            echo "package=$PKG" | tee package.txt
+            adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1
+            sleep 15
+            adb shell dumpsys activity activities | grep -E 'mResumedActivity|topResumedActivity' | tee resumed.txt
+            adb shell uiautomator dump /sdcard/ui.xml && adb pull /sdcard/ui.xml ui-dump.xml
+            adb exec-out screencap -p > launch-screenshot.png
+            unzip -o -q "$APK" resources.arsc -d apk-res && (strings apk-res/resources.arsc | grep -c 'Reset App State' | tee reset-string-count.txt)
+            adb shell getprop ro.build.version.release | tr -d '\r' > android-version.txt
+            adb shell getprop ro.build.version.sdk | tr -d '\r' > android-sdk.txt
+      - name: Write the ENVIRONMENT_VERIFICATION record
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json, os, datetime
+          def rd(p, d=''):
+              try: return open(p).read().strip()
+              except FileNotFoundError: return d
+          count = rd('reset-string-count.txt', '0')
+          ok = bool(rd('resumed.txt')) and count.isdigit() and int(count) > 0
+          rec = {'record_class': os.environ['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
+                 'sut_id': 'SUT-02', 'surfaces': ['ANDROID'], 'conditions_covered': ['E03-CS001-SUT02-ANDROID'], 'environment_type': 'EMULATED',
+                 'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}', 'commit_sha': '${{ steps.pin.outputs.sha }}', 'release': '${{ steps.pin.outputs.release }}', 'artifact_sha256': rd('apk.sha256')},
+                 'emulator': {'api_level': 35, 'target': 'google_apis', 'arch': 'x86_64', 'profile': 'pixel_7', 'android_release': rd('android-version.txt'), 'sdk': rd('android-sdk.txt')},
+                 'reset_mechanism_under_verification': "'Reset App State' menu item behind a confirmation dialog (SUT02-EV-0008); presence in the installed artifact's resources; app install and launch verified; the reset itself is not exercised",
+                 'checks': {'package': rd('package.txt'), 'resumed_activity': rd('resumed.txt'), 'reset_string_occurrences_in_resources': count, 'ui_dump_captured': os.path.exists('ui-dump.xml')},
+                 'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
+                 'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH')},
+                 'mobile_runner': 'none (no mobile test runner is used for environment verification; Mobilewright qualification is a separate, not-yet-executed gate)',
+                 'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'job': '${{ github.job }}', 'repository_sha': '${{ github.sha }}', 'workflow_ref': '${{ github.workflow_ref }}'},
+                 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
+          json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          raise SystemExit(0 if ok else 1)
+          PY
+      - name: Upload the ENVIRONMENT_VERIFICATION record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-ENVIRONMENT_VERIFICATION-SUT-02-android-run${{ github.run_id }}-a${{ github.run_attempt }}
+          path: |
+            environment-verification.json
+            apk.sha256
+            package.txt
+            resumed.txt
+            ui-dump.xml
+            launch-screenshot.png
+          retention-days: 90
+          if-no-files-found: error
+
+  sut-02-ios:
+    name: E03 Environment Verification SUT-02 ios
+    if: ${{ inputs.target == 'all' || inputs.target == 'SUT-02-ios' }}
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - name: Check out study repository
+        uses: actions/checkout@v4
+      - name: Read the pinned SUT-02 ios release
+        id: pin
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import yaml
+          c = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-02']['components']['ios']
+          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}"); print(f"release={c['release']}")
+          PY
+      - name: Download the pinned simulator build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release download "${{ steps.pin.outputs.release }}" --repo "${{ steps.pin.outputs.repo }}" --pattern 'SauceLabs-Demo-App.Simulator.zip' --clobber
+          shasum -a 256 SauceLabs-Demo-App.Simulator.zip | tee app.sha256
+          unzip -q SauceLabs-Demo-App.Simulator.zip -d simapp
+          find simapp -maxdepth 3 -name '*.app' -type d | head -1 > app-path.txt
+          plutil -p "$(cat app-path.txt)/Info.plist" | grep -E 'CFBundleIdentifier|CFBundleShortVersionString|MinimumOSVersion|DTSDKName' | tee app-info.txt
+          plutil -extract CFBundleIdentifier raw "$(cat app-path.txt)/Info.plist" > bundle-id.txt
+      - name: Boot an iOS Simulator, install, launch, and verify mechanism presence
+        run: |
+          set -euo pipefail
+          xcodebuild -version | tee xcode-version.txt
+          UDID="$(xcrun simctl list devices available -j | python3 -c "import json,sys; d=json.load(sys.stdin)['devices']; c=[x for rt,xs in d.items() if 'iOS' in rt for x in xs if x['name'].startswith('iPhone 16')]; print(c[0]['udid'])")"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl list devices booted | tee booted.txt
+          xcrun simctl install "$UDID" "$(cat app-path.txt)"
+          xcrun simctl launch "$UDID" "$(cat bundle-id.txt)" | tee launch.txt
+          sleep 10
+          xcrun simctl get_app_container "$UDID" "$(cat bundle-id.txt)" | tee container.txt
+          xcrun simctl io "$UDID" screenshot launch-screenshot.png
+          BIN="$(cat app-path.txt)/$(plutil -extract CFBundleExecutable raw "$(cat app-path.txt)/Info.plist")"
+          strings "$BIN" | grep -c 'Reset App State' | tee reset-string-count.txt || echo 0 > reset-string-count.txt
+          xcrun simctl list runtimes | grep -i 'iOS' | tee runtimes.txt
+      - name: Write the ENVIRONMENT_VERIFICATION record
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json, os, datetime
+          def rd(p, d=''):
+              try: return open(p).read().strip()
+              except FileNotFoundError: return d
+          count = rd('reset-string-count.txt', '0')
+          ok = ': ' in rd('launch.txt') and bool(rd('container.txt')) and count.isdigit() and int(count) > 0
+          rec = {'record_class': os.environ['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
+                 'sut_id': 'SUT-02', 'surfaces': ['IOS'], 'conditions_covered': ['E03-CS001-SUT02-IOS'], 'environment_type': 'SIMULATED',
+                 'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}', 'commit_sha': '${{ steps.pin.outputs.sha }}', 'release': '${{ steps.pin.outputs.release }}', 'artifact_sha256': rd('app.sha256')},
+                 'simulator': {'booted': rd('booted.txt'), 'xcode': rd('xcode-version.txt'), 'runtimes': rd('runtimes.txt'), 'app_info': rd('app-info.txt')},
+                 'reset_mechanism_under_verification': "'Reset App State' in the Menu screen behind a confirmation (SUT02-EV-0009); presence in the installed binary; install and launch verified; the reset itself is not exercised",
+                 'checks': {'launch': rd('launch.txt'), 'app_container': rd('container.txt'), 'reset_string_occurrences_in_binary': count},
+                 'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
+                 'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH')},
+                 'mobile_runner': 'none (no mobile test runner is used for environment verification; Mobilewright qualification is a separate, not-yet-executed gate)',
+                 'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'job': '${{ github.job }}', 'repository_sha': '${{ github.sha }}', 'workflow_ref': '${{ github.workflow_ref }}'},
+                 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
+          json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          raise SystemExit(0 if ok else 1)
+          PY
+      - name: Upload the ENVIRONMENT_VERIFICATION record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-ENVIRONMENT_VERIFICATION-SUT-02-ios-run${{ github.run_id }}-a${{ github.run_attempt }}
+          path: |
+            environment-verification.json
+            app.sha256
+            app-info.txt
+            launch.txt
+            container.txt
+            launch-screenshot.png
+          retention-days: 90
+          if-no-files-found: error
+
+  sut-03-web:
+    name: E03 Environment Verification SUT-03 web
+    if: ${{ inputs.target == 'all' || inputs.target == 'SUT-03' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out study repository
+        uses: actions/checkout@v4
+      - name: Read the pinned SUT-03 provenance
+        id: pin
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import yaml
+          c = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-03']['components']['web']
+          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
+          PY
+      - name: Clone the pinned SUT source
+        run: |
+          set -euo pipefail
+          git clone --quiet "${{ steps.pin.outputs.repo }}" sut
+          git -C sut checkout --quiet "${{ steps.pin.outputs.sha }}"
+          test "$(git -C sut rev-parse HEAD)" = "${{ steps.pin.outputs.sha }}"
+      - name: Set up Node.js 14 (Next.js 10 era; the pinned tree has no lockfile and predates npm 7 peer-dependency enforcement)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "14"
+      - name: Provision, build, and serve the web instance
+        run: |
+          set -euo pipefail
+          cd sut
+          npm install --legacy-peer-deps --no-audit --no-fund
+          # node_modules/swagger-ui-react/swagger-ui.js at the pinned tree imports formdata-node without any package declaring it; v4 (CommonJS) is added without saving (no SUT source changes)
+          npm install --no-save formdata-node@4 --no-audit --no-fund
+          npm run build
+          nohup npx next start -p 3000 > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &
+          for i in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
+      - name: Verify surface and reset-mechanism reachability (nothing measured)
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, datetime, urllib.request, urllib.error
+          def http(url):
+              try:
+                  with urllib.request.urlopen(url, timeout=15) as r: return r.status
+              except urllib.error.HTTPError as e: return e.code
+              except Exception as e: return f'ERROR:{e.__class__.__name__}'
+          logout = subprocess.run(['grep', '-rl', '--exclude-dir=node_modules', '--exclude-dir=.next', 'logOutHandler', 'sut/src', 'sut/pages'], capture_output=True, text=True).stdout.split()
+          store2 = subprocess.run(['grep', '-rl', '--exclude-dir=node_modules', '--exclude-dir=.next', 'clearAll', 'sut/src', 'sut/pages'], capture_output=True, text=True).stdout.split()
+          checks = {'web_GET_/_status': http('http://127.0.0.1:3000/'), 'web_GET_/signin_status': http('http://127.0.0.1:3000/signin'), 'api_GET_/api/products_status': http('http://127.0.0.1:3000/api/products'), 'source_files_with_logOutHandler': logout, 'source_files_with_session_clearAll': store2}
+          ok = checks['web_GET_/_status'] == 200 and checks['api_GET_/api/products_status'] == 200 and len(logout) > 0 and len(store2) > 0
+          rec = {'record_class': os.environ['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
+                 'sut_id': 'SUT-03', 'surfaces': ['WEB'], 'conditions_covered': ['E03-CS001-SUT03-WEB'], 'environment_type': 'SELF_HOSTED',
+                 'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}', 'commit_sha': '${{ steps.pin.outputs.sha }}'},
+                 'reset_mechanism_under_verification': 'Sign-Out -> store2.session.clearAll() (SUT03-EV-0030, SUT03-EV-0031); presence at source level and served web surface',
+                 'checks': checks, 'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
+                 'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH')},
+                 'tool_versions': {'node': subprocess.run(['node', '--version'], capture_output=True, text=True).stdout.strip(), 'npm': subprocess.run(['npm', '--version'], capture_output=True, text=True).stdout.strip()},
+                 'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'job': '${{ github.job }}', 'repository_sha': '${{ github.sha }}', 'workflow_ref': '${{ github.workflow_ref }}'},
+                 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
+          json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2)); assert ok
+          PY
+      - name: Upload the ENVIRONMENT_VERIFICATION record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-ENVIRONMENT_VERIFICATION-SUT-03-web-run${{ github.run_id }}-a${{ github.run_attempt }}
+          path: |
+            environment-verification.json
+            web-stdout.log
+            web-stderr.log
+          retention-days: 90
+          if-no-files-found: error
+
+  sut-04-web-api:
+    name: E03 Environment Verification SUT-04 web+api
+    if: ${{ inputs.target == 'all' || inputs.target == 'SUT-04' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out study repository
+        uses: actions/checkout@v4
+      - name: Read the pinned SUT-04 provenance
+        id: pin
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import yaml
+          c = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-04']['components']['api']
+          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
+          PY
+      - name: Clone the pinned SUT source
+        run: |
+          set -euo pipefail
+          git clone --quiet "${{ steps.pin.outputs.repo }}" sut
+          git -C sut checkout --quiet "${{ steps.pin.outputs.sha }}"
+          test "$(git -C sut rev-parse HEAD)" = "${{ steps.pin.outputs.sha }}"
+      - name: Provision and start the platform with its documented docker-compose deployment
+        run: |
+          set -euo pipefail
+          cd sut
+          docker compose version | tee "$GITHUB_WORKSPACE/compose-version.txt"
+          docker compose up --build -d 2>&1 | tail -20
+          for i in $(seq 1 90); do curl -fsS -o /dev/null http://127.0.0.1:3004/auth/validate -X POST -H 'Content-Type: application/json' -d '{"token":"x"}' 2>/dev/null && break; sleep 5; done
+          docker compose ps | tee "$GITHUB_WORKSPACE/compose-ps.txt"
+      - name: Verify surface and reset-mechanism reachability (nothing measured)
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, datetime, urllib.request, urllib.error
+          def http(method, url, body=None, headers=None):
+              req = urllib.request.Request(url, data=body, method=method, headers=headers or {})
+              try:
+                  with urllib.request.urlopen(req, timeout=20) as r: return r.status
+              except urllib.error.HTTPError as e: return e.code
+              except Exception as e: return f'ERROR:{e.__class__.__name__}'
+          checks = {
+              'web_GET_/_status': http('GET', 'http://127.0.0.1/'),
+              'api_POST_/auth/login_empty_body_status': http('POST', 'http://127.0.0.1:3004/auth/login', b'{}', {'Content-Type': 'application/json'}),
+              'api_GET_/booking/_status': http('GET', 'http://127.0.0.1:3000/booking/'),
+              'api_DELETE_/booking/999999_unauthenticated_status': http('DELETE', 'http://127.0.0.1:3000/booking/999999'),
+              'api_GET_/booking/999999_status': http('GET', 'http://127.0.0.1:3000/booking/999999'),
+          }
+          defined = lambda v: isinstance(v, int)
+          ok = defined(checks['web_GET_/_status']) and all(defined(v) for v in checks.values())
+          rec = {'record_class': os.environ['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
+                 'sut_id': 'SUT-04', 'surfaces': ['WEB', 'API'], 'conditions_covered': ['E03-CS001-SUT04-WEB', 'E03-CS001-SUT04-API'], 'environment_type': 'SELF_HOSTED',
+                 'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}', 'commit_sha': '${{ steps.pin.outputs.sha }}'},
+                 'reset_mechanism_under_verification': 'DELETE /booking/{bookingid} (SUT04-EV-0006); reachability only, against a non-existent id, unauthenticated',
+                 'checks': checks, 'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
+                 'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH')},
+                 'tool_versions': {'docker_compose': open('compose-version.txt').read().strip()},
+                 'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'job': '${{ github.job }}', 'repository_sha': '${{ github.sha }}', 'workflow_ref': '${{ github.workflow_ref }}'},
+                 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
+          json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2)); assert ok
+          PY
+      - name: Collect service logs
+        if: always()
+        run: cd sut && docker compose logs --no-color > "$GITHUB_WORKSPACE/compose-logs.txt" 2>&1 || true
+      - name: Upload the ENVIRONMENT_VERIFICATION record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-ENVIRONMENT_VERIFICATION-SUT-04-web-api-run${{ github.run_id }}-a${{ github.run_attempt }}
+          path: |
+            environment-verification.json
+            compose-version.txt
+            compose-ps.txt
+            compose-logs.txt
+          retention-days: 90
+          if-no-files-found: error
+
+  sut-05-api:
+    name: E03 Environment Verification SUT-05 api
+    if: ${{ inputs.target == 'all' || inputs.target == 'SUT-05' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out study repository
+        uses: actions/checkout@v4
+      - name: Read the pinned SUT-05 provenance
+        id: pin
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import yaml
+          c = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-05']['components']['api']
+          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
+          PY
+      - name: Clone the pinned SUT source
+        run: |
+          set -euo pipefail
+          git clone --quiet "${{ steps.pin.outputs.repo }}" sut
+          git -C sut checkout --quiet "${{ steps.pin.outputs.sha }}"
+          test "$(git -C sut rev-parse HEAD)" = "${{ steps.pin.outputs.sha }}"
+      - name: Set up Node.js (engines 22 - 26 at the pinned commit)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Provision (source build at the pinned commit) and start the api instance
+        run: |
+          set -euo pipefail
+          cd sut
+          npm install --no-audit --no-fund 2>&1 | tail -5
+          nohup npm start > "$GITHUB_WORKSPACE/api-stdout-1.log" 2> "$GITHUB_WORKSPACE/api-stderr-1.log" &
+          echo $! > "$GITHUB_WORKSPACE/pid1.txt"
+          for i in $(seq 1 90); do curl -fsS -o /dev/null http://127.0.0.1:3000/rest/admin/application-version && break; sleep 3; done
+          curl -fsS http://127.0.0.1:3000/rest/admin/application-version | tee "$GITHUB_WORKSPACE/version-1.json"
+      - name: Verify api reachability and the process-restart reset mechanism (nothing measured)
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, datetime, time, urllib.request, urllib.error
+          def http(method, url, body=None, headers=None):
+              req = urllib.request.Request(url, data=body, method=method, headers=headers or {})
+              try:
+                  with urllib.request.urlopen(req, timeout=20) as r: return r.status
+              except urllib.error.HTTPError as e: return e.code
+              except Exception as e: return f'ERROR:{e.__class__.__name__}'
+          checks = {
+              'api_GET_/rest/admin/application-version_status': http('GET', 'http://127.0.0.1:3000/rest/admin/application-version'),
+              'api_POST_/rest/user/login_empty_body_status': http('POST', 'http://127.0.0.1:3000/rest/user/login', b'{}', {'Content-Type': 'application/json'}),
+              'api_GET_/api/BasketItems/_unauthenticated_status': http('GET', 'http://127.0.0.1:3000/api/BasketItems/'),
+              'api_GET_/rest/basket/1_unauthenticated_status': http('GET', 'http://127.0.0.1:3000/rest/basket/1'),
+          }
+          # Reset mechanism = ENVIRONMENT_RESTART (SUT05-EV-0003): stop the process and start it again; verify it comes back.
+          pid = int(open('pid1.txt').read().strip())
+          subprocess.run(['pkill', '-TERM', '-P', str(pid)]); subprocess.run(['kill', '-TERM', str(pid)]); time.sleep(5)
+          checks['api_after_stop_status'] = http('GET', 'http://127.0.0.1:3000/rest/admin/application-version')
+          p = subprocess.Popen(['npm', 'start'], cwd='sut', stdout=open('api-stdout-2.log', 'w'), stderr=open('api-stderr-2.log', 'w'))
+          for _ in range(90):
+              if http('GET', 'http://127.0.0.1:3000/rest/admin/application-version') == 200: break
+              time.sleep(3)
+          checks['api_after_restart_status'] = http('GET', 'http://127.0.0.1:3000/rest/admin/application-version')
+          ok = checks['api_GET_/rest/admin/application-version_status'] == 200 and str(checks['api_after_stop_status']).startswith('ERROR') and checks['api_after_restart_status'] == 200 \
+               and all(isinstance(checks[k], int) for k in ('api_POST_/rest/user/login_empty_body_status', 'api_GET_/api/BasketItems/_unauthenticated_status'))
+          rec = {'record_class': os.environ['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
+                 'sut_id': 'SUT-05', 'surfaces': ['API'], 'conditions_covered': ['E03-CS001-SUT05-API'], 'environment_type': 'SELF_HOSTED',
+                 'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}', 'commit_sha': '${{ steps.pin.outputs.sha }}', 'reported_version': open('version-1.json').read().strip()},
+                 'reset_mechanism_under_verification': 'full process restart (sequelize.sync force on start, SUT05-EV-0003); stop/start reachability only, no business state established',
+                 'checks': checks, 'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
+                 'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH')},
+                 'tool_versions': {'node': subprocess.run(['node', '--version'], capture_output=True, text=True).stdout.strip(), 'npm': subprocess.run(['npm', '--version'], capture_output=True, text=True).stdout.strip()},
+                 'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'job': '${{ github.job }}', 'repository_sha': '${{ github.sha }}', 'workflow_ref': '${{ github.workflow_ref }}'},
+                 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
+          json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2)); assert ok
+          PY
+      - name: Upload the ENVIRONMENT_VERIFICATION record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-ENVIRONMENT_VERIFICATION-SUT-05-api-run${{ github.run_id }}-a${{ github.run_attempt }}
+          path: |
+            environment-verification.json
+            version-1.json
+            api-stdout-1.log
+            api-stderr-1.log
+            api-stdout-2.log
+            api-stderr-2.log
+          retention-days: 90
+          if-no-files-found: error

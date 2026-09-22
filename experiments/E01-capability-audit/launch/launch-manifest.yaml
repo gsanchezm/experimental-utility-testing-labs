@@ -1,0 +1,165 @@
+# experiments/E01-capability-audit/launch/launch-manifest.yaml
+# E01 auditor launch-package record, EUS-2026-001. Operational, non-frozen artifact written by
+# ORCHESTRATOR under this operation's instruction ("E01 START / AUDITOR LAUNCH PREPARATION",
+# 2026-09-17). Not a protocol document; carries no protocol state. Per-package substitution
+# detail and validation are in render-report.json (same directory); this file is the narrative
+# record, including why the campaign-start state transition requested by this operation was NOT
+# performed.
+study_id: EUS-2026-001
+campaign: E01-capability-audit
+operation: E01 START / AUDITOR LAUNCH PREPARATION
+prepared_by: ORCHESTRATOR
+prepared_at: "2026-09-17T04:35:40Z"
+
+pre_start_integrity_verification:
+  orchestration_tree_status_before_operation: clean
+  frozen_prompt:
+    path: prompts/frozen/e01-capability-auditor-v1.md
+    sha256: b504b5f720a6fe8b2a7255b3fe0509d8d18a244fb8114b485c9a2e4fbfe6c358
+    byte_length: 17057
+    matches_expected: true
+    prompt_freeze_manifest_consistent: true  # manifests/e01-prompt-freeze.yaml: same prompt_id, sha256, status FROZEN
+  protocol_freeze:
+    tag: eus-2026-001-protocol-v1-pre-data
+    tag_resolves_to_commit: 38b82fda8282e2e068a27a45eef458f0e085def8
+    matches_expected: true
+    protocol_state: FROZEN-PRE-DATA
+  provenance:
+    e01_source_provenance_present: true
+    sut_manifest_present: true
+    all_six_suts_have_pinned_component_provenance: true
+    cross_file_consistency: spot-checked, not exhaustive -- pinned_commit_sha values for SUT-01 (both commits) and SUT-02 (all three components) in manifests/e01-source-provenance.yaml match manifests/sut-manifest.yaml verbatim; SUT-03..SUT-06 and the null/UNCONFIRMED entries were not individually re-diffed field by field
+  worktrees:
+    expected_head: 82b7a26ba9d03aa860adf4a3b102c79d815cce89
+    all_six:
+      - {auditor_id: AUDITOR-SUT01-OMNIPIZZA, branch: audit/e01-sut01-omnipizza, worktree: ../eus-2026-001-worktrees/e01-sut01-omnipizza, head_matches: true, clean: true, evidence_csv_header_only: true}
+      - {auditor_id: AUDITOR-SUT02-SAUCELABS, branch: audit/e01-sut02-saucelabs, worktree: ../eus-2026-001-worktrees/e01-sut02-saucelabs, head_matches: true, clean: true, evidence_csv_header_only: true}
+      - {auditor_id: AUDITOR-SUT03-BROWSERSTACK, branch: audit/e01-sut03-browserstack, worktree: ../eus-2026-001-worktrees/e01-sut03-browserstack, head_matches: true, clean: true, evidence_csv_header_only: true}
+      - {auditor_id: AUDITOR-SUT04-RESTFULBOOKER, branch: audit/e01-sut04-restful-booker, worktree: ../eus-2026-001-worktrees/e01-sut04-restful-booker, head_matches: true, clean: true, evidence_csv_header_only: true}
+      - {auditor_id: AUDITOR-SUT05-JUICESHOP, branch: audit/e01-sut05-juice-shop, worktree: ../eus-2026-001-worktrees/e01-sut05-juice-shop, head_matches: true, clean: true, evidence_csv_header_only: true}
+      - {auditor_id: AUDITOR-SUT06-WEBDRIVERIO, branch: audit/e01-sut06-webdriverio, worktree: ../eus-2026-001-worktrees/e01-sut06-webdriverio, head_matches: true, clean: true, evidence_csv_header_only: true}
+  campaign_state_before_operation:
+    study_manifest_data_collection_started: false
+    study_manifest_campaigns_E01_capability_audit_status: NOT_STARTED
+    e01_capability_audit_yaml_data_collection_started: false
+    e01_capability_audit_yaml_campaign_status: PREPARED_NOT_STARTED
+  mobilewright_qualification_status: NOT_STARTED
+  e02_e12_untouched: true
+
+rendering:
+  method: >
+    Position-tracked substitution: the frozen prompt was split into an alternating sequence of
+    literal-text and placeholder-token spans using the pattern \{\{[A-Z_]+\}\}. Only the nine
+    token spans were replaced with per-SUT values; every literal-text span was carried through
+    byte-for-byte unchanged, so fidelity outside the substitution points is guaranteed by
+    construction rather than asserted after the fact. Script: not committed (ad hoc, run from an
+    isolated scratch location outside this repository); its output and validation are what is
+    committed here.
+  actual_token_set_in_frozen_prompt_equals_documented_nine: true
+  documented_tokens:
+    [AGENT_ID, SUT_ID, SUT_NAME, AUDIT_BRANCH, AUDIT_DIRECTORY, SOURCE_WORKSPACE, COMPONENTS,
+     PINNED_PROVENANCE, ORCHESTRATION_BASELINE]
+  per_package_detail_and_hashes: render-report.json
+  worktree_availability: >
+    Rendered packages were committed to main (this operation's commit), not pushed into the six
+    audit worktrees/branches: this operation's instructions prefer keeping the six worktrees at
+    the frozen baseline (82b7a26) until each auditor is actually launched, rather than moving
+    audit branches during launch preparation. Consequence: as of this commit, none of the six
+    worktrees (../eus-2026-001-worktrees/e01-sut0N-*) contains its launch package on disk; an
+    auditor would read its package from the main working tree, or a launch-time step would fast-
+    forward/merge the relevant audit branch to this commit first -- a launch-time decision, not
+    one this operation made. "ready_to_launch" below means rendering and isolation validated, not
+    that a package is present in its worktree or that starting is authorized (see
+    campaign_start_state_transition).
+  source_workspace_caveat: >
+    SOURCE_WORKSPACE values point to ../e01-sut-sources/<SUT-dir>/, the layout already documented
+    in manifests/e01-capability-audit.yaml (source_workspaces.layout). No clone exists yet at any
+    of these paths (manifests/e01-capability-audit.yaml, source_workspaces.note: "No clone was
+    made for this orchestration task"); an auditor will need one created, read-only, before
+    SOURCE_WORKSPACE-dependent steps (SOURCE_VERIFIED evidence, execution verification) can begin.
+    This is an existing, already-documented gap, not something this operation introduced or
+    resolved.
+  frozen_prompt_self_description_observation: >
+    prompts/frozen/e01-capability-auditor-v1.md still opens with "Status: WORKING. Not yet frozen.
+    Do not use this prompt for a data-producing run" (its title also still reads "working prompt
+    v1"), inherited byte-for-byte from prompts/working/ at freeze time per
+    manifests/e01-prompt-freeze.yaml (byte_equivalence_verified: true) -- so it now propagates,
+    unchanged, into all six rendered packages below. The file is frozen and authoritative
+    regardless of this internal self-description (manifests/e01-prompt-freeze.yaml status: FROZEN
+    is what governs); this operation did not and must not edit it. Flagged here for the human as a
+    candidate non-substantive correction (protocol/change-control-v1.md, section 2) at their
+    discretion, not acted on by this operation.
+
+isolation_and_leakage_validation:
+  # per package: no unresolved {{...}} placeholder; no other-SUT identifying string appears more
+  # often than it already, legitimately, does in the frozen template's own illustrative prose
+  # (e.g. "for example SUT-02, Sauce Labs Demo Ecosystem", "SUT-01 ... SUT-06", "AUDITOR-SUT01-
+  # OMNIPIZZA ... AUDITOR-SUT06-WEBDRIVERIO"); fidelity outside substitution points proved by the
+  # construction method above, not by a blind reverse-string-replace (an earlier version of the
+  # validation script used blind reverse-replace and produced false positives against that same
+  # legitimate boilerplate; superseded by the span-based method before these files were written).
+  all_six_pass: true
+  detail: render-report.json
+
+frozen_file_integrity_after_operation:
+  prompts_frozen_e01_capability_auditor_v1_md: unchanged
+  manifests_e01_source_provenance_yaml: unchanged
+  manifests_sut_manifest_yaml: unchanged
+  protocol_directory: unchanged
+  note: This operation only added files under experiments/E01-capability-audit/launch/.
+
+data_integrity_after_operation:
+  capability_evidence_collected_by_orchestrator: false
+  all_six_evidence_csv_header_only: true
+  capability_score_exists: false
+  audit_conclusion_exists: false
+  auditor_executed: false
+
+campaign_start_state_transition:
+  requested_by_this_operation:
+    - "manifests/study-manifest.yaml: data_collection_started false -> true"
+    - "manifests/e01-capability-audit.yaml: data_collection_started false -> true"
+    - "manifests/e01-capability-audit.yaml: campaign_status PREPARED_NOT_STARTED -> RUNNING"
+  performed: false
+  blocked_because: >
+    protocol/change-control-v1.md, section 7, is the frozen protocol's only defined procedure for
+    a campaign's NOT_STARTED -> IN_PROGRESS transition, and its campaign status vocabulary is
+    exactly NOT_STARTED -> IN_PROGRESS -> FROZEN; RUNNING is not a token defined anywhere in the
+    frozen protocol. That procedure requires the ORCHESTRATOR to record a "Campaign configuration"
+    section in experiments/E01-capability-audit/README.md (pinned SUT versions -- already recorded
+    in manifests/sut-manifest.yaml and reusable here; toolchain versions; the frozen prompt version
+    id; conditions and environment_type; sample size per condition; exclusion and attribution
+    rules; and the list of CONFIRMATORY comparisons -- already recorded at the study level in
+    manifests/study-manifest.yaml, comparison_classification.confirmatory_pairs, and reusable
+    here), followed by a `campaign NOT_STARTED -> IN_PROGRESS` row in protocol/CHANGELOG.md and
+    the corresponding transition of manifests/study-manifest.yaml campaigns[].status. None of that
+    record exists yet, and section 7 states "Both moments are proposed by the ORCHESTRATOR and
+    approved by a human" -- an approval this operation's instructions do not supply for that
+    specific record (they supply approval only for the narrower three-field transition listed
+    above). Performing the narrower transition anyway would leave the repository asserting E01 has
+    started while failing the frozen protocol's own start procedure, and would introduce a second,
+    undocumented campaign-status vocabulary (RUNNING) alongside the frozen one (IN_PROGRESS) for
+    the same fact -- exactly the "operation would require a methodological decision" and "do not
+    introduce a parallel state representation" conditions this operation's own instructions name
+    as reasons to stop. No repository state was changed to work around this.
+  not_a_scenario_mapping_blocker: >
+    The frozen auditor prompt itself notes E01 does not require a frozen equivalent-scenario
+    mapping record to assess capability (its rubric decision procedure is per-ecosystem). The
+    blocker above is the missing Campaign configuration record, changelog row, and study-manifest
+    transition required by protocol/change-control-v1.md section 7 -- not a missing scenario
+    mapping.
+  requires_before_start:
+    - "The 'Campaign configuration' section written into experiments/E01-capability-audit/README.md per protocol/change-control-v1.md section 7, reusing the pinned SUT versions and CONFIRMATORY-comparison list already on record, and recording sample size / exclusion-attribution rules as N/A for E01 if that is the human's decision (E01 is a one-time structured audit per ecosystem, not a repeated-trial measurement -- protocol/repeatability-determinism-v1.md and protocol/setup-effort-v1.md do not apply to it), or with whatever else the human decides those fields mean for an audit-type campaign."
+    - "A protocol/CHANGELOG.md row: campaign NOT_STARTED -> IN_PROGRESS."
+    - "manifests/study-manifest.yaml campaigns[].status (E01-capability-audit): NOT_STARTED -> IN_PROGRESS."
+    - "A human decision on the token for manifests/e01-capability-audit.yaml's own campaign_status field: RUNNING is not defined anywhere in the frozen protocol; IN_PROGRESS is the protocol's own vocabulary and would keep one status representation instead of two, but that choice belongs to the human, not to this operation."
+  current_state_unchanged:
+    study_manifest_data_collection_started: false
+    e01_capability_audit_yaml_data_collection_started: false
+    e01_capability_audit_yaml_campaign_status: PREPARED_NOT_STARTED
+    study_manifest_campaigns_E01_capability_audit_status: NOT_STARTED
+
+notes: |
+  This file and the six rendered prompts plus render-report.json under
+  experiments/E01-capability-audit/launch/ are the only artifacts this operation produced. No
+  auditor was launched under any rendered package during this operation.

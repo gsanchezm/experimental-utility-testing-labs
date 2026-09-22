@@ -1,0 +1,47 @@
+# derived-data/h1-analysis/H1-result.json.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (JSON cannot carry a leading comment block).
+# This dataset's real input is the corrected E01 adjudicated capability matrix (no raw-data/ campaign
+# exists for E01; the matrix is itself a derived dataset with its own provenance chain, PROTO-U05/PROTO-U06).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v1.md).
+dataset: derived-data/h1-analysis/H1-result.json
+dataset_sha256: 8684deefc09faa4ba209546c4223f0cd1ec969de0a4d091bb92e3b6dbf137be5
+campaign_id: E01-capability-audit
+hypothesis_id: H1
+sut_ids: [SUT-01, SUT-02, SUT-03]
+sut_ids_excluded: [SUT-04, SUT-05, SUT-06]
+raw_inputs:
+  adjudicated_matrix:
+    path: derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json
+    sha256: 88a062ebac5af2a659c8396d70b36137c8a8d4d9c30569a325b742f98ccbe589
+    commit: 0722773b9090163b5c882fc5a5c9f748db1b0d19
+transformation_script:
+  path: analysis/h1-analysis/compute-h1.js
+  version: git-blob-sha 9247178f8971175e080439b517035ba661864036
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only; pin already committed at PROTO-U06, verified unaltered before this run)
+date_generated: "2026-09-18"
+protocol_version: v1
+frozen_procedure_source: protocol/statistical-analysis-plan-v1.md, section 4.3 (H1 row); protocol/study-design-v1.md, section 6 (H1 wording, notes (a), (c), (d)); protocol/capability-rubric-v1.md, "Score 3 confirmation" and "Tie-break rule for undecidable adjacent scores"
+notes: >
+  Deterministic, non-interpretive computation only. Implements exactly the frozen H1 procedure: a
+  descriptive count, per ecosystem, of modalities with effective_confirmed_score = 3 in the corrected
+  matrix, for SUT-01, SUT-02, and SUT-03 only (the frozen general-purpose-baseline comparison set;
+  protocol/study-design-v1.md, section 6, note (c)). No confidence interval, p-value, or effect size is
+  computed (none is prescribed for ordinal rubric scores; protocol/statistical-analysis-plan-v1.md,
+  section 3). No support/non-support determination is computed (none is frozen for H1). Specialist
+  ecosystems (SUT-04, SUT-05, SUT-06) are excluded from the comparison entirely, per protocol/study-design-v1.md
+  section 6 notes (a) and (d); H1 makes no prediction about them and they are not pre-registered as
+  CONFIRMATORY for H1 in experiments/E01-capability-audit/README.md's campaign configuration.
+
+  SAP "confirmed_score" -> matrix field mapping (see analysis/h1-analysis/compute-h1.js header comment for
+  the full citation chain): the script counts effective_confirmed_score, not confirmed_score_as_stored.
+  confirmed_score_as_stored is literal per-cell auditor-row provenance only (PROTO-U06) and is null on 20
+  cells, including every SUT-02 cell, several of which have effective_confirmed_score = 3; using
+  confirmed_score_as_stored as the count field would be a representational error, not an application of the
+  frozen rule. For the one DISPUTED-then-human-ruled cell in the H1 population (SUT-01 Visual Testing),
+  PROTO-U04 downstream_consumption_semantics rule 4 (manifests/e01-proto-u04-correction.yaml) is the
+  already-approved substitution rule that resolves the count: the human ruling's effective score stands in
+  "in place of the auditor's confirmed_score." This is an application of an already-frozen/approved rule to
+  the concrete matrix representation, not a new rule invented for this analysis; the resulting sensitivity
+  (count would be 8 rather than 9 under an unfrozen, stricter reading requiring confirmation_state =
+  CONFIRMED specifically) is disclosed in the result's own "limitations" field, and does not change the
+  directional finding either way.

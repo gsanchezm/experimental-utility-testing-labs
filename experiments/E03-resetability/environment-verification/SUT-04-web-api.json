@@ -1,0 +1,46 @@
+{
+  "record_class": "ENVIRONMENT_VERIFICATION",
+  "measured_experiment": false,
+  "study_id": "EUS-2026-001",
+  "campaign_id": "E03-resetability",
+  "sut_id": "SUT-04",
+  "surfaces": [
+    "WEB",
+    "API"
+  ],
+  "conditions_covered": [
+    "E03-CS001-SUT04-WEB",
+    "E03-CS001-SUT04-API"
+  ],
+  "environment_type": "LOCAL",
+  "sut_provenance": {
+    "repository": "https://github.com/mwinteringham/restful-booker-platform",
+    "commit_sha": "d36bd3f8647a091d406e53bad463c5e3e5d2ece1"
+  },
+  "reset_mechanism_under_verification": "DELETE /booking/{bookingid} (SUT04-EV-0006); reachability only, against a non-existent id, unauthenticated; no booking created",
+  "checks": {
+    "web_GET_/_status": 200,
+    "api_POST_/auth/login_empty_body_status": 403,
+    "api_POST_/auth/validate_status": 403,
+    "api_GET_/booking/_status": 403,
+    "api_DELETE_/booking/999999_unauthenticated_status": 403,
+    "api_GET_/booking/999999_status": 403,
+    "api_GET_/room/_status": 200
+  },
+  "verification_result": "VERIFIED",
+  "host": {
+    "os": "macOS-26.5.2-x86_64-i386-64bit-Mach-O",
+    "arch": "x86_64",
+    "kind": "operator workstation (LOCAL)"
+  },
+  "tool_versions": {
+    "java_runtime": "openjdk version \"26.0.2.1\" 2026-08-18",
+    "maven": "Apache Maven 3.9.9",
+    "node": "v24.21.0"
+  },
+  "performed_by": "ORCHESTRATOR (human-authorized NON-MEASURED PRE-START provisioning, 2026-09-22)",
+  "timestamp": "2026-09-22T10:01:17.278644+00:00",
+  "timezone": "UTC",
+  "instance_identifier": "six Spring services on 127.0.0.1:3000-3002,3004-3006 (java -jar, spring profile dev) + assets dev server 127.0.0.1:3003",
+  "provisioning_notes": "built and run under a scratch Temurin JDK 26.0.2.1 (the pinned pom compiles with --release 26; the host system JDK 23 was not changed) with mvn clean install -DskipTests; the documented docker-compose path was not used (Docker daemon unavailable on the host during this operation); module unit tests and end-to-end tests were not run"
+}

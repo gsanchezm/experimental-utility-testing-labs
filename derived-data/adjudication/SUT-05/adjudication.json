@@ -1,0 +1,61 @@
+{
+  "adjudicator_role": "ADJUDICATOR-EU-01",
+  "ecosystem_id": "SUT-05",
+  "cell_outcomes": [
+    {
+      "modality": "Web UI Functional",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT05-EV-0002", "SUT05-EV-0003", "SUT05-EV-0004"],
+      "note": "Score 3, confirmation_state CONFIRMED. Fixed, deterministically re-seeded named accounts (SUT05-EV-0002, SUT05-EV-0003) with a role-gated, defined-outcome UI (SUT05-EV-0004) match the rubric's 'deterministic test account' example."
+    },
+    {
+      "modality": "API",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT05-EV-0006", "SUT05-EV-0007"],
+      "note": "Score 3, confirmation_state CONFIRMED. POST /rest/user/login (SUT05-EV-0006) is API-based state seeding via the same deterministic accounts; GET /api/Challenges (SUT05-EV-0007) gives a source-verified, machine-readable ground-truth readout."
+    },
+    {
+      "modality": "Android Native",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT05-EV-0021"],
+      "note": "Score 0, structural_scope_note NO_MOBILE_SURFACE. Full top-level tree and package.json dependency search found no Android build artifact or cross-platform mobile framework."
+    },
+    {
+      "modality": "iOS Native",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT05-EV-0022"],
+      "note": "Score 0, structural_scope_note NO_MOBILE_SURFACE. Same basis as Android Native."
+    },
+    {
+      "modality": "Performance",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT05-EV-0016", "SUT05-EV-0017"],
+      "note": "Score 1. The full 16-category, 113-entry challenge catalog, all 61 route modules, and all 14 config profiles were searched for a documented, controllable performance-degradation condition; none found (SUT05-EV-0016). Reachability by a generic load-testing tool is Score 1's own definition."
+    },
+    {
+      "modality": "Accessibility — Web only",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT05-EV-0018", "SUT05-EV-0019"],
+      "note": "Score 1. No accessibility-testing dependency in package.json (SUT05-EV-0018) and no documented/labeled accessibility violation anywhere in the challenge catalog or frontend (SUT05-EV-0019); on the evidence actually collected, step 2 ('specific experimental support ... beyond ... generic tool reachability') is answered no and Score 1 is fully supported. See this record's top-level notes for an audit-scope observation about this cell's search depth relative to sibling audits; that observation does not identify a rubric misapplication or unsupported evidence in this cell and is not a basis for disputing it."
+    },
+    {
+      "modality": "Visual Testing",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT05-EV-0020"],
+      "note": "Score 1. The frontend was searched for a runtime theme/visual toggle; the 14 config/*.yml branding profiles exist but are selected only at application startup, not activatable within a running session (SUT05-EV-0020), so they do not meet the evaluated-version-already-exposes-it bar for an in-session condition. Consistent, well-reasoned Score 1."
+    },
+    {
+      "modality": "Security Testing",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT05-EV-0009", "SUT05-EV-0010", "SUT05-EV-0011", "SUT05-EV-0012"],
+      "note": "Score 3, confirmation_state CONFIRMED. A 113-entry catalog of individually named, keyed, documented intentional vulnerabilities (SUT05-EV-0010) with automated, deterministic server-side detection (SUT05-EV-0011) is the clearest possible match to the rubric's 'documented intentional vulnerability' example in this campaign."
+    },
+    {
+      "modality": "Localization / i18n",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT05-EV-0013", "SUT05-EV-0014", "SUT05-EV-0015"],
+      "note": "Score 3, confirmation_state CONFIRMED. An explicit, user-invokable runtime locale switch (translate.use(langKey), SUT05-EV-0014) backed by 45 shipped translation files matches the rubric's 'explicit market/locale selection' example."
+    }
+  ],
+  "notes": "The write-boundary incident recorded in unresolved.md (SUT-05-U01 -- a shared-scratchpad script executed against audits/SUT-03-browserstack/evidence.csv instead of this workspace) was already reviewed by the pre-adjudication integrity review (manifests/e01-pre-adjudication-snapshot-v1.yaml, decision_gate PASSED; INCIDENT-1-SUT05-WRONG-TARGET, independence_established_for_both_parties true; content_contamination_found false) and is not re-opened here; this record concerns only SUT-05's own cell outcomes. Audit-scope observation (not a dispute): this audit's Accessibility -- Web only cell (SUT05-EV-0018, SUT05-EV-0019) evaluated Decision procedure step 2 by searching for an accessibility-testing dependency and a documented/labeled violation, and concluded step 2 is not met once neither was found. Sibling audits on comparable web ecosystems (SUT-02, SUT02-EV-0013; SUT-03, SUT03-EV-0019; SUT-04, SUT04-EV-0018) additionally searched the DOM itself for stable, meaningful markup (ARIA labels, alt text) exercised from a reproducible starting state, and reached Score 2 on that basis even without a documented fault. SUT-05 has comparable evidence already on record for a reproducible starting state (SUT05-EV-0002, deterministic accounts; SUT05-EV-0003, full reseed on every start) that this cell's evaluation did not apply to the same DOM-markup question. This is recorded as an observation about audit search depth for the ORCHESTRATOR's attention, not as a rubric misapplication: nothing in the record establishes that SUT-05's DOM would in fact meet step 2 if examined, and this adjudicator does not supply or assume that finding on the auditor's behalf. Every cell in this record, including Accessibility -- Web only, is CONFIRMED as the highest fully-supported level under protocol/capability-rubric-v1.md on the evidence actually collected; none is UNSUPPORTED."
+}

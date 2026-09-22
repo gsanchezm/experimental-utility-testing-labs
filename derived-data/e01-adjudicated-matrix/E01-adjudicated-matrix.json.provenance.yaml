@@ -1,0 +1,65 @@
+# derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (JSON cannot carry a leading comment block).
+# derived-data/README.md rule 1 defines a derived dataset as reproducible from raw-data/; this dataset's
+# real inputs are audits/**, derived-data/adjudication/**, and derived-data/adjudication-rulings/** (no
+# raw-data/ campaign exists yet for E01), so this record lists the actual real inputs in the spirit of
+# rule 3 rather than its raw-data/-specific literal wording. Editable by ORCHESTRATOR only
+# (protocol/agent-governance-v1.md).
+dataset: derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json
+dataset_sha256: 88a062ebac5af2a659c8396d70b36137c8a8d4d9c30569a325b742f98ccbe589
+schema: schemas/adjudicated-matrix.schema.v2.json
+schema_id: "urn:eus-2026-001:schemas:adjudicated-matrix:v2"
+campaign_id: E01-capability-audit
+sut_ids: [SUT-01, SUT-02, SUT-03, SUT-04, SUT-05, SUT-06]
+raw_inputs:
+  # No raw-data/ campaign exists for E01; these are the actual immutable source artifacts.
+  auditor_result_commits:
+    SUT-01: fa807da45c3210e4659c231a7326890ed0a5dbb8   # audits/SUT-01-omnipizza/audit.md
+    SUT-02: bdef52b12bbdad3ca1746c0f4c74f0d9ca248226   # audits/SUT-02-saucelabs/audit.md
+    SUT-03: f04fe3fc5e25b2c9f4660b2e425a3eba08382986   # audits/SUT-03-browserstack/audit.md
+    SUT-04: 97ecae19151e8232f9992ee12f0944ce3120dbbb   # audits/SUT-04-restful-booker/audit.md
+    SUT-05: 57a82d43307eeb8f4ab5ba413cacd97ddd25297a   # audits/SUT-05-juice-shop/audit.md
+    SUT-06: 2bb26399f82f4bc1841d712b50fe8c1679dacd36   # audits/SUT-06-webdriverio/audit.md
+  adjudication_first_run:
+    SUT-01: { path: derived-data/adjudication/SUT-01/adjudication.json, sha256: 989e728ad7fba848d655aa1722cc01ec910953f91d3f2a78ff1992f1d03f5981 }
+    SUT-02: { path: derived-data/adjudication/SUT-02/adjudication.json, sha256: 3785205d7090c7c66395be1ad7db719f59da8f2912327b7d066fb6f5ca49bd9b }
+    SUT-03: { path: derived-data/adjudication/SUT-03/adjudication.json, sha256: 054de3bd2338c85a3d9f63975d4594d151a1e0a1a4311903fa4de5934c445a1d }
+    SUT-04: { path: derived-data/adjudication/SUT-04/adjudication.json, sha256: 70083fce6db33fb5ec1b6bfce65fe4565471c72d060c12a66154b32d49b2b897 }
+    SUT-05: { path: derived-data/adjudication/SUT-05/adjudication.json, sha256: d838675ae2293314b26ef7f9e841d115df85afc7e0a4025f48fefaec8f58d1a6 }
+    SUT-06: { path: derived-data/adjudication/SUT-06/adjudication.json, sha256: 43d5380c1092bae59057d340783d827207713c5ec0b3a522fb3ce5748159bfc2 }
+  human_rulings:
+    E01-HR-01: { path: derived-data/adjudication-rulings/E01-HR-01.json, sha256: f6cd1fd1c53c388443eb405a350099f7ea2f21452457c9d2c1741419c04e5bcf }
+    E01-HR-02: { path: derived-data/adjudication-rulings/E01-HR-02.json, sha256: 305e44412dd852d43fee0c15be0a2b6963739c3471ff796402404960a9d80d58 }
+transformation_script:
+  path: analysis/e01-adjudicated-matrix/generate-matrix.js
+  version: git-blob-sha a301d80084c5d27126edea5801ee27e334bf4377
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only)
+date_generated: "2026-09-18"
+protocol_version: v1
+correction_records_applied: []
+# correction_records_applied is scoped to raw-data/README.md "Correction records" (raw-observation
+# corrections); PROTO-U06 is a representation/provenance correction to this derived dataset's own contract,
+# not a raw-data correction, so it is not listed there. Recorded instead as its own field:
+representation_correction_applied: manifests/e01-proto-u06-correction.yaml
+notes: >
+  Deterministic, non-interpretive materialization only (protocol/unresolved.md, PROTO-U05, corrected by
+  PROTO-U06). Every CONFIRMED cell's effective_confirmed_score equals the auditor's confirmed_score exactly
+  as recorded in audits/<SUT>/audit.md at the pinned commit (falling back to provisional_score where
+  confirmed_score was left blank, per protocol/capability-rubric-v1.md's own stated fallback and
+  analysis/README.md rule 7). The two DISPUTED cells (SUT-01 Visual Testing, SUT-04 Security Testing) use
+  derived-data/adjudication-rulings/E01-HR-01.json and E01-HR-02.json's human_effective_confirmed_score
+  exclusively. No other cell's outcome or score was reinterpreted. audits/**, derived-data/adjudication/**,
+  and derived-data/adjudication-rulings/** are unmodified by this dataset's generation (read-only;
+  re-verified by SHA-256 above).
+
+  PROTO-U06 correction (manifests/e01-proto-u06-correction.yaml): confirmed_score_as_stored now preserves a
+  literal blank audit.md confirmed_score cell as null instead of the v1 fallback-substituted numeric value,
+  verified by direct inspection of all six audit.md tables to be blank on all 9 SUT-02 cells, all 9 SUT-06
+  cells, and the SUT-03 Android Native / iOS Native cells (20 of 54 cells total). This dataset's
+  effective_confirmed_score is identical, cell for cell, to v1 (git commit
+  77216f610a341fe87fb3c90c4035de73d66ca29d, sha256 3a737c1e3474d60380488379514f4a9b04d2e371212e46f233eac7018c480a69,
+  recoverable via git history) -- independently re-diffed and confirmed to differ only in
+  confirmed_score_as_stored on the 20 identified cells (numeric -> null); no other field of any cell, and no
+  top-level field, differs. Validated against schemas/adjudicated-matrix.schema.v2.json (Ajv v8.20.0, draft
+  2020-12, strict mode, zero errors); schemas/adjudicated-matrix.schema.json (v1) is unmodified and is not
+  the contract this dataset conforms to as of this generation.

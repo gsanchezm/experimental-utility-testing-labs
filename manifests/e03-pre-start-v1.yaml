@@ -1,0 +1,94 @@
+# manifests/e03-pre-start-v1.yaml
+# Provenance record of E03-resetability PRE-START configuration preparation.
+# This is explicitly NOT a campaign-start record: there is no "NOT_STARTED -> IN_PROGRESS" transition here
+# (contrast manifests/e01-campaign-start-v1.yaml, the analogous record for an actual campaign start).
+# manifests/study-manifest.yaml's E03-resetability campaign entry is unchanged by this operation and remains
+# status: NOT_STARTED. This file records what a human-authorized PRE-START preparation operation determined,
+# drafted, and left blocked, for future reference when a separate, later, explicitly authorized campaign-start
+# operation is proposed. Editable by ORCHESTRATOR only (protocol/agent-governance-v1.md).
+study_id: EUS-2026-001
+operation: E03-resetability PRE-START configuration preparation
+operation_date: "2026-09-21"
+authorized_by: "explicit human instruction, this operation only (see HUMAN_SELECTION_PERSISTENCE below); authorizes PRE-START preparation only, not campaign start, execution, mobile qualification execution, executor launch, H2 analysis, or any E04/E05 execution, or any modification to E01 or H1"
+pre_start_head: 6c6e7fba8a5ff25bf44c43008bb55552406d39a7  # main HEAD immediately before this operation's mutations
+human_selection_persistence:
+  result: NO_EXISTING_MECHANISM
+  basis: >
+    manifests/study-manifest.yaml's `campaigns[]` list only carries the frozen vocabulary
+    NOT_STARTED -> IN_PROGRESS -> FROZEN (protocol/change-control-v1.md, section 7); no field or schema
+    exists for a "selected, not yet started" campaign state, and none is invented by this operation.
+    The human authorization that E03-resetability is the next campaign for PRE-START preparation is
+    externally established by this operation's own instruction and by this record's narrative; it is not,
+    and must not be read as, a new campaign-lifecycle status written into manifests/study-manifest.yaml.
+  study_manifest_e03_status_unchanged: true  # E03-resetability remains status: NOT_STARTED in manifests/study-manifest.yaml
+issue_xviii:
+  classification: HUMAN_RULING_REQUIRED
+  analysis: experiments/E03-resetability/issue-xviii-analysis.md
+  register_row: "protocol/study-design-v1.md, section 13, row (xviii) — status DEFERRED-BEFORE-CAMPAIGN, requires_human_decision: yes (unchanged; not resolved by this operation)"
+proto_u08:
+  status: OPEN — deferred
+  record: protocol/unresolved.md, PROTO-U08
+  summary: "controlled_instance_available is null for all six SUTs in manifests/sut-manifest.yaml; never verified by execution during the FROZEN E01 campaign (confirmed by inspecting the controlled_instance_available header field of all six audit/e01-sut0N-* branches' real audit.md files, not the unmerged main-branch templates). Blocks per-condition environment_type / NOT_EXECUTABLE_WITHOUT_CONTROLLED_INSTANCE determination for E03 (and E02)."
+e03_configuration:
+  status: DRAFT (BLOCKED for freeze; not a locked campaign-configuration record)
+  record: experiments/E03-resetability/campaign-configuration-draft.md
+  blockers: [issue_xviii, proto_u08, "CS-001.yaml mapping record not FROZEN"]
+  sut_population:
+    comparable_on_cs001: [SUT-01, SUT-02, SUT-03, SUT-04, SUT-05]
+    not_comparable_on_cs001: [SUT-06]
+  candidate_condition_count: 9  # E03-CS001-SUT01-WEB, -API; SUT02-WEB, -ANDROID, -IOS; SUT03-WEB; SUT04-WEB, -API; SUT05-API
+mapping:
+  canonical_scenario_id: CS-001
+  path: experiments/scenario-mappings/CS-001.yaml
+  mapping_status: DRAFT
+  status_for_this_operation: DRAFT_BLOCKED_BY_ISSUE_XVIII  # also blocked by proto_u08 for environment_type fields
+mobile_qualification:
+  decision: REQUIRED
+  basis: >
+    SUT-02's Android Native and iOS Native surfaces are E01-confirmed present (effective_confirmed_score = 3,
+    confirmation_state = CONFIRMED, derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json) and CS-001
+    marks SUT-02 COMPARABLE with surfaces_used including ANDROID and IOS (both realizing an explicit, evidenced
+    "Reset App State" mechanism, SUT02-EV-0008, SUT02-EV-0009). These two condition rows
+    (E03-CS001-SUT02-ANDROID, E03-CS001-SUT02-IOS) are therefore configured, executable-in-principle E03
+    conditions using Android Native / iOS Native. protocol/mobile-runner-policy-v1.md, sections 2 and 9, apply:
+    Mobilewright must pass the qualification gate (or the study switches to Appium 3 under section 8) and SUT-02
+    must pass its own per-SUT compatibility smoke before either row may execute. No mobile condition was added
+    or removed to reach this conclusion; it follows directly from already-adjudicated E01 evidence and CS-001's
+    evidence-cited mapping.
+  affected_sut: SUT-02
+  affected_conditions: [E03-CS001-SUT02-ANDROID, E03-CS001-SUT02-IOS]
+  affected_surfaces: [ANDROID, IOS]
+  qualification_gate_executed: false  # not run by this operation
+  compatibility_smoke_executed: false  # not run by this operation
+governance:
+  status: READY (DRAFT document created; not frozen)
+  record: protocol/agent-governance-v2.md
+  new_role: EXECUTOR-E03-RESETABILITY
+  role_scope: "E03-resetability only; instantiated once per assigned SUT; write boundary raw-data/E03-resetability/<assigned-SUT>/** only"
+  frozen: false  # freezing this document requires its own separate explicit human approval, not given by this operation
+gates:
+  G1_human_campaign_selection: PASS
+  G2_e03_configuration: BLOCKED  # draft prepared; full lock blocked by issue_xviii and proto_u08 and mapping-not-frozen
+  G3_issue_xviii: BLOCKED  # HUMAN_RULING_REQUIRED
+  G4_equivalent_scenario_mapping: BLOCKED  # DRAFT_BLOCKED_BY_ISSUE_XVIII
+  G5_mobile_qualification: BLOCKED  # REQUIRED and not yet executed
+  G6_e03_executor_governance_role: PASS  # DRAFT v2 created; freeze is a separate future step
+  G7_e03_campaign_start: NOT_AUTHORIZED
+  G8_e03_executor_prompt_freeze: NOT_STARTED
+  G9_executor_launch: NOT_STARTED
+validation:
+  e01_matrix_sha256_unchanged: 88a062ebac5af2a659c8396d70b36137c8a8d4d9c30569a325b742f98ccbe589
+  h1_result_sha256_unchanged: 8684deefc09faa4ba209546c4223f0cd1ec969de0a4d091bb92e3b6dbf137be5
+  e01_campaign_status_unchanged: FROZEN
+  e03_campaign_status_unchanged: NOT_STARTED
+  e02_e12_campaign_status_unchanged: NOT_STARTED
+notes: |
+  This operation modified/created files only under: protocol/unresolved.md (append PROTO-U08);
+  protocol/agent-governance-v2.md (new, DRAFT); experiments/E03-resetability/issue-xviii-analysis.md (new);
+  experiments/E03-resetability/campaign-configuration-draft.md (new); experiments/scenario-mappings/CS-001.yaml
+  (new, DRAFT); manifests/e03-pre-start-v1.yaml (this file); research-status.html (descriptive update, after
+  the above). No file under protocol/ in state FROZEN-PRE-DATA was edited in place (protocol/unresolved.md is
+  exempt from the protocol lifecycle, per its own header, and append-only). No file under audits/**,
+  derived-data/**, raw-data/**, or prompts/frozen/** was touched. manifests/study-manifest.yaml,
+  manifests/sut-manifest.yaml, and manifests/toolchain-manifest.yaml are unchanged. No experimental execution,
+  mobile qualification run, or executor launch occurred.

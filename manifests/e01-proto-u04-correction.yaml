@@ -1,0 +1,136 @@
+# manifests/e01-proto-u04-correction.yaml
+# Post-data-collection change-control record for PROTO-U04 (protocol/unresolved.md), EUS-2026-001.
+# Establishes, prospectively, the minimum recording location and record shape for a human ruling on an
+# ADJUDICATOR-EU-01 DISPUTED cell, and the precedence rule by which a downstream adjudicated-matrix
+# construction step would consume such a ruling. Does not change how adjudication decisions are made, does
+# not alter the capability rubric, evidence rules, RQs, hypotheses, statistical definitions, SUT or modality
+# definitions, and does not modify any immutable auditor or first-run adjudicator artifact. Editable by
+# ORCHESTRATOR only (protocol/agent-governance-v1.md).
+change_id: PROTO-U04
+study_id: EUS-2026-001
+discovery_point: >
+  During the E01 human-ruling evidence-pack operation, after the E01 post-adjudication scientific review
+  found two DISPUTED cells (SUT-01 Visual Testing; SUT-04 Security Testing) and the human issued rulings on
+  both (E01-HR-01, E01-HR-02). The gap was discovered while attempting to determine where a human ruling on
+  an ADJUDICATOR-EU-01 DISPUTED cell is authorized to be durably recorded: protocol/agent-governance-v1.md,
+  section 6 (Escalation) establishes that humans decide such disputes, but defines no ruling-specific
+  recording location distinct from the generic protocol/unresolved.md escalation-log pattern, and
+  schemas/adjudication.schema.json has no field for a human ruling, a resolution, or a final outcome.
+issue: >
+  protocol/agent-governance-v1.md, section 6: "Disputed cells flagged by ADJUDICATOR-EU-01" are listed among
+  matters "never resolved by an agent on its own authority... Humans decide the outcome." No frozen artifact
+  defines: (a) where a human ruling on such a cell is durably recorded; (b) how it is represented without
+  modifying the immutable audits/** or derived-data/adjudication/** artifacts; (c) how a downstream
+  "adjudicated matrix" (referenced descriptively by protocol/statistical-analysis-plan-v1.md, H1, and by
+  analysis/README.md) is meant to consume it. audits/** is write-once per the write-boundary matrix (section
+  4: the AUDITOR row is "Allowed for own assigned SUT directory only; — for all others," including
+  ORCHESTRATOR) and therefore permanently immutable to a ruling. derived-data/adjudication/** is
+  ADJUDICATOR-EU-01's own carved-out write scope (section 3.3: "May write: only derived-data/adjudication/**");
+  ORCHESTRATOR's general derived-data/ authority ("Allowed, version-controlled transformations only") is not
+  read here as extending into that specific reserved subpath, to avoid assuming write authority under a path
+  explicitly assigned to another role.
+classification:
+  category: POST-DATA DISCOVERED OPERATIONAL / PROVENANCE GAP
+  methodological: false
+  blocking_persistence_operationalization_of_human_rulings: true
+  blocking_scientific_human_decisions: false
+  note: >
+    The gap concerns only where and how an already-made human decision is durably recorded and later
+    consumed. It does not concern, and did not delay, the human's act of interpreting the frozen rubric text
+    to decide SUT-01 Visual Testing and SUT-04 Security Testing (E01-HR-01, E01-HR-02) -- those decisions
+    were made directly from the frozen normative text and the recorded evidence, independent of any
+    recording mechanism.
+human_ruling: >
+  Classification ACCEPTED. PROTO-U04 defines only HOW already-made human rulings are recorded and consumed
+  for downstream matrix construction; it changes nothing about HOW adjudication decisions are made.
+  Prospective only. Approved by gilbertosanchez.
+write_authority_analysis:
+  audits_star_star: "Permanently immutable to every role once an auditor's own SUT directory is written (write-boundary matrix, section 4: AUDITOR row only, 'own assigned SUT directory only'). Not a candidate location."
+  derived_data_adjudication_star_star: "ADJUDICATOR-EU-01's own reserved write scope (section 3.3). Not used for a ruling record, per explicit instruction not to assume ORCHESTRATOR write authority under a path specifically assigned to another role."
+  derived_data_star_general: "ORCHESTRATOR: 'Allowed (version-controlled transformations only)' (write-boundary matrix, section 4). This authority is unambiguous for a NEW subpath under derived-data/ that is not the specific derived-data/adjudication/ path already carved out for ADJUDICATOR-EU-01."
+  experiments_star: "ORCHESTRATOR: 'Allowed' -- a plausible alternative location (campaign coordination records already live here, e.g. experiments/E01-capability-audit/pre-adjudication-integrity.md, adjudication-input-view.yaml). Not used for the ruling records themselves because a human ruling on a scored cell is a derived scientific-record transformation of the audit+adjudication inputs, not campaign-coordination metadata; experiments/ remains available for any future narrative record about this change if wanted."
+  conclusion: >
+    No existing authorized path cleanly fits a human-ruling record. Per instruction, PROTO-U04 prospectively
+    establishes the minimum new location: derived-data/adjudication-rulings/ -- a new subpath under
+    derived-data/, distinct from derived-data/adjudication/, authorized under ORCHESTRATOR's own pre-existing,
+    unambiguous 'derived-data/ Allowed' write authority (write-boundary matrix, section 4). This is a
+    location decision under existing authority, not a grant of new write authority to any role.
+recording_location: derived-data/adjudication-rulings/
+minimum_recording_contract:
+  fields:
+    - study_id
+    - campaign_id
+    - ruling_id
+    - decision_authority  # fixed value HUMAN
+    - decision_datetime
+    - ecosystem_id
+    - modality
+    - original_first_run_adjudicator_output_path
+    - original_first_run_adjudicator_output_sha256
+    - original_adjudicator_outcome  # fixed value DISPUTED for every record under this contract
+    - auditor_provisional_score
+    - auditor_confirmed_score_as_stored
+    - human_effective_confirmed_score
+    - evidence_ids  # evidence_id values materially supporting the ruling, per protocol/evidence-rules-v1.md
+    - rationale  # concise frozen-rubric rationale
+    - immutability_statement  # explicit statement that audits/** and derived-data/adjudication/**/adjudication.json are unmodified
+  excluded_fields: [confidence_score, weight, rank, winner, new_evidence_status, new_capability_level, global_experimental_utility_score, hypothesis_outcome]
+  score_vocabulary: "Uses only the existing capability-rubric-v1.md score integers (0-3); introduces no new level, status, or vocabulary."
+downstream_consumption_semantics:
+  scope: "Applies only to a DISPUTED cell for which an authorized human-ruling record exists under derived-data/adjudication-rulings/. Does not apply to, and does not reinterpret, any of the other 52 cells."
+  rules:
+    - "1. The immutable auditor row (audits/<SUT>/audit.md) is preserved and never rewritten."
+    - "2. The immutable first-run adjudicator outcome (derived-data/adjudication/<SUT>/adjudication.json) is preserved and never rewritten."
+    - "3. If no human-ruling record exists for a DISPUTED cell, that cell remains unresolved for any downstream matrix construction step."
+    - "4. If an authorized human-ruling record exists for a DISPUTED cell, a downstream matrix construction step uses that record's human_effective_confirmed_score for that cell in place of the auditor's confirmed_score."
+    - "5. All non-DISPUTED cells continue to use the already-reviewed effective confirmed_score (confirmed_score as stored, or provisional_score where confirmed_score was not recorded distinctly, per capability-rubric-v1.md's Tie-break rule Output convention)."
+    - "6. No original input artifact (audits/**, derived-data/adjudication/**) is overwritten by this precedence rule at any step."
+  note: "This is a precedence/recording rule only. It does not alter protocol/capability-rubric-v1.md's decision criteria, does not define a new evidence status, and does not itself construct any matrix file (see notes below on the unresolved final-matrix representation)."
+adjudicated_matrix_representation:
+  status: NOT_ESTABLISHED
+  basis: >
+    protocol/statistical-analysis-plan-v1.md references "the adjudicated matrix" descriptively (H1 row) but
+    defines no file format, field shape, or schema for it. analysis/README.md, "Layout": "Internal layout:
+    TBD before freeze. Candidate -- not frozen" -- confirming the shape remains genuinely undetermined, not
+    merely undiscovered. No schemas/adjudicated-matrix.schema.json or equivalent exists. Constructing one now
+    would require a substantive shape/contract decision beyond the minimum recording contract above; per
+    instruction, that decision is not made by this record. The two human-ruling records above are sufficient
+    on their own to represent both decided disputes completely; a consuming matrix step, if and when its
+    shape is defined, reads them via the precedence rule above.
+section_5_compliance:
+  new_location_established: "derived-data/adjudication-rulings/ (new, additive; derived-data/adjudication/ left unmodified)"
+  written_rationale: "this record's issue/classification/write_authority_analysis fields, above"
+  affected_campaigns_statement:
+    - campaign: E01-capability-audit
+      already_collected_evidence: "remains valid and unread/unmodified by this record; the two human rulings were made directly from evidence and rubric text already reviewed, not from any newly collected evidence"
+    - campaigns: [E02-state-establishment, E03-resetability, E04-repeatability, E05-determinism, E06-observability, E07-automation-affordances, E08-performance, E09-security, E10-cross-platform-parity, E11-state-continuity, E12-localization-i18n]
+      status: "NOT_STARTED; this record is not referenced by any of them; not applicable"
+  change_log_entry: "protocol/CHANGELOG.md, PROTO-U04 row"
+affected_campaign: E01-capability-audit
+affected_phase: post-adjudication human-ruling persistence only
+collected_evidence_affected: false
+scoring_semantics_affected: false
+evidence_admissibility_affected: false
+hypotheses_affected: false
+rqs_affected: false
+cross_sut_comparisons_affected: false
+rerun_required: false
+prospective_only: true
+adjudicator_relaunched_by_this_record: false
+audits_directory_modified: false
+derived_data_adjudication_modified: false
+implementation_files:
+  - derived-data/adjudication-rulings/E01-HR-01.json  # new file
+  - derived-data/adjudication-rulings/E01-HR-02.json  # new file
+  - protocol/unresolved.md  # PROTO-U04 row appended
+  - protocol/CHANGELOG.md  # PROTO-U04 row appended
+timestamp: "2026-09-18T00:56:33Z"
+controlling_pre_change_commit: 8ac2a2ddf1550062bead922511509f14f1343d08
+approved_by: gilbertosanchez
+notes: |
+  No file under audits/** was read or modified. No file under derived-data/adjudication/**/adjudication.json
+  was read for the purpose of modification (only re-hashed for verification). ADJUDICATOR-EU-01 was not
+  relaunched. schemas/adjudication.schema.json, protocol/capability-rubric-v1.md, and
+  protocol/evidence-rules-v1.md are unchanged and unreferenced for modification by this record. This record
+  does not create a JSON Schema file; the "minimum_recording_contract" field list above is the complete
+  shape and is not expected to be formalized into schemas/ unless a future decision requires it.

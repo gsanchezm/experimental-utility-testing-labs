@@ -1,0 +1,147 @@
+# manifests/e01-adjudicator-v2-correction.yaml
+# Post-data-collection change-control record for PROTO-U03 (protocol/unresolved.md), EUS-2026-001.
+# Records the prospective-only correction that produced prompts/frozen/e01-adjudicator-v2.md from
+# prompts/frozen/e01-adjudicator-v1.md. Does not alter RQs, hypotheses, the capability rubric, modality
+# definitions, SUT definitions, evidence-status semantics, Score-3 confirmation rules, adjudication outcome
+# or schema semantics, auditor evidence/scores/confirmation states, evidence provenance, the statistical
+# analysis plan, CONFIRMATORY comparisons, write authority, or the PROTO-U02 disposition. Editable by
+# ORCHESTRATOR only (protocol/agent-governance-v1.md).
+change_id: PROTO-U03
+study_id: EUS-2026-001
+discovery_point: >
+  During the ADJUDICATOR-EU-01 final pre-launch preflight, after all 17 enumerated preflight gates passed
+  (direct hash/byte verification of prompts/frozen/e01-adjudicator-v1.md matched its recorded freeze values
+  exactly). ADJUDICATOR-EU-01 was NOT_STARTED and had never executed. No auditor result commit or its
+  scientific contents were read to make this discovery; it was found by direct textual review of the frozen
+  prompt's own line 3, required as part of preflight due diligence.
+issue: >
+  prompts/frozen/e01-adjudicator-v1.md, line 3, reads: "Status: WORKING SKELETON. Not yet frozen, not yet
+  complete, and not usable: this file states only what protocol/agent-governance-v1.md, section 3.3 and
+  protocol/capability-rubric-v1.md already define for ADJUDICATOR-EU-01. It invents no methodology beyond
+  the frozen protocol and is not a substitute for one. It is prepared here only so that the role exists in
+  `prompts/working/`; it is not reviewed, not approved, and not to be used to adjudicate anything." This
+  statement is unconditional and asserts the prompt's own content is incomplete and unusable, despite the
+  prompt being formally FROZEN (manifests/e01-adjudicator-prompt-freeze.yaml, status: FROZEN, approved by
+  gilbertosanchez, 2026-09-17T14:43:38Z). Because Section A of the launch procedure forbids any prefix,
+  suffix, wrapper instruction, or hint around the frozen prompt text supplied to ADJUDICATOR-EU-01, a fresh
+  executing agent's first instruction would be a document declaring itself unreviewed, unapproved, and "not
+  to be used to adjudicate anything" -- undischargeable from the agent's authorized inputs alone. Distinct
+  from the already-accepted staleness in prompts/frozen/e01-capability-auditor-v1.md's own header (logged
+  commit 637abe7; experiments/E01-capability-audit/pre-adjudication-integrity.md, section 6): that header is
+  a conditional ("do not use until copied to prompts/frozen/ with a recorded SHA-256") a reader can discharge
+  in-band from the frozen copy plus manifests/e01-prompt-freeze.yaml; the adjudicator header is unconditional
+  and asserts content insufficiency ("not yet complete... not usable") that no freeze record can satisfy from
+  inside the prompt. Not caught by the prior freeze review (commit d7f0f25): that review's checklist
+  evaluated and classified a different staleness (the "skeleton only" YAML comment in
+  manifests/e01-capability-audit.yaml, HISTORICAL/NON-BLOCKING, "never parsed programmatically") but did not
+  separately evaluate prompts/frozen/e01-adjudicator-v1.md's own line 3, which -- unlike that comment -- is
+  parsed by the executing agent as its first instruction.
+classification:
+  category: PRE-EXISTING OPERATIONAL / PROVENANCE DEFECT
+  temporal: DISCOVERED POST-DATA
+  methodological: false
+  blocking: BLOCKING ADJUDICATOR EXECUTION
+  note: >
+    The defect affects whether the already-defined adjudication instructions (assignment, responsibilities,
+    "what the adjudicator never does," output-record binding to schemas/adjudication.schema.json) can be
+    executed. It does not change how adjudication decisions are made.
+human_ruling: >
+  Classification ACCEPTED. ADJUDICATOR-EU-01 must remain NOT_STARTED; not launched by this record. Correction
+  is PROSPECTIVE ONLY and must not modify or reinterpret any previously collected auditor evidence. Remedy:
+  create prompts/frozen/e01-adjudicator-v2.md (prompts/README.md, rule 4 -- a frozen prompt is never edited
+  in place) containing the minimum metadata/status correction only, replacing the disqualifying Status
+  statement with: "Status: ADJUDICATION TASK PROMPT. Execution is authorized only from a formally frozen copy
+  after the required pre-launch gates pass." No other prose rewritten, no stylistic or spelling correction
+  made, no prompt-version identifier elsewhere in the file changed (evaluated: the file's own title, "working
+  prompt skeleton v1," contains an embedded "v1" token; changing it was judged not mechanically required --
+  no code, schema, or manifest parses that heading string to determine version identity; the file's path and
+  this record establish it as E01-ADJUDICATOR-V2 -- so it was left untouched, keeping the diff to exactly one
+  hunk). Approved by gilbertosanchez.
+scientific_boundary_confirmed_unchanged:
+  - RQs (RQ1-RQ5)
+  - hypotheses (H1-H5)
+  - capability rubric
+  - modality definitions
+  - SUT definitions
+  - evidence-status semantics (DOCUMENTED, SOURCE_VERIFIED, EXECUTION_VERIFIED, INFERRED)
+  - Score-3 confirmation rules and the tie-break rule
+  - adjudication outcome semantics (CONFIRMED, DISPUTED, UNSUPPORTED)
+  - schemas/adjudication.schema.json (unchanged; not modified by this record)
+  - schemas/sut-audit.schema.json (unchanged; not modified by this record)
+  - auditor evidence, auditor scores, auditor confirmation states
+  - provenance of auditor evidence
+  - statistical analysis plan and CONFIRMATORY comparisons
+  - write authority (protocol/agent-governance-v1.md, section 3.3/4, unchanged)
+  - PROTO-U02 disposition (remains OPEN_NON_BLOCKING; not resolved by this record)
+no_new_concepts_introduced:
+  new_evidence_statuses: false
+  new_capability_levels: false
+  replacement_scores: false
+  weighted_experimental_utility_score: false
+  global_experimental_utility_score: false
+  ranking: false
+  winner: false
+  hypothesis_result: false
+  scientific_hints_in_prompt: false
+diff_audit:
+  method: "node paragraph-split comparison + unified diff (prompts/frozen/e01-adjudicator-v1.md vs prompts/working/e01-adjudicator-v2.md)"
+  hunks_found: 1
+  hunk_1: "Status statement paragraph replaced in full, as specified in human_ruling above. No other line differs."
+  result: COMPLIANT
+v1:
+  path: prompts/frozen/e01-adjudicator-v1.md
+  sha256: f93e82ab339b32b84883951ad0d15f31301b9f23ddd89090072109de05f92bc4
+  byte_size: 3475
+  status_after_this_record: "FROZEN, unchanged, retained as immutable historical provenance (not edited in place, not superseded, not deleted)"
+v2:
+  prompt_id: E01-ADJUDICATOR-V2
+  working_path: prompts/working/e01-adjudicator-v2.md
+  frozen_path: prompts/frozen/e01-adjudicator-v2.md
+  sha256: e4f27dfe6748b81cb8987b19fe3a76ac5f38b4d0d1bd806083215490a320d508
+  byte_size: 3150
+  working_frozen_byte_equivalent: true
+section_5_compliance:
+  new_version_file: "prompts/frozen/e01-adjudicator-v2.md (prompts/README.md rule 4; V1 retained unchanged)"
+  written_rationale: "this record's issue/classification/human_ruling fields, above"
+  affected_campaigns_statement:
+    - campaign: E01-capability-audit
+      already_collected_evidence: "remains valid; unaffected by this change (six auditor result commits unmodified, unread by this operation)"
+    - campaigns: [E02-state-establishment, E03-resetability, E04-repeatability, E05-determinism, E06-observability, E07-automation-affordances, E08-performance, E09-security, E10-cross-platform-parity, E11-state-continuity, E12-localization-i18n]
+      status: "NOT_STARTED; this prompt is not referenced by any of them; not applicable"
+  change_log_entry: "protocol/CHANGELOG.md, PROTO-U03 row"
+affected_campaign: E01-capability-audit
+affected_phase: future adjudication only
+collected_evidence_affected: false
+scoring_semantics_affected: false
+evidence_admissibility_affected: false
+hypotheses_affected: false
+rqs_affected: false
+cross_sut_comparisons_affected: false
+rerun_required: false
+prospective_only: true
+adjudicator_launched_by_this_record: false
+adjudicator_status_after_this_record: NOT_STARTED
+audits_directory_touched: false
+auditor_result_commits_read_or_inspected: false
+implementation_files:
+  - prompts/working/e01-adjudicator-v2.md  # new file
+  - prompts/frozen/e01-adjudicator-v2.md   # new file (freeze copy, byte-identical to working)
+  - manifests/e01-adjudicator-prompt-freeze-v2.yaml  # new file, V2 freeze provenance
+  - protocol/unresolved.md  # PROTO-U03 row appended
+  - protocol/CHANGELOG.md  # PROTO-U03 row appended
+timestamp: "2026-09-17T16:16:53Z"
+controlling_pre_change_commit: d7f0f250631f47e11ccdd1c012697cbb173ade4e
+protocol_freeze_commit: 38b82fda8282e2e068a27a45eef458f0e085def8
+protocol_freeze_tag: eus-2026-001-protocol-v1-pre-data
+e01_start_commit: 89b23f2787c7717f357b8031a798389c2b9ca335
+adjudicator_prompt_v1_freeze_commit: d7f0f250631f47e11ccdd1c012697cbb173ade4e
+approved_by: gilbertosanchez
+notes: |
+  This record implements protocol/change-control-v1.md, section 5, by extension to prompts/ (frozen agent
+  prompts), mirroring the precedent set by manifests/e01-adjudication-output-contract-v1.yaml (PROTO-U01).
+  No file under audits/** was read or modified. None of the six immutable auditor result commits (fa807da4,
+  bdef52b1, f04fe3fc, 97ecae19, 57a82d43, 2bb26399) or their scientific contents was read, inspected, or
+  summarized to produce this record -- their branch tips were confirmed unmoved by SHA comparison only.
+  ADJUDICATOR-EU-01 has not executed before, during, or after this record and remains NOT_STARTED. No
+  derived-data/adjudication output exists. schemas/adjudication.schema.json and schemas/sut-audit.schema.json
+  are both unmodified by this record.

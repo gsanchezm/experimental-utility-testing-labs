@@ -1,0 +1,151 @@
+# manifests/e03-cs002-exclusion-v1.yaml
+# Provenance record of the human ruling that excludes canonical scenario CS-002 from the current
+# E03-resetability campaign configuration and fixes the canonical-scenario methodology for E03.
+# Modeled on manifests/issue-xviii-ruling-v1.yaml. Editable by ORCHESTRATOR only
+# (protocol/agent-governance-v1.md). Unknown values are null, never a guess.
+study_id: EUS-2026-001
+subject: "experiments/scenario-mappings/CS-002.yaml (canonical scenario CS-002) and the E03-resetability canonical-scenario methodology"
+authorization_id: E03-CS002-EXCLUSION-RULING-01
+ruled_by: gilbertosanchez
+ruling_date: "2026-09-22"
+prior_finding:
+  raised_by: ORCHESTRATOR
+  raised_on: "2026-09-22"
+  where: "E03 FINAL PRE-START DECISION EVIDENCE PACKAGE (strict read-only audit, 2026-09-22): CS-002 classified POST_HOC_SUT_RESPONSIVE; CS-001 classified VALID"
+  escalation_row: "protocol/unresolved.md, PROTO-U09 (recorded with this ruling)"
+  basis: >
+    The canonical intent of CS-002 was written after, and generalized from, one ecosystem's
+    specific E01 implementation evidence (SUT06-EV-0007, SUT06-EV-0015: the Data Management
+    screen's per-tier Save/Clear controls), and exists only because that evidence was read
+    first. protocol/equivalent-scenario-mapping-v1.md, section 6, forbids exactly this order:
+    "the canonical record is written first, then the six mapping entries. The canonical intent
+    is never derived from one ecosystem's implementation and then generalized; an intent that
+    can be expressed only in one ecosystem's vocabulary is not canonical." CS-001's intent, by
+    contrast, traces to section 2's own pre-existing illustrative pattern (an authenticated
+    actor and a cart) and was classified VALID.
+ruling_text_verbatim: |
+  Canonical E03 scenarios must be defined independently of SUT-specific
+  implementation evidence.
+
+  E01 evidence MAY be used to determine whether a SUT maps to an already
+  independently defined canonical scenario.
+
+  E01/SUT evidence MUST NOT be used to invent the canonical scenario
+  itself.
+
+  For the CURRENT E03 campaign version:
+
+  CS-001 is the sole accepted canonical scenario.
+
+  CS-002 is NOT admissible for measured E03 execution because its
+  canonical intent was generalized after observing SUT-06-specific
+  implementation evidence.
+
+  CS-002 must NOT be deleted or silently rewritten.
+
+  Its historical existence and provenance must be preserved.
+
+  It must be superseded / excluded from the active E03 campaign through
+  the repository's existing change-control/provenance mechanism.
+
+  SUT-06 REMAINS in the E03 campaign population.
+
+  For CS-001:
+
+  SUT-06 = NOT_COMPARABLE
+
+  This does NOT remove SUT-06 from E03's frozen six-SUT population.
+
+  Do NOT invent another scenario merely so SUT-06 receives a measured E03
+  condition.
+ruling:
+  cs002_status: EXCLUDED_FROM_CAMPAIGN  # non-operative for E03-resetability measured execution; no successor record
+  cs001_status: "FROZEN, sole accepted canonical scenario for the current E03 campaign version (unchanged; E03-CS001-FREEZE-AUTH-01)"
+  sut06_population_membership: "RETAINED (SUT-06 remains one of E03's six SUTs; NOT_COMPARABLE on CS-001 per the frozen record; no measured E03 condition exists for it in the current configuration)"
+  replacement_scenario_created: false
+  methodological_rule: >
+    A canonical scenario's intent must precede, and be independent of, any SUT-specific
+    implementation evidence. SUT-specific (E01) evidence may establish only whether a SUT maps
+    to an already independently defined canonical intent (comparability), never the intent
+    itself. This is not a new rule: it restates protocol/equivalent-scenario-mapping-v1.md,
+    section 6 (order of authorship) and section 5 (the comparability decision "is made from the
+    canonical record and the E01 evidence"). No protocol document changes.
+persistence:
+  cs002_file: experiments/scenario-mappings/CS-002.yaml
+  cs002_file_unchanged: true  # byte-identical; not deleted, not rewritten, not re-versioned
+  cs002_file_sha256: aa5bd4a71c02348b48c4fc7cda086ceb5519d848081080db995d6a6aa5f4a7fe
+  cs002_introduced_in_commit: b67ac644b316cdc859525d5be2fa906cc8612979  # 2026-09-21; the only commit that has ever touched the file
+  cs002_original_freeze_metadata_preserved: "mapping_status: FROZEN; frozen_at 2026-09-21; approved_by gilbertosanchez; authorization id E03-CS002-FREEZE-AUTH-01 (all retained inside the unchanged file as historical record)"
+  changelog_row: "protocol/CHANGELOG.md, 2026-09-22, document experiments/scenario-mappings/CS-002.yaml, state change `mapping FROZEN -> EXCLUDED_FROM_CAMPAIGN (no successor record)`"
+  why_no_cs002_v2_file: >
+    protocol/equivalent-scenario-mapping-v1.md, section 6, requires a new record version file
+    (CS-002-v2.yaml) for a change to a frozen record's content. This ruling changes no content of
+    the record: it withdraws the record from campaign use. A v2 file would have to carry the full
+    six-entry record (section 7 template), which would either re-freeze the post-hoc content this
+    ruling excludes or invent a replacement scenario, both forbidden by the ruling. The withdrawal
+    is therefore recorded at the campaign level (the E03 configuration names CS-001 only) and in
+    the change log, using the `state change` column's open form (protocol/change-control-v1.md,
+    section 5, gives examples, not a closed enumeration). The frozen v1 file remains the complete
+    historical record of what CS-002 said.
+  cs001_file_unchanged: true
+  cs001_file_sha256: e251e3825ebbbe3aa1a0f3fee8a30131fa1e0910161ae583a09cb34d9f1cc583
+  cs001_stale_pointer_note: >
+    experiments/scenario-mappings/CS-001.yaml's frozen `notes` field states that SUT-06's
+    mechanism "is instead realized in experiments/scenario-mappings/CS-002.yaml, completing the
+    PRE-DATA canonical-scenario catalogue". That sentence is a historical snapshot inside a
+    frozen record (same treatment as protocol/study-design-v1.md sections 13 and 14): it is not
+    edited, and it is not current status. Current status is this record and
+    experiments/E03-resetability/canonical-scenario-catalogue.md.
+  catalogue_document: experiments/E03-resetability/canonical-scenario-catalogue.md  # corrected in place (working document, not frozen)
+  configuration_draft: experiments/E03-resetability/campaign-configuration-draft.md  # corrected in place (DRAFT, not the campaign-start record)
+  superseded_provenance_left_unedited:
+    - manifests/e03-configuration-completion-v1.yaml  # records the 2026-09-21 operation as it happened (catalogue COMPLETE, 2 scenarios, 11 conditions); historical, not edited
+    - manifests/e03-pre-start-v1.yaml
+active_e03_catalogue:
+  scenarios: [CS-001]
+  count: 1
+  candidate_conditions:
+    derivation: "one condition per (COMPARABLE SUT x surfaces_used entry) in experiments/scenario-mappings/CS-001.yaml, recomputed from the frozen record on 2026-09-22, not copied from prior text"
+    count: 9
+    ids:
+      - E03-CS001-SUT01-WEB
+      - E03-CS001-SUT01-API
+      - E03-CS001-SUT02-WEB
+      - E03-CS001-SUT02-ANDROID
+      - E03-CS001-SUT02-IOS
+      - E03-CS001-SUT03-WEB
+      - E03-CS001-SUT04-WEB
+      - E03-CS001-SUT04-API
+      - E03-CS001-SUT05-API
+    removed_relative_to_2026_09_21_draft:
+      - E03-CS002-SUT06-ANDROID
+      - E03-CS002-SUT06-IOS
+  population: [SUT-01, SUT-02, SUT-03, SUT-04, SUT-05, SUT-06]
+  mapping_status_per_sut_on_cs001:
+    SUT-01: COMPARABLE
+    SUT-02: COMPARABLE
+    SUT-03: COMPARABLE
+    SUT-04: COMPARABLE
+    SUT-05: COMPARABLE
+    SUT-06: NOT_COMPARABLE
+  mobile_qualification_required_for: [E03-CS001-SUT02-ANDROID, E03-CS001-SUT02-IOS]
+explicitly_not_created_or_changed:
+  - protocol document content (no new protocol version; equivalent-scenario-mapping-v1.md unchanged)
+  - CS-001.yaml content or freeze
+  - CS-002.yaml content, freeze metadata, or file existence
+  - a replacement or successor scenario for SUT-06
+  - E03 population (six SUTs)
+  - H2 CONFIRMATORY pairs (SUT-01 vs SUT-02, SUT-01 vs SUT-03, both anchored on CS-001, unaffected)
+  - E01 or H1 results
+affected_campaigns:
+  - id: E03-resetability
+    effect: "active canonical-scenario catalogue reduced from 2 to 1 (CS-001); candidate conditions from 11 to 9; mobile-qualification-gated conditions from 4 to 2 (SUT-02 Android/iOS); campaign remains NOT_STARTED; no data existed under CS-002"
+  - id: E02-state-establishment
+    effect: "none; E02 has no configuration and cited no scenario record"
+notes: |
+  The ruling text above was supplied verbatim in the instruction that authorized this operation
+  (section 1.3) and is reproduced without alteration. The instruction also fixed the general
+  methodological rule for E03 canonical scenarios (independence from SUT-specific implementation
+  evidence), which this record restates by citing the frozen protocol text it corresponds to
+  rather than authoring new rule text. E03-resetability remains NOT_STARTED; nothing in this
+  record authorizes execution.

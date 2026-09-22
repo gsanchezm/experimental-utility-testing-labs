@@ -1,0 +1,196 @@
+# experiments/scenario-mappings/CS-002.yaml
+# Canonical experimental intent + per-ecosystem mapping, per protocol/equivalent-scenario-mapping-v1.md.
+# Author: ORCHESTRATOR. Second canonical scenario for E03-resetability, completing the PRE-DATA
+# canonical-scenario catalogue (experiments/E03-resetability/canonical-scenario-catalogue.md):
+# CS-001 covers the business-object-establish-then-reset intent class (5/6 SUTs); this record covers
+# the distinct, evidenced generic-application-tier-persistence intent class (1/6 SUTs). Created to
+# avoid forcing SUT-06's evidenced Save/Clear mechanism into CS-001's business-object intent
+# (protocol/equivalent-scenario-mapping-v1.md, section 5, forbids substituting a different intent).
+#
+# STATUS: FROZEN 2026-09-21, approved by gilbertosanchez (authorization id E03-CS002-FREEZE-AUTH-01).
+#
+# All `justification` and realization fields cite real E01 evidence_ids from the six SUBMITTED
+# per-branch audits (audit/e01-sut0N-*; PROTO-U07). Unknown/unevidenced fields are null, never guessed.
+
+version: 1
+canonical_scenario_id: CS-002
+description: >
+  An actor establishes a known value in one of an application's own, purpose-built, generically
+  named data-persistence tiers (for example an in-memory store, a local database tier, or a
+  secure/keychain-backed store), exposed by the ecosystem itself as a discrete Save control per
+  tier, and then triggers that same tier's own Clear control, which restores the tier to its
+  declared empty/placeholder state. Unlike CS-001, no purchasable or reservable business object is
+  involved: the intent is a generic, ecosystem-exposed persistence-tier probe, not a simulated
+  end-user commerce/booking flow.
+precondition_class: CONFIGURED_CONTEXT
+actor_state: NOT_APPLICABLE
+business_intent: >
+  An actor establishes a known value in one of the application's own data-persistence tiers via a
+  tier-specific Save control, then triggers that tier's own Clear control, which restores the tier
+  to its declared empty/placeholder state.
+target_state_or_transition: >
+  Before reset: the tier's readout shows exactly the value the actor saved. After reset (Clear): the
+  readout shows the tier's fixed, declared empty/placeholder text.
+observable_oracle_class: UI_STATE
+reset_requirement: DATA_RESET
+applicable_surfaces: [ANDROID, IOS]
+allowed_domain_mapping: >
+  The number and identity of persistence tiers, their exact names, and the exact placeholder text
+  may vary. May NOT vary: the mechanism must be an ecosystem-exposed, discrete, per-tier Save +
+  Clear control pair (not an incidental end-user flow, and not a business-object simulation); the
+  Clear action's effect must be independently observable via a defined readout. This scenario is
+  scoped to ANDROID and IOS because no WEB or API component evidenced in this study exposes an
+  analogous generic, discrete, per-tier persistence-probe control (as opposed to CS-001's
+  business-object mechanisms, which several web/api components do expose) -- applicable_surfaces
+  reflects what is realistically in scope for this study's evaluated population, not a theoretical
+  superset.
+campaigns_using: [E03-resetability]
+mapping_status: FROZEN
+frozen_at: "2026-09-21"
+approved_by: gilbertosanchez
+mappings:
+  - sut_id: SUT-01
+    comparability: NOT_COMPARABLE
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: null
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      NO_EQUIVALENT_INTENT. This ecosystem's only evidenced reset mechanism is
+      business-object-scoped (POST /api/session/reset clears the session cart and profile,
+      SUT01-EV-0006) — a business-state reset, not a generic, ecosystem-exposed, per-tier
+      persistence-probe Save/Clear control. No such generic-tier mechanism is evidenced anywhere in
+      the audit.
+    evidence_ids: [SUT01-EV-0006]
+    justification: >
+      No defensible equivalent of a generic persistence-tier probe exists; forcing this scenario
+      onto the session-reset mechanism would substitute CS-001's business-object intent for this
+      scenario's distinct intent, which protocol/equivalent-scenario-mapping-v1.md, section 5,
+      forbids.
+  - sut_id: SUT-02
+    comparability: NOT_COMPARABLE
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: null
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      NO_EQUIVALENT_INTENT. The "Reset App State" mechanism on all three surfaces
+      (SUT02-EV-0002, SUT02-EV-0008, SUT02-EV-0009) is explicitly business-object-scoped (cart,
+      plus shipping/billing/card fields on iOS) — one coarse, app-wide reset, not a set of discrete,
+      independently addressable, generically named persistence tiers each with its own Save/Clear
+      control. No such generic-tier mechanism is evidenced.
+    evidence_ids: [SUT02-EV-0002, SUT02-EV-0008, SUT02-EV-0009]
+    justification: >
+      A single coarse reset action is not the same intent as an actor selecting and probing an
+      individually named persistence tier; no defensible equivalent exists.
+  - sut_id: SUT-03
+    comparability: NOT_COMPARABLE
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: null
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      NO_EQUIVALENT_INTENT. This ecosystem's only evidenced reset mechanism is Sign-Out clearing all
+      client-side sessionStorage state in one step (SUT03-EV-0030, SUT03-EV-0031) — coarse and
+      session-scoped, not a set of individually addressable, generically named persistence tiers
+      with their own Save/Clear controls. No such generic-tier mechanism is evidenced; this ecosystem
+      also has no ANDROID or IOS surface at all (NO_MOBILE_SURFACE, E01), and this scenario is scoped
+      to those surfaces.
+    evidence_ids: [SUT03-EV-0030, SUT03-EV-0031]
+    justification: >
+      No defensible equivalent exists, independent of and in addition to the surface mismatch
+      (this ecosystem has no mobile surface, and this scenario is ANDROID/IOS-scoped).
+  - sut_id: SUT-04
+    comparability: NOT_COMPARABLE
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: null
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      NO_EQUIVALENT_INTENT. This ecosystem has no ANDROID or IOS surface (NO_MOBILE_SURFACE, E01;
+      SUT04-EV-0011...0014), and this scenario is scoped to those surfaces. Its evidenced reset
+      mechanisms (per-resource DELETE, SUT04-EV-0006; periodic resetDB(), SUT04-EV-0027) are in any
+      case business-object- or whole-service-scoped, not a generic per-tier persistence probe.
+    evidence_ids: [SUT04-EV-0006, SUT04-EV-0027]
+    justification: >
+      No applicable surface exists for this scenario, and no defensible equivalent mechanism is
+      evidenced on any surface this ecosystem does have.
+  - sut_id: SUT-05
+    comparability: NOT_COMPARABLE
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: null
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      NO_EQUIVALENT_INTENT. This ecosystem has no ANDROID or IOS surface (NO_MOBILE_SURFACE, E01;
+      SUT05-EV-0021, SUT05-EV-0022), and this scenario is scoped to those surfaces. Its only
+      evidenced reset mechanism is a whole-datastore process restart (SUT05-EV-0003), not a generic
+      per-tier persistence probe.
+    evidence_ids: [SUT05-EV-0003]
+    justification: >
+      No applicable surface exists for this scenario, and no defensible equivalent mechanism is
+      evidenced on any surface this ecosystem does have.
+  - sut_id: SUT-06
+    comparability: COMPARABLE
+    surfaces_used: [ANDROID, IOS]
+    domain_object: "generic per-tier key/value storage (in-memory; AsyncStorage-tier SQLite; explicit SQLite; SecureStore/Keychain-Keystore)"
+    precondition_realization: >
+      Navigate to the Data Management screen (navigation action; no authentication concept evidenced
+      for this screen -- actor_state NOT_APPLICABLE per the canonical record).
+    actor_realization: "Not applicable — no authenticated-actor concept evidenced for this mechanism (SUT06-EV-0007, SUT06-EV-0015)."
+    entry_and_steps:
+      - "[navigation] Navigate to the Data Management screen."
+      - "[UI] Enter a known value into one tier's testID-tagged input, then tap that tier's testID-tagged 'Save' control (`data-<tier>-save`) -- establishes the known value; readout `data-<tier>-readout` shows exactly the saved text (SUT06-EV-0007 android, SUT06-EV-0015 ios: 'Same cross-platform mechanism... DataManagement.tsx has no platform branch')."
+      - "[reset] Tap that tier's testID-tagged 'Clear' control (`data-<tier>-clear`; the SecureStore one literally labelled 'Clear (test hook)') -- resets the tier to its known empty state (SUT06-EV-0007, SUT06-EV-0015)."
+      - "[UI, verification] Read `data-<tier>-readout` -- shows the fixed placeholder text ('— empty —' for memory; '— nothing saved yet —' for the three persisted tiers) (SUT06-EV-0007, SUT06-EV-0015). Counted under protocol/setup-effort-v2.md section 5, rule 8 (human ruling A2)."
+      - "Required Actions -- reset: 2 (1 reset action + 1 UI action), per tier probed. No app-wide 'reset all tiers' action exists (SUT06-EV-0007); a run probing multiple tiers repeats this pattern once per tier, each a separate, independently countable reset."
+    oracle_realization: >
+      testID-tagged readout `data-<tier>-readout` (SUT06-EV-0007, SUT06-EV-0015): exact saved text
+      after Save; fixed placeholder text after Clear.
+    reset_realization: >
+      Per-tier 'Clear' test-hook control (`data-<tier>-clear`), same cross-platform mechanism on
+      Android and iOS (SUT06-EV-0007, SUT06-EV-0015; DataManagement.tsx has no platform branch).
+      The evidence explicitly rejects reading this as merely "the end-user path" rather than an
+      SUT-exposed experimental mechanism (audit note, SUT06-EV-0007: the SecureStore control is
+      literally labelled "Clear (test hook)" and the in-screen help text names Appium/`mobile:
+      clearApp` expectations directly). reset_mechanisms candidate: [APP_DATA_CLEAR].
+    environment_type: "PENDING -- not a mapping-freeze prerequisite (protocol/study-design-v1.md section 10.3; PROTO-U08 resolved). Source-inspection candidate only: release APK/IPA artifacts pinned (manifests/sut-manifest.yaml); installable on Android emulator / iOS Simulator once the mobile runner passes qualification (protocol/mobile-runner-policy-v1.md); not execution-verified."
+    not_comparable_reason: null
+    evidence_ids: [SUT06-EV-0007, SUT06-EV-0015]
+    justification: >
+      A purpose-built, cross-platform, SOURCE_VERIFIED, per-tier Save/Clear test-hook mechanism
+      exists identically on both Android and iOS (the app is one shared React Native/Expo codebase
+      with no platform branch for this screen); the audit itself considered and rejected reading it
+      as merely incidental, treating it as an SUT-exposed experimental mechanism. This is the
+      evidenced mechanism this canonical scenario exists to capture.
+notes: >
+  Completes the PRE-DATA canonical-scenario catalogue for E03 alongside CS-001
+  (experiments/E03-resetability/canonical-scenario-catalogue.md, stop rule). SUT-06 is COMPARABLE
+  here and NOT_COMPARABLE on CS-001 — the exact inverse of every other SUT — which is the intended,
+  symmetric outcome of using two distinct canonical scenarios rather than forcing one intent onto an
+  ecosystem it does not fit (protocol/study-design-v1.md, section 11, rules 1 and 3: breadth and
+  depth answer different questions; specialist ecosystems are not removed). Every
+  `environment_type` field remains PENDING by design, for the same reason as in CS-001 (section
+  10.3; PROTO-U08 resolved) — not a freeze blocker. This record additionally requires the
+  Mobilewright/Appium 3 qualification gate (protocol/mobile-runner-policy-v1.md) to pass before its
+  SUT-06 conditions may execute, since both realized surfaces are Android Native / iOS Native.

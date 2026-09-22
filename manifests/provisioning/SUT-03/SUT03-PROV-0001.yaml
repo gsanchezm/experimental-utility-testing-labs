@@ -1,0 +1,64 @@
+# manifests/provisioning/SUT-03/SUT03-PROV-0001.yaml
+# One-time provisioning record (protocol/setup-effort-v2.md, section 8; manifests/provisioning/README.md).
+# Descriptive reproducibility metadata only: never counted, never a score, never a measured observation.
+# Authored by ORCHESTRATOR under the explicit human authorization of 2026-09-22 (NON-MEASURED PRE-START).
+provisioning_id: SUT03-PROV-0001
+sut_id: SUT-03
+environment_type: LOCAL
+instance_identifier: "operator workstation; single Next.js process at 127.0.0.1:4303 (next start of the production build; serves the web pages and the /api routes)"
+sut_provenance:
+  components: [web, api]
+  repository: https://github.com/browserstack/browserstack-demo-app
+  commit_sha: 7ab934d733f2f74d4b912e94e86f59ae0f6b7609  # manifests/sut-manifest.yaml, SUT-03 web, PINNED_SOURCE (default branch master)
+steps:
+  - sut_id: SUT-03
+    component: web/api (single Next.js application)
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "git 2.48.1"
+    installation_or_build_step: "git clone; git checkout 7ab934d733f2f74d4b912e94e86f59ae0f6b7609 (HEAD verified equal to the pin)"
+    required_external_dependency: "github.com"
+    estimated_or_observed_duration: "about 10 s"
+    automation_classification: AUTOMATED
+    provenance: "git 2.48.1"
+    notes: null
+  - sut_id: SUT-03
+    component: web/api (single Next.js application)
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "Node.js 14.21.3 and npm 6.14.18 (installed with nvm). The pinned tree (Next.js 10.0.1, React 17.0.1, @material-ui/core 4.11 with a react ^16.8 peer range, node-sass 4.x through @zeit/next-sass) has no lockfile; under Node 16/npm 8 the install failed on peer-dependency enforcement and then on node-sass needing a Python 2 era build toolchain, so the Node 14 line contemporary with the pinned commit was used"
+    installation_or_build_step: "npm install --legacy-peer-deps (npm 6 resolves the 2020 dependency ranges without peer enforcement and downloads the prebuilt node-sass binding)"
+    required_external_dependency: "npm registry; github.com (node-sass binding download)"
+    estimated_or_observed_duration: "about 3 min"
+    automation_classification: AUTOMATED
+    provenance: "npm 6.14.18"
+    notes: "npm 6 wrote a package-lock.json into the working copy (untracked; not committed to the SUT; no SUT source changed)"
+  - sut_id: SUT-03
+    component: web/api (single Next.js application)
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "dependencies installed"
+    installation_or_build_step: "npm install --no-save formdata-node@4, because node_modules/swagger-ui-react/swagger-ui.js at the pinned tree imports formdata-node without any package declaring it (a first try with formdata-node 6, ESM-only, was not resolvable by webpack 4 / Next.js 10); then npm run build (next build)"
+    required_external_dependency: "npm registry"
+    estimated_or_observed_duration: "about 9 min (two build attempts; the successful one about 9 min)"
+    automation_classification: AUTOMATED
+    provenance: "npm 6.14.18; formdata-node 4.4.1 (not persisted to package.json)"
+    notes: "provisioning-only dependency completion; it adds no capability and changes no SUT source"
+  - sut_id: SUT-03
+    component: web/api (single Next.js application)
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "build complete"
+    installation_or_build_step: "npx next start -p 4303"
+    required_external_dependency: null
+    estimated_or_observed_duration: "about 60 s to ready"
+    automation_classification: AUTOMATED
+    provenance: "Next.js 10.0.1 via the pinned package.json"
+    notes: null
+duration: "about 1 h end to end including the failed attempts (descriptive only)"
+performed_by: ORCHESTRATOR
+date: "2026-09-22"
+campaigns_served: []  # none yet: E03-resetability is NOT_STARTED; this instance served PRE-START environment verification only (E03-CS001-SUT03-WEB)
+notes: >
+  Environment verification record: experiments/E03-resetability/environment-verification/SUT-03-web.json
+  (VERIFIED: GET / 200 and GET /signin 200; GET /api/products 200 (the E01-confirmed api surface, same
+  process); Header.logOutHandler and store2 session clearAll present in src/components/Header/index.jsx,
+  SUT03-EV-0030 / SUT03-EV-0031). No sign-in or cart state was established or cleared. The GitHub Actions job
+  "E03 Environment Verification SUT-03 web" reproduces these steps on an ubuntu-24.04 runner (SELF_HOSTED)
+  and is the verification route required before measured execution.

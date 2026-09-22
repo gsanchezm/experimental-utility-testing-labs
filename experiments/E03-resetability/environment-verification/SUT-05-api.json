@@ -1,0 +1,48 @@
+{
+  "record_class": "ENVIRONMENT_VERIFICATION",
+  "measured_experiment": false,
+  "study_id": "EUS-2026-001",
+  "campaign_id": "E03-resetability",
+  "sut_id": "SUT-05",
+  "surfaces": [
+    "API"
+  ],
+  "conditions_covered": [
+    "E03-CS001-SUT05-API"
+  ],
+  "environment_type": "LOCAL",
+  "sut_provenance": {
+    "repository": "https://github.com/juice-shop/juice-shop",
+    "commit_sha": "1618a611b173b4bf114028e6e02549950606e29d",
+    "reported_version": "{\"version\":\"20.2.0\"}"
+  },
+  "reset_mechanism_under_verification": "full process restart (sequelize.sync force on every start, SUT05-EV-0003); stop/start reachability only; no account logged in, no basket item created",
+  "checks": {
+    "api_GET_/rest/admin/application-version_status": 200,
+    "api_POST_/rest/user/login_empty_body_status": 401,
+    "api_GET_/api/BasketItems/_unauthenticated_status": 401,
+    "api_GET_/rest/basket/1_unauthenticated_status": 401,
+    "api_POST_/api/BasketItems/_unauthenticated_status": 401,
+    "api_after_stop_status": "ERROR:URLError",
+    "api_after_restart_status": 200,
+    "restart_log_mentions_server_listening": true,
+    "web_GET_/_status_same_process": 200,
+    "web_GET_/_content_type": "text/html; charset=UTF-8"
+  },
+  "verification_result": "VERIFIED",
+  "host": {
+    "os": "macOS-26.5.2-x86_64-i386-64bit-Mach-O",
+    "arch": "x86_64",
+    "kind": "operator workstation (LOCAL)"
+  },
+  "tool_versions": {
+    "node": "v24.21.0",
+    "npm": "11.19.0"
+  },
+  "performed_by": "ORCHESTRATOR (human-authorized NON-MEASURED PRE-START provisioning, 2026-09-22)",
+  "timestamp": "2026-09-22T10:30:14.714848+00:00",
+  "timezone": "UTC",
+  "instance_identifier": "127.0.0.1:3105 (node build/app via npm start, PORT=3105)",
+  "provisioning_notes": "built from source at the pinned commit with npm install (postinstall builds the Angular frontend and compiles the server) under Node 24.21.0 (engines 22-26); no prebuilt darwin x86_64 release archive exists for v20.2.0",
+  "e01_confirmed_surfaces_note": "E01 confirmed web and api present for SUT-05; both are served by this single Node.js process (the Angular frontend at / and the REST/API routes), so the LOCAL instance covers both surfaces; only the API surface is an E03 condition (CS-001)"
+}

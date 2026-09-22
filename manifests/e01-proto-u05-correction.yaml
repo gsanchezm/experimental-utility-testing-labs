@@ -1,0 +1,197 @@
+# manifests/e01-proto-u05-correction.yaml
+# Post-data-collection change-control record for PROTO-U05 (protocol/unresolved.md), EUS-2026-001.
+# Establishes, prospectively, the minimum machine-readable representation for the already-fully-decided
+# E01 adjudicated capability matrix, and the deterministic transformation that materializes it. Does not
+# change how any of the 54 cells was decided, does not alter the capability rubric, evidence rules, RQs,
+# hypotheses, statistical definitions, SUT or modality definitions, and does not modify any immutable
+# auditor, first-run adjudicator, or human-ruling artifact. Editable by ORCHESTRATOR only
+# (protocol/agent-governance-v1.md).
+change_id: PROTO-U05
+study_id: EUS-2026-001
+discovery_point: >
+  While materializing the final E01 resolved capability matrix, after PROTO-U04 (human rulings E01-HR-01,
+  E01-HR-02) and the durable version-controlling of the six first-run ADJUDICATOR-EU-01 outputs (commit
+  d6939deacdbfe26624b90e60d288888e12787bd9). All 54 scientific determinations, and both human rulings,
+  already existed before this representation was defined; nothing here changes any of them.
+issue: >
+  protocol/statistical-analysis-plan-v1.md, H1 row, references "the adjudicated matrix" descriptively (a
+  count "from the adjudicated matrix"), and analysis/README.md's own "Layout" section states "Internal
+  layout: TBD before freeze. Candidate — not frozen." No frozen artifact defines a concrete file format,
+  field shape, or schema for this matrix; schemas/adjudication.schema.json (PROTO-U01) and
+  schemas/sut-audit.schema.json validate ADJUDICATOR-EU-01's and each AUDITOR's own per-SUT records, not a
+  cross-SUT, human-ruling-aware, 54-cell representation. This was left NOT_ESTABLISHED by PROTO-U04
+  (manifests/e01-proto-u04-correction.yaml, adjudicated_matrix_representation) rather than invented.
+classification:
+  category: POST-DATA DISCOVERED OPERATIONAL / REPRESENTATION GAP
+  methodological: false
+  blocking_materialization_of_already_defined_adjudicated_matrix: true
+  blocking_underlying_scientific_decisions: false
+  authorizes_hypothesis_analysis: false
+  note: >
+    The gap concerns only HOW the 54 already-resolved cell determinations are represented in a
+    machine-readable file. It does not concern, and does not reopen, HOW any cell was decided: the 52
+    auditor-confirmed cells rest on protocol/capability-rubric-v1.md's confirmed_score as recorded in the
+    six immutable audits/<SUT>/audit.md commits and upheld by ADJUDICATOR-EU-01; the 2 DISPUTED cells rest
+    on E01-HR-01 and E01-HR-02 (PROTO-U04). Creating this matrix does not itself authorize H1-H5 analysis,
+    ranking, or any weighted Experimental Utility Score (protocol/study-design-v1.md; derived-data/README.md
+    rule 5; analysis/README.md rule 6) -- a separate, explicit human instruction is required for that.
+human_ruling: >
+  Classification ACCEPTED. PROTO-U05 defines only HOW the already-decided 54-cell matrix is represented and
+  deterministically materialized; it changes nothing about HOW any cell was decided. Prospective only.
+  Approved by gilbertosanchez.
+frozen_requirements_inspected:
+  # Section 4 of the operating task: exact existing constraints found before any field was defined.
+  items:
+  - source: "protocol/capability-rubric-v1.md, line 22"
+    text: "Scores are per modality only. They are NEVER summed, averaged, weighted, or otherwise aggregated into a single index, score, or ranking. A capability matrix is reported as a matrix."
+  - source: "protocol/study-design-v1.md, line 254"
+    text: "A Score 0 cell is reported in the capability matrix as 0, together with its structural_scope_note where one exists. It is never hidden, converted to N/A, dropped from a table, or removed from the profile."
+  - source: "protocol/statistical-analysis-plan-v1.md, line 104"
+    text: "Every cell shows both confirmed_score and, where the tie-break rule caps it below the auditor's candidate level, provisional_score alongside it... A Score 3 cell shows its confirmation_state (CONFIRMED or UNCONFIRMED_SCORE_3) alongside the score."
+  - source: "protocol/statistical-analysis-plan-v1.md, H1 row"
+    text: "Number of modalities at CONFIRMED Score 3 per ecosystem (count from the adjudicated matrix; Score 0 cells remain in the matrix; a cell with confirmation_state = UNCONFIRMED_SCORE_3 is excluded from this count... equivalently, a cell whose confirmed_score is not 3 is excluded, whatever its provisional_score)."
+  - source: "analysis/README.md, rule 7"
+    text: "Counts of modalities per level use each cell's confirmed_score where it is recorded, otherwise provisional_score (which confirmed_score equals whenever the tie-break rule was not invoked)... Where confirmed_score differs from provisional_score, both are carried through to the output, never only the higher one."
+  - source: "derived-data/README.md, rules 2, 3, 5"
+    text: "Transformation scripts must be version controlled and live in analysis/... A dataset produced by an unversioned or ad-hoc step is invalid. Every derived dataset must identify its source campaign and raw inputs [via a provenance header or sidecar]... No file here may contain a composite, weighted, or aggregated Experimental Utility score, index, or ranking."
+  - source: "analysis/README.md, rule 3"
+    text: "Language and tooling: TBD before freeze... When one is chosen, it is recorded in manifests/toolchain-manifest.yaml with exact versions before the first script runs."
+  - source: "schemas/README.md, Conventions"
+    text: "$id is a URN of the form urn:eus-2026-001:schemas:<name>:v<n>... Every root object sets additionalProperties: false... Enumerations reproduce frozen vocabularies exactly... The schemas add no values of their own."
+  - source: "protocol/unresolved.md, PROTO-U01 resolution"
+    text: "For EUS-2026-001, schemas/ is treated as freeze-locked; the full post-data-collection change-control procedure of protocol/change-control-v1.md, section 5, governs [for a new, additive schema]."
+  - source: "manifests/e01-proto-u04-correction.yaml, downstream_consumption_semantics"
+    text: "If an authorized human-ruling record exists for a DISPUTED cell, a downstream matrix construction step uses that record's human_effective_confirmed_score for that cell in place of the auditor's confirmed_score. All non-DISPUTED cells continue to use the already-reviewed effective confirmed_score."
+  conclusion: >
+    No existing schema or file format matches a cross-SUT, 54-cell, human-ruling-aware representation. The
+    frozen requirements above are constraints ON that representation (fields it must carry), not permission
+    to omit a schema. They directly determined the minimum field list below: confirmed_score_as_stored,
+    provisional_score, confirmation_state, and structural_scope_note are not optional convenience fields --
+    each is required verbatim by one of the frozen passages quoted above, independent of the operating
+    task's own minimum-field suggestion.
+write_authority_basis:
+  derived_data_new_subpath: "ORCHESTRATOR: 'Allowed (version-controlled transformations only)' (write-boundary matrix, protocol/agent-governance-v1.md, section 4), for a new subpath derived-data/e01-adjudicated-matrix/ -- distinct from derived-data/adjudication/ (ADJUDICATOR-EU-01's own reserved scope) and derived-data/adjudication-rulings/ (established by PROTO-U04). Same basis as PROTO-U04's location decision."
+  analysis_directory: "ORCHESTRATOR: manifests/ and analysis/ are not listed in agent-governance-v1.md as restricted to any other role; analysis/README.md rule 2 requires the transformation script to live in analysis/, version controlled. analysis/e01-adjudicated-matrix/generate-matrix.js is the first file ever written to analysis/ (analysis/README.md, 'Current status': 'No script has been written' -- true immediately before this record)."
+  schemas_directory: "schemas/ is freeze-locked (PROTO-U01 resolution, above); a new, additive schema follows the same full post-data-collection change-control procedure PROTO-U01 established. schemas/adjudication.schema.json and schemas/sut-audit.schema.json are unmodified."
+  manifests_directory: "AGENT-INSTRUCTIONS.md: 'only the ORCHESTRATOR writes to protocol/ and manifests/.' manifests/toolchain-manifest.yaml's own policy text requires recording a chosen tool's exact version before first use; this is a fill-in of an already-declared TBD field (scripting_runtime), not a protocol change."
+representation_decision:
+  new_schema_created: true
+  schema_path: schemas/adjudicated-matrix.schema.json
+  schema_id: "urn:eus-2026-001:schemas:adjudicated-matrix:v1"
+  rationale_for_creating_a_schema: >
+    Section 9's escape valve ("if a new schema is unnecessary because an existing generic representation
+    contract already suffices, do not create one") does not apply: no existing schema validates a flat,
+    cross-SUT, 54-cell record carrying human-ruling provenance, and the operating task itself requires
+    machine-checkable structural guarantees (exactly 54 cells, scores restricted to 0-3, no duplicate
+    ecosystem+modality pair) that a schema enforces and free-form JSON does not.
+  new_vocabulary_introduced:
+    - field: resolution_source
+      values: ["AUDITOR_ADJUDICATION", "HUMAN_RULING"]
+      verified_representational_not_scientific: >
+        Distinguishes which of two already-authorized paths supplied effective_confirmed_score
+        (ADJUDICATOR-EU-01 upholding the auditor's confirmed_score, vs. a human ruling under PROTO-U04). Adds
+        no rubric level, no evidence status, no adjudication outcome; original_adjudicator_outcome (CONFIRMED
+        / DISPUTED, the existing schemas/adjudication.schema.json vocabulary) is preserved unchanged
+        alongside it, never overwritten or hidden, satisfying the operating task's section 6 requirement.
+  fields_and_justification:
+    - {field: ecosystem_id, justification: "task section 5 minimum field list"}
+    - {field: modality, justification: "task section 5 minimum field list"}
+    - {field: effective_confirmed_score, justification: "task section 5 minimum field list"}
+    - {field: resolution_source, justification: "task section 5 minimum field list ('resolution_source')"}
+    - {field: resolution_source_id, justification: "task section 5 minimum field list ('source reference')"}
+    - {field: confirmed_score_as_stored, justification: "statistical-analysis-plan-v1.md:104 -- confirmed_score must be shown, never dropped"}
+    - {field: provisional_score, justification: "statistical-analysis-plan-v1.md:104, analysis/README.md rule 7 -- carried alongside confirmed_score wherever they differ"}
+    - {field: confirmation_state, justification: "statistical-analysis-plan-v1.md:104 -- a Score 3 cell shows confirmation_state alongside the score"}
+    - {field: structural_scope_note, justification: "study-design-v1.md:254 -- a Score 0 cell is reported with its structural_scope_note, never hidden"}
+    - {field: original_adjudicator_outcome, justification: "task section 6 -- do not overwrite or hide that a cell's original outcome was DISPUTED"}
+    - {field: evidence_ids, justification: "task section 5 minimum field list ('source reference'); evidence-rules-v1.md -- never referenced by row/line number"}
+  fields_deliberately_excluded: [confidence_score, weight, rank, winner, h1_countable, confirmed_score_3_flag, global_experimental_utility_score, hypothesis_outcome, recommendation, inferred_capability, new_evidence_status, new_rubric_level]
+  h1_countability_note: >
+    SUT-01 Visual Testing now has effective_confirmed_score = 3 with confirmation_state = null (the
+    auditor's gap was at Decision procedure step 3 itself, not at the evidence status behind an already-
+    decided step 3; protocol/capability-rubric-v1.md, "Relation to Score 3 confirmation"). Whether this cell
+    is countable under H1 (statistical-analysis-plan-v1.md:92, which excludes confirmation_state =
+    UNCONFIRMED_SCORE_3, not null) is an H1 determination and is NOT resolved by this record or by the
+    matrix: no h1_countable or equivalent boolean is written anywhere. confirmation_state is carried through
+    exactly as recorded (null), unresolved, for a future, separately authorized H1 analysis step to interpret.
+deterministic_derivation_procedure:
+  script: analysis/e01-adjudicated-matrix/generate-matrix.js
+  inputs_used_exclusively:
+    - "six immutable auditor result commits (audits/<SUT>/audit.md read via git show <commit>:<path>, never a worktree)"
+    - "six immutable derived-data/adjudication/<SUT>/adjudication.json files (SHA-256 verified against the six values recorded in this same operation's provenance chain before being trusted)"
+    - "derived-data/adjudication-rulings/E01-HR-01.json, E01-HR-02.json"
+    - "frozen confirmed_score / tie-break semantics (protocol/capability-rubric-v1.md)"
+  rule_implemented: "PROTO-U04's downstream_consumption_semantics precedence rule only (manifests/e01-proto-u04-correction.yaml) -- no new precedence rule invented."
+  failure_modes_enforced:
+    - "fails if any first-run adjudication.json's SHA-256 does not match the expected value"
+    - "fails if audit.md's modality table is missing a canonical modality, has a duplicate, or a non-clean 0-3 score literal"
+    - "fails if a DISPUTED cell has no matching human-ruling record (unresolved cell)"
+    - "fails if any cell has outcome UNSUPPORTED (no precedence rule defined for it; out of scope for this schema version)"
+    - "fails if the final cell count is not exactly 54, if any (ecosystem_id, modality) pair repeats, or if the two human-ruling cells do not match SUT-01 Visual Testing=3 / SUT-04 Security Testing=2 exactly"
+  observed_run_result:
+    outcome_tally: {CONFIRMED: 52, DISPUTED: 2, UNSUPPORTED: 0}
+    cells_by_sut: {SUT-01: 9, SUT-02: 9, SUT-03: 9, SUT-04: 9, SUT-05: 9, SUT-06: 9}
+    cells_by_effective_confirmed_score: {"0": 12, "1": 7, "2": 8, "3": 27}
+    human_ruling_sourced_cells: 2
+  parsing_note: >
+    audit.md's confirmed_score column is left blank by some auditors (observed: SUT-02, SUT-03, SUT-04,
+    SUT-05, SUT-06) when it equals provisional_score, per protocol/capability-rubric-v1.md's own stated
+    ordinary case and analysis/README.md rule 7's explicit fallback ("confirmed_score where it is recorded,
+    otherwise provisional_score"). The script implements this frozen fallback rather than treating a blank
+    cell as malformed; SUT-01 fills every confirmed_score cell explicitly (also valid, redundant). Discovered
+    empirically on the script's first run (it failed loudly on the blank cell rather than silently
+    misreading it), not assumed in advance.
+output:
+  path: derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json
+  sha256: 3a737c1e3474d60380488379514f4a9b04d2e371212e46f233eac7018c480a69
+  provenance_sidecar: derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json.provenance.yaml
+  schema_validation: "Ajv v8.20.0 (draft 2020-12), ephemeral local install for validation only per schemas/README.md; valid=true, strict mode, zero errors"
+section_5_compliance:
+  new_locations_established: ["derived-data/e01-adjudicated-matrix/ (new, additive)", "analysis/e01-adjudicated-matrix/ (new, additive; first file ever written to analysis/)", "schemas/adjudicated-matrix.schema.json (new, additive; schemas/adjudication.schema.json and schemas/sut-audit.schema.json unmodified)"]
+  written_rationale: "this record's issue/classification/frozen_requirements_inspected/write_authority_basis/representation_decision fields, above"
+  affected_campaigns_statement:
+    - campaign: E01-capability-audit
+      already_collected_evidence: "remains valid and unread/unmodified by this record; the matrix is a deterministic re-representation of already-decided cells, not a new observation"
+    - campaigns: [E02-state-establishment, E03-resetability, E04-repeatability, E05-determinism, E06-observability, E07-automation-affordances, E08-performance, E09-security, E10-cross-platform-parity, E11-state-continuity, E12-localization-i18n]
+      status: "NOT_STARTED; this record is not referenced by any of them; not applicable"
+  change_log_entry: "protocol/CHANGELOG.md, PROTO-U05 row"
+affected_campaign: E01-capability-audit
+affected_phase: post-adjudication matrix representation and materialization only
+collected_evidence_affected: false
+scoring_semantics_affected: false
+evidence_admissibility_affected: false
+hypotheses_affected: false
+rqs_affected: false
+cross_sut_comparisons_affected: false
+rerun_required: false
+prospective_only: true
+adjudicator_relaunched_by_this_record: false
+audits_directory_modified: false
+derived_data_adjudication_modified: false
+adjudication_rulings_modified: false
+h1_or_hypothesis_analysis_performed: false
+implementation_files:
+  - manifests/toolchain-manifest.yaml  # scripting_runtime entry added
+  - analysis/e01-adjudicated-matrix/generate-matrix.js  # new file
+  - schemas/adjudicated-matrix.schema.json  # new file
+  - derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json  # new file, deterministic output
+  - derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json.provenance.yaml  # new file
+  - protocol/unresolved.md  # PROTO-U05 row appended
+  - protocol/CHANGELOG.md  # PROTO-U05 row appended
+timestamp: "2026-09-18T00:00:00Z"
+controlling_pre_change_commit: d6939deacdbfe26624b90e60d288888e12787bd9
+approved_by: gilbertosanchez
+notes: |
+  Single commit bundles contract and result (manifests/protocol/schema/script + the generated matrix and
+  its sidecar), matching this repository's own established convention: PROTO-U03's commit (0fdbbab) bundled
+  the frozen prompt v2 with its change-control record, and PROTO-U04's commit (1270bc1c) bundled the two
+  human-ruling records with their change-control record. The operating task's preference for two separate
+  commits (contract-freeze, then materialization) would break that established one-commit-per-change-control
+  -event convention without a corresponding benefit here, since both halves are produced and verified in the
+  same operation; the commit message itemizes which files are the representation contract and which are the
+  deterministic result, as the minimum auditable alternative. No file under audits/**,
+  derived-data/adjudication/**, or derived-data/adjudication-rulings/** was modified (only read and
+  re-hashed for verification). ADJUDICATOR-EU-01 was not relaunched. schemas/adjudication.schema.json,
+  schemas/sut-audit.schema.json, protocol/capability-rubric-v1.md, and protocol/evidence-rules-v1.md are
+  unchanged. No H1-H5 analysis, ranking, or weighted score was computed anywhere in this record, the script,
+  or the matrix output.

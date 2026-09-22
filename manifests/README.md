@@ -1,0 +1,83 @@
+# Manifests
+
+Machine-readable registry for study EUS-2026-001, "Experimental Utility of Software-Testing Laboratory Ecosystems". The manifests record what the study is configured to evaluate and with what. They never record results, scores, findings, or rankings; those belong to `audits/`, `raw-data/`, `derived-data/`, and `analysis/` once data collection is authorized.
+
+Repository phase: SETUP (manifests/study-manifest.yaml, `status` — the literal top-level phase label has not been renamed since freeze even though the E01 campaign has since started, run, and been frozen; see below). Protocol v1/v2 is FROZEN-PRE-DATA (v1 frozen 2026-09-16, approved by gilbertosanchez, manifests/protocol-freeze-v1.yaml; setup-effort-v2.md frozen 2026-09-21 resolving issue (xviii), manifests/issue-xviii-ruling-v1.yaml). Data collection started 2026-09-17 (`data_collection_started: true`, manifests/study-manifest.yaml) at E01 campaign start; freezing the protocol was necessary but not sufficient for that (see "Data-collection gate" below). E01 Capability Audit is now campaign status FROZEN (manifests/study-manifest.yaml; manifests/e01-campaign-freeze-v1.yaml); E03-resetability was human-selected for PRE-START preparation 2026-09-21 (manifests/e03-pre-start-v1.yaml, manifests/e03-configuration-completion-v1.yaml) and corrected/extended 2026-09-22 (manifests/e03-cs002-exclusion-v1.yaml, manifests/run-manifest-schema-v2-provenance.yaml, PUBLIC-EXPORT-MANIFEST.yaml, provisioning records) but remains NOT_STARTED; E02, E04-E12 remain NOT_STARTED and untouched.
+
+## Files
+
+| File | Purpose | Changes when |
+|---|---|---|
+| `study-manifest.yaml` | Study identity, protocol version and state, the six dimensions of the Experimental Utility profile, research question and hypothesis ids, the frozen modality list, campaign status, and the freeze and data-collection flags. | The protocol is frozen or versioned; a campaign changes status; data collection is authorized. |
+| `sut-manifest.yaml` | Registry of the six evaluated testing laboratory ecosystems (SUT = system under test), the component surfaces of each, the provenance record for every surface, and `controlled_instance_available`. | The ORCHESTRATOR pins the evaluated version before E01 starts; E01 verifies a surface's presence and whether a controlled instance can be established; a provenance correction is approved by a human. |
+| `toolchain-manifest.yaml` | Intended tool candidates, pinned candidate versions for the qualification gate (a pin is not an install record: `version`/`install_date` stay null until observed), the pinned qualification build, execution-environment descriptors, the qualification SUT, and the qualification and compatibility-smoke status. | A tool is installed (recorded before the first run that uses it); an open candidate marked `TBD` is resolved before freeze; the Mobilewright qualification or compatibility-smoke status changes. |
+| `provisioning/` | One-time provisioning records (protocol/setup-effort-v2.md, sections 2 and 8): descriptive reproducibility metadata per ecosystem per environment instance, never part of the primary Setup Effort comparison and never a measured observation. Template and rules: `provisioning/README.md`. | A provisioning record is authored (`provisioning/<sut-id>/<provisioning_id>.yaml`) from facts relayed by the role that performed the provisioning. First records written 2026-09-22 (human-authorized NON-MEASURED PRE-START provisioning of the CS-001 conditions on the operator workstation). |
+| `protocol-freeze-v1.yaml` | Provenance record of the protocol v1 pre-data freeze: freeze date and approver, the pre-freeze baseline commit, the Open-Issue Register counts at freeze, and the deferred issues and the campaigns they block. Not a second protocol. | A protocol version is frozen (written once, at that freeze) or corrected non-substantively (protocol/change-control-v1.md, section 2). |
+| `e01-campaign-start-v1.yaml` | Provenance record of the E01 campaign start (protocol/change-control-v1.md, section 7): start timestamp and approver, the controlling commits, and confirmation that every campaign-configuration field was derived from already-frozen artifacts. Not a second campaign-configuration record — that is authoritative in `experiments/E01-capability-audit/README.md`. | Written once, at E01 campaign start. |
+| `e01-campaign-freeze-v1.yaml` | Provenance record of the E01 campaign freeze (protocol/change-control-v1.md, section 7): freeze timestamp, human authorization id, the full E01 closure chain (six audits, adjudication, human rulings, final matrix, H1 result) with commits/hashes, and the statement that E01's scientific inputs/results are now closed to ordinary modification. Not a second campaign-configuration record. | Written once, at E01 campaign freeze. |
+| `e03-pre-start-v1.yaml` | Provenance record of the E03-resetability PRE-START configuration-preparation operation (2026-09-21): human-selection persistence result, Issue (xviii) classification, PROTO-U08, draft-configuration/mapping status, mobile-qualification determination, G1-G9 gate table. Explicitly not a campaign-start record. | Written once, at that operation. |
+| `issue-xviii-ruling-v1.yaml` | Provenance record of the human ruling on protocol/study-design-v1.md, section 13, issue (xviii) (authorization id `ISSUE-XVIII-RULING-01`): the ruling text (A2, B1), the resulting protocol/setup-effort-v1.md -> v2.md transition, and affected-campaigns statement. | Written once, at that ruling. |
+| `e03-configuration-completion-v1.yaml` | Provenance record of the 2026-09-21 E03 configuration-completion operation (ruling persistence, PROTO-U08 resolution, catalogue and mapping freezes as they stood then, CI/CD design BLOCKED, gates, decisions required). Historical: its catalogue/condition counts were superseded on 2026-09-22 and are left unedited. | Written once, at that operation. |
+| `e03-cs002-exclusion-v1.yaml` | Provenance record of the human ruling `E03-CS002-EXCLUSION-RULING-01` (2026-09-22): verbatim ruling text, why CS-002 is excluded from the current E03 campaign version, why no CS-002-v2 file exists, the preserved CS-002 hash and commit, and the recomputed active condition set (9, CS-001 only). | Written once, at that ruling. |
+| `run-manifest-schema-v2-provenance.yaml` | Change-control record of `schemas/run-manifest.schema.v2.json`: exact delta (one optional property, `actions[].outcome`), non-semantic description changes, backward-compatibility validation, campaign convention. | Written once, at that schema's creation. |
+| (publication record) | The canonical publication record is not exported. The public tree carries `PUBLIC-EXPORT-MANIFEST.yaml` at its root: the publication mode, canonical source commits and trees, inclusion/exclusion rules, per-file transformation table with canonical and exported blob hashes, scientific-integrity hashes, and the export log. | Rewritten at every export. |
+| `agent-governance-v2-freeze-v1.yaml` | Provenance record of the protocol/agent-governance-v2.md freeze (2026-09-22, AGENT-GOVERNANCE-V2-FREEZE-AUTH-01): pre- and post-freeze content hashes, the two header rows changed at freeze, the semantic-preservation checklist, the v1 -> AMENDED transition, and what the freeze does not authorize. | Written once, at that freeze. |
+| `mobile-qualification-package-v1.yaml` | Frozen-input package for the Mobilewright qualification gate (protocol/mobile-runner-policy-v1.md): qualification build, pinned runner and fallback versions, Android emulator and iOS simulator identities, MQ1–MQ3, N = 10 (60 measured executions), artifact paths, acceptance criteria, fallback trigger, compatibility smoke, and the authorized executing role (QUALIFIER-MOBILE-01). Preparation only; status READY_FOR_HUMAN_AUTHORIZATION. | Written once; the ORCHESTRATOR transcribes gate outcomes into `toolchain-manifest.yaml`, never into this package. |
+
+Authoritative definitions live under `protocol/`; the manifests reference them and do not restate them. The manifests are not protocol documents and do not carry the protocol header block, but `protocol_version` and `protocol_state` in `study-manifest.yaml` must always match the current protocol files.
+
+## Who may edit
+
+Only the ORCHESTRATOR role (protocol/agent-governance-v1.md) edits files in this directory.
+
+Provenance sequence (authoritative; audits/README.md, the audit templates, README.md, and protocol/study-design-v1.md point here):
+
+1. Before E01 starts, under explicit human instruction, the ORCHESTRATOR pins the evaluated version of every component surface of every ecosystem in `sut-manifest.yaml` (`repository`, `commit_sha` or `release`, `endpoint`), filling `verified_by` (ORCHESTRATOR) and `verified_at`. `presence` stays UNCONFIRMED. Version-pinning rule: the pinned identity is a repository SHA, a release, a binary or build identity, or equivalent provenance. If an official current component cannot be pinned by SHA, the ORCHESTRATOR records the strongest reproducible release, version, or date identifier available and documents the limitation in the component's `notes`. The same rule applies to the qualification SUT build, which the ORCHESTRATOR pins under `qualification_build` in `toolchain-manifest.yaml` and QUALIFIER-MOBILE-01 copies into qualification/mobilewright/README.md (protocol/mobile-runner-policy-v1.md, section 3), and, before each later campaign, to the versions the campaign runs against (protocol/change-control-v1.md, section 7).
+2. Each auditor copies that record into its `audit.md` section 2 (`repository` and `endpoint` verbatim; `commit_sha` or `release`, whichever is non-null, into `commit_sha_or_release`) and, during E01, verifies the pinned target and whether the surface is present, recording CONFIRMED or ABSENT there with evidence, and records whether a controlled instance of the pinned version could be established. The auditor records evidence against the pinned target only and never switches independently to another version, branch, fork, or deployment because it exposes a more favorable capability. A discrepancy between the manifest and what the auditor observes is recorded in the auditor's `unresolved.md`; the auditor never edits the manifest.
+3. After E01, the ORCHESTRATOR transcribes the verified `presence` values, the `controlled_instance_available` value, and any provenance correction approved by a human into `sut-manifest.yaml`, updating `verified_by` and `verified_at`.
+
+The same sequence applies to every ecosystem, SUT-01 included. Edits that touch protocol-level facts (`protocol_version`, `protocol_state`, `protocol_frozen`, `freeze_approved_by`, `freeze_date`) follow protocol/change-control-v1.md.
+
+## Null policy
+
+Unknown means `null`, never a guess. This applies to commit SHAs, releases, repository URLs, endpoints, `controlled_instance_available`, tool versions, install dates, platforms, emulator and simulator descriptors, host descriptors, and freeze metadata. A value stays `null` until a named role verifies it on a recorded date.
+
+The string `TBD` appears only where the study context itself leaves a choice open (for example the performance and API tool candidates). It labels an undecided choice; it is not a placeholder for a fact that exists but was not looked up.
+
+## Multi-component ecosystems
+
+The unit of comparison is the testing laboratory ecosystem, not a repository. An ecosystem may span several repositories or artifacts (for example separate Web, Android, and iOS deliverables) and is still one SUT. `sut-manifest.yaml` therefore models each SUT as a set of named component surfaces (`web`, `api`, `android`, `ios`), each carrying the identical provenance record:
+
+| Field | Meaning |
+|---|---|
+| `presence` | `UNCONFIRMED` at initialization; set to CONFIRMED or ABSENT by the ORCHESTRATOR after E01 verifies it (step 3 of the provenance sequence above) |
+| `repository`, `commit_sha`, `release`, `endpoint` | Provenance of the evaluated artifact; `null` until verified |
+| `verified_by`, `verified_at` | Role and ISO date of the verification; required whenever any provenance field is non-null |
+
+Every SUT lists the same four surfaces (`web`, `api`, `android`, `ios`), all UNCONFIRMED, so that E01 verifies presence and absence identically for every ecosystem; the manifest encodes no prior belief about which surfaces any ecosystem has, and no availability was inferred during protocol hardening. Each SUT also carries `controlled_instance_available` (null until E01): true when every component surface that E01 confirmed present can be run by the study, from the pinned evaluated version, in a controlled environment (SELF_HOSTED or LOCAL for web and api service components; EMULATED or SIMULATED for android and ios application builds); false otherwise, naming the components that cannot in `notes` (protocol/study-design-v1.md, sections 10.1 and 10.5). It is an experimental-control fact that summarizes E01; the per-condition decision on which campaign conditions run on a controlled instance is made in each campaign configuration by the same rule for every ecosystem, and the boolean is never a score input. Listing a surface means "verify whether this surface exists"; it is not a claim that it exists. If E01 finds a surface absent, that is an audit finding recorded in `audits/`, not a defect in the manifest. If E01 finds a surface that is not listed, the auditor records it in `unresolved.md` and the ORCHESTRATOR adds it under the same record structure. No SUT, including SUT-01 OmniPizza, has extra fields or special handling.
+
+## Data-collection gate
+
+`data_collection_started` in `study-manifest.yaml` is `false` and flips to `true` only after both of the following, in order:
+
+1. The protocol is frozen (`protocol_frozen: true`, with `freeze_approved_by` and `freeze_date` filled) through explicit human approval as described in protocol/change-control-v1.md.
+2. A human authorizes the start of data collection.
+
+Campaign statuses in `study-manifest.yaml` remain `NOT_STARTED` until that flag is `true`. Both conditions above were satisfied for the study as a whole (protocol frozen 2026-09-16; data collection authorized 2026-09-17 at E01 campaign start), so `data_collection_started` is now `true`; this gate rule continues to govern each individual campaign's own `NOT_STARTED -> IN_PROGRESS` transition (protocol/change-control-v1.md, section 7) — E02-E12 each still require their own explicit human authorization to leave `NOT_STARTED`, the gate flag being `true` is necessary but not sufficient. Mobile conditions use Mobilewright only after it passes the qualification gate (MQ1, MQ2, MQ3, pass criteria of section 7) in protocol/mobile-runner-policy-v1.md, and only for ecosystems that passed the per-SUT compatibility smoke (section 9); otherwise the fallback is Appium 3. Appium 2 must not be used.
+
+## Validating YAML locally
+
+No validation tooling is mandated at this phase. When a syntax check is wanted, use an interpreter already on the machine; nothing needs to be installed.
+
+```sh
+# Ruby (bundled with macOS): silent on success, raises on a syntax error
+ruby -ryaml -e 'YAML.load_file(ARGV[0])' manifests/study-manifest.yaml
+
+# All three manifests
+for f in manifests/*.yaml; do ruby -ryaml -e 'YAML.load_file(ARGV[0]); puts "ok #{ARGV[0]}"' "$f"; done
+
+# Python 3 with PyYAML, only if PyYAML is already present
+python3 -c 'import sys, yaml; yaml.safe_load(open(sys.argv[1])); print("ok", sys.argv[1])' manifests/study-manifest.yaml
+```
+
+A parse check confirms syntax only. It does not check the null policy, field order, or cross-file consistency; the ORCHESTRATOR reviews those by hand. Machine-readable DRAFT schemas for evidence records, run manifests, and audit summaries exist under `schemas/` (see schemas/README.md); validation tooling is not mandated at this phase.

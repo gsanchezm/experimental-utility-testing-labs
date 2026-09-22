@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eus-2026-001:schemas:evidence:v1",
+  "title": "Evidence Record",
+  "description": "One evidence record produced during the capability audit (E01-capability-audit) of a testing laboratory ecosystem, the system under test (SUT), in study EUS-2026-001. Validates one row of audits/<SUT>/evidence.csv after CSV-to-JSON conversion (empty CSV cells become null). Field names and order follow protocol/evidence-rules-v1.md (thirteen fields: evidence_id, ecosystem_id, modality, provisional_score, evidence_type, repository, commit_sha_or_release, file_path_or_endpoint, mechanism, expected_behavior, evidence_status, structural_scope_note, notes); the capability scale follows protocol/capability-rubric-v1.md. Every reference to a record uses evidence_id, never a CSV row or line number. A record whose provisional_score is null documents a negative finding or limitation rather than a capability level. Schema state: DRAFT; changes follow protocol/change-control-v1.md.",
+  "type": "object",
+  "properties": {
+    "evidence_id": {
+      "type": "string",
+      "description": "Stable identifier of the record (protocol/evidence-rules-v1.md, 'Evidence identifiers'): SUT0n-EV-nnnn, where SUT0n corresponds to ecosystem_id (SUT01 for SUT-01, and so on) and nnnn is a four-digit sequence starting at 0001, assigned at creation, never reused or renumbered. The only permitted way to reference an evidence record.",
+      "pattern": "^SUT0[1-6]-EV-[0-9]{4}$"
+    },
+    "ecosystem_id": {
+      "type": "string",
+      "description": "Identifier of the evaluated ecosystem (system under test) the record belongs to.",
+      "enum": [
+        "SUT-01",
+        "SUT-02",
+        "SUT-03",
+        "SUT-04",
+        "SUT-05",
+        "SUT-06"
+      ]
+    },
+    "modality": {
+      "type": "string",
+      "description": "Testing modality the record supports, from the frozen v1 modality list. Manual and exploratory testing are not modalities in this list and never appear in evidence records used for the quantitative comparison.",
+      "enum": [
+        "Web UI Functional",
+        "API",
+        "Android Native",
+        "iOS Native",
+        "Performance",
+        "Accessibility — Web only",
+        "Visual Testing",
+        "Security Testing",
+        "Localization / i18n"
+      ]
+    },
+    "provisional_score": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Provisional capability level the record supports for this ecosystem and modality, on the rubric scale of protocol/capability-rubric-v1.md: 0 UNSUPPORTED, 1 TECHNICALLY EXECUTABLE, 2 EXPERIMENTALLY USABLE, 3 EXPERIMENTALLY CONTROLLABLE. Null for negative or limitation records that do not support a level. Provisional until adjudication.",
+      "minimum": 0,
+      "maximum": 3
+    },
+    "evidence_type": {
+      "type": "string",
+      "description": "Kind of artifact the evidence is drawn from. Suggested values: documentation, source-file, endpoint, execution-log, screenshot, configuration, test-data, other. Not enum-restricted at v1.",
+      "minLength": 1
+    },
+    "repository": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Repository or artifact collection the evidence was taken from, as recorded in the ecosystem's manifest. Null when unknown or not applicable (for example PUBLIC_HOSTED endpoints without a public repository)."
+    },
+    "commit_sha_or_release": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Exact commit SHA, release tag, or the strongest reproducible identifier pinned in manifests/ for the evaluated version at the time the evidence was collected. Null when unknown or not applicable. Never approximate."
+    },
+    "file_path_or_endpoint": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "File path within the repository, or the endpoint (URL, route, or identifier) that the evidence points to. Null when unknown or not applicable."
+    },
+    "mechanism": {
+      "type": "string",
+      "description": "The concrete mechanism the evidence identifies (for example a test hook, reset endpoint, configuration switch, or data fixture) and how it is exercised. Must not be empty.",
+      "minLength": 1
+    },
+    "expected_behavior": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The observable outcome the mechanism should produce. Required (non-null) for any record supporting Score 3, where it carries the ground-truth claim (protocol/evidence-rules-v1.md); null for records that do not state an expected outcome."
+    },
+    "evidence_status": {
+      "type": "string",
+      "description": "Verification status of the record as defined in protocol/evidence-rules-v1.md. Reflects the strongest evidence actually obtainable; EXECUTION_VERIFIED requires a linked execution verification record.",
+      "enum": [
+        "DOCUMENTED",
+        "SOURCE_VERIFIED",
+        "EXECUTION_VERIFIED",
+        "INFERRED"
+      ]
+    },
+    "structural_scope_note": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Descriptive annotation for a structural absence or narrowness of the modality in the evaluated ecosystem (protocol/capability-rubric-v1.md, 'Structural scope note'): one of NO_WEB_SURFACE, NO_MOBILE_SURFACE, NO_API_SURFACE, INTENTIONAL_SPECIALIST_SCOPE, OTHER_STRUCTURAL_REASON, optionally followed by ': ' and free text; the free text is required for OTHER_STRUCTURAL_REASON. Null for every record that does not document a structural reason. Descriptive only: it never modifies provisional_score, never replaces Score 0 with N/A, and never removes a cell from any table.",
+      "pattern": "^((NO_WEB_SURFACE|NO_MOBILE_SURFACE|NO_API_SURFACE|INTENTIONAL_SPECIALIST_SCOPE)(: .+)?|OTHER_STRUCTURAL_REASON: .+)$"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Free-text qualifications, limitations, or pointers to related records by evidence_id (contradicts=SUT0n-EV-nnnn; corrects=SUT0n-EV-nnnn), to execution verification records (verification=SUT0n-VR-nnnn), and to retained artifacts. Null when there is nothing to add."
+    }
+  },
+  "required": [
+    "evidence_id",
+    "ecosystem_id",
+    "modality",
+    "evidence_type",
+    "mechanism",
+    "evidence_status"
+  ],
+  "additionalProperties": false
+}

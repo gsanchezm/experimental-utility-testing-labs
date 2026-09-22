@@ -1,0 +1,43 @@
+# manifests/e01-campaign-start-v1.yaml
+# Provenance record of the E01 Capability Audit campaign start (protocol/change-control-v1.md, section 7,
+# "Campaign start (NOT_STARTED -> IN_PROGRESS)"). Modeled on manifests/protocol-freeze-v1.yaml (the analogous
+# record for the protocol freeze). This is a provenance record, not a second campaign-configuration record:
+# the campaign configuration itself is authoritative in experiments/E01-capability-audit/README.md, "Campaign
+# configuration"; this file only certifies when the start happened, on what basis, and against which
+# controlling commits. Editable by ORCHESTRATOR only (protocol/agent-governance-v1.md).
+study_id: EUS-2026-001
+campaign: E01-capability-audit
+transition: "NOT_STARTED -> IN_PROGRESS"
+start_timestamp: "2026-09-17T05:32:52Z"
+start_approved_by: gilbertosanchez  # explicit human approval, this operation
+started_by: ORCHESTRATOR
+pre_start_head: 637abe7f6b864f9b29da77e2404484628095194a  # main HEAD immediately before this operation's mutations
+controlling_commits:
+  protocol_freeze_commit: 38b82fda8282e2e068a27a45eef458f0e085def8
+  protocol_freeze_tag: eus-2026-001-protocol-v1-pre-data
+  e01_orchestration_commit: b5d907ebb1e7532bea4c061a50915db8df029e3c
+  e01_auditor_baseline_and_prompt_freeze_commit: 82b7a26ba9d03aa860adf4a3b102c79d815cce89
+  launch_preparation_commits:
+    - 42d04874ff3b7ee0e2dc487b7945b73db13890db  # render six auditor launch packages; campaign start blocked
+    - 637abe7f6b864f9b29da77e2404484628095194a  # note worktree availability gap and frozen-prompt self-description
+frozen_prompt:
+  prompt_id: E01-CAPABILITY-AUDITOR-V1
+  path: prompts/frozen/e01-capability-auditor-v1.md
+  sha256: b504b5f720a6fe8b2a7255b3fe0509d8d18a244fb8114b485c9a2e4fbfe6c358
+  byte_length: 17057
+campaign_configuration_record: experiments/E01-capability-audit/README.md, "Campaign configuration" section
+changelog_row: protocol/CHANGELOG.md, 2026-09-17, document experiments/E01-capability-audit/README.md, "campaign NOT_STARTED -> IN_PROGRESS"
+resulting_start_commit: null  # cannot self-reference this commit's own SHA; the commit that includes this file is the authoritative resulting-start commit once made (see the START report returned alongside this operation)
+notes: |
+  Every value in the campaign configuration record this start depends on was derived from already-frozen
+  artifacts (manifests/sut-manifest.yaml, manifests/toolchain-manifest.yaml, prompts/frozen/, protocol/
+  study-design-v1.md, protocol/statistical-analysis-plan-v1.md, protocol/equivalent-scenario-mapping-v1.md);
+  no new methodological rule, sample size, exclusion rule, or attribution rule was introduced. This start is
+  administrative: it locks the campaign configuration and transitions data_collection_started (study and E01)
+  and campaign_status. It does not itself launch any auditor. As of this record, no auditor has been
+  instructed to begin, no capability evidence has been collected, all six audits/SUT-XX/evidence.csv files
+  remain header-only, and no capability score or audit conclusion exists. Mobilewright qualification remains
+  NOT_STARTED; E02-E12 remain NOT_STARTED; deferred issues (xviii) and (xix) remain unresolved and out of
+  scope for E01. The campaign-status token used throughout is IN_PROGRESS (protocol/change-control-v1.md,
+  section 7, vocabulary NOT_STARTED -> IN_PROGRESS -> FROZEN); RUNNING, proposed in an earlier operation, was
+  not used, to avoid a second, undefined campaign-status representation.

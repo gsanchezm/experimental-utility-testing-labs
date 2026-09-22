@@ -1,0 +1,242 @@
+# manifests/e01-proto-u06-correction.yaml
+# Post-data-collection change-control record for PROTO-U06 (protocol/unresolved.md), EUS-2026-001.
+# Corrects three representation/provenance defects in the PROTO-U05 E01 adjudicated capability matrix
+# artifacts, discovered by an independent semantic/provenance audit of commit
+# 77216f610a341fe87fb3c90c4035de73d66ca29d. Prospective correction only: does not revisit any of the 54
+# scientific cell determinations, does not revisit E01-HR-01 or E01-HR-02, does not perform H1-H5 analysis,
+# and does not relaunch ADJUDICATOR-EU-01. Editable by ORCHESTRATOR only (protocol/agent-governance-v1.md).
+change_id: PROTO-U06
+study_id: EUS-2026-001
+discovery_point: >
+  An independent semantic/provenance audit of the E01 adjudicated capability matrix (commit
+  77216f610a341fe87fb3c90c4035de73d66ca29d, PROTO-U05) found zero scientific score errors, zero
+  human-ruling errors, and zero methodological defects, but three non-scientific representation/provenance
+  defects that block authorizing the matrix as H1 input.
+classification:
+  category: "POST-DATA DISCOVERED REPRESENTATION / PROVENANCE DEFECT"
+  methodological: false
+  blocking_authorization_of_e01_matrix_as_h1_input: true
+  invalidates_54_cell_scientific_determinations: false
+  invalidates_e01_hr_01_or_e01_hr_02: false
+  requires_re_adjudication: false
+  note: >
+    Addresses exactly: (A) confirmed_score_as_stored provenance semantics; (B) preservation of the frozen
+    UNSUPPORTED source vocabulary; (C) inaccurate toolchain execution chronology recorded during PROTO-U05.
+    No other issue belongs in PROTO-U06.
+human_ruling: >
+  Classification ACCEPTED as instructed. PROTO-U06 corrects representation and provenance only; none of the
+  54 scientific determinations, E01-HR-01, or E01-HR-02 is revisited, and no H1-H5 analysis is performed.
+  Approved by gilbertosanchez.
+pre_correction_immutability_gate:
+  head_before_correction: 77216f610a341fe87fb3c90c4035de73d66ca29d
+  working_tree_clean: true
+  v1_matrix_sha256: 3a737c1e3474d60380488379514f4a9b04d2e371212e46f233eac7018c480a69
+  v1_effective_score_distribution: {"0": 12, "1": 7, "2": 8, "3": 27, total: 54}
+  six_first_run_adjudication_hashes_reverified:
+    SUT-01: 989e728ad7fba848d655aa1722cc01ec910953f91d3f2a78ff1992f1d03f5981
+    SUT-02: 3785205d7090c7c66395be1ad7db719f59da8f2912327b7d066fb6f5ca49bd9b
+    SUT-03: 054de3bd2338c85a3d9f63975d4594d151a1e0a1a4311903fa4de5934c445a1d
+    SUT-04: 70083fce6db33fb5ec1b6bfce65fe4565471c72d060c12a66154b32d49b2b897
+    SUT-05: d838675ae2293314b26ef7f9e841d115df85afc7e0a4025f48fefaec8f58d1a6
+    SUT-06: 43d5380c1092bae59057d340783d827207713c5ec0b3a522fb3ce5748159bfc2
+  human_rulings_reverified:
+    E01-HR-01: f6cd1fd1c53c388443eb405a350099f7ea2f21452457c9d2c1741419c04e5bcf
+    E01-HR-02: 305e44412dd852d43fee0c15be0a2b6963739c3471ff796402404960a9d80d58
+  result: PASS — all values matched exactly before any file was written; see manifests/e01-proto-u06-correction.yaml, defect_a section for the per-cell inspection this gate required.
+defect_a:
+  title: confirmed_score_as_stored provenance semantics
+  problem: >
+    derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json (v1) stored the fallback-derived value
+    (equal to provisional_score) in confirmed_score_as_stored whenever the immutable audits/<SUT>/audit.md
+    confirmed_score column was left blank, rather than representing that the literal cell was blank. This
+    conflated "the auditor's literal recorded value" with "the value used downstream after the already-frozen
+    fallback rule," for both fields the schema itself already distinguished by name.
+  ground_truth_established_by_direct_inspection: >
+    Every one of the six immutable audits/<SUT>/audit.md tables was read directly at its pinned auditor
+    result commit (git show <commit>:audits/<dir>/audit.md), not assumed. The literal confirmed_score column
+    is blank on:
+      - SUT-02 (bdef52b1...8226): all 9 modality rows. SUT-02's own adjudication.json top-level "notes"
+        field independently confirms this: "this audit leaves the confirmed_score column blank on every
+        row... confirmed_score equals provisional_score in every row here."
+      - SUT-06 (2bb26399...dacd36): all 9 modality rows.
+      - SUT-03 (f04fe3fc...382986): 2 of 9 modality rows only — Android Native and iOS Native (both
+        structurally-absent, provisional_score 0). SUT-03's other 7 rows explicitly fill confirmed_score.
+    SUT-01 (fa807da4...a5dbb8), SUT-04 (97ecae19...20dbbb), and SUT-05 (57a82d43...5297a) fill
+    confirmed_score explicitly on every one of their 9 rows, including SUT-01's and SUT-04's DISPUTED cells
+    (Visual Testing = 2; Security Testing = 2, respectively) — those two literal values are unaffected by
+    this correction and remain non-null.
+  scope_correction_from_the_operating_instruction: >
+    Section 5 of the operating instruction named only SUT-02 and SUT-06 as requiring
+    confirmed_score_as_stored = null, with the general rule in section 4 ("If the auditor field was blank:
+    represent null") governing the rest, and explicitly directed "do not assume" for SUT-06. Direct inspection
+    (above) found the same literal-blank condition additionally holds for 2 of SUT-03's 9 cells. Section 4's
+    rule is fully general and section 5 is a spot-check, not a whitelist of which cells may be null; applying
+    it only to SUT-02/SUT-06 and leaving SUT-03's 2 blank cells storing their fallback value would leave the
+    exact defect this record exists to fix unfixed for those 2 cells. This correction therefore nulls 20
+    cells, not 18: all 9 SUT-02 cells, all 9 SUT-06 cells, and SUT-03's Android Native and iOS Native cells.
+  note_on_proto_u05s_own_parsing_note: >
+    manifests/e01-proto-u05-correction.yaml's parsing_note (as committed in 77216f610a341fe87fb3c90c4035de73d66ca29d)
+    states blanks were "observed: SUT-02, SUT-03, SUT-04, SUT-05, SUT-06" when it equals provisional_score.
+    Direct inspection under this record found that claim inaccurate for SUT-04 and SUT-05 (zero blank cells
+    in either) and under-specific for SUT-03 (2 of 9 cells, not all). PROTO-U05's record is left unedited in
+    place as immutable historical provenance (the same preserve-history principle this record applies to the
+    toolchain-manifest.yaml chronology in defect_c, below); this record is the corrected, accurate per-SUT
+    blank-cell inventory, superseding that claim going forward without altering the historical file that
+    made it.
+  required_semantics: >
+    confirmed_score_as_stored means exactly the value literally stored in the immutable auditor audit: the
+    integer 0-3 if one was recorded, null if the column was left blank. effective_confirmed_score remains the
+    separate, already-frozen downstream derived value: for a non-tie-break cell whose confirmed_score was
+    blank, effective_confirmed_score = provisional_score (protocol/capability-rubric-v1.md; analysis/README.md
+    rule 7) — not a new rule.
+  validation:
+    every_sut_02_cell_confirmed_score_as_stored_null: true
+    every_sut_06_cell_confirmed_score_as_stored_null: true
+    sut_03_android_native_and_ios_native_confirmed_score_as_stored_null: true
+    all_other_38_cells_literal_value_preserved_exactly: true
+    effective_confirmed_score_unchanged_for_all_54_cells: true
+defect_b:
+  title: preservation of the frozen UNSUPPORTED source vocabulary
+  problem: >
+    schemas/adjudicated-matrix.schema.json (v1) restricted original_adjudicator_outcome to
+    ["CONFIRMED", "DISPUTED"], narrowing the frozen first-run adjudication vocabulary
+    (schemas/adjudication.schema.json: CONFIRMED, DISPUTED, UNSUPPORTED) merely because the observed E01
+    dataset contains zero UNSUPPORTED cells.
+  resolution: >
+    schemas/adjudicated-matrix.schema.v2.json's original_adjudicator_outcome enum is
+    ["CONFIRMED", "DISPUTED", "UNSUPPORTED"] — the full frozen source vocabulary is representable. No
+    effective-score derivation rule is invented for UNSUPPORTED: analysis/e01-adjudicated-matrix/generate-matrix.js
+    continues to fail loudly (fail("... outcome ... has no defined effective-score derivation rule")) if a cell
+    with outcome UNSUPPORTED is ever actually encountered, exactly as v1 did. The distinction is explicit in
+    the v2 schema's own field description: the schema permits the vocabulary value; the generator requires
+    every actual E01 cell to resolve to a score.
+  validation:
+    unsupported_permitted_in_schema_v2: true
+    unsupported_present_in_actual_e01_data: false
+    generator_still_hard_stops_on_unsupported: true
+    no_new_effective_score_derivation_rule_invented: true
+defect_c:
+  title: toolchain execution chronology
+  problem: >
+    manifests/toolchain-manifest.yaml's scripting_runtime.notes field (as committed in
+    77216f610a341fe87fb3c90c4035de73d66ca29d) read "Recorded before
+    analysis/e01-adjudicated-matrix/generate-matrix.js's first run" — factually incorrect.
+  actual_v1_chronology: >
+    (1) generate-matrix.js was written. (2) The generator was first executed and failed. (3) The generator
+    was corrected. (4) The successful v1 matrix generation occurred. (5) manifests/toolchain-manifest.yaml's
+    scripting_runtime entry was then populated.
+  assessment: >
+    The rule requiring the runtime pin to be recorded before the first generator run (analysis/README.md,
+    rule 3) was violated for matrix v1. This is assessed non-contaminating: generate-matrix.js uses only
+    Node.js's standard library (fs, path, crypto, child_process), with no runtime-version-sensitive behavior
+    the v1 output could have depended on, and no scientific decision rests on it.
+  resolution: >
+    manifests/toolchain-manifest.yaml's scripting_runtime.notes field is corrected to state the actual
+    chronology above, the violation, and its non-contaminating assessment (see the corrected file for exact
+    wording). PROTO-U05's own record (manifests/e01-proto-u05-correction.yaml) is left unedited in place as
+    historical evidence — its incorrect claim is not silently erased, per the operating instruction. The
+    corrected/final matrix generation under PROTO-U06 (Commit B, below) occurs only after this corrected pin
+    already exists in a committed state (Commit A) — unlike v1, where generation preceded the pin. PROTO-U06
+    does not claim v1 was properly pinned before generation: it was not, and that historical gap is not
+    erased, only resolved prospectively for the corrected matrix.
+contract_versioning_decision:
+  basis: >
+    schemas/README.md, "Changing a schema": "A schema in use by a frozen campaign is never overwritten. A
+    change creates a new file with an incremented version (for example evidence.schema.json with $id
+    ...:evidence:v2, stored as schemas/evidence.schema.v2.json)." This is the repository's own established,
+    explicit convention for this exact situation and is followed here rather than inventing a new one.
+  decision: >
+    New file schemas/adjudicated-matrix.schema.v2.json, $id urn:eus-2026-001:schemas:adjudicated-matrix:v2.
+    schemas/adjudicated-matrix.schema.json (v1, $id ...:v1) is left byte-for-byte unmodified: PROTO-U06 does
+    not overwrite or mutate its historical meaning. v1 instance data (the matrix as it existed at commit
+    77216f610a341fe87fb3c90c4035de73d66ca29d) remains valid against v1's schema, recoverable via git history.
+    analysis/e01-adjudicated-matrix/generate-matrix.js is updated to target the v2 contract (header comment);
+    it performs no schema validation itself (validation is external, Ajv, as in PROTO-U05).
+  matrix_file_path_decision: >
+    derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json is corrected in place at its existing
+    path (derived-data/README.md, rule 4: "Regenerating a derived dataset overwrites only the derived file");
+    a single canonical current-matrix path is kept, with matrix v1 recoverable through git history at commit
+    77216f610a341fe87fb3c90c4035de73d66ca29d, per the operating instruction's stated preference.
+  experiments_readme_check: >
+    experiments/E01-capability-audit/README.md's campaign-configuration section was checked (grep -n -i
+    schema) and does not reference schemas/adjudicated-matrix.schema.json or its $id anywhere; it references
+    only schemas/run-manifest.schema.json and the generic schema_validator toolchain entry. No update to that
+    file is needed or made.
+two_commit_provenance_sequence:
+  rationale: >
+    An operational provenance choice for this correction only, per explicit operating instruction, so that
+    "corrected contract precedes corrected result" is objectively auditable from git history rather than
+    asserted. Not claimed as a new general repository convention: manifests/e01-proto-u05-correction.yaml's
+    own notes field explicitly preferred one commit per change-control event (citing PROTO-U03's and
+    PROTO-U04's single-commit precedent) and that reasoning is not overruled here — it simply does not apply
+    to this one correction, which was explicitly instructed to use two commits.
+  commit_a_contents: [manifests/e01-proto-u06-correction.yaml, schemas/adjudicated-matrix.schema.v2.json, analysis/e01-adjudicated-matrix/generate-matrix.js, manifests/toolchain-manifest.yaml, protocol/unresolved.md, protocol/CHANGELOG.md]
+  commit_a_excludes: derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json and its provenance sidecar (not yet regenerated)
+  commit_b_contents: [derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json, derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json.provenance.yaml]
+  transient_state_note: >
+    Between Commit A and Commit B, the committed derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json
+    is the v1 file and does not yet conform to schemas/adjudicated-matrix.schema.v2.json's corrected
+    confirmed_score_as_stored semantics (it still has the v1 fallback-substituted values for the 20 cells
+    identified in defect_a). This is the intended, temporary state the two-commit sequence produces, not an
+    inconsistency: it is resolved by Commit B, which regenerates the matrix under the now-committed,
+    now-pinned corrected contract.
+predicted_correction_scope_ahead_of_generator_run: >
+  Established by direct inspection (defect_a, above), before the corrected generator is run: the only
+  difference between the v1 matrix and the PROTO-U06-corrected matrix is that confirmed_score_as_stored
+  changes from a numeric value (equal to provisional_score in every one of these 20 cases) to null, in
+  exactly 20 of the 54 cells (all 9 SUT-02 cells, all 9 SUT-06 cells, SUT-03 Android Native, SUT-03 iOS
+  Native). No other field of any cell, and no top-level field, changes. effective_confirmed_score is
+  identical for all 54 cells (the fallback to provisional_score for these 20 cells was already how v1
+  computed effective_confirmed_score; only the separately-tracked confirmed_score_as_stored field was wrong).
+  This prediction is independently checked against the corrected generator's actual output after Commit B,
+  below.
+sut01_visual_provenance_semantics_preserved:
+  auditor_provisional_score: 3
+  auditor_confirmed_score_as_stored: 2
+  auditor_confirmation_state: null
+  original_adjudicator_outcome: DISPUTED
+  resolution_source: HUMAN_RULING
+  ruling_id: E01-HR-01
+  effective_confirmed_score: 3
+  no_h1_countable_or_equivalent_field_introduced: true
+write_authority_basis: >
+  Same basis as PROTO-U04 and PROTO-U05 (manifests/e01-proto-u04-correction.yaml,
+  manifests/e01-proto-u05-correction.yaml, write_authority_basis fields): ORCHESTRATOR's existing write
+  authority over manifests/, analysis/, derived-data/e01-adjudicated-matrix/, and (for a new, additive,
+  versioned schema file only) schemas/ under the freeze-locked-schemas procedure established by PROTO-U01.
+  schemas/adjudication.schema.json and schemas/sut-audit.schema.json are unmodified.
+implementation_files:
+  - manifests/e01-proto-u06-correction.yaml  # new file (this record)
+  - schemas/adjudicated-matrix.schema.v2.json  # new file; schemas/adjudicated-matrix.schema.json (v1) unmodified
+  - analysis/e01-adjudicated-matrix/generate-matrix.js  # corrected in place (git history preserves v1 blob)
+  - manifests/toolchain-manifest.yaml  # scripting_runtime.notes corrected in place; all other fields unchanged
+  - protocol/unresolved.md  # PROTO-U06 row appended
+  - protocol/CHANGELOG.md  # PROTO-U06 rows appended (Commit A, Commit B)
+  - derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json  # regenerated in place, Commit B only
+  - derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json.provenance.yaml  # updated in place, Commit B only
+affected_campaign: E01-capability-audit
+affected_phase: post-adjudication matrix representation/provenance correction only
+collected_evidence_affected: false
+scoring_semantics_affected: false
+evidence_admissibility_affected: false
+hypotheses_affected: false
+rqs_affected: false
+cross_sut_comparisons_affected: false
+rerun_required: false
+prospective_only: true
+adjudicator_relaunched_by_this_record: false
+audits_directory_modified: false
+derived_data_adjudication_modified: false
+adjudication_rulings_modified: false
+h1_or_hypothesis_analysis_performed: false
+approved_by: gilbertosanchez
+notes: |
+  This record is written and committed (Commit A) before the corrected generator is run, per explicit
+  operating instruction. predicted_correction_scope_ahead_of_generator_run, above, is established by direct,
+  independent inspection of the six immutable audits/<SUT>/audit.md tables at their pinned commits — not by
+  trusting the (until this correction, buggy) v1 generator's own behavior — so this record's validation
+  claims do not depend on the corrected generator having already run. Commit B mechanically materializes
+  this already-verified correction and is independently re-checked against every claim in this record
+  afterward (git diff 77216f610a341fe87fb3c90c4035de73d66ca29d HEAD --name-only listing exactly the 8
+  implementation_files paths above; schema validation; 54-cell / distribution / human-ruling checks; source
+  hash re-verification).

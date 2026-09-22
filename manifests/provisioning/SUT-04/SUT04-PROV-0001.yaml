@@ -1,0 +1,54 @@
+# manifests/provisioning/SUT-04/SUT04-PROV-0001.yaml
+# One-time provisioning record (protocol/setup-effort-v2.md, section 8; manifests/provisioning/README.md).
+# Descriptive reproducibility metadata only: never counted, never a score, never a measured observation.
+# Authored by ORCHESTRATOR under the explicit human authorization of 2026-09-22 (NON-MEASURED PRE-START).
+provisioning_id: SUT04-PROV-0001
+sut_id: SUT-04
+environment_type: LOCAL
+instance_identifier: "operator workstation; six Spring services (auth 127.0.0.1:3004, booking :3000, room :3001, branding :3002, report :3005, message :3006; spring profile dev) and the assets dev server 127.0.0.1:3003"
+sut_provenance:
+  components: [web, api]
+  repository: https://github.com/mwinteringham/restful-booker-platform
+  commit_sha: d36bd3f8647a091d406e53bad463c5e3e5d2ece1  # manifests/sut-manifest.yaml, SUT-04 web/api, PINNED_SOURCE (release tag 2.2 is source-only)
+steps:
+  - sut_id: SUT-04
+    component: web/api monorepo
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "git 2.48.1"
+    installation_or_build_step: "git clone; git checkout d36bd3f8647a091d406e53bad463c5e3e5d2ece1 (HEAD verified equal to the pin)"
+    required_external_dependency: "github.com"
+    estimated_or_observed_duration: "about 50 s"
+    automation_classification: AUTOMATED
+    provenance: "git 2.48.1"
+    notes: null
+  - sut_id: SUT-04
+    component: web/api monorepo
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "JDK 26 (the pinned pom.xml compiles with --release 26; the SUT README requires JDK 26 or higher) and Apache Maven 3.9.9"
+    installation_or_build_step: "Temurin JDK 26.0.2.1+1 (x64 macOS tarball from the Adoptium API) unpacked into a scratch directory and selected through JAVA_HOME for this build only; the host's system JDK 23 was not changed. mvn -q clean install -DskipTests at the repository root"
+    required_external_dependency: "api.adoptium.net (JDK tarball); Maven Central"
+    estimated_or_observed_duration: "about 17 min"
+    automation_classification: AUTOMATED
+    provenance: "Temurin 26.0.2.1+1; Apache Maven 3.9.9"
+    notes: "the SUT's documented build_locally.sh runs mvn clean install with the module unit tests and then the end-to-end tests; both test phases were skipped because provisioning needs only the service jars. The documented docker-compose deployment was not used: the host's Docker daemon was unavailable during this operation (a Docker Desktop privileged-helper prompt awaiting an administrator password)."
+  - sut_id: SUT-04
+    component: web/api monorepo
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "service jars built; Node.js 24.21.0 and npm 11.19.0 for the assets dev server"
+    installation_or_build_step: "java -jar -Dspring.profiles.active=dev <module>/target/restful-booker-platform-<module>-*-exec.jar for auth, booking, room, report, branding, message (as run_locally.sh does); cd assets && npm ci && npm run dev"
+    required_external_dependency: "npm registry (assets)"
+    estimated_or_observed_duration: "about 2.5 min until every service reported Started"
+    automation_classification: AUTOMATED
+    provenance: "Temurin 26.0.2.1+1 runtime; npm 11.19.0"
+    notes: "service start-up times 90-145 s each under the dev profile (in-memory data)"
+duration: "about 21 min end to end (descriptive only)"
+performed_by: ORCHESTRATOR
+date: "2026-09-22"
+campaigns_served: []  # none yet: E03-resetability is NOT_STARTED; this instance served PRE-START environment verification only (E03-CS001-SUT04-WEB, -API)
+notes: >
+  Environment verification record: experiments/E03-resetability/environment-verification/SUT-04-web-api.json
+  (VERIFIED: web GET / 200 on the assets server; auth, booking, and room services answer with defined HTTP
+  statuses unauthenticated, including DELETE /booking/{id} against a non-existent id, SUT04-EV-0006; no
+  booking was created). The GitHub Actions job "E03 Environment Verification SUT-04 web+api" uses the SUT's
+  documented docker-compose deployment on an ubuntu-24.04 runner (SELF_HOSTED) and is the verification route
+  required before measured execution.

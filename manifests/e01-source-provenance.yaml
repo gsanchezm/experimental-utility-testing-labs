@@ -1,0 +1,313 @@
+# manifests/e01-source-provenance.yaml
+# Official repository verification record for E01-capability-audit, EUS-2026-001.
+# This is a provenance record, not a capability finding: it documents which repository/commit was pinned
+# for each component, how, and why it is eligible under the component-eligibility rule (E01 orchestration
+# task instruction, 2026-09-16). It does not record surface presence, capability, or any audit finding —
+# those belong to audits/<SUT>/audit.md and audits/<SUT>/evidence.csv, populated only during E01 itself.
+# The authoritative operational copy of these pins is manifests/sut-manifest.yaml; this file is the
+# supplementary verification trail (resolution method, eligibility basis, and per-component notes).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v1.md).
+study_id: EUS-2026-001
+protocol_freeze_commit: 38b82fda8282e2e068a27a45eef458f0e085def8
+protocol_freeze_tag: eus-2026-001-protocol-v1-pre-data
+terminology:
+  logical_surface: "A Web / API / Android / iOS role for one SUT (protocol/study-design-v1.md; manifests/sut-manifest.yaml component keys). Also called a 'component role.' There are exactly 24 in this study (6 SUTs x 4 surfaces); this record lists all 24, of which 14 are eligible and pinned below and 10 have no component named for this study (component_id entries with null fields)."
+  provenance_artifact: "A unique pinned repository, identified by (repository_url, pinned_commit_sha). One provenance artifact may back more than one logical surface when a single repository/release is the source for several surfaces (a monorepo, or one mobile codebase producing both Android and iOS builds). There are exactly 9 distinct provenance artifacts backing the 14 pinned logical surfaces below."
+  note: "'Component' alone is used loosely elsewhere in this study's documentation to mean 'logical surface'; where precision matters (as in this file), use 'logical surface' / 'component role' for the Web/API/Android/iOS role and 'provenance artifact' for the pinned repository+commit. Grouping several logical surfaces under one provenance artifact is a fact about how the ecosystem is built, never a reason to change component scope or eligibility (E01 orchestration task instruction, 2026-09-16)."
+surface_and_artifact_counts:
+  total_logical_surfaces: 24  # 6 SUTs x {web, api, android, ios}
+  pinned_logical_surfaces: 14
+  unpinned_logical_surfaces: 10  # no component named for this study; presence remains E01's matter, not assumed absent
+  distinct_provenance_artifacts: 9
+  grouped_surfaces:
+    - {provenance_artifact: "gsanchezm/OmniPizza @ 9ca37674d3...", logical_surfaces: [SUT-01-web, SUT-01-api]}
+    - {provenance_artifact: "gsanchezm/OmniPizza @ 3cdbe6596a... (tag v1.1.8)", logical_surfaces: [SUT-01-android, SUT-01-ios]}
+    - {provenance_artifact: "mwinteringham/restful-booker-platform @ d36bd3f864...", logical_surfaces: [SUT-04-web, SUT-04-api]}
+    - {provenance_artifact: "juice-shop/juice-shop @ 1618a611b1...", logical_surfaces: [SUT-05-web, SUT-05-api]}
+    - {provenance_artifact: "webdriverio/native-demo-app @ 470b89ec09... (tag v2.2.0)", logical_surfaces: [SUT-06-android, SUT-06-ios]}
+  ungrouped_surfaces_one_artifact_each: [SUT-02-web, SUT-02-android, SUT-02-ios, SUT-03-web]
+  verification: "Counts computed directly from the `components` list below (ruby -ryaml, 2026-09-16); not assumed."
+resolution_method: "git ls-remote --symref <url> HEAD (default branch + HEAD SHA); git ls-remote <url> refs/tags/<tag> (tag SHA); gh api / gh release view (release metadata and asset names) — read-only metadata queries, no repository was cloned and no binary artifact was downloaded"
+resolution_timestamp: "2026-09-16T23:20:44Z"
+resolved_by: ORCHESTRATOR
+components:
+  - sut_id: SUT-01
+    component_id: SUT-01-web
+    repository_url: https://github.com/gsanchezm/OmniPizza
+    repository_owner: gsanchezm
+    pinned_commit_sha: 9ca37674d374e9303912e259641ee86baf3aabe1
+    default_branch: main
+    pin_timestamp: "2026-09-16T23:20:44Z"
+    release_or_tag: null
+    provenance_status: PINNED_SOURCE
+    eligibility_basis: "Rule A — named explicitly by human instruction for this study (equivalent to the ORCHESTRATOR pinning sequence of manifests/README.md, under explicit human instruction)."
+    notes: "Monorepo; frontend/ subdirectory. Not a fork; MIT licensed; not archived. Hosted at https://omnipizza-frontend.onrender.com — mapping to this exact commit not independently verified."
+  - sut_id: SUT-01
+    component_id: SUT-01-api
+    repository_url: https://github.com/gsanchezm/OmniPizza
+    repository_owner: gsanchezm
+    pinned_commit_sha: 9ca37674d374e9303912e259641ee86baf3aabe1
+    default_branch: main
+    pin_timestamp: "2026-09-16T23:20:44Z"
+    release_or_tag: null
+    provenance_status: PINNED_SOURCE
+    eligibility_basis: "Rule A — same monorepo as SUT-01-web."
+    notes: "backend/ subdirectory of the same monorepo, same commit. Hosted at https://omnipizza-backend.onrender.com — mapping to this exact commit not independently verified."
+  - sut_id: SUT-01
+    component_id: SUT-01-android
+    repository_url: https://github.com/gsanchezm/OmniPizza
+    repository_owner: gsanchezm
+    pinned_commit_sha: 3cdbe6596a1ab5ef2058ba4259c44da96a0fa03a
+    default_branch: main
+    pin_timestamp: "2026-09-16T23:20:44Z"
+    release_or_tag: v1.1.8
+    provenance_status: PINNED_RELEASE
+    eligibility_basis: "Rule A — same monorepo; frontend-mobile/ subdirectory (shared React Native/Expo codebase for android+ios)."
+    notes: "Release v1.1.8 published 2026-07-22T02:00:52Z, target main. Asset: omnipizza-release.apk (also a debug androidTest apk). Pinned commit is the tagged release commit, not raw default-branch HEAD, because the mobile surface is evaluated as a built artifact."
+  - sut_id: SUT-01
+    component_id: SUT-01-ios
+    repository_url: https://github.com/gsanchezm/OmniPizza
+    repository_owner: gsanchezm
+    pinned_commit_sha: 3cdbe6596a1ab5ef2058ba4259c44da96a0fa03a
+    default_branch: main
+    pin_timestamp: "2026-09-16T23:20:44Z"
+    release_or_tag: v1.1.8
+    provenance_status: PINNED_RELEASE
+    eligibility_basis: "Rule A — same monorepo; frontend-mobile/ subdirectory (shared codebase for android+ios)."
+    notes: "Release v1.1.8 published 2026-07-22T02:00:52Z, target main. Asset: OmniPizza-Simulator.zip. Per the repository README, the iOS build targets the simulator SDK only and cannot be installed on a physical device without a distribution certificate — recorded here as a limitation, not evaluated as a finding."
+  - sut_id: SUT-02
+    component_id: SUT-02-web
+    repository_url: https://github.com/saucelabs/sample-app-web
+    repository_owner: saucelabs
+    pinned_commit_sha: 60fdd634bb111c092282fa07977513a0a7765593
+    default_branch: main
+    pin_timestamp: "2026-09-16T23:20:44Z"
+    release_or_tag: null
+    provenance_status: PINNED_SOURCE
+    eligibility_basis: "Rule A (named explicitly) and Rule B — repository description states it is 'the Sauce Labs Sample Application ... designed to be used from desktop web browsers'; homepage is the well-known saucedemo.com."
+    notes: "No GitHub releases exist; not a fork, MIT licensed, not archived."
+  - sut_id: SUT-02
+    component_id: SUT-02-android
+    repository_url: https://github.com/saucelabs/my-demo-app-android
+    repository_owner: saucelabs
+    pinned_commit_sha: 36b012eecdf6a2b488b9504e16b3d0c3ca9a0e7b
+    default_branch: main
+    pin_timestamp: "2026-09-16T23:20:44Z"
+    release_or_tag: "2.2.0"
+    provenance_status: PINNED_RELEASE
+    eligibility_basis: "Rule A (named explicitly) and Rule B — repository README explicitly states 'This app is part of a set of demo apps' and cross-links My Demo App - Android and My Demo App - iOS."
+    notes: "Release 2.2.0 published 2024-11-14T09:36:59Z, target main. Asset: mda-2.2.0-25.apk (also an androidTest apk). Default-branch HEAD (8cf5fac23ca6cedafe7be3c63fad8fe4ee6f5612) is more recent than this release; the release commit was pinned because the mobile surface is evaluated as a built artifact."
+  - sut_id: SUT-02
+    component_id: SUT-02-ios
+    repository_url: https://github.com/saucelabs/my-demo-app-ios
+    repository_owner: saucelabs
+    pinned_commit_sha: 031358f56903742103a02d086f8af76735bb31a7
+    default_branch: main
+    pin_timestamp: "2026-09-16T23:20:44Z"
+    release_or_tag: "2.2.2"
+    provenance_status: PINNED_RELEASE
+    eligibility_basis: "Rule A (named explicitly) and Rule B — repository README explicitly states 'This app is part of a set of demo apps' and cross-links the Android and iOS demo apps."
+    notes: "Release 2.2.2 published 2026-04-17T22:01:10Z, target main. Assets: SauceLabs-Demo-App-Runner.Simulator.XCUITest.zip and SauceLabs-Demo-App-Runner.XCUITest.ipa. Default-branch HEAD (0700a78626fbdc4368a91cc5144cfcf416faa42f) is more recent than this release; the release commit was pinned for the same reason as SUT-02-android."
+  - sut_id: SUT-02
+    component_id: SUT-02-api
+    repository_url: null
+    repository_owner: null
+    pinned_commit_sha: null
+    default_branch: null
+    pin_timestamp: null
+    release_or_tag: null
+    provenance_status: null
+    eligibility_basis: "No component named for this study; not searched for or added (component-eligibility rule forbids adding components merely to increase breadth)."
+    notes: "Presence remains E01's matter to verify, not assumed absent."
+  - sut_id: SUT-03
+    component_id: SUT-03-web
+    repository_url: https://github.com/browserstack/browserstack-demo-app
+    repository_owner: browserstack
+    pinned_commit_sha: 7ab934d733f2f74d4b912e94e86f59ae0f6b7609
+    default_branch: master
+    pin_timestamp: "2026-09-16T23:20:44Z"
+    release_or_tag: null
+    provenance_status: PINNED_SOURCE
+    eligibility_basis: "Rule A (named explicitly as the sole selected repository) and Rule C — repository description: 'A shopping application to demonstrate real-world usage of BrowserStack testing methods, patterns, and workflows.'"
+    notes: "Next.js application (pages/, next.config.js); no GitHub releases; not a fork, not archived. Scope deliberately not expanded: BrowserStack's other public sample, SDK-example, and App-Automate demonstration repositories were not searched for or added (component-eligibility rule, task instruction 2026-09-16)."
+  - sut_id: SUT-03
+    component_id: SUT-03-api
+    repository_url: null
+    repository_owner: null
+    pinned_commit_sha: null
+    default_branch: null
+    pin_timestamp: null
+    release_or_tag: null
+    provenance_status: null
+    eligibility_basis: "No component named for this study."
+    notes: "Presence remains E01's matter to verify, not assumed absent."
+  - sut_id: SUT-03
+    component_id: SUT-03-android
+    repository_url: null
+    repository_owner: null
+    pinned_commit_sha: null
+    default_branch: null
+    pin_timestamp: null
+    release_or_tag: null
+    provenance_status: null
+    eligibility_basis: "No component named for this study."
+    notes: "Presence remains E01's matter to verify, not assumed absent."
+  - sut_id: SUT-03
+    component_id: SUT-03-ios
+    repository_url: null
+    repository_owner: null
+    pinned_commit_sha: null
+    default_branch: null
+    pin_timestamp: null
+    release_or_tag: null
+    provenance_status: null
+    eligibility_basis: "No component named for this study."
+    notes: "Presence remains E01's matter to verify, not assumed absent."
+  - sut_id: SUT-04
+    component_id: SUT-04-web
+    repository_url: https://github.com/mwinteringham/restful-booker-platform
+    repository_owner: mwinteringham
+    pinned_commit_sha: d36bd3f8647a091d406e53bad463c5e3e5d2ece1
+    default_branch: trunk
+    pin_timestamp: "2026-09-16T23:20:44Z"
+    release_or_tag: "2.2"
+    provenance_status: PINNED_SOURCE
+    eligibility_basis: "Rule A (named explicitly, and explicitly not substituted with mwinteringham/restful-booker) and Rule C — verified this is the multi-service 'Platform' repository (auth/, booking/, room/, message/, branding/ subprojects; docker-compose.yml), not the simpler single-service repository."
+    notes: "Release tag 2.2 (published 2026-04-11T16:32:44Z, target trunk, commit 60865403c827cb880187c71d7ad03c951e8d4f2c) carries no downloadable assets — a source/version tag, not a binary release; default-branch HEAD was pinned as the primary source provenance. Hosted at http://www.automationintesting.online — mapping to this exact commit not independently verified."
+  - sut_id: SUT-04
+    component_id: SUT-04-api
+    repository_url: https://github.com/mwinteringham/restful-booker-platform
+    repository_owner: mwinteringham
+    pinned_commit_sha: d36bd3f8647a091d406e53bad463c5e3e5d2ece1
+    default_branch: trunk
+    pin_timestamp: "2026-09-16T23:20:44Z"
+    release_or_tag: "2.2"
+    provenance_status: PINNED_SOURCE
+    eligibility_basis: "Rule A — same monorepo as SUT-04-web."
+    notes: "Same repository and commit as web."
+  - sut_id: SUT-04
+    component_id: SUT-04-android
+    repository_url: null
+    repository_owner: null
+    pinned_commit_sha: null
+    default_branch: null
+    pin_timestamp: null
+    release_or_tag: null
+    provenance_status: null
+    eligibility_basis: "No component named for this study; Restful Booker Platform is a Web/API specialist."
+    notes: "Presence remains E01's matter to verify, not assumed absent."
+  - sut_id: SUT-04
+    component_id: SUT-04-ios
+    repository_url: null
+    repository_owner: null
+    pinned_commit_sha: null
+    default_branch: null
+    pin_timestamp: null
+    release_or_tag: null
+    provenance_status: null
+    eligibility_basis: "No component named for this study; Restful Booker Platform is a Web/API specialist."
+    notes: "Presence remains E01's matter to verify, not assumed absent."
+  - sut_id: SUT-05
+    component_id: SUT-05-web
+    repository_url: https://github.com/juice-shop/juice-shop
+    repository_owner: juice-shop
+    pinned_commit_sha: 1618a611b173b4bf114028e6e02549950606e29d
+    default_branch: master
+    pin_timestamp: "2026-09-16T23:20:44Z"
+    release_or_tag: v20.2.0
+    provenance_status: PINNED_SOURCE
+    eligibility_basis: "Rule A (named explicitly as the authoritative current repository) and Rule C — repository description: 'OWASP Juice Shop: Probably the most modern and sophisticated insecure web application'; homepage owasp-juice.shop."
+    notes: "Release v20.2.0 (published 2026-08-10T21:58:43Z, target master, commit c4e9b29ed0f9e4bbae3787aa2ca84267d57e5016) ships real prebuilt archives per platform/Node version (for example juice-shop-20.2.0_node22_linux_x64.tgz); default-branch HEAD was pinned as the primary source provenance, the release recorded as a PINNED_RELEASE-eligible alternative. Hosted at https://owasp-juice.shop — mapping to this exact commit not independently verified. No older repository alias was encountered during this resolution; juice-shop/juice-shop is used directly per instruction."
+  - sut_id: SUT-05
+    component_id: SUT-05-api
+    repository_url: https://github.com/juice-shop/juice-shop
+    repository_owner: juice-shop
+    pinned_commit_sha: 1618a611b173b4bf114028e6e02549950606e29d
+    default_branch: master
+    pin_timestamp: "2026-09-16T23:20:44Z"
+    release_or_tag: v20.2.0
+    provenance_status: PINNED_SOURCE
+    eligibility_basis: "Rule A — same repository as SUT-05-web (single Node.js application)."
+    notes: "Same repository and commit as web."
+  - sut_id: SUT-05
+    component_id: SUT-05-android
+    repository_url: null
+    repository_owner: null
+    pinned_commit_sha: null
+    default_branch: null
+    pin_timestamp: null
+    release_or_tag: null
+    provenance_status: null
+    eligibility_basis: "No component named for this study; OWASP Juice Shop is a security specialist."
+    notes: "Presence remains E01's matter to verify, not assumed absent."
+  - sut_id: SUT-05
+    component_id: SUT-05-ios
+    repository_url: null
+    repository_owner: null
+    pinned_commit_sha: null
+    default_branch: null
+    pin_timestamp: null
+    release_or_tag: null
+    provenance_status: null
+    eligibility_basis: "No component named for this study; OWASP Juice Shop is a security specialist."
+    notes: "Presence remains E01's matter to verify, not assumed absent."
+  - sut_id: SUT-06
+    component_id: SUT-06-android
+    repository_url: https://github.com/webdriverio/native-demo-app
+    repository_owner: webdriverio
+    pinned_commit_sha: 470b89ec09afac8b28d32cb8ea953071fb7e138a
+    default_branch: main
+    pin_timestamp: "2026-09-16T23:20:44Z"
+    release_or_tag: v2.2.0
+    provenance_status: PINNED_RELEASE
+    eligibility_basis: "Rule A (named explicitly) and Rule C — repository description: 'Guinea pig app for showcasing test automation with WebdriverIO and Appium'; official webdriverio-org repository."
+    notes: "Release v2.2.0 published 2026-03-23T07:28:07Z, target main. Asset: android.wdio.native.app.v2.2.0.apk. Default-branch HEAD (cbb9346faa5f025594408131831e908c4ee3fd2e) is more recent; the release commit was pinned because the mobile surface is evaluated as a built artifact, per the frozen version-pinning rule (do not select an older release merely because it is easier to automate)."
+  - sut_id: SUT-06
+    component_id: SUT-06-ios
+    repository_url: https://github.com/webdriverio/native-demo-app
+    repository_owner: webdriverio
+    pinned_commit_sha: 470b89ec09afac8b28d32cb8ea953071fb7e138a
+    default_branch: main
+    pin_timestamp: "2026-09-16T23:20:44Z"
+    release_or_tag: v2.2.0
+    provenance_status: PINNED_RELEASE
+    eligibility_basis: "Rule A — same repository and release as SUT-06-android."
+    notes: "Release v2.2.0 published 2026-03-23T07:28:07Z, target main. Asset: ios.simulator.wdio.native.app.v2.2.0.zip."
+  - sut_id: SUT-06
+    component_id: SUT-06-web
+    repository_url: null
+    repository_owner: null
+    pinned_commit_sha: null
+    default_branch: null
+    pin_timestamp: null
+    release_or_tag: null
+    provenance_status: null
+    eligibility_basis: "No component named for this study; WebdriverIO Native Demo App is a mobile specialist."
+    notes: "Presence remains E01's matter to verify, not assumed absent."
+  - sut_id: SUT-06
+    component_id: SUT-06-api
+    repository_url: null
+    repository_owner: null
+    pinned_commit_sha: null
+    default_branch: null
+    pin_timestamp: null
+    release_or_tag: null
+    provenance_status: null
+    eligibility_basis: "No component named for this study; WebdriverIO Native Demo App is a mobile specialist."
+    notes: "Presence remains E01's matter to verify, not assumed absent."
+component_eligibility_unresolved: []
+scope_drift_check:
+  seventh_sut_added: false
+  any_selected_sut_removed: false
+  sauce_labs_remains_one_ecosystem: true
+  restful_booker_substituted_with_simpler_repo: false
+  browserstack_expanded_with_extra_vendor_repos: false
+  juice_shop_uses_authoritative_current_repo: true
+  webdriverio_native_demo_remains_one_ecosystem: true
+  commercial_cloud_features_attributed_to_sut: false
+  capability_finding_inferred_while_pinning: false
+notes: |
+  No capability score, evidence record, or audit finding was produced while resolving this provenance.
+  All commit SHAs, tags, release names, publish dates, and asset names above were fetched from GitHub
+  (git ls-remote, gh api, gh release view) during this task; none were invented or guessed. No repository
+  was cloned in full and no release binary was downloaded; only ref/tag/release metadata was queried.

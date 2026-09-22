@@ -1,0 +1,43 @@
+# manifests/e01-prompt-freeze.yaml
+# Prompt provenance record for the frozen E01 capability-auditor prompt, EUS-2026-001.
+# This is a provenance record, not a protocol document: it records that the prompt was frozen, when, from
+# what working copy, and with what checksum. The prompt's own content is authoritative in prompts/frozen/;
+# this file only certifies it. Editable by ORCHESTRATOR only (protocol/agent-governance-v1.md).
+study_id: EUS-2026-001
+prompt_id: E01-CAPABILITY-AUDITOR-V1
+prompt_path: prompts/frozen/e01-capability-auditor-v1.md
+working_source_path: prompts/working/e01-capability-auditor-v1.md
+sha256: b504b5f720a6fe8b2a7255b3fe0509d8d18a244fb8114b485c9a2e4fbfe6c358
+byte_length: 17057
+byte_equivalence_verified: true  # `diff` and `shasum -a 256` both confirm prompts/working/ and prompts/frozen/ are byte-identical at freeze time
+freeze_timestamp: "2026-09-17T00:26:49Z"
+freeze_approved_by: gilbertosanchez
+orchestration_commit_parent: b5d907ebb1e7532bea4c061a50915db8df029e3c  # HEAD immediately before this prompt-freeze commit
+protocol_freeze_commit: 38b82fda8282e2e068a27a45eef458f0e085def8
+protocol_freeze_tag: eus-2026-001-protocol-v1-pre-data
+status: FROZEN
+review_summary: |
+  Reviewed against protocol/capability-rubric-v1.md, protocol/evidence-rules-v1.md,
+  protocol/cross-cutting-properties-v1.md, protocol/equivalent-scenario-mapping-v1.md,
+  protocol/change-control-v1.md, and protocol/agent-governance-v1.md before freezing. The working prompt
+  was substantially expanded during this review to close gaps against the human-directed review checklist:
+  added an explicit evidence-collection order (DOCUMENTED -> SOURCE_VERIFIED -> identify unresolved claims
+  -> lightweight, authorized execution verification only); an "Execution verification safety" section with
+  allowed/not-allowed action lists and the E11 (security)/E08 (performance) scope boundary; a "Source
+  workspace requirements" section (no re-pinning, no pulling to latest, no committing into the SUT, no
+  using another SUT's workspace, no adding extra vendor repositories, multi-repository ecosystems such as
+  Sauce Labs treated as one ecosystem); explicit prohibitions on computing a global Experimental Utility
+  Score, declaring an overall winner, or penalizing a specialist SUT's narrow breadth; an expanded output
+  boundary naming all five required files plus the `main`-branch prohibition; an expanded "Required audit
+  output" section (limitations.md's specific threat categories; unresolved.md never auto-converts to
+  negative evidence); a full "Final auditor return package" (16-point list); and three additional
+  documented variables ({{AUDIT_BRANCH}}, {{SOURCE_WORKSPACE}}, {{ORCHESTRATION_BASELINE}}). No frozen
+  protocol document was modified; where the prompt cites protocol/change-control-v1.md, it states the
+  frozen protocol always overrides this prompt on conflict. Neutrality review found no biasing language
+  outside prohibition/example contexts, and no H1-H5 hypothesis wording.
+notes: |
+  This is the only frozen copy of E01-CAPABILITY-AUDITOR-V1 at this time. Any future substantive change to
+  auditor methodology creates a new version (E01-CAPABILITY-AUDITOR-V2 or later) with its own freeze record;
+  this file is never edited to describe a different prompt. prompts/working/e01-adjudicator-v1.md is a
+  separate, still-WORKING prompt for a different role (ADJUDICATOR-EU-01) and is explicitly not frozen by
+  this record; it is not copied to prompts/frozen/.

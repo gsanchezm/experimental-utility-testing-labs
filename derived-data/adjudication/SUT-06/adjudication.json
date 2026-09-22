@@ -1,0 +1,61 @@
+{
+  "adjudicator_role": "ADJUDICATOR-EU-01",
+  "ecosystem_id": "SUT-06",
+  "cell_outcomes": [
+    {
+      "modality": "Web UI Functional",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT06-EV-0001", "SUT06-EV-0002"],
+      "note": "Score 0, structural_scope_note NO_WEB_SURFACE. Documentation, package.json/app.json, and the release CI workflow all confirm no web build target; the transitive react-native-web dependency is correctly not credited (local/potential buildability does not count)."
+    },
+    {
+      "modality": "API",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT06-EV-0003", "SUT06-EV-0004"],
+      "note": "Score 0, structural_scope_note NO_API_SURFACE. Full src/ and app/ search found no fetch/axios/HTTP client usage anywhere; the app is fully local/offline."
+    },
+    {
+      "modality": "Android Native",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT06-EV-0005", "SUT06-EV-0006", "SUT06-EV-0007", "SUT06-EV-0008", "SUT06-EV-0009", "SUT06-EV-0010", "SUT06-EV-0011", "SUT06-EV-0012"],
+      "note": "Score 3, confirmation_state CONFIRMED. The Data Management screen (SUT06-EV-0007) is a source-verified, testID-addressable mechanism to save a known value and clear it to a defined placeholder state across four storage tiers -- a direct match to Decision procedure step 3. This resolves the auditor's own flagged concern (unresolved.md, SUT-06-U05: whether reaching the mechanism via a UI tap is merely 'the end-user path'). cross-cutting-properties-v1.md's State Controllability definition ('rather than reaching it only by replaying the end-user path') is explicitly descriptive-only and not scored (every audit in this campaign, section 4, states cross-cutting properties carry no score); it does not gate protocol/capability-rubric-v1.md's own Score 3 criteria, which impose no restriction to a non-UI channel (the rubric's own 'deterministic test account' example is itself ordinarily reached via a normal login UI, accepted without qualification for SUT-01/02/03/04/05's Score 3 determinations in this campaign). The screen's own in-app text additionally names Appium/mobile: clearApp expectations directly and labels the SecureStore control 'Clear (test hook)', supporting that this is a dedicated experimental hook rather than an incidental flow. Treated as CONFIRMED rather than DISPUTED because the interpretive question is resolvable directly from the frozen protocol text and from consistent precedent already established across sibling audits in this campaign, not a case of genuinely competing, unresolvable readings."
+    },
+    {
+      "modality": "iOS Native",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT06-EV-0013", "SUT06-EV-0014", "SUT06-EV-0015", "SUT06-EV-0016", "SUT06-EV-0017", "SUT06-EV-0018", "SUT06-EV-0019", "SUT06-EV-0020"],
+      "note": "Score 3, confirmation_state CONFIRMED. Same non-platform-branched Data Management mechanism (SUT06-EV-0015) and the same resolution of SUT-06-U05 as Android Native, above."
+    },
+    {
+      "modality": "Performance",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT06-EV-0021", "SUT06-EV-0022"],
+      "note": "Score 1. No performance-specific instrumentation, budget, or controlled-degradation mechanism documented or present in source; a built app remains technically reachable by a generic profiler, which is Score 1's own definition."
+    },
+    {
+      "modality": "Accessibility — Web only",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT06-EV-0023"],
+      "note": "Score 0, structural_scope_note NO_WEB_SURFACE, correctly derivative of the Web UI Functional absence rather than an independently searched cell; matches protocol/capability-rubric-v1.md's own worked example for a mobile-only ecosystem."
+    },
+    {
+      "modality": "Visual Testing",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT06-EV-0024", "SUT06-EV-0025"],
+      "note": "Score 2. useColorScheme()-driven dark/light styling against a fixed palette (SUT06-EV-0024) is a meaningful, stable, deterministic visual condition (step 2 yes), but the trigger (OS appearance setting) is external to the SUT, and no in-app visual-condition control exists (SUT06-EV-0025), so step 3 is correctly answered no."
+    },
+    {
+      "modality": "Security Testing",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT06-EV-0026", "SUT06-EV-0027"],
+      "note": "Score 1. No documented intentional vulnerability or security-testing purpose exists; the one committed signing keystore is documented as dummy data for a non-Play-Store demo, not a security scenario. A built APK/IPA remains technically reachable by a generic scanner, which is Score 1's own definition."
+    },
+    {
+      "modality": "Localization / i18n",
+      "outcome": "CONFIRMED",
+      "evidence_ids": ["SUT06-EV-0028", "SUT06-EV-0029"],
+      "note": "Score 0. No i18n library dependency and no locale/translation logic anywhere in source (an exhaustive case-insensitive search found only one unrelated false-positive match). Structural_scope_note observation: this cell carries no structural_scope_note, on the reasoning that a complete absence of a locale feature within an existing surface is 'a plain capability absence, not a missing-surface-type reason.' The open rubric-application question (see this record's top-level notes) is whether protocol/capability-rubric-v1.md's OTHER_STRUCTURAL_REASON token is meant to reach a within-surface feature absence like this one, or is reserved for surface-type/documented-scope absences; it does not change this cell's score, which is independently, correctly Score 0 on the evidence either way."
+    }
+  ],
+  "notes": "Data-hygiene / rubric-output-convention observation, same as recorded for SUT-02 (derived-data/adjudication/SUT-02/adjudication.json): this audit leaves confirmed_score blank throughout ('confirmed_score is left blank throughout because it coincides with provisional_score in every row'), which this adjudicator finds the correct, literal application of protocol/capability-rubric-v1.md's Output rule (confirmed_score is recorded as a distinct value only when the tie-break rule caps it below provisional_score), differing only in formatting convention from SUT-01/03/04/05's practice of filling it in explicitly even when equal. No incorrect confirmed_score results from this. Rubric-application question (not a dispute, does not change any score): SUT-06's Localization / i18n cell (Score 0) carries no structural_scope_note, while SUT-04's Localization / i18n cell (Score 0, derived-data/adjudication/SUT-04/adjudication.json) carries OTHER_STRUCTURAL_REASON for what is, on the evidence, the same kind of finding -- a complete absence of any locale-switching feature within a surface that otherwise exists. The corpus otherwise treats comparable plain feature absences (for example SUT-05 Performance/Accessibility/Visual Testing at Score 1, this audit's own Security Testing at Score 1) without any structural_scope_note. This is recorded as a rule-clarification question for the ORCHESTRATOR -- whether OTHER_STRUCTURAL_REASON is meant to reach a within-surface feature absence or is reserved for surface-type/documented-scope absences -- not as a finding that either cell's score is wrong. SUT-06-U01 (android/ios pinned identifier is a tag object, not a raw commit SHA -- the same pattern as SUT-02-U01) is a manifest-provenance question outside this adjudicator's scope and is properly addressed to the ORCHESTRATOR. All nine cells are CONFIRMED; the two Android/iOS Native Score 3 determinations, both explicitly flagged by the auditor for adjudicator review (SUT-06-U05), are resolved in this record with reasoning grounded in the frozen protocol text and in consistent precedent from sibling audits, rather than passed through as DISPUTED."
+}

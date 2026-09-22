@@ -1,0 +1,144 @@
+# E03 Mobile Qualification
+# Study EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems).
+# Authored by ORCHESTRATOR under E03-CI-WRITE-AUTH-01 (AGENT-INSTRUCTIONS.md, "E03 CI/CD infrastructure").
+#
+# PREPARATION ONLY. This workflow is the GitHub Actions-compatible path for the mobile-runner
+# qualification gate of protocol/mobile-runner-policy-v1.md (MQ1, MQ2, MQ3; Android emulator and
+# iOS Simulator; qualification SUT OmniPizza, SUT-01; pass criteria of section 7), required before
+# the two mobile E03 conditions (E03-CS001-SUT02-ANDROID, E03-CS001-SUT02-IOS) may execute.
+# Mobilewright is the primary candidate and Appium 3 the fallback; Appium 2 is never introduced.
+#
+# It fails closed: the gate job requires an explicit human instruction id (relayed by the
+# ORCHESTRATOR, protocol/mobile-runner-policy-v1.md, section 2), the pinned qualification build and
+# runner version in manifests/toolchain-manifest.yaml, and the scenario realization recorded in
+# qualification/mobilewright/README.md. As of its creation (2026-09-22) none of these exists, and the
+# execution job's procedure has not been authored by QUALIFIER-MOBILE-01, so the gate cannot
+# execute. Qualification artifacts are labeled QUALIFICATION and are never measured E03 data.
+name: E03 Mobile Qualification
+
+on:
+  workflow_dispatch:
+    inputs:
+      instruction_id:
+        description: "Id of the explicit human instruction to execute the qualification gate (relayed by the ORCHESTRATOR)"
+        required: true
+        type: string
+      runner_candidate:
+        description: "Runner under qualification"
+        required: true
+        default: Mobilewright
+        type: choice
+        options: [Mobilewright, "Appium 3"]
+      platform:
+        description: "Platform(s) to exercise"
+        required: true
+        default: both
+        type: choice
+        options: [android, ios, both]
+      confirm:
+        description: "Type EXECUTE-QUALIFICATION-GATE to confirm"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e03-mobile-qualification
+  cancel-in-progress: false
+
+env:
+  TZ: UTC
+  RECORD_CLASS: QUALIFICATION
+
+jobs:
+  gate:
+    name: E03 Mobile Qualification Gate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      ready: ${{ steps.gate.outputs.ready }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Verify the qualification prerequisites (fail closed)
+        id: gate
+        run: |
+          set -euo pipefail
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - <<'PY'
+          import os, re, sys, yaml
+          failures = []
+          def gate(name, ok, detail=''):
+              print(('PASS ' if ok else 'FAIL ') + name + (': ' + detail if detail else ''))
+              if not ok: failures.append(name)
+          gate('explicit confirmation', '${{ inputs.confirm }}' == 'EXECUTE-QUALIFICATION-GATE')
+          gate('human instruction id provided', bool('${{ inputs.instruction_id }}'.strip()))
+          gate('runner candidate is Mobilewright or Appium 3 (never Appium 2)', '${{ inputs.runner_candidate }}' in ('Mobilewright', 'Appium 3'))
+          pol = open('protocol/mobile-runner-policy-v1.md').read()
+          gate('mobile-runner policy FROZEN-PRE-DATA', '| Protocol state | FROZEN-PRE-DATA |' in pol)
+          tm = yaml.safe_load(open('manifests/toolchain-manifest.yaml'))['tools']
+          qb = tm['mobile_primary_candidate']['qualification_build']
+          gate('qualification build pinned (repository, commit/release, android and ios build identities, pinned_by, pinned_at)', all(qb.get(k) for k in ('repository', 'commit_sha_or_release', 'android_build_identity', 'ios_build_identity', 'pinned_by', 'pinned_at')))
+          key = 'mobile_primary_candidate' if '${{ inputs.runner_candidate }}' == 'Mobilewright' else 'mobile_fallback'
+          gate('runner version recorded in manifests/toolchain-manifest.yaml', bool(tm[key].get('version')))
+          env_ = yaml.safe_load(open('manifests/toolchain-manifest.yaml')).get('environments', {})
+          gate('emulator and simulator identities recorded', all(env_.get('android_emulator', {}).get(k) for k in ('image', 'api_level', 'device_profile')) and all(env_.get('ios_simulator', {}).get(k) for k in ('runtime', 'device_profile')))
+          rd = open('qualification/mobilewright/README.md').read()
+          real = re.search(r'## Scenario realization.*?\n\n(.*?)\n\n## ', rd, re.S)
+          gate('scenario realization recorded (no null / TBD in the realization table)', real is not None and 'null / TBD' not in real.group(1))
+          gate('instruction to execute recorded in qualification/mobilewright/README.md', '${{ inputs.instruction_id }}' in rd)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f: f.write('ready=' + ('true' if not failures else 'false') + '\n')
+          if failures:
+              print('QUALIFICATION GATE NOT READY (' + str(len(failures)) + '): ' + '; '.join(failures)); sys.exit(1)
+          print('QUALIFICATION GATE READY')
+          PY
+
+  qualification-android:
+    name: E03 Mobile Qualification android
+    needs: gate
+    if: ${{ needs.gate.outputs.ready == 'true' && (inputs.platform == 'android' || inputs.platform == 'both') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Execute the qualification procedure (not yet authored)
+        run: |
+          set -euo pipefail
+          # The concrete MQ1-MQ3 procedure (protocol/mobile-runner-policy-v1.md, sections 4-7) is authored by
+          # QUALIFIER-MOBILE-01 into qualification/mobilewright/ on explicit instruction. Until that
+          # procedure exists at the path below, this job fails closed.
+          test -x qualification/mobilewright/run-gate-android.sh || { echo "qualification/mobilewright/run-gate-android.sh not authored: failing closed"; exit 1; }
+          bash qualification/mobilewright/run-gate-android.sh
+      - name: Upload QUALIFICATION artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-QUALIFICATION-android-${{ inputs.runner_candidate }}-run${{ github.run_id }}-a${{ github.run_attempt }}
+          path: qualification/mobilewright/output
+          retention-days: 90
+          if-no-files-found: warn
+
+  qualification-ios:
+    name: E03 Mobile Qualification ios
+    needs: gate
+    if: ${{ needs.gate.outputs.ready == 'true' && (inputs.platform == 'ios' || inputs.platform == 'both') }}
+    runs-on: macos-15
+    timeout-minutes: 180
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Execute the qualification procedure (not yet authored)
+        run: |
+          set -euo pipefail
+          test -x qualification/mobilewright/run-gate-ios.sh || { echo "qualification/mobilewright/run-gate-ios.sh not authored: failing closed"; exit 1; }
+          bash qualification/mobilewright/run-gate-ios.sh
+      - name: Upload QUALIFICATION artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-QUALIFICATION-ios-${{ inputs.runner_candidate }}-run${{ github.run_id }}-a${{ github.run_attempt }}
+          path: qualification/mobilewright/output
+          retention-days: 90
+          if-no-files-found: warn

@@ -1,0 +1,331 @@
+# manifests/sut-manifest.yaml
+# Registry of the six evaluated testing laboratory ecosystems (SUT = system under test) for EUS-2026-001.
+# Phase: SETUP. Every SUT uses the identical record structure; no SUT is privileged.
+# Component entries are surfaces to verify in E01-capability-audit, not claims of existence.
+# Unknown values are null, never a guess. Editable by ORCHESTRATOR only (protocol/agent-governance-v1.md).
+#
+# Provenance pinned during E01 orchestration preparation (2026-09-16), under explicit human instruction
+# naming each repository (manifests/README.md, "Provenance sequence", step 1; protocol/agent-governance-v1.md,
+# section 3.1). `presence` stays UNCONFIRMED until E01 verifies it; a pinned repository is not capability
+# evidence and does not imply any surface is present, functional, or controllable — that is an E01 finding.
+# provenance_status vocabulary: PINNED_SOURCE (pinned to a source commit on the default branch);
+# PINNED_RELEASE (pinned to the commit underlying a tagged release, used when the ecosystem ships or is
+# evaluated as a built artifact); HOSTED_MAPPING_UNVERIFIED (a public hosted endpoint exists but its exact
+# correspondence to the pinned commit is not independently verified — noted per component below, not a
+# capability finding); COMPONENT_ELIGIBILITY_UNRESOLVED (not used below: every component considered for this
+# manifest satisfied the component-eligibility rule; none remained unresolved).
+manifest_version: v1
+protocol_version: v1
+unit_of_comparison: "testing laboratory ecosystem"
+provenance_policy: >
+  Unknown values are null. No commit SHA, release, repository URL, or deployment
+  endpoint may be entered without recording who verified it and when. Component
+  presence is UNCONFIRMED until the E01 audit verifies it; absence of a listed
+  surface is a finding, not a manifest defect. Every ecosystem lists the same
+  four surfaces (web, api, android, ios) with the identical record structure,
+  so the manifest encodes no prior belief about what any ecosystem has. The
+  provenance sequence (who pins the evaluated version, when, and who verifies
+  presence) is defined in manifests/README.md. Environment is provenance, not
+  utility: whether a controlled instance can be established is recorded per SUT
+  after E01 (controlled_instance_available) and the environment of every run is
+  recorded per run (environment_type); neither enters any capability score.
+suts:
+  SUT-01:
+    ecosystem_name: OmniPizza
+    role: "general-purpose candidate"
+    audit_directory: audits/SUT-01-omnipizza
+    controlled_instance_available: null  # true | false — true only if every surface E01 confirms present can run from the pinned version in a controlled environment (SELF_HOSTED/LOCAL for web, api; EMULATED/SIMULATED for android, ios); verified in E01 or, as here, by separately human-authorized provisioning at or before E03's campaign-configuration lock (protocol/unresolved.md, PROTO-U08 resolution), transcribed by ORCHESTRATOR; experimental-control fact, not a score (protocol/study-design-v1.md section 10.5). Status 2026-09-22: null — not inferred. 2026-09-22 (human-authorized NON-MEASURED PRE-START provisioning): the web and api surfaces run as a verified LOCAL controlled instance (manifests/provisioning/SUT-01/SUT01-PROV-0001.yaml; experiments/E03-resetability/environment-verification/SUT-01-web-api.json), but the E01-confirmed android and ios surfaces were not provisioned (no E03 condition uses them), so the every-confirmed-surface criterion of protocol/study-design-v1.md section 10.5 is not established; per-condition status: experiments/E03-resetability/controlled-instance-status.yaml
+    evaluated_version_frozen: false
+    # the same four surfaces are listed for every SUT and verified in E01; presence is UNCONFIRMED until audited
+    # OmniPizza is one monorepo (gsanchezm/OmniPizza): web = frontend/, api = backend/, android+ios = frontend-mobile/
+    # (one shared cross-platform mobile codebase). Eligibility: named explicitly by human instruction for this
+    # study (manifests/README.md provenance sequence, step 1); repository is not a fork, MIT-licensed, active.
+    components:
+      web:
+        presence: UNCONFIRMED
+        component_id: SUT-01-web
+        repository: https://github.com/gsanchezm/OmniPizza
+        default_branch: main
+        commit_sha: 9ca37674d374e9303912e259641ee86baf3aabe1
+        release: null
+        endpoint: https://omnipizza-frontend.onrender.com
+        provenance_status: PINNED_SOURCE
+        pin_timestamp: "2026-09-16T23:20:44Z"
+        verified_by: ORCHESTRATOR
+        verified_at: "2026-09-16"
+        notes: "Hosted endpoint is a Render deployment; its exact correspondence to the pinned commit is not independently verified (HOSTED_MAPPING_UNVERIFIED caveat) — source pin above is the primary provenance."
+      api:
+        presence: UNCONFIRMED
+        component_id: SUT-01-api
+        repository: https://github.com/gsanchezm/OmniPizza
+        default_branch: main
+        commit_sha: 9ca37674d374e9303912e259641ee86baf3aabe1
+        release: null
+        endpoint: https://omnipizza-backend.onrender.com
+        provenance_status: PINNED_SOURCE
+        pin_timestamp: "2026-09-16T23:20:44Z"
+        verified_by: ORCHESTRATOR
+        verified_at: "2026-09-16"
+        notes: "Hosted endpoint is a Render deployment; its exact correspondence to the pinned commit is not independently verified (HOSTED_MAPPING_UNVERIFIED caveat) — source pin above is the primary provenance."
+      android:
+        presence: UNCONFIRMED
+        component_id: SUT-01-android
+        repository: https://github.com/gsanchezm/OmniPizza
+        default_branch: main
+        commit_sha: 3cdbe6596a1ab5ef2058ba4259c44da96a0fa03a  # commit underlying tag v1.1.8; default-branch HEAD is 9ca37674d374e9303912e259641ee86baf3aabe1
+        release: v1.1.8
+        endpoint: null
+        provenance_status: PINNED_RELEASE
+        pin_timestamp: "2026-09-16T23:20:44Z"
+        verified_by: ORCHESTRATOR
+        verified_at: "2026-09-16"
+        notes: "Release v1.1.8 published 2026-07-22, target main. Android artifact: omnipizza-release.apk (also omnipizza-debug-androidTest.apk). Binary not downloaded during this orchestration task."
+      ios:
+        presence: UNCONFIRMED
+        component_id: SUT-01-ios
+        repository: https://github.com/gsanchezm/OmniPizza
+        default_branch: main
+        commit_sha: 3cdbe6596a1ab5ef2058ba4259c44da96a0fa03a  # commit underlying tag v1.1.8; default-branch HEAD is 9ca37674d374e9303912e259641ee86baf3aabe1
+        release: v1.1.8
+        endpoint: null
+        provenance_status: PINNED_RELEASE
+        pin_timestamp: "2026-09-16T23:20:44Z"
+        verified_by: ORCHESTRATOR
+        verified_at: "2026-09-16"
+        notes: "Release v1.1.8 published 2026-07-22, target main. iOS artifact: OmniPizza-Simulator.zip (simulator build only, per repository README; cannot install on a physical device). Binary not downloaded during this orchestration task."
+    notes: "One repository (monorepo) supplies all four surfaces. Do not treat pinning as evidence of any surface's presence, functionality, or capability; that is E01's finding."
+  SUT-02:
+    ecosystem_name: "Sauce Labs Demo Ecosystem"
+    # may span separate Web, Android, and iOS repositories/artifacts; treated as ONE ecosystem
+    role: "general-purpose baseline"
+    audit_directory: audits/SUT-02-saucelabs
+    controlled_instance_available: null  # true | false — true only if every surface E01 confirms present can run from the pinned version in a controlled environment (SELF_HOSTED/LOCAL for web, api; EMULATED/SIMULATED for android, ios); verified in E01 or, as here, by separately human-authorized provisioning at or before E03's campaign-configuration lock (protocol/unresolved.md, PROTO-U08 resolution), transcribed by ORCHESTRATOR; experimental-control fact, not a score (protocol/study-design-v1.md section 10.5). Status 2026-09-22: null — not inferred. 2026-09-22: web (LOCAL) and android (EMULATED) verified as controlled instances (SUT02-PROV-0001, SUT02-PROV-0002); ios (SIMULATED) provisioning attempted but NOT verified on the operator workstation (SUT02-PROV-0003, host simulator service unresponsive), so the every-confirmed-surface criterion (section 10.5) is not yet established; per-condition status: experiments/E03-resetability/controlled-instance-status.yaml
+    evaluated_version_frozen: false
+    # the same four surfaces are listed for every SUT and verified in E01; presence is UNCONFIRMED until audited
+    # Three official saucelabs-org repositories, explicitly cross-referenced in each other's README as
+    # "part of a set of demo apps" (component-eligibility rule B); treated as one ecosystem per protocol/study-design-v1.md.
+    components:
+      web:
+        presence: UNCONFIRMED
+        component_id: SUT-02-web
+        repository: https://github.com/saucelabs/sample-app-web
+        default_branch: main
+        commit_sha: 60fdd634bb111c092282fa07977513a0a7765593
+        release: null
+        endpoint: https://www.saucedemo.com/
+        provenance_status: PINNED_SOURCE
+        pin_timestamp: "2026-09-16T23:20:44Z"
+        verified_by: ORCHESTRATOR
+        verified_at: "2026-09-16"
+        notes: "No GitHub releases exist for this repository; endpoint is the repository's documented homepage (saucedemo.com), mapping to the pinned commit not independently verified (HOSTED_MAPPING_UNVERIFIED caveat)."
+      api: &sut02_no_component
+        presence: UNCONFIRMED
+        component_id: SUT-02-api
+        repository: null
+        default_branch: null
+        commit_sha: null
+        release: null
+        endpoint: null
+        provenance_status: null
+        pin_timestamp: null
+        verified_by: null
+        verified_at: null
+        notes: "No official Sauce Labs demo API component was named for this study; presence is E01's matter to verify, not assumed absent."
+      android:
+        presence: UNCONFIRMED
+        component_id: SUT-02-android
+        repository: https://github.com/saucelabs/my-demo-app-android
+        default_branch: main
+        commit_sha: 36b012eecdf6a2b488b9504e16b3d0c3ca9a0e7b  # commit underlying tag 2.2.0; default-branch HEAD is 8cf5fac23ca6cedafe7be3c63fad8fe4ee6f5612
+        release: "2.2.0"
+        endpoint: null
+        provenance_status: PINNED_RELEASE
+        pin_timestamp: "2026-09-16T23:20:44Z"
+        verified_by: ORCHESTRATOR
+        verified_at: "2026-09-16"
+        notes: "Release 2.2.0 published 2024-11-14, target main. Artifact: mda-2.2.0-25.apk. Binary not downloaded during this orchestration task."
+      ios:
+        presence: UNCONFIRMED
+        component_id: SUT-02-ios
+        repository: https://github.com/saucelabs/my-demo-app-ios
+        default_branch: main
+        commit_sha: 031358f56903742103a02d086f8af76735bb31a7  # commit underlying tag 2.2.2; default-branch HEAD is 0700a78626fbdc4368a91cc5144cfcf416faa42f
+        release: "2.2.2"
+        endpoint: null
+        provenance_status: PINNED_RELEASE
+        pin_timestamp: "2026-09-16T23:20:44Z"
+        verified_by: ORCHESTRATOR
+        verified_at: "2026-09-16"
+        notes: "Release 2.2.2 published 2026-04-17, target main. Artifacts: SauceLabs-Demo-App-Runner.Simulator.XCUITest.zip and .../.XCUITest.ipa. Binary not downloaded during this orchestration task."
+    notes: "Three repositories, one ecosystem (AGENT-INSTRUCTIONS.md rules 10/16; protocol/study-design-v1.md, section 2). No official Sauce Labs demo API repository was identified or authorized for this study; api presence remains UNCONFIRMED and unpinned, not assumed absent."
+  SUT-03:
+    ecosystem_name: "BrowserStack Demo Ecosystem"
+    role: "general-purpose / Web / API baseline"
+    audit_directory: audits/SUT-03-browserstack
+    controlled_instance_available: true  # true | false — true only if every surface E01 confirms present can run from the pinned version in a controlled environment (SELF_HOSTED/LOCAL for web, api; EMULATED/SIMULATED for android, ios); verified in E01 or, as here, by separately human-authorized provisioning at or before E03's campaign-configuration lock (protocol/unresolved.md, PROTO-U08 resolution), transcribed by ORCHESTRATOR; experimental-control fact, not a score (protocol/study-design-v1.md section 10.5). Status 2026-09-22: true — verified 2026-09-22 by execution on the operator workstation (LOCAL), transcribed by ORCHESTRATOR: every E01-confirmed-present surface (web, api; both served by the single pinned Next.js process) runs from the pinned commit in a controlled environment (manifests/provisioning/SUT-03/SUT03-PROV-0001.yaml; experiments/E03-resetability/environment-verification/SUT-03-web.json). Experimental-control fact, not a score (protocol/study-design-v1.md section 10.5); the per-condition decision remains experiments/E03-resetability/controlled-instance-status.yaml
+    evaluated_version_frozen: false
+    # the same four surfaces are listed for every SUT and verified in E01; presence is UNCONFIRMED until audited
+    # Single official browserstack-org repository, scope deliberately not expanded to other BrowserStack sample,
+    # SDK, or App-Automate example repositories per the component-eligibility rule (task instruction, 2026-09-16).
+    components:
+      web:
+        presence: UNCONFIRMED
+        component_id: SUT-03-web
+        repository: https://github.com/browserstack/browserstack-demo-app
+        default_branch: master
+        commit_sha: 7ab934d733f2f74d4b912e94e86f59ae0f6b7609
+        release: null
+        endpoint: null
+        provenance_status: PINNED_SOURCE
+        pin_timestamp: "2026-09-16T23:20:44Z"
+        verified_by: ORCHESTRATOR
+        verified_at: "2026-09-16"
+        notes: "Next.js application (pages/, next.config.js); no GitHub releases. No hosted endpoint is documented in the repository; none is recorded here to avoid guessing one."
+      api:
+        <<: *sut02_no_component
+        component_id: SUT-03-api
+        notes: "No separate BrowserStack demo API repository was named for this study; presence is E01's matter to verify, not assumed absent. Not automatically expanded to other BrowserStack repositories (component-eligibility rule)."
+      android:
+        <<: *sut02_no_component
+        component_id: SUT-03-android
+        notes: "No BrowserStack demo mobile repository was named for this study; presence is E01's matter to verify, not assumed absent. Not automatically expanded to other BrowserStack repositories (component-eligibility rule)."
+      ios:
+        <<: *sut02_no_component
+        component_id: SUT-03-ios
+        notes: "No BrowserStack demo mobile repository was named for this study; presence is E01's matter to verify, not assumed absent. Not automatically expanded to other BrowserStack repositories (component-eligibility rule)."
+    notes: "Scope intentionally limited to browserstack-demo-app only (task instruction, 2026-09-16); no vendor sample, SDK-example, or App-Automate demonstration repository was added regardless of BrowserStack ownership."
+  SUT-04:
+    ecosystem_name: "Restful Booker Platform"
+    role: "Web/API specialist baseline"
+    audit_directory: audits/SUT-04-restful-booker
+    controlled_instance_available: true  # true | false — true only if every surface E01 confirms present can run from the pinned version in a controlled environment (SELF_HOSTED/LOCAL for web, api; EMULATED/SIMULATED for android, ios); verified in E01 or, as here, by separately human-authorized provisioning at or before E03's campaign-configuration lock (protocol/unresolved.md, PROTO-U08 resolution), transcribed by ORCHESTRATOR; experimental-control fact, not a score (protocol/study-design-v1.md section 10.5). Status 2026-09-22: true — verified 2026-09-22 by execution on the operator workstation (LOCAL), transcribed by ORCHESTRATOR: every E01-confirmed-present surface (web, api) runs from the pinned commit in a controlled environment (manifests/provisioning/SUT-04/SUT04-PROV-0001.yaml; experiments/E03-resetability/environment-verification/SUT-04-web-api.json). Experimental-control fact, not a score (section 10.5); per-condition decision: experiments/E03-resetability/controlled-instance-status.yaml
+    evaluated_version_frozen: false
+    # the same four surfaces are listed for every SUT and verified in E01; presence is UNCONFIRMED until audited
+    # mwinteringham/restful-booker-platform (the multi-service "Platform", not the simpler mwinteringham/restful-booker)
+    # is a single monorepo of Java services (auth/, booking/, room/, message/, branding/) run via docker-compose;
+    # supplies both web and api surfaces from one repository.
+    components:
+      web:
+        presence: UNCONFIRMED
+        component_id: SUT-04-web
+        repository: https://github.com/mwinteringham/restful-booker-platform
+        default_branch: trunk
+        commit_sha: d36bd3f8647a091d406e53bad463c5e3e5d2ece1
+        release: "2.2"
+        endpoint: http://www.automationintesting.online
+        provenance_status: PINNED_SOURCE
+        pin_timestamp: "2026-09-16T23:20:44Z"
+        verified_by: ORCHESTRATOR
+        verified_at: "2026-09-16"
+        notes: "Release tag 2.2 (published 2026-04-11, target trunk) carries no downloadable assets — it is a source/version tag, not a binary release; source pin above (default-branch HEAD) is the primary provenance. Hosted endpoint's exact correspondence to the pinned commit is not independently verified (HOSTED_MAPPING_UNVERIFIED caveat)."
+      api:
+        presence: UNCONFIRMED
+        component_id: SUT-04-api
+        repository: https://github.com/mwinteringham/restful-booker-platform
+        default_branch: trunk
+        commit_sha: d36bd3f8647a091d406e53bad463c5e3e5d2ece1
+        release: "2.2"
+        endpoint: null
+        provenance_status: PINNED_SOURCE
+        pin_timestamp: "2026-09-16T23:20:44Z"
+        verified_by: ORCHESTRATOR
+        verified_at: "2026-09-16"
+        notes: "Same monorepo and commit as web. Release tag 2.2 carries no downloadable assets; source pin is the primary provenance."
+      android:
+        <<: *sut02_no_component
+        component_id: SUT-04-android
+        notes: "Restful Booker Platform is a Web/API specialist; no mobile component is named for this study. Presence remains E01's matter, not assumed absent (a structurally absent surface is Score 0 with a structural_scope_note, protocol/capability-rubric-v1.md, not an N/A here)."
+      ios:
+        <<: *sut02_no_component
+        component_id: SUT-04-ios
+        notes: "Restful Booker Platform is a Web/API specialist; no mobile component is named for this study. Presence remains E01's matter, not assumed absent (a structurally absent surface is Score 0 with a structural_scope_note, protocol/capability-rubric-v1.md, not an N/A here)."
+    notes: "Selected repository is restful-booker-platform (the SaaS/multi-service Platform), explicitly not substituted with the simpler mwinteringham/restful-booker per task instruction, 2026-09-16."
+  SUT-05:
+    ecosystem_name: "OWASP Juice Shop"
+    role: "security specialist baseline"
+    audit_directory: audits/SUT-05-juice-shop
+    controlled_instance_available: true  # true | false — true only if every surface E01 confirms present can run from the pinned version in a controlled environment (SELF_HOSTED/LOCAL for web, api; EMULATED/SIMULATED for android, ios); verified in E01 or, as here, by separately human-authorized provisioning at or before E03's campaign-configuration lock (protocol/unresolved.md, PROTO-U08 resolution), transcribed by ORCHESTRATOR; experimental-control fact, not a score (protocol/study-design-v1.md section 10.5). Status 2026-09-22: true — verified 2026-09-22 by execution on the operator workstation (LOCAL), transcribed by ORCHESTRATOR: every E01-confirmed-present surface (web, api; both served by the single pinned Node.js process) runs from the pinned commit in a controlled environment (manifests/provisioning/SUT-05/SUT05-PROV-0001.yaml; experiments/E03-resetability/environment-verification/SUT-05-api.json). Experimental-control fact, not a score (section 10.5); per-condition decision: experiments/E03-resetability/controlled-instance-status.yaml
+    evaluated_version_frozen: false
+    # the same four surfaces are listed for every SUT and verified in E01; presence is UNCONFIRMED until audited
+    # juice-shop/juice-shop is the authoritative current repository (the project moved from its original
+    # personal-account location to the juice-shop GitHub organization); single Node.js app supplies web and api.
+    components:
+      web:
+        presence: UNCONFIRMED
+        component_id: SUT-05-web
+        repository: https://github.com/juice-shop/juice-shop
+        default_branch: master
+        commit_sha: 1618a611b173b4bf114028e6e02549950606e29d
+        release: v20.2.0
+        endpoint: https://owasp-juice.shop
+        provenance_status: PINNED_SOURCE
+        pin_timestamp: "2026-09-16T23:20:44Z"
+        verified_by: ORCHESTRATOR
+        verified_at: "2026-09-16"
+        notes: "Release v20.2.0 (published 2026-08-10, target master, commit c4e9b29ed0f9e4bbae3787aa2ca84267d57e5016) ships real prebuilt archives per platform/Node version (for example juice-shop-20.2.0_node22_linux_x64.tgz); source pin above (default-branch HEAD) is the primary provenance, release noted as a PINNED_RELEASE-eligible alternative. Hosted endpoint's exact correspondence to the pinned commit is not independently verified (HOSTED_MAPPING_UNVERIFIED caveat)."
+      api:
+        presence: UNCONFIRMED
+        component_id: SUT-05-api
+        repository: https://github.com/juice-shop/juice-shop
+        default_branch: master
+        commit_sha: 1618a611b173b4bf114028e6e02549950606e29d
+        release: v20.2.0
+        endpoint: null
+        provenance_status: PINNED_SOURCE
+        pin_timestamp: "2026-09-16T23:20:44Z"
+        verified_by: ORCHESTRATOR
+        verified_at: "2026-09-16"
+        notes: "Same repository and commit as web (single Node.js application)."
+      android:
+        <<: *sut02_no_component
+        component_id: SUT-05-android
+        notes: "OWASP Juice Shop is a security specialist with no mobile component named for this study. Presence remains E01's matter, not assumed absent."
+      ios:
+        <<: *sut02_no_component
+        component_id: SUT-05-ios
+        notes: "OWASP Juice Shop is a security specialist with no mobile component named for this study. Presence remains E01's matter, not assumed absent."
+    notes: "Authoritative current repository is juice-shop/juice-shop; SUT identity (OWASP Juice Shop) is unchanged regardless of the repository's organizational history."
+  SUT-06:
+    ecosystem_name: "WebdriverIO Native Demo App"
+    role: "mobile specialist baseline"
+    audit_directory: audits/SUT-06-webdriverio
+    controlled_instance_available: null  # true | false — true only if every surface E01 confirms present can run from the pinned version in a controlled environment (SELF_HOSTED/LOCAL for web, api; EMULATED/SIMULATED for android, ios); verified in E01 or, as here, by separately human-authorized provisioning at or before E03's campaign-configuration lock (protocol/unresolved.md, PROTO-U08 resolution), transcribed by ORCHESTRATOR; experimental-control fact, not a score (protocol/study-design-v1.md section 10.5). Status 2026-09-22: null — not inferred; not provisioned on 2026-09-22 (no E03 condition in the current configuration: NOT_COMPARABLE on CS-001; SUT-06 remains in the population)
+    evaluated_version_frozen: false
+    # the same four surfaces are listed for every SUT and verified in E01; presence is UNCONFIRMED until audited
+    # webdriverio/native-demo-app is one repository supplying both android and ios builds from the same release.
+    components:
+      web:
+        <<: *sut02_no_component
+        component_id: SUT-06-web
+        notes: "WebdriverIO Native Demo App is a mobile specialist with no web component named for this study. Presence remains E01's matter, not assumed absent."
+      api:
+        <<: *sut02_no_component
+        component_id: SUT-06-api
+        notes: "WebdriverIO Native Demo App is a mobile specialist with no separate api component named for this study. Presence remains E01's matter, not assumed absent."
+      android:
+        presence: UNCONFIRMED
+        component_id: SUT-06-android
+        repository: https://github.com/webdriverio/native-demo-app
+        default_branch: main
+        commit_sha: 470b89ec09afac8b28d32cb8ea953071fb7e138a  # commit underlying tag v2.2.0; default-branch HEAD is cbb9346faa5f025594408131831e908c4ee3fd2e
+        release: v2.2.0
+        endpoint: null
+        provenance_status: PINNED_RELEASE
+        pin_timestamp: "2026-09-16T23:20:44Z"
+        verified_by: ORCHESTRATOR
+        verified_at: "2026-09-16"
+        notes: "Release v2.2.0 published 2026-03-23, target main. Artifact: android.wdio.native.app.v2.2.0.apk. Binary not downloaded during this orchestration task."
+      ios:
+        presence: UNCONFIRMED
+        component_id: SUT-06-ios
+        repository: https://github.com/webdriverio/native-demo-app
+        default_branch: main
+        commit_sha: 470b89ec09afac8b28d32cb8ea953071fb7e138a  # commit underlying tag v2.2.0; default-branch HEAD is cbb9346faa5f025594408131831e908c4ee3fd2e
+        release: v2.2.0
+        endpoint: null
+        provenance_status: PINNED_RELEASE
+        pin_timestamp: "2026-09-16T23:20:44Z"
+        verified_by: ORCHESTRATOR
+        verified_at: "2026-09-16"
+        notes: "Release v2.2.0 published 2026-03-23, target main. Artifact: ios.simulator.wdio.native.app.v2.2.0.zip. Binary not downloaded during this orchestration task."
+    notes: "One repository supplies both mobile surfaces from the same release. No web or api component was named for this study; presence remains E01's matter, not assumed absent (structurally absent surfaces are Score 0 with a structural_scope_note, protocol/capability-rubric-v1.md, never N/A)."

@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eus-2026-001:schemas:adjudication:v1",
+  "title": "E01 Adjudication Output Record",
+  "description": "Validates one ADJUDICATOR-EU-01 output record, one per audited ecosystem (system under test, SUT), written to derived-data/adjudication/<SUT>/adjudication.json (manifests/e01-adjudication-output-contract-v1.yaml; protocol/unresolved.md, PROTO-U01). For every examined modality cell, records whether it is CONFIRMED, DISPUTED, or UNSUPPORTED (protocol/agent-governance-v1.md, section 3.3), referenced by evidence_id only -- never by CSV row or line number (protocol/evidence-rules-v1.md). Introduces no new scoring concept, evidence status, or outcome category beyond those already required by section 3.3; does not alter provisional_score or confirmed_score semantics, the capability rubric, or the tie-break rule. Distinct from, and does not modify, the adjudication object in schemas/sut-audit.schema.json, which remains unchanged.",
+  "type": "object",
+  "properties": {
+    "adjudicator_role": {
+      "type": "string",
+      "description": "Agent role that produced this record, from protocol/agent-governance-v1.md.",
+      "enum": [
+        "ADJUDICATOR-EU-01"
+      ]
+    },
+    "ecosystem_id": {
+      "type": "string",
+      "description": "Identifier of the audited ecosystem (system under test) this record adjudicates.",
+      "enum": [
+        "SUT-01",
+        "SUT-02",
+        "SUT-03",
+        "SUT-04",
+        "SUT-05",
+        "SUT-06"
+      ]
+    },
+    "cell_outcomes": {
+      "type": "array",
+      "description": "One entry per examined modality cell for this ecosystem (protocol/agent-governance-v1.md, section 3.3).",
+      "items": {
+        "type": "object",
+        "properties": {
+          "modality": {
+            "type": "string",
+            "description": "Modality of the examined cell, per protocol/study-design-v1.md.",
+            "enum": [
+              "Web UI Functional",
+              "API",
+              "Android Native",
+              "iOS Native",
+              "Performance",
+              "Accessibility — Web only",
+              "Visual Testing",
+              "Security Testing",
+              "Localization / i18n"
+            ]
+          },
+          "outcome": {
+            "type": "string",
+            "description": "Adjudication outcome for this cell (protocol/agent-governance-v1.md, section 3.3): CONFIRMED when the auditor's confirmed_score is upheld; DISPUTED when flagged for human decision; UNSUPPORTED when the provisional score is not supported by its cited evidence records.",
+            "enum": [
+              "CONFIRMED",
+              "DISPUTED",
+              "UNSUPPORTED"
+            ]
+          },
+          "evidence_ids": {
+            "type": "array",
+            "description": "evidence_id values (protocol/evidence-rules-v1.md) of every evidence record involved in this outcome. CSV row or line numbers are never used.",
+            "items": {
+              "type": "string",
+              "pattern": "^SUT0[1-6]-EV-[0-9]{4}$"
+            },
+            "uniqueItems": true
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Adjudicator's free-text note on this cell. Null if none."
+          }
+        },
+        "required": [
+          "modality",
+          "outcome",
+          "evidence_ids"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Adjudicator's free-text notes for the record as a whole. Null if none."
+    }
+  },
+  "required": [
+    "adjudicator_role",
+    "ecosystem_id",
+    "cell_outcomes"
+  ],
+  "additionalProperties": false
+}

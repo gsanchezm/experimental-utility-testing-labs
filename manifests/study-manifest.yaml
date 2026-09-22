@@ -1,0 +1,209 @@
+# manifests/study-manifest.yaml
+# Study-level manifest for EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems).
+# Phase: SETUP (literal top-level `status` value below, unrenamed since freeze; substantial work has since
+# occurred within it -- see the `campaigns` list and `notes` below). Protocol v1 is FROZEN-PRE-DATA (frozen
+# 2026-09-16 by explicit human decision; see freeze_approved_by/freeze_date below and manifests/protocol-freeze-v1.yaml).
+# data_collection_started is true (became true 2026-09-17 at E01 campaign start; manifests/README.md,
+# "Data-collection gate"); E01 Capability Audit is campaign status FROZEN (manifests/e01-campaign-freeze-v1.yaml).
+# E02-E12 remain NOT_STARTED and no result, score, or ranking exists for any of them.
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v1.md). Unknown values are null, never a guess.
+# Definitions are authoritative in protocol/; this file references them and does not restate them.
+study_id: EUS-2026-001
+study_name: "Experimental Utility of Software-Testing Laboratory Ecosystems"
+protocol_version: v1
+protocol_state: FROZEN-PRE-DATA
+status: SETUP
+created_at: "2026-09-15"
+primary_construct:
+  name: "Experimental Utility"
+  form: "multidimensional profile"
+  aggregate_score_defined: false
+  dimensions:
+    - "Experimental Breadth"
+    - "Experimental Controllability"
+    - "Repeatability and Determinism"
+    - "Cross-platform and Cross-layer Integration"
+    - "Observability and Automation Affordances"
+    - "Setup Effort"
+research_questions:
+  - id: RQ1
+    title: "Experimental Breadth"
+    status: "PROVISIONAL — PRE-DATA-COLLECTION"
+    source: protocol/study-design-v1.md
+  - id: RQ2
+    title: "Controllability, Observability, Automation Affordances, and Setup Effort"
+    status: "PROVISIONAL — PRE-DATA-COLLECTION"
+    source: protocol/study-design-v1.md
+  - id: RQ3
+    title: "Repeatability and Determinism"
+    status: "PROVISIONAL — PRE-DATA-COLLECTION"
+    source: protocol/study-design-v1.md
+  - id: RQ4
+    title: "Cross-platform and Cross-layer Integration"
+    status: "PROVISIONAL — PRE-DATA-COLLECTION"
+    source: protocol/study-design-v1.md
+  - id: RQ5
+    title: "Controlled Non-functional Experimentation"
+    status: "PROVISIONAL — PRE-DATA-COLLECTION"
+    source: protocol/study-design-v1.md
+comparison_classification:
+  confirmatory_pairs: ["SUT-01 vs SUT-02", "SUT-01 vs SUT-03"]  # H1, H2, H4, H5 (pairwise); H3 is a single-ecosystem prediction with no pair; protocol/statistical-analysis-plan-v1.md section 4
+  specialist_comparisons: EXPLORATORY  # unless explicitly pre-registered before the campaign begins
+  global_weighted_score: false
+hypotheses:
+  - id: H1
+    status: "PROVISIONAL — PRE-DATA-COLLECTION"
+    source: protocol/study-design-v1.md
+  - id: H2
+    status: "PROVISIONAL — PRE-DATA-COLLECTION"
+    source: protocol/study-design-v1.md
+  - id: H3
+    status: "PROVISIONAL — PRE-DATA-COLLECTION"
+    source: protocol/study-design-v1.md
+  - id: H4
+    status: "PROVISIONAL — PRE-DATA-COLLECTION"
+    source: protocol/study-design-v1.md
+  - id: H5
+    status: "PROVISIONAL — PRE-DATA-COLLECTION"
+    source: protocol/study-design-v1.md
+modalities:
+  - "Web UI Functional"
+  - "API"
+  - "Android Native"
+  - "iOS Native"
+  - "Performance"
+  - "Accessibility — Web only"
+  - "Visual Testing"
+  - "Security Testing"
+  - "Localization / i18n"
+sut_count: 6
+environment_types: [PUBLIC_HOSTED, SELF_HOSTED, LOCAL, EMULATED, SIMULATED, OTHER]  # protocol/study-design-v1.md section 10
+sut_manifest: manifests/sut-manifest.yaml
+toolchain_manifest: manifests/toolchain-manifest.yaml
+data_collection_started: true  # true from 2026-09-17, E01 campaign start (protocol/change-control-v1.md, section 7; protocol/CHANGELOG.md); see notes below
+protocol_frozen: true
+freeze_approved_by: gilbertosanchez
+freeze_date: "2026-09-16"
+pre_freeze_baseline_commit: b87c67c7df7810b3d5ff770e3ddadfe7cd3eb70a  # last commit before the freeze commit; the freeze commit and tag are the authoritative frozen-state pointer (manifests/protocol-freeze-v1.yaml)
+# campaign status vocabulary: NOT_STARTED -> IN_PROGRESS -> FROZEN
+# (campaign freeze is defined in protocol/change-control-v1.md, section 7)
+campaigns:
+  - id: E01-capability-audit
+    status: FROZEN  # transitioned 2026-09-18T20:01:45Z (protocol/change-control-v1.md, section 7; protocol/CHANGELOG.md; manifests/e01-campaign-freeze-v1.yaml; human authorization E01-FREEZE-AUTH-01)
+  - id: E02-state-establishment
+    status: NOT_STARTED
+  - id: E03-resetability
+    status: NOT_STARTED
+  - id: E04-repeatability
+    status: NOT_STARTED
+  - id: E05-determinism
+    status: NOT_STARTED
+  - id: E06-cross-platform-parity
+    status: NOT_STARTED
+  - id: E07-cross-layer-continuity
+    status: NOT_STARTED
+  - id: E08-performance
+    status: NOT_STARTED
+  - id: E09-accessibility
+    status: NOT_STARTED
+  - id: E10-visual
+    status: NOT_STARTED
+  - id: E11-security
+    status: NOT_STARTED
+  - id: E12-localization-i18n
+    status: NOT_STARTED
+open_issue_register:
+  source: protocol/study-design-v1.md  # section 13; row (xviii)'s own table text is unedited (frozen historical snapshot) -- current status is this block, per AGENT-INSTRUCTIONS.md's "Current phase" precedent
+  resolved: 19  # (xviii) resolved 2026-09-21, manifests/issue-xviii-ruling-v1.yaml; protocol/setup-effort-v2.md
+  open: 0
+  deferred_before_campaign: 1  # (xix) E04/E05 only, as of 2026-09-21
+notes: |
+  Repository initialized 2026-09-15.
+  Pre-freeze protocol hardening iteration instructed 2026-09-15 and completed 2026-09-16; protocol state remained DRAFT.
+  Second pre-freeze hardening iteration, resolving issues (x), (xi), (xx) by explicit human decision,
+  instructed and completed 2026-09-16; protocol state remained DRAFT.
+  Final pre-freeze checklist closure, resolving the remaining step-3 freeze-checklist items (tie-break rule,
+  Setup Effort Duration boundaries, provisioning record location, equivalent-scenario controlled vocabulary,
+  bootstrap and paired effect-size policy, JSON Schema validator, establishment/reset mechanism vocabulary)
+  by explicit human decision, instructed and completed 2026-09-16; protocol state remained DRAFT; no new
+  Open-Issue Register row was surfaced.
+  Protocol v1 pre-data freeze, by explicit human decision, instructed and completed 2026-09-16:
+  every protocol v1 document transitioned DRAFT -> FROZEN-PRE-DATA (protocol/change-control-v1.md, section 6);
+  the stale "candidate — to be frozen" heading in protocol/repeatability-determinism-v1.md, section 5, was
+  renamed to "Execution Rules — v1" immediately beforehand (non-substantive: no rule's substance changed).
+  Recorded in protocol/CHANGELOG.md and manifests/protocol-freeze-v1.yaml.
+  No audit performed. No score assigned. No experiment executed. No qualification run executed.
+  OmniPizza (SUT-01) is one evaluated SUT and receives no privileged interpretation.
+  Open-Issue Register is RESOLVED 18 / OPEN 0 / DEFERRED-BEFORE-CAMPAIGN 2 ((xviii) E02/E03; (xix) E04/E05);
+  neither deferred issue blocks E01 Capability Audit; each must be resolved and campaign-frozen before its
+  own affected campaigns begin.
+  At protocol freeze (2026-09-16), data_collection_started was false: freezing the protocol authorizes
+  nothing by itself; a human still had to separately authorize the start of data collection (manifests/README.md,
+  "Data-collection gate"). E01 Capability Audit was NOT_STARTED at that point. Mobilewright qualification
+  remains NOT_STARTED; Mobilewright is still the candidate runner and Appium 3 the fallback; neither has been
+  executed and no runner is selected.
+  E01 campaign start, by explicit human approval, instructed and completed 2026-09-17: data_collection_started
+  transitioned false -> true; E01 Capability Audit campaign status transitioned NOT_STARTED -> IN_PROGRESS per
+  the protocol/change-control-v1.md, section 7, campaign-start procedure (Campaign configuration record in
+  experiments/E01-capability-audit/README.md; campaign NOT_STARTED -> IN_PROGRESS row in
+  protocol/CHANGELOG.md). Every campaign-configuration field was derived from already-frozen artifacts
+  (manifests/sut-manifest.yaml, manifests/toolchain-manifest.yaml, prompts/frozen/e01-capability-auditor-v1.md,
+  protocol/study-design-v1.md, protocol/statistical-analysis-plan-v1.md, protocol/equivalent-scenario-mapping-v1.md);
+  no new methodological rule, sample size, exclusion rule, or attribution rule was introduced. This transition
+  is administrative: it locks the campaign configuration and does not, by itself, launch any auditor. No
+  auditor has been instructed to begin; no capability evidence, score, or audit conclusion exists. Mobilewright
+  qualification remains NOT_STARTED; E02-E12 remain NOT_STARTED; deferred issues (xviii) and (xix) remain
+  unresolved and out of scope for E01.
+  E01 campaign freeze, by explicit human authorization (E01-FREEZE-AUTH-01), instructed and completed
+  2026-09-18T20:01:45Z: E01 Capability Audit campaign status transitioned IN_PROGRESS -> FROZEN per
+  protocol/change-control-v1.md, section 7, campaign-freeze procedure. Trigger: every planned E01 run (the
+  per-ecosystem audit; E01's own campaign configuration defines no repeated-execution sample size) has been
+  executed for all six ecosystems across all 54 (ecosystem x modality) cells, followed by pre-adjudication
+  integrity review, independent adjudication, both human rulings (E01-HR-01, E01-HR-02), the PROTO-U06-corrected
+  final adjudicated matrix, and the H1 confirmatory analysis. Full record: manifests/e01-campaign-freeze-v1.yaml;
+  changelog row in protocol/CHANGELOG.md. From this freeze, E01's scientific inputs and results are closed to
+  ordinary modification (protocol/change-control-v1.md, section 7); any further change follows section 5 in
+  full. This freeze does not authorize E02 or any later campaign; none of E02-E12 has a campaign-configuration
+  record yet, and no campaign has been started by this operation. H2-H5 have not been analyzed.
+  2026-09-21: E03-resetability human-selected for PRE-START preparation only (not campaign start). PRE-START
+  draft configuration, draft CS-001 scenario mapping, and DRAFT agent-governance-v2.md (EXECUTOR-E03-RESETABILITY
+  role) prepared; PROTO-U08 raised (controlled_instance_available null for all six SUTs, never verified in E01).
+  A subsequent PRE-START integrity audit found PROTO-U08 DUPLICATE_OR_ALREADY_RESOLVED_CONCERN (resolved by
+  protocol/study-design-v1.md sections 10.3/10.5, not a new defect) and reviewed issue (xviii) without deciding
+  it. The human research lead then ruled on issue (xviii): verification-as-action = A2, partial-success
+  counting = B1 (authorization id ISSUE-XVIII-RULING-01). protocol/setup-effort-v2.md now FROZEN-PRE-DATA;
+  protocol/setup-effort-v1.md AMENDED. PROTO-U08 RESOLVED (protocol/unresolved.md). Full ruling provenance:
+  manifests/issue-xviii-ruling-v1.yaml. E01's FROZEN scientific inputs/results, both human rulings, the
+  adjudicated matrix, and H1 are unchanged throughout. E03-resetability remains status NOT_STARTED; no
+  campaign has been started. H2-H5 remain not analyzed.
+  2026-09-22: E03-resetability PRE-START corrective and operational preparation, by explicit human decisions
+  (no campaign start). CS-002 EXCLUDED_FROM_CAMPAIGN by ruling E03-CS002-EXCLUSION-RULING-01 (its intent was
+  generalized from SUT-06-specific E01 evidence, contrary to protocol/equivalent-scenario-mapping-v1.md
+  section 6); CS-001 is the sole accepted canonical scenario; 9 candidate conditions; SUT-06 remains in the
+  population (manifests/e03-cs002-exclusion-v1.yaml; protocol/unresolved.md PROTO-U09). schemas/run-manifest.schema.v2.json
+  created (additive: optional actions[].outcome, mandatory by E02/E03 campaign convention; v1 preserved;
+  manifests/run-manifest-schema-v2-provenance.yaml). AGENT-INSTRUCTIONS.md amended with the narrow E03-CI-WRITE-AUTH-01
+  carve-out: GitHub Actions selected as the E03 CI/CD orchestrator; .github/workflows/** granted to ORCHESTRATOR
+  only; four workflows created (validation, environment verification, mobile qualification preparation, gated
+  measured execution); every measured execution must use that path. protocol/agent-governance-v2.md revised
+  (explicit executor READ/WRITE boundaries, GitHub Actions permissions); later the same day it was FROZEN
+  (see below).
+  NON-MEASURED PRE-START provisioning and environment verification performed on the operator workstation for
+  the CS-001 conditions: 8 of 9 CONTROLLED, E03-CS001-SUT02-IOS not verified (host simulator service
+  unresponsive); controlled_instance_available transcribed true for SUT-03, SUT-04, SUT-05 from that evidence
+  and left null for SUT-01, SUT-02, SUT-06 (manifests/provisioning/; experiments/E03-resetability/
+  controlled-instance-status.yaml). Public GitHub repository created empty and PUBLIC (PUBLIC-EXPORT-MANIFEST.yaml).
+  E01's FROZEN results, both human rulings, the adjudicated matrix, and H1 are unchanged. E03-resetability
+  remains NOT_STARTED; E03 START not authorized; mobile qualification NOT_STARTED; no executor launched;
+  H2-H5 not analyzed.
+  2026-09-22 (later): protocol/agent-governance-v2.md FROZEN-PRE-DATA at its exact pre-freeze content hash by
+  explicit human approval (AGENT-GOVERNANCE-V2-FREEZE-AUTH-01; manifests/agent-governance-v2-freeze-v1.yaml);
+  protocol/agent-governance-v1.md AMENDED. Publication mode decided by the human research lead:
+  CLEAN_PROVIDER_NEUTRAL_REPRODUCIBILITY_EXPORT — the canonical history is preserved internally and never
+  rewritten; the public repository receives provider-neutral clean snapshot commits built from the canonical
+  trees under documented inclusion/exclusion rules and a transformation manifest (export log in
+  PUBLIC-EXPORT-MANIFEST.yaml). Mobile qualification frozen-input package prepared
+  (manifests/mobile-qualification-package-v1.yaml, READY_FOR_HUMAN_AUTHORIZATION; pins in
+  manifests/toolchain-manifest.yaml) — preparation only, no qualification run. E01 results, both human
+  rulings, the adjudicated matrix, and H1 unchanged. E03-resetability remains NOT_STARTED; E03 START not
+  authorized; no measured execution; no executor launched; H2-H5 not analyzed.

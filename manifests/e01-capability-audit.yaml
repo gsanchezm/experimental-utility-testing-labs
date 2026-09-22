@@ -1,0 +1,124 @@
+# manifests/e01-capability-audit.yaml
+# E01-capability-audit campaign orchestration metadata for EUS-2026-001.
+# Campaign started 2026-09-17 (protocol/change-control-v1.md, section 7; campaign_status below), by explicit
+# human approval and instruction relayed by the ORCHESTRATOR. Starting the campaign (this file's
+# campaign_status/data_collection_started, protocol/CHANGELOG.md, manifests/study-manifest.yaml) is an
+# administrative/protocol-state transition; it does not by itself authorize any auditor to execute
+# (protocol/agent-governance-v1.md, section 2, rule 6; AGENT-INSTRUCTIONS.md, rule 15) — each of the six independent
+# audits still requires its own separate explicit instruction before it begins work under this file.
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v1.md).
+study_id: EUS-2026-001
+experiment_id: E01
+campaign_name: E01-capability-audit
+protocol_version: v1
+protocol_freeze_tag: eus-2026-001-protocol-v1-pre-data
+protocol_freeze_commit: 38b82fda8282e2e068a27a45eef458f0e085def8
+campaign_status: IN_PROGRESS  # transitioned from PREPARED_NOT_STARTED 2026-09-17T05:32:52Z; protocol/change-control-v1.md section 7 campaign-status vocabulary (NOT_STARTED -> IN_PROGRESS -> FROZEN) is the single representation in force -- PREPARED_NOT_STARTED and RUNNING are not used once the campaign is IN_PROGRESS
+prepared_at: "2026-09-16T23:20:44Z"
+prepared_by: ORCHESTRATOR
+started_at: "2026-09-17T05:32:52Z"
+started_by: ORCHESTRATOR
+start_approved_by: gilbertosanchez  # explicit human approval of the protocol-compliant E01 START operation
+data_collection_started: true
+auditor_count: 6
+sut_ids: [SUT-01, SUT-02, SUT-03, SUT-04, SUT-05, SUT-06]
+audit_mode: INDEPENDENT_PARALLEL
+audit_mode_rules:
+  - "Each auditor evaluates exactly one SUT ecosystem (protocol/agent-governance-v1.md, section 3.2)."
+  - "Auditors do not see other SUT audit findings during independent auditing: each auditor may read only its own audits/SUT-XX/** workspace, never another SUT's audits/SUT-YY/** directory."
+  - "All auditors use the same frozen audit prompt; only SUT identity and component provenance differ (see prompt_version and component_manifest_reference below)."
+  - "Adjudication happens only after all six independent audits are complete (protocol/agent-governance-v1.md, section 3.3, ADJUDICATOR-EU-01); no partial or early adjudication."
+prompt_version: E01-CAPABILITY-AUDITOR-V1
+prompt_frozen_path: prompts/frozen/e01-capability-auditor-v1.md
+prompt_sha256: b504b5f720a6fe8b2a7255b3fe0509d8d18a244fb8114b485c9a2e4fbfe6c358
+prompt_freeze_reference: manifests/e01-prompt-freeze.yaml
+prompt_working_path: prompts/working/e01-capability-auditor-v1.md  # retained as the editable source of the frozen copy; the frozen copy is authoritative for any run
+component_manifest_reference: manifests/sut-manifest.yaml
+source_provenance_reference: manifests/e01-source-provenance.yaml
+terminology_reference: "manifests/e01-source-provenance.yaml, `terminology` and `surface_and_artifact_counts` — distinguishes 'logical surface / component role' (24 total, 14 pinned) from 'provenance artifact' (9 distinct pinned repository+commit pairs; some back more than one logical surface)."
+auditor_agents:
+  - agent_role: AUDITOR-SUT01-OMNIPIZZA
+    sut_id: SUT-01
+    audit_directory: audits/SUT-01-omnipizza
+  - agent_role: AUDITOR-SUT02-SAUCELABS
+    sut_id: SUT-02
+    audit_directory: audits/SUT-02-saucelabs
+  - agent_role: AUDITOR-SUT03-BROWSERSTACK
+    sut_id: SUT-03
+    audit_directory: audits/SUT-03-browserstack
+  - agent_role: AUDITOR-SUT04-RESTFULBOOKER
+    sut_id: SUT-04
+    audit_directory: audits/SUT-04-restful-booker
+  - agent_role: AUDITOR-SUT05-JUICESHOP
+    sut_id: SUT-05
+    audit_directory: audits/SUT-05-juice-shop
+  - agent_role: AUDITOR-SUT06-WEBDRIVERIO
+    sut_id: SUT-06
+    audit_directory: audits/SUT-06-webdriverio
+orchestration_baseline_commit: null  # cannot self-reference this commit's own SHA; the six audit branches are resynced to this commit immediately after it is created, and the branch refs (not this field) are the authoritative pointer to the current baseline
+source_workspaces:
+  policy: "Evaluated SUT source code is never vendored into experimental-utility-testing-labs and is never committed here. Any clone made to resolve provenance or to support an auditor's read-only inspection is kept outside this repository."
+  recommended_root: "../e01-sut-sources/"  # sibling to this repository's working directory, not inside it
+  layout: |
+    ../e01-sut-sources/
+      SUT-01-omnipizza/            # gsanchezm/OmniPizza (monorepo: frontend/, backend/, frontend-mobile/)
+      SUT-02-saucelabs/
+        web/                       # saucelabs/sample-app-web
+        android/                   # saucelabs/my-demo-app-android
+        ios/                       # saucelabs/my-demo-app-ios
+      SUT-03-browserstack/         # browserstack/browserstack-demo-app
+      SUT-04-restful-booker/       # mwinteringham/restful-booker-platform
+      SUT-05-juice-shop/           # juice-shop/juice-shop
+      SUT-06-webdriverio/          # webdriverio/native-demo-app
+  read_only: true
+  note: "No clone was made for this orchestration task; provenance was resolved with read-only metadata queries only (git ls-remote, gh api, gh release view — manifests/e01-source-provenance.yaml, resolution_method). This layout documents where a future auditor's clone should live, not where one already exists."
+worktree_plan:
+  status: "Branches and worktrees created from the pre-prompt-freeze orchestration commit (b5d907ebb1e7532bea4c061a50915db8df029e3c); resynced to the prompt-freeze commit immediately after this file's commit lands (git branch --force / worktree pull, per the prompt-freeze task's branch/worktree consistency step). base_commit below is intentionally left null: it would have to name this very commit's own SHA, which does not exist until after this commit is made (the same reason no commit SHA is written into this file). The git branch refs themselves, synced post-commit, are the authoritative pointer, not this field."
+  base_commit: null  # cannot self-reference the commit this field would be written into; see status above
+  branches:
+    - {sut_id: SUT-01, branch: audit/e01-sut01-omnipizza}
+    - {sut_id: SUT-02, branch: audit/e01-sut02-saucelabs}
+    - {sut_id: SUT-03, branch: audit/e01-sut03-browserstack}
+    - {sut_id: SUT-04, branch: audit/e01-sut04-restful-booker}
+    - {sut_id: SUT-05, branch: audit/e01-sut05-juice-shop}
+    - {sut_id: SUT-06, branch: audit/e01-sut06-webdriverio}
+  worktree_command_template: "git worktree add ../eus-2026-001-worktrees/<branch-leaf> <branch>"
+  proposed_worktree_paths:
+    - ../eus-2026-001-worktrees/e01-sut01-omnipizza
+    - ../eus-2026-001-worktrees/e01-sut02-saucelabs
+    - ../eus-2026-001-worktrees/e01-sut03-browserstack
+    - ../eus-2026-001-worktrees/e01-sut04-restful-booker
+    - ../eus-2026-001-worktrees/e01-sut05-juice-shop
+    - ../eus-2026-001-worktrees/e01-sut06-webdriverio
+  notes: |
+    Branches and worktrees are created after this file's commit lands on main, from that exact commit SHA,
+    so every auditor begins from the identical orchestration baseline. Worktrees live outside this
+    repository's own directory (sibling path), contain no tracked scientific content changes at creation
+    time (a plain checkout of the orchestration commit), and are reversible (`git worktree remove`). No
+    auditor is launched into them in this task.
+adjudicator:
+  agent_role: ADJUDICATOR-EU-01
+  status: NOT_PREPARED_FOR_EXECUTION
+  prompt_working_path: prompts/working/e01-adjudicator-v1.md  # skeleton only; adjudicator does not run during E01 independent auditing
+notes: |
+  campaign_status PREPARED_NOT_STARTED is distinct from NOT_STARTED (manifests/study-manifest.yaml,
+  experiments/E01-capability-audit): NOT_STARTED means nothing has been prepared; PREPARED_NOT_STARTED means
+  orchestration metadata, provenance pins, agent identities, and now a frozen prompt exist, but no auditor
+  has been instructed to begin and data_collection_started is still false. The campaign becomes data
+  collection only when the first auditor begins gathering capability evidence under the frozen prompt
+  (prompts/frozen/e01-capability-auditor-v1.md), which required: (1) explicit human review and approval of
+  the working prompt — done; (2) the prompt-freeze operation copying it to prompts/frozen/ with a version id
+  and checksum (manifests/e01-prompt-freeze.yaml) — done, 2026-09-17; (3) an explicit human instruction to
+  begin, relayed by the ORCHESTRATOR — not yet given. Freezing the prompt does not, by itself, start data
+  collection or change campaign_status.
+  (3) was given 2026-09-17: explicit human approval and instruction to perform the protocol-compliant E01
+  campaign start (protocol/change-control-v1.md, section 7), relayed by the ORCHESTRATOR. campaign_status
+  and data_collection_started above reflect that administrative/protocol-state transition -- the campaign
+  configuration is now locked (experiments/E01-capability-audit/README.md) and protocol/CHANGELOG.md carries
+  the campaign NOT_STARTED -> IN_PROGRESS row. This is distinct from any auditor actually executing: no
+  auditor has been instructed to begin gathering evidence, and each of the six independent audits still
+  requires its own separate explicit instruction before it starts reading this file to begin work
+  (protocol/agent-governance-v1.md, section 2, rule 6; AGENT-INSTRUCTIONS.md, rule 15). RUNNING was considered and
+  rejected as a campaign_status token: it is not defined in protocol/change-control-v1.md's campaign-status
+  vocabulary (NOT_STARTED -> IN_PROGRESS -> FROZEN), and IN_PROGRESS was used instead so this file and
+  manifests/study-manifest.yaml carry a single, consistent representation.

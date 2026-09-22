@@ -1,0 +1,71 @@
+# manifests/provisioning/SUT-01/SUT01-PROV-0001.yaml
+# One-time provisioning record (protocol/setup-effort-v2.md, section 8; manifests/provisioning/README.md).
+# Descriptive reproducibility metadata only: never counted in Required Actions, never a score, never a
+# measured observation. Authored by ORCHESTRATOR from the provisioning it performed itself under the
+# explicit human authorization of 2026-09-22 (NON-MEASURED PRE-START provisioning, CS-001 conditions).
+# SUT-01 receives no privileged treatment: the same record structure, verification checks, and
+# environment class are used for every SUT provisioned in this operation.
+provisioning_id: SUT01-PROV-0001
+sut_id: SUT-01
+environment_type: LOCAL
+instance_identifier: "operator workstation; api instance at 127.0.0.1:8000 (uvicorn); web instance at 127.0.0.1:4301 (vite preview of the production build)"
+sut_provenance:
+  components: [web, api]
+  repository: https://github.com/gsanchezm/OmniPizza
+  commit_sha: 9ca37674d374e9303912e259641ee86baf3aabe1  # manifests/sut-manifest.yaml, SUT-01 web/api, PINNED_SOURCE (monorepo: backend/, frontend/)
+  reported_api_identity: "OmniPizza QA Platform 1.0.0 (served OpenAPI document, /api/openapi.json)"
+steps:
+  - sut_id: SUT-01
+    component: web/api monorepo
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "git 2.48.1"
+    installation_or_build_step: "git clone; git checkout 9ca37674d374e9303912e259641ee86baf3aabe1 (HEAD verified equal to the pin)"
+    required_external_dependency: "github.com"
+    estimated_or_observed_duration: "about 45 s"
+    automation_classification: AUTOMATED
+    provenance: "git 2.48.1"
+    notes: null
+  - sut_id: SUT-01
+    component: api
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "CPython 3.11 or 3.12 (the SUT README requires it: pydantic 2.5.3 publishes no wheels for CPython 3.13+); the host's system interpreters are 3.13/3.14, so a standalone CPython 3.12.14 build (python-build-standalone, x86_64 macOS, install_only tarball) was unpacked into a scratch directory; system Python untouched"
+    installation_or_build_step: "python3.12 -m venv; pip install -r backend/requirements.txt (fastapi 0.109.0, uvicorn 0.27.0, pydantic 2.5.3, and the rest of the pinned requirements)"
+    required_external_dependency: "github.com (python-build-standalone release asset); PyPI"
+    estimated_or_observed_duration: "about 27 min (several requirements built from source on this interpreter/architecture)"
+    automation_classification: AUTOMATED
+    provenance: "CPython 3.12.14; pip from the venv; requirements.txt at the pinned commit"
+    notes: "the documented docker-compose deployment (backend image python:3.11-slim) was not used: the host's Docker daemon was unavailable during this operation (a Docker Desktop privileged-helper prompt awaiting an administrator password)"
+  - sut_id: SUT-01
+    component: api
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "venv populated"
+    installation_or_build_step: "python -m uvicorn main:app --host 127.0.0.1 --port 8000 (from backend/); GET /health -> {status: healthy}"
+    required_external_dependency: null
+    estimated_or_observed_duration: "about 5 s"
+    automation_classification: AUTOMATED
+    provenance: "uvicorn 0.27.0"
+    notes: "the SUT reports environment production by default; its OpenAPI document and docs are mounted under /api (backend/main.py: openapi_url, docs_url)"
+  - sut_id: SUT-01
+    component: web
+    operating_system: "macOS 26.5.2 (x86_64)"
+    prerequisite: "Node.js 24.21.0 (nvm) and pnpm 10 (the repository's pnpm-lock.yaml is lockfileVersion 9.0; pnpm 11.1.1 failed its dependency-status check on it, so pnpm 10 was invoked through npx)"
+    installation_or_build_step: "pnpm install --frozen-lockfile (frontend/); VITE_API_URL=http://127.0.0.1:8000 pnpm build; pnpm exec vite preview --host 127.0.0.1 --port 4301 --strictPort"
+    required_external_dependency: "npm registry"
+    estimated_or_observed_duration: "about 2 min"
+    automation_classification: AUTOMATED
+    provenance: "pnpm 10 (npx); vite via the pinned package.json"
+    notes: "a first attempt with pnpm 11.1.1 failed before building; no SUT file was changed"
+duration: "about 40 min end to end, dominated by the Python dependency build (descriptive only)"
+performed_by: ORCHESTRATOR
+date: "2026-09-22"
+campaigns_served: []  # none yet: E03-resetability is NOT_STARTED; this instance served PRE-START environment verification only (E03-CS001-SUT01-WEB, -API)
+notes: >
+  Environment verification record: experiments/E03-resetability/environment-verification/SUT-01-web-api.json
+  (VERIFIED: GET /health 200; the served OpenAPI document declares /api/session/reset and /api/session;
+  POST /api/session/reset answers 403 unauthenticated, i.e. reachable, SUT01-EV-0006; web GET / 200). No
+  session, cart, or profile was established or reset. The E01-confirmed android and ios surfaces of SUT-01
+  were not provisioned (no E03 condition uses them), so the per-ecosystem controlled_instance_available
+  boolean of manifests/sut-manifest.yaml stays null for SUT-01 (protocol/study-design-v1.md, section 10.5:
+  true only when every confirmed-present surface runs controlled). The GitHub Actions job "E03 Environment
+  Verification SUT-01 web+api" reproduces these steps on an ubuntu-24.04 runner (SELF_HOSTED) and is the
+  verification route required before measured execution.

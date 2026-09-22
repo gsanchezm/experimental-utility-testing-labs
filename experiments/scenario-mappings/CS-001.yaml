@@ -1,0 +1,291 @@
+# experiments/scenario-mappings/CS-001.yaml
+# Canonical experimental intent + per-ecosystem mapping, per protocol/equivalent-scenario-mapping-v1.md.
+# Author: ORCHESTRATOR. Prepared during E03-resetability PRE-START configuration preparation
+# (human-authorized pre-start preparation only; this operation does not start E03 or any campaign).
+#
+# STATUS: FROZEN 2026-09-21, approved by gilbertosanchez (authorization id E03-CS001-FREEZE-AUTH-01).
+#
+# Freeze history: created DRAFT (this operation's earlier PRE-START pass), status
+# MAPPING_STATUS = DRAFT_BLOCKED_BY_ISSUE_XVIII pending the human ruling on
+# protocol/study-design-v1.md, section 13, issue (xviii). The human ruling (verification-as-action
+# = A2, partial-success counting = B1; authorization id ISSUE-XVIII-RULING-01;
+# protocol/setup-effort-v2.md) resolved that blocker; every `entry_and_steps` field below was then
+# rewritten to concrete, mechanism-level, action-class-tagged steps applying that ruling. The
+# comparability decision rule (protocol/equivalent-scenario-mapping-v1.md, section 5) does not
+# require `environment_type` to be resolved at mapping-freeze time -- protocol/study-design-v1.md,
+# section 10.3, fixes that determination "per condition in the campaign configuration before the
+# campaign starts," a later, separate lock point (PROTO-U08, resolved: this is not a freeze
+# prerequisite). Every `environment_type` field below therefore remains explicitly PENDING, by
+# design, not as an unresolved blocker.
+#
+# All `justification` and realization fields below cite real E01 evidence_ids from the six
+# SUBMITTED per-branch audits (audit/e01-sut0N-*; the audits/SUT-0N-.../ directories on `main`
+# remain unmerged templates, per PROTO-U07). No field states a fact this operation could not trace
+# to a cited evidence_id; where evidence was insufficient to responsibly populate a field, the field
+# is left null with a note, per AGENT-INSTRUCTIONS.md ("Unknown provenance is null... never a guess").
+
+version: 1
+canonical_scenario_id: CS-001
+description: >
+  An authenticated actor establishes one unit of session-scoped or resource-scoped business state
+  (for example: one or more items placed in a cart, or one booking/reservation created) beyond the
+  actor's clean starting state, and a reset action or procedure restores the ecosystem to that
+  actor's declared clean starting state. The business object varies by ecosystem (cart, basket, or
+  booking); the semantic intent -- an authenticated actor alters session/resource-scoped business
+  state, then a reset returns the ecosystem to its known starting state -- does not
+  (protocol/equivalent-scenario-mapping-v1.md, section 2, illustrative pattern: "An authenticated
+  user places one purchasable item into a cart and reaches a checkout-ready state").
+precondition_class: AUTHENTICATED_SESSION
+actor_state: AUTHENTICATED_STANDARD
+business_intent: >
+  An authenticated actor adds a purchasable/reservable item to their session- or resource-scoped
+  business state (a cart, basket, or booking), then triggers a reset that restores the ecosystem to
+  the actor's declared clean starting state.
+target_state_or_transition: >
+  Before reset: the actor's business state (cart/basket contents, or an existing booking record)
+  reflects the item(s) established. After reset: the business state matches the declared clean
+  starting state exactly (empty cart/basket, or the booking record absent/reverted), verified
+  independently before and after (E03-resetability README.md, "Required evidence").
+observable_oracle_class: BUSINESS_STATE
+reset_requirement: DATA_RESET
+applicable_surfaces: [WEB, API, ANDROID, IOS]
+allowed_domain_mapping: >
+  Business object may vary: cart (SUT-01, SUT-02, SUT-03), booking (SUT-04), basket (SUT-05).
+  Vocabulary, endpoint names, selectors, and number of steps may vary. The reset mechanism class
+  used to realize `reset_requirement` may vary (API_RESET, SESSION_RESET, APP_DATA_CLEAR,
+  ENVIRONMENT_RESTART, MANUAL, per protocol/setup-effort-v1.md, section 10) -- the mechanism itself
+  is part of what E03 measures, not a constraint on equivalence. May NOT vary: the actor must be
+  authenticated; the altered state must be a business object the actor themself established (not a
+  fixture the study seeds out-of-band); the reset must restore that same business state, not merely
+  end the session or restart the process. Scenario-specific constraint: the established item(s) must
+  be attributable to the specific authenticated actor's own action (rule 5, comparability), not a
+  study-wide fixture.
+campaigns_using: [E03-resetability]
+mapping_status: FROZEN
+frozen_at: "2026-09-21"
+approved_by: gilbertosanchez
+mappings:
+  - sut_id: SUT-01
+    comparability: COMPARABLE
+    surfaces_used: [WEB, API]
+    domain_object: "cart (pizza order items)"
+    precondition_realization: >
+      Auth token injected into localStorage (SUT01-EV-0002; documented "Web atomic entry" per
+      SUT01-EV-0001) establishes AUTHENTICATED_SESSION without a UI login flow.
+    actor_realization: "Documented test account/token mechanism, SUT01-EV-0001, SUT01-EV-0002."
+    entry_and_steps:
+      - "[reset] POST /api/session/reset -- clears the caller's session cart and resets the profile to its deterministic empty default (SUT01-EV-0006). Purpose is reset, so classified as a reset action per protocol/setup-effort-v2.md section 4 regardless of its API mechanism."
+      - "[API, verification] GET /api/session -- confirms the post-reset cart is empty and the session's default market is unchanged (SUT01-EV-0006). Counted under protocol/setup-effort-v2.md section 5, rule 8 (human ruling A2): a verification call is not excluded merely because its purpose is verification; it is classified by its mechanism (API)."
+      - "Required Actions -- reset: 2 (1 reset action + 1 API action). Scope caveat, not a counted action: this reset is explicitly partial (does not clear order history; full backend reset requires a process restart not attempted by E01), per the audit's own Resetability description."
+    oracle_realization: >
+      GET /api/cart (server-side session cart state), or the Checkout page rendering the seeded
+      items on mount (SUT01-EV-0004, "Cart Hydration").
+    reset_realization: >
+      POST /api/session/reset clears the caller's session cart and resets the profile to its
+      deterministic empty default (SUT01-EV-0006, primary evidence for cross-cutting Resetability).
+      reset_mechanisms candidate: [API_RESET, SESSION_RESET].
+    environment_type: "PENDING -- not a mapping-freeze prerequisite (protocol/study-design-v1.md section 10.3; PROTO-U08 resolved). Source-inspection candidate only, not execution-verified: open-source monorepo (manifests/sut-manifest.yaml), no execution/clone performed by this operation (AGENT-INSTRUCTIONS.md rule 15)."
+    not_comparable_reason: null
+    evidence_ids: [SUT01-EV-0001, SUT01-EV-0002, SUT01-EV-0004, SUT01-EV-0006]
+    justification: >
+      Web+API cart establishment and an explicit, dedicated session-reset endpoint are both
+      SOURCE_VERIFIED and directly on point; SUT01-EV-0006 is E01's own primary Resetability
+      evidence for this ecosystem.
+  - sut_id: SUT-02
+    comparability: COMPARABLE
+    surfaces_used: [WEB, ANDROID, IOS]
+    domain_object: "cart (shopping cart, ShoppingCart/Engine.sharedInstance)"
+    precondition_realization: "Documented login (Sauce Labs Demo Ecosystem test accounts; audit's State Controllability evidence); not itself re-cited here beyond the reset-adjacent rows inspected for this record."
+    actor_realization: "Standard authenticated actor via the app's own login flow (component present on web/android/ios per manifests/sut-manifest.yaml)."
+    entry_and_steps:
+      - "[web] [reset] Tap 'Reset App State' in DrawerMenu.jsx -> ShoppingCart.resetCart() (SUT02-EV-0002). No confirmation dialog evidenced on web."
+      - "[web] [UI, verification] Read cart state/badge to confirm it is empty (SUT02-EV-0002 oracle). Required Actions -- reset (web): 2."
+      - "[android] [reset] Tap 'Reset App State' menu item (showResetDialog) (SUT02-EV-0008)."
+      - "[android] [reset] Tap 'Confirm' in the resulting confirmation dialog -- clears ST.cartItemList and reloads product data (SUT02-EV-0008: 'each behind a confirmation dialog'). Two distinct experimenter-initiated operations with observable effects (rule 1); both purpose=reset."
+      - "[android] [UI, verification] Read ST.cartItemList / product screen to confirm empty cart, or the 'App State has been reset.' confirmation text (SUT02-EV-0008). Required Actions -- reset (android): 3."
+      - "[ios] [reset] Tap 'Reset App State' in the Menu screen (resetAppState()) (SUT02-EV-0009)."
+      - "[ios] [reset] Tap confirmation -- zeroes Engine.sharedInstance's cart list/count/total plus shipping/billing/card fields (SUT02-EV-0009: 'each behind a confirmation for reset')."
+      - "[ios] [UI, verification] Read Engine.sharedInstance cart state / the 'App State has been reset.' alert (SUT02-EV-0009). Required Actions -- reset (ios): 3."
+    oracle_realization: >
+      Cart contents (ShoppingCart.resetCart() state on web, ST.cartItemList on Android,
+      Engine.sharedInstance cart list/count/total on iOS) -- SUT02-EV-0002, SUT02-EV-0008,
+      SUT02-EV-0009.
+    reset_realization: >
+      An explicit, purpose-built "Reset App State" action exists on all three surfaces and is the
+      cleanest reset evidence found across all six SUTs: web DrawerMenu.jsx resetStorage ->
+      ShoppingCart.resetCart() (SUT02-EV-0002); Android MainActivity.java showResetDialog, clears
+      ST.cartItemList and reloads product data (SUT02-EV-0008); iOS MenuViewController.swift
+      resetAppState(), zeroes Engine.sharedInstance's cart list/count/total and shipping/billing
+      fields (SUT02-EV-0009). reset_mechanisms candidate: [APP_DATA_CLEAR] on all three surfaces
+      (in-app action, not a session/API endpoint -- SUT-02 has no API surface, NO_API_SURFACE,
+      manifests confirm api presence UNCONFIRMED/unpinned and E01 API score 0).
+    environment_type: "PENDING -- not a mapping-freeze prerequisite (section 10.3; PROTO-U08 resolved). Source-inspection candidate only: web self-hostable via npm (sample-app-web); android/ios buildable from source or installable from the pinned release APK/IPA artifacts (manifests/sut-manifest.yaml); none execution-verified."
+    not_comparable_reason: null
+    evidence_ids: [SUT02-EV-0002, SUT02-EV-0008, SUT02-EV-0009]
+    justification: >
+      Only SUT in the study with an explicit, SOURCE_VERIFIED, purpose-built reset control on every
+      one of its three surfaces (web, Android, iOS), each independently confirmed to zero the exact
+      business object (cart) this scenario establishes.
+  - sut_id: SUT-03
+    comparability: COMPARABLE
+    surfaces_used: [WEB]
+    domain_object: "cart (client-side only; store/Redux cart state, no server persistence)"
+    precondition_realization: "Documented sign-in (constants/users.js test accounts, SUT03-EV-0001); not independently re-verified for this record beyond the cart/reset-adjacent rows inspected."
+    actor_realization: "Standard authenticated actor per SUT03-EV-0001."
+    entry_and_steps:
+      - "[state/configuration] addProduct / changeProductQuantity Redux actions (src/services/cart/actions.js) add item(s) to the client-side cart; pure client state changes, no API call (negative evidence, SUT03-EV-0032). Classified state/configuration action per protocol/setup-effort-v2.md section 4 (changes seed/fixture-equivalent client state that determines ecosystem behavior within the run)."
+      - "[reset] Click Sign-Out (Header.logOutHandler, SUT03-EV-0030) -> store2.session.clearAll() (SUT03-EV-0031)."
+      - "[UI, verification] Read the cart badge/UI to confirm it is empty after sign-out. Required Actions -- reset: 2 (1 reset action + 1 UI action)."
+    oracle_realization: >
+      UI_STATE only: the cart is never reflected in any API response (SUT03-EV-0032, negative
+      evidence); observable_oracle_class realized here is client-rendered cart state, not
+      BUSINESS_STATE in the server sense. This is a genuine, evidence-supported deviation from the
+      canonical scenario's stated oracle class and is disclosed rather than smoothed over
+      (protocol/equivalent-scenario-mapping-v1.md, section 2, "does not require identical... the
+      semantic testing intent must be [the same]" -- the oracle *class* is UI_STATE here by
+      necessity of the ecosystem's own architecture, not by a mapping shortcut).
+    reset_realization: >
+      No dedicated reset API or reset control exists (audit.md, "Resetability": "No dedicated reset
+      API endpoint... exists in the pinned commit"). The Sign-Out action
+      (store2.session.clearAll()) clears all client-side sessionStorage state in one step
+      (SUT03-EV-0030, SUT03-EV-0031, audit.md "Resetability" section). Scope resolved, not a hedge:
+      the same audit section states in terms this ecosystem's cart necessarily falls under --
+      "State lives only in the browser (sessionStorage...)"; SUT03-EV-0032 (negative evidence)
+      independently confirms cart/favourite/filter/sort actions are pure client-side Redux state
+      with no separate persistence channel of any kind (no API call, hence no server-side store).
+      Since (a) the audit found no persistence mechanism for this ecosystem's client state other
+      than sessionStorage, and (b) the audit found no persistence mechanism for cart state other
+      than in-memory Redux (itself necessarily bound to the same client runtime that sessionStorage
+      backs, there being no third channel evidenced anywhere in the audit), a full
+      store2.session.clearAll() has nowhere else for cart state to survive. reset_mechanisms
+      candidate: [SESSION_RESET].
+    environment_type: "PENDING -- not a mapping-freeze prerequisite (section 10.3; PROTO-U08 resolved). Source-inspection candidate only: Next.js app, self-hostable via npm (manifests/sut-manifest.yaml); no server-side persisted state to provision (no database evidenced); not execution-verified."
+    not_comparable_reason: null
+    evidence_ids: [SUT03-EV-0001, SUT03-EV-0030, SUT03-EV-0031, SUT03-EV-0032]
+    justification: >
+      A defensible equivalent exists (client-side cart, established and clearable). One disclosed,
+      evidence-grounded deviation remains: the oracle class is UI-only (no server-side state to
+      query) -- this does not block comparability, since the frozen comparability rule
+      (protocol/equivalent-scenario-mapping-v1.md, section 5) does not require an identical oracle
+      class, only that "an observation of the required oracle class is available," and UI_STATE
+      observation is available. The Sign-Out reset's scope over cart state, previously flagged as
+      unconfirmed, is resolved above (reset_realization): the audit found no persistence channel for
+      this ecosystem's client state, or for cart state specifically, other than the sessionStorage
+      that Sign-Out fully clears.
+  - sut_id: SUT-04
+    comparability: COMPARABLE
+    surfaces_used: [WEB, API]
+    domain_object: "booking (room reservation)"
+    precondition_realization: "Cookie-token login via POST /auth/login with the seeded admin/password account (SUT04-EV-0008)."
+    actor_realization: "Deterministic seeded admin account, SUT04-EV-0003 (cited by SUT04-EV-0008), token-based authorization."
+    entry_and_steps:
+      - "[reset] DELETE /booking/{bookingid} -- removes the specific booking the actor created (SUT04-EV-0006). Requires the token obtained during this scenario's own establish-side authentication (precondition_realization); no separate reset-side login evidenced or assumed."
+      - "[API, verification] GET /booking/{bookingid} -- returns 404 NOT_FOUND, confirming removal (SUT04-EV-0006)."
+      - "Required Actions -- reset: 2 (1 reset action + 1 API action)."
+    oracle_realization: >
+      GET /booking/{bookingid} (SUT04-EV-0006); the Home page availability listing also reflects
+      the seeded/current room state (SUT04-EV-0004).
+    reset_realization: >
+      DELETE /booking/{bookingid} removes the specific booking the actor created; a subsequent
+      GET /{bookingid} returns 404 NOT_FOUND (SUT04-EV-0006) -- an experimenter-triggered,
+      on-demand, per-resource reset. Distinct from, and preferred over for this scenario's per-run
+      reset, the periodic env-var-scheduled resetDB() (SUT04-EV-0027, audit.md "Resetability"),
+      which is explicitly NOT an on-demand, HTTP-exposed action ("not exposed as an HTTP route in
+      any Controller.java") and resets far more than this scenario's own altered state (it wipes
+      and reseeds the entire service). reset_mechanisms candidate: [API_RESET].
+    environment_type: "PENDING -- not a mapping-freeze prerequisite (section 10.3; PROTO-U08 resolved). Source-inspection candidate only: explicitly self-hostable via docker-compose (manifests/sut-manifest.yaml notes); not execution-verified."
+    not_comparable_reason: null
+    evidence_ids: [SUT04-EV-0003, SUT04-EV-0004, SUT04-EV-0006, SUT04-EV-0008, SUT04-EV-0027]
+    justification: >
+      Full CRUD on the booking resource, with an on-demand, per-resource DELETE serving as a clean,
+      experimenter-triggered reset of exactly the state this scenario establishes -- SOURCE_VERIFIED
+      and directly on point.
+  - sut_id: SUT-05
+    comparability: COMPARABLE
+    surfaces_used: [API]
+    domain_object: "basket"
+    precondition_realization: >
+      POST /rest/user/login with a documented deterministic account issues a JWT (SUT05-EV-0006,
+      citing the account set of SUT05-EV-0002).
+    actor_realization: "Deterministic named account (admin/jim/bender/etc., SUT05-EV-0002/0006)."
+    entry_and_steps:
+      - "[state/configuration] POST /basket (or basketItems, SUT05-EV-0008) adds item(s) to the authenticated actor's basket -- route/model existence SOURCE_VERIFIED (SUT05-EV-0008, SUT05-EV-0027); not individually execution-verified by E01. Establish-side; recorded here for completeness of the intent, not counted into the reset-side total below."
+      - "[reset] Restart the SUT-05 process -- `sequelize.sync({force: true})` runs on every start, dropping and recreating the entire database and reloading static seed data (SUT05-EV-0003). One experimenter-initiated operation (starting the process) with an observable effect on the whole datastore; classified reset action by purpose (protocol/setup-effort-v2.md section 4), regardless of its ENVIRONMENT_RESTART mechanism."
+      - "[API, verification] GET on the basket resource -- confirms the basket is empty post-restart (route existence per SUT05-EV-0008)."
+      - "Required Actions -- reset: 2 (1 reset action + 1 API action). This reset mechanism is a full-datastore process restart, not a scoped basket-only reset -- the heaviest mechanism of the six ecosystems in this record; a real RQ2/H2-relevant finding, not a mapping defect (protocol/equivalent-scenario-mapping-v1.md, section 8; setup-effort-v2.md counting rule 7: differing mechanisms between realizations are the measurement)."
+    oracle_realization: "GET on the basket resource (route existence per SUT05-EV-0008; not individually execution-verified by E01)."
+    reset_realization: >
+      Explicitly, no in-session HTTP reset endpoint exists for this ecosystem (audit's own finding,
+      SUT05-EV-0003: "no in-session HTTP reset endpoint was found"). The only confirmed reset
+      mechanism is a full application restart: `sequelize.sync({force: true})` on every process
+      start drops and recreates all tables, then reloads the static seed data (SUT05-EV-0003).
+      reset_mechanisms candidate: [ENVIRONMENT_RESTART] -- explicitly heavier than every other SUT's
+      mechanism in this record; this is itself a legitimate, disclosed RQ2/H2-relevant finding about
+      relative setup effort, not a mapping defect (protocol/equivalent-scenario-mapping-v1.md,
+      section 8, cites setup-effort-v1.md counting rule 7: differing step counts/mechanisms between
+      realizations are the measurement, not a defect).
+    environment_type: "PENDING -- not a mapping-freeze prerequisite (section 10.3; PROTO-U08 resolved). Source-inspection candidate only: Node.js app, documented self-host paths (npm, Docker; prebuilt per-platform archives, manifests/sut-manifest.yaml); not execution-verified. Flagged for particular attention at campaign-configuration lock: this scenario's only reset mechanism requires restarting the process, so a PUBLIC_HOSTED-only instance would make the reset condition NOT_EXECUTABLE_WITHOUT_CONTROLLED_INSTANCE."
+    not_comparable_reason: null
+    evidence_ids: [SUT05-EV-0002, SUT05-EV-0003, SUT05-EV-0006, SUT05-EV-0008, SUT05-EV-0027]
+    justification: >
+      A defensible basket-establishment mechanism exists (API routes + models, SOURCE_VERIFIED
+      route/model presence), and the reset mechanism, while the heaviest of the six ecosystems
+      (full restart, not a scoped reset), is real, SOURCE_VERIFIED, and directly on point for
+      reset_requirement DATA_RESET. Marked COMPARABLE rather than NOT_COMPARABLE because condition
+      5 of the comparability rule ("the reset requirement can be met") is satisfied by
+      ENVIRONMENT_RESTART -- the rule does not require a lightweight mechanism, only that one exists.
+  - sut_id: SUT-06
+    comparability: NOT_COMPARABLE
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: null
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      NO_EQUIVALENT_INTENT. This ecosystem is a native-UI-element demonstration app with no
+      cart/basket/booking or other purchasable-item business-object concept: its only confirmed
+      stateful mechanism is the Data Management screen's four independent, generic per-tier
+      key/value storage slots (in-memory, AsyncStorage-tier SQLite, explicit SQLite,
+      SecureStore/Keychain-Keystore), each with its own Save/Clear test-hook control
+      (SUT06-EV-0007). There is no authenticated actor placing a purchasable item into a business
+      object; forcing this scenario's business_intent onto a generic key/value Save/Clear action
+      would substitute a different intent (a generic state-storage probe) for this scenario's actual
+      intent (an actor-driven business-state establish/reset), which
+      protocol/equivalent-scenario-mapping-v1.md, section 5, explicitly forbids ("If... the mapping
+      would require... substituting a different intent, the ecosystem is marked NOT_COMPARABLE").
+      SUT-06 is the mobile specialist baseline (protocol/study-design-v1.md, section 3); this
+      NOT_COMPARABLE marking is not a penalty for narrow scope (rule 11, AGENT-INSTRUCTIONS.md) -- SUT-06's own
+      generic per-tier Save/Clear mechanism (SUT06-EV-0007) remains directly relevant to a future,
+      differently-scoped canonical scenario built around exactly that mechanism (a state-persistence
+      resetability probe), which this record does not define and is not required to.
+    evidence_ids: [SUT06-EV-0007]
+    justification: >
+      No defensible semantic equivalent of "an authenticated actor establishes a purchasable-item
+      business state" exists in the evaluated version; the ecosystem's only relevant mechanism
+      (generic per-tier Save/Clear) tests a materially different intent (raw persistence-tier
+      behavior, not business-state establishment). Recorded with the same discipline used for every
+      other ecosystem (protocol/equivalent-scenario-mapping-v1.md, section 5: "recorded with the
+      same discipline for every ecosystem, including SUT-01").
+notes: >
+  FROZEN 2026-09-21, approved by gilbertosanchez (E03-CS001-FREEZE-AUTH-01), following the human
+  ruling on protocol/study-design-v1.md, section 13, issue (xviii) (ISSUE-XVIII-RULING-01;
+  protocol/setup-effort-v2.md) and resolution of protocol/unresolved.md, PROTO-U08. Every
+  `entry_and_steps` field is now concrete and mechanism-level, applying A2 (verification counts,
+  classified by mechanism) and B1 (partial success counts as one ordinary action) throughout. Every
+  `environment_type` field remains explicitly PENDING BY DESIGN, not as a freeze blocker:
+  protocol/study-design-v1.md, section 10.3, fixes the controlled-instance determination "per
+  condition in the campaign configuration before the campaign starts" -- a later, separate lock
+  point this record does not need to reach. This record may not be used to execute any run until
+  E03's own campaign-configuration lock additionally fixes, per condition, environment_type and any
+  NOT_EXECUTABLE_WITHOUT_CONTROLLED_INSTANCE status (protocol/equivalent-scenario-mapping-v1.md,
+  section 6: freeze of the mapping record and campaign start are two separate gates). SUT-06
+  (WebdriverIO Native Demo App) is NOT_COMPARABLE for this specific scenario; this does not remove
+  it from E03 generally (protocol/study-design-v1.md, section 11, rule 9) -- its own evidenced
+  generic per-tier Save/Clear mechanism (SUT06-EV-0007) is instead realized in
+  experiments/scenario-mappings/CS-002.yaml, completing the PRE-DATA canonical-scenario catalogue
+  for E03 (experiments/E03-resetability/canonical-scenario-catalogue.md). This is the study's first
+  canonical scenario record (CS-001); no prior canonical_scenario_id exists to conflict with this
+  identifier.

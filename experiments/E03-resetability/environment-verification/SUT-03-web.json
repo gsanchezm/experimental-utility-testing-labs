@@ -1,0 +1,47 @@
+{
+  "record_class": "ENVIRONMENT_VERIFICATION",
+  "measured_experiment": false,
+  "study_id": "EUS-2026-001",
+  "campaign_id": "E03-resetability",
+  "sut_id": "SUT-03",
+  "surfaces": [
+    "WEB"
+  ],
+  "conditions_covered": [
+    "E03-CS001-SUT03-WEB"
+  ],
+  "environment_type": "LOCAL",
+  "sut_provenance": {
+    "repository": "https://github.com/browserstack/browserstack-demo-app",
+    "commit_sha": "7ab934d733f2f74d4b912e94e86f59ae0f6b7609"
+  },
+  "reset_mechanism_under_verification": "Sign-Out -> store2.session.clearAll() (SUT03-EV-0030, SUT03-EV-0031); presence at source level and served web surface (next build + next start on 127.0.0.1:4303)",
+  "checks": {
+    "web_GET_/_status": 200,
+    "web_GET_/signin_status": 200,
+    "api_GET_/api/products_status": 200,
+    "api_GET_/api/signin_status": 422,
+    "source_files_with_logOutHandler": [
+      "src/components/Header/index.jsx"
+    ],
+    "source_files_with_session_clearAll": [
+      "src/components/Header/index.jsx"
+    ]
+  },
+  "verification_result": "VERIFIED",
+  "host": {
+    "os": "macOS-26.5.2-x86_64-i386-64bit-Mach-O",
+    "arch": "x86_64",
+    "kind": "operator workstation (LOCAL)"
+  },
+  "tool_versions": {
+    "node": "v14.21.3",
+    "npm": "6.14.18"
+  },
+  "performed_by": "ORCHESTRATOR (human-authorized NON-MEASURED PRE-START provisioning, 2026-09-22)",
+  "timestamp": "2026-09-22T10:44:25.570989+00:00",
+  "timezone": "UTC",
+  "instance_identifier": "127.0.0.1:4303 (next start of the production build)",
+  "provisioning_notes": "npm install --legacy-peer-deps under Node 14.21.3 / npm 6.14.18 (the pinned tree has no lockfile; its 2020 dependency ranges do not resolve under npm>=7 or Node>=16); formdata-node@4 added with --no-save because node_modules/swagger-ui-react/swagger-ui.js imports it without any package declaring it (no SUT source changed; not persisted to package.json); the E01-confirmed api surface (Next.js API routes, e.g. /api/products) is served by the same process and was probed too",
+  "e01_confirmed_surfaces_note": "E01 confirmed web and api present for SUT-03; both are served by this single Next.js process, so the LOCAL instance covers both; only the WEB surface is an E03 condition (CS-001)"
+}
