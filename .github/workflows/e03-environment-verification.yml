@@ -76,7 +76,7 @@ jobs:
           cd sut/backend
           python -m pip install --quiet -r requirements.txt
           nohup python -m uvicorn main:app --host 127.0.0.1 --port 8000 > "$GITHUB_WORKSPACE/api-stdout.log" 2> "$GITHUB_WORKSPACE/api-stderr.log" &
-          for i in $(seq 1 60); do curl -fsS http://127.0.0.1:8000/health >/dev/null 2>&1 && break; sleep 2; done
+          for _ in $(seq 1 60); do curl -fsS http://127.0.0.1:8000/health >/dev/null 2>&1 && break; sleep 2; done
           curl -fsS http://127.0.0.1:8000/health
       - name: Provision, build, and serve the web instance
         run: |
@@ -86,7 +86,7 @@ jobs:
           pnpm install --frozen-lockfile
           VITE_API_URL=http://127.0.0.1:8000 pnpm build
           nohup pnpm exec vite preview --host 127.0.0.1 --port 3000 --strictPort > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &
-          for i in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
+          for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
       - name: Verify surface and reset-mechanism reachability (no state established, nothing measured)
         run: |
           set -euo pipefail
@@ -174,7 +174,7 @@ jobs:
           npm ci --no-audit --no-fund
           npm run build
           nohup npx vite preview --host 127.0.0.1 --port 3000 --strictPort > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &
-          for i in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
+          for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
       - name: Verify surface and reset-mechanism reachability (nothing measured)
         run: |
           set -euo pipefail
@@ -234,7 +234,7 @@ jobs:
         run: |
           set -euo pipefail
           gh release download "${{ steps.pin.outputs.release }}" --repo "${{ steps.pin.outputs.repo }}" --pattern 'mda-*.apk' --clobber
-          ls -1 mda-*.apk | grep -v androidTest | head -1 > apk-name.txt
+          for f in mda-*.apk; do case "$f" in *androidTest*) ;; *) echo "$f" > apk-name.txt; break ;; esac; done
           sha256sum "$(cat apk-name.txt)" | tee apk.sha256
       - name: Enable KVM for the emulator
         run: |
@@ -422,7 +422,7 @@ jobs:
           npm install --no-save formdata-node@4 --no-audit --no-fund
           npm run build
           nohup npx next start -p 3000 > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &
-          for i in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
+          for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
       - name: Verify surface and reset-mechanism reachability (nothing measured)
         run: |
           set -euo pipefail
@@ -489,7 +489,7 @@ jobs:
           cd sut
           docker compose version | tee "$GITHUB_WORKSPACE/compose-version.txt"
           docker compose up --build -d 2>&1 | tail -20
-          for i in $(seq 1 90); do curl -fsS -o /dev/null http://127.0.0.1:3004/auth/validate -X POST -H 'Content-Type: application/json' -d '{"token":"x"}' 2>/dev/null && break; sleep 5; done
+          for _ in $(seq 1 90); do curl -fsS -o /dev/null http://127.0.0.1:3004/auth/validate -X POST -H 'Content-Type: application/json' -d '{"token":"x"}' 2>/dev/null && break; sleep 5; done
           docker compose ps | tee "$GITHUB_WORKSPACE/compose-ps.txt"
       - name: Verify surface and reset-mechanism reachability (nothing measured)
         run: |
@@ -524,7 +524,9 @@ jobs:
           PY
       - name: Collect service logs
         if: always()
-        run: cd sut && docker compose logs --no-color > "$GITHUB_WORKSPACE/compose-logs.txt" 2>&1 || true
+        run: |
+          cd sut || exit 0
+          docker compose logs --no-color > "$GITHUB_WORKSPACE/compose-logs.txt" 2>&1 || true
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
         uses: actions/upload-artifact@v4
@@ -572,7 +574,7 @@ jobs:
           npm install --no-audit --no-fund 2>&1 | tail -5
           nohup npm start > "$GITHUB_WORKSPACE/api-stdout-1.log" 2> "$GITHUB_WORKSPACE/api-stderr-1.log" &
           echo $! > "$GITHUB_WORKSPACE/pid1.txt"
-          for i in $(seq 1 90); do curl -fsS -o /dev/null http://127.0.0.1:3000/rest/admin/application-version && break; sleep 3; done
+          for _ in $(seq 1 90); do curl -fsS -o /dev/null http://127.0.0.1:3000/rest/admin/application-version && break; sleep 3; done
           curl -fsS http://127.0.0.1:3000/rest/admin/application-version | tee "$GITHUB_WORKSPACE/version-1.json"
       - name: Verify api reachability and the process-restart reset mechanism (nothing measured)
         run: |

@@ -46,7 +46,7 @@ jobs:
         run: |
           set -euo pipefail
           for f in schemas/*.json; do
-            npx --yes ajv-cli@5 compile -s "$f" --spec=draft2020 --allow-union-types >/dev/null && echo "ajv compile ok: $f"
+            npx --yes -p ajv-cli@5 -p ajv-formats@3 ajv compile -s "$f" --spec=draft2020 --allow-union-types -c ajv-formats >/dev/null && echo "ajv compile ok: $f"
           done
       - name: Assert run-manifest v1 is preserved and v2 is the only additive successor
         run: |
