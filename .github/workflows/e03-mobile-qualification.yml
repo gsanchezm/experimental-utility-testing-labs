@@ -125,8 +125,8 @@ jobs:
           gate('instruction to execute recorded in qualification/mobilewright/README.md', instruction in rd)
           version_id = (auth.get('launch_prompt') or {}).get('prompt_version_id') or ''
           gate('prompt version id recorded in qualification/mobilewright/README.md', bool(version_id) and version_id in rd, version_id)
-          for f in ('qualification/mobilewright/run-gate-android.sh', 'qualification/mobilewright/run-gate-ios.sh'):
-              gate('gate implementation present and executable: ' + f, os.path.isfile(f) and os.access(f, os.X_OK))
+          for f in ('qualification/mobilewright/run-gate-android.sh', 'qualification/mobilewright/run-gate-ios.sh', 'qualification/mobilewright/gate-common.sh'):
+              gate('gate implementation present: ' + f, os.path.isfile(f) and os.path.getsize(f) > 0)
           gate('gate harness lockfile present', os.path.isfile('qualification/mobilewright/harness/package-lock.json'))
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f: f.write('ready=' + ('true' if not failures else 'false') + '\n')
           if failures:
@@ -156,7 +156,7 @@ jobs:
       - name: Verify the gate implementation is present
         run: |
           set -euo pipefail
-          test -x qualification/mobilewright/run-gate-android.sh || { echo "qualification/mobilewright/run-gate-android.sh not authored: failing closed"; exit 1; }
+          test -s qualification/mobilewright/run-gate-android.sh || { echo "qualification/mobilewright/run-gate-android.sh not authored: failing closed"; exit 1; }
       - name: Execute the qualification gate on the pinned Android emulator
         # ReactiveCircus/android-emulator-runner v2.38.0, pinned at the commit the annotated tag resolves to
         # (manifests/toolchain-manifest.yaml, environments.android_emulator.substrate).
@@ -205,7 +205,7 @@ jobs:
       - name: Verify the gate implementation is present
         run: |
           set -euo pipefail
-          test -x qualification/mobilewright/run-gate-ios.sh || { echo "qualification/mobilewright/run-gate-ios.sh not authored: failing closed"; exit 1; }
+          test -s qualification/mobilewright/run-gate-ios.sh || { echo "qualification/mobilewright/run-gate-ios.sh not authored: failing closed"; exit 1; }
       - name: Execute the qualification gate on the pinned iOS Simulator
         env:
           # DEVELOPMENT output stays outside the checkout (gate-common.sh refuses a path inside the repository).
