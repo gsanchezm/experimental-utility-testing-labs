@@ -54,19 +54,27 @@ issued_under_instruction: "EUS-2026-001 — MOBILE QUALIFICATION issuance instru
 dispatch_authorized_by_this_record: true  # the record now satisfies the readiness gate's authorization checks
 dispatch_performed_under_this_operation: false  # the issuance instruction explicitly withheld dispatch; no workflow was run
 
-launch_prompt:  # AUTH-02 PROMOTION instruction, "FROZEN AUTH-02 LAUNCH PROMPT": the frozen template is reused unchanged
-                # (prompts/README.md's own forward-looking note: "the frozen prompt itself is unchanged and remains the
-                # launch prompt for a future gate under a new authorization id"); rendering is recorded here as data,
-                # not as a literal edit to the frozen file, which stays byte-identical to its 2026-09-22 freeze
-  frozen_copy: prompts/frozen/qualifier-mobile-01-mobilewright-gate-v1.md
-  prompt_version_id: qualifier-mobile-01-mobilewright-gate-v1
-  sha256: edbeb9f524392e0d3cfb82c5a7cff92908681ecfece37cb788f4fbf32b3c3ba8  # independently recomputed 2026-09-23; unchanged since the 2026-09-22 freeze
-  frozen_at: "2026-09-22"  # unchanged; this authorization reuses the existing frozen prompt, it does not re-freeze one
-  rendered_variables:  # what QUALIFIER-MOBILE-01 substitutes for this authorization's {{...}} placeholders at launch
+launch_prompt:  # CORRECTED 2026-09-23 (AUTH-02 FROZEN PROMPT PROVENANCE CORRECTION instruction). SUPERSEDED representation,
+                # preserved for history only (do not act on it): this block previously pointed at the unchanged, still-
+                # parametrized v1 template and recorded the rendering only as data here, reasoning that prompts/README.md's
+                # forward-looking note ("the frozen prompt itself is unchanged and remains the launch prompt for a future
+                # gate under a new authorization id") made that sufficient. The human explicit issuance instruction had
+                # asked for something more specific -- "a NEW QUALIFIER-MOBILE-01 launch prompt" that "actually contains
+                # AUTH-02" as literal text -- which the reused-template representation did not satisfy literally. Corrected:
+                # a new frozen file, prompts/frozen/qualifier-mobile-01-mobilewright-gate-v2.md, contains the exact launch
+                # text (v1's substantive procedure, byte-for-byte, plus the three launch variables actually rendered and an
+                # accurate frozen-status header); verified below to differ from v1 in only those permitted ways (no
+                # methodological or procedural change; qualification/mobilewright/README.md, "prompt normalization" note).
+  frozen_copy: prompts/frozen/qualifier-mobile-01-mobilewright-gate-v2.md
+  prompt_version_id: qualifier-mobile-01-mobilewright-gate-v2
+  sha256: 6d2414c5c685755addb4e966f1858171bdbf927df6998a0c27a153d83a639a00
+  frozen_at: "2026-09-23"
+  derived_from: "prompts/frozen/qualifier-mobile-01-mobilewright-gate-v1.md (sha256 edbeb9f524392e0d3cfb82c5a7cff92908681ecfece37cb788f4fbf32b3c3ba8, preserved byte-for-byte unchanged as historical provenance for the AUTH-01 lineage, including its stale 'Status: WORKING PROMPT, not frozen' header text, which is not silently corrected in place)"
+  rendered_variables:  # now rendered as literal text IN the frozen v2 file itself, not only recorded here as data
     INSTRUCTION_ID: MOBILE-QUALIFICATION-EXEC-AUTH-02
     INSTRUCTION_DATE: "2026-09-23"
-    PROMPT_VERSION_ID: qualifier-mobile-01-mobilewright-gate-v1
-  verification: "the frozen file (prompts/frozen/qualifier-mobile-01-mobilewright-gate-v1.md) contains no literal instruction id at all -- it is a parametrized template whose only occurrences of {{INSTRUCTION_ID}} are the placeholder token itself; it therefore contains neither MOBILE-QUALIFICATION-EXEC-AUTH-01 nor MOBILE-QUALIFICATION-EXEC-AUTH-02 as literal text. The concrete active instruction id for this authorization is MOBILE-QUALIFICATION-EXEC-AUTH-02, carried here in rendered_variables and in qualification/mobilewright/README.md (both of which the readiness gate reads); AUTH-01 does not appear in either as an active id."
+    PROMPT_VERSION_ID: qualifier-mobile-01-mobilewright-gate-v2
+  verification: "prompts/frozen/qualifier-mobile-01-mobilewright-gate-v2.md contains the literal string MOBILE-QUALIFICATION-EXEC-AUTH-02 (twice: the rendered-variables list and step 1 of the procedure) and does not contain MOBILE-QUALIFICATION-EXEC-AUTH-01 or any unresolved {{...}} placeholder anywhere. Diffed line-by-line against v1 (44 lines each): exactly 6 lines differ (the title, the status/header paragraph, the three variable-definition lines, and step 1's inline instantiation of the same three variables); applying only the three variable substitutions to v1's step-1 line reproduces v2's step-1 line exactly (byte-for-byte). No other line of role, boundaries, frozen inputs, procedure steps 2-10, or 'what you never do' changed."
 
 provenance_rule:  # restated verbatim, still in force (originally AUTH-02 PRE-ISSUANCE CONSISTENCY HARDENING instruction, section 8; unaffected by issuance -- these are permanent, not conditional on PREPARED status)
   - "THE PREPARED FILE IS NOT AUTHORIZATION." # historical: true of this file from 2026-09-22 to 2026-09-23, before issuance

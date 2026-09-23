@@ -160,6 +160,18 @@ jobs:
           gate('authorization record is not the retired id MOBILE-QUALIFICATION-EXEC-AUTH-01', instruction != 'MOBILE-QUALIFICATION-EXEC-AUTH-01')
           prompt = (auth.get('launch_prompt') or {}).get('frozen_copy') or ''
           gate('frozen launch prompt present', bool(prompt) and os.path.isfile(prompt), prompt)
+          # AUTH-02 FROZEN PROMPT PROVENANCE CORRECTION (2026-09-23): a frozen_copy pointing at an existing file was
+          # not enough on its own -- verify the record's own claimed hash, that it matches the file on disk, that the
+          # submitted instruction_id is literally instantiated in that file (not merely discoverable via a separate
+          # id lookup), and that no unrendered launch placeholder remains active. Generic on instruction_id, not
+          # hardcoded to any one authorization id.
+          prompt_text = open(prompt, encoding='utf-8').read() if prompt and os.path.isfile(prompt) else None
+          prompt_sha_claimed = (auth.get('launch_prompt') or {}).get('sha256')
+          gate('launch_prompt.sha256 is present in the authorization record', bool(prompt_sha_claimed), str(prompt_sha_claimed))
+          prompt_sha_actual = hashlib.sha256(prompt_text.encode('utf-8')).hexdigest() if prompt_text is not None else None
+          gate('SHA-256 of the frozen launch prompt on disk matches the authorization record', prompt_sha_actual is not None and prompt_sha_claimed is not None and prompt_sha_actual == prompt_sha_claimed, str(prompt_sha_actual))
+          gate('the submitted instruction_id appears literally in the frozen launch prompt', prompt_text is not None and instruction in prompt_text)
+          gate('no unresolved {{INSTRUCTION_ID}} launch placeholder remains in the active frozen prompt', prompt_text is not None and '{{INSTRUCTION_ID}}' not in prompt_text)
           rd = open('qualification/mobilewright/README.md').read()
           real = re.search(r'## Scenario realization.*?\n\n(.*?)\n\n## ', rd, re.S)
           gate('scenario realization recorded (no null / TBD in the realization table)', real is not None and 'null / TBD' not in real.group(1))
