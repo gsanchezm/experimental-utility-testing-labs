@@ -1,0 +1,62 @@
+# qualification/mobilewright/local-preflight/android-zflip6/MQ2-AND-MEASURED-01/preflight-record.yaml
+# Sidecar record of one LOCAL_DEVELOPMENT_PREFLIGHT execution on the Android physical device (Samsung Galaxy Z Flip 6).
+# The harness files beside it (record.json, spec.json, runner.log, harness-precheck.json, screenshots, view trees, device log) are the
+# locked harness's own output, imported unchanged except for the redactions listed in ../IMPORT-RECORD.yaml. By construction they
+# carry record_class DEVELOPMENT, kind MEASURED (the harness's word for a non-warm-up execution), combination "Android emulator" and
+# environment_type EMULATED; none of those labels is true of this execution, which is a diagnostic preflight on a physical device.
+record_class: LOCAL_DEVELOPMENT_PREFLIGHT
+qualification_evidence: false
+measured_experiment: false
+counts_toward_N: false
+classification: [NON_QUALIFICATION, NON_MEASURED, NOT_PART_OF_N, NOT_A_WARMUP, NOT_PASS_FAIL_EVIDENCE, NOT_RUNNER_SELECTION_EVIDENCE, NOT_E03_DATA]
+study_id: EUS-2026-001
+recorded_by: QUALIFIER-MOBILE-01
+recorded_at: "2026-09-22"
+instruction: "LOCAL DEVELOPMENT PREFLIGHT instruction of the human research lead, 2026-09-22 (verbatim in manifests/mobile-qualification-implementation-lock-v1.yaml; sha256 90d87d18e75caebeffbbd81b4fde9f2348efefea889a20ab632b20a6c13c9c6b)"
+implementation_lock: "manifests/mobile-qualification-implementation-lock-v1.yaml (MOBILE-QUALIFICATION-IMPLEMENTATION-LOCK-01); every locked artifact recomputed at its locked hash before and after this execution"
+repository_head_at_execution: 4386a42
+preflight_execution_id: PREFLIGHT-ANDROID-ZFLIP6-MQ2-01
+harness_execution_id: MQ2-AND-MEASURED-01  # directory name as produced by the locked harness; "MEASURED" is the harness kind vocabulary, NOT a measured qualification execution
+scenario: MQ2
+platform: android
+substrate: "Android physical device (human-owned Samsung Galaxy Z Flip 6); NOT the frozen Android qualification substrate (API 35 x86_64 emulator, profile pixel_7); diagnostic only"
+environment_type_actual: OTHER  # protocol/study-design-v1.md section 10: a physical device is not EMULATED; controlled by the study (operator-connected device) for this diagnostic only
+environment_type_label_in_harness_files: EMULATED  # fixed by run-gate.mjs for any non-iOS platform; disclosed, not edited
+device: {manufacturer: "samsung", model: "SM-F741B", product_name: "b6qxxx", android_release: "16", api_level: "36", abi: "arm64-v8a", build_display_id: "BP4A.251205.006.F741BXXS4DZH5", security_patch: "2026-08-05", serial: "<android-serial-redacted>", connection_mode: "USB (adb)", runner_observed_identity: "id <android-serial-redacted> (equal to the adb serial), name Galaxy Z Flip6, platform android, type real, osVersion 16, model SM-F741B (environment/android-runner-readiness.json device_entry)"}
+runner: {candidate: Mobilewright, version: "0.0.60", mobilecli_version: "1.0.13", install: "npm ci from the locked lockfile; driver-mobilecli 0.0.60, core 0.0.60, playwright 1.63.0; Node.js v23.6.1, npm 11.1.0 (the pinned CI substrate used Node.js 22)"}
+host: {model: "MacBookPro16,2", arch: x86_64, macos_version: "26.5.2", load_average_at_driver_start: "{ 846.03 852.66 705.74 }", note: "1-minute load average between 770 and 920 from unrelated applications during the whole preflight"}
+build: {asset: "omnipizza-release.apk", pinned_sha256: 1059e9468145761710c9884b37e9fbc76da8e75eb9666dc0867d82a546cda6a4, observed_sha256: 1059e9468145761710c9884b37e9fbc76da8e75eb9666dc0867d82a546cda6a4, digest_match: true}
+timestamps: {started: "2026-09-23T01:59:16.421Z", ended: "2026-09-23T02:00:56.245Z"}
+outcome_as_recorded_by_harness: SUCCESS
+duration_ms: {"reset": 8119, "precondition": 51832, "scenario": 31745, "total": 99816}
+capabilities_exercised_as_recorded: ["MC-01", "MC-02", "MC-03", "MC-04", "MC-05", "MC-06", "MC-08", "MC-09", "MC-10"]
+failed_step: null
+steps:
+  - {status: OK, name: "connect the runner to the pinned device (explicit id)", duration_ms: 5203}
+  - {status: OK, name: "reset: uninstall any previous install (MC-09)", duration_ms: 1709}
+  - {status: OK, name: "reset: install the pinned build (MC-09, MC-01)", duration_ms: 5495}
+  - {status: OK, name: "reset: verify the pinned build is installed (MC-09)", duration_ms: 914}
+  - {status: OK, name: "launch the app (MC-01)", duration_ms: 3149}
+  - {status: OK, name: "login screen visible (MC-02, MC-06, MC-08)", duration_ms: 4460}
+  - {status: OK, name: "select market US (MC-02, MC-04)", duration_ms: 8498}
+  - {status: OK, name: "enter password (MC-02, MC-03)", duration_ms: 7344}
+  - {status: OK, name: "enter username (MC-02, MC-03)", duration_ms: 6571}
+  - {status: OK, name: "read back the entered values (MC-08; diagnostic, not an oracle)", duration_ms: 5166}
+  - {status: OK, name: "dismiss the keyboard by tapping outside the inputs (MC-02, MC-04)", duration_ms: 2956}
+  - {status: OK, name: "tap Sign In (MC-02, MC-04)", duration_ms: 6753}
+  - {status: OK, name: "catalog screen visible (MC-06, MC-08)", duration_ms: 2889}
+  - {status: OK, name: "bottom navigation visible (MC-02, MC-08)", duration_ms: 4044}
+  - {status: OK, name: "catalog list loaded: first card visible (MC-02, MC-08)", duration_ms: 4495}
+  - {status: OK, name: "swipe up in the catalog (MC-05)", duration_ms: 1968}
+  - {status: OK, name: "scroll the target product control into view (MC-02, MC-05)", duration_ms: 14360}
+  - {status: OK, name: "open the target product (MC-02, MC-04)", duration_ms: 4050}
+  - {status: OK, name: "product screen visible (MC-06, MC-08)", duration_ms: 1443}
+  - {status: OK, name: "initial estimated total is $15.99 (MC-02, MC-08)", duration_ms: 1119}
+  - {status: OK, name: "tap the size control Large (MC-02, MC-04)", duration_ms: 2803}
+  - {status: OK, name: "estimated total changed to $19.99 (MC-08)", duration_ms: 1507}
+  - {status: OK, name: "capture terminal screenshot and view tree (MC-10)", duration_ms: 1736}
+terminal_ui_state_observed: "product screen (screen-pizza-builder) of the target product with size Large selected and the estimated total changed from $15.99 to $19.99; screenshot terminal.png shows Customize Pizza, Large selected, ESTIMATED TOTAL $19.99"
+artifacts: ["harness-precheck.json", "record.json", "runner.log", "spec.json", "terminal.png", "view-tree-terminal.json"]
+retry_used: false  # no retry of any kind; one execution per scenario exactly as instructed
+harness_unchanged: true  # all eleven locked hashes recomputed equal before and after the execution (../PREFLIGHT-SUMMARY.yaml)
+interpretation_limits: "diagnostic only; not part of N; not pass/fail evidence; not runner-selection evidence; not E03 data; not evidence about any system under test; the physical device is not the frozen qualification substrate"

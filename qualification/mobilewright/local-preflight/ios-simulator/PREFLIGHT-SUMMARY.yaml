@@ -1,0 +1,46 @@
+# qualification/mobilewright/local-preflight/ios-simulator/PREFLIGHT-SUMMARY.yaml
+# Platform summary of the LOCAL_DEVELOPMENT_PREFLIGHT attempt on the iOS Simulator of the operator's Mac, 2026-09-22 (local time) / 2026-09-23 UTC.
+# Observations only. No scenario was executed on this platform: the attempt is BLOCKED by a pre-scenario infrastructure failure.
+record_class: LOCAL_DEVELOPMENT_PREFLIGHT
+qualification_evidence: false
+measured_experiment: false
+counts_toward_N: false
+classification: [NON_QUALIFICATION, NON_MEASURED, NOT_PART_OF_N, NOT_A_WARMUP, NOT_PASS_FAIL_EVIDENCE, NOT_RUNNER_SELECTION_EVIDENCE, NOT_E03_DATA]
+study_id: EUS-2026-001
+recorded_by: QUALIFIER-MOBILE-01
+recorded_at: "2026-09-22"
+instruction: "LOCAL DEVELOPMENT PREFLIGHT instruction of the human research lead, 2026-09-22 (verbatim in manifests/mobile-qualification-implementation-lock-v1.yaml; sha256 90d87d18e75caebeffbbd81b4fde9f2348efefea889a20ab632b20a6c13c9c6b)"
+implementation_lock: "manifests/mobile-qualification-implementation-lock-v1.yaml (MOBILE-QUALIFICATION-IMPLEMENTATION-LOCK-01)"
+repository_head_at_attempt: 4386a42
+platform: ios
+substrate: "Xcode Simulator on the human's Mac (Intel); diagnostic only; not the pinned GitHub macos-15 substrate"
+status: BLOCKED
+blocking_cause: HOST_SIMULATOR_SERVICE_UNRESPONSIVE
+failure_class: "pre-scenario infrastructure/setup failure (instruction section 9); no scenario started; no execution record exists; nothing counted"
+scenario_executions: 0  # MQ1, MQ2, MQ3: NOT_STARTED on this platform
+observed_environment:
+  mac_architecture: x86_64  # MacBookPro16,2
+  macos_version: "26.5.2 (25F84)"
+  xcode_version: "Xcode 26.5, build 17F42 (xcode-select: the Xcode.app developer directory)"  # pinned CI substrate: Xcode 16.4 build 16F6 on macos-15
+  simulator_device_as_seen_by_the_runner_device_server: "iPhone 16, platform ios, type simulator, version 18.2, state online (probes/mobilecli-devices.json, captured 2026-09-23 ~02:20Z; the same listing shows the Android physical device)"
+  simulator_udid: "E83DB502-<udid-redacted>"
+  ios_runtime: "iOS 18.2 (build 22C150) -- the only iOS 18 runtime installed (probes/coresimulator-runtime-volumes.txt: iOS_22C150 plus four iOS 26 runtime volumes); iOS 18.5 (22F77) is NOT installed locally and was not installed (instruction section 5.B: prefer 18.5 only if already available; no tooling change)"
+  ios_runtime_build_verification: "could not be read through simctl (unresponsive, below); taken from the runtime volume name iOS_22C150 and the runner device server listing (version 18.2)"
+  differences_from_the_pinned_substrate: "Xcode 26.5 (17F42) instead of 16.4 (16F6); iOS 18.2 (22C150) instead of 18.5 (22F77); macOS 26.5.2 Intel instead of the macos-15 arm64 image; no result is invalid because of these differences, and none would be qualification evidence"
+  host_load: "1-minute load average between 770 and 920 during the whole session (unrelated applications of the operator: an IDE helper process at ~105% CPU, the window server at ~74%, a browser at ~85% combined); 382 running processes; 55 MB unused physical memory at 19:12 local"
+evidence_of_the_blocking_failure:  # every probe is read-only; timestamps local (UTC-6)
+  - {probe: "xcrun simctl list -j devices available (Python subprocess timeout 60 s, first background probe ~19:06)", result: "no output; the timeout could not terminate the call (the pipe stayed open); output lost"}
+  - {probe: "xcrun simctl list -j devices booted (timeout 90 s, started ~19:33)", result: "SIMCTL_TIMEOUT; the call only returned after 1985 s (probes/simctl-probe-1b-booted-90s.txt)"}
+  - {probe: "xcrun simctl list -j devices available then runtimes (process-group kill, 300 s each, 19:29-19:39)", result: "both TIMEOUT after 300 s (probes/simctl-probe-2-devices-and-runtimes-300s.txt)"}
+  - {probe: "xcrun simctl list -j devices booted then available (900 s each, 19:40-20:10)", result: "both TIMEOUT after 900 s (probes/simctl-probe-3-booted-and-available-900s.txt)"}
+  - {probe: "mobilecli agent status --device <simulator udid> (the runner's own agent probe, 120 s, ~20:05)", result: "AGENT_STATUS_TIMEOUT after 120 s; no output"}
+  - {probe: "xcrun simctl list -j devices booted after the Android preflight had finished (300 s, 20:11-20:16)", result: "TIMEOUT after 300 s (probes/simctl-probe-4-booted-300s-after-android.txt)"}
+  - {probe: "process states at 20:17 local", result: "the killed simctl processes remain in uninterruptible / exiting kernel states (probes/simctl-process-states-at-20-17-local.txt); CoreSimulatorService (running for 10 h 36 min) did not answer any listing"}
+why_the_locked_ios_entry_script_cannot_run: "run-gate-ios.sh (locked) calls xcrun simctl at every step before the first runner action: device lookup (list -j devices available), boot, bootstatus -b, the environment record (list -j), and the runner's agent status / install; each of those calls hung on this host, so the script would block before any scenario; driving the locked orchestrator directly would still depend on the same simulator service for install, launch, and the failure-time log capture"
+what_was_not_done:
+  - "no restart or kill of CoreSimulatorService or of the booted simulator (a state change on the human's machine outside this instruction; a booted iPhone 16 with hours-old processes was in use)"
+  - "no installation of the iOS 18.5 runtime or any other tooling change"
+  - "no edit of run-gate-ios.sh, gate-common.sh, or harness/** (PREFLIGHT_REQUIRES_IMPLEMENTATION_CHANGE was not the case: the script is applicable, the host service is not responding)"
+  - "no CI/CD dispatch"
+retry: "none within this operation beyond the read-only listing probes above; a later re-attempt of the iOS preflight under the same instruction, once the host simulator service responds (for example after a reboot of the operator workstation), would be a separately recorded pre-scenario infrastructure retry (instruction section 9), left to the human"
+interpretation_limits: "an infrastructure block of the operator workstation; says nothing about the runner, the qualification build, MQ1-MQ3, or any system under test"

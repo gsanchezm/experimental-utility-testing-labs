@@ -1,0 +1,758 @@
+# manifests/mobile-qualification-implementation-lock-v1.yaml
+# Implementation-baseline lock of the Mobilewright qualification realization and harness, EUS-2026-001 (human decision of
+# 2026-09-22, section 1 of the LOCAL DEVELOPMENT PREFLIGHT instruction reproduced verbatim below). Declares the exact artifacts
+# accepted as the baseline for the future protocol-valid Mobilewright requalification. Modeled on
+# manifests/mobile-qualification-authorization-correction-v1.yaml (verbatim human text, recomputed hashes). Editable by ORCHESTRATOR
+# only (protocol/agent-governance-v2.md, section 4). This lock is NOT a qualification result, NOT a runner selection, NOT an
+# execution authorization, and changes no protocol document. The record id below is ORCHESTRATOR bookkeeping, not a human
+# authorization id; no authorization id for the future valid gate is created here.
+record_id: MOBILE-QUALIFICATION-IMPLEMENTATION-LOCK-01  # ORCHESTRATOR bookkeeping identifier of this record; not an -AUTH- id
+record_class: IMPLEMENTATION_BASELINE_LOCK
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-09-22"
+qualification_evidence: false
+measured_experiment: false
+counts_toward_N: false
+is_qualification_result: false
+selects_runner: false
+authorizes_execution: false  # no qualification execution, compatibility smoke, E03 START, or executor launch is authorized by this record or by the instruction below
+head_before: 86a0931f388badde2e1588e819249471691c3070
+working_tree_clean_before: true
+human_decision:
+  decided_by: "gilbertosanchez (human research lead)"
+  decided_on: "2026-09-22"
+  decision: "accept the current concrete qualification realization and current harness implementation as the baseline for the future valid Mobilewright requalification, including the realization introduced before the qualification-labelled executions (c5bb7b27290d385f2b459fe270801e738cb0261d) and the subsequent shell-portability correction (ab2791960a82650199a8a8b4630ff0cdcc20832c); these changes may survive"
+  basis_stated_by_the_human: "the realization changes preserved the frozen meanings of MQ1, MQ2, and MQ3; did not alter MC-01 through MC-10, N, the pass criteria, the attribution/exclusion rules, or the fallback rule; did not replace the runner's Android deep-link mechanism with adb or another workaround; did not repair the known MC-07 Android behavior after the qualification-labelled Android failures; the changes were implementation/operability changes (login field ordering around the software keyboard, diagnostic credential read-back, keyboard dismissal, handling of the native iOS open prompt through the runner, additional failure diagnostics, Bash 3.2 portability)"
+  how_the_instruction_arrived: "entered directly by the human operator as the session input of 2026-09-22 to the ORCHESTRATOR session (pasted instruction text, reproduced verbatim below); not relayed from a research advisor, not a proposed draft; unlike the retired MOBILE-QUALIFICATION-EXEC-AUTH-01 record (PROTO-U10) it creates no gated-execution authorization and carries no authorization id; the ORCHESTRATOR asks the human, in the return package of the same operation, to confirm in their own words that they issued the section-1 acceptance"
+  instruction_sha256: 90d87d18e75caebeffbbd81b4fde9f2348efefea889a20ab632b20a6c13c9c6b  # SHA-256 of the verbatim text under human_instruction_verbatim (UTF-8, LF line endings, trailing newline)
+lock_verification:  # section 2 of the instruction: every hash recomputed independently at head_before, before any preflight execution
+  method: "shasum -a 256 over the working-tree file (identical to the HEAD blob, tree clean); README section extracted with Python from the file text"
+  result: IMPLEMENTATION_LOCK_HASH_MATCH  # all eleven expected values reproduced; no artifact differs
+  artifacts:
+    - {path: qualification/mobilewright/run-gate-android.sh, sha256: a10c7b9f24e0c2ed302c87ed24cac0b18ac001cc84b2683ea202d610d1bb7a4e, expected: a10c7b9f24e0c2ed302c87ed24cac0b18ac001cc84b2683ea202d610d1bb7a4e, match: true, git_blob: fa8e80a774fedc615f45e6b2244bc87e2bb04b6a}
+    - {path: qualification/mobilewright/run-gate-ios.sh, sha256: 708f27794722b3f5fe61524cf7408bfb8e133de5edf94c7717abe3daee890879, expected: 708f27794722b3f5fe61524cf7408bfb8e133de5edf94c7717abe3daee890879, match: true, git_blob: e92e67fd626c8ccc56aaa9a9abbe8919fd1ebab7}
+    - {path: qualification/mobilewright/gate-common.sh, sha256: 1580c5c2fc7c5dedc7323a15ea65894998575bc1bf7276bd582b0d2457edf59c, expected: 1580c5c2fc7c5dedc7323a15ea65894998575bc1bf7276bd582b0d2457edf59c, match: true, git_blob: e6081d5863c098b8e37fd9b89f52d0f87016d71e}
+    - {path: qualification/mobilewright/harness/package.json, sha256: f2b4f936e2cb1692e5b49dbeaa1ca136ac9460b8064627fbdc8b881323d7e390, expected: f2b4f936e2cb1692e5b49dbeaa1ca136ac9460b8064627fbdc8b881323d7e390, match: true, git_blob: bb05ac302e6450f9f361ccb99f07b49dfba7bade}
+    - {path: qualification/mobilewright/harness/package-lock.json, sha256: 5d235b55b72526c7548b49d2f22fbc5697dd4a3b68d18830245af572e62b08ef, expected: 5d235b55b72526c7548b49d2f22fbc5697dd4a3b68d18830245af572e62b08ef, match: true, git_blob: 670d0b66cf9c90210923773610f5d8c7b62e9867}
+    - {path: qualification/mobilewright/harness/backend.mjs, sha256: 6e0af303a72175fd1e4af3544ec953fe28733d577688b778f20c868720e0a9bd, expected: 6e0af303a72175fd1e4af3544ec953fe28733d577688b778f20c868720e0a9bd, match: true, git_blob: 8376f9ce679159dc025c33c3a412c4b82892a5a3}
+    - {path: qualification/mobilewright/harness/execute.mjs, sha256: da67f01088a8524b50ed1592443493922c1d0967c1ffc4287b392555e45f6e6a, expected: da67f01088a8524b50ed1592443493922c1d0967c1ffc4287b392555e45f6e6a, match: true, git_blob: 7529ec6e4aefc4c69f2d02492267fc90b90e11a1}
+    - {path: qualification/mobilewright/harness/run-gate.mjs, sha256: f92796317915f076b1fbde28f468f69379cdcf11671774e1d369beeaa86b4224, expected: f92796317915f076b1fbde28f468f69379cdcf11671774e1d369beeaa86b4224, match: true, git_blob: 052085b00b9c7e0ce5a4ca545f92ef1aaa16cef9}
+    - {path: qualification/mobilewright/harness/import-artifacts.mjs, sha256: 6b28f0b6fb1e9c081f0c5e275afb8f5ae6ddeb77d0a3d9b75880a20530651cdf, expected: 6b28f0b6fb1e9c081f0c5e275afb8f5ae6ddeb77d0a3d9b75880a20530651cdf, match: true, git_blob: 3ea04dd6ff964f448c6903129b0bb02563de2d85}
+    - {path: qualification/mobilewright/harness/summarize-results.mjs, sha256: d6b56464c113c6addfda962e2af050552f2c2b34ee551466c2f70e025bc1a1dc, expected: d6b56464c113c6addfda962e2af050552f2c2b34ee551466c2f70e025bc1a1dc, match: true, git_blob: 5ffb7c61ba0aa1a03c2a0a329af4401b130f1b07}
+  scenario_realization_section:
+    path: qualification/mobilewright/README.md
+    git_blob: 14e3b7771e073efc46d6c3719a76e45c4adc1812
+    extraction_convention: "the text from the first character of the heading line '## Scenario realization' up to, but excluding, the final line-feed character that precedes the heading line '## Pass criteria' (equivalently: the section joined from its lines with single line feeds and no trailing line feed); 4668 characters; the same section including that final line feed is 4669 characters and hashes to 5deb97e0c22e6cbf6913cd5001a43bc224ce041723aa801f2326dc3dcae5a293 -- the correction record's figure of 4668 characters identifies the convention without the trailing line feed"
+    sha256: f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018
+    expected: f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018
+    match: true
+    byte_identical_at: [c5bb7b27290d385f2b459fe270801e738cb0261d, e9ceaac54f8dba08f0531d7752d11a6997504535, 86a0931f388badde2e1588e819249471691c3070]  # the section did not change through the PROTO-U10 documentation update of the same file (commit 4f5d00f)
+accepted_baseline:  # these exact artifacts are the accepted realization and harness for the future protocol-valid requalification
+  gate_entry_scripts: [qualification/mobilewright/run-gate-android.sh, qualification/mobilewright/run-gate-ios.sh, qualification/mobilewright/gate-common.sh]
+  harness: [qualification/mobilewright/harness/package.json, qualification/mobilewright/harness/package-lock.json, qualification/mobilewright/harness/backend.mjs, qualification/mobilewright/harness/execute.mjs, qualification/mobilewright/harness/run-gate.mjs, qualification/mobilewright/harness/import-artifacts.mjs, qualification/mobilewright/harness/summarize-results.mjs]
+  scenario_realization_table: "qualification/mobilewright/README.md, section 'Scenario realization' (hash above); its executable form is the REALIZATION constant of harness/execute.mjs"
+  runner_under_qualification: "mobilewright 0.0.60 exactly as pinned in the lockfile (manifests/toolchain-manifest.yaml, tools.mobile_primary_candidate.pinned_candidate_version); resolving mobilecli 1.0.13"
+  qualification_build: "OmniPizza release v1.1.8 (manifests/toolchain-manifest.yaml, tools.mobile_primary_candidate.qualification_build): omnipizza-release.apk sha256 1059e9468145761710c9884b37e9fbc76da8e75eb9666dc0867d82a546cda6a4; OmniPizza-Simulator.zip sha256 de2e8c21b0788cef1ba4654378449d16e958574b33a2b4ef8a07cb698dbc6eb1"
+  frozen_inputs_unchanged: "protocol/mobile-runner-policy-v1.md (FROZEN-PRE-DATA 2026-09-16): MQ1-MQ3 semantic definitions, MC-01..MC-10, N = 10, pass criteria, attribution rules, fallback rule, qualification SUT and platforms; manifests/mobile-qualification-package-v1.yaml; none is touched by this lock"
+  prequalification_outcome_exposure: true  # PROTO-U10; the baseline is accepted with the exposed Android MQ3 / MC-07 outcome known; nothing above was changed in response to it
+rules_from_this_lock_forward:
+  - "the future protocol-valid Mobilewright requalification (which requires a NEW explicit human authorization with a new id; MOBILE-QUALIFICATION-EXEC-AUTH-01 is retired) uses these exact artifacts at these exact hashes"
+  - "no outcome-responsive modification: none of the artifacts above, the MQ1-MQ3 realization, the pass criteria, or the capability definitions is edited in response to any observed outcome; in particular the runner's own deep-link API (device.openUrl) is never replaced by adb shell am start, a manual deep-link invocation, another automation library, a SUT modification, or a direct navigation workaround"
+  - "a change to any locked artifact before the requalification requires an explicit human decision recorded as a successor of this record (a new version file; this file is never edited in substance), with the new hashes"
+  - "a local preflight (class LOCAL_DEVELOPMENT_PREFLIGHT; qualification/mobilewright/local-preflight/) that would require an implementation change stops for that platform and reports PREFLIGHT_REQUIRES_IMPLEMENTATION_CHANGE; the change is not made"
+what_this_record_is_not:
+  - a qualification result (Mobilewright is neither qualified nor disqualified; qualification_status remains INVALID_EXECUTION_AUTHORIZATION, the protocol-valid gate NOT_STARTED)
+  - a runner selection (manifests/toolchain-manifest.yaml mobile_runner_selection.selected_runner remains none)
+  - an execution authorization of any kind
+  - a protocol change (no file under protocol/ changes state or content)
+  - evidence about any system under test
+human_instruction_verbatim: |
+  EUS-2026-001 — MOBILEWRIGHT
+  LOCAL DEVELOPMENT PREFLIGHT
+
+  * IMPLEMENTATION LOCK
+
+  MODE:
+
+  NON-QUALIFICATION
+  NON-MEASURED
+  LOCAL-ONLY
+
+  NO CI/CD QUALIFICATION EXECUTION.
+  NO RUNNER-SELECTION DECISION.
+  NO APPIUM COMPATIBILITY SMOKE.
+  NO E03 START.
+
+  ==================================================
+  0. AUTHORITATIVE CURRENT STATE
+  ==============================
+
+  The authorization-provenance correction PROTO-U10 is accepted.
+
+  Current authoritative state:
+
+  MOBILE_QUALIFICATION_AUTHORIZATION:
+  INVALID for retired id MOBILE-QUALIFICATION-EXEC-AUTH-01
+
+  AFFECTED QUALIFICATION RUNS:
+  PRESERVED_QUARANTINED
+
+  MOBILEWRIGHT TECHNICAL OBSERVATION:
+  PRESERVED_NONAUTHORITATIVE
+
+  MOBILEWRIGHT QUALIFICATION DECISION:
+  INVALID_REQUIRES_VALID_REEXECUTION
+
+  MOBILE RUNNER SELECTION:
+  NONE
+
+  PRIMARY CANDIDATE:
+  Mobilewright 0.0.60
+
+  FALLBACK:
+  Appium 3.7.0
+
+  PREQUALIFICATION_OUTCOME_EXPOSURE:
+  TRUE
+
+  E03:
+  NOT_STARTED
+
+  No compatibility smoke is authorized.
+
+  No valid qualification execution is authorized by this prompt.
+
+  ==================================================
+
+  1. HUMAN DECISION — ACCEPT CURRENT REALIZATION
+     ==================================================
+
+  The human research lead accepts the current concrete qualification
+  realization and current harness implementation as the baseline for the
+  future valid Mobilewright requalification.
+
+  This acceptance includes the realization introduced before the
+  qualification-labelled executions and the subsequent shell-portability
+  correction.
+
+  The acceptance is based on the following distinction:
+
+  The realization changes:
+
+  * preserved the frozen meanings of MQ1, MQ2, and MQ3;
+  * did not alter MC-01 through MC-10;
+  * did not alter N;
+  * did not alter pass criteria;
+  * did not alter attribution/exclusion rules;
+  * did not alter the fallback rule;
+  * did not replace Mobilewright's Android deep-link mechanism with adb or
+    another workaround;
+  * did not repair the known MC-07 Android behavior after the
+    qualification-labelled Android failures.
+
+  The changes were implementation/operability changes:
+
+  * login field ordering around the software keyboard;
+  * diagnostic credential read-back;
+  * keyboard dismissal;
+  * handling of the native iOS open prompt through the runner;
+  * additional failure diagnostics;
+  * Bash 3.2 portability.
+
+  These changes may survive.
+
+  ==================================================
+  2. IMPLEMENTATION LOCK
+  ======================
+
+  Before any local preflight execution, independently recompute the SHA-256
+  of the currently accepted artifacts.
+
+  Expected values from PROTO-U10:
+
+  qualification/mobilewright/run-gate-android.sh
+  a10c7b9f24e0c2ed302c87ed24cac0b18ac001cc84b2683ea202d610d1bb7a4e
+
+  qualification/mobilewright/run-gate-ios.sh
+  708f27794722b3f5fe61524cf7408bfb8e133de5edf94c7717abe3daee890879
+
+  qualification/mobilewright/gate-common.sh
+  1580c5c2fc7c5dedc7323a15ea65894998575bc1bf7276bd582b0d2457edf59c
+
+  qualification/mobilewright/harness/package.json
+  f2b4f936e2cb1692e5b49dbeaa1ca136ac9460b8064627fbdc8b881323d7e390
+
+  qualification/mobilewright/harness/package-lock.json
+  5d235b55b72526c7548b49d2f22fbc5697dd4a3b68d18830245af572e62b08ef
+
+  qualification/mobilewright/harness/backend.mjs
+  6e0af303a72175fd1e4af3544ec953fe28733d577688b778f20c868720e0a9bd
+
+  qualification/mobilewright/harness/execute.mjs
+  da67f01088a8524b50ed1592443493922c1d0967c1ffc4287b392555e45f6e6a
+
+  qualification/mobilewright/harness/run-gate.mjs
+  f92796317915f076b1fbde28f468f69379cdcf11671774e1d369beeaa86b4224
+
+  qualification/mobilewright/harness/import-artifacts.mjs
+  6b28f0b6fb1e9c081f0c5e275afb8f5ae6ddeb77d0a3d9b75880a20530651cdf
+
+  qualification/mobilewright/harness/summarize-results.mjs
+  d6b56464c113c6addfda962e2af050552f2c2b34ee551466c2f70e025bc1a1dc
+
+  Scenario-realization section:
+  f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018
+
+  If ANY hash differs:
+
+  STOP.
+
+  Return:
+
+  IMPLEMENTATION_LOCK_HASH_MISMATCH
+
+  Do not execute preflight.
+
+  If all match, create the minimum provenance record needed to declare
+  these exact artifacts the accepted baseline for future valid
+  requalification.
+
+  This lock is not a qualification result and does not select a runner.
+
+  ==================================================
+  3. NO OUTCOME-RESPONSIVE MODIFICATION
+  =====================================
+
+  From this point onward, this preflight is observational.
+
+  Do NOT edit:
+
+  run-gate-android.sh
+  run-gate-ios.sh
+  gate-common.sh
+  harness/**
+  the MQ1-MQ3 realization
+  pass criteria
+  capability definitions
+
+  during this operation.
+
+  In particular do NOT replace Mobilewright's Android deep-link operation
+  with:
+
+  adb shell am start
+  manual deep-link invocation
+  another automation library
+  a SUT modification
+  a direct navigation workaround
+
+  to evade the previously observed MC-07 behavior.
+
+  If execution would require an implementation change:
+
+  STOP that platform and report:
+
+  PREFLIGHT_REQUIRES_IMPLEMENTATION_CHANGE
+
+  with the exact reason.
+
+  Do not make the change.
+
+  ==================================================
+  4. PREFLIGHT CLASSIFICATION
+  ===========================
+
+  Every execution under this instruction is:
+
+  LOCAL_DEVELOPMENT_PREFLIGHT
+
+  and simultaneously:
+
+  NON_QUALIFICATION
+  NON_MEASURED
+  NOT_PART_OF_N
+  NOT_A_WARMUP
+  NOT_PASS_FAIL_EVIDENCE
+  NOT_RUNNER_SELECTION_EVIDENCE
+  NOT_E03_DATA
+
+  Do not call these executions:
+
+  qualification runs
+  measured qualification executions
+  formal warm-ups
+  E03 executions
+
+  They may not be used in H2 or any campaign analysis.
+
+  ==================================================
+  5. AUTHORIZED LOCAL ENVIRONMENTS
+  ================================
+
+  This instruction authorizes local preflight only on:
+
+  A. Android physical device
+
+  Human-owned:
+
+  Samsung Galaxy Z Flip 6
+
+  Record the actual observed:
+
+  manufacturer
+  model
+  Android version
+  API level
+  ABI
+  device serial in redacted/non-identifying form
+  connection mode
+  Mobilewright-observed device identity
+
+  The Z Flip 6 is NOT the frozen Android qualification substrate.
+
+  Its result is diagnostic only.
+
+  B. iOS Simulator
+
+  Xcode Simulator on the human's Mac.
+
+  Prefer, if already locally available:
+
+  iPhone 16
+  iOS 18.5
+
+  Do NOT install/change major local development tooling merely to make the
+  environment equal CI unless harmless and already supported.
+
+  Record the actual:
+
+  Mac architecture
+  macOS version
+  Xcode version/build
+  simulator device
+  iOS runtime/build
+  UDID in redacted/non-identifying form where appropriate
+
+  If it differs from the pinned GitHub substrate, disclose the difference.
+
+  No result is invalid merely because this diagnostic local environment
+  differs.
+
+  ==================================================
+  6. DO NOT USE CI/CD
+  ===================
+
+  Do NOT dispatch:
+
+  E03 Mobile Qualification
+  E03 Environment Verification
+  E03 Measured Execution
+
+  or any other GitHub Actions workflow to perform this preflight.
+
+  Local machine/device only.
+
+  The ordinary repository-validation workflow may run later as a result of
+  publication, but it must not execute any SUT and is not part of this
+  preflight.
+
+  ==================================================
+  7. MOBILEWRIGHT VERSION
+  =======================
+
+  Use exactly:
+
+  Mobilewright 0.0.60
+
+  Verify the installed package/version before execution.
+
+  Record the observed supporting versions, including Mobilewright's
+  underlying mobile tooling where available.
+
+  Do not upgrade or downgrade in response to the known outcome.
+
+  ==================================================
+  8. QUALIFICATION BUILD
+  ======================
+
+  Use the same pinned OmniPizza qualification build:
+
+  release v1.1.8
+
+  Android APK digest:
+
+  1059e9468145761710c9884b37e9fbc76da8e75eb9666dc0867d82a546cda6a4
+
+  iOS Simulator build digest:
+
+  de2e8c21b0788cef1ba4654378449d16e958574b33a2b4ef8a07cb698dbc6eb1
+
+  Verify digest before use.
+
+  If mismatch:
+
+  STOP that platform.
+
+  Do not substitute another build.
+
+  ==================================================
+  9. PREFLIGHT EXECUTION COUNT
+  ============================
+
+  Execute exactly ONE diagnostic execution of each realized scenario on
+  each available local platform:
+
+  Android Z Flip 6:
+
+  MQ1 × 1
+  MQ2 × 1
+  MQ3 × 1
+
+  iOS Simulator:
+
+  MQ1 × 1
+  MQ2 × 1
+  MQ3 × 1
+
+  Maximum intended scenario executions:
+
+  6
+
+  Do not repeat a failed scenario to make it pass.
+
+  A retry may occur only for a clearly pre-scenario infrastructure/setup
+  failure and must be recorded separately.
+
+  Do not optimize based on observed outcome.
+
+  ==================================================
+  10. MQ1 / MQ2 / MQ3
+  ===================
+
+  Use the currently locked realization EXACTLY.
+
+  Do not redefine terminal states.
+
+  Do not change selectors.
+
+  Do not change API seed semantics.
+
+  Do not change the deep-link URI.
+
+  Do not change the runner API used to open the deep link.
+
+  Do not change the sequence in response to a result.
+
+  ==================================================
+  11. ANDROID Z FLIP 6 DIAGNOSTIC
+  ===============================
+
+  For the Z Flip 6, record particularly:
+
+  * Mobilewright connection succeeds/fails;
+  * pinned APK installs;
+  * MC-09-style reset operation works;
+  * MQ1 terminal state;
+  * MQ2 terminal state;
+  * MQ3 API seed verification;
+  * exact deep-link URI supplied to Mobilewright;
+  * whether the route is delivered;
+  * whether query parameters reach the app;
+  * resulting target UI state;
+  * screenshot;
+  * runner log;
+  * relevant view hierarchy.
+
+  Do NOT invoke adb directly as part of MQ3.
+
+  If a separate adb diagnostic would be scientifically useful:
+
+  do not perform it inside this preflight.
+
+  Report:
+
+  OPTIONAL_EXTERNAL_DIAGNOSTIC_AVAILABLE
+
+  instead.
+
+  The purpose is to observe Mobilewright as-is.
+
+  ==================================================
+  12. IOS SIMULATOR DIAGNOSTIC
+  ============================
+
+  Record:
+
+  * Mobilewright connection;
+  * DeviceKit/runner agent state;
+  * build installation;
+  * reset;
+  * MQ1;
+  * MQ2;
+  * MQ3;
+  * native open prompt handling using the already-locked runner behavior;
+  * deep-link delivery;
+  * target UI state;
+  * screenshots/logs.
+
+  No manual intervention inside a scenario.
+
+  ==================================================
+  13. OUTPUT LOCATION
+  ===================
+
+  Keep these records explicitly separated from qualification-gate output.
+
+  Use an existing authorized DEVELOPMENT/preflight location if one already
+  exists.
+
+  Otherwise, under QUALIFIER-MOBILE-01's existing qualification workspace,
+  use a clearly isolated path equivalent to:
+
+  qualification/mobilewright/local-preflight/
+
+  with:
+
+  README.md
+  android-zflip6/
+  ios-simulator/
+
+  Do NOT write these diagnostic records into the directories representing
+  formal qualification measured executions.
+
+  Every record must include:
+
+  record_class: LOCAL_DEVELOPMENT_PREFLIGHT
+  qualification_evidence: false
+  measured_experiment: false
+  counts_toward_N: false
+
+  ==================================================
+  14. RESULT INTERPRETATION
+  =========================
+
+  Return observations only.
+
+  Allowed examples:
+
+  MQ3 on Z Flip 6 delivered route and parameters.
+
+  MQ3 on Z Flip 6 delivered route but parameters were absent.
+
+  MQ3 on the local iOS Simulator reached the seeded terminal state.
+
+  Not allowed:
+
+  Mobilewright PASSES qualification.
+  Mobilewright FAILS qualification.
+  Appium 3 is selected.
+  The switch rule fires.
+
+  No runner-selection decision may be made from this preflight.
+
+  ==================================================
+  15. SPECIAL INTERPRETATION OF Z FLIP RESULT
+  ===========================================
+
+  Even if MQ3 succeeds on the Z Flip 6:
+
+  do NOT infer that the previously observed Android emulator behavior was
+  incorrect.
+
+  The formal gate's Android platform remains the frozen emulator substrate.
+
+  A physical-device success would show only that the observed behavior may
+  be substrate-specific.
+
+  Likewise:
+
+  a physical-device failure is diagnostic only.
+
+  ==================================================
+  16. AFTER PREFLIGHT
+  ===================
+
+  Do NOT launch a valid qualification automatically.
+
+  After the six diagnostic executions:
+
+  STOP.
+
+  Return the preflight package for human review.
+
+  A future valid qualification requires a NEW explicit human authorization.
+
+  Retired id:
+
+  MOBILE-QUALIFICATION-EXEC-AUTH-01
+
+  must never be reused.
+
+  No authorization id for the future valid gate is created by this prompt.
+
+  ==================================================
+  17. GOVERNANCE REPRESENTATION ERRATUM
+  =====================================
+
+  Separately from the preflight, inspect the already-frozen:
+
+  protocol/agent-governance-v2.md
+
+  The frozen document header contains an historical representation issue:
+
+  its Supersedes row retains pre-freeze wording saying the freeze is a
+  future action / not performed, while the Protocol state and Freeze
+  approval rows correctly establish that the document is now
+  FROZEN-PRE-DATA.
+
+  Do NOT edit the frozen governance document.
+
+  If this inconsistency is still present, create the minimum
+  representation-only erratum/correction record according to existing
+  change-control conventions.
+
+  Classification:
+
+  REPRESENTATION_ONLY
+
+  It must explicitly state:
+
+  * governance v2 is validly frozen;
+  * the authority is unaffected;
+  * body semantics are unaffected;
+  * only stale pre-freeze narrative wording remains in the immutable
+    snapshot.
+
+  Update descriptive documentation/dashboard if necessary.
+
+  ==================================================
+  18. PUBLIC REPOSITORY
+  =====================
+
+  Do not publish local device identifiers or private machine paths.
+
+  If canonical documentation changes because of:
+
+  * implementation lock;
+  * erratum;
+  * preflight summary;
+
+  create the next provider-neutral reproducibility export through the
+  existing mechanism.
+
+  Do not publish assistant/provider metadata.
+
+  Do not publish secrets.
+
+  Detailed local preflight logs need not be publicly exported if they are
+  not scientific reproducibility artifacts; follow the existing export
+  classification rules.
+
+  ==================================================
+  19. SCIENTIFIC INTEGRITY
+  ========================
+
+  Recompute:
+
+  E01 matrix SHA-256:
+
+  88a062ebac5af2a659c8396d70b36137c8a8d4d9c30569a325b742f98ccbe589
+
+  H1 SHA-256:
+
+  8684deefc09faa4ba209546c4223f0cd1ec969de0a4d091bb92e3b6dbf137be5
+
+  Confirm:
+
+  E01 = FROZEN
+  H1 = COMPLETE
+  E03 = NOT_STARTED
+  H2-H5 = NOT_ANALYZED
+
+  Confirm:
+
+  no formal qualification executed
+  no compatibility smoke
+  no runner selected
+  no E03 START
+  no E03 measured execution
+  no executor launch
+
+  ==================================================
+  20. RETURN PACKAGE
+  ==================
+
+  Return:
+
+  1. HEAD before;
+  2. implementation-lock verification result;
+  3. implementation-lock artifact/path/hash if created;
+  4. exact locked artifact hashes;
+  5. governance representation erratum result;
+  6. Z Flip 6 observed environment;
+  7. iOS local Simulator observed environment;
+  8. Mobilewright observed versions;
+  9. build-digest verification per platform;
+  10. MQ1 Android result;
+  11. MQ2 Android result;
+  12. MQ3 Android result;
+  13. whether Android route arrived;
+  14. whether Android query parameters arrived;
+  15. MQ1 iOS result;
+  16. MQ2 iOS result;
+  17. MQ3 iOS result;
+  18. whether iOS query parameters arrived;
+  19. artifact paths;
+  20. any setup/infrastructure failures;
+  21. confirmation no scenario retry was used to obtain a pass;
+  22. confirmation locked harness was unchanged;
+  23. documentation/public-export changes;
+  24. dashboard hash if changed;
+  25. E01 matrix hash;
+  26. H1 hash;
+  27. git status;
+  28. exact remaining human decisions.
+
+  ==================================================
+  21. FINAL STATUS
+  ================
+
+  End exactly:
+
+  IMPLEMENTATION_BASELINE:
+  LOCKED
+  or
+  BLOCKED
+
+  LOCAL_PREFLIGHT_ANDROID_ZFLIP6:
+  COMPLETE
+  or
+  BLOCKED
+  or
+  NOT_AVAILABLE
+
+  LOCAL_PREFLIGHT_IOS_SIMULATOR:
+  COMPLETE
+  or
+  BLOCKED
+  or
+  NOT_AVAILABLE
+
+  LOCAL_PREFLIGHT_CLASS:
+  NON_QUALIFICATION_NON_MEASURED
+
+  MOBILEWRIGHT_QUALIFICATION:
+  REQUIRES_NEW_HUMAN_AUTHORIZATION
+
+  MOBILE_RUNNER_SELECTION:
+  NOT_SELECTED
+
+  APPIUM3_COMPATIBILITY_SMOKE:
+  NOT_AUTHORIZED
+
+  E03_START:
+  NOT_AUTHORIZED
+
+  E03_EXECUTION:
+  NOT_STARTED

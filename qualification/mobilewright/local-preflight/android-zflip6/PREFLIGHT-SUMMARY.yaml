@@ -1,0 +1,46 @@
+# qualification/mobilewright/local-preflight/android-zflip6/PREFLIGHT-SUMMARY.yaml
+# Platform summary of the LOCAL_DEVELOPMENT_PREFLIGHT on the Android physical device (Samsung Galaxy Z Flip 6), 2026-09-22/23 UTC.
+# Observations only. Not a qualification gate, not a warm-up, not measured, not runner-selection evidence, not evidence about any SUT.
+record_class: LOCAL_DEVELOPMENT_PREFLIGHT
+qualification_evidence: false
+measured_experiment: false
+counts_toward_N: false
+classification: [NON_QUALIFICATION, NON_MEASURED, NOT_PART_OF_N, NOT_A_WARMUP, NOT_PASS_FAIL_EVIDENCE, NOT_RUNNER_SELECTION_EVIDENCE, NOT_E03_DATA]
+study_id: EUS-2026-001
+recorded_by: QUALIFIER-MOBILE-01
+recorded_at: "2026-09-22"
+instruction: "LOCAL DEVELOPMENT PREFLIGHT instruction of the human research lead, 2026-09-22 (verbatim in manifests/mobile-qualification-implementation-lock-v1.yaml; sha256 90d87d18e75caebeffbbd81b4fde9f2348efefea889a20ab632b20a6c13c9c6b)"
+implementation_lock: "manifests/mobile-qualification-implementation-lock-v1.yaml (MOBILE-QUALIFICATION-IMPLEMENTATION-LOCK-01); every locked artifact recomputed at its locked hash before and after this execution"
+repository_head_at_execution: 4386a42
+platform: android
+substrate: "Android physical device, human-owned Samsung Galaxy Z Flip 6, connected over USB (adb); NOT the frozen Android qualification substrate; diagnostic only"
+environment_type_actual: OTHER  # see the per-execution records; the harness files label it EMULATED by construction
+observed_device: {manufacturer: samsung, model: SM-F741B, product_name: b6qxxx, android_release: "16", api_level: "36", abi: arm64-v8a, build_display_id: "BP4A.251205.006.F741BXXS4DZH5", security_patch: "2026-08-05", serial: "<android-serial-redacted>", connection_mode: "USB (adb)", runner_observed_identity: "type real, name Galaxy Z Flip6, osVersion 16, model SM-F741B, id equal to the adb serial"}
+differences_from_the_pinned_substrate: "physical arm64-v8a Samsung device on Android 16 / API 36 (pinned: x86_64 emulator image system-images;android-35;google_apis;x86_64, API 35, profile pixel_7, ubuntu-24.04 host); macOS 26.5.2 Intel host with Node.js v23.6.1 (pinned CI: Linux x86_64, Node.js 22); no result is invalid because of these differences, and none is qualification evidence"
+host: {model: MacBookPro16,2, arch: x86_64, macos_version: "26.5.2", load_average_at_driver_start: "{ 846.03 852.66 705.74 }"}
+runner: {candidate: Mobilewright, pinned_version: "0.0.60", observed_version: "0.0.60", pin_matches_observed: true, mobilecli_version: "1.0.13", driver_mobilecli_version: "0.0.60", core_version: "0.0.60", playwright_version: "1.63.0", install_method: "npm ci from qualification/mobilewright/harness/package-lock.json", node_version: "v23.6.1", npm_version: "11.1.0", on_device_agent: "none needed on Android (runner readiness record)"}
+build_verification: {asset: omnipizza-release.apk, source: "https://github.com/gsanchezm/OmniPizza/releases/download/v1.1.8/omnipizza-release.apk", pinned_sha256: 1059e9468145761710c9884b37e9fbc76da8e75eb9666dc0867d82a546cda6a4, observed_sha256: 1059e9468145761710c9884b37e9fbc76da8e75eb9666dc0867d82a546cda6a4, size_bytes: 84930726, digest_match: true}
+runner_readiness: {ready: true, attempts: 1, screen_size: {"width": 1080, "height": 2640, "scale": 1}, installed_apps_count: 82}
+backend: {origin: "https://omnipizza-backend.onrender.com", health_at_start: healthy, catalog_snapshot: "12 products (environment/android-catalog-snapshot.json)"}
+timeline_utc: {driver_started: "2026-09-23T01:55:23Z", orchestrator_started: "2026-09-23T01:57:22.224Z", orchestrator_finished: "2026-09-23T02:03:01.319Z", driver_finished: "2026-09-23T02:03:01Z"}
+executions:  # exactly one per scenario; no retry; no warm-up
+  - {preflight_execution_id: PREFLIGHT-ANDROID-ZFLIP6-MQ1-01, harness_execution_id: MQ1-AND-MEASURED-01, scenario: MQ1, outcome_as_recorded: SUCCESS, scenario_ms: 45995, total_ms: 70427, observation: "reached the terminal state (catalog screen with bottom navigation)"}
+  - {preflight_execution_id: PREFLIGHT-ANDROID-ZFLIP6-MQ2-01, harness_execution_id: MQ2-AND-MEASURED-01, scenario: MQ2, outcome_as_recorded: SUCCESS, scenario_ms: 31745, total_ms: 99816, observation: "reached the terminal state (product screen, size Large, estimated total $19.99)"}
+  - {preflight_execution_id: PREFLIGHT-ANDROID-ZFLIP6-MQ3-01, harness_execution_id: MQ3-AND-MEASURED-01, scenario: MQ3, outcome_as_recorded: FAILURE, failed_step: "checkout screen visible (MC-06, MC-08)", scenario_ms: null, total_ms: 122919, observation: "route delivered (Checkout opened); seeded state not rendered (empty-cart Checkout); parameters not observed in the UI; delivery not confirmable from the redacted device log"}
+mc09_reset_operation: "worked in all three executions: uninstall of the previous install (present before every execution), install of the pinned APK through the runner (9.3-10.3 s), verification of the installed package"
+mobilewright_connection: "succeeded on the first attempt in the readiness probe and in every execution (5.3-8.2 s)"
+locked_harness_unchanged:
+  verified: true
+  method: "shasum -a 256 of the ten locked files and the README scenario-realization section (lock convention), recomputed after the last execution; all equal to manifests/mobile-qualification-implementation-lock-v1.yaml"
+  note: "npm ci re-installed harness/node_modules (untracked) from the locked lockfile; no tracked file changed (git status showed only this new directory)"
+driver:
+  path: driver/preflight-android-driver.sh  # verbatim copy of the scratchpad driver; lives outside the locked realization
+  sha256: 65199cf4460027862ad52dbb9787e75d62633b17150235208e298b6d9c5b90a9
+  why: "the locked run-gate-android.sh is emulator-only by construction (fails closed on any adb serial not starting with emulator- and derives the runner device id from ro.boot.qemu.avd_name), so it cannot drive a physical device; the driver sources the locked gate-common.sh unchanged (init in mode DEVELOPMENT, pinned-build download and digest verification, runner install exactly as pinned, environment record) and invokes the locked harness/run-gate.mjs unchanged with the physical device id; no repository file was edited"
+  invocation: "EUS_REPO=<repository root> PREFLIGHT_OUT=<scratchpad>/preflight-out/android-zflip6 PREFLIGHT_SERIAL=<android serial> bash preflight-android-driver.sh (mode DEVELOPMENT, N=1, warm-ups 0, scenarios MQ1,MQ2,MQ3); orchestrator argv: run-gate.mjs --platform=android --device=<android serial> --build=<cache>/omnipizza-release.apk --out=<scratchpad>/preflight-out/android-zflip6 --scenarios=MQ1,MQ2,MQ3 --mode=DEVELOPMENT --n=1 --warmups=0 --adb-serial=<android serial>"
+  human_decision_requested: "whether driving the locked orchestrator from a scratchpad driver instead of the emulator-only run-gate-android.sh counts as an implementation change for the purpose of the future valid gate (the gate itself will still use run-gate-android.sh on the frozen emulator substrate; nothing locked was edited)"
+adb_usage: "adb was used only by the driver for device properties and by the locked harness for its failure-time log capture (device-log-failure.txt); never to open the deep link and never inside a scenario step"
+infrastructure_failures: none
+retries: none
+raw_artifacts: "kept outside the repository in the session scratchpad; IMPORT-RECORD.yaml lists the raw and imported SHA-256 of every file and the redactions applied (device serial, USB port, one truncated bearer-token fragment)"
+interpretation_limits: "observations only; the physical-device outcome supports no inference about the correctness of the quarantined emulator observation (instruction section 15), no qualification pass/fail statement, and no runner-selection statement"

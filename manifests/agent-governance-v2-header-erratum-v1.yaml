@@ -1,0 +1,42 @@
+# manifests/agent-governance-v2-header-erratum-v1.yaml
+# Representation-only erratum record PROTO-U11 (protocol/unresolved.md), EUS-2026-001: the frozen protocol/agent-governance-v2.md
+# header keeps pre-freeze narrative wording in its Supersedes row. Modeled on manifests/e01-proto-u07-correction.yaml (a
+# representation defect recorded beside an unchanged frozen artifact). Editable by ORCHESTRATOR only (protocol/agent-governance-v2.md,
+# section 4). The frozen document is NOT edited; no new protocol version is created; no protocol state changes.
+change_id: PROTO-U11
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-09-22"
+classification: REPRESENTATION_ONLY
+noticed_by: "human research lead (gilbertosanchez), section 17 of the LOCAL DEVELOPMENT PREFLIGHT instruction of 2026-09-22 (verbatim in manifests/mobile-qualification-implementation-lock-v1.yaml, human_instruction_verbatim); the ORCHESTRATOR confirmed the inconsistency is still present at head_before"
+head_before: 86a0931f388badde2e1588e819249471691c3070
+document:
+  path: protocol/agent-governance-v2.md
+  protocol_version: v2
+  protocol_state: FROZEN-PRE-DATA  # unchanged by this record
+  content_sha256_recomputed: a6334e680dbc03167e468a89227806c82e60aadef581833c96e1f5454d81caae  # equals content_sha256_post_freeze in manifests/agent-governance-v2-freeze-v1.yaml; unchanged since the freeze commit 58cb0921335e80b4de13fc8e109b2628e795f61d
+  freeze_record: manifests/agent-governance-v2-freeze-v1.yaml
+  freeze_authorization_id: AGENT-GOVERNANCE-V2-FREEZE-AUTH-01
+inconsistency:
+  where: "header block, row 'Supersedes' (line 10)"
+  stale_text_verbatim: "| Supersedes | protocol/agent-governance-v1.md (remains FROZEN-PRE-DATA and unedited until this document is itself frozen, per protocol/change-control-v1.md, section 4 — \"Rules for the old file after a successor is frozen\"; freezing this document is a separate, future, explicitly human-approved action, not performed by this operation) |"
+  what_is_stale:
+    - "'remains FROZEN-PRE-DATA and unedited until this document is itself frozen': protocol/agent-governance-v1.md transitioned to AMENDED at the v2 freeze (its header now carries Protocol state AMENDED and a Superseded-by row; content sha256 82f42fe2007a6454455edf088692b7d7f37ffc9bf023a339ddabf0398922bdef)"
+    - "'freezing this document is a separate, future, explicitly human-approved action, not performed by this operation': the freeze was performed on 2026-09-22 (commit 58cb0921335e80b4de13fc8e109b2628e795f61d), as the same header's Protocol state row (FROZEN-PRE-DATA) and Freeze approval row (gilbertosanchez, 2026-09-22, AGENT-GOVERNANCE-V2-FREEZE-AUTH-01) record"
+  why_it_exists: "the freeze changed exactly two header rows (Protocol state, Freeze approval) and left every other line, including the Supersedes row written while the document was DRAFT, byte-identical to the human-approved content (manifests/agent-governance-v2-freeze-v1.yaml, changes_made_at_freeze); the row is therefore a pre-freeze narrative snapshot, in the same sense as the section-7 and closing-paragraph DRAFT narration already covered by that record's body_narration_note"
+assertions:  # required by the instruction; each verified against the artifacts named
+  governance_v2_validly_frozen: true  # explicit human approval at the exact pre-freeze content hash 660de9c21ac3e9cb2e7970811248658a81c7f75f7cdd26dd360535a1b7ae9ccf, freeze procedure per protocol/change-control-v1.md section 5, recorded in protocol/CHANGELOG.md (2026-09-22 rows) and manifests/agent-governance-v2-freeze-v1.yaml
+  authority_unaffected: true  # protocol/agent-governance-v2.md remains the sole agent-governance document in force; every role, write boundary, permission, and prohibition it defines applies unchanged; EXECUTOR-E03-RESETABILITY remains a defined (not launched) role
+  body_semantics_unaffected: true  # no section, rule, boundary, or definition of the document is altered, reinterpreted, or re-versioned by this record
+  only_stale_pre_freeze_narrative_wording_remains: true  # confined to the Supersedes header row (this record) and the section-7 / closing-paragraph DRAFT narration (freeze record body_narration_note); all of it is an immutable historical snapshot, never live lifecycle status
+reading_rule: "the live lifecycle status of protocol/agent-governance-v2.md is given by its Protocol state and Freeze approval header rows, manifests/agent-governance-v2-freeze-v1.yaml, and protocol/CHANGELOG.md; the Supersedes row's parenthetical is read as the historical statement it was when written (2026-09-21) -- the same treatment as protocol/study-design-v1.md section 14 and this document's own section 7"
+what_this_record_does:
+  - records the representation-only erratum beside the unchanged frozen file (protocol/change-control-v1.md, section 2, non-substantive corrections: the file itself is not edited, following the PROTO-U07 precedent of recording a correction alongside preserved text)
+  - appends the PROTO-U11 row to protocol/unresolved.md and a non-substantive-correction row to protocol/CHANGELOG.md
+what_this_record_does_not_do:
+  - edit protocol/agent-governance-v2.md or protocol/agent-governance-v1.md (both content hashes above are unchanged)
+  - create a new protocol version or change any Protocol state field
+  - change any role, write boundary, or authorization; authorize any execution, campaign START, or executor launch
+  - touch any scientific artifact (E01 matrix sha256 88a062ebac5af2a659c8396d70b36137c8a8d4d9c30569a325b742f98ccbe589 and H1 sha256 8684deefc09faa4ba209546c4223f0cd1ec969de0a4d091bb92e3b6dbf137be5 recomputed unchanged on 2026-09-22)
+affected_campaigns: none
+approved_by: "gilbertosanchez (explicit instruction of 2026-09-22, section 17; the erratum is representation-only and requires no freeze procedure)"
