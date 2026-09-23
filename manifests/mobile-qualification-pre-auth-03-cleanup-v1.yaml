@@ -1,0 +1,298 @@
+# manifests/mobile-qualification-pre-auth-03-cleanup-v1.yaml
+# Provenance record of the explicit human instruction "FINAL PRE-AUTH-03 REPRESENTATION CLEANUP" (2026-09-23), recorded by
+# the ORCHESTRATOR. Representation / provenance cleanup only: it issues nothing, authorizes no execution, and changes no
+# locked implementation hash, no quarantine file, no frozen protocol document, and no scientific input.
+record_id: MOBILE-QUALIFICATION-PRE-AUTH-03-CLEANUP-01  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: REPRESENTATION_PROVENANCE_CLEANUP
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-09-23"
+related_escalation: PROTO-U12  # RESOLVED; this record adds provenance clarifications to its correction package
+qualification_evidence: false
+measured_experiment: false
+authorizes_execution: false
+issues_authorization: false  # MOBILE-QUALIFICATION-EXEC-AUTH-03 remains PREPARED, NOT ISSUED
+selects_runner: false
+
+human_confirmation_of_prior_instruction:
+  instruction: "MOBILE QUALIFICATION PRE-DISPATCH INTEGRITY CORRECTION (2026-09-23)"
+  confirmed_by: gilbertosanchez  # human research lead
+  confirmed_on: "2026-09-23"
+  confirmation: "the instruction was adopted and issued by the human research lead; that its text was supplied to the human in drafted form does not make it a proposal once the human deliberately sent it as their instruction"
+  verbatim_record: "manifests/mobile-qualification-implementation-lock-v2.yaml, human_instruction_verbatim (sha256 f35f9042e311cf85bde351dbe3754dc05149d5a90eb5ecd603494a586f5d8e9c); confirmed by the human as intended to preserve that instruction"
+  scope: "provenance clarification only; authorizes no execution"
+
+authorization_criterion_clarification:  # section 2 of the instruction
+  rule: "a proposed, drafted, or relayed authorization is not an authorization until the human explicitly adopts, issues, or approves it as live human instruction (PROTO-U10); the origin of the wording is not a criterion; issuance is never inferred from preparation, publication, discussion, recommendation, or an unadopted draft"
+  not_a_requirement: "there is no requirement that a human authorization be composed personally by the human or written in the human's own words"
+  normative_text_corrected: "manifests/mobile-qualification-execution-auth-v3-prepared.yaml, issuance_procedure step 1 (previously required issuance 'in their own words'; now 'explicitly issues or approves ... as live human instruction; ... never inferred ...')"
+  descriptive_text_left_unchanged:
+    - "manifests/mobile-qualification-implementation-lock-v1.yaml, human_decision.how_the_instruction_arrived (immutable historical provenance) -- records what the ORCHESTRATOR asked on 2026-09-22; not a criterion"
+    - "manifests/mobile-qualification-implementation-lock-v2.yaml, human_decision.how_the_instruction_arrived -- records what the ORCHESTRATOR asked on 2026-09-23; not a criterion; the lock file is not edited (its gate-checked hashes and content stay exactly as recorded)"
+  other_tracked_occurrences: "none (tracked-file scan for the phrase, 2026-09-23)"
+
+single_dispatch_clarification:  # section 3 of the instruction
+  rule: "a second formal dispatch under any authorization id requires a separate explicit human authorization; that rule, not the output namespace, is authoritative"
+  what_namespace_isolation_guarantees:
+    - "a persisted prior formal lineage cannot silently be reused"
+    - "an imported prior formal namespace makes a later readiness check fail closed"
+    - "historical quarantine files cannot contaminate formal output"
+  what_it_does_not_guarantee: "it does not by itself prevent two dispatch requests from being submitted or queued before the first lineage is imported or published"
+  tracked_documentation_checked: "no tracked PROTO-U12 document claims unconditional mechanical single use; the claim appeared only in the ORCHESTRATOR's session report of 2026-09-23, which is corrected here; no workflow change (no executable contradiction found)"
+
+row_ids_line: "protocol/unresolved.md's historical 'Row ids in use' line (PROTO-U01 ... PROTO-U09) predates PROTO-U10..U12 and is left unchanged; no clarification row added (non-blocking)"
+
+unchanged: [protocol/mobile-runner-policy-v1.md, "implementation-lock v2 and every hash in it", "package v2", "qualification/mobilewright/output/**", "prompts/frozen/**", "qualification harness and scenario realization", "E01 matrix and H1 result"]
+
+human_instruction_verbatim_sha256: 8a614b47b7fdbf2bc6d4ab777c7d3c746c81f62950cbf19c9ab07df3839673ef  # the text below as a file with one trailing line feed
+human_instruction_verbatim: |
+  # EUS-2026-001 — FINAL PRE-AUTH-03 REPRESENTATION CLEANUP
+
+  I, gilbertosanchez, human research lead for EUS-2026-001, explicitly authorize this narrow representation/provenance cleanup.
+
+  This instruction is NOT:
+
+  * MOBILE-QUALIFICATION-EXEC-AUTH-03 issuance;
+  * qualification dispatch authorization;
+  * DEVELOPMENT authorization;
+  * Appium authorization;
+  * compatibility-smoke authorization;
+  * runner-selection authorization;
+  * E03 START authorization.
+
+  No workflow other than the normal publication validation workflow may be executed as a result of this instruction.
+
+  ## 1. CONFIRMATION OF THE PRIOR HUMAN INSTRUCTION
+
+  For provenance clarity, I explicitly confirm that the immediately preceding:
+
+  `MOBILE QUALIFICATION PRE-DISPATCH INTEGRITY CORRECTION`
+
+  instruction was an instruction I adopted and issued as the human research lead.
+
+  The fact that its text was supplied to me in drafted form does NOT make it merely a proposal once I deliberately sent it as my instruction.
+
+  I also confirm that the `human_instruction_verbatim` text recorded in:
+
+  `manifests/mobile-qualification-implementation-lock-v2.yaml`
+
+  is intended to preserve that instruction.
+
+  This confirmation is provenance clarification only.
+
+  It does NOT authorize any execution.
+
+  ## 2. REMOVE THE INVENTED "IN THEIR OWN WORDS" REQUIREMENT
+
+  The repository must NOT establish a new requirement that a valid human authorization must be composed personally by the human or written "in their own words."
+
+  PROTO-U10 established a different rule:
+
+  A proposed/drafted/relayed authorization is not an authorization UNTIL the human explicitly adopts/issues/approves it.
+
+  The origin of the wording does not invalidate an otherwise explicit human issuance.
+
+  Therefore, in:
+
+  `manifests/mobile-qualification-execution-auth-v3-prepared.yaml`
+
+  replace the normative issuance-procedure wording:
+
+  `the human explicitly issues ... in their own words`
+
+  with wording equivalent to:
+
+  `the human explicitly issues or approves MOBILE-QUALIFICATION-EXEC-AUTH-03 as live human instruction; issuance must never be inferred merely from preparation, publication, discussion, recommendation, or an unadopted draft`
+
+  Do not weaken the requirement for explicit human issuance.
+
+  Do not issue AUTH-03 during this operation.
+
+  Also inspect the PROTO-U12 correction package for any other sentence that incorrectly makes "own words" a prerequisite.
+
+  Descriptive historical statements that merely record how a particular instruction arrived may remain, but they must not establish a normative authorization criterion.
+
+  ## 3. CORRECT THE SINGLE-DISPATCH REPRESENTATION
+
+  Do not represent the authorization-specific formal output namespace as an absolute mechanical guarantee that an authorization id can never be dispatched twice.
+
+  The namespace isolation guarantees that:
+
+  * a persisted prior formal lineage cannot silently be reused;
+  * an imported prior formal namespace makes a later readiness check fail closed;
+  * historical quarantine files cannot contaminate formal output.
+
+  It does NOT by itself prove that two dispatch requests could never be submitted or queued before the first lineage is imported/published.
+
+  The authoritative rule remains:
+
+  a second formal dispatch requires a separate explicit human authorization.
+
+  If any tracked documentation created under PROTO-U12 claims unconditional mechanical single-use solely because the namespace later becomes non-empty, correct that wording.
+
+  Do NOT change the workflow merely to address this representation issue unless an actual contradiction in executable behavior is discovered.
+
+  No new retry/rerun/history-query mechanism is authorized.
+
+  ## 4. SYNCHRONIZE research-status.html
+
+  Update `research-status.html` only as necessary to represent the current authoritative state.
+
+  It must accurately state:
+
+  * PROTO-U12 is RESOLVED;
+  * AUTH-02 was genuinely issued;
+  * AUTH-02 was NEVER dispatched;
+  * AUTH-02 was superseded before dispatch because of the three pre-dispatch execution-integrity/provenance defects;
+  * implementation-lock v2 exists;
+  * qualification-package v2 exists;
+  * formal qualification output is authorization-specific and isolated from the AUTH-01 quarantine;
+  * one future formal dispatch uses sequential gate → Android → iOS execution;
+  * AUTH-03 is PREPARED but NOT ISSUED;
+  * the v3 prompt is WORKING / NOT FROZEN;
+  * Mobilewright qualification is NOT_STARTED;
+  * formal qualification data = NONE;
+  * mobile runner = NOT_SELECTED;
+  * Appium 3 execution = NOT_PERFORMED;
+  * compatibility smoke = NOT_STARTED;
+  * E03 = NOT_STARTED / NOT_AUTHORIZED.
+
+  Do not present AUTH-02 as dispatchable.
+
+  Do not present AUTH-03 as issued or dispatchable.
+
+  Do not present PROTO-U12 corrections as qualification evidence.
+
+  Preserve PREQUALIFICATION_OUTCOME_EXPOSURE = TRUE.
+
+  ## 5. protocol/unresolved.md "Row ids in use"
+
+  The historical line:
+
+  `Row ids in use: PROTO-U01 ... PROTO-U09`
+
+  predates PROTO-U10 through PROTO-U12.
+
+  Do NOT rewrite or delete that historical line merely for cosmetic consistency.
+
+  If a clarification is genuinely needed, add only a non-destructive append-only clarification after the current rows.
+
+  This issue is non-blocking and does not justify another protocol-change cycle by itself.
+
+  ## 6. NO SCIENTIFIC OR EXECUTION CHANGES
+
+  Do not modify:
+
+  * protocol/mobile-runner-policy-v1.md;
+  * RQs or hypotheses;
+  * MQ1/MQ2/MQ3 definitions;
+  * MC-01..MC-10;
+  * N;
+  * warm-up rules;
+  * exclusions/attribution;
+  * pass criteria;
+  * switch rule;
+  * OmniPizza build;
+  * Mobilewright version;
+  * Appium version;
+  * scenario realization;
+  * execute.mjs;
+  * backend.mjs;
+  * run-gate-android.sh;
+  * run-gate-ios.sh;
+  * qualification/mobilewright/output/**;
+  * prompts/frozen/**;
+  * E01 matrix;
+  * H1 result.
+
+  Do not alter implementation-lock v2 hashes.
+
+  Do not alter package v2 scientific semantics.
+
+  ## 7. STATIC VERIFICATION
+
+  After the representation cleanup, verify:
+
+  * implementation-lock v2 still validates;
+  * its four changed locked-artifact hashes remain unchanged;
+  * all unchanged locked artifacts remain byte-identical;
+  * Scenario realization hash remains:
+
+  `f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018`
+
+  * package v2 retains the same scientific inputs;
+  * quarantine files remain unchanged;
+  * AUTH-02 remains superseded and never dispatched;
+  * AUTH-03 remains PREPARED / NOT ISSUED;
+  * v3 prompt remains WORKING / NOT FROZEN;
+  * formal AUTH-03 namespace remains absent or empty;
+  * no qualification or DEVELOPMENT workflow was dispatched.
+
+  Static inspection and the normal push-triggered validation workflow are allowed.
+
+  No harness/SUT execution is authorized.
+
+  ## 8. PUBLIC EXPORT
+
+  Publish the corrected provider-neutral snapshot through the existing export procedure.
+
+  Report:
+
+  * correction commit SHA(s);
+  * canonical HEAD after export logging;
+  * public HEAD;
+  * public tree SHA;
+  * export manifest SHA-256;
+  * validation workflow run id and result;
+  * exact files changed;
+  * confirmation that no locked implementation hash changed;
+  * confirmation that no quarantine file changed.
+
+  ## 9. REQUIRED FINAL STATE
+
+  End exactly with:
+
+  PRIOR_CORRECTION_HUMAN_CONFIRMATION:
+  CONFIRMED
+
+  OWN_WORDS_AUTHORIZATION_REQUIREMENT:
+  NOT_A_PROTOCOL_REQUIREMENT
+
+  RESEARCH_STATUS:
+  SYNCHRONIZED
+
+  AUTH_02:
+  VALIDLY_ISSUED_BUT_SUPERSEDED_BEFORE_DISPATCH
+
+  AUTH_02_DISPATCH_PERFORMED:
+  NO
+
+  AUTH_03:
+  PREPARED_NOT_ISSUED
+
+  AUTH_03_PROMPT:
+  WORKING_NOT_FROZEN
+
+  MOBILEWRIGHT_QUALIFICATION:
+  NOT_STARTED
+
+  FORMAL_QUALIFICATION_DATA:
+  NONE
+
+  MOBILE_RUNNER_SELECTION:
+  NOT_SELECTED
+
+  APPIUM3_EXECUTION:
+  NOT_PERFORMED
+
+  COMPATIBILITY_SMOKE:
+  NOT_STARTED
+
+  E03_START:
+  NOT_AUTHORIZED
+
+  E03_EXECUTION:
+  NOT_STARTED
+
+  NEXT_REQUIRED_HUMAN_ACTION:
+  REVIEW_FINAL_SYNC_THEN_EXPLICITLY_ISSUE_AUTH_03
