@@ -6,10 +6,15 @@
 // but under qualification/ (QUALIFICATION artifacts only). Authored by QUALIFIER-MOBILE-01 under prompt
 // version qualifier-mobile-01-mobilewright-gate-v1. Imports nothing from the runner under qualification.
 //
-// Usage: node import-artifacts.mjs --run=<run id> --repo=<owner/name> --dest=<dir> [--allow-development]
-// QUALIFICATION artifacts (E03-QUALIFICATION-*) may be imported under qualification/mobilewright/output;
+// Usage: node import-artifacts.mjs --run=<run id> --repo=<owner/name> --dest=<dir> --prompt-version=<id> [--allow-development]
+// QUALIFICATION artifacts (E03-QUALIFICATION-*) are imported into the repository only under the
+// authorization-specific formal namespace qualification/mobilewright/formal/<authorization id>/, and only when
+// every imported summary-<platform>.json names that same authorization id; qualification/mobilewright/output/
+// (the quarantined HISTORICAL_UNAUTHORIZED_EXECUTION records of 2026-09-22) is never an import destination.
 // DEVELOPMENT artifacts (E03-DEVELOPMENT-*) are refused unless --allow-development is given AND the
 // destination is outside the repository (they are never gate executions and never enter the repository).
+// Revised 2026-09-23 under manifests/mobile-qualification-implementation-lock-v2.yaml (PROTO-U12): destination
+// isolation and the importer's own prompt version id (--prompt-version, no longer hardcoded).
 
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -24,8 +29,17 @@ const runId = need('run');
 const repo = need('repo');
 const dest = resolve(need('dest'));
 const allowDev = args['allow-development'] === 'true';
+const promptVersionId = need('prompt-version');
+if (!/^qualifier-mobile-01-mobilewright-gate-v[0-9]+$/.test(promptVersionId)) { console.error(`invalid --prompt-version ${promptVersionId}`); process.exit(2); }
 const repoRoot = resolve(fileURLToPath(new URL('.', import.meta.url)), '..', '..', '..');
 const insideRepo = dest.startsWith(repoRoot + '/');
+// Formal output isolation (PROTO-U12): inside the repository the only admissible destination is
+// qualification/mobilewright/formal/<MOBILE-QUALIFICATION-EXEC-AUTH-n>; the quarantined output/ is never one.
+const quarantine = join(repoRoot, 'qualification', 'mobilewright', 'output');
+if (dest === quarantine || dest.startsWith(quarantine + '/')) { console.error('refusing to import into the quarantined qualification/mobilewright/output/'); process.exit(2); }
+const formalMatch = relative(repoRoot, dest).match(/^qualification\/mobilewright\/formal\/(MOBILE-QUALIFICATION-EXEC-AUTH-[0-9]+)$/);
+if (insideRepo && !formalMatch) { console.error('inside the repository, --dest must be qualification/mobilewright/formal/<authorization id>'); process.exit(2); }
+const formalAuthorizationId = formalMatch ? formalMatch[1] : null;
 
 const gh = (a) => execFileSync('gh', a, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
 const run = JSON.parse(gh(['api', `repos/${repo}/actions/runs/${runId}`]));
@@ -36,7 +50,7 @@ const record = {
   record_class: 'QUALIFICATION_IMPORT',
   imported_at: new Date().toISOString(),
   imported_by: 'QUALIFIER-MOBILE-01',
-  prompt_version_id: 'qualifier-mobile-01-mobilewright-gate-v1',
+  prompt_version_id: promptVersionId,
   workflow: { repository: repo, name: run.name, path: run.path, run_id: run.id, run_number: run.run_number, run_attempt: run.run_attempt, event: run.event, head_sha: run.head_sha, head_branch: run.head_branch, created_at: run.created_at, updated_at: run.updated_at, status: run.status, conclusion: run.conclusion, html_url: run.html_url },
   jobs: jobs.map((j) => ({ id: j.id, name: j.name, status: j.status, conclusion: j.conclusion, started_at: j.started_at, completed_at: j.completed_at, runner_name: j.runner_name, labels: j.labels })),
   artifacts: [],
@@ -59,6 +73,11 @@ for (const a of artifacts) {
   if (isQual && !insideRepo) { console.log(`note: QUALIFICATION artifact ${a.name} imported outside the repository (inspection copy)`); }
   const adir = join(stage, a.name);
   gh(['run', 'download', String(runId), '-R', repo, '-n', a.name, '-D', adir]);
+  if (isQual && formalAuthorizationId) {
+    const summaries = readdirSync(adir).filter((f) => /^summary-(android|ios)\.json$/.test(f));
+    const ids = summaries.map((f) => JSON.parse(readFileSync(join(adir, f), 'utf8')).instruction_id);
+    if (!summaries.length || ids.some((id) => id !== formalAuthorizationId)) { console.error(`artifact ${a.name} does not belong to ${formalAuthorizationId} (summary instruction ids: ${ids.join(', ') || 'none'}); refusing`); process.exit(1); }
+  }
   const entry = { id: a.id, name: a.name, size_in_bytes: a.size_in_bytes, created_at: a.created_at, expires_at: a.expires_at, expired: a.expired, workflow_run_head_sha: a.workflow_run && a.workflow_run.head_sha, files: 0 };
   for (const p of walk(adir)) {
     const rel = relative(adir, p);

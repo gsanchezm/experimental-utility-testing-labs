@@ -10,6 +10,11 @@
 // N is 10 in QUALIFICATION mode (policy 7.1); nothing but a pre-runner infrastructure failure is
 // EXCLUDED (and only as a proposal for QUALIFIER-MOBILE-01); every artifact is scrubbed of host paths
 // and tokens before it is kept (publication hygiene).
+//
+// Revised 2026-09-23 under manifests/mobile-qualification-implementation-lock-v2.yaml (PROTO-U12): the active
+// prompt version id comes from QUALIFICATION_PROMPT_VERSION_ID (set by the workflow from the authorization record)
+// instead of a hardcoded value, and the provisional capability tally reads only the records of this run's own
+// executions instead of every record found in the output directory. No execution semantics changed.
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, relative, basename } from 'node:path';
@@ -37,8 +42,9 @@ const platformCode = platform === 'ios' ? 'IOS' : 'AND';
 const platformLabel = platform === 'ios' ? 'iOS Simulator' : 'Android emulator';
 const envType = platform === 'ios' ? 'SIMULATED' : 'EMULATED';
 const instructionId = process.env.QUALIFICATION_INSTRUCTION_ID || null;
-const promptVersionId = 'qualifier-mobile-01-mobilewright-gate-v1';
+const promptVersionId = process.env.QUALIFICATION_PROMPT_VERSION_ID || null;
 if (mode === 'QUALIFICATION' && !instructionId) { console.error('QUALIFICATION mode requires QUALIFICATION_INSTRUCTION_ID'); process.exit(2); }
+if (mode === 'QUALIFICATION' && !promptVersionId) { console.error('QUALIFICATION mode requires QUALIFICATION_PROMPT_VERSION_ID'); process.exit(2); }
 
 const envRecordPath = join(outDir, 'environment', `${platform}-environment.json`);
 const envRecord = existsSync(envRecordPath) ? JSON.parse(readFileSync(envRecordPath, 'utf8')) : {};
@@ -205,7 +211,7 @@ for (const id of ['MC-01', 'MC-02', 'MC-03', 'MC-04', 'MC-05', 'MC-06', 'MC-07',
 for (const e of summary.executions) {
   if (e.kind === 'MEASURED' && e.outcome === 'SUCCESS') for (const id of e.capabilities_exercised) if (caps[id]) caps[id].exercised_in_successful_measured += 1;
 }
-for (const dirName of readdirSync(outDir)) {
+for (const dirName of summary.executions.map((e) => e.execution_id)) {
   const recPath = join(outDir, dirName, 'record.json');
   if (!existsSync(recPath)) continue;
   const rec = JSON.parse(readFileSync(recPath, 'utf8'));

@@ -5,11 +5,19 @@
 # qualifier-mobile-01-mobilewright-gate-v1. Governing policy: protocol/mobile-runner-policy-v1.md;
 # frozen inputs: manifests/mobile-qualification-package-v1.yaml and manifests/toolchain-manifest.yaml.
 #
-# Modes (GATE_MODE): QUALIFICATION (default; the gate; N = 10, one warm-up per combination; output under
-# qualification/mobilewright/output/; requires QUALIFICATION_INSTRUCTION_ID) or DEVELOPMENT (harness
-# development on the operator workstation; never counted; output must be OUTSIDE the repository via
-# GATE_OUTPUT_DIR; GATE_N / GATE_WARMUPS / GATE_DEVICE_ID / GATE_SCENARIOS may override).
+# Modes (GATE_MODE): QUALIFICATION (default; the gate; N = 10, one warm-up per combination; output under the
+# authorization-specific formal namespace qualification/mobilewright/formal/<QUALIFICATION_INSTRUCTION_ID>/, which
+# must be absent or empty before the first execution; requires QUALIFICATION_INSTRUCTION_ID and
+# QUALIFICATION_PROMPT_VERSION_ID) or DEVELOPMENT (harness development on the operator workstation; never counted;
+# output must be OUTSIDE the repository via GATE_OUTPUT_DIR; GATE_N / GATE_WARMUPS / GATE_DEVICE_ID /
+# GATE_SCENARIOS may override).
 # Record class is written into every record. Nothing here is evidence about any system under test.
+#
+# Revised 2026-09-23 under manifests/mobile-qualification-implementation-lock-v2.yaml (PROTO-U12, pre-dispatch
+# execution-integrity / provenance correction): formal output is isolated from qualification/mobilewright/output/
+# (the quarantined HISTORICAL_UNAUTHORIZED_EXECUTION records of 2026-09-22, never read or written by a formal run),
+# and the active prompt version id is supplied by the workflow from the authorization record instead of being
+# hardcoded. No scenario, runner call, pin, N, warm-up, timeout, or attribution semantics changed.
 
 set -euo pipefail
 
@@ -20,7 +28,8 @@ GATE_APK_SHA256="1059e9468145761710c9884b37e9fbc76da8e75eb9666dc0867d82a546cda6a
 GATE_IOS_URL="https://github.com/gsanchezm/OmniPizza/releases/download/v1.1.8/OmniPizza-Simulator.zip"
 GATE_IOS_SHA256="de2e8c21b0788cef1ba4654378449d16e958574b33a2b4ef8a07cb698dbc6eb1"
 GATE_RUNNER_PIN="0.0.60"
-GATE_PROMPT_VERSION_ID="qualifier-mobile-01-mobilewright-gate-v1"
+# Active execution prompt version: supplied by the workflow from the authorization record (never hardcoded).
+GATE_PROMPT_VERSION_ID="${QUALIFICATION_PROMPT_VERSION_ID:-}"
 GATE_BUNDLE_ID="com.omnipizza.app"
 
 gate_log() { printf '[gate %s] %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*"; }
@@ -41,9 +50,25 @@ gate_init() {
   mkdir -p "$GATE_CACHE"
   case "$GATE_MODE" in
     QUALIFICATION)
-      GATE_OUT="$GATE_HERE/output"
       if [[ -z "${QUALIFICATION_INSTRUCTION_ID:-}" ]]; then
         gate_log "QUALIFICATION mode requires QUALIFICATION_INSTRUCTION_ID (the explicit human instruction id); failing closed"; exit 1
+      fi
+      if [[ ! "$QUALIFICATION_INSTRUCTION_ID" =~ ^MOBILE-QUALIFICATION-EXEC-AUTH-[0-9]+$ ]]; then
+        gate_log "QUALIFICATION_INSTRUCTION_ID '$QUALIFICATION_INSTRUCTION_ID' is not a MOBILE-QUALIFICATION-EXEC-AUTH-<n> id; failing closed"; exit 1
+      fi
+      if [[ ! "$GATE_PROMPT_VERSION_ID" =~ ^qualifier-mobile-01-mobilewright-gate-v[0-9]+$ ]]; then
+        gate_log "QUALIFICATION mode requires QUALIFICATION_PROMPT_VERSION_ID (the authorization's frozen prompt version id); failing closed"; exit 1
+      fi
+      # Formal output isolation (PROTO-U12): an authorization-specific namespace, never the quarantined output/.
+      GATE_OUT="$GATE_HERE/formal/$QUALIFICATION_INSTRUCTION_ID"
+      if [[ "$GATE_OUT" == "$GATE_HERE/output" ]] || [[ "$GATE_OUT" == "$GATE_HERE/output/"* ]]; then
+        gate_log "formal output namespace resolves into the quarantined output/; failing closed"; exit 1
+      fi
+      # Must be absent or empty (only .gitkeep allowed) BEFORE anything is written: no inherited files.
+      if [[ -e "$GATE_OUT" ]]; then
+        if [[ ! -d "$GATE_OUT" ]] || [[ -n "$(find "$GATE_OUT" -mindepth 1 ! -name .gitkeep -print -quit)" ]]; then
+          gate_log "formal output namespace $GATE_OUT is not empty before the first execution; failing closed"; exit 1
+        fi
       fi
       GATE_N=10; GATE_WARMUPS=1
       GATE_SCENARIOS="MQ1,MQ2,MQ3"
@@ -133,7 +158,7 @@ gate_write_environment() {
 import json, sys, datetime
 out, platform, env_type, mode, instr, pv, run_id, attempt, image_os, image_version, osname, arch, kernel, device = sys.argv[1:15]
 rec = {"record_class": "QUALIFICATION_ENVIRONMENT" if mode == "QUALIFICATION" else "DEVELOPMENT", "at": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
-       "platform": platform, "environment_type": env_type, "instruction_id": instr or None, "prompt_version_id": pv,
+       "platform": platform, "environment_type": env_type, "instruction_id": instr or None, "prompt_version_id": pv or None,
        "github": {"run_id": run_id or None, "run_attempt": attempt or None, "image_os": image_os or None, "image_version": image_version or None},
        "host": {"os": osname, "arch": arch, "kernel": kernel}, "device": json.loads(device)}
 json.dump(rec, open(out, "w"), indent=2)

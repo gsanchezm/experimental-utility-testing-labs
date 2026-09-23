@@ -217,19 +217,21 @@ jobs:
       - name: Assert the mobile-qualification gate does not regress to a hardcoded authorization path (CI_AUTHORIZATION_RESOLUTION_DEFECT)
         run: |
           set -euo pipefail
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
           python3 - <<'PY'
           import re, sys
           wf = open('.github/workflows/e03-mobile-qualification.yml').read()
+          E = '$' + '{{'
           bad = re.search(r"""auth_path\s*=\s*['"]manifests/mobile-qualification-execution-auth-v1\.yaml['"]""", wf)
           checks = [
               ('does not hardcode the retired v1 record as the sole authorization source', not bad),
               ('resolves authorization records by globbing the auth-record family', "glob.glob('manifests/mobile-qualification-execution-auth-v*.yaml')" in wf),
               ('requires exactly one matching record (fails closed on zero or multiple)', 'len(matches) == 1' in wf),
-              ('still explicitly refuses the retired MOBILE-QUALIFICATION-EXEC-AUTH-01 id', "instruction != 'MOBILE-QUALIFICATION-EXEC-AUTH-01'" in wf),
+              ('still explicitly refuses the retired MOBILE-QUALIFICATION-EXEC-AUTH-01 id and the superseded-before-dispatch MOBILE-QUALIFICATION-EXEC-AUTH-02 id', "RETIRED_AUTHORIZATION_IDS = ('MOBILE-QUALIFICATION-EXEC-AUTH-01', 'MOBILE-QUALIFICATION-EXEC-AUTH-02')" in wf and 'instruction not in RETIRED_AUTHORIZATION_IDS' in wf),
               ('requires record_validity explicitly present (absence is not a silent pass)', 'record_validity is not None' in wf),
               ('requires authorizes_execution to be exactly true (never defaulted)', "auth.get('authorizes_execution') is True" in wf),
               ('requires issued_by to be a real, non-placeholder, non-agent-role identity', 'bad_issuer_tokens' in wf),
-              ('verifies the implementation-lock hashes before platform execution', "yaml.safe_load(open('manifests/mobile-qualification-implementation-lock-v1.yaml'))" in wf and 'hashlib.sha256' in wf),
+              ('verifies the implementation-lock v2 hashes before platform execution (lock v1 is immutable history)', "yaml.safe_load(open('manifests/mobile-qualification-implementation-lock-v2.yaml'))" in wf and 'hashlib.sha256' in wf),
               # AUTH-02 PRE-ISSUANCE CONSISTENCY HARDENING (2026-09-23): status must be checked with strict
               # equality; an absent status field must fail closed, not be silently permitted.
               ('requires status to equal ISSUED exactly (strict equality, not a permissive is-None-or check)', "status_val == 'ISSUED'" in wf),
@@ -244,7 +246,20 @@ jobs:
               ("checks the manifest's exported_sha256 against the actual on-disk public prompt", 'prompt_sha_actual is not None and manifest_exported_sha is not None and prompt_sha_actual == manifest_exported_sha' in wf),
               ('restricts the accepted prompt transformation classes to an explicit allow-list', 'ALLOWED_PROMPT_TRANSFORMATIONS' in wf and "'PROVIDER_NEUTRAL_PATH_ALIAS'" in wf and "'UNCHANGED'" in wf),
               ('still requires the submitted instruction_id literally in the prompt and no unresolved placeholder', 'instruction in prompt_text' in wf and "'{{INSTRUCTION_ID}}' not in prompt_text" in wf),
+              # PRE-DISPATCH EXECUTION-INTEGRITY / PROVENANCE correction (PROTO-U12, 2026-09-23).
+              ('requires dispatch_eligibility to be exactly ELIGIBLE', "auth.get('dispatch_eligibility') == 'ELIGIBLE'" in wf),
+              ('requires the frozen prompt to declare exactly the authorization prompt version', 'declared_versions == [prompt_version_id_field]' in wf),
+              ('checks the formal output namespace is isolated from the quarantine and empty before execution', "formal_ns = 'qualification/mobilewright/formal/' + instruction" in wf and "quarantine_dir = 'qualification/mobilewright/output'" in wf and 'ns_extra' in wf),
+              # E = the Actions expression opener, assembled so that this run script carries no literal expression.
+              ('passes the prompt version and formal namespace from the gate to the platform jobs', ('prompt_version_id: ' + E + ' steps.gate.outputs.prompt_version_id }}') in wf and ('formal_namespace: ' + E + ' steps.gate.outputs.formal_namespace }}') in wf and wf.count('QUALIFICATION_PROMPT_VERSION_ID: ' + E + ' needs.gate.outputs.prompt_version_id }}') == 2),
+              ('never uploads the quarantined qualification/mobilewright/output', "|| 'qualification/mobilewright/output' }}" not in wf and wf.count('|| needs.gate.outputs.formal_namespace }}') == 2),
           ]
+          # PROTO-U12 (defect B): structural Android -> iOS ordering under platform both (parsed, not string-matched).
+          import yaml
+          w = yaml.safe_load(open('.github/workflows/e03-mobile-qualification.yml'))
+          ios = w['jobs']['qualification-ios']
+          needs = ios.get('needs') if isinstance(ios.get('needs'), list) else [ios.get('needs')]
+          checks.append(('the iOS job needs the Android job and runs under platform both only after Android succeeded', 'qualification-android' in needs and "inputs.platform == 'both' && needs.qualification-android.result == 'success'" in str(ios.get('if', ''))))
           bad_checks = [name for name, ok in checks if not ok]
           for name, ok in checks:
               print(('PASS ' if ok else 'FAIL ') + name)

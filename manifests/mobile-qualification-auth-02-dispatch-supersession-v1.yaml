@@ -1,0 +1,66 @@
+# manifests/mobile-qualification-auth-02-dispatch-supersession-v1.yaml
+# Additive supersession record: MOBILE-QUALIFICATION-EXEC-AUTH-02 must no longer be used for dispatch (PROTO-U12).
+# Recorded by the ORCHESTRATOR on the explicit instruction of the human research lead, "MOBILE QUALIFICATION PRE-DISPATCH
+# INTEGRITY CORRECTION" (2026-09-23), section 4; that instruction is reproduced verbatim in
+# manifests/mobile-qualification-implementation-lock-v2.yaml (human_instruction_verbatim). This record deletes nothing,
+# creates no second AUTH-02 record, and rewrites no history: the AUTH-02 record
+# (manifests/mobile-qualification-execution-auth-v2-prepared.yaml) keeps its issuance facts and gains only
+# dispatch-eligibility fields, each previous value kept in a comment.
+record_id: MOBILE-QUALIFICATION-AUTH-02-DISPATCH-SUPERSESSION-01  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: AUTHORIZATION_DISPATCH_SUPERSESSION
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-09-23"
+qualification_evidence: false
+measured_experiment: false
+authorizes_execution: false
+selects_runner: false
+escalation: PROTO-U12  # protocol/unresolved.md; mirrored as QUAL-U02 in qualification/unresolved.md
+classification: PRE-DISPATCH EXECUTION-INTEGRITY / PROVENANCE DEFECTS
+
+superseded_authorization:
+  authorization_id: MOBILE-QUALIFICATION-EXEC-AUTH-02
+  record: manifests/mobile-qualification-execution-auth-v2-prepared.yaml
+  AUTHORIZATION_PROVENANCE: VALID  # genuinely issued by the human research lead (gilbertosanchez), 2026-09-23, as live session input
+  DISPATCH_ELIGIBILITY_AFTER_PRE_DISPATCH_DEFECT_DISCOVERY: SUPERSEDED  # superseded / retired BEFORE EXECUTION
+  dispatch_performed: false  # never dispatched; the qualification workflow's last run remains 35767911878 (2026-09-22, quarantined AUTH-01 lineage)
+  executions_under_this_id: 0
+  fields_changed_in_the_record: {record_validity: "VALID -> SUPERSEDED", authorizes_execution: "true -> false", dispatch_authorized_by_this_record: "true -> false", dispatch_eligibility: "(absent) -> SUPERSEDED", authorization_provenance: "(absent) -> VALID"}
+  fields_unchanged: [authorization_id, authorization_type, status, issued_by, issued_at, issued_under_instruction, launch_prompt, authorized_scope_if_issued]
+
+reason: >-
+  The ORCHESTRATOR's pre-dispatch check of 2026-09-23 (performed under the human's dispatch instruction for AUTH-02, which
+  stopped before dispatch) found that the implementation and package AUTH-02 was issued against contain three pre-dispatch
+  execution-integrity / provenance defects that the readiness gate did not check: (A) QUALIFICATION mode wrote formal output
+  into qualification/mobilewright/output/, the quarantined AUTH-01 records (reused execution directories, appended execution
+  logs, historical records in the provisional tally, quarantine packaged into the uploaded artifact); (B) with platform both,
+  the Android and iOS jobs could run concurrently against the shared qualification account, contrary to the sequential
+  measured-execution rule of protocol/mobile-runner-policy-v1.md section 7.1; (C) the active prompt version id was hardcoded
+  as qualifier-mobile-01-mobilewright-gate-v1 although AUTH-02's frozen prompt is v2. The human research lead accepted the
+  findings and directed that AUTH-02 not be used for dispatch after the corrections (implementation-lock v2, package v2,
+  corrected workflow), and that the valid lineage continue under a new authorization id.
+
+not_a_consequence_of_any_outcome: "no protocol-valid qualification execution exists; the supersession is required by execution isolation, the frozen sequential-execution rule, and provenance correctness, independently of whether Mobilewright would pass or fail; PREQUALIFICATION_OUTCOME_EXPOSURE remains true (PROTO-U10)"
+
+workflow_refusal:  # .github/workflows/e03-mobile-qualification.yml readiness gate, independent grounds on which AUTH-02 now fails closed
+  - "explicit refusal of the id (RETIRED_AUTHORIZATION_IDS contains MOBILE-QUALIFICATION-EXEC-AUTH-01 and MOBILE-QUALIFICATION-EXEC-AUTH-02)"
+  - "record_validity SUPERSEDED"
+  - "authorizes_execution false"
+  - "dispatch_eligibility is not ELIGIBLE"
+  - "its frozen prompt (prompts/frozen/qualifier-mobile-01-mobilewright-gate-v2.md) does not direct output to its formal namespace qualification/mobilewright/formal/MOBILE-QUALIFICATION-EXEC-AUTH-02/ (it names the quarantined qualification/mobilewright/output/)"
+
+successor_lineage:
+  next_authorization_id: MOBILE-QUALIFICATION-EXEC-AUTH-03
+  record: manifests/mobile-qualification-execution-auth-v3-prepared.yaml
+  state: PREPARED_NOT_ISSUED  # not dispatchable; issuance requires an explicit human reply; dispatch a further explicit human instruction
+  package: manifests/mobile-qualification-package-v2.yaml
+  implementation_lock: manifests/mobile-qualification-implementation-lock-v2.yaml
+  intended_prompt: prompts/working/qualifier-mobile-01-mobilewright-gate-v3.md  # working copy; frozen at issuance
+
+unchanged:
+  - "the quarantined HISTORICAL_UNAUTHORIZED_EXECUTION records under qualification/mobilewright/output/ (byte-identical)"
+  - "manifests/mobile-qualification-execution-auth-v1.yaml (AUTH-01, record_validity INVALID, retired)"
+  - "protocol/mobile-runner-policy-v1.md and every frozen protocol document"
+  - "manifests/mobile-qualification-implementation-lock-v1.yaml and manifests/mobile-qualification-package-v1.yaml (immutable historical provenance)"
+  - "prompts/frozen/qualifier-mobile-01-mobilewright-gate-v1.md and -v2.md"
+  - "runner selection: none; E03: NOT_STARTED"

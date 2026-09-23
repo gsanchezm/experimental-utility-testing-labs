@@ -35,13 +35,28 @@
 # 60 QUALIFICATION RUNS YET"). This is a genuine issuance, not a proposal or draft: distinguished from PROTO-U10 by
 # arriving as the human's own first-person statement in this session, exactly the class of event the guards above (and
 # the ORCHESTRATOR's standing practice since PROTO-U10) require before promoting any record from PREPARED to ISSUED.
+#
+# PRE-DISPATCH SUPERSESSION (2026-09-23, PROTO-U12; manifests/mobile-qualification-auth-02-dispatch-supersession-v1.yaml):
+# before any dispatch, the ORCHESTRATOR's pre-dispatch check found three execution-integrity / provenance defects in the
+# implementation and package this authorization was issued against (formal output into the quarantined
+# qualification/mobilewright/output/; cross-platform parallelism against the shared qualification account; active prompt
+# version hardcoded as v1). By explicit human instruction ("MOBILE QUALIFICATION PRE-DISPATCH INTEGRITY CORRECTION",
+# 2026-09-23) this authorization must no longer be used for dispatch. The historical facts are preserved, not rewritten:
+# it was genuinely issued by the human research lead on 2026-09-23 (authorization_provenance: VALID; status, issued_by,
+# issued_at unchanged) and it was NEVER dispatched. Only its current dispatch-eligibility fields change (record_validity,
+# authorizes_execution, dispatch_authorized_by_this_record, dispatch_eligibility; each previous value is kept in a
+# comment). The readiness gate additionally refuses this id explicitly. The valid lineage continues with
+# MOBILE-QUALIFICATION-EXEC-AUTH-03 (manifests/mobile-qualification-execution-auth-v3-prepared.yaml; PREPARED, NOT ISSUED).
 record_class: MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION
 status: ISSUED
 qualification_evidence: false
 measured_experiment: false
-authorizes_execution: true
+authorizes_execution: false  # PROTO-U12, 2026-09-23: was true from issuance (2026-09-23) until supersession before dispatch; nothing was ever executed under it
 selects_runner: false
-record_validity: VALID
+record_validity: SUPERSEDED  # PROTO-U12, 2026-09-23: was VALID; superseded before dispatch (exact lifecycle term refused by the readiness gate). Not INVALID: unlike AUTH-01 (PROTO-U10), the human issuance is genuine -- see authorization_provenance
+authorization_provenance: VALID  # PROTO-U12: the human issuance of 2026-09-23 is genuine and remains valid provenance
+dispatch_eligibility: SUPERSEDED  # PROTO-U12: superseded / retired BEFORE EXECUTION; never dispatched; the readiness gate admits only dispatch_eligibility: ELIGIBLE and refuses this id explicitly
+dispatch_eligibility_record: manifests/mobile-qualification-auth-02-dispatch-supersession-v1.yaml
 study_id: EUS-2026-001
 prepared_by: ORCHESTRATOR
 prepared_at: "2026-09-22"
@@ -51,7 +66,7 @@ authorization_type: MOBILE_QUALIFICATION_EXECUTION
 issued_by: gilbertosanchez  # explicit human issuance, live session input, 2026-09-23 -- see the ISSUANCE note above
 issued_at: "2026-09-23"
 issued_under_instruction: "EUS-2026-001 — MOBILE QUALIFICATION issuance instruction (\"I explicitly issue and approve: MOBILE-QUALIFICATION-EXEC-AUTH-02 ... Issued by: gilbertosanchez\"), entered directly by the human operator as live session input, 2026-09-23; explicitly withholds dispatch authority in the same message (section \"IMPORTANT EXECUTION BOUNDARY\": do not dispatch the 60 qualification runs, DEVELOPMENT mode, Appium, compatibility smoke, runner selection, or E03 in this operation)"
-dispatch_authorized_by_this_record: true  # the record now satisfies the readiness gate's authorization checks
+dispatch_authorized_by_this_record: false  # PROTO-U12, 2026-09-23: was true (the record satisfied the readiness gate from issuance until supersession); superseded before dispatch
 dispatch_performed_under_this_operation: false  # the issuance instruction explicitly withheld dispatch; no workflow was run
 
 launch_prompt:  # CORRECTED 2026-09-23 (AUTH-02 FROZEN PROMPT PROVENANCE CORRECTION instruction). SUPERSEDED representation,
@@ -156,4 +171,4 @@ issuance_and_dispatch_status:  # supersedes the old "if_issued_next_steps" (that
   step_not_performed:
     - "8. NOT PERFORMED under this authorization's issuance operation: the GitHub Actions workflow (.github/workflows/e03-mobile-qualification.yml) was NOT dispatched. The issuing instruction explicitly withheld dispatch (\"DO NOT DISPATCH THE 60 QUALIFICATION RUNS YET\" and the same for DEVELOPMENT mode, Appium, compatibility smoke, runner selection, and E03). This record now makes dispatch POSSIBLE (AUTH_02_DISPATCHABLE: TRUE, verified statically); it does not make dispatch AUTOMATIC. Dispatch requires its own separate explicit human instruction."
 
-human_confirmation_requested: "AUTH-02 is now ISSUED and dispatchable. Please reply explicitly if and when you wish the GitHub Actions qualification workflow actually dispatched (the 60 measured executions); nothing in the issuance itself triggers that."
+human_confirmation_requested: "HISTORICAL (superseded before dispatch, PROTO-U12; no dispatch may be requested under this id): AUTH-02 is now ISSUED and dispatchable. Please reply explicitly if and when you wish the GitHub Actions qualification workflow actually dispatched (the 60 measured executions); nothing in the issuance itself triggers that."

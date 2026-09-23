@@ -7,12 +7,18 @@
 // step's capabilities; QUALIFIER-MOBILE-01 attributes (policy 7.3) in the README, never this script.
 // Imports nothing from the runner under qualification. Usage: node summarize-results.mjs --out=<dir>
 // Authored by QUALIFIER-MOBILE-01 under prompt version qualifier-mobile-01-mobilewright-gate-v1.
+// Revised 2026-09-23 under manifests/mobile-qualification-implementation-lock-v2.yaml (PROTO-U12): --out is
+// required (no default pointing at the quarantined output/), and artifact paths are labeled relative to
+// qualification/mobilewright/ from the directory actually summarized. The computed tables are unchanged.
 
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const args = Object.fromEntries(process.argv.slice(2).map((a) => a.replace(/^--/, '').split('=')).map(([k, v]) => [k, v ?? 'true']));
-const out = args.out || 'qualification/mobilewright/output';
+if (!args.out) { console.error('missing --out (the formal namespace to summarize, e.g. qualification/mobilewright/formal/<authorization id>)'); process.exit(2); }
+const out = args.out;
+const outLabel = relative(resolve(fileURLToPath(new URL('.', import.meta.url)), '..'), resolve(out));
 const N = 10;
 const CAPS = ['MC-01', 'MC-02', 'MC-03', 'MC-04', 'MC-05', 'MC-06', 'MC-07', 'MC-08', 'MC-09', 'MC-10'];
 const CAP_NAMES = { 'MC-01': 'Install and launch', 'MC-02': 'Locate by stable identifier', 'MC-03': 'Text entry', 'MC-04': 'Tap / press native control', 'MC-05': 'Scroll / swipe', 'MC-06': 'Screen navigation and verification', 'MC-07': 'Deep link with parameters', 'MC-08': 'Read UI state', 'MC-09': 'App state reset between executions', 'MC-10': 'Artifact capture' };
@@ -35,7 +41,7 @@ md += '| execution_id | combination (MQn × platform) | kind (WARMUP / MEASURED 
 for (const r of records) {
   const dur = r.outcome === 'SUCCESS' ? `scenario ${sec(r.duration_ms.scenario)}; total ${sec(r.duration_ms.total)}` : `total ${sec(r.duration_ms.total)}`;
   const note = r.outcome === 'FAILURE' ? `failed step: ${r.failed_step ? r.failed_step.name : 'n/a'}` : r.outcome === 'EXCLUDED' ? `proposed cause: ${r.exclusion_proposal && r.exclusion_proposal.proposed_cause}` : (r.harness && r.harness.ios_open_prompt_shown === true ? 'system open prompt accepted' : '');
-  md += `| ${r.execution_id} | ${q(r.combination)} | ${r.kind} | ${r.attempt} | ${r.timestamp} | ${r.environment_type} | ${r.runner.version} | ${r.outcome} | ${dur} | \`output/${r.execution_id}/\` | ${q(note)} |\n`;
+  md += `| ${r.execution_id} | ${q(r.combination)} | ${r.kind} | ${r.attempt} | ${r.timestamp} | ${r.environment_type} | ${r.runner.version} | ${r.outcome} | ${dur} | \`${outLabel}/${r.execution_id}/\` | ${q(note)} |\n`;
 }
 
 md += '\n### Results per combination (generated)\n\n| Combination | Warm-ups (count) | Measured successes / 10 | Excluded (count) | Measured failures (count; runner-caused unless attributed) | Manual intervention (count) | Result |\n|---|---|---|---|---|---|---|\n';

@@ -21,7 +21,8 @@
 # frozen launch prompt; and, in qualification/mobilewright/README.md, the recorded instruction and a fully
 # realized scenario table. The platform jobs run the gate implementation authored by QUALIFIER-MOBILE-01
 # (qualification/mobilewright/run-gate-android.sh, run-gate-ios.sh) on the pinned substrates
-# (manifests/toolchain-manifest.yaml, environments) and upload qualification/mobilewright/output.
+# (manifests/toolchain-manifest.yaml, environments) and upload the authorization-specific formal namespace
+# qualification/mobilewright/formal/<instruction_id>/ (PROTO-U12; qualification/mobilewright/output/ is the quarantine).
 #
 # Mode DEVELOPMENT (experiments/E03-resetability/ci-cd-execution-model.md, sections 7 and 9): the same
 # harness on the same pinned substrates with N = 1 and no warm-up, every record labeled DEVELOPMENT, output
@@ -36,6 +37,17 @@
 # MOBILE-QUALIFICATION-EXEC-AUTH-02, manifests/mobile-qualification-execution-auth-v2-prepared.yaml, currently
 # PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION and refused by this gate on multiple independent grounds).
 # Resolution is now dynamic, id-filtered, and fails closed on zero or more than one match.
+#
+# PRE-DISPATCH EXECUTION-INTEGRITY / PROVENANCE correction (PROTO-U12, 2026-09-23; explicit human instruction
+# "MOBILE QUALIFICATION PRE-DISPATCH INTEGRITY CORRECTION"): (A) formal output is written to, uploaded from, and imported
+# into only the authorization-specific namespace qualification/mobilewright/formal/<instruction_id>/, which must be absent or
+# empty before the first execution -- never the quarantined qualification/mobilewright/output/; (B) one dispatch with
+# platform both runs gate -> Android -> iOS, the iOS job starting only after the Android job completed successfully (an
+# ordinary measured runner failure does not fail the Android job; an incomplete Android job leaves iOS unexecuted, fail
+# closed); (C) the active prompt version id is taken from the authorization record and passed to the platform jobs. The
+# implementation baseline is manifests/mobile-qualification-implementation-lock-v2.yaml (lock v1 is immutable history).
+# MOBILE-QUALIFICATION-EXEC-AUTH-02 was superseded before dispatch and is refused, like AUTH-01. No retry, no rerun, no
+# change to runner images, versions, scenario order, N, warm-ups, timeouts, or attribution.
 name: E03 Mobile Qualification
 
 on:
@@ -92,6 +104,8 @@ jobs:
     timeout-minutes: 10
     outputs:
       ready: ${{ steps.gate.outputs.ready }}
+      prompt_version_id: ${{ steps.gate.outputs.prompt_version_id }}
+      formal_namespace: ${{ steps.gate.outputs.formal_namespace }}
     env:
       GATE_CONFIRM: ${{ inputs.confirm }}
       GATE_PLATFORM: ${{ inputs.platform }}
@@ -156,8 +170,12 @@ jobs:
           bad_issuer_tokens = ('', 'null', 'none', 'tbd', 'pending', 'orchestrator', 'qualifier-mobile-01', 'adjudicator-eu-01', 'executor-e03-resetability')
           gate('issued_by is a human identity, not empty/placeholder/agent-role', issued_by.lower() not in bad_issuer_tokens, issued_by or '(absent)')
           gate('authorizes_execution is explicitly true (never defaulted)', auth.get('authorizes_execution') is True, str(auth.get('authorizes_execution')))
-          # PROTO-U10: continue refusing the retired id explicitly, even if another field were accidentally changed.
-          gate('authorization record is not the retired id MOBILE-QUALIFICATION-EXEC-AUTH-01', instruction != 'MOBILE-QUALIFICATION-EXEC-AUTH-01')
+          # PROTO-U12: an issued authorization must also be explicitly dispatch-eligible; a superseded one never is.
+          gate('dispatch_eligibility is exactly ELIGIBLE (superseded, retired, or not-yet-issued records fail closed)', auth.get('dispatch_eligibility') == 'ELIGIBLE', str(auth.get('dispatch_eligibility')))
+          # PROTO-U10 / PROTO-U12: refuse the retired and the superseded-before-dispatch ids explicitly, even if another
+          # field were accidentally changed.
+          RETIRED_AUTHORIZATION_IDS = ('MOBILE-QUALIFICATION-EXEC-AUTH-01', 'MOBILE-QUALIFICATION-EXEC-AUTH-02')
+          gate('authorization record is not a retired or superseded id (' + ', '.join(RETIRED_AUTHORIZATION_IDS) + ')', instruction not in RETIRED_AUTHORIZATION_IDS)
           prompt = (auth.get('launch_prompt') or {}).get('frozen_copy') or ''
           prompt_sha_claimed = (auth.get('launch_prompt') or {}).get('sha256')
           prompt_version_id_field = (auth.get('launch_prompt') or {}).get('prompt_version_id')
@@ -204,6 +222,36 @@ jobs:
           gate('actual on-disk SHA-256 of the frozen prompt matches the manifest entry\'s exported_sha256 (this checkout is the declared transformation of the canonical artifact)', prompt_sha_actual is not None and manifest_exported_sha is not None and prompt_sha_actual == manifest_exported_sha, str(prompt_sha_actual))
           gate('the submitted instruction_id appears literally in the frozen launch prompt', prompt_text is not None and instruction in prompt_text)
           gate('no unresolved {{INSTRUCTION_ID}} launch placeholder remains in the active frozen prompt', prompt_text is not None and '{{INSTRUCTION_ID}}' not in prompt_text)
+          gate('no unresolved {{...}} launch placeholder of any kind remains in the active frozen prompt', prompt_text is not None and re.search(r'\{\{[A-Z_]+\}\}', prompt_text) is None)
+          # PROTO-U12 (defect C): the active execution prompt version must match the authorization. The frozen prompt
+          # must declare exactly the authorization's prompt_version_id, and that id is what the platform jobs stamp on
+          # every record (QUALIFICATION_PROMPT_VERSION_ID); nothing in the implementation hardcodes a version.
+          declared_versions = sorted(set(re.findall(r'Prompt version: (qualifier-mobile-01-mobilewright-gate-v[0-9]+)', prompt_text or '')))
+          gate('the frozen prompt declares exactly the authorization\'s prompt version id', bool(prompt_version_id_field) and declared_versions == [prompt_version_id_field], str(declared_versions))
+          gate('prompt version id is a qualifier-mobile-01-mobilewright-gate-v<n> id', bool(re.fullmatch(r'qualifier-mobile-01-mobilewright-gate-v[0-9]+', str(prompt_version_id_field or ''))), str(prompt_version_id_field))
+          # PROTO-U12 (defect A): formal output isolation, checked BEFORE any execution. The namespace is
+          # authorization-specific, never the quarantined output/, and absent or empty (only .gitkeep) in this checkout.
+          id_ok = bool(re.fullmatch(r'MOBILE-QUALIFICATION-EXEC-AUTH-[0-9]+', instruction))
+          gate('instruction id has the MOBILE-QUALIFICATION-EXEC-AUTH-<n> form (safe as a path component)', id_ok, instruction)
+          formal_ns = 'qualification/mobilewright/formal/' + instruction if id_ok else ''
+          quarantine_dir = 'qualification/mobilewright/output'
+          gate('formal output namespace is isolated from the quarantined qualification/mobilewright/output', bool(formal_ns) and os.path.normpath(formal_ns) != quarantine_dir and not os.path.normpath(formal_ns).startswith(quarantine_dir + '/'), formal_ns)
+          ns_extra = [os.path.relpath(os.path.join(d, f), formal_ns) for d, _, fs in os.walk(formal_ns) for f in fs if f != '.gitkeep'] if formal_ns and os.path.isdir(formal_ns) else []
+          gate('formal output namespace is absent or empty before the first execution (only .gitkeep allowed)', bool(formal_ns) and (not os.path.exists(formal_ns) or (os.path.isdir(formal_ns) and not ns_extra)), str(ns_extra[:5]))
+          gate('the frozen prompt directs output to this authorization\'s formal namespace, not the quarantine', bool(formal_ns) and prompt_text is not None and (formal_ns + '/') in prompt_text)
+          gc = open('qualification/mobilewright/gate-common.sh').read()
+          gate('gate implementation writes QUALIFICATION output to the formal namespace and stamps the supplied prompt version', 'GATE_OUT="$GATE_HERE/formal/$QUALIFICATION_INSTRUCTION_ID"' in gc and 'GATE_PROMPT_VERSION_ID="${QUALIFICATION_PROMPT_VERSION_ID:-}"' in gc)
+          # PROTO-U12 (defect B): platform both must not permit Android/iOS overlap. Checked on this workflow file itself.
+          try:
+              wf = yaml.safe_load(open('.github/workflows/e03-mobile-qualification.yml'))
+              ios_job = wf['jobs']['qualification-ios']
+              ios_needs = ios_job.get('needs') if isinstance(ios_job.get('needs'), list) else [ios_job.get('needs')]
+              ios_if = str(ios_job.get('if', ''))
+              upload_paths = [st.get('with', {}).get('path', '') for j in ('qualification-android', 'qualification-ios') for st in wf['jobs'][j]['steps'] if str(st.get('uses', '')).startswith('actions/upload-artifact')]
+          except Exception as ex:
+              ios_needs, ios_if, upload_paths = [], '', []
+          gate('the iOS job needs the Android job (no Android/iOS overlap under platform both)', 'qualification-android' in ios_needs and "inputs.platform == 'both' && needs.qualification-android.result == 'success'" in ios_if, str(ios_needs))
+          gate('both platform uploads come from the formal namespace, never the quarantined output/', len(upload_paths) == 2 and all('needs.gate.outputs.formal_namespace' in p and 'mobilewright/output' not in p for p in upload_paths), str(upload_paths))
           rd = open('qualification/mobilewright/README.md').read()
           real = re.search(r'## Scenario realization.*?\n\n(.*?)\n\n## ', rd, re.S)
           gate('scenario realization recorded (no null / TBD in the realization table)', real is not None and 'null / TBD' not in real.group(1))
@@ -214,11 +262,11 @@ jobs:
               gate('gate implementation present: ' + f, os.path.isfile(f) and os.path.getsize(f) > 0)
           gate('gate harness lockfile present', os.path.isfile('qualification/mobilewright/harness/package-lock.json'))
           # Implementation-lock verification: the accepted baseline (manifests/mobile-qualification-
-          # implementation-lock-v1.yaml, MOBILE-QUALIFICATION-IMPLEMENTATION-LOCK-01) is independently
+          # implementation-lock-v2.yaml, MOBILE-QUALIFICATION-IMPLEMENTATION-LOCK-02, successor of LOCK-01) is independently
           # recomputed from the checked-out working tree, not merely read from the lock file. The formal
           # qualification must not run against an implementation different from the human-accepted baseline.
           try:
-              lock = yaml.safe_load(open('manifests/mobile-qualification-implementation-lock-v1.yaml'))
+              lock = yaml.safe_load(open('manifests/mobile-qualification-implementation-lock-v2.yaml'))
               lv = lock.get('lock_verification', {}) if isinstance(lock, dict) else {}
           except Exception:
               lv = {}
@@ -239,7 +287,11 @@ jobs:
               except Exception:
                   actual_srs = None
               gate('implementation-lock hash matches: Scenario-realization section of ' + str(srs.get('path')), actual_srs is not None and actual_srs == srs.get('expected'), str(actual_srs))
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as f: f.write('ready=' + ('true' if not failures else 'false') + '\n')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write('ready=' + ('true' if not failures else 'false') + '\n')
+              if not failures:
+                  f.write('prompt_version_id=' + prompt_version_id_field + '\n')
+                  f.write('formal_namespace=' + formal_ns + '\n')
           if failures:
               print('QUALIFICATION GATE NOT READY (' + str(len(failures)) + '): ' + '; '.join(failures)); sys.exit(1)
           print('QUALIFICATION GATE READY for platform(s): ' + os.environ.get('GATE_PLATFORM', '') + ' in mode ' + os.environ.get('GATE_MODE', ''))
@@ -251,6 +303,9 @@ jobs:
     if: ${{ needs.gate.outputs.ready == 'true' && (inputs.platform == 'android' || inputs.platform == 'both') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 180
+    env:
+      # Active execution prompt version, from the authorization record (PROTO-U12); stamped on every record.
+      QUALIFICATION_PROMPT_VERSION_ID: ${{ needs.gate.outputs.prompt_version_id }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -291,16 +346,22 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: E03-${{ inputs.mode }}-android-${{ inputs.runner_candidate }}-run${{ github.run_id }}-a${{ github.run_attempt }}
-          path: ${{ inputs.mode == 'DEVELOPMENT' && format('{0}/development-output', runner.temp) || 'qualification/mobilewright/output' }}
+          path: ${{ inputs.mode == 'DEVELOPMENT' && format('{0}/development-output', runner.temp) || needs.gate.outputs.formal_namespace }}
           retention-days: 90
           if-no-files-found: warn
 
   qualification-ios:
     name: E03 Mobile Qualification ios
-    needs: gate
-    if: ${{ needs.gate.outputs.ready == 'true' && (inputs.platform == 'ios' || inputs.platform == 'both') }}
+    # Sequential platforms (PROTO-U12, policy section 7.1): under platform both the iOS job starts only after the
+    # Android job has completed successfully; ordinary measured runner failures leave the Android job successful
+    # (the orchestrator records them and exits 0), while an incomplete Android job leaves iOS unexecuted (fail closed).
+    needs: [gate, qualification-android]
+    if: ${{ !cancelled() && needs.gate.outputs.ready == 'true' && ((inputs.platform == 'ios' && needs.qualification-android.result == 'skipped') || (inputs.platform == 'both' && needs.qualification-android.result == 'success')) }}
     runs-on: macos-15
     timeout-minutes: 180
+    env:
+      # Active execution prompt version, from the authorization record (PROTO-U12); stamped on every record.
+      QUALIFICATION_PROMPT_VERSION_ID: ${{ needs.gate.outputs.prompt_version_id }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -329,6 +390,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: E03-${{ inputs.mode }}-ios-${{ inputs.runner_candidate }}-run${{ github.run_id }}-a${{ github.run_attempt }}
-          path: ${{ inputs.mode == 'DEVELOPMENT' && format('{0}/development-output', runner.temp) || 'qualification/mobilewright/output' }}
+          path: ${{ inputs.mode == 'DEVELOPMENT' && format('{0}/development-output', runner.temp) || needs.gate.outputs.formal_namespace }}
           retention-days: 90
           if-no-files-found: warn
