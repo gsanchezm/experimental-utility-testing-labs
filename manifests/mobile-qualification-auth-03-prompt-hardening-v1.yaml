@@ -1,0 +1,354 @@
+# manifests/mobile-qualification-auth-03-prompt-hardening-v1.yaml
+# Preparation / provenance record of the AUTH-03 FINAL PRE-ISSUANCE PROMPT HARDENING (explicit human instruction,
+# 2026-09-23; verbatim below). Recorded by the ORCHESTRATOR. Not qualification evidence, not a protocol rule, not an
+# issuance: MOBILE-QUALIFICATION-EXEC-AUTH-03 remains PREPARED, NOT ISSUED, NOT DISPATCHABLE.
+record_id: MOBILE-QUALIFICATION-AUTH-03-PROMPT-HARDENING-01  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: PRE_ISSUANCE_PREPARATION_CORRECTION
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-09-23"
+qualification_evidence: false
+measured_experiment: false
+authorizes_execution: false
+issues_authorization: false
+protocol_escalation: none  # no frozen rule requires one for a pre-issuance working-prompt wording correction (instruction section 2)
+
+defect: "the v3 working prompt's title and status line described it intrinsically as 'WORKING PROMPT -- NOT FROZEN, NOT ISSUED, NOT DISPATCHABLE', while the frozen v3 copy is to be made from it byte-for-byte at issuance with only the INSTRUCTION_DATE placeholder rendered; frozen in that state, the authoritative launch prompt would have kept declaring itself not frozen and not issued"
+found: "before the issuance of MOBILE-QUALIFICATION-EXEC-AUTH-03; no qualification run, dispatch, or DEVELOPMENT run had occurred under any v3 lineage"
+mutability_basis: "prompts/README.md rule 1: working/ drafts may be edited freely until used; v3 has never been frozen or used, so it is corrected in place under prompts/working/ and no v4 is created"
+
+prompt: prompts/working/qualifier-mobile-01-mobilewright-gate-v3.md
+old_canonical_sha256: 755e225ae90b88eed2ac187f6fec3d2d6b74a7d34643cff084f614ae845aac9f
+new_canonical_sha256: 961e6ab233e0022a7f7b3d5e7a43735a507ec54f7a3c358a9f9dab7b4f7c4320
+line_count: 46  # unchanged
+changed_lines:  # the only lines that differ; lines 11-46 (role, boundaries, frozen inputs, procedure steps 1-10, "What you never do") are byte-identical
+  - line: 1
+    old: "# QUALIFIER-MOBILE-01 — Mobilewright Qualification Gate (working launch prompt, v3)"
+    new: "# QUALIFIER-MOBILE-01 — Mobilewright Qualification Gate v3"
+  - line: 3
+    old: "Status: WORKING PROMPT — NOT FROZEN, NOT ISSUED, NOT DISPATCHABLE. Prepared 2026-09-23 by the ORCHESTRATOR for MOBILE-QUALIFICATION-EXEC-AUTH-03, which at preparation time is PREPARED and NOT ISSUED (manifests/mobile-qualification-execution-auth-v3-prepared.yaml). Prompt version: qualifier-mobile-01-mobilewright-gate-v3. Preparing this file is not a human issuance and not a dispatch authorization; it is copied byte-for-byte into prompts/frozen/ (with only the INSTRUCTION_DATE placeholder rendered to the human issuance date) no earlier than the human issuance of AUTH-03 and no later than its first run (prompts/README.md, rules 2–5). Starts from v2 (prompts/frozen/qualifier-mobile-01-mobilewright-gate-v2.md, the frozen prompt of the superseded-before-dispatch AUTH-02 lineage, preserved unchanged); the differences from v2 are this status/header representation, the rendered launch variables, and the pre-dispatch execution-integrity corrections of PROTO-U12 (formal output namespace, gate → Android → iOS execution order in one dispatch, locked implementation-lock v2 baseline, quarantine excluded as input) — no methodological change: scenarios, capabilities, N, warm-ups, criteria, attribution, and switch rule are those of the frozen policy, unchanged."
+    new: "Status: AUTH-03 LAUNCH PROMPT TEXT. Prompt version: qualifier-mobile-01-mobilewright-gate-v3. This text authorizes no execution by its mere existence. It may be executed only when an exact frozen copy exists for MOBILE-QUALIFICATION-EXEC-AUTH-03 under prompts/frozen/, AUTH-03 has been explicitly issued by the human research lead and is VALID / dispatch-ELIGIBLE (manifests/mobile-qualification-execution-auth-v3-prepared.yaml is the authoritative lifecycle record), and a separate explicit human dispatch instruction has been given. Lifecycle: the copy under prompts/working/ remains editable until the human issuance of AUTH-03; the copy under prompts/frozen/ is made from it byte-for-byte at issuance, with only the INSTRUCTION_DATE placeholder rendered to the human issuance date, and is then immutable provenance (prompts/README.md, rules 2–5). Starts from v2 (prompts/frozen/qualifier-mobile-01-mobilewright-gate-v2.md, the frozen prompt of the superseded-before-dispatch AUTH-02 lineage, preserved unchanged); the differences from v2 are this status/header representation, the rendered launch variables, and the pre-dispatch execution-integrity corrections of PROTO-U12 (formal output namespace, gate → Android → iOS execution order in one dispatch, locked implementation-lock v2 baseline, quarantine excluded as input) — no methodological change: scenarios, capabilities, N, warm-ups, criteria, attribution, and switch rule are those of the frozen policy, unchanged."
+  - line: 5
+    old: "Variables rendered by the ORCHESTRATOR (the only text that may change between this working copy and the frozen launched copy is the INSTRUCTION_DATE placeholder, rendered at issuance):"
+    new: "Launch variables (the only text rendered between the working copy and the frozen copy is the INSTRUCTION_DATE placeholder, at issuance):"
+  - line: 7
+    old: "- `MOBILE-QUALIFICATION-EXEC-AUTH-03` — the human instruction id authorizing execution of the gate (PREPARED, NOT ISSUED at preparation time)."
+    new: "- `MOBILE-QUALIFICATION-EXEC-AUTH-03` — the human instruction id authorizing execution of the gate."
+  - line: 8
+    old: "- `{{INSTRUCTION_DATE}}` — its human issuance date (unknown until issuance; rendered only then)."
+    new: "- `{{INSTRUCTION_DATE}}` — its human issuance date (rendered at issuance)."
+invariants_after_correction:
+  - "the text contains the literal MOBILE-QUALIFICATION-EXEC-AUTH-03 and the literal prompt version qualifier-mobile-01-mobilewright-gate-v3 (declared once as 'Prompt version: qualifier-mobile-01-mobilewright-gate-v3', as the readiness gate requires)"
+  - "exactly two {{INSTRUCTION_DATE}} placeholders remain (the variable list and procedure step 1) and no other placeholder; they are the only text rendered at issuance"
+  - "no statement that becomes false when the same bytes are copied to prompts/frozen/ (no NOT FROZEN / NOT ISSUED / NOT DISPATCHABLE / WORKING PROMPT lifecycle claim); the status line states the conditions under which the text may be executed and describes the working/frozen lifecycle"
+  - "substantive QUALIFIER-MOBILE-01 procedure unchanged"
+
+auth_03_record_changes:  # manifests/mobile-qualification-execution-auth-v3-prepared.yaml
+  - "launch_prompt.working_copy_sha256_at_preparation: 755e225a... -> 961e6ab2... (previous value kept in a comment)"
+  - "issuance_procedure step 3 now also promotes record_class MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION_DRAFT -> MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION at explicit human issuance (not performed now); record_class comment added"
+  - "unchanged: status PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION, issued_by null, issued_at null, authorizes_execution false, dispatch_eligibility NOT_ELIGIBLE_UNTIL_ISSUED, launch_prompt.frozen_copy null, launch_prompt.sha256 null; no second AUTH-03 file"
+
+unchanged: [manifests/mobile-qualification-implementation-lock-v2.yaml (every hash), manifests/mobile-qualification-package-v2.yaml, .github/workflows/e03-mobile-qualification.yml, .github/workflows/e03-validate.yml, "qualification harness and entry scripts", "scenario realization (sha256 f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018)", "qualification/mobilewright/output/**", "prompts/frozen/** (v1, v2)", protocol/mobile-runner-policy-v1.md, "E01 matrix and H1 result"]
+scientific_inputs_changed: none
+
+human_instruction_verbatim_sha256: 2fe26db2ec7ed2008f45255b52e02245f6c084083cb91baa3f7f9ce4ea805a43  # the text below as a file with one trailing line feed
+human_instruction_verbatim: |
+  # EUS-2026-001 — AUTH-03 FINAL PRE-ISSUANCE PROMPT HARDENING
+
+  I, gilbertosanchez, human research lead for EUS-2026-001, explicitly authorize this narrow PRE-ISSUANCE PREPARATION CORRECTION ONLY.
+
+  This instruction does NOT issue MOBILE-QUALIFICATION-EXEC-AUTH-03.
+
+  It does NOT authorize:
+
+  * QUALIFICATION dispatch;
+  * DEVELOPMENT execution;
+  * Appium execution;
+  * compatibility smoke;
+  * mobile-runner selection;
+  * E03 START or execution.
+
+  The only automatically triggered workflow permitted is the normal push/publication validation workflow.
+
+  ## 1. CURRENT VERIFIED BASELINE
+
+  Begin from the currently published state:
+
+  Public main:
+
+  `fa04869dfbb932d80792a725f6001daed03105dc`
+
+  Public tree:
+
+  `3079423044190ad7b3c692b9b0ad144c615643ba`
+
+  Public export manifest SHA-256:
+
+  `f6962d8333c234fa5ce915144f0c19aa7f08d33f494c922f966f8417a53e0447`
+
+  AUTH-03 remains:
+
+  `PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION`
+
+  and has NOT been issued or dispatched.
+
+  The following remain authoritative and must not change:
+
+  * `manifests/mobile-qualification-implementation-lock-v2.yaml`
+  * `manifests/mobile-qualification-package-v2.yaml`
+  * `.github/workflows/e03-mobile-qualification.yml`
+  * the locked qualification harness
+  * MQ1/MQ2/MQ3 realization
+  * policy section 7 criteria and section 8 switch rule
+  * quarantine lineage
+  * E01/H1 results.
+
+  ## 2. DEFECT FOUND BEFORE AUTH-03 ISSUANCE
+
+  The current working prompt:
+
+  `prompts/working/qualifier-mobile-01-mobilewright-gate-v3.md`
+
+  contains a status/header statement equivalent to:
+
+  `WORKING PROMPT — NOT FROZEN, NOT ISSUED, NOT DISPATCHABLE`
+
+  while its own preparation rule states that at AUTH-03 issuance the frozen copy is produced from this working copy with only the `{{INSTRUCTION_DATE}}` placeholder rendered.
+
+  If frozen in that state, the authoritative frozen launch prompt would incorrectly continue to declare itself NOT FROZEN / NOT ISSUED.
+
+  Correct this BEFORE issuance.
+
+  This is a PRE-ISSUANCE REPRESENTATION / EXECUTION-PROVENANCE correction.
+
+  It is not methodological and is discovered before any AUTH-03 execution or qualification result exists.
+
+  Do not create a protocol escalation solely for this issue unless an existing frozen rule explicitly requires one.
+
+  ## 3. MAKE THE V3 PROMPT HEADER LOCATION-NEUTRAL
+
+  Edit the still-editable working prompt v3 so that its title/status language is truthful in BOTH states:
+
+  * while stored under `prompts/working/`; and
+  * after the exact text is copied to `prompts/frozen/` at issuance.
+
+  Use wording equivalent in substance to:
+
+  `Status: AUTH-03 LAUNCH PROMPT TEXT. This text authorizes no execution by its mere existence. It may be executed only when an exact frozen copy exists for MOBILE-QUALIFICATION-EXEC-AUTH-03, AUTH-03 has been explicitly issued by the human research lead and is VALID / dispatch-ELIGIBLE, and a separate explicit human dispatch instruction has been given.`
+
+  Also make the document title location-neutral, for example:
+
+  `QUALIFIER-MOBILE-01 — Mobilewright Qualification Gate v3`
+
+  rather than identifying the content intrinsically as a "working prompt."
+
+  The text may describe that the copy under `prompts/working/` remains editable before issuance and that the copy under `prompts/frozen/` becomes immutable provenance after issuance.
+
+  But the same bytes, once frozen, must not claim:
+
+  * NOT FROZEN;
+  * NOT ISSUED;
+  * NOT DISPATCHABLE;
+  * WORKING PROMPT as its current lifecycle state.
+
+  Do not change the substantive procedure.
+
+  ## 4. PRESERVE THE ONLY ISSUANCE-TIME RENDERING
+
+  After this correction, retain the existing rule that between the reviewed working v3 text and its future frozen v3 copy, the ONLY textual rendering performed at issuance is:
+
+  `{{INSTRUCTION_DATE}}` → actual human issuance date
+
+  The following are already literal and must remain so:
+
+  `MOBILE-QUALIFICATION-EXEC-AUTH-03`
+
+  `qualifier-mobile-01-mobilewright-gate-v3`
+
+  Do not introduce a new unresolved placeholder.
+
+  Do not create v4.
+
+  v3 has never been frozen or used; `prompts/working/` is still the correct place to correct it.
+
+  ## 5. UPDATE AUTH-03 PREPARED PROVENANCE
+
+  Update:
+
+  `manifests/mobile-qualification-execution-auth-v3-prepared.yaml`
+
+  only as necessary to keep its prepared provenance consistent with the corrected working prompt.
+
+  At minimum:
+
+  * recompute and replace `launch_prompt.working_copy_sha256_at_preparation`;
+  * preserve `frozen_copy: null`;
+  * preserve `sha256: null`;
+  * preserve `issued_by: null`;
+  * preserve `issued_at: null`;
+  * preserve `status: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION`;
+  * preserve `authorizes_execution: false`;
+  * preserve `dispatch_eligibility: NOT_ELIGIBLE_UNTIL_ISSUED`.
+
+  AUTH-03 remains NOT ISSUED.
+
+  ## 6. DEFINE THE RECORD-CLASS PROMOTION
+
+  AUTH-03 currently has:
+
+  `record_class: MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION_DRAFT`
+
+  which is correct while PREPARED.
+
+  Update its issuance procedure so that when AUTH-03 is eventually explicitly issued, promotion in place also performs:
+
+  `record_class: MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION_DRAFT`
+
+  →
+
+  `record_class: MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION`
+
+  along with the already-defined promotion of:
+
+  * record_validity → VALID;
+  * status → ISSUED;
+  * issued_by;
+  * issued_at;
+  * authorizes_execution → true;
+  * dispatch_eligibility → ELIGIBLE;
+  * frozen prompt path/hash/date.
+
+  Do NOT perform that promotion now.
+
+  This operation only records that it is part of the future issuance transition.
+
+  No second AUTH-03 file may be created.
+
+  ## 7. NO EXECUTABLE BASELINE CHANGE
+
+  Do NOT modify:
+
+  * `.github/workflows/e03-mobile-qualification.yml`
+  * `.github/workflows/e03-validate.yml`, except only if publication mechanics automatically require no semantic modification; preferably leave it unchanged
+  * implementation-lock v2
+  * package v2
+  * `qualification/mobilewright/gate-common.sh`
+  * `run-gate.mjs`
+  * `execute.mjs`
+  * `backend.mjs`
+  * `import-artifacts.mjs`
+  * `summarize-results.mjs`
+  * platform entry scripts
+  * scenario realization
+  * qualification/mobilewright/output/**
+  * frozen prompt v1
+  * frozen prompt v2
+  * mobile policy
+  * E01/H1.
+
+  Do NOT execute the harness or SUT.
+
+  ## 8. MINIMUM PROVENANCE RECORD
+
+  Create the minimum additive preparation/provenance record needed to explain:
+
+  * the defect was found before AUTH-03 issuance;
+  * no run had occurred;
+  * the working prompt was still mutable under prompts/README.md;
+  * only lifecycle/header wording was corrected;
+  * the substantive QUALIFIER procedure was unchanged;
+  * the working-prompt hash changed;
+  * no implementation-lock hash changed;
+  * no scientific input changed.
+
+  Do not classify this as qualification evidence.
+
+  Do not create a new protocol rule.
+
+  ## 9. STATIC VERIFICATION
+
+  Verify after the correction:
+
+  1. AUTH-03 is still PREPARED / NOT ISSUED / NOT DISPATCHABLE.
+  2. No frozen v3 prompt exists.
+  3. No AUTH-03 formal-output directory exists.
+  4. The working v3 prompt contains:
+
+     * literal AUTH-03;
+     * literal v3 prompt version;
+     * exactly the intended `{{INSTRUCTION_DATE}}` placeholders;
+     * no status statement that would become false when copied to frozen.
+  5. The substantive procedure steps are unchanged except for lifecycle/header representation if numbering is unaffected.
+  6. Lock v2 is unchanged and every hash still matches.
+  7. Package v2 is unchanged.
+  8. Scenario realization remains:
+
+  `f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018`
+
+  9. Quarantine is unchanged.
+  10. No qualification or DEVELOPMENT workflow was dispatched.
+
+  ## 10. PUBLICATION
+
+  Publish the normal provider-neutral snapshot.
+
+  Return:
+
+  * correction commit SHA(s);
+  * provenance-record path;
+  * old working-prompt canonical SHA-256;
+  * new working-prompt canonical SHA-256;
+  * exact prompt lines changed;
+  * AUTH-03 prepared-record changes;
+  * canonical HEAD after publication logging;
+  * public HEAD;
+  * public tree SHA;
+  * public export manifest SHA-256;
+  * validation-run id/result;
+  * confirmation implementation-lock v2 is unchanged;
+  * confirmation package v2 is unchanged;
+  * confirmation workflow is unchanged;
+  * confirmation no qualification execution occurred.
+
+  ## 11. REQUIRED FINAL STATE
+
+  End exactly:
+
+  AUTH_03_PROMPT_HARDENING:
+  COMPLETE
+
+  AUTH_03:
+  PREPARED_NOT_ISSUED
+
+  AUTH_03_RECORD_CLASS:
+  DRAFT_UNTIL_FUTURE_ISSUANCE
+
+  AUTH_03_FROZEN_PROMPT:
+  NONE
+
+  AUTH_03_FORMAL_OUTPUT:
+  NONE
+
+  MOBILEWRIGHT_QUALIFICATION:
+  NOT_STARTED
+
+  FORMAL_QUALIFICATION_DATA:
+  NONE
+
+  MOBILE_RUNNER_SELECTION:
+  NOT_SELECTED
+
+  APPIUM3_EXECUTION:
+  NOT_PERFORMED
+
+  COMPATIBILITY_SMOKE:
+  NOT_STARTED
+
+  E03_START:
+  NOT_AUTHORIZED
+
+  E03_EXECUTION:
+  NOT_STARTED
+
+  NEXT_REQUIRED_HUMAN_ACTION:
+  REVIEW_HARDENED_V3_PROMPT_THEN_EXPLICITLY_ISSUE_AUTH_03
