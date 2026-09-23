@@ -131,8 +131,9 @@ jobs:
           # correction). Every file matching the family below is a candidate; the gate fails closed unless
           # exactly one admissible record's authorization_id matches the submitted instruction_id. A drafted or
           # prepared record (issued_by empty/placeholder/agent-role, authorizes_execution not exactly true, a
-          # non-ISSUED status, or a missing/bad record_validity) must never pass, regardless of its id (PROTO-U10:
-          # a proposed/relayed authorization text is never itself an authorization).
+          # status that is absent or anything other than exactly ISSUED, or a missing/bad record_validity) must
+          # never pass, regardless of its id (PROTO-U10: a proposed/relayed authorization text is never itself an
+          # authorization; AUTH-02 PRE-ISSUANCE CONSISTENCY HARDENING, 2026-09-23: status absence no longer passes).
           auth_candidates = sorted(glob.glob('manifests/mobile-qualification-execution-auth-v*.yaml'))
           matches = []
           for p in auth_candidates:
@@ -150,7 +151,7 @@ jobs:
           record_validity = auth.get('record_validity')
           gate('record_validity is explicitly present and not INVALID/SUPERSEDED/RETIRED', record_validity is not None and str(record_validity).upper() not in ('INVALID', 'SUPERSEDED', 'RETIRED'), str(record_validity))
           status_val = auth.get('status')
-          gate('lifecycle/status field, if present, is exactly ISSUED (never a prepared/draft state)', status_val is None or status_val == 'ISSUED', str(status_val))
+          gate('status is exactly ISSUED (absence, PREPARED, DRAFT, or any other value fails closed)', status_val == 'ISSUED', str(status_val))
           issued_by = str(auth.get('issued_by') or '').strip()
           bad_issuer_tokens = ('', 'null', 'none', 'tbd', 'pending', 'orchestrator', 'qualifier-mobile-01', 'adjudicator-eu-01', 'executor-e03-resetability')
           gate('issued_by is a human identity, not empty/placeholder/agent-role', issued_by.lower() not in bad_issuer_tokens, issued_by or '(absent)')

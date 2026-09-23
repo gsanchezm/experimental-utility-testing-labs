@@ -4,17 +4,28 @@
 # the next valid formal qualification package... do NOT mark it issued yet"). It exists to save the human the work of
 # re-deriving the inputs; it grants nothing on its own. The PROTO-U10 incident (manifests/mobile-qualification-authorization-
 # correction-v1.yaml) is the exact failure mode this file guards against: a relayed/drafted authorization text was later
-# treated as if a human had issued it. That must not happen again. Guards:
+# treated as if a human had issued it. That must not happen again. Guards (updated 2026-09-23, AUTH-02
+# PRE-ISSUANCE CONSISTENCY HARDENING, after CI_AUTHORIZATION_RESOLUTION_DEFECT made the gate's discovery dynamic):
 #   - status is PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION, issued_by is null, authorizes_execution is false, and there
 #     is no issued_at date -- there will not be one until the human actually issues this.
-#   - this file's authorization_id (MOBILE-QUALIFICATION-EXEC-AUTH-02) is NOT referenced by any workflow readiness gate and
-#     is NOT written into manifests/mobile-qualification-execution-auth-v1.yaml (the only path
-#     .github/workflows/e03-mobile-qualification.yml actually reads); the workflow cannot pick this file up as-is, by
-#     construction, until a human explicitly instructs the ORCHESTRATOR to promote it.
-#   - a proposed/drafted/relayed authorization text -- including this file -- is never itself an authorization. An
-#     authorization exists only when the human explicitly replies with language issuing/approving it. The ORCHESTRATOR must
-#     not infer approval from an advisor-generated template, from the existence of this preparation, from discussion of a
-#     possible next step, or from a request for recommendations (LOCAL PREFLIGHT CLOSURE instruction, section 16).
+#   - the workflow's readiness gate (.github/workflows/e03-mobile-qualification.yml) DOES discover this file: it globs the
+#     manifests/mobile-qualification-execution-auth-v*.yaml family and this file's authorization_id
+#     (MOBILE-QUALIFICATION-EXEC-AUTH-02) is unique among them, so it IS the single matching record whenever that id is
+#     submitted as the dispatch instruction_id. Discoverability is not authorization: the gate still fails closed on this
+#     exact record today, because status is PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION (the gate requires status ==
+#     ISSUED exactly, absence or any other value fails), issued_by is null, authorizes_execution is false, record_validity
+#     is absent (the gate requires it explicitly present and VALID), and no AUTH-02 frozen launch prompt exists yet.
+#   - a proposed/drafted/relayed authorization text -- including this file -- is never itself an authorization. Nor is the
+#     file's mere presence in the repository, nor its discoverability by the workflow. An authorization exists only when
+#     the human explicitly replies with language issuing/approving it. The ORCHESTRATOR must not infer approval from an
+#     advisor-generated template, from the existence of this preparation, from the workflow's ability to find this file,
+#     from discussion of a possible next step, or from a request for recommendations (LOCAL PREFLIGHT CLOSURE instruction,
+#     section 16; AUTH-02 PRE-ISSUANCE CONSISTENCY HARDENING instruction, section 8).
+#   - issuance NEVER creates a second authorization record. MOBILE-QUALIFICATION-EXEC-AUTH-02 is promoted in place, in
+#     THIS file, by editing it when issuance actually occurs (section "if_issued_next_steps" below). A second file
+#     carrying the same authorization_id would violate the gate's own "exactly one matching record" requirement and is
+#     explicitly prohibited (AUTH-02 PRE-ISSUANCE CONSISTENCY HARDENING instruction, section 3). Git history already
+#     preserves the PREPARED state, so promotion in place does not destroy provenance.
 record_class: MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION_DRAFT
 status: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION
 qualification_evidence: false
@@ -30,6 +41,12 @@ authorization_type: MOBILE_QUALIFICATION_EXECUTION
 issued_by: null  # not issued; set only by explicit human reply issuing this authorization, never inferred
 issued_at: null  # not issued; no date until issuance
 
+provenance_rule:  # restated verbatim in force (AUTH-02 PRE-ISSUANCE CONSISTENCY HARDENING instruction, section 8)
+  - "THE PREPARED FILE IS NOT AUTHORIZATION."
+  - "THE PRESENCE OF AUTH-02 IN THE PUBLIC REPOSITORY IS NOT AUTHORIZATION."
+  - "DISCOVERY BY THE WORKFLOW IS NOT AUTHORIZATION."
+  - "ONLY AN EXPLICIT HUMAN ISSUANCE MAY CHANGE AUTH-02 FROM PREPARED TO ISSUED."
+
 references:
   governing_policy: protocol/mobile-runner-policy-v1.md  # FROZEN-PRE-DATA; pass criteria section 7, switch rule section 8
   governance_in_force: protocol/agent-governance-v2.md  # FROZEN-PRE-DATA 2026-09-22; QUALIFIER-MOBILE-01 writes qualification/** only
@@ -37,7 +54,7 @@ references:
   implementation_baseline_lock: manifests/mobile-qualification-implementation-lock-v1.yaml  # MOBILE-QUALIFICATION-IMPLEMENTATION-LOCK-01; eleven artifacts, reverified byte-identical as recently as the iOS local-preflight retry of 2026-09-22
   proto_u10_correction: manifests/mobile-qualification-authorization-correction-v1.yaml  # the record documenting why AUTH-01 is retired and invalid; this draft exists specifically because of it
   locked_qualification_harness: [qualification/mobilewright/run-gate-android.sh, qualification/mobilewright/run-gate-ios.sh, qualification/mobilewright/gate-common.sh, "qualification/mobilewright/harness/**"]
-  existing_workflow: .github/workflows/e03-mobile-qualification.yml  # its readiness gate reads manifests/mobile-qualification-execution-auth-v1.yaml by a hardcoded path and an authorization_id env input at dispatch time; it does NOT read this file; promoting this draft into that gate is a separate future step, itself requiring explicit human instruction
+  existing_workflow: .github/workflows/e03-mobile-qualification.yml  # readiness gate corrected 2026-09-23 (CI_AUTHORIZATION_RESOLUTION_DEFECT): it globs manifests/mobile-qualification-execution-auth-v*.yaml and DOES discover this file by its unique authorization_id; discovery still fails closed today because this record's status/issued_by/authorizes_execution/record_validity/frozen-prompt fields do not (yet) show an issued authorization -- see the header guards above
   frozen_launch_prompt_precedent: prompts/frozen/qualifier-mobile-01-mobilewright-gate-v1.md  # the AUTH-01 prompt freeze; its rendered INSTRUCTION_ID is AUTH-01 and cannot be reused verbatim -- a NEW prompt freeze rendering INSTRUCTION_ID = MOBILE-QUALIFICATION-EXEC-AUTH-02 is a step to perform at actual issuance, not created by this draft
 
 authorized_scope_if_issued:  # copied from, and cross-checked against, manifests/mobile-qualification-package-v1.yaml and protocol/mobile-runner-policy-v1.md at draft time; not copied from the closure instruction's own restatement of these numbers, which is a consistency check, not a source
@@ -66,13 +83,20 @@ explicitly_excluded_as_formal_input:  # LOCAL PREFLIGHT CLOSURE instruction, sec
     - "the quarantined HISTORICAL_UNAUTHORIZED_EXECUTION qualification-labelled runs (qualification/mobilewright/output/, QUARANTINE-RECORD.yaml)"
     - "any other development/warm-up run outside a formally authorized and dispatched gate under this authorization_id"
 
-if_issued_next_steps:  # not performed by this draft; listed so the human can see what issuance actually triggers
-  gate_field_requirements: "the workflow's readiness gate (corrected 2026-09-23, CI_AUTHORIZATION_RESOLUTION_DEFECT) discovers authorization records dynamically across manifests/mobile-qualification-execution-auth-v*.yaml and requires, on the uniquely id-matching record: authorization_type == MOBILE_QUALIFICATION_EXECUTION; record_validity explicitly present and not INVALID/SUPERSEDED/RETIRED (VALID); status, if present, exactly ISSUED (never a prepared/draft value); issued_by a real human identity, not empty/placeholder/agent-role; authorizes_execution exactly true (never defaulted); a frozen launch prompt that exists on disk"
+if_issued_next_steps:  # not performed by this draft; listed so the human can see what issuance actually triggers. Frozen as an exact
+                        # procedure (AUTH-02 PRE-ISSUANCE CONSISTENCY HARDENING instruction, section 7) to remove any ambiguity about
+                        # promoting in place vs. creating a second record.
+  gate_field_requirements: "the workflow's readiness gate (corrected 2026-09-23, CI_AUTHORIZATION_RESOLUTION_DEFECT; hardened 2026-09-23, AUTH-02 PRE-ISSUANCE CONSISTENCY HARDENING) discovers authorization records dynamically across manifests/mobile-qualification-execution-auth-v*.yaml and requires, on the uniquely id-matching record: authorization_type == MOBILE_QUALIFICATION_EXECUTION; record_validity explicitly present and not INVALID/SUPERSEDED/RETIRED (VALID); status == ISSUED exactly (absence now fails closed -- no longer permissively skipped); issued_by a real human identity, not empty/placeholder/agent-role; authorizes_execution exactly true (never defaulted); a frozen launch prompt that exists on disk"
+  duplicate_record_prohibition: "issuance NEVER creates manifests/mobile-qualification-execution-auth-v2.yaml or any other second file carrying authorization_id: MOBILE-QUALIFICATION-EXEC-AUTH-02. The gate requires exactly one matching record; a second file with the same id would make that requirement fail (0 or 2+ matches is always closed). The ONLY correct promotion path is editing THIS file (manifests/mobile-qualification-execution-auth-v2-prepared.yaml) in place. Its filename does not need to change -- the gate discovers by authorization_id, not by filename convention -- though the human may rename it if they prefer; either way there is exactly one file for this id at all times."
   steps:
-    - "ORCHESTRATOR promotes this draft's content -- either by editing this file in place or by writing a new manifests/mobile-qualification-execution-auth-v2.yaml -- setting record_validity: VALID, status: ISSUED, issued_by set to the human's own identity as they state it (never an agent role), issued_at set to the actual date, and authorizes_execution: true; the gate no longer needs to be repointed at a specific filename, since discovery is dynamic"
-    - "a new frozen launch prompt is rendered for QUALIFIER-MOBILE-01 with INSTRUCTION_ID = MOBILE-QUALIFICATION-EXEC-AUTH-02 (prompts/README.md, rules 2-5), frozen no later than the first run, and its frozen_copy path is recorded in the now-issued record's launch_prompt.frozen_copy field"
-    - "ORCHESTRATOR relays the authorization to QUALIFIER-MOBILE-01 (protocol/agent-governance-v2.md, section 2, rule 6)"
-    - "the GitHub Actions workflow (.github/workflows/e03-mobile-qualification.yml) is dispatched with QUALIFICATION_INSTRUCTION_ID=MOBILE-QUALIFICATION-EXEC-AUTH-02 and the appropriate GATE_CONFIRM/candidate inputs; its readiness gate independently re-verifies every pin above, the implementation-lock hashes, and the field requirements above before running anything"
-    - "none of this happens until the human's own explicit issuance reply is received; discussion, preparation, or a request for recommendations does not count as issuance (section 16)"
+    - "1. the human explicitly issues MOBILE-QUALIFICATION-EXEC-AUTH-02 (an explicit reply; not inferred from preparation, discussion, or a request for recommendations -- section 8/16)"
+    - "2. ORCHESTRATOR promotes THIS SAME prepared file in place (no second file is created; see duplicate_record_prohibition above)"
+    - "3. set on this file: record_validity: VALID; status: ISSUED; issued_by: <the human's own identity as they state it, never an agent role>; issued_at: <the actual date>; authorizes_execution: true"
+    - "4. a new frozen launch prompt is rendered for QUALIFIER-MOBILE-01 with INSTRUCTION_ID = MOBILE-QUALIFICATION-EXEC-AUTH-02 (prompts/README.md, rules 2-5), frozen no later than the first run"
+    - "5. record on this file: launch_prompt.frozen_copy, launch_prompt.prompt_version_id, launch_prompt.sha256"
+    - "6. ensure qualification/mobilewright/README.md records the same instruction id and the same prompt version id"
+    - "7. publish the resulting clean provider-neutral export"
+    - "8. only then is the GitHub Actions workflow (.github/workflows/e03-mobile-qualification.yml) dispatched with QUALIFICATION_INSTRUCTION_ID=MOBILE-QUALIFICATION-EXEC-AUTH-02 and the appropriate GATE_CONFIRM/candidate inputs; its readiness gate independently re-verifies every pin, the implementation-lock hashes, and every field requirement above before running anything"
+    - "none of steps 2-8 happens until step 1 (the human's own explicit issuance reply) is received"
 
 human_confirmation_requested: "Please reply explicitly if and when you wish to issue MOBILE-QUALIFICATION-EXEC-AUTH-02. Until then this remains PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION and authorizes nothing."
