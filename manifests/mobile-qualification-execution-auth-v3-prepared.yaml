@@ -1,25 +1,47 @@
 # manifests/mobile-qualification-execution-auth-v3-prepared.yaml
-# THIS FILE IS NOT AN AUTHORIZATION. It is the PREPARED record of the next MOBILE_QUALIFICATION_EXECUTION
-# authorization, MOBILE-QUALIFICATION-EXEC-AUTH-03, assembled by the ORCHESTRATOR under the explicit human
-# instruction "MOBILE QUALIFICATION PRE-DISPATCH INTEGRITY CORRECTION" (2026-09-23), section 9 ("prepare the
-# lineage for MOBILE-QUALIFICATION-EXEC-AUTH-03 ... AUTH-03 must initially remain PREPARED, NOT ISSUED, NOT
-# DISPATCHABLE. The human will issue it separately after reviewing this correction package").
-# It exists because MOBILE-QUALIFICATION-EXEC-AUTH-02 was superseded before dispatch (PROTO-U12;
-# manifests/mobile-qualification-auth-02-dispatch-supersession-v1.yaml). Guards (PROTO-U10 lesson):
-#   - status is PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION, record_validity is absent, issued_by and issued_at are
-#     null, authorizes_execution is false, dispatch_eligibility is NOT_ELIGIBLE_UNTIL_ISSUED, and launch_prompt.frozen_copy
-#     is null: the readiness gate of .github/workflows/e03-mobile-qualification.yml refuses this record on each of these
-#     grounds independently.
+# STATUS: ISSUED (promoted in place 2026-09-23; see the ISSUANCE note below). The "-prepared" filename is HISTORICAL /
+# PROVENANCE-ORIENTED ONLY -- it names the file that carried this authorization_id from its PREPARED state through
+# issuance, per the issuance procedure this file itself recorded ("issuance promotes THIS file in place (the AUTH-02
+# precedent); no second file may ever carry this authorization_id"). The lifecycle fields below (record_class, status,
+# record_validity, issued_by, issued_at, authorizes_execution, dispatch_eligibility) are authoritative; the filename is
+# not renamed.
+#
+# History preserved (this file was NOT an authorization before the issuance below; git history shows its PREPARED text
+# verbatim): it was assembled by the ORCHESTRATOR under the explicit human instruction "MOBILE QUALIFICATION PRE-DISPATCH
+# INTEGRITY CORRECTION" (2026-09-23), section 9 ("prepare the lineage for MOBILE-QUALIFICATION-EXEC-AUTH-03 ... AUTH-03
+# must initially remain PREPARED, NOT ISSUED, NOT DISPATCHABLE. The human will issue it separately after reviewing this
+# correction package"), because MOBILE-QUALIFICATION-EXEC-AUTH-02 was superseded before dispatch (PROTO-U12;
+# manifests/mobile-qualification-auth-02-dispatch-supersession-v1.yaml). Guards that were in force while PREPARED
+# (PROTO-U10 lesson), preserved as history:
+#   - while PREPARED, record_class was MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION_DRAFT, status was
+#     PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION, record_validity was absent, issued_by and issued_at were null,
+#     authorizes_execution was false, dispatch_eligibility was NOT_ELIGIBLE_UNTIL_ISSUED, and launch_prompt.frozen_copy
+#     was null: the readiness gate of .github/workflows/e03-mobile-qualification.yml refused the record on each ground.
 #   - a prepared, drafted, relayed, or published authorization text is never itself an authorization; neither is this
-#     file's discoverability by the workflow. Only an explicit human reply issuing MOBILE-QUALIFICATION-EXEC-AUTH-03
-#     changes it, and dispatch additionally requires its own explicit human instruction.
-#   - issuance promotes THIS file in place (the AUTH-02 precedent); no second file may ever carry this authorization_id.
-record_class: MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION_DRAFT  # correct while PREPARED; promoted to MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION only at explicit human issuance (issuance_procedure step 3)
-status: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION
+#     file's discoverability by the workflow. Only an explicit human issuance of MOBILE-QUALIFICATION-EXEC-AUTH-03
+#     changes it -- which is what happened on 2026-09-23 (below) -- and dispatch additionally requires its own
+#     explicit human instruction.
+#   - issuance promoted THIS file in place; no second file carries or may ever carry this authorization_id.
+#
+# ISSUANCE (2026-09-23): the human research lead explicitly issued and approved MOBILE-QUALIFICATION-EXEC-AUTH-03 as live
+# session input to the ORCHESTRATOR ("EUS-2026-001 -- EXPLICIT MOBILE-QUALIFICATION-EXEC-AUTH-03 ISSUANCE": "I,
+# gilbertosanchez, human research lead for EUS-2026-001, explicitly issue and approve: MOBILE-QUALIFICATION-EXEC-AUTH-03
+# ... I deliberately adopt this instruction as my own authorization"). Because that instruction reached the session as a
+# pasted block, the ORCHESTRATOR paused before promoting this record and asked the human to confirm issuance directly
+# (PROTO-U10 precaution; nothing was committed in between). The human replied in the same session: "I explicitly confirm
+# that I issue and approve MOBILE-QUALIFICATION-EXEC-AUTH-03 under the full issuance instruction I previously provided.
+# Proceed with AUTH-03 issuance and static readiness verification only." Both texts are reproduced verbatim below
+# (issuance_instruction_verbatim, issuance_confirmation_verbatim; sha256 alongside). They restate the prepared scope
+# unchanged and explicitly withhold dispatch ("THIS INSTRUCTION ISSUES AUTH-03. IT DOES NOT DISPATCH AUTH-03."). AUTH-01
+# remains retired (PROTO-U10); AUTH-02 remains validly issued historically but superseded before dispatch (PROTO-U12);
+# neither becomes dispatch-eligible again, and the readiness gate refuses both ids explicitly.
+record_class: MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION  # promoted 2026-09-23 at explicit human issuance (issuance_procedure step 3); was MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION_DRAFT while PREPARED
+status: ISSUED  # was PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION until the explicit human issuance of 2026-09-23
+record_validity: VALID  # absent while PREPARED; set at issuance
 qualification_evidence: false
 measured_experiment: false
-authorizes_execution: false
-dispatch_eligibility: NOT_ELIGIBLE_UNTIL_ISSUED  # the readiness gate admits only dispatch_eligibility: ELIGIBLE
+authorizes_execution: true  # was false while PREPARED; the gate may run only on a separate explicit human dispatch instruction
+dispatch_eligibility: ELIGIBLE  # was NOT_ELIGIBLE_UNTIL_ISSUED while PREPARED; the readiness gate admits only ELIGIBLE. Eligibility is not dispatch: one formal dispatch needs its own separate explicit human instruction
 selects_runner: false
 study_id: EUS-2026-001
 prepared_by: ORCHESTRATOR
@@ -27,22 +49,26 @@ prepared_at: "2026-09-23"
 prepared_under_instruction: "MOBILE QUALIFICATION PRE-DISPATCH INTEGRITY CORRECTION instruction (explicit human instruction, 2026-09-23), section 9; verbatim in manifests/mobile-qualification-implementation-lock-v2.yaml"
 authorization_id: MOBILE-QUALIFICATION-EXEC-AUTH-03  # a NEW id; AUTH-01 is retired (PROTO-U10) and AUTH-02 superseded before dispatch (PROTO-U12); neither is ever reused
 authorization_type: MOBILE_QUALIFICATION_EXECUTION
-issued_by: null  # not issued; set only by explicit human reply issuing this authorization, never inferred
-issued_at: null  # not issued; no date until issuance
+issued_by: gilbertosanchez  # explicit human issuance, live session input, 2026-09-23, confirmed directly by the human -- see the ISSUANCE note above
+issued_at: "2026-09-23"
+issued_under_instruction: "EUS-2026-001 -- EXPLICIT MOBILE-QUALIFICATION-EXEC-AUTH-03 ISSUANCE (explicit human instruction, live session input to the ORCHESTRATOR, 2026-09-23), followed by the human's direct confirmation of issuance in the same session; both verbatim below; both explicitly withhold dispatch"
+issuance_basis: "explicit human adoption and issuance as live instruction (issuance_procedure step 1): the instruction states 'I deliberately adopt this instruction as my own authorization' and the human separately confirmed 'I explicitly confirm that I issue and approve MOBILE-QUALIFICATION-EXEC-AUTH-03'; the origin of the wording is not a criterion"
+dispatch_authorized_by_this_record: true  # the record satisfies the readiness gate; this is eligibility, not a dispatch instruction
+dispatch_performed_under_this_operation: false  # the issuing instruction explicitly withheld dispatch; no qualification workflow was run
 
 launch_prompt:
   working_copy: prompts/working/qualifier-mobile-01-mobilewright-gate-v3.md
   working_copy_sha256_at_preparation: 961e6ab233e0022a7f7b3d5e7a43735a507ec54f7a3c358a9f9dab7b4f7c4320  # after the AUTH-03 FINAL PRE-ISSUANCE PROMPT HARDENING (2026-09-23; header/lifecycle wording only; manifests/mobile-qualification-auth-03-prompt-hardening-v1.yaml); previously 755e225ae90b88eed2ac187f6fec3d2d6b74a7d34643cff084f614ae845aac9f
-  frozen_copy: null  # frozen at issuance: byte-for-byte copy of the working copy with only {{INSTRUCTION_DATE}} rendered to the human issuance date (prompts/README.md, rules 2-5)
+  frozen_copy: prompts/frozen/qualifier-mobile-01-mobilewright-gate-v3.md  # frozen 2026-09-23 at issuance: byte-for-byte copy of the working copy (sha256 961e6ab2...4320, verified before freezing) with only the two {{INSTRUCTION_DATE}} occurrences (lines 8 and 27) rendered to 2026-09-23; 45 lines each, no other line differs (prompts/README.md, rules 2-5)
   prompt_version_id: qualifier-mobile-01-mobilewright-gate-v3
-  sha256: null  # canonical sha256 of the frozen copy, recorded at issuance
+  sha256: e7322c0a60e0592924fa1fac41526b862640f8e9c6925540e4b057e1d6dfe273  # canonical sha256 of the frozen copy; the public export may carry a declared PROVIDER_NEUTRAL_PATH_ALIAS transformation of it, bridged by PUBLIC-EXPORT-MANIFEST.yaml (canonical_sha256 == this value)
   rendered_variables:
     INSTRUCTION_ID: MOBILE-QUALIFICATION-EXEC-AUTH-03  # already literal in the working copy
-    INSTRUCTION_DATE: null  # the human issuance date; unknown until issuance
+    INSTRUCTION_DATE: "2026-09-23"  # the human issuance date, rendered at freeze (2 substitutions)
     PROMPT_VERSION_ID: qualifier-mobile-01-mobilewright-gate-v3  # already literal in the working copy
-  note: "preparing or freezing the prompt is not a human issuance and not a dispatch authorization"
+  note: "preparing or freezing the prompt is not a human issuance and not a dispatch authorization; the frozen copy is immutable execution provenance, the working copy remains historical preparation provenance"
 
-formal_output_namespace: qualification/mobilewright/formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/  # absent at preparation; must be absent or empty (only .gitkeep) before the first execution; the only canonical import destination for this authorization's artifacts
+formal_output_namespace: qualification/mobilewright/formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/  # absent at preparation and at issuance; must be absent or empty (only .gitkeep) before the first execution; the only canonical import destination for this authorization's artifacts
 
 references:
   governing_policy: protocol/mobile-runner-policy-v1.md  # FROZEN-PRE-DATA; unchanged
@@ -78,10 +104,384 @@ explicitly_excluded_as_formal_input:
   - "every DEVELOPMENT run"
   - "anything recorded under the superseded MOBILE-QUALIFICATION-EXEC-AUTH-02 (nothing was executed under it)"
 
-issuance_procedure:  # to be performed only on an explicit human reply issuing MOBILE-QUALIFICATION-EXEC-AUTH-03
+issuance_procedure:  # performed 2026-09-23 on the explicit human issuance above (steps 1-5); step 6 remains open
   - "1. the human explicitly issues or approves MOBILE-QUALIFICATION-EXEC-AUTH-03 as live human instruction; issuance must never be inferred merely from preparation, publication, discussion, recommendation, or an unadopted draft (PROTO-U10). The origin of the wording is not a criterion: a drafted text the human deliberately adopts and sends as their instruction is an explicit issuance (clarified by the human research lead, FINAL PRE-AUTH-03 REPRESENTATION CLEANUP, 2026-09-23)"
   - "2. ORCHESTRATOR freezes prompts/working/qualifier-mobile-01-mobilewright-gate-v3.md to prompts/frozen/qualifier-mobile-01-mobilewright-gate-v3.md, rendering only the two {{INSTRUCTION_DATE}} placeholders (variable list and step 1); CHANGELOG row"
   - "3. ORCHESTRATOR promotes THIS file in place: record_class MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION_DRAFT -> MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION, record_validity VALID, status ISSUED, issued_by <human>, issued_at <date>, authorizes_execution true, dispatch_eligibility ELIGIBLE, launch_prompt.frozen_copy / sha256 / rendered_variables.INSTRUCTION_DATE"
   - "4. qualification/mobilewright/README.md records the instruction and prompt version (QUALIFIER-MOBILE-01)"
   - "5. clean provider-neutral public export; readiness verified statically against the fresh public clone"
   - "6. dispatch only on a separate explicit human instruction"
+
+human_instruction_verbatim_sha256: 2b0fc4b5b7f779a489be1cb0027a200c93a3ccfcd46a38da81a65bd3f0532cc1  # sha256 of issuance_instruction_verbatim as a file with one trailing line feed
+issuance_instruction_verbatim: |
+  # EUS-2026-001 — EXPLICIT MOBILE-QUALIFICATION-EXEC-AUTH-03 ISSUANCE
+
+  I, gilbertosanchez, human research lead for EUS-2026-001, explicitly issue and approve:
+
+  `MOBILE-QUALIFICATION-EXEC-AUTH-03`
+
+  Authorization type:
+
+  `MOBILE_QUALIFICATION_EXECUTION`
+
+  Issuance date:
+
+  `2026-09-23`
+
+  This is an explicit human issuance of AUTH-03.
+
+  I deliberately adopt this instruction as my own authorization.
+
+  The origin or drafting of this text does not affect its validity: I am explicitly issuing it as the human research lead.
+
+  ## 1. AUTHORIZED SCOPE
+
+  AUTH-03 authorizes the prepared Mobilewright qualification gate under the already-reviewed frozen inputs:
+
+  Runner under qualification:
+
+  `Mobilewright 0.0.60`
+
+  Fallback, only if the frozen section-8 switch rule is legitimately triggered:
+
+  `Appium 3.7.0`
+
+  Qualification SUT:
+
+  `OmniPizza v1.1.8`
+
+  Platforms:
+
+  * Android — pinned ubuntu-24.04 / API 35 / google_apis / x86_64 / pixel_7 substrate.
+  * iOS — pinned macos-15 / Xcode 16.4 build 16F6 / iOS 18.5 / iPhone 16 substrate.
+
+  Scenarios:
+
+  * MQ1
+  * MQ2
+  * MQ3
+
+  Mandatory capabilities:
+
+  `MC-01 through MC-10`
+
+  Measured volume:
+
+  `10 measured executions × 3 scenarios × 2 platforms = 60 measured executions`
+
+  Execution topology:
+
+  `one workflow_dispatch`
+
+  with:
+
+  `platform = both`
+
+  and strictly:
+
+  `readiness gate → Android → iOS`
+
+  with Android and iOS never executing concurrently.
+
+  Formal output namespace:
+
+  `qualification/mobilewright/formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/`
+
+  The AUTH-01 quarantine under:
+
+  `qualification/mobilewright/output/`
+
+  is NOT a formal input and must remain immutable.
+
+  PREQUALIFICATION_OUTCOME_EXPOSURE remains:
+
+  `TRUE`
+
+  No frozen scientific input may change in response to any previously observed Mobilewright behavior.
+
+  ## 2. PROMPT FREEZE
+
+  Freeze:
+
+  `prompts/working/qualifier-mobile-01-mobilewright-gate-v3.md`
+
+  as:
+
+  `prompts/frozen/qualifier-mobile-01-mobilewright-gate-v3.md`
+
+  The reviewed working prompt has canonical SHA-256:
+
+  `961e6ab233e0022a7f7b3d5e7a43735a507ec54f7a3c358a9f9dab7b4f7c4320`
+
+  At freeze time, perform ONLY the already-authorized rendering:
+
+  `{{INSTRUCTION_DATE}}` → `2026-09-23`
+
+  There must be exactly two such substitutions.
+
+  Do not alter any other byte deliberately.
+
+  After rendering:
+
+  * compute the canonical frozen-prompt SHA-256;
+  * record it in the AUTH-03 lifecycle record;
+  * verify literal `MOBILE-QUALIFICATION-EXEC-AUTH-03`;
+  * verify literal `qualifier-mobile-01-mobilewright-gate-v3`;
+  * verify no unresolved `{{...}}` placeholder remains;
+  * verify the substantive procedure is unchanged from the reviewed v3 working prompt except for the two date substitutions.
+
+  The working prompt remains historical preparation provenance.
+
+  The frozen prompt becomes immutable execution provenance.
+
+  ## 3. PROMOTE THE EXISTING AUTH-03 RECORD IN PLACE
+
+  Promote the existing and unique:
+
+  `manifests/mobile-qualification-execution-auth-v3-prepared.yaml`
+
+  in place.
+
+  Do NOT create a second AUTH-03 authorization record.
+
+  Perform the lifecycle transition:
+
+  `record_class: MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION_DRAFT`
+
+  →
+
+  `record_class: MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION`
+
+  Set:
+
+  `record_validity: VALID`
+
+  `status: ISSUED`
+
+  `issued_by: gilbertosanchez`
+
+  `issued_at: 2026-09-23`
+
+  `authorizes_execution: true`
+
+  `dispatch_eligibility: ELIGIBLE`
+
+  Populate:
+
+  * `launch_prompt.frozen_copy`
+  * `launch_prompt.sha256`
+  * `launch_prompt.rendered_variables.INSTRUCTION_DATE`
+
+  Preserve:
+
+  `authorization_id: MOBILE-QUALIFICATION-EXEC-AUTH-03`
+
+  Preserve all authorized scientific scope exactly as prepared.
+
+  Record this explicit human issuance as the issuance basis.
+
+  AUTH-01 remains retired.
+
+  AUTH-02 remains validly issued historically but superseded before dispatch.
+
+  Neither may become dispatch-eligible again.
+
+  ## 4. QUALIFIER-MOBILE-01 PRE-EXECUTION RECORDING
+
+  Without executing MQ1, MQ2, MQ3 or the SUT, ensure the required pre-execution instruction/provenance entry under:
+
+  `qualification/mobilewright/README.md`
+
+  records:
+
+  * authorization id `MOBILE-QUALIFICATION-EXEC-AUTH-03`;
+  * issuance date `2026-09-23`;
+  * prompt version `qualifier-mobile-01-mobilewright-gate-v3`;
+  * frozen prompt path/hash as applicable;
+  * implementation lock v2;
+  * package v2;
+  * formal namespace.
+
+  Respect role/write boundaries.
+
+  If this update belongs to QUALIFIER-MOBILE-01 rather than ORCHESTRATOR, use the proper role for that bookkeeping operation.
+
+  This bookkeeping is NOT qualification execution.
+
+  Do not invoke the harness.
+
+  Do not interact with OmniPizza.
+
+  ## 5. HARD EXECUTION BOUNDARY
+
+  THIS INSTRUCTION ISSUES AUTH-03.
+
+  IT DOES NOT DISPATCH AUTH-03.
+
+  Do NOT trigger:
+
+  `E03 Mobile Qualification`
+
+  Do NOT provide the workflow with:
+
+  `confirm = EXECUTE-QUALIFICATION-GATE`
+
+  Do NOT execute:
+
+  * any warm-up;
+  * any measured qualification execution;
+  * Android qualification;
+  * iOS qualification;
+  * DEVELOPMENT mode;
+  * Mobilewright against the SUT;
+  * Appium 3;
+  * compatibility smoke;
+  * runner selection;
+  * E03 START;
+  * E03 measured execution.
+
+  No qualification result may exist after this operation.
+
+  The only workflow execution permitted as a side effect of publication is the normal push-triggered validation workflow.
+
+  ## 6. STATIC READINESS VERIFICATION
+
+  After issuance and public export, verify statically from a fresh public checkout that AUTH-03 satisfies every pre-dispatch readiness condition.
+
+  The verification must confirm at minimum:
+
+  * exactly one authorization record matches AUTH-03;
+  * `record_class = MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION`;
+  * `record_validity = VALID`;
+  * `status = ISSUED`;
+  * `issued_by = gilbertosanchez`;
+  * `authorizes_execution = true`;
+  * `dispatch_eligibility = ELIGIBLE`;
+  * AUTH-03 is not in the retired/superseded-id list;
+  * frozen v3 prompt exists;
+  * canonical/public prompt provenance bridge validates;
+  * prompt declares exactly `qualifier-mobile-01-mobilewright-gate-v3`;
+  * prompt contains AUTH-03 literally;
+  * no unresolved placeholder remains;
+  * implementation-lock v2 hashes all match;
+  * scenario realization hash remains:
+
+  `f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018`
+
+  * package v2 remains unchanged;
+  * formal namespace is absent or empty;
+  * quarantine remains unchanged;
+  * workflow topology remains gate → Android → iOS;
+  * the public readiness gate would accept the exact future dispatch inputs.
+
+  Report the readiness check count and result.
+
+  A static/simulated readiness check is allowed.
+
+  Actual qualification execution is not.
+
+  ## 7. PUBLIC EXPORT
+
+  Publish the normal clean provider-neutral snapshot.
+
+  Report:
+
+  * issuance commit SHA(s);
+  * canonical frozen v3 prompt SHA-256;
+  * public exported frozen v3 prompt SHA-256;
+  * canonical/public transformation class;
+  * AUTH-03 record path and final lifecycle fields;
+  * canonical HEAD after export logging;
+  * public HEAD;
+  * public tree;
+  * public export manifest SHA-256;
+  * validation workflow run id/result;
+  * static AUTH-03 readiness result;
+  * confirmation no qualification workflow was dispatched;
+  * confirmation no formal AUTH-03 execution artifact exists.
+
+  ## 8. SCIENTIFIC STATE MUST REMAIN
+
+  After this operation:
+
+  Mobilewright qualification:
+
+  `AUTHORIZED_BUT_NOT_DISPATCHED`
+
+  Formal qualification data:
+
+  `NONE`
+
+  Mobile runner:
+
+  `NOT_SELECTED`
+
+  Appium 3 execution:
+
+  `NOT_PERFORMED`
+
+  Compatibility smoke:
+
+  `NOT_STARTED`
+
+  E03 START:
+
+  `NOT_AUTHORIZED`
+
+  E03 execution:
+
+  `NOT_STARTED`
+
+  Do not reinterpret any historical unauthorized/preflight result.
+
+  Do not execute the section-8 fallback.
+
+  ## 9. REQUIRED FINAL DECLARATIONS
+
+  End exactly with:
+
+  AUTH_03:
+  ISSUED_VALID
+
+  AUTH_03_RECORD_CLASS:
+  MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION
+
+  AUTH_03_DISPATCH_ELIGIBILITY:
+  ELIGIBLE
+
+  AUTH_03_FROZEN_PROMPT:
+  FROZEN
+
+  AUTH_03_DISPATCH_PERFORMED:
+  NO
+
+  MOBILEWRIGHT_QUALIFICATION:
+  AUTHORIZED_BUT_NOT_DISPATCHED
+
+  FORMAL_QUALIFICATION_DATA:
+  NONE
+
+  MOBILE_RUNNER_SELECTION:
+  NOT_SELECTED
+
+  APPIUM3_EXECUTION:
+  NOT_PERFORMED
+
+  COMPATIBILITY_SMOKE:
+  NOT_STARTED
+
+  E03_START:
+  NOT_AUTHORIZED
+
+  E03_EXECUTION:
+  NOT_STARTED
+
+  NEXT_REQUIRED_HUMAN_ACTION:
+  REVIEW_AUTH_03_ISSUANCE_AND_STATIC_READINESS_THEN_SEPARATELY_AUTHORIZE_ONE_FORMAL_DISPATCH
+human_confirmation_verbatim_sha256: 4e9752786ba8899a99bf2d17d6cdada8836ba3586671c0572cfdde2bd0218ef5  # sha256 of issuance_confirmation_verbatim as a file with one trailing line feed
+issuance_confirmation_verbatim: |
+  I explicitly confirm that I issue and approve MOBILE-QUALIFICATION-EXEC-AUTH-03 under the full issuance instruction I previously provided.
+
+  Proceed with AUTH-03 issuance and static readiness verification only.
+
+  Do not dispatch the qualification workflow and do not execute Mobilewright, DEVELOPMENT mode, Appium, compatibility smoke, runner selection, or E03.
