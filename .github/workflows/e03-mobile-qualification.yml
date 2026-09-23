@@ -159,17 +159,49 @@ jobs:
           # PROTO-U10: continue refusing the retired id explicitly, even if another field were accidentally changed.
           gate('authorization record is not the retired id MOBILE-QUALIFICATION-EXEC-AUTH-01', instruction != 'MOBILE-QUALIFICATION-EXEC-AUTH-01')
           prompt = (auth.get('launch_prompt') or {}).get('frozen_copy') or ''
-          gate('frozen launch prompt present', bool(prompt) and os.path.isfile(prompt), prompt)
-          # AUTH-02 FROZEN PROMPT PROVENANCE CORRECTION (2026-09-23): a frozen_copy pointing at an existing file was
-          # not enough on its own -- verify the record's own claimed hash, that it matches the file on disk, that the
-          # submitted instruction_id is literally instantiated in that file (not merely discoverable via a separate
-          # id lookup), and that no unrendered launch placeholder remains active. Generic on instruction_id, not
-          # hardcoded to any one authorization id.
-          prompt_text = open(prompt, encoding='utf-8').read() if prompt and os.path.isfile(prompt) else None
           prompt_sha_claimed = (auth.get('launch_prompt') or {}).get('sha256')
+          prompt_version_id_field = (auth.get('launch_prompt') or {}).get('prompt_version_id')
+          gate('launch_prompt.frozen_copy is present', bool(prompt))
           gate('launch_prompt.sha256 is present in the authorization record', bool(prompt_sha_claimed), str(prompt_sha_claimed))
+          gate('launch_prompt.prompt_version_id is present in the authorization record', bool(prompt_version_id_field), str(prompt_version_id_field))
+          gate('frozen launch prompt present', bool(prompt) and os.path.isfile(prompt), prompt)
+          # CANONICAL vs PUBLIC EXECUTION PROMPT HASH correction (2026-09-23): this workflow only ever executes from
+          # the published public checkout (GitHub Actions has no other repository to run from), which the clean
+          # provider-neutral export deterministically transforms (PROVIDER_NEUTRAL_PATH_ALIAS etc.) relative to the
+          # canonical source the authorization record was hashed against. Comparing launch_prompt.sha256 directly
+          # against the on-disk file therefore fails by design for any transformed file -- it is not a defect to
+          # paper over with an exemption or a normalization step, and it is not corrected by overwriting the
+          # authorization's canonical hash with the exported one. Instead PUBLIC-EXPORT-MANIFEST.yaml (present in
+          # every published checkout; it is the export's own declared transformation record) is the bridge: it must
+          # show exactly one entry for this exact path, that entry's canonical_sha256 must equal what AUTH-02
+          # claims (proving AUTH-02 was hashed against the same canonical artifact the export started from), the
+          # actual on-disk bytes in THIS checkout must equal that entry's exported_sha256 (proving this checkout is
+          # exactly the declared transformation of that artifact, not something else), and the declared
+          # transformation class must be on the short allowed list -- never an unreviewed or scientifically
+          # meaningful transformation. An UNCHANGED entry (the manifest omits explicit canonical_sha256/
+          # exported_sha256 for files the export did not touch, since canonical, exported, and on-disk are then
+          # identical by construction) is handled by using the freshly computed on-disk hash as the effective value
+          # of both, which reduces to the original direct comparison exactly when no transformation occurred.
+          prompt_text = open(prompt, encoding='utf-8').read() if prompt and os.path.isfile(prompt) else None
           prompt_sha_actual = hashlib.sha256(prompt_text.encode('utf-8')).hexdigest() if prompt_text is not None else None
-          gate('SHA-256 of the frozen launch prompt on disk matches the authorization record', prompt_sha_actual is not None and prompt_sha_claimed is not None and prompt_sha_actual == prompt_sha_claimed, str(prompt_sha_actual))
+          ALLOWED_PROMPT_TRANSFORMATIONS = {'PROVIDER_NEUTRAL_PATH_ALIAS', 'UNCHANGED'}
+          manifest_path = 'PUBLIC-EXPORT-MANIFEST.yaml'
+          manifest_entries = []
+          if os.path.isfile(manifest_path):
+              try:
+                  pm = yaml.safe_load(open(manifest_path)) or {}
+                  manifest_entries = [e for e in (pm.get('files') or []) if isinstance(e, dict) and e.get('path') == prompt]
+              except Exception:
+                  manifest_entries = []
+          gate('PUBLIC-EXPORT-MANIFEST.yaml exists and lists exactly one entry for the frozen prompt path', len(manifest_entries) == 1, f'{len(manifest_entries)} entr(y/ies) for {prompt}')
+          entry = manifest_entries[0] if len(manifest_entries) == 1 else {}
+          entry_transforms = entry.get('transformations') if isinstance(entry.get('transformations'), list) else []
+          entry_unchanged = entry_transforms == ['UNCHANGED']
+          manifest_canonical_sha = entry.get('canonical_sha256', prompt_sha_actual if entry_unchanged else None)
+          manifest_exported_sha = entry.get('exported_sha256', prompt_sha_actual if entry_unchanged else None)
+          gate('manifest transformation class for the frozen prompt is on the allowed list', bool(entry_transforms) and set(entry_transforms) <= ALLOWED_PROMPT_TRANSFORMATIONS, str(entry_transforms))
+          gate('manifest entry canonical_sha256 matches the authorization record\'s launch_prompt.sha256', manifest_canonical_sha is not None and prompt_sha_claimed is not None and manifest_canonical_sha == prompt_sha_claimed, str(manifest_canonical_sha))
+          gate('actual on-disk SHA-256 of the frozen prompt matches the manifest entry\'s exported_sha256 (this checkout is the declared transformation of the canonical artifact)', prompt_sha_actual is not None and manifest_exported_sha is not None and prompt_sha_actual == manifest_exported_sha, str(prompt_sha_actual))
           gate('the submitted instruction_id appears literally in the frozen launch prompt', prompt_text is not None and instruction in prompt_text)
           gate('no unresolved {{INSTRUCTION_ID}} launch placeholder remains in the active frozen prompt', prompt_text is not None and '{{INSTRUCTION_ID}}' not in prompt_text)
           rd = open('qualification/mobilewright/README.md').read()

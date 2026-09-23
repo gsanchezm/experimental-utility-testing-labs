@@ -234,6 +234,16 @@ jobs:
               # equality; an absent status field must fail closed, not be silently permitted.
               ('requires status to equal ISSUED exactly (strict equality, not a permissive is-None-or check)', "status_val == 'ISSUED'" in wf),
               ('does not permit an absent status to pass (no "status_val is None or" bypass)', 'status_val is None or' not in wf),
+              # CANONICAL vs PUBLIC EXECUTION PROMPT HASH correction (2026-09-23): the gate must never compare the
+              # authorization record's canonical prompt hash directly against on-disk bytes in the (always
+              # provider-neutral-transformed) public checkout; it must bridge through PUBLIC-EXPORT-MANIFEST.yaml.
+              ('does not compare launch_prompt.sha256 directly against on-disk prompt bytes', 'prompt_sha_actual is not None and prompt_sha_claimed is not None and prompt_sha_actual == prompt_sha_claimed' not in wf),
+              ('loads PUBLIC-EXPORT-MANIFEST.yaml as the canonical/public bridge', "manifest_path = 'PUBLIC-EXPORT-MANIFEST.yaml'" in wf and 'yaml.safe_load(open(manifest_path))' in wf),
+              ('requires exactly one manifest entry for the frozen prompt path (fails closed on zero or multiple)', 'len(manifest_entries) == 1' in wf),
+              ("checks the manifest's canonical_sha256 against the authorization record", "manifest_canonical_sha is not None and prompt_sha_claimed is not None and manifest_canonical_sha == prompt_sha_claimed" in wf),
+              ("checks the manifest's exported_sha256 against the actual on-disk public prompt", 'prompt_sha_actual is not None and manifest_exported_sha is not None and prompt_sha_actual == manifest_exported_sha' in wf),
+              ('restricts the accepted prompt transformation classes to an explicit allow-list', 'ALLOWED_PROMPT_TRANSFORMATIONS' in wf and "'PROVIDER_NEUTRAL_PATH_ALIAS'" in wf and "'UNCHANGED'" in wf),
+              ('still requires the submitted instruction_id literally in the prompt and no unresolved placeholder', 'instruction in prompt_text' in wf and "'{{INSTRUCTION_ID}}' not in prompt_text" in wf),
           ]
           bad_checks = [name for name, ok in checks if not ok]
           for name, ok in checks:

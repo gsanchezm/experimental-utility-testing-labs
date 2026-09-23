@@ -75,6 +75,29 @@ launch_prompt:  # CORRECTED 2026-09-23 (AUTH-02 FROZEN PROMPT PROVENANCE CORRECT
     INSTRUCTION_DATE: "2026-09-23"
     PROMPT_VERSION_ID: qualifier-mobile-01-mobilewright-gate-v2
   verification: "prompts/frozen/qualifier-mobile-01-mobilewright-gate-v2.md contains the literal string MOBILE-QUALIFICATION-EXEC-AUTH-02 (twice: the rendered-variables list and step 1 of the procedure) and does not contain MOBILE-QUALIFICATION-EXEC-AUTH-01 or any unresolved {{...}} placeholder anywhere. Diffed line-by-line against v1 (44 lines each): exactly 6 lines differ (the title, the status/header paragraph, the three variable-definition lines, and step 1's inline instantiation of the same three variables); applying only the three variable substitutions to v1's step-1 line reproduces v2's step-1 line exactly (byte-for-byte). No other line of role, boundaries, frozen inputs, procedure steps 2-10, or 'what you never do' changed."
+  execution_view_provenance: PUBLIC-EXPORT-MANIFEST.yaml  # CANONICAL vs PUBLIC EXECUTION PROMPT HASH correction, 2026-09-23. This field is
+    # a pointer only, not a duplicated hash: sha256 above is this record's own canonical provenance claim (the exact
+    # canonical frozen artifact, verified against the working tree at authorization time); the public execution
+    # checkout that GitHub Actions actually runs from is a declared, deterministic PROVIDER_NEUTRAL_PATH_ALIAS
+    # transformation of that same artifact (this file's "Binding rules: AGENT-INSTRUCTIONS.md" line becomes "Binding rules:
+    # AGENT-INSTRUCTIONS.md" on export; nothing else differs -- see prompts/README.md's v1->v2 diff note for the
+    # full six-line accounting, which the transformation does not add to). The public export's own
+    # PUBLIC-EXPORT-MANIFEST.yaml is the authoritative bridge between the two: it records, per exported file, both
+    # canonical_sha256 (must equal sha256 above) and exported_sha256 (the exact bytes present in that checkout),
+    # plus the declared transformation class. AUTH-02 does not duplicate exported_sha256 here -- that value is
+    # export-run bookkeeping, not authorization provenance, and belongs solely in the manifest the export itself
+    # produces. The readiness gate (.github/workflows/e03-mobile-qualification.yml) verifies the full chain --
+    # AUTH-02.sha256 == manifest.canonical_sha256, and SHA256(on-disk prompt) == manifest.exported_sha256, with the
+    # transformation class restricted to a short allowed list -- rather than ever comparing AUTH-02.sha256 directly
+    # against on-disk bytes in the (always-transformed) public checkout.
+  prompt_provenance_record:  # descriptive summary of the two legitimate representations; neither supersedes the other
+    canonical_prompt: "prompts/frozen/qualifier-mobile-01-mobilewright-gate-v2.md (the frozen canonical source, authored and hashed on the canonical working tree)"
+    canonical_sha256: 6d2414c5c685755addb4e966f1858171bdbf927df6998a0c27a153d83a639a00
+    public_execution_view: "the same file as exported into the public repository's checkout, after the declared provider-neutral transformation; this is the exact byte sequence any real GitHub Actions dispatch would read, since that is the only repository the workflow can run from"
+    public_execution_sha256: "derived from the current PUBLIC-EXPORT-MANIFEST.yaml exported_sha256 entry for this path, not hardcoded here; verify against the currently published export, not a value frozen into this record"
+    transformation: PROVIDER_NEUTRAL_PATH_ALIAS
+    semantic_change: "NONE -- one string substitution (AGENT-INSTRUCTIONS.md -> AGENT-INSTRUCTIONS.md) inside the role/boundaries paragraph's 'Binding rules' citation; no role, procedure, scenario, criterion, constraint, or launch-variable rendering differs between the two byte sequences"
+    note: "the two byte sequences are NOT identical and this record does not claim they are; they are two legitimate, independently verifiable representations of the same authorized artifact, connected by a declared, auditable, scientifically-inert transformation -- not by assertion"
 
 provenance_rule:  # restated verbatim, still in force (originally AUTH-02 PRE-ISSUANCE CONSISTENCY HARDENING instruction, section 8; unaffected by issuance -- these are permanent, not conditional on PREPARED status)
   - "THE PREPARED FILE IS NOT AUTHORIZATION." # historical: true of this file from 2026-09-22 to 2026-09-23, before issuance
