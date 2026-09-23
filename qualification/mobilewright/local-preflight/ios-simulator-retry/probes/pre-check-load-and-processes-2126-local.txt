@@ -1,0 +1,30 @@
+Captured 2026-09-22 ~21:46-21:53 local time, before the bounded CoreSimulator health-check probes below. Read-only, non-destructive.
+
+=== uptime ===
+21:46  up 27 days,  1:46, 1 user, load averages: 691.80 768.23 892.95
+
+=== vm_stat (free pages; page size 4096 bytes) ===
+Pages free:                                     3562.   (~14 MB)
+Pages active:                                1050312.
+Pages inactive:                              1192293.
+Pages speculative:                             66815.
+
+=== relevant long-running processes (ps -eo pid,stat,etime,command) ===
+ 7024 S       12:06:17 CoreSimulator.framework/.../com.apple.CoreSimulator.CoreSimulatorService  (same service instance as the blocked 2026-09-22 attempt recorded in ../ios-simulator/PREFLIGHT-SUMMARY.yaml, which logged it at 10h36m uptime around 20:17 local that day; this is the same unbroken CoreSimulatorService run, never restarted)
+ 8263 U       12:04:00 launchd_sim for booted simulator E83DB502-<udid-redacted> (the same UDID as the prior blocked attempt)
+31304 Ss      11:07:09 .../OmniPizza.app/OmniPizza (already running inside the booted simulator)
+31444 Ss      11:06:17 .../devicekit-iosUITests-Runner.app/devicekit-iosUITests-Runner (already running inside the booted simulator)
+(full simulator guest-OS process tree omitted here; ~200 iOS 18.2 runtime processes running normally inside the booted guest, none of it evidence of guest-side failure -- the failure is in the host's CoreSimulatorService/simctl control path, as in the prior attempt)
+
+=== process count / disk ===
+865 processes total
+/dev/disk1s2s1   466Gi    12Gi    81Gi    13%    459k  854M    0%   /   (not a constraint)
+
+=== after the three bounded health-check probes below (2026-09-22 ~21:53 local) ===
+ps -eo pid,stat,etime,command | grep -i simctl:
+  569 ?Es        01:29 (simctl)
+93750 ?Es        04:08 (simctl)
+96971 ?Es        02:47 (simctl)
+-- three simctl invocations left in state "Es" (trying to exit / session leader) despite each being SIGKILLed via its own process group at the bounded_run.py timeout boundary; same failure signature as the prior attempt's "killed simctl processes remain in uninterruptible / exiting kernel states" (probes/simctl-process-states-at-20-17-local.txt in ../ios-simulator/). CoreSimulatorService pid 7024 unchanged, now at 12:13:25 uptime, still the same instance.
+
+uptime at 21:53: load averages 936.36 919.96 923.95 (higher than at the start of this retry)

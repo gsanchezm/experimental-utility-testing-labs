@@ -214,6 +214,30 @@ jobs:
           set -euo pipefail
           bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.7/scripts/download-actionlint.bash) 1.7.7 /tmp
           /tmp/actionlint -color .github/workflows/*.yml
+      - name: Assert the mobile-qualification gate does not regress to a hardcoded authorization path (CI_AUTHORIZATION_RESOLUTION_DEFECT)
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re, sys
+          wf = open('.github/workflows/e03-mobile-qualification.yml').read()
+          bad = re.search(r"""auth_path\s*=\s*['"]manifests/mobile-qualification-execution-auth-v1\.yaml['"]""", wf)
+          checks = [
+              ('does not hardcode the retired v1 record as the sole authorization source', not bad),
+              ('resolves authorization records by globbing the auth-record family', "glob.glob('manifests/mobile-qualification-execution-auth-v*.yaml')" in wf),
+              ('requires exactly one matching record (fails closed on zero or multiple)', 'len(matches) == 1' in wf),
+              ('still explicitly refuses the retired MOBILE-QUALIFICATION-EXEC-AUTH-01 id', "instruction != 'MOBILE-QUALIFICATION-EXEC-AUTH-01'" in wf),
+              ('requires record_validity explicitly present (absence is not a silent pass)', 'record_validity is not None' in wf),
+              ('requires authorizes_execution to be exactly true (never defaulted)', "auth.get('authorizes_execution') is True" in wf),
+              ('requires issued_by to be a real, non-placeholder, non-agent-role identity', 'bad_issuer_tokens' in wf),
+              ('verifies the implementation-lock hashes before platform execution', "yaml.safe_load(open('manifests/mobile-qualification-implementation-lock-v1.yaml'))" in wf and 'hashlib.sha256' in wf),
+          ]
+          bad_checks = [name for name, ok in checks if not ok]
+          for name, ok in checks:
+              print(('PASS ' if ok else 'FAIL ') + name)
+          if bad_checks:
+              print('mobile-qualification authorization resolution regression check FAILED'); sys.exit(1)
+          print('mobile-qualification authorization resolution regression check ok')
+          PY
       - name: Assert every workflow, job, step, and artifact name is domain-oriented
         run: |
           set -euo pipefail

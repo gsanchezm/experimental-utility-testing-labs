@@ -1,0 +1,73 @@
+# qualification/mobilewright/local-preflight/LOCAL-PREFLIGHT-CLOSURE.yaml
+# Closes the LOCAL_DEVELOPMENT_PREFLIGHT phase by explicit human decision, 2026-09-22. This record does not edit any prior
+# preflight record (android-zflip6/PREFLIGHT-SUMMARY.yaml, ios-simulator/PREFLIGHT-SUMMARY.yaml, ios-simulator-retry/PREFLIGHT-
+# SUMMARY.yaml); it references them and states the closure decision and the two interpretive distinctions the human instruction
+# asked to make explicit (driver classification, and that local iOS infrastructure health does not gate formal qualification).
+record_class: LOCAL_PREFLIGHT_CLOSURE
+qualification_evidence: false
+measured_experiment: false
+counts_toward_N: false
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-09-22"
+instruction: "LOCAL PREFLIGHT CLOSURE instruction (* PREPARATION FOR VALID CI QUALIFICATION), entered directly by the human operator as live session input, 2026-09-22"
+
+human_decision:
+  statement: "The research lead chooses not to invest additional time in local preflight and closes the local-preflight phase. This decision does NOT authorize formal Mobilewright qualification."
+  accepted:
+    - "Android local preflight COMPLETE (diagnostic only)"
+    - "iOS local preflight BLOCKED_BY_HOST_INFRASTRUCTURE, closed (no further local iOS attempts will be made)"
+    - "no further local attempts required before formal qualification"
+  not_stated: "the human did NOT authorize formal qualification execution, Appium compatibility smoke, or E03 START by this decision"
+
+local_preflight_final_state:
+  implementation_baseline: LOCKED
+  android_zflip6_preflight:
+    status: COMPLETE
+    mq1: SUCCESS
+    mq2: SUCCESS
+    mq3: FAILURE
+    interpretation: [diagnostic_only, non_qualification, non_measured, not_part_of_N, no_runner_selection_authority]
+    record: android-zflip6/PREFLIGHT-SUMMARY.yaml
+  ios_local_preflight:
+    status: BLOCKED_BY_HOST_INFRASTRUCTURE
+    reason: HOST_SIMULATOR_SERVICE_UNRESPONSIVE
+    mq1: NOT_EXECUTED
+    mq2: NOT_EXECUTED
+    mq3: NOT_EXECUTED
+    attempts: 2  # first attempt (ios-simulator/) and the human-authorized narrow retry (ios-simulator-retry/), both blocked at the pre-scenario infrastructure check; no scenario ever entered execution on either attempt
+    records: [ios-simulator/PREFLIGHT-SUMMARY.yaml, ios-simulator-retry/PREFLIGHT-SUMMARY.yaml]
+    conclusion_limit: "no Mobilewright conclusion may be drawn from either blocked iOS local attempt; both are pre-scenario host-infrastructure findings about the operator's Mac, not about the runner, the build, or any SUT"
+  scratchpad_driver_classification:
+    class: LOCAL_DEVELOPMENT_PREFLIGHT_ADAPTER
+    is_part_of_implementation_baseline: false
+    did_it_modify_the_locked_harness: false
+    why_it_was_used: "qualification/mobilewright/run-gate-android.sh is emulator-specific by construction (fails closed on any adb serial that does not start with emulator-) and cannot drive a physical device; the driver invoked the already-locked harness/run-gate.mjs unchanged, sourcing the already-locked gate-common.sh unchanged, with the device's adb serial as the runner device id"
+    formal_qualification_rule: "the future formal qualification MUST NOT use this scratchpad driver; it continues to use the locked GitHub Actions path (.github/workflows/e03-mobile-qualification.yml, run-gate-android.sh) and the pinned Android emulator substrate exclusively"
+    record: android-zflip6/PREFLIGHT-SUMMARY.yaml, android-zflip6/driver/
+
+local_preflight_phase: CLOSED
+formal_mobile_qualification: NOT_VALIDLY_EXECUTED_REQUIRES_NEW_HUMAN_AUTHORIZATION
+retired_authorization: "MOBILE-QUALIFICATION-EXEC-AUTH-01 remains invalid and unusable (PROTO-U10); the workflow's readiness gate refuses it"
+
+prequalification_outcome_exposure:
+  value: true
+  historical_observations_nonauthoritative:
+    - "Android emulator (quarantined qualification-labelled execution, 2026-09-22): Mobilewright MQ3 / MC-07 failure"
+    - "Samsung Galaxy Z Flip 6 (this local diagnostic): MQ3 failure, route delivered but the seeded target state absent"
+  immutable_regardless_of_outcome: [Mobilewright version, qualification SUT, build, "MQ1-MQ3", "MC-01..MC-10", N, pass criteria, attribution rules, fallback rule, locked realization, locked harness]
+
+ios_local_blocker_disposition:
+  status: "accepted as a closed diagnostic limitation of the operator workstation"
+  host_repair_required_prerequisite: RETRACTED
+  retraction_statement: "HOST_REPAIR_REQUIRED (the candidate repair recorded in ios-simulator-retry/PREFLIGHT-SUMMARY.yaml, host_repair_required_assessment -- not performed, not required to be performed) is NOT a prerequisite for formal Mobilewright qualification. The formal qualification gate runs on the pinned GitHub-hosted macOS substrate (manifests/mobile-qualification-package-v1.yaml: GitHub-hosted macos-15 runner, image 20260824.0482.1 or later, Xcode 16.4 build 16F6, iOS 18.5), not on the operator's local Mac. The local CoreSimulator health observed here says nothing about that substrate's availability and does not block it."
+  distinction: "local iOS preflight diagnostic capability (operator Mac) is a separate concern from the formal qualification substrate (GitHub-hosted macOS runner); closing the former does not touch the latter"
+
+dashboard_validation_classification: STATIC_VALIDATION_ONLY  # research-status.html parsed with Python's html.parser without error; no live browser render was attempted, consistent with the retry's own finding that host load makes a browser render unreliable; this is a documentation/UI validation limitation only and does not block formal mobile qualification, which may be browser-validated later on a healthy environment
+
+remaining_human_decisions:
+  - "issue MOBILE-QUALIFICATION-EXEC-AUTH-02 explicitly (prepared, not issued; manifests/mobile-qualification-execution-auth-v2-prepared.yaml)"
+  - "after AUTH-02 is issued and the gate runs: per-SUT compatibility smoke for the selected runner (SUT-02 Android/iOS required)"
+  - "E03 campaign START"
+  - "executor prompt freeze/launch"
+  - "whether/when to push the next public reproducibility export"

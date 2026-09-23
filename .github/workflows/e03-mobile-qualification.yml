@@ -12,12 +12,16 @@
 # writes raw-data/, and its artifacts are imported only under qualification/ by QUALIFIER-MOBILE-01.
 #
 # It fails closed. The gate job requires: the explicit human instruction id (relayed by the ORCHESTRATOR,
-# policy section 2) matching manifests/mobile-qualification-execution-auth-v1.yaml; the pinned
-# qualification build, runner pin, and emulator/simulator identities in manifests/toolchain-manifest.yaml;
-# the frozen launch prompt; and, in qualification/mobilewright/README.md, the recorded instruction and a
-# fully realized scenario table. The platform jobs run the gate implementation authored by
-# QUALIFIER-MOBILE-01 (qualification/mobilewright/run-gate-android.sh, run-gate-ios.sh) on the pinned
-# substrates (manifests/toolchain-manifest.yaml, environments) and upload qualification/mobilewright/output.
+# policy section 2) resolved DYNAMICALLY against every manifests/mobile-qualification-execution-auth-v*.yaml
+# record (no version is hardcoded as the source), accepting only an authorization_id-unique match whose type,
+# record_validity, lifecycle/status, issued_by, and authorizes_execution fields show an actually issued human
+# authorization, never a drafted or prepared one; the pinned qualification build, runner pin, and
+# emulator/simulator identities in manifests/toolchain-manifest.yaml; the accepted implementation baseline of
+# manifests/mobile-qualification-implementation-lock-v1.yaml, independently recomputed from the checkout; the
+# frozen launch prompt; and, in qualification/mobilewright/README.md, the recorded instruction and a fully
+# realized scenario table. The platform jobs run the gate implementation authored by QUALIFIER-MOBILE-01
+# (qualification/mobilewright/run-gate-android.sh, run-gate-ios.sh) on the pinned substrates
+# (manifests/toolchain-manifest.yaml, environments) and upload qualification/mobilewright/output.
 #
 # Mode DEVELOPMENT (experiments/E03-resetability/ci-cd-execution-model.md, sections 7 and 9): the same
 # harness on the same pinned substrates with N = 1 and no warm-up, every record labeled DEVELOPMENT, output
@@ -26,7 +30,12 @@
 #
 # PROTO-U10 (2026-09-22): the authorization record must not carry record_validity INVALID and the retired id
 # MOBILE-QUALIFICATION-EXEC-AUTH-01 is refused; a future gate needs a new human authorization record with a
-# new id (manifests/mobile-qualification-authorization-correction-v1.yaml).
+# new id (manifests/mobile-qualification-authorization-correction-v1.yaml). CI_AUTHORIZATION_RESOLUTION_DEFECT
+# correction (2026-09-23): the gate previously read only manifests/mobile-qualification-execution-auth-v1.yaml
+# by a hardcoded path, which could never admit a differently-named future authorization record (for example
+# MOBILE-QUALIFICATION-EXEC-AUTH-02, manifests/mobile-qualification-execution-auth-v2-prepared.yaml, currently
+# PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION and refused by this gate on multiple independent grounds).
+# Resolution is now dynamic, id-filtered, and fails closed on zero or more than one match.
 name: E03 Mobile Qualification
 
 on:
@@ -95,7 +104,7 @@ jobs:
           set -euo pipefail
           python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
           python3 - <<'PY'
-          import os, re, sys, yaml
+          import glob, hashlib, os, re, sys, yaml
           failures = []
           def gate(name, ok, detail=''):
               print(('PASS ' if ok else 'FAIL ') + name + (': ' + detail if detail else ''))
@@ -118,11 +127,35 @@ jobs:
               gate('fallback pin is an Appium 3 version', str(pin).startswith('3.'), str(pin))
           env_ = tmall.get('environments', {})
           gate('emulator and simulator identities recorded', all(env_.get('android_emulator', {}).get(k) for k in ('image', 'api_level', 'device_profile')) and all(env_.get('ios_simulator', {}).get(k) for k in ('runtime', 'device_profile')))
-          auth_path = 'manifests/mobile-qualification-execution-auth-v1.yaml'
-          auth = yaml.safe_load(open(auth_path)) if os.path.exists(auth_path) else {}
-          gate('human authorization record present and matching the instruction id', auth.get('authorization_id') == instruction and auth.get('authorization_type') == 'MOBILE_QUALIFICATION_EXECUTION', str(auth.get('authorization_id')))
-          # PROTO-U10: a record whose validity was corrected to INVALID is retired; its id is refused for dispatch.
-          gate('authorization record validity is not INVALID (a retired or superseded record is refused)', str(auth.get('record_validity', 'VALID')).upper() not in ('INVALID', 'SUPERSEDED', 'RETIRED'), str(auth.get('record_validity', 'VALID')))
+          # Authorization record discovery: no version is hardcoded (CI_AUTHORIZATION_RESOLUTION_DEFECT
+          # correction). Every file matching the family below is a candidate; the gate fails closed unless
+          # exactly one admissible record's authorization_id matches the submitted instruction_id. A drafted or
+          # prepared record (issued_by empty/placeholder/agent-role, authorizes_execution not exactly true, a
+          # non-ISSUED status, or a missing/bad record_validity) must never pass, regardless of its id (PROTO-U10:
+          # a proposed/relayed authorization text is never itself an authorization).
+          auth_candidates = sorted(glob.glob('manifests/mobile-qualification-execution-auth-v*.yaml'))
+          matches = []
+          for p in auth_candidates:
+              try:
+                  rec = yaml.safe_load(open(p)) or {}
+              except Exception:
+                  rec = {}
+              if isinstance(rec, dict) and rec.get('authorization_id') == instruction:
+                  matches.append((p, rec))
+          gate('exactly one authorization record matches the submitted instruction_id', len(matches) == 1, f'{len(matches)} match(es) among {auth_candidates}')
+          auth_path, auth = matches[0] if len(matches) == 1 else (None, {})
+          if auth_path:
+              print('matched authorization record: ' + auth_path)
+          gate('authorization_type is MOBILE_QUALIFICATION_EXECUTION', auth.get('authorization_type') == 'MOBILE_QUALIFICATION_EXECUTION', str(auth.get('authorization_type')))
+          record_validity = auth.get('record_validity')
+          gate('record_validity is explicitly present and not INVALID/SUPERSEDED/RETIRED', record_validity is not None and str(record_validity).upper() not in ('INVALID', 'SUPERSEDED', 'RETIRED'), str(record_validity))
+          status_val = auth.get('status')
+          gate('lifecycle/status field, if present, is exactly ISSUED (never a prepared/draft state)', status_val is None or status_val == 'ISSUED', str(status_val))
+          issued_by = str(auth.get('issued_by') or '').strip()
+          bad_issuer_tokens = ('', 'null', 'none', 'tbd', 'pending', 'orchestrator', 'qualifier-mobile-01', 'adjudicator-eu-01', 'executor-e03-resetability')
+          gate('issued_by is a human identity, not empty/placeholder/agent-role', issued_by.lower() not in bad_issuer_tokens, issued_by or '(absent)')
+          gate('authorizes_execution is explicitly true (never defaulted)', auth.get('authorizes_execution') is True, str(auth.get('authorizes_execution')))
+          # PROTO-U10: continue refusing the retired id explicitly, even if another field were accidentally changed.
           gate('authorization record is not the retired id MOBILE-QUALIFICATION-EXEC-AUTH-01', instruction != 'MOBILE-QUALIFICATION-EXEC-AUTH-01')
           prompt = (auth.get('launch_prompt') or {}).get('frozen_copy') or ''
           gate('frozen launch prompt present', bool(prompt) and os.path.isfile(prompt), prompt)
@@ -135,6 +168,32 @@ jobs:
           for f in ('qualification/mobilewright/run-gate-android.sh', 'qualification/mobilewright/run-gate-ios.sh', 'qualification/mobilewright/gate-common.sh'):
               gate('gate implementation present: ' + f, os.path.isfile(f) and os.path.getsize(f) > 0)
           gate('gate harness lockfile present', os.path.isfile('qualification/mobilewright/harness/package-lock.json'))
+          # Implementation-lock verification: the accepted baseline (manifests/mobile-qualification-
+          # implementation-lock-v1.yaml, MOBILE-QUALIFICATION-IMPLEMENTATION-LOCK-01) is independently
+          # recomputed from the checked-out working tree, not merely read from the lock file. The formal
+          # qualification must not run against an implementation different from the human-accepted baseline.
+          try:
+              lock = yaml.safe_load(open('manifests/mobile-qualification-implementation-lock-v1.yaml'))
+              lv = lock.get('lock_verification', {}) if isinstance(lock, dict) else {}
+          except Exception:
+              lv = {}
+          artifacts = lv.get('artifacts', [])
+          gate('implementation-lock manifest lists the expected artifacts', len(artifacts) > 0, str(len(artifacts)))
+          for art in artifacts:
+              p, expected = art.get('path'), art.get('expected')
+              actual = hashlib.sha256(open(p, 'rb').read()).hexdigest() if p and os.path.isfile(p) else None
+              gate('implementation-lock hash matches: ' + str(p), actual is not None and actual == expected, str(actual))
+          srs = lv.get('scenario_realization_section') or {}
+          if srs:
+              try:
+                  srs_text = open(srs['path'], encoding='utf-8').read()
+                  s = srs_text.index('## Scenario realization'); e = srs_text.index('## Pass criteria', s)
+                  section = srs_text[s:e]
+                  if section.endswith('\n'): section = section[:-1]
+                  actual_srs = hashlib.sha256(section.encode('utf-8')).hexdigest()
+              except Exception:
+                  actual_srs = None
+              gate('implementation-lock hash matches: Scenario-realization section of ' + str(srs.get('path')), actual_srs is not None and actual_srs == srs.get('expected'), str(actual_srs))
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f: f.write('ready=' + ('true' if not failures else 'false') + '\n')
           if failures:
               print('QUALIFICATION GATE NOT READY (' + str(len(failures)) + '): ' + '; '.join(failures)); sys.exit(1)

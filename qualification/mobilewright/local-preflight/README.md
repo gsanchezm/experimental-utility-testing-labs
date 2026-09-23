@@ -1,5 +1,7 @@
 # Local development preflight (LOCAL_DEVELOPMENT_PREFLIGHT)
 
+**Phase status: CLOSED** (human decision, 2026-09-22; `LOCAL-PREFLIGHT-CLOSURE.yaml`). No further local execution (iOS retry, further Z Flip 6 runs, or CoreSimulator repair) will be performed as part of this study. This closure does not authorize formal Mobilewright qualification, and the local iOS CoreSimulator blocker is not a prerequisite for it — the formal gate runs on the pinned GitHub-hosted macOS substrate, not the operator's Mac (`LOCAL-PREFLIGHT-CLOSURE.yaml`, `ios_local_blocker_disposition`).
+
 | Field | Value |
 |---|---|
 | Workspace | qualification/mobilewright/local-preflight/ (QUALIFIER-MOBILE-01; isolated from `../output/`, which holds the quarantined qualification-labelled executions) |
@@ -8,7 +10,8 @@
 | Implementation baseline | manifests/mobile-qualification-implementation-lock-v1.yaml (MOBILE-QUALIFICATION-IMPLEMENTATION-LOCK-01): every locked artifact recomputed at its locked hash before and after the executions; nothing under `../` was edited |
 | Executed | 2026-09-22 local (2026-09-23 01:55–02:03 UTC), on the operator's Mac (MacBookPro16,2, x86_64, macOS 26.5.2) |
 | Android | **COMPLETE** — Samsung Galaxy Z Flip 6 (physical device), one execution of each of MQ1, MQ2, MQ3: `android-zflip6/` |
-| iOS | **BLOCKED** — host simulator service unresponsive (HOST_SIMULATOR_SERVICE_UNRESPONSIVE); no scenario started: `ios-simulator/` |
+| iOS (first attempt) | **BLOCKED** — host simulator service unresponsive (HOST_SIMULATOR_SERVICE_UNRESPONSIVE); no scenario started: `ios-simulator/` |
+| iOS (retry, human-authorized narrow retry instruction, 2026-09-22 later the same day) | **BLOCKED again** at the same bounded health-check gate — same never-restarted CoreSimulatorService instance, same or worse host load; no scenario started: `ios-simulator-retry/` |
 | Runner | Mobilewright 0.0.60 exactly as pinned (mobilecli 1.0.13, driver-mobilecli 0.0.60, core 0.0.60, playwright 1.63.0), installed by `npm ci` from the locked lockfile |
 | Build | OmniPizza release v1.1.8, `omnipizza-release.apk`, sha256 1059e946…cda6a4 verified before use (`android-zflip6/environment/android-build-verification.json`); the iOS build was not downloaded because no iOS execution started |
 
@@ -18,6 +21,7 @@ These records are observations from a diagnostic preflight. They are not the qua
 
 | Path | Content |
 |---|---|
+| `LOCAL-PREFLIGHT-CLOSURE.yaml` | Phase closure record: human decision, final Android/iOS state, scratchpad-driver classification (`LOCAL_DEVELOPMENT_PREFLIGHT_ADAPTER`), retraction of `HOST_REPAIR_REQUIRED` as a formal-qualification prerequisite, dashboard validation classification, remaining human decisions |
 | `android-zflip6/PREFLIGHT-SUMMARY.yaml` | Platform summary: observed device, runner, build verification, readiness, the three executions, driver provenance, harness-unchanged verification |
 | `android-zflip6/<harness execution id>/preflight-record.yaml` | Sidecar record per execution with the mandated classification fields and the observation (terminal UI state; for MQ3 the deep link supplied, the runner API used, route delivery, whether the parameters were observed in the UI) |
 | `android-zflip6/<harness execution id>/` (other files) | The locked harness's own output for that execution, imported unchanged except for the redactions in `IMPORT-RECORD.yaml`: `record.json`, `spec.json`, `runner.log`, `harness-precheck.json`, `terminal.png` + `view-tree-terminal.json` (success) or `failure.png` + `view-tree-failure.json` + `device-log-failure.txt` (failure) |
@@ -27,6 +31,8 @@ These records are observations from a diagnostic preflight. They are not the qua
 | `android-zflip6/IMPORT-RECORD.yaml`, `ios-simulator/IMPORT-RECORD.yaml` | Per file: raw sha256 (scratchpad original, untouched), imported sha256, transformation (UNCHANGED / DEVICE_IDENTIFIER_REDACTED / PRIVATE_PATH_SCRUBBED / TOKEN_FRAGMENT_REDACTED) |
 | `ios-simulator/PREFLIGHT-SUMMARY.yaml` | The BLOCKED record: observed environment, the read-only probes that timed out, what was not done, retry policy |
 | `ios-simulator/probes/` | Probe outputs (simctl listing timeouts, process states, runtime volumes, the runner device server's device listing, Xcode/macOS versions) |
+| `ios-simulator-retry/PREFLIGHT-SUMMARY.yaml` | The second, again-BLOCKED record: implementation-lock reverification, observed environment, the bounded 3-attempt health check, host-infrastructure-continuity evidence, what was not done |
+| `ios-simulator-retry/probes/` | Probe outputs for the retry (pre/post load and process-state evidence, the three bounded health-check attempts) |
 
 ## Harness labels that are wrong for this preflight by construction (disclosed, not edited)
 
@@ -49,6 +55,12 @@ How the locked harness was driven: `../run-gate-android.sh` is emulator-only by 
 ## iOS Simulator — BLOCKED
 
 No scenario started. Every `xcrun simctl list` probe on the operator's Mac timed out (300 s, 300 s, 900 s, 900 s, 300 s; a 90 s probe only returned after 1985 s), the runner's own `mobilecli agent status` probe timed out (120 s), and the killed simctl processes stayed in uninterruptible kernel states, while the host ran under a 1-minute load average of 770–920 from unrelated applications. The locked `../run-gate-ios.sh` calls simctl before the first runner action (device lookup, boot, bootstatus, environment record, agent status/install), so it would block before any scenario. The runner's device server did list the booted simulator (iPhone 16, iOS 18.2, `ios-simulator/probes/mobilecli-devices.json`). Observed environment: Xcode 26.5 build 17F42; macOS 26.5.2; x86_64; the only iOS 18 runtime installed is 18.2 (22C150) — iOS 18.5 (22F77) is not installed and was not installed. Nothing was restarted, killed, installed, or edited. A later re-attempt under the same instruction, once the host simulator service responds, is a separately recorded pre-scenario infrastructure retry (instruction, section 9), left to the human.
+
+## iOS Simulator retry — BLOCKED again (second attempt)
+
+A narrow retry of the iOS Simulator preflight only (`ios-simulator-retry/`), under a separate human authorization entered live in this ORCHESTRATOR session on 2026-09-22, later the same day as the first attempt: check whether the infrastructure had recovered, and run MQ1/MQ2/MQ3 at most once each if it had. Android, GitHub Actions qualification, Appium, runner selection, and E03 were explicitly out of scope and none was touched.
+
+The implementation lock was independently reverified first (all eleven locked artifacts and the Scenario-realization section byte-identical; `ios-simulator-retry/PREFLIGHT-SUMMARY.yaml`, `implementation_lock_verification`). The bounded CoreSimulator health check (three attempts, 60 s each, non-destructive: `simctl list devices`, `simctl list runtimes`, `simctl bootstatus <the known booted UDID>`) timed out on all three attempts, so per the retry instruction's own rule, MQ1/MQ2/MQ3 were correctly never attempted. Evidence gathered before and after the health check shows the same CoreSimulatorService process observed in the first attempt is still running, unrestarted, now past 12 hours of uptime, under host load at least as high as before (and with less free memory: ~14 MB versus ~55 MB) — the infrastructure had not recovered between the two attempts. Mobilewright (0.0.60) and mobilecli (1.0.13) versions were confirmed via calls that do not depend on CoreSimulatorService. Nothing was restarted, killed (beyond the three bounded probes' own process groups on timeout), installed, or edited; full detail in `ios-simulator-retry/PREFLIGHT-SUMMARY.yaml` and `ios-simulator-retry/probes/`.
 
 ## Redactions and hygiene
 

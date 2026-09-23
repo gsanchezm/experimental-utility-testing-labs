@@ -1,0 +1,17 @@
+Bounded CoreSimulator health check, 2026-09-22 ~21:47-21:52 local time. Section 6 of the retry instruction: non-destructive commands only, max 3 attempts, each bounded (60s per attempt here, tighter than the prior attempt's 90s/300s/900s escalating probes, because the prior attempt already demonstrated that a responsive simctl answers in seconds and that longer bounds buy nothing but more wedged processes and wall-clock).
+
+Mechanism: qualification/mobilewright/local-preflight/ios-simulator-retry (scratchpad copy: bounded_run.py) -- subprocess.Popen with start_new_session=True (own process group), communicate(timeout=N), and on TimeoutExpired an os.killpg(SIGKILL) against that process group. A plain subprocess timeout alone does not terminate a hung `xcrun simctl` on this host (the prior session's finding, reproduced here: the killpg still leaves the simctl processes in "Es" kernel state, see pre-check-load-and-processes-2126-local.txt).
+
+Attempt 1/3: `xcrun simctl list devices`, bound 60s
+  --- health-check-attempt-1: simctl list devices: TIMEOUT after 60.0s (process group killed) ---
+
+Attempt 2/3: `xcrun simctl list runtimes`, bound 60s
+  --- health-check-attempt-2: simctl list runtimes: TIMEOUT after 60.1s (process group killed) ---
+
+Attempt 3/3: `xcrun simctl bootstatus E83DB502-<udid-redacted>` (the known booted simulator from the prior attempt), bound 60s
+  --- health-check-attempt-3: simctl bootstatus E83DB502-<udid-redacted>: TIMEOUT after 60.2s (process group killed) ---
+
+Result: all 3 bounded attempts (the instruction's stated maximum) timed out. Per instruction section 6:
+  IOS_PREFLIGHT_STATUS: BLOCKED_BY_HOST_INFRASTRUCTURE
+  Reason: HOST_SIMULATOR_SERVICE_UNRESPONSIVE
+No MQ1, MQ2, or MQ3 was executed as a result (section 6 explicitly prohibits proceeding). This is not classified as a Mobilewright failure -- the CoreSimulatorService itself did not answer any of the three calls, before Mobilewright/mobilecli would ever be invoked.
