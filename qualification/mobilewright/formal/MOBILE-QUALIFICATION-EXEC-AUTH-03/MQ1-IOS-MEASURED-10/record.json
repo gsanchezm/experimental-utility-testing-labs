@@ -1,0 +1,270 @@
+{
+  "record_class": "QUALIFICATION",
+  "execution_id": "MQ1-IOS-MEASURED-10",
+  "combination": "MQ1 × iOS Simulator",
+  "scenario": "MQ1",
+  "platform": "ios",
+  "kind": "MEASURED",
+  "attempt": 10,
+  "timestamp": "2026-09-24T01:09:16.643Z",
+  "timestamp_end": "2026-09-24T01:10:20.511Z",
+  "environment_type": "SIMULATED",
+  "runner": {
+    "candidate": "Mobilewright",
+    "version": "0.0.60",
+    "mobilecli_version": "1.0.13"
+  },
+  "device": {
+    "udid": "F0E646EF-4792-4F36-B48B-EC89B3A6B73B",
+    "kind": "iOS Simulator",
+    "name": "iPhone 16",
+    "state": "Booted",
+    "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-16",
+    "runtime_identifier": "com.apple.CoreSimulator.SimRuntime.iOS-18-5",
+    "runtime_name": "iOS 18.5",
+    "runtime_version": "18.5",
+    "runtime_build": "22F77",
+    "xcode": "Xcode 16.4 Build version 16F6",
+    "macos_version": "15.7.9",
+    "pinned_identity": "iPhone 16, iOS 18.5 simulator runtime, Xcode 16.4 build 16F6 (manifests/toolchain-manifest.yaml environments.ios_simulator)"
+  },
+  "instruction_id": "MOBILE-QUALIFICATION-EXEC-AUTH-03",
+  "prompt_version_id": "qualifier-mobile-01-mobilewright-gate-v3",
+  "github": {
+    "run_id": "35938250936",
+    "run_attempt": "1",
+    "image_os": "macos15",
+    "image_version": "20260907.0337.1",
+    "workflow_ref": "gsanchezm/experimental-utility-testing-labs/.github/workflows/e03-mobile-qualification.yml@refs/heads/main",
+    "sha": "d3361e2f12b6b9e4be4a654c151dd6c83a7810a7"
+  },
+  "realization": {
+    "bundle_id": "com.omnipizza.app",
+    "scheme": "omnipizza",
+    "account": "standard_user",
+    "market": "US",
+    "MQ1": {
+      "login_screen": "screen-login",
+      "username": "input-username",
+      "password": "input-password",
+      "market_control": "btn-market-US",
+      "login_button": "btn-login",
+      "keyboard_dismiss_target": "text-welcome-title",
+      "terminal": [
+        "screen-catalog",
+        "view-bottom-nav"
+      ]
+    },
+    "MQ2": {
+      "first_card": "card-pizza-p01",
+      "target_product": "p12",
+      "target_open_control": "btn-add-pizza-p12",
+      "product_screen": "screen-pizza-builder",
+      "total_text": "text-estimated-total-value",
+      "initial_total": "$15.99",
+      "size_control": "btn-size-large",
+      "total_after": "$19.99"
+    },
+    "MQ3": {
+      "seed": {
+        "pizza_id": "p01",
+        "quantity": 2,
+        "size": "large",
+        "toppings": []
+      },
+      "deep_link_path": "checkout",
+      "deep_link_params": {
+        "market": "US",
+        "hydrateCart": "true"
+      },
+      "checkout_screen": "screen-checkout",
+      "expected_title": "2x Margherita",
+      "expected_line_total": "$33.98",
+      "ios_open_prompt_button": "Open"
+    }
+  },
+  "outcome": "SUCCESS",
+  "duration_ms": {
+    "reset": 6949,
+    "precondition": null,
+    "scenario": 52722,
+    "total": 63867
+  },
+  "capabilities_exercised": [
+    "MC-01",
+    "MC-02",
+    "MC-03",
+    "MC-04",
+    "MC-06",
+    "MC-08",
+    "MC-09",
+    "MC-10"
+  ],
+  "failed_step": null,
+  "exclusion_proposal": null,
+  "harness": {
+    "backend_health_attempts": 1,
+    "backend_health_last_latency_ms": 157,
+    "seed_verified": null,
+    "entered": {
+      "username_text": "Username",
+      "username_value": "standard_user",
+      "password_masked_length": 8,
+      "password_value_length": 8
+    }
+  },
+  "artifacts": [
+    "harness-precheck.json",
+    "terminal.png",
+    "view-tree-terminal.json",
+    "record.json",
+    "runner.log"
+  ],
+  "steps": [
+    {
+      "name": "connect the runner to the pinned device (explicit id)",
+      "capabilities": [],
+      "started_at": "2026-09-24T01:09:16.802Z",
+      "status": "OK",
+      "duration_ms": 1546
+    },
+    {
+      "name": "reset: uninstall any previous install (MC-09)",
+      "capabilities": [
+        "MC-09"
+      ],
+      "started_at": "2026-09-24T01:09:18.348Z",
+      "status": "OK",
+      "duration_ms": 3451
+    },
+    {
+      "name": "reset: install the pinned build (MC-09, MC-01)",
+      "capabilities": [
+        "MC-09",
+        "MC-01"
+      ],
+      "started_at": "2026-09-24T01:09:21.799Z",
+      "status": "OK",
+      "duration_ms": 2619
+    },
+    {
+      "name": "reset: verify the pinned build is installed (MC-09)",
+      "capabilities": [
+        "MC-09"
+      ],
+      "started_at": "2026-09-24T01:09:24.418Z",
+      "status": "OK",
+      "duration_ms": 879
+    },
+    {
+      "name": "launch the app (MC-01)",
+      "capabilities": [
+        "MC-01"
+      ],
+      "started_at": "2026-09-24T01:09:25.297Z",
+      "status": "OK",
+      "duration_ms": 5745
+    },
+    {
+      "name": "login screen visible (MC-02, MC-06, MC-08)",
+      "capabilities": [
+        "MC-02",
+        "MC-06",
+        "MC-08"
+      ],
+      "started_at": "2026-09-24T01:09:31.043Z",
+      "status": "OK",
+      "duration_ms": 1924
+    },
+    {
+      "name": "select market US (MC-02, MC-04)",
+      "capabilities": [
+        "MC-02",
+        "MC-04"
+      ],
+      "started_at": "2026-09-24T01:09:32.967Z",
+      "status": "OK",
+      "duration_ms": 4457
+    },
+    {
+      "name": "enter password (MC-02, MC-03)",
+      "capabilities": [
+        "MC-02",
+        "MC-03"
+      ],
+      "started_at": "2026-09-24T01:09:37.424Z",
+      "status": "OK",
+      "duration_ms": 9630
+    },
+    {
+      "name": "enter username (MC-02, MC-03)",
+      "capabilities": [
+        "MC-02",
+        "MC-03"
+      ],
+      "started_at": "2026-09-24T01:09:47.054Z",
+      "status": "OK",
+      "duration_ms": 8216
+    },
+    {
+      "name": "read back the entered values (MC-08; diagnostic, not an oracle)",
+      "capabilities": [
+        "MC-08"
+      ],
+      "started_at": "2026-09-24T01:09:55.270Z",
+      "status": "OK",
+      "duration_ms": 7398
+    },
+    {
+      "name": "dismiss the keyboard by tapping outside the inputs (MC-02, MC-04)",
+      "capabilities": [
+        "MC-02",
+        "MC-04"
+      ],
+      "started_at": "2026-09-24T01:10:02.668Z",
+      "status": "OK",
+      "duration_ms": 5448
+    },
+    {
+      "name": "tap Sign In (MC-02, MC-04)",
+      "capabilities": [
+        "MC-02",
+        "MC-04"
+      ],
+      "started_at": "2026-09-24T01:10:08.116Z",
+      "status": "OK",
+      "duration_ms": 5812
+    },
+    {
+      "name": "catalog screen visible (MC-06, MC-08)",
+      "capabilities": [
+        "MC-06",
+        "MC-08"
+      ],
+      "started_at": "2026-09-24T01:10:13.928Z",
+      "status": "OK",
+      "duration_ms": 2228
+    },
+    {
+      "name": "bottom navigation visible (MC-02, MC-08)",
+      "capabilities": [
+        "MC-02",
+        "MC-08"
+      ],
+      "started_at": "2026-09-24T01:10:16.156Z",
+      "status": "OK",
+      "duration_ms": 1858
+    },
+    {
+      "name": "capture terminal screenshot and view tree (MC-10)",
+      "capabilities": [
+        "MC-10"
+      ],
+      "started_at": "2026-09-24T01:10:18.019Z",
+      "status": "OK",
+      "duration_ms": 2492
+    }
+  ],
+  "notes": [],
+  "build_file": "OmniPizza-Simulator.zip"
+}

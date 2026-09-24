@@ -1,0 +1,216 @@
+{
+  "record_class": "QUALIFICATION",
+  "execution_id": "MQ3-AND-WARMUP-01",
+  "combination": "MQ3 × Android emulator",
+  "scenario": "MQ3",
+  "platform": "android",
+  "kind": "WARMUP",
+  "attempt": 1,
+  "timestamp": "2026-09-24T00:36:07.248Z",
+  "timestamp_end": "2026-09-24T00:37:44.206Z",
+  "environment_type": "EMULATED",
+  "runner": {
+    "candidate": "Mobilewright",
+    "version": "0.0.60",
+    "mobilecli_version": "1.0.13"
+  },
+  "device": {
+    "serial": "emulator-5554",
+    "kind": "Android emulator",
+    "android_release": "15",
+    "api_level": "35",
+    "model": "sdk_gphone64_x86_64",
+    "abi": "x86_64",
+    "avd_name": "eus-qualification-pixel7-api35",
+    "build_fingerprint": "google/sdk_gphone64_x86_64/emu64xa:15/AE3A.240806.043/12960925:userdebug/dev-keys",
+    "is_emulator": true,
+    "adb_version": "Android Debug Bridge version 1.0.41",
+    "emulator_version": "",
+    "security_patch": "2024-09-05",
+    "pinned_identity": "system-images;android-35;google_apis;x86_64, API 35, profile pixel_7 (manifests/toolchain-manifest.yaml environments.android_emulator)"
+  },
+  "instruction_id": "MOBILE-QUALIFICATION-EXEC-AUTH-03",
+  "prompt_version_id": "qualifier-mobile-01-mobilewright-gate-v3",
+  "github": {
+    "run_id": "35938250936",
+    "run_attempt": "1",
+    "image_os": "ubuntu24",
+    "image_version": "20260920.314.1",
+    "workflow_ref": "gsanchezm/experimental-utility-testing-labs/.github/workflows/e03-mobile-qualification.yml@refs/heads/main",
+    "sha": "d3361e2f12b6b9e4be4a654c151dd6c83a7810a7"
+  },
+  "realization": {
+    "bundle_id": "com.omnipizza.app",
+    "scheme": "omnipizza",
+    "account": "standard_user",
+    "market": "US",
+    "MQ1": {
+      "login_screen": "screen-login",
+      "username": "input-username",
+      "password": "input-password",
+      "market_control": "btn-market-US",
+      "login_button": "btn-login",
+      "keyboard_dismiss_target": "text-welcome-title",
+      "terminal": [
+        "screen-catalog",
+        "view-bottom-nav"
+      ]
+    },
+    "MQ2": {
+      "first_card": "card-pizza-p01",
+      "target_product": "p12",
+      "target_open_control": "btn-add-pizza-p12",
+      "product_screen": "screen-pizza-builder",
+      "total_text": "text-estimated-total-value",
+      "initial_total": "$15.99",
+      "size_control": "btn-size-large",
+      "total_after": "$19.99"
+    },
+    "MQ3": {
+      "seed": {
+        "pizza_id": "p01",
+        "quantity": 2,
+        "size": "large",
+        "toppings": []
+      },
+      "deep_link_path": "checkout",
+      "deep_link_params": {
+        "market": "US",
+        "hydrateCart": "true"
+      },
+      "checkout_screen": "screen-checkout",
+      "expected_title": "2x Margherita",
+      "expected_line_total": "$33.98",
+      "ios_open_prompt_button": "Open"
+    }
+  },
+  "outcome": "FAILURE",
+  "duration_ms": {
+    "reset": 4694,
+    "precondition": null,
+    "scenario": null,
+    "total": 96958
+  },
+  "capabilities_exercised": [
+    "MC-01",
+    "MC-07",
+    "MC-09"
+  ],
+  "failed_step": {
+    "name": "checkout screen visible (MC-06, MC-08)",
+    "capabilities": [
+      "MC-06",
+      "MC-08"
+    ],
+    "error": "ExpectError: Expected element to be visible, but it was not\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async step (file://<host-path>/qualification/mobilewright/harness/execute.mjs:187:15)\n    at async file://<host-path>/qualification/mobilewright/harness/execute.mjs:327:5"
+  },
+  "exclusion_proposal": null,
+  "harness": {
+    "backend_health_attempts": 1,
+    "backend_health_last_latency_ms": 145,
+    "seed_verified": true,
+    "deep_link": "omnipizza://checkout?market=US&hydrateCart=true&accessToken=<redacted-token>",
+    "cart_after_failure": {
+      "status": 200,
+      "latency_ms": 210,
+      "body": {
+        "username": "standard_user",
+        "country_code": "US",
+        "cart_items": [
+          {
+            "pizza_id": "p01",
+            "item_id": "ITEM-2A64E2B9",
+            "name": "Margherita",
+            "size": "large",
+            "quantity": 2,
+            "price": 12.99,
+            "base_price": 12.99,
+            "currency": "USD",
+            "currency_symbol": "$",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Margherita_pizza.jpg/500px-Margherita_pizza.jpg"
+          }
+        ],
+        "updated_at": "2026-09-24T00:36:07.665842"
+      }
+    },
+    "cleanup_session_reset": {
+      "status": 200,
+      "latency_ms": 86,
+      "body": {
+        "username": "standard_user",
+        "country_code": "MX",
+        "cart_items": [],
+        "updated_at": "2026-09-24T00:37:44.257980"
+      }
+    }
+  },
+  "artifacts": [
+    "harness-precheck.json",
+    "failure.png",
+    "view-tree-failure.json",
+    "device-log-failure.txt",
+    "record.json",
+    "runner.log"
+  ],
+  "steps": [
+    {
+      "name": "connect the runner to the pinned device (explicit id)",
+      "capabilities": [],
+      "started_at": "2026-09-24T00:36:07.784Z",
+      "status": "OK",
+      "duration_ms": 634
+    },
+    {
+      "name": "reset: uninstall any previous install (MC-09)",
+      "capabilities": [
+        "MC-09"
+      ],
+      "started_at": "2026-09-24T00:36:08.418Z",
+      "status": "OK",
+      "duration_ms": 776
+    },
+    {
+      "name": "reset: install the pinned build (MC-09, MC-01)",
+      "capabilities": [
+        "MC-09",
+        "MC-01"
+      ],
+      "started_at": "2026-09-24T00:36:09.194Z",
+      "status": "OK",
+      "duration_ms": 3087
+    },
+    {
+      "name": "reset: verify the pinned build is installed (MC-09)",
+      "capabilities": [
+        "MC-09"
+      ],
+      "started_at": "2026-09-24T00:36:12.281Z",
+      "status": "OK",
+      "duration_ms": 831
+    },
+    {
+      "name": "open the deep link from a cold state (MC-07)",
+      "capabilities": [
+        "MC-07"
+      ],
+      "started_at": "2026-09-24T00:36:13.112Z",
+      "status": "OK",
+      "duration_ms": 158
+    },
+    {
+      "name": "checkout screen visible (MC-06, MC-08)",
+      "capabilities": [
+        "MC-06",
+        "MC-08"
+      ],
+      "started_at": "2026-09-24T00:36:13.270Z",
+      "status": "FAILED",
+      "duration_ms": 90205,
+      "error": "ExpectError: Expected element to be visible, but it was not\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async step (file://<host-path>/qualification/mobilewright/harness/execute.mjs:187:15)\n    at async file://<host-path>/qualification/mobilewright/harness/execute.mjs:327:5"
+    }
+  ],
+  "notes": [
+    "failed: ExpectError: Expected element to be visible, but it was not"
+  ],
+  "build_file": "omnipizza-release.apk"
+}

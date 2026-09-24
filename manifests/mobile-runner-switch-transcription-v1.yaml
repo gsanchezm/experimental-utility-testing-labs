@@ -1,0 +1,460 @@
+# manifests/mobile-runner-switch-transcription-v1.yaml
+# Provenance record of the POST-QUALIFICATION RECORDING OPERATION (explicit human instruction, verbatim below): the
+# ORCHESTRATOR's transcription, into places 2 and 3 of protocol/mobile-runner-policy-v1.md section 8, of the runner
+# decision that QUALIFIER-MOBILE-01 recorded in qualification/mobilewright/README.md (place 1) after the protocol-valid
+# Mobilewright qualification gate under MOBILE-QUALIFICATION-EXEC-AUTH-03, and the verifications performed before it.
+# The switch is the mechanical application of the frozen switch rule, not a discretionary human selection. This record
+# is not qualification evidence beyond the decision record it cites and is never evidence about any system under test
+# (SUT). Written by the ORCHESTRATOR; `recording_commits` is filled additively once; otherwise corrected only by a new
+# version file.
+record_id: MOBILE-RUNNER-SWITCH-TRANSCRIPTION-01  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: MOBILE_RUNNER_SELECTION_TRANSCRIPTION_RECORD
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-09-24T06:21:51Z"  # UTC
+qualification_evidence: false
+measured_experiment: false
+executes_anything: false  # no dispatch, re-run, DEVELOPMENT run, Appium installation or execution, compatibility smoke, E03 START, or E03 execution
+
+instruction:
+  title: "EUS-2026-001 — RECORD FROZEN MOBILE-RUNNER SWITCH + QUALIFICATION ARTIFACT HYGIENE"
+  given_by: gilbertosanchez  # human research lead
+  given_on: "2026-09-23"  # operator local date (CST); 2026-09-24 UTC
+  how_the_instruction_arrived: "direct live session input to the ORCHESTRATOR session, first person ('I, gilbertosanchez, human research lead for EUS-2026-001, authorize the following POST-QUALIFICATION RECORDING OPERATION ONLY.')"
+  authorizes:
+    - "transcription of the runner selection already determined by the frozen Section 8 switch rule"
+    - "synchronization of internal live-status records"
+    - "recording and auditing the newly discovered qualification-artifact hygiene deviation"
+  does_not_authorize: [another Mobilewright qualification dispatch, any retry or re-run, DEVELOPMENT execution, "Appium installation or execution", compatibility smoke, E03 START, E03 measured execution, public export or push, "research-status.html update"]
+  verbatim_sha256: 4d0ace6c5f6e1cbfd18c6aa69b2038bd8732be26f23c896dd08e18b1c5ec8637  # sha256 of the verbatim text below as a file with one trailing line feed (seven lines carry tab characters, as received)
+  verbatim: |
+    EUS-2026-001 — RECORD FROZEN MOBILE-RUNNER SWITCH + QUALIFICATION ARTIFACT HYGIENE
+
+    I, gilbertosanchez, human research lead for EUS-2026-001, authorize the following POST-QUALIFICATION RECORDING OPERATION ONLY.
+
+    The formal Mobilewright qualification run has completed.
+
+    This instruction authorizes:
+
+    1. transcription of the runner selection already determined by the frozen Section 8 switch rule;
+    2. synchronization of internal live-status records;
+    3. recording and auditing the newly discovered qualification-artifact hygiene deviation.
+
+    This instruction does NOT authorize:
+
+    * another Mobilewright qualification dispatch;
+    * any retry or re-run;
+    * DEVELOPMENT execution;
+    * Appium installation or execution;
+    * compatibility smoke;
+    * E03 START;
+    * E03 measured execution;
+    * public export or push.
+
+    1. FORMAL RUN IDENTITY
+
+    Use only the completed formal run:
+
+    35938250936
+
+    Expected identity:
+
+    * event: workflow_dispatch
+    * attempt: 1
+    * head SHA: d3361e2f12b6b9e4be4a654c151dd6c83a7810a7
+    * authorization: MOBILE-QUALIFICATION-EXEC-AUTH-03
+    * prompt: qualifier-mobile-01-mobilewright-gate-v3
+    * runner: Mobilewright 0.0.60
+    * mode: QUALIFICATION
+    * platform input: both
+
+    Do not dispatch or rerun anything.
+
+    Verify there is no attempt 2 and no second AUTH-03 qualification dispatch.
+
+    2. PRESERVE THE OBSERVED FORMAL RESULTS
+
+    Verify the imported canonical records against the original GitHub Actions artifacts before transcription.
+
+    Expected formal measured results:
+
+    Combination	Result
+    MQ1 × Android	10/10 SUCCESS
+    MQ2 × Android	10/10 SUCCESS
+    MQ3 × Android	0/10 SUCCESS, 10/10 FAILURE
+    MQ1 × iOS	10/10 SUCCESS
+    MQ2 × iOS	10/10 SUCCESS
+    MQ3 × iOS	10/10 SUCCESS
+
+    Warm-ups:
+
+    * 6 total;
+    * MQ3 Android warm-up = FAILURE;
+    * other five warm-ups = SUCCESS.
+
+    Expected:
+
+    * 60 measured executions;
+    * 6 warm-ups;
+    * 0 EXCLUDED;
+    * no manual intervention.
+
+    Do not modify any execution result.
+
+    Do not create replacement executions.
+
+    3. DISTINGUISH WORKFLOW SUCCESS FROM QUALIFICATION FAIL
+
+    GitHub Actions run conclusion success means the workflow/harness completed normally and uploaded its artifacts.
+
+    It does NOT mean Mobilewright passed the scientific qualification gate.
+
+    Record that distinction explicitly where useful.
+
+    The frozen qualification decision is:
+
+    FAIL
+
+    because not all Section 7.2 requirements hold.
+
+    4. FROZEN CRITERIA DECISION
+
+    Apply only protocol/mobile-runner-policy-v1.md.
+
+    Record:
+
+    Criterion 7.2.1 — FAIL
+
+    MQ3 is the predeclared scenario exercising MC-07.
+
+    The Android measured executions did not establish successful support for MC-07 under the frozen definition, and the failures are runner-caused under the conservative Section 7.3 attribution rule.
+
+    Criterion 7.2.2 — FAIL
+
+    MQ3 × Android = 0/10.
+
+    The requirement is 10/10 for every scenario × platform combination.
+
+    Criterion 7.2.3 — FAIL
+
+    The same predeclared MQ3 / MC-07 blocker occurred in:
+
+    * 1 warm-up;
+    * 10 measured executions.
+
+    Criterion 7.2.4 — PASS
+
+    No manual intervention occurred inside any measured execution.
+
+    Overall gate:
+
+    FAIL
+
+    5. ROOT-CAUSE WORDING MUST REMAIN CONSERVATIVE
+
+    Do NOT state as an established technical fact that:
+
+    Mobilewright definitely stripped/dropped the deep-link query parameters
+
+    unless the formal artifacts directly demonstrate that fact.
+
+    The formal evidence establishes:
+
+    * the MQ3 API seed succeeded and was verified before runner interaction;
+    * the deep link opened the Checkout route on Android;
+    * the expected seeded UI state was not present;
+    * the Android MQ3 terminal state failed in all 11 executions;
+    * the corresponding MQ3 sequence succeeded on iOS;
+    * the artifacts do not independently demonstrate where the parameter/state transfer was lost.
+
+    Therefore use wording equivalent to:
+
+    The specific root cause is unresolved. Under frozen Section 7.3, because the artifacts do not demonstrate an allowed cause outside the runner, the failure is conservatively attributed to the runner. Under the predeclared MQ3 mapping, the repeated blocker is recorded against MC-07.
+
+    Do not convert the attribution rule into a stronger causal claim.
+
+    6. TRANSCRIBE THE SECTION 8 SWITCH
+
+    Section 8 now applies mechanically.
+
+    This is not a new discretionary human selection.
+
+    Record the selected mobile runner as:
+
+    Appium 3
+
+    Pinned version:
+
+    3.7.0
+
+    Update the required locations specified by frozen Section 8:
+
+    1. existing qualification decision record — already recorded by QUALIFIER-MOBILE-01; verify, do not duplicate unnecessarily;
+    2. manifests/toolchain-manifest.yaml;
+    3. protocol/CHANGELOG.md.
+
+    Use existing schema/vocabulary.
+
+    Record the basis as the frozen Section 8 switch following the formal AUTH-03 Mobilewright qualification FAIL.
+
+    Do NOT install or execute Appium.
+
+    Do NOT run compatibility smoke.
+
+    Do NOT modify any research question, hypothesis, SUT population, modality definition, scenario, N, capability definition, pass criterion, attribution rule, or switch rule.
+
+    7. INTERNAL LIVE-STATUS SYNCHRONIZATION
+
+    Synchronize internal status documentation as needed, including the files you previously identified such as:
+
+    * AGENT-INSTRUCTIONS.md current phase;
+    * study-manifest notes/status;
+    * E03 README;
+    * prompts/README or related launch-status documentation.
+
+    Represent the state accurately:
+
+    MOBILEWRIGHT_QUALIFICATION = COMPLETE_FAIL
+
+    SELECTED_MOBILE_RUNNER = APPIUM_3_3.7.0
+
+    APPIUM3_EXECUTION = NOT_PERFORMED
+
+    COMPATIBILITY_SMOKE = NOT_STARTED
+
+    E03_START = NOT_AUTHORIZED
+
+    E03_EXECUTION = NOT_STARTED
+
+    Do not update the public dashboard or build a public export under this instruction.
+
+    8. ARTIFACT-HYGIENE DEVIATION
+
+    A post-run audit discovered that the predeclared Scenario Realization states that the MQ3 access token is redacted in every kept artifact, while runner.log files contain a truncated token fragment.
+
+    Record this as a qualification artifact-hygiene / provenance deviation in:
+
+    qualification/unresolved.md
+
+    or the existing qualification-level unresolved mechanism required by governance.
+
+    Do NOT modify the frozen scenario realization.
+
+    Do NOT modify the implementation lock.
+
+    Do NOT modify any formal or quarantined raw artifact.
+
+    Do NOT delete or rewrite evidence.
+
+    The record must state:
+
+    * discovered after the formal run;
+    * affects artifact hygiene / publication handling only;
+    * does not change the execution outcome;
+    * does not change attribution;
+    * does not change the gate decision;
+    * does not authorize a rerun;
+    * canonical evidence remains immutable.
+
+    9. AUDIT THE TOKEN FRAGMENTS WITHOUT REPRODUCING THEM
+
+    Inspect every MQ3 runner.log under both:
+
+    * historical quarantine qualification/mobilewright/output/**;
+    * formal AUTH-03 lineage qualification/mobilewright/formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/**.
+
+    Do NOT print or paste any token fragment into the report.
+
+    Return separately:
+
+    * number of affected quarantine files;
+    * number of affected formal files;
+    * whether any complete three-segment JWT exists;
+    * whether any complete Authorization/Bearer credential exists;
+    * whether any token fragment contains a complete signature segment;
+    * whether host-local paths or unrelated secrets appear.
+
+    If ANY complete usable credential or unrelated secret exists:
+
+    STOP_BEFORE_PUBLICATION = TRUE
+
+    and report the remediation requirement without exposing the secret.
+
+    If only incomplete unusable fragments exist, classify them accurately but still do not authorize publication yet.
+
+    10. CANONICAL INTEGRITY
+
+    Re-verify:
+
+    * implementation-lock v2: all recorded hashes;
+    * scenario-realization section hash:
+        f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018
+    * quarantine unchanged;
+    * imported formal lineage hashes;
+    * AUTH-03 run artifacts correspond to GitHub Actions artifact digests;
+    * no execution record was altered during this operation.
+
+    Report the canonical commit SHA(s) for:
+
+    * runner-selection transcription;
+    * live-status synchronization;
+    * qualification-hygiene record.
+
+    11. HARD STOP
+
+    After committing these recording changes:
+
+    STOP.
+
+    Do NOT:
+
+    * push a public export;
+    * update research-status.html;
+    * execute Appium;
+    * run compatibility smoke;
+    * start E03;
+    * rerun Mobilewright.
+
+    The next human decision will address publication hygiene/dashboard/export separately.
+
+    12. REQUIRED FINAL STATE
+
+    End with:
+
+    MOBILEWRIGHT_QUALIFICATION:
+    COMPLETE_FAIL
+
+    MOBILEWRIGHT_FORMAL_RUN:
+    35938250936_ATTEMPT_1
+
+    MOBILEWRIGHT_RERUN:
+    NOT_PERFORMED
+
+    FROZEN_SWITCH_RULE:
+    TRIGGERED
+
+    SELECTED_MOBILE_RUNNER:
+    APPIUM_3_3.7.0
+
+    RUNNER_SELECTION_BASIS:
+    FROZEN_SECTION_8_SWITCH_RULE
+
+    APPIUM3_EXECUTION:
+    NOT_PERFORMED
+
+    COMPATIBILITY_SMOKE:
+    NOT_STARTED
+
+    QUALIFICATION_ARTIFACT_HYGIENE:
+    RECORDED
+
+    PUBLICATION_OF_FORMAL_ARTIFACTS:
+    NOT_AUTHORIZED
+
+    E03_START:
+    NOT_AUTHORIZED
+
+    E03_EXECUTION:
+    NOT_STARTED
+
+    NEXT_REQUIRED_HUMAN_ACTION:
+    REVIEW_ARTIFACT_HYGIENE_AND_AUTHORIZE_PUBLICATION_STRATEGY
+
+formal_run_verification:  # read-only GitHub API queries and artifact downloads by the ORCHESTRATOR on 2026-09-24 UTC, before any edit (canonical HEAD 25a32a32d5ecefc8f8ea9b6778d1d966470e27fc)
+  run_id: 35938250936
+  run_attempt: 1
+  second_attempt: "none: GET actions/runs/35938250936/attempts/2 returns HTTP 404; previous_attempt_url null"
+  event: workflow_dispatch
+  head_branch: main
+  head_sha: d3361e2f12b6b9e4be4a654c151dd6c83a7810a7  # public export v24
+  status: completed
+  conclusion: success
+  conclusion_meaning: "the workflow and harness completed normally and uploaded their artifacts; it is NOT the qualification result. The frozen gate result is FAIL (qualification_decision below)"
+  created_at: "2026-09-24T00:24:05Z"
+  updated_at: "2026-09-24T01:34:41Z"
+  jobs:  # all attempt 1, conclusion success, sequential (the iOS job started after the Android job completed)
+    - {id: 107440114784, name: "E03 Mobile Qualification Gate", started: "2026-09-24T00:24:10Z", completed: "2026-09-24T00:24:19Z"}
+    - {id: 107440165143, name: "E03 Mobile Qualification android", started: "2026-09-24T00:24:22Z", completed: "2026-09-24T00:53:47Z"}
+    - {id: 107447076155, name: "E03 Mobile Qualification ios", started: "2026-09-24T00:53:56Z", completed: "2026-09-24T01:34:40Z"}
+  dispatch_inputs_observed: "gate job environment (job log): GATE_MODE QUALIFICATION, QUALIFICATION_INSTRUCTION_ID MOBILE-QUALIFICATION-EXEC-AUTH-03, QUALIFICATION_RUNNER_CANDIDATE Mobilewright, GATE_PLATFORM both"
+  qualification_workflow_runs: "7 runs of .github/workflows/e03-mobile-qualification.yml in total; 35938250936 is the newest and the only one after 2026-09-22 — no second AUTH-03 dispatch and no re-run exists"
+  artifacts:
+    - {id: 10783679894, name: E03-QUALIFICATION-android-Mobilewright-run35938250936-a1, size_bytes: 16794798, github_digest: "sha256:59647640111c92591a26fd90808c183dd8975c1421f5bcadb01df1471cf34a6a", downloaded_zip_sha256: 59647640111c92591a26fd90808c183dd8975c1421f5bcadb01df1471cf34a6a, files: 220, expired: false}
+    - {id: 10786001186, name: E03-QUALIFICATION-ios-Mobilewright-run35938250936-a1, size_bytes: 23819046, github_digest: "sha256:3a225ef64591c3bb25866462a91ae49cf2966136f1438a0334eaf311de891cee", downloaded_zip_sha256: 3a225ef64591c3bb25866462a91ae49cf2966136f1438a0334eaf311de891cee, files: 211, expired: false}
+  artifact_to_canonical: "431 of 431 files in the two downloaded artifacts are byte-identical (SHA-256) to qualification/mobilewright/formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/ and to the per-file SHA-256 of import-record-run35938250936-a1.json; no path shared between the artifacts; the canonical namespace holds exactly those 431 files plus the import record itself"
+  execution_records: "66 record.json files: every one instruction_id MOBILE-QUALIFICATION-EXEC-AUTH-03, prompt_version_id qualifier-mobile-01-mobilewright-gate-v3, record_class QUALIFICATION, runner Mobilewright 0.0.60 (mobilecli 1.0.13), run 35938250936 attempt 1, commit d3361e2f12b6b9e4be4a654c151dd6c83a7810a7; 0 exclusion proposals; no manual step exists in the scripted scenarios"
+  results_rederived_from_records:
+    - {combination: "MQ1 × Android emulator", warm_up: SUCCESS, measured: "10 SUCCESS / 10"}
+    - {combination: "MQ2 × Android emulator", warm_up: SUCCESS, measured: "10 SUCCESS / 10"}
+    - {combination: "MQ3 × Android emulator", warm_up: FAILURE, measured: "0 SUCCESS / 10 (10 FAILURE)"}
+    - {combination: "MQ1 × iOS Simulator", warm_up: SUCCESS, measured: "10 SUCCESS / 10"}
+    - {combination: "MQ2 × iOS Simulator", warm_up: SUCCESS, measured: "10 SUCCESS / 10"}
+    - {combination: "MQ3 × iOS Simulator", warm_up: SUCCESS, measured: "10 SUCCESS / 10"}
+  totals: {measured: 60, warm_ups: 6, excluded: 0, manual_interventions: 0}
+  matches_instruction_expectation: true
+  execution_results_modified: false
+  replacement_executions_created: false
+
+canonical_integrity_before_transcription:  # recomputed by the ORCHESTRATOR on 2026-09-24 UTC
+  implementation_lock_v2: "10 of 10 artifact SHA-256 values equal manifests/mobile-qualification-implementation-lock-v2.yaml"
+  scenario_realization_section_sha256: f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018  # equal to lock v1 and v2 (extraction convention of lock v2)
+  mobile_qualification_workflow_canonical_sha256: 76b781083f00b21900a0a30d60555ee484909803a3049ff9c782a4f060fd92cd  # equal to lock v2 workflow_canonical_sha256_at_recording
+  quarantine: "both import records match QUARANTINE-RECORD.yaml; 652 of 652 import-record SHA-256 references (220 + 432, over 432 distinct files) verified; the last commit touching qualification/mobilewright/output/ is 4f5d00f (PROTO-U10)"
+  tree_ids_at_25a32a3: {formal: 55369b192b71cf0c14d26fdb0dc5e37c777bd285, output: 05b6884d90df86de834a40d66e2c57c3c24bce3e, harness: da8aba9daef2949770aa80cf34c4c64c7bb1f2e0, local_preflight: 3cb50d70b8431a6fcb00b23166f100aed11ac637}
+
+qualification_decision:  # verified in place 1 (qualification/mobilewright/README.md, "AUTH-03 formal gate", "Decision record"; QUALIFIER-MOBILE-01, prompt version qualifier-mobile-01-mobilewright-gate-v3, commit 332b470); restated here, not duplicated or changed
+  gate_complete: true
+  gate_result: FAIL
+  criteria:
+    "7.2.1": "FAIL — MQ3 is the predeclared scenario exercising MC-07; the Android measured executions did not establish successful support for MC-07 under the frozen definition (0 successful measured executions exercising it), and the failures are runner-caused under the conservative attribution rule of section 7.3"
+    "7.2.2": "FAIL — MQ3 × Android emulator 0 of 10; the requirement is 10 of 10 for every scenario × platform combination"
+    "7.2.3": "FAIL — the same predeclared MQ3 / MC-07 blocker occurred in 1 warm-up (MQ3-AND-WARMUP-01) and 10 measured executions (MQ3-AND-MEASURED-01 … MQ3-AND-MEASURED-10)"
+    "7.2.4": "PASS — no manual intervention occurred inside any measured execution"
+  root_cause: >-
+    Unresolved. The formal artifacts establish that the MQ3 API seed succeeded and was verified before any runner
+    interaction; that the deep link opened the Checkout route on Android (in its empty-cart state); that the pre-declared
+    seeded UI state was not present; that the Android MQ3 terminal state failed in all 11 executions; and that the same
+    MQ3 sequence succeeded on the iOS Simulator. They do not independently demonstrate where the parameter / state
+    transfer was lost (the Android device log records the intent data only up to its authority). Under frozen section
+    7.3, because the artifacts do not demonstrate an allowed cause outside the runner, the failure is conservatively
+    attributed to the runner; under the predeclared MQ3 mapping the repeated blocker is recorded against MC-07. The
+    attribution rule is not converted into a stronger causal claim.
+  historical_wording_not_adopted: "protocol/CHANGELOG.md (row of 2026-09-22, append-only) and manifests/toolchain-manifest.yaml mobile_runner_selection.superseded_2026_09_22 describe the quarantined 2026-09-22 observation as the runner delivering the route but not the query parameters; that is a stronger causal statement than either lineage's artifacts demonstrate. Those historical texts are left unchanged; the wording is not adopted for this gate"
+
+transcription:  # protocol/mobile-runner-policy-v1.md section 8
+  place_1_decision_record: "qualification/mobilewright/README.md — already recorded by QUALIFIER-MOBILE-01 (Decision: Appium 3, pinned 3.7.0; failed criteria 7.2.1, 7.2.2, 7.2.3 with capability MC-07); verified, not duplicated"
+  place_2_toolchain_manifest:  # manifests/toolchain-manifest.yaml; existing vocabulary only
+    - {field: tools.mobile_runner_selection.selected_runner, from: none, to: "Appium 3"}
+    - {field: tools.mobile_runner_selection.selected_version_pin, from: "(absent)", to: "3.7.0"}
+    - {field: tools.mobile_runner_selection.selected_on, from: "(absent)", to: "2026-09-24"}
+    - {field: tools.mobile_runner_selection.basis / next_step / primary_candidate / fallback, from: "values at canonical commit 25a32a3", to: "the frozen section 8 switch following the formal AUTH-03 FAIL; next step human review of the artifact-hygiene deviation and of the publication strategy"}
+    - {field: tools.mobile_primary_candidate.qualification_status, from: INVALID_EXECUTION_AUTHORIZATION, to: FAILED}
+    - {field: tools.mobile_primary_candidate.formal_gate_observation_auth_03, from: "(absent)", to: "observed gate-host install of Mobilewright 0.0.60; not an install for study use"}
+    - {field: tools.mobile_fallback.notes, from: "FALLBACK, not selected", to: "SELECTED under section 8; not installed, not executed"}
+  place_2_unchanged: "installed false; Mobilewright and Appium 3 version / install_date / platform null; compatibility_smoke_status NOT_STARTED; pins; qualification_build; environments; superseded_2026_09_22 block"
+  place_3_changelog: "protocol/CHANGELOG.md, one appended row (2026-09-24, manifests/toolchain-manifest.yaml, mobile runner selection none -> Appium 3)"
+  selection_kind: MECHANICAL_FROZEN_SECTION_8_SWITCH  # not a new discretionary human selection
+  unchanged_by_this_operation: "research questions, hypotheses, SUT population, modality definitions, scenarios, N, capability definitions, pass criteria, attribution rule, switch rule; every protocol/ document; implementation lock; qualification package; frozen prompts; the quarantine; every formal record and artifact"
+  not_performed: [Appium installation, Appium execution, compatibility smoke, qualification dispatch or re-run, DEVELOPMENT run, E03 START, E03 execution, public export or push, research-status.html update]
+
+observations_not_acted_on:  # recorded for the human; outside this instruction's scope
+  - "The measured-execution gate G-7 of .github/workflows/e03-measured-execution.yml (and experiments/E03-resetability/ci-cd-execution-model.md, gate 7) requires tools.mobile_primary_candidate.qualification_status == PASSED for any ANDROID or IOS condition and has no branch for a section 8 switch; with qualification_status FAILED the two SUT-02 mobile conditions fail closed (safe) even after a future Appium 3 compatibility smoke, until a separately authorized amendment of that gate. Not changed here."
+  - "MOBILE-QUALIFICATION-EXEC-AUTH-03 (manifests/mobile-qualification-execution-auth-v3-prepared.yaml) still reads dispatch_eligibility ELIGIBLE; its single authorized dispatch has been consumed (manifests/mobile-qualification-auth-03-dispatch-v1.yaml). Public main d3361e2 predates the import of the formal namespace, so the published readiness gate's empty-namespace check alone would not refuse a second AUTH-03 dispatch there; the governing rule remains that a second formal dispatch requires a separate explicit human authorization. The gate-read field was not changed under this instruction."
+
+state_after_this_operation:
+  MOBILEWRIGHT_QUALIFICATION: COMPLETE_FAIL  # toolchain qualification_status FAILED
+  MOBILEWRIGHT_FORMAL_RUN: 35938250936_ATTEMPT_1
+  MOBILEWRIGHT_RERUN: NOT_PERFORMED
+  FROZEN_SWITCH_RULE: TRIGGERED
+  SELECTED_MOBILE_RUNNER: APPIUM_3_3.7.0
+  RUNNER_SELECTION_BASIS: FROZEN_SECTION_8_SWITCH_RULE
+  APPIUM3_EXECUTION: NOT_PERFORMED
+  COMPATIBILITY_SMOKE: NOT_STARTED
+  E03_START: NOT_AUTHORIZED
+  E03_EXECUTION: NOT_STARTED
+
+recording_commits:  # filled additively (once) by the live-status synchronization commit of this operation
+  runner_selection_transcription: e027ef4abe7c63641053f6681f588df5742d261e
+  qualification_hygiene_record: b5b1ff90d6683e83d1b9a1878a8477a7bc64161b  # QUAL-U03, PROTO-U13, manifests/mobile-qualification-artifact-hygiene-audit-v1.yaml
+  live_status_synchronization_qualifier_rows: 245e64581f31ec17dd543a79a3db15ff10296f28  # QUALIFIER-MOBILE-01: qualification/README.md, qualification/mobilewright/README.md
+  live_status_synchronization_orchestrator: "the commit that filled this field (git log -1 --format=%H -- manifests/mobile-runner-switch-transcription-v1.yaml)"

@@ -1,0 +1,66 @@
+# manifests/mobile-qualification-auth-03-dispatch-v1.yaml
+# Dispatch record of MOBILE-QUALIFICATION-EXEC-AUTH-03: the separate explicit human dispatch instruction required by
+# step 6 of the AUTH-03 issuance procedure (manifests/mobile-qualification-execution-auth-v3-prepared.yaml), recorded by
+# the ORCHESTRATOR BEFORE the dispatch, then updated additively with the observed run identity. This record does not
+# modify the AUTH-03 record (which the readiness gate reads and which stays byte-identical to the verified public copy),
+# is not qualification evidence, selects no runner, and authorizes nothing beyond the one dispatch it records.
+record_id: MOBILE-QUALIFICATION-AUTH-03-DISPATCH-01  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: AUTHORIZATION_DISPATCH_RECORD
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-09-24T00:15:28Z"  # UTC; the instruction arrived on 2026-09-23 in the operator's local time zone
+qualification_evidence: false
+measured_experiment: false
+selects_runner: false
+status: DISPATCHED  # was PRE_DISPATCH_RECORDED (commit 7e3b2a0, before the dispatch); run identity added below, never rewritten
+
+authorization:
+  authorization_id: MOBILE-QUALIFICATION-EXEC-AUTH-03
+  record: manifests/mobile-qualification-execution-auth-v3-prepared.yaml  # ISSUED / VALID / ELIGIBLE (2026-09-23); unchanged by this record
+  issuance_procedure_step: "6. dispatch only on a separate explicit human instruction"
+  frozen_launch_prompt: prompts/frozen/qualifier-mobile-01-mobilewright-gate-v3.md  # canonical sha256 e7322c0a60e0592924fa1fac41526b862640f8e9c6925540e4b057e1d6dfe273; public exported 0cc7da29f420a251c0540581ea628a33d4b7d6a56cce4ab6b27fea3f2caf100f (PROVIDER_NEUTRAL_PATH_ALIAS)
+  prompt_version_id: qualifier-mobile-01-mobilewright-gate-v3
+
+dispatch_instruction:
+  given_by: gilbertosanchez  # human research lead
+  given_on: "2026-09-23"  # operator local date
+  how_the_instruction_arrived: "direct live session input to the ORCHESTRATOR session, first person, a single line, not a pasted block, in reply to the ORCHESTRATOR's report that AUTH-03 was published and statically ready and that the next required human action was to review the published state and separately authorize exactly one formal dispatch"
+  confirmation_round_trip: "not requested: the message is the human's own direct instruction naming the authorization and the single dispatch; the criterion is explicit human adoption as live instruction (AUTH-03 issuance_procedure step 1), which a direct first-person instruction satisfies"
+  verbatim: "I explicitly authorize exactly one formal AUTH-03 qualification dispatch"
+  verbatim_sha256: 9d4a6ebe3c9264043d23a925e7122b680c5f862919acbbb056f4bd6977c74fd3  # sha256 of the verbatim text as a file with one trailing line feed
+  dispatch_count_authorized: 1
+  scope: "one workflow_dispatch of E03 Mobile Qualification under MOBILE-QUALIFICATION-EXEC-AUTH-03 with platform both (readiness gate -> Android -> iOS, never concurrent), mode QUALIFICATION, runner Mobilewright; the frozen launch prompt governs the execution and QUALIFIER-MOBILE-01's recording of it"
+  not_authorized_by_this_instruction: [a second dispatch, a GitHub re-run or re-run of failed jobs, DEVELOPMENT mode, "Appium 3 execution", compatibility smoke, E03 START, E03 measured execution]
+  retry_policy: "none: any second dispatch or GitHub re-run requires a new explicit human instruction; a failed or incomplete run is recorded as it is"
+
+dispatch_inputs:  # exact workflow_dispatch inputs of .github/workflows/e03-mobile-qualification.yml
+  repository: gsanchezm/experimental-utility-testing-labs  # PUBLIC; GitHub Actions runs only there
+  ref: main
+  instruction_id: MOBILE-QUALIFICATION-EXEC-AUTH-03
+  runner_candidate: Mobilewright
+  platform: both
+  confirm: EXECUTE-QUALIFICATION-GATE
+  mode: QUALIFICATION
+
+pre_dispatch_state:  # verified by the ORCHESTRATOR immediately before this record
+  public_main_snapshot_commit: d3361e2f12b6b9e4be4a654c151dd6c83a7810a7  # public export v24 (canonical source e9ee4e7d2a41fc8081df985d387a224983b5817a)
+  public_main_root_tree: b57f7e23d1e2d191cd03bb416155e6fe70ce1ce0
+  public_workflow_sha256: 128c76dd5c2c78a42ee98e10c3f601b537cc6c925632a4a91609ac65a8129f6c  # .github/workflows/e03-mobile-qualification.yml as exported (canonical 76b781083f00b21900a0a30d60555ee484909803a3049ff9c782a4f060fd92cd)
+  static_readiness: "shipped readiness gate executed statically on a fresh clone of public main d3361e2 with exactly the inputs above (no workflow_dispatch): ready=true, 54 of 54 checks PASS (PUBLIC-EXPORT-MANIFEST.yaml, export_log v24)"
+  formal_output_namespace: "qualification/mobilewright/formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/ absent in the canonical tree and on public main"
+  quarantine: "qualification/mobilewright/output/: 434 tracked files; 652 import-record SHA-256 references (220 + 432, over 432 distinct files), all verified 2026-09-23; not an input, not a destination"
+  implementation_lock_v2: "10 of 10 harness artifact hashes and the Scenario-realization section hash (f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018) match manifests/mobile-qualification-implementation-lock-v2.yaml"
+  qualification_workflow_runs_before_dispatch: "6 in total, the latest 35767911878 (2026-09-22T18:33:10Z, quarantined AUTH-01 lineage); none in progress"
+  public_export_before_dispatch: "none performed after this record, so that the dispatch runs on the statically verified snapshot d3361e2"
+
+dispatch:  # filled additively after the single dispatch (was null in the pre-dispatch commit 7e3b2a0)
+  dispatched_at: "2026-09-24T00:24:05Z"  # run createdAt; the gh workflow run command was issued at 2026-09-24T00:23:57Z, public main re-verified d3361e2 immediately before
+  dispatch_commands_issued: 1
+  run_id: 35938250936
+  run_attempt: 1
+  run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/35938250936
+  event: workflow_dispatch
+  head_branch: main
+  head_sha: d3361e2f12b6b9e4be4a654c151dd6c83a7810a7  # equal to the statically verified snapshot
+  qualification_workflow_runs_after_dispatch: "7 in total; the only new one is 35938250936"
+  outcome: null  # recorded by QUALIFIER-MOBILE-01 in qualification/mobilewright/ after the run completes; this record is not updated with results

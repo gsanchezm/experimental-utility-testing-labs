@@ -246,3 +246,51 @@ notes: |
   immutable in response to it). E01 results, both human rulings, the adjudicated matrix, and H1 unchanged;
   E03-resetability remains NOT_STARTED; E03 START not authorized; no executor launched; H2-H5 not analyzed;
   Appium 2 never.
+  2026-09-22 to 2026-09-23 (summary of events after PROTO-U10; details in the records named): a non-qualification
+  LOCAL_DEVELOPMENT_PREFLIGHT ran 2026-09-22 by explicit human instruction (implementation baseline locked,
+  manifests/mobile-qualification-implementation-lock-v1.yaml; Android complete, iOS blocked on host infrastructure;
+  phase closed the same day, qualification/mobilewright/local-preflight/LOCAL-PREFLIGHT-CLOSURE.yaml).
+  MOBILE-QUALIFICATION-EXEC-AUTH-02 was issued by the human research lead on 2026-09-23 and superseded before any
+  dispatch (PROTO-U12: pre-dispatch execution-integrity / provenance defects, corrected under
+  manifests/mobile-qualification-implementation-lock-v2.yaml and manifests/mobile-qualification-package-v2.yaml).
+  MOBILE-QUALIFICATION-EXEC-AUTH-03 was issued on 2026-09-23 (manifests/mobile-qualification-execution-auth-v3-prepared.yaml;
+  frozen prompt prompts/frozen/qualifier-mobile-01-mobilewright-gate-v3.md) and, on a separate explicit human
+  instruction, dispatched exactly once (manifests/mobile-qualification-auth-03-dispatch-v1.yaml). Public exports
+  through v24 (PUBLIC-EXPORT-MANIFEST.yaml).
+  2026-09-24 (protocol-valid mobile qualification executed; runner transcribed): the Mobilewright gate ran once under
+  MOBILE-QUALIFICATION-EXEC-AUTH-03 (GitHub Actions run 35938250936, attempt 1, public snapshot d3361e2; readiness gate,
+  then Android, then iOS; 6 warm-ups, 60 measured executions, 0 excluded, no manual intervention; artifacts imported
+  byte-for-byte into qualification/mobilewright/formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/). Result FAIL (the workflow
+  conclusion "success" is not a gate PASS): MQ1/MQ2 10/10 on both platforms and MQ3 10/10 on iOS, MQ3 0/10 on the
+  Android emulator (warm-up also FAILURE); criteria 7.2.1 (MC-07), 7.2.2, 7.2.3 fail, 7.2.4 holds; the specific root
+  cause is unresolved and the failures are runner-caused under the conservative section 7.3 rule (the causal wording
+  of the 2026-09-22 note above about the quarantined observation is not adopted). The frozen switch rule
+  (protocol/mobile-runner-policy-v1.md section 8) selects Appium 3, pinned 3.7.0: decision recorded by
+  QUALIFIER-MOBILE-01 in qualification/mobilewright/README.md; transcribed by the ORCHESTRATOR into
+  manifests/toolchain-manifest.yaml and protocol/CHANGELOG.md under the human's POST-QUALIFICATION RECORDING OPERATION
+  instruction (manifests/mobile-runner-switch-transcription-v1.yaml). Appium 3 not installed, not executed;
+  compatibility smoke NOT_STARTED (not authorized). Post-run artifact-hygiene deviation recorded: the MQ3 runner.log
+  files of both lineages keep an incomplete, unusable token fragment contrary to the Scenario realization's redaction
+  statement (qualification/unresolved.md QUAL-U03; protocol/unresolved.md PROTO-U13;
+  manifests/mobile-qualification-artifact-hygiene-audit-v1.yaml); publication of the formal artifacts not authorized.
+  Tool qualification only: no SUT evidence, no E03 raw-data, no H2 input. E01 results, both human rulings, the
+  adjudicated matrix, and H1 unchanged; E03-resetability remains NOT_STARTED; E03 START not authorized; Appium 2 never.
+  2026-09-24 (later; FINAL PRE-PUBLICATION OPERATIONAL CORRECTIONS, explicit human instruction, verbatim in
+  manifests/pre-publication-corrections-v1.yaml): AUTH-03's dispatch lifecycle closed in place
+  (dispatch_eligibility CONSUMED_AFTER_DISPATCH, dispatch_performed true; still VALID / ISSUED; the readiness gate
+  refuses it). Gate G-7 of .github/workflows/e03-measured-execution.yml corrected prospectively (PROTO-U14,
+  PRE-E03-START CI GATE IMPLEMENTATION DEFECT): mobile conditions are admitted only on one of the two paths of the
+  frozen mobile-runner policy (Mobilewright PASSED, or Appium 3 by the section 8 switch), with the selected runner's
+  own version and compatibility smoke; it fails closed now (Appium 3 smoke NOT_STARTED). Publication-only
+  transformation QUALIFICATION_TOKEN_FRAGMENT_REDACTION defined for the 44 MQ3 runner.log files (PROTO-U13 / QUAL-U03
+  resolved as to publication handling; canonical artifacts unchanged; not yet applied). No dispatch, re-run,
+  Appium installation or execution, compatibility smoke, export, or push; E03 remains NOT_STARTED; E03 START not
+  authorized.
+  2026-09-24 (later; FINAL G-7 PROVENANCE / SMOKE-GRANULARITY FIX + PUBLIC EXPORT V25, explicit human instruction,
+  verbatim in manifests/pre-e03-publication-completion-v1.yaml): PROTO-U15 corrected before E03 START — gate G-7
+  evaluates the compatibility smoke per SUT x platform x selected runner from manifests/compatibility-smoke-status.yaml
+  (ORCHESTRATOR mirror of the QUALIFIER-MOBILE-01 records under qualification/compatibility-smoke/; SUT-02 android
+  and ios for Appium 3 NOT_STARTED), and the measured provenance records the study-selected runner. The
+  publication-only token redaction was extended to every textual remnant in the qualification trees (141 files).
+  Public export v25 authorized (its export-log entry in PUBLIC-EXPORT-MANIFEST.yaml records the published
+  state). No dispatch, re-run, Appium installation or execution, or compatibility smoke; E03 remains NOT_STARTED.

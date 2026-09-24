@@ -121,7 +121,7 @@ jobs:
           set -euo pipefail
           python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
           python3 - <<'PY'
-          import hashlib, os, re, subprocess, sys, yaml
+          import glob, hashlib, os, re, subprocess, sys, yaml
           cond = '${{ inputs.condition_id }}'; sut = '${{ inputs.assigned_sut }}'; attempt = '${{ inputs.attempt }}'
           auth = '${{ inputs.campaign_start_authorization_id }}'; pv = '${{ inputs.executor_prompt_version }}'; impl_sha = '${{ inputs.executor_implementation_sha256 }}'
           failures = []
@@ -167,15 +167,57 @@ jobs:
           gov = open('protocol/agent-governance-v2.md').read()
           gm = re.search(r'\| Protocol state \| ([A-Z-]+) \|', gov)
           gate('agent-governance-v2 frozen', gm is not None and gm.group(1) in ('FROZEN-PRE-DATA', 'AMENDED'), gm.group(1) if gm else 'no header')
-          # G-7 mobile qualification for mobile cells
+          # G-7 mobile runner for mobile cells (protocol/mobile-runner-policy-v1.md sections 1, 7, 8, 9). PROTO-U14
+          # (2026-09-24, prospective correction before E03 START): the selected runner is determined first, then only
+          # the lineage of that runner is checked. Admissible paths: (A) Mobilewright selected after PASSING the gate;
+          # (B) Appium 3 selected by the section 8 switch after Mobilewright FAILED the gate. Both require the
+          # selection to rest on exactly one VALID, ISSUED, dispatched gate authorization and the selected runner's own
+          # recorded version equal to its pin. PROTO-U15 (2026-09-24): the compatibility smoke is checked per SUT x
+          # platform x selected runner (policy section 9) from manifests/compatibility-smoke-status.yaml, the ORCHESTRATOR
+          # mirror of the QUALIFIER-MOBILE-01 records under qualification/compatibility-smoke/; a result for another SUT,
+          # platform, or runner never counts, and the study-level compatibility_smoke_status summaries of the toolchain
+          # manifest are not read. Selected runner none or anything else, a smoke that is not PASS, or an absent version
+          # fails closed. The provenance-only keys selection_kind, transcribed_by_role, and
+          # values_before_this_transcription are never read.
           surface = cond.split('-')[3]
           if surface in ('ANDROID', 'IOS'):
               tm = yaml.safe_load(open('manifests/toolchain-manifest.yaml'))['tools']
-              mp = tm['mobile_primary_candidate']; fb = tm['mobile_fallback']
-              qual = mp.get('qualification_status') == 'PASSED' and mp.get('compatibility_smoke_status') == 'PASSED'
-              gate('mobile qualification gate PASSED and compatibility smoke PASSED', qual, f"{mp.get('qualification_status')}/{mp.get('compatibility_smoke_status')}")
-              gate('selected mobile runner version recorded', bool(mp.get('version')) or bool(fb.get('version')))
-              gate('Appium 2 never selected', str(fb.get('candidate')) == 'Appium 3' and 'Appium 2' not in str(fb.get('version')))
+              mp = tm['mobile_primary_candidate']; fb = tm['mobile_fallback']; sel = tm.get('mobile_runner_selection') or {}
+              runner = str(sel.get('selected_runner'))
+              gate('a mobile runner is selected: Mobilewright or Appium 3 (policy sections 1, 8)', runner in ('Mobilewright', 'Appium 3'), runner)
+              entry, qual_needed, pin = {}, None, None
+              if runner == 'Appium 3':
+                  entry, qual_needed = fb, 'FAILED'
+                  pin = str((fb.get('pinned_candidate_version') or {}).get('version'))
+                  gate('Appium 3 path: fallback is Appium 3 pinned 3.7.0 and the selection names that pin', str(fb.get('candidate')) == 'Appium 3' and pin == '3.7.0' and str(sel.get('selected_version_pin')) == pin, f"{fb.get('candidate')} {pin} / {sel.get('selected_version_pin')}")
+                  gate('Appium 3 path: selection basis is the frozen section 8 switch', 'protocol/mobile-runner-policy-v1.md section 8' in str(sel.get('basis')))
+              elif runner == 'Mobilewright':
+                  entry, qual_needed = mp, 'PASSED'
+                  pin = str((mp.get('pinned_candidate_version') or {}).get('version'))
+                  gate('Mobilewright path: the primary candidate is Mobilewright and the selection names its pin', str(mp.get('candidate')) == 'Mobilewright' and str(sel.get('selected_version_pin')) == pin, f"{mp.get('candidate')} {pin} / {sel.get('selected_version_pin')}")
+              gate('Mobilewright qualification_status matches the selected-runner path (' + str(qual_needed) + ')', qual_needed is not None and mp.get('qualification_status') == qual_needed, str(mp.get('qualification_status')))
+              ga = str(sel.get('human_authorization'))
+              recs = [r for r in (yaml.safe_load(open(p)) for p in sorted(glob.glob('manifests/mobile-qualification-execution-auth-v*.yaml'))) if isinstance(r, dict) and r.get('authorization_id') == ga]
+              gate('the selection rests on exactly one VALID, ISSUED, dispatched gate authorization', len(recs) == 1 and recs[0].get('record_validity') == 'VALID' and recs[0].get('status') == 'ISSUED' and recs[0].get('dispatch_performed') is True, ga)
+              ver = str(entry.get('version') or '').strip()
+              gate('the version of the selected runner itself is recorded and equals its pin', bool(ver) and pin is not None and ver.split()[0] == pin, ver or '(absent)')
+              plat = surface.lower()
+              smk_path = 'manifests/compatibility-smoke-status.yaml'
+              smk = (yaml.safe_load(open(smk_path)) or {}) if os.path.isfile(smk_path) else {}
+              ents = [e for e in (smk.get('entries') or []) if isinstance(e, dict) and e.get('sut_id') == sut and e.get('platform') == plat and e.get('runner') == runner]
+              gate(f'exactly one compatibility-smoke entry for {sut} x {plat} x {runner}', len(ents) == 1, f'{len(ents)} in {smk_path}')
+              sm1 = ents[0] if len(ents) == 1 else {}
+              gate(f'compatibility smoke of {sut} x {plat} with the selected runner is PASS', sm1.get('result') == 'PASS', str(sm1.get('result')))
+              gate('the smoke entry runner_version equals the selected runner pin', pin is not None and str(sm1.get('runner_version') or '').strip().split(' ')[0] == pin, str(sm1.get('runner_version')))
+              qr = str(sm1.get('qualifier_record') or '')
+              rows = []
+              if qr.startswith('qualification/compatibility-smoke/') and os.path.isfile(qr):
+                  for line in open(qr).read().splitlines():
+                      cells = [c.strip() for c in line.strip().strip('|').split('|')]
+                      if line.startswith('|') and len(cells) >= 8 and cells[0] == sut and cells[1] == plat:
+                          rows.append(cells)
+              gate(f'the QUALIFIER-owned smoke record has a PASS row for {sut} x {plat} with the selected runner version', any(r[7] == 'PASS' and pin is not None and pin in r[5] for r in rows), qr or '(absent)')
+              gate('Appium 2 never selected', 'Appium 2' not in runner and str(fb.get('candidate')) == 'Appium 3' and 'Appium 2' not in str(fb.get('version')) and not str(fb.get('version') or '').strip().startswith('2'))
           # G-8 controlled instance verified for this condition on GitHub Actions
           try:
               cis = yaml.safe_load(open('experiments/E03-resetability/controlled-instance-status.yaml'))
@@ -235,6 +277,24 @@ jobs:
           cond = '${{ inputs.condition_id }}'; sut = '${{ inputs.assigned_sut }}'; surface = cond.split('-')[3]
           sm = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts'][sut]['components'][surface.lower()]
           tm = yaml.safe_load(open('manifests/toolchain-manifest.yaml'))
+          # PROTO-U15 (2026-09-24): a mobile run records the study-SELECTED runner (mobile_runner_selection), which is
+          # the execution runner; the primary candidate and the fallback are kept apart as historical candidate data.
+          mobile_runner = None
+          if surface in ('ANDROID', 'IOS'):
+              tools = tm['tools']; sel = tools.get('mobile_runner_selection') or {}; selected = str(sel.get('selected_runner'))
+              entry = {'Mobilewright': tools['mobile_primary_candidate'], 'Appium 3': tools['mobile_fallback']}.get(selected, {})
+              smk = yaml.safe_load(open('manifests/compatibility-smoke-status.yaml')) or {}
+              smoke = [e for e in (smk.get('entries') or []) if isinstance(e, dict) and e.get('sut_id') == sut and e.get('platform') == surface.lower() and e.get('runner') == selected]
+              mobile_runner = {
+                'selected_runner': selected, 'execution_runner': selected,
+                'selected_version_pin': sel.get('selected_version_pin'), 'execution_runner_version': entry.get('version'),
+                'selection_basis': sel.get('basis'), 'selection_authorization': sel.get('human_authorization'),
+                'compatibility_smoke': smoke[0] if len(smoke) == 1 else None,
+                'historical_candidates': {'primary_candidate': tools['mobile_primary_candidate']['candidate'], 'primary_candidate_pin': (tools['mobile_primary_candidate'].get('pinned_candidate_version') or {}).get('version'),
+                                          'primary_candidate_qualification_status': tools['mobile_primary_candidate'].get('qualification_status'),
+                                          'fallback': tools['mobile_fallback']['candidate'], 'fallback_pin': (tools['mobile_fallback'].get('pinned_candidate_version') or {}).get('version'),
+                                          'note': 'candidate roles under protocol/mobile-runner-policy-v1.md section 1; not the execution runner'},
+              }
           rec = {
             'record_class': os.environ['RECORD_CLASS'], 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability', 'scenario': 'CS-001',
             'condition_id': cond, 'sut_id': sut, 'surface': surface, 'execution_id': '${{ inputs.execution_id }}', 'attempt': int('${{ inputs.attempt }}'), 'run_id': os.environ['RUN_ID'],
@@ -244,7 +304,7 @@ jobs:
             'sut_version': {'repository': sm.get('repository'), 'commit_sha': sm.get('commit_sha'), 'release': sm.get('release')},
             'environment_type': '${{ needs.gate.outputs.environment_type }}',
             'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'note': 'the measured job records its own runner and runtime versions in runtime-environment.json; this job records the gate-time contract'},
-            'mobile_runner': {'candidate': tm['tools']['mobile_primary_candidate']['candidate'], 'version': tm['tools']['mobile_primary_candidate']['version'], 'fallback': tm['tools']['mobile_fallback']['candidate'], 'fallback_version': tm['tools']['mobile_fallback']['version']},
+            'mobile_runner': mobile_runner,
             'emulator_configuration': tm.get('environments', {}).get('android_emulator'), 'simulator_configuration': tm.get('environments', {}).get('ios_simulator'),
             'timezone': 'UTC', 'timeout_policy': os.environ['TIMEOUT_POLICY'], 'retry_policy': os.environ['RETRY_POLICY'], 'concurrency_policy': os.environ['CONCURRENCY_POLICY'], 'artifact_retention_days': int(os.environ['ARTIFACT_RETENTION_DAYS']),
             'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'run_number': '${{ github.run_number }}', 'job': '${{ github.job }}', 'actor': 'not recorded (agent role, not a person identity, is the provenance unit)'},

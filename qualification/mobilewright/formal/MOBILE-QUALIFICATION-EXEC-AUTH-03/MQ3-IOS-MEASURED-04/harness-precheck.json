@@ -1,0 +1,109 @@
+{
+  "at": "2026-09-24T01:31:07.572Z",
+  "backend_health": {
+    "healthy": true,
+    "attempts": [
+      {
+        "attempt": 1,
+        "at": "2026-09-24T01:31:07.746Z",
+        "ok": true,
+        "status": 200,
+        "latency_ms": 174,
+        "body": {
+          "status": "healthy",
+          "timestamp": "2026-09-24T01:31:07.777820",
+          "environment": "production"
+        }
+      }
+    ]
+  },
+  "login": {
+    "status": 200,
+    "latency_ms": 123,
+    "body": {
+      "access_token": "<redacted-token>",
+      "token_type": "bearer",
+      "username": "standard_user",
+      "behavior": "standard"
+    }
+  },
+  "seed": {
+    "seeded": true,
+    "verified": true,
+    "request": {
+      "method": "POST",
+      "path": "/api/cart",
+      "body": {
+        "items": [
+          {
+            "pizza_id": "p01",
+            "quantity": 2,
+            "size": "large",
+            "toppings": []
+          }
+        ]
+      }
+    },
+    "seed_response": {
+      "status": 200,
+      "latency_ms": 116,
+      "body": {
+        "username": "standard_user",
+        "country_code": "MX",
+        "cart_items": [
+          {
+            "pizza_id": "p01",
+            "quantity": 2,
+            "size": "large",
+            "toppings": [],
+            "item_id": "ITEM-A2E50CF9"
+          }
+        ],
+        "updated_at": "2026-09-24T01:31:08.019096"
+      }
+    },
+    "verify_request": {
+      "method": "GET",
+      "path": "/api/cart",
+      "headers": {
+        "X-Country-Code": "US",
+        "X-Language": "en"
+      }
+    },
+    "verify_response": {
+      "status": 200,
+      "latency_ms": 94,
+      "body": {
+        "username": "standard_user",
+        "country_code": "US",
+        "cart_items": [
+          {
+            "pizza_id": "p01",
+            "item_id": "ITEM-A2E50CF9",
+            "name": "Margherita",
+            "size": "large",
+            "quantity": 2,
+            "price": 12.99,
+            "base_price": 12.99,
+            "currency": "USD",
+            "currency_symbol": "$",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Margherita_pizza.jpg/500px-Margherita_pizza.jpg"
+          }
+        ],
+        "updated_at": "2026-09-24T01:31:08.019096"
+      }
+    },
+    "enriched_line": {
+      "pizza_id": "p01",
+      "item_id": "ITEM-A2E50CF9",
+      "name": "Margherita",
+      "size": "large",
+      "quantity": 2,
+      "price": 12.99,
+      "base_price": 12.99,
+      "currency": "USD",
+      "currency_symbol": "$",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Margherita_pizza.jpg/500px-Margherita_pizza.jpg"
+    }
+  }
+}

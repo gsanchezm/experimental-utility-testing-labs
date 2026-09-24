@@ -35,13 +35,22 @@
 # unchanged and explicitly withhold dispatch ("THIS INSTRUCTION ISSUES AUTH-03. IT DOES NOT DISPATCH AUTH-03."). AUTH-01
 # remains retired (PROTO-U10); AUTH-02 remains validly issued historically but superseded before dispatch (PROTO-U12);
 # neither becomes dispatch-eligible again, and the readiness gate refuses both ids explicitly.
+#
+# DISPATCH LIFECYCLE CLOSED (2026-09-24): the one formal dispatch this authorization permitted was performed on the
+# separate explicit human dispatch instruction (manifests/mobile-qualification-auth-03-dispatch-v1.yaml): GitHub Actions
+# run 35938250936, attempt 1, completed; no re-run exists or is authorized. By the human research lead's FINAL
+# PRE-PUBLICATION OPERATIONAL CORRECTIONS instruction (verbatim in manifests/pre-publication-corrections-v1.yaml) this
+# record was updated in place: dispatch_eligibility ELIGIBLE -> CONSUMED_AFTER_DISPATCH and the dispatch_lifecycle block
+# added. record_validity (VALID), status (ISSUED), issued_by, issued_at, and authorizes_execution are unchanged: the
+# issuance and the execution performed under it remain valid historical provenance. The record is neither INVALID nor
+# SUPERSEDED; it is consumed.
 record_class: MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION  # promoted 2026-09-23 at explicit human issuance (issuance_procedure step 3); was MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION_DRAFT while PREPARED
 status: ISSUED  # was PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION until the explicit human issuance of 2026-09-23
 record_validity: VALID  # absent while PREPARED; set at issuance
 qualification_evidence: false
 measured_experiment: false
-authorizes_execution: true  # was false while PREPARED; the gate may run only on a separate explicit human dispatch instruction
-dispatch_eligibility: ELIGIBLE  # was NOT_ELIGIBLE_UNTIL_ISSUED while PREPARED; the readiness gate admits only ELIGIBLE. Eligibility is not dispatch: one formal dispatch needs its own separate explicit human instruction
+authorizes_execution: true  # historical fact: this authorization permitted its one formal execution (performed: run 35938250936, dispatch_lifecycle below); was false while PREPARED. It does not make the record dispatch-eligible (dispatch_eligibility below)
+dispatch_eligibility: CONSUMED_AFTER_DISPATCH  # terminal, fail-closed post-dispatch value (2026-09-24). No consumed/used value existed in the repository's lifecycle vocabulary (ELIGIBLE, NOT_ELIGIBLE_UNTIL_ISSUED, SUPERSEDED), so this narrowly documented value was introduced: it is an authorization-lifecycle value only and changes no scientific rule; the readiness gate of .github/workflows/e03-mobile-qualification.yml admits only exact ELIGIBLE, so the consumed AUTH-03 fails closed there; another formal dispatch requires a NEW explicit human authorization id. History: NOT_ELIGIBLE_UNTIL_ISSUED while PREPARED; ELIGIBLE from issuance (2026-09-23) until this closure
 selects_runner: false
 study_id: EUS-2026-001
 prepared_by: ORCHESTRATOR
@@ -53,8 +62,23 @@ issued_by: gilbertosanchez  # explicit human issuance, live session input, 2026-
 issued_at: "2026-09-23"
 issued_under_instruction: "EUS-2026-001 -- EXPLICIT MOBILE-QUALIFICATION-EXEC-AUTH-03 ISSUANCE (explicit human instruction, live session input to the ORCHESTRATOR, 2026-09-23), followed by the human's direct confirmation of issuance in the same session; both verbatim below; both explicitly withhold dispatch"
 issuance_basis: "explicit human adoption and issuance as live instruction (issuance_procedure step 1): the instruction states 'I deliberately adopt this instruction as my own authorization' and the human separately confirmed 'I explicitly confirm that I issue and approve MOBILE-QUALIFICATION-EXEC-AUTH-03'; the origin of the wording is not a criterion"
-dispatch_authorized_by_this_record: true  # the record satisfies the readiness gate; this is eligibility, not a dispatch instruction
-dispatch_performed_under_this_operation: false  # the issuing instruction explicitly withheld dispatch; no qualification workflow was run
+dispatch_authorized_by_this_record: true  # historical: from issuance until its single dispatch was consumed the record satisfied the readiness gate (eligibility, never itself a dispatch instruction); since 2026-09-24 dispatch_eligibility is CONSUMED_AFTER_DISPATCH
+dispatch_performed_under_this_operation: false  # refers to the ISSUANCE operation of 2026-09-23 only (the issuing instruction explicitly withheld dispatch); the dispatch itself is recorded by dispatch_performed / dispatch_lifecycle below
+dispatch_performed: true  # exactly once (added 2026-09-24)
+dispatch_lifecycle:  # added 2026-09-24 by the ORCHESTRATOR (FINAL PRE-PUBLICATION OPERATIONAL CORRECTIONS; manifests/pre-publication-corrections-v1.yaml); values read from the GitHub Actions API
+  dispatch_count: 1
+  dispatch_instruction_record: manifests/mobile-qualification-auth-03-dispatch-v1.yaml  # the separate explicit human dispatch instruction, recorded before the dispatch
+  workflow: .github/workflows/e03-mobile-qualification.yml
+  run_id: 35938250936
+  run_attempt: 1  # GET actions/runs/35938250936/attempts/2 returns HTTP 404: no attempt 2
+  event: workflow_dispatch
+  head_sha: d3361e2f12b6b9e4be4a654c151dd6c83a7810a7  # public export v24
+  dispatched_at: "2026-09-24T00:24:05Z"  # GitHub run created_at / run_started_at
+  completed_at: "2026-09-24T01:34:41Z"  # GitHub run updated_at; status completed, conclusion success (the harness completed and uploaded its artifacts; the qualification result is FAIL)
+  execution_completed: true  # 6 warm-ups and 60 measured executions; artifacts imported into qualification/mobilewright/formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/
+  qualification_result: "FAIL (qualification/mobilewright/README.md, 'AUTH-03 formal gate'); selected mobile runner Appium 3, pinned 3.7.0, by the frozen section 8 switch (manifests/toolchain-manifest.yaml)"
+  second_dispatch: none  # 35938250936 is the only run of the qualification workflow after 2026-09-22
+  rerun_authorized: false
 
 launch_prompt:
   working_copy: prompts/working/qualifier-mobile-01-mobilewright-gate-v3.md
@@ -104,7 +128,7 @@ explicitly_excluded_as_formal_input:
   - "every DEVELOPMENT run"
   - "anything recorded under the superseded MOBILE-QUALIFICATION-EXEC-AUTH-02 (nothing was executed under it)"
 
-issuance_procedure:  # performed 2026-09-23 on the explicit human issuance above (steps 1-5); step 6 remains open
+issuance_procedure:  # performed 2026-09-23 on the explicit human issuance above (steps 1-5); step 6 performed 2026-09-24 (one dispatch, run 35938250936; dispatch_lifecycle above)
   - "1. the human explicitly issues or approves MOBILE-QUALIFICATION-EXEC-AUTH-03 as live human instruction; issuance must never be inferred merely from preparation, publication, discussion, recommendation, or an unadopted draft (PROTO-U10). The origin of the wording is not a criterion: a drafted text the human deliberately adopts and sends as their instruction is an explicit issuance (clarified by the human research lead, FINAL PRE-AUTH-03 REPRESENTATION CLEANUP, 2026-09-23)"
   - "2. ORCHESTRATOR freezes prompts/working/qualifier-mobile-01-mobilewright-gate-v3.md to prompts/frozen/qualifier-mobile-01-mobilewright-gate-v3.md, rendering only the two {{INSTRUCTION_DATE}} placeholders (variable list and step 1); CHANGELOG row"
   - "3. ORCHESTRATOR promotes THIS file in place: record_class MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION_DRAFT -> MOBILE_QUALIFICATION_EXECUTION_AUTHORIZATION, record_validity VALID, status ISSUED, issued_by <human>, issued_at <date>, authorizes_execution true, dispatch_eligibility ELIGIBLE, launch_prompt.frozen_copy / sha256 / rendered_variables.INSTRUCTION_DATE"

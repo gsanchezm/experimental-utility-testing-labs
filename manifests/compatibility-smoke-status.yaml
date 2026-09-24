@@ -1,0 +1,51 @@
+# manifests/compatibility-smoke-status.yaml
+# Machine-readable ORCHESTRATOR mirror of the per-SUT x platform compatibility-smoke results of
+# protocol/mobile-runner-policy-v1.md, section 9 (one smoke per mobile-capable ecosystem x platform, with the selected
+# runner). Created 2026-09-24 (PROTO-U15) so that gate G-7 of .github/workflows/e03-measured-execution.yml can check
+# the smoke of a mobile condition's exact SUT, platform, and selected runner.
+#
+# Source of truth: the QUALIFIER-MOBILE-01 records under qualification/compatibility-smoke/ (the "Smoke records" table
+# of qualification/compatibility-smoke/README.md: one row per ecosystem x platform, result PASS / FAIL_RUNNER /
+# NOT_EXECUTED). This file only TRANSCRIBES status and provenance from those records and points back to them. It defines
+# no smoke criterion, procedure, or result vocabulary of its own. NOT_STARTED means that no smoke has been executed for
+# the entry. An entry is changed only after QUALIFIER-MOBILE-01 has recorded an executed smoke there, under a separate
+# explicit human authorization, and only by transcription.
+#
+# Gate G-7 admits an ANDROID or IOS condition only if exactly one entry matches the condition's SUT, platform, and the
+# selected runner, that entry's result is PASS with runner_version equal to the selected runner's pin, and its
+# qualifier_record (a file under qualification/compatibility-smoke/) holds a PASS row for the same SUT and platform
+# whose runner-version cell contains that pin. An entry for another SUT, another platform, or another runner never
+# satisfies a condition. The study-level compatibility_smoke_status fields of manifests/toolchain-manifest.yaml are
+# convenience summaries only and are not read by G-7.
+#
+# Editable by ORCHESTRATOR only. Unknown values are null, never a guess.
+record_class: COMPATIBILITY_SMOKE_STATUS_MIRROR
+study_id: EUS-2026-001
+governing_policy: protocol/mobile-runner-policy-v1.md  # section 9; FROZEN-PRE-DATA
+source_of_truth: qualification/compatibility-smoke/README.md  # QUALIFIER-MOBILE-01 workspace
+result_vocabulary: [NOT_STARTED, PASS, FAIL_RUNNER, NOT_EXECUTED]  # PASS, FAIL_RUNNER, NOT_EXECUTED as defined by the source template; NOT_STARTED = not executed yet
+selected_runner_at_creation: "Appium 3"  # manifests/toolchain-manifest.yaml mobile_runner_selection (frozen section 8 switch, 2026-09-24)
+scope_note: "entries exist for the ecosystem x platform pairs required by the current E03-resetability configuration (the two SUT-02 mobile conditions); entries for other mobile-capable ecosystems are added when a campaign requires them"
+entries:
+  - sut_id: SUT-02
+    platform: android
+    runner: "Appium 3"
+    runner_version: null  # set by transcription from the QUALIFIER record after an executed smoke
+    result: NOT_STARTED
+    qualifier_record: null  # path under qualification/compatibility-smoke/ after an executed smoke
+    executed_at: null
+    authorization_id: null  # the separate explicit human authorization of the smoke
+    transcribed_by: null
+    transcribed_at: null
+    e03_condition: E03-CS001-SUT02-ANDROID
+  - sut_id: SUT-02
+    platform: ios
+    runner: "Appium 3"
+    runner_version: null
+    result: NOT_STARTED
+    qualifier_record: null
+    executed_at: null
+    authorization_id: null
+    transcribed_by: null
+    transcribed_at: null
+    e03_condition: E03-CS001-SUT02-IOS

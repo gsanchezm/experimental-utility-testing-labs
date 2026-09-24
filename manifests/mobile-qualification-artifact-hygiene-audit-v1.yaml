@@ -1,0 +1,124 @@
+# manifests/mobile-qualification-artifact-hygiene-audit-v1.yaml
+# Post-run artifact-hygiene audit of the MQ3 runner.log files of both Mobilewright qualification lineages, performed by
+# the ORCHESTRATOR on 2026-09-24 under the POST-QUALIFICATION RECORDING OPERATION instruction (verbatim in
+# manifests/mobile-runner-switch-transcription-v1.yaml, section 9 of the instruction). It records counts, classes, hashes,
+# and paths only: no token fragment, decoded claim value, or credential is reproduced here or in any report. Escalations:
+# qualification/unresolved.md QUAL-U03 (recorded by QUALIFIER-MOBILE-01) and protocol/unresolved.md PROTO-U13 (ORCHESTRATOR
+# mirror). Read-only audit: no artifact, realization, lock, harness file, or export record was modified. Not qualification
+# evidence and never evidence about any system under test (SUT). Written once; corrected by a new version file.
+record_id: MOBILE-QUALIFICATION-ARTIFACT-HYGIENE-AUDIT-01  # ORCHESTRATOR bookkeeping identifier
+record_class: QUALIFICATION_ARTIFACT_HYGIENE_AUDIT
+study_id: EUS-2026-001
+performed_by: ORCHESTRATOR
+performed_at: "2026-09-24T06:31:26Z"  # UTC, time of writing this record; the audit computations ran earlier the same day against canonical HEAD 25a32a3 and were re-run for the path and hash list at e027ef4 (qualification/ trees identical at both)
+discovered: "after the formal run (run 35938250936 completed 2026-09-24T01:34:41Z)"
+qualification_evidence: false
+measured_experiment: false
+
+deviation:
+  predeclared_statements:
+    - {source: "qualification/mobilewright/README.md, section 'Scenario realization', MQ3 deep-link cell (locked: implementation-lock v2 section hash f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018)", statement: "the token is redacted in every kept artifact"}
+    - {source: "qualification/mobilewright/README.md, section 'Gate implementation', Publication hygiene paragraph", statement: "every kept artifact is scrubbed by the orchestrator of ... bearer tokens"}
+  observed: "each MQ3 runner.log keeps the deep link as logged by the runner's debug output (mobilecli), cut by the runner's own log-line limit (the line ends with an ellipsis and a byte total); the kept span contains the complete JWT header segment and a truncated leading part of the payload segment of the access token"
+  mechanism: "the locked scrubber (harness/run-gate.mjs scrubText and harness/backend.mjs redact) replaces only complete three-segment JWTs (a pattern requiring header, payload, and signature segments of at least five characters each); the truncated two-segment span in runner.log does not match and was kept. Records and prechecks, which held the complete token, carry the redacted form: a 12-character prefix of the header segment followed by <redacted-token>"
+  qualifier_record_before_this_audit: "qualification/mobilewright/README.md, AUTH-03 Run provenance, row 'Kept-artifact hygiene' (commit 332b470), already described the truncated deep link in each MQ3 runner.log as 'header and part of the payload only; not a usable credential' without classifying it as a deviation from the statements above"
+  classification: QUALIFICATION_ARTIFACT_HYGIENE_PROVENANCE_DEVIATION
+  fragment_class: INCOMPLETE_UNUSABLE_TOKEN_FRAGMENT
+  effects:
+    artifact_hygiene_and_publication_handling_only: true
+    changes_execution_outcome: false
+    changes_attribution: false
+    changes_gate_decision: false
+    authorizes_rerun: false
+    canonical_evidence_immutable: true  # no artifact is rewritten, redacted, or deleted in the canonical repository
+
+method:
+  scope: "every file under qualification/mobilewright/output/ (434 files, quarantined AUTH-01 lineage) and qualification/mobilewright/formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/ (432 files, formal AUTH-03 lineage); the question of section 9 concerns the MQ3 runner.log files, the rest was scanned for completeness"
+  checks: "JWT-looking spans (base64url text starting with the JSON-object prefix of a JWT header), their segment count and lengths, whether a signature segment exists, whether the header and the payload decode as JSON (decoded values were read by the script only to classify claim keys and completeness, never printed); Authorization headers and Bearer values; accessToken URL parameters; access_token JSON fields; host-local path prefixes (/Users/, /home/, /private/var/, /var/folders/, /opt/hostedtoolcache, /Volumes/, drive letters, /tmp/) in text; PNG text chunks (tEXt, zTXt, iTXt, eXIf); secret families (GitHub tokens, AWS access keys, provider API keys, Slack tokens, Google API keys, private-key blocks, Actions runtime tokens, password / secret / api-key assignments); cookie and authentication headers; e-mail addresses; IP addresses"
+  output_policy: "counts, lengths, booleans, paths, and SHA-256 only"
+
+results:
+  quarantine_mq3_runner_logs:
+    files: 22  # 11 Android (MQ3-AND-WARMUP-01, MQ3-AND-MEASURED-01..10), 11 iOS (MQ3-IOS-WARMUP-01, MQ3-IOS-MEASURED-01..10)
+    affected: 22  # one fragment per file
+  formal_mq3_runner_logs:
+    files: 22
+    affected: 22  # one fragment per file
+  fragment_structure:  # identical in both lineages
+    segments_present: 2  # header + truncated payload; no second separator
+    header_segment: "complete (36 characters); decodes to the standard algorithm / type header of an HMAC-signed JWT (a public constant, not secret)"
+    payload_segment: "truncated (101 or 107 characters kept); does not decode completely; visible claim keys: sub (the documented qualification test account), behavior, sid (session identifier, value cut mid-string: 23 or 26 characters kept, closing quote not reached); no expiry or issued-at claim visible"
+    signature_segment: absent  # length 0 in every fragment
+    truncation_marker: "runner log-line limit: ellipsis followed by a byte total (333 or 339 bytes)"
+    distinct_tokens: "44 fragments, 44 distinct session-identifier prefixes (one login per MQ3 execution; none shared between lineages)"
+  complete_three_segment_jwt: 0  # in any file of either tree
+  complete_authorization_or_bearer_credential: 0  # no Authorization header, no Bearer value in any file; every access_token JSON field is the redacted form
+  fragment_with_complete_signature_segment: 0
+  redacted_forms_elsewhere: "record.json (22 per tree), harness-precheck.json (22 per tree), <platform>-catalog-snapshot.json (2 per tree): 12-character header prefix + <redacted-token> (header-only characters, a public constant)"
+  host_local_paths: "0 in any text artifact (host-path placeholders only). Pattern hits inside PNG image data are byte-pattern noise (random drive-letter-like byte sequences in compressed pixel data); PNG metadata holds only eXIf chunks, none containing a path"
+  unrelated_secrets: 0  # none of the secret families above
+  false_positives_classified: ["the testID input-password (password-assignment pattern)", "Android framework strings ending in @classes.dex / @classes.vdex (e-mail pattern)"]
+  documented_test_account_credential:
+    occurrences: "44 per tree, in MQ1 and MQ2 runner.log files (the runner's log of the text-entry step)"
+    classification: DOCUMENTED_PUBLIC_TEST_ACCOUNT_CREDENTIAL
+    note: "the documented qualification test account password, which the frozen Scenario realization itself records verbatim (already public in qualification/mobilewright/README.md on public main); not an unrelated secret; not covered by the MQ3 access-token redaction statement; listed for the human's publication review"
+  complete_usable_credential_or_unrelated_secret: false
+  STOP_BEFORE_PUBLICATION: false  # the credential test of instruction section 9 is not triggered; publication nevertheless remains NOT_AUTHORIZED
+  PUBLICATION_OF_FORMAL_ARTIFACTS: NOT_AUTHORIZED
+
+public_exposure:  # read-only GitHub API checks, 2026-09-24
+  public_main: d3361e2f12b6b9e4be4a654c151dd6c83a7810a7  # export v24
+  quarantine_mq3_runner_logs: "22 of 22 present on public main with blob ids identical to canonical; first published with export v7 (Android, pushed 2026-09-22T18:31:15Z) and export v8 (iOS, pushed 2026-09-22T19:41:22Z), PUBLIC-EXPORT-MANIFEST.yaml"
+  formal_namespace: "absent from public main (0 paths): the formal AUTH-03 artifacts have never been published"
+  export_log_statement: "PUBLIC-EXPORT-MANIFEST.yaml publication_hygiene_audit.secrets reads 'none  # no token, key, credential, or private path in any tracked file'; the export hygiene scan did not classify the truncated two-segment fragments; the export log is unchanged by this audit"
+
+affected_files:  # paths relative to qualification/mobilewright/; SHA-256 of the unchanged canonical bytes
+  quarantine:
+    - {path: output/MQ3-AND-MEASURED-01/runner.log, sha256: 5285c8f4e5069ac43401a945b08256244c8b9fc609b0df54eb7678bc81574c76}
+    - {path: output/MQ3-AND-MEASURED-02/runner.log, sha256: a7d7ca764494fa490f502ddb60696e98d91a4f7b78ab6a457bf69e8df6b2e05a}
+    - {path: output/MQ3-AND-MEASURED-03/runner.log, sha256: 53bf86bce2ab2400beef42e917766cafd946783e33f631ad15ff480f614e1d24}
+    - {path: output/MQ3-AND-MEASURED-04/runner.log, sha256: 1e6a7c53f0393dc0f539303c618590b4f3ad6d2463cec5656f1d08827066d4f4}
+    - {path: output/MQ3-AND-MEASURED-05/runner.log, sha256: ed5126fdeb634db8215f6b8eedfbf04a0ec4272ca4df604131f11a0da673572a}
+    - {path: output/MQ3-AND-MEASURED-06/runner.log, sha256: c3bf18cc190d0743337e6298b81c53437096f303dff9514725f06dd51bd3c850}
+    - {path: output/MQ3-AND-MEASURED-07/runner.log, sha256: 35bb6075ae9534675a66b41a56c5fe0af7513ce3b485e8e775920fc1af3a3a92}
+    - {path: output/MQ3-AND-MEASURED-08/runner.log, sha256: 06b527167093bed0dd60c55a1906dd633aaa7833b9de00aa585c8cd0cd791514}
+    - {path: output/MQ3-AND-MEASURED-09/runner.log, sha256: 0d04c981479eab619c1842ef077e37cd97494ce5da49084cfbb9849c6c97d2b5}
+    - {path: output/MQ3-AND-MEASURED-10/runner.log, sha256: a919b992874a7b2c944b71725a6a999f624d1fc5b4eb849734cc7e0451a94b67}
+    - {path: output/MQ3-AND-WARMUP-01/runner.log, sha256: fd6f05473d2079405046b120d9ffd1b89ffc12612a92809336442f60324caa93}
+    - {path: output/MQ3-IOS-MEASURED-01/runner.log, sha256: 4888bbbca1e8ac200fe25ef5c64f99bd3216fdc188aaceac0b1bb6e2071b50e0}
+    - {path: output/MQ3-IOS-MEASURED-02/runner.log, sha256: e8d444e30f3768a75b8601ce7a4b6055d54821260418ef10852e201081e903fd}
+    - {path: output/MQ3-IOS-MEASURED-03/runner.log, sha256: e415935666acf90e98f400a8b6ad02b1e544011b934845c8e407671f7febeea6}
+    - {path: output/MQ3-IOS-MEASURED-04/runner.log, sha256: c7b67a265c34093b1bdfaacef8d2028252a2b5b76f0a3b85cbd35bd7feab2be1}
+    - {path: output/MQ3-IOS-MEASURED-05/runner.log, sha256: b3be8b4a4fb19ab8665e1786c78fe59186093be27aacec945e27f13dec766254}
+    - {path: output/MQ3-IOS-MEASURED-06/runner.log, sha256: 40d87f22517e5529c412709bb76df228a1dc6715afec877a812a267541e1a24e}
+    - {path: output/MQ3-IOS-MEASURED-07/runner.log, sha256: 4f418fb07db5b1c3de8c77b0d62b1f93af01912f4814e400b255646c6fc8891e}
+    - {path: output/MQ3-IOS-MEASURED-08/runner.log, sha256: 6854e4e5ba20d2ef2b70da3da84c44897337907fbde031a1fa7fdcb4827d183e}
+    - {path: output/MQ3-IOS-MEASURED-09/runner.log, sha256: 48b0dbed13509fcc25dd246e7176dc1c9073e5a96a0286d3e4ec77d81d477d42}
+    - {path: output/MQ3-IOS-MEASURED-10/runner.log, sha256: 5208d3031f48fe5c23e51dcbcacaf8a10722d1a84201bd1de1ffa738753c292f}
+    - {path: output/MQ3-IOS-WARMUP-01/runner.log, sha256: 01e26fab956285799c22030d3e1e41b406c2cf1f3e1ce659568625b34249ddc9}
+  formal:
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-AND-MEASURED-01/runner.log, sha256: 25da7efd1954289508f1d3fd03bc49d0a3b6c51a320c3569e4dd55cdeb065095}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-AND-MEASURED-02/runner.log, sha256: 28075247240e09e74908a21a14d407770c751697f15e5685f49d9ccdeaaf037a}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-AND-MEASURED-03/runner.log, sha256: 20d33e89fa703955f07a2294d017d6e9055da3eba6f2b280e5f370a714e2464e}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-AND-MEASURED-04/runner.log, sha256: d7d397b8b38cedc5353da179a0ca53ae62f209b053570c370bd03e957d5ed203}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-AND-MEASURED-05/runner.log, sha256: bf0354bf311867c37952750d980bedef372a33764b64d54104b9b5715a2d008d}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-AND-MEASURED-06/runner.log, sha256: bd0ec65769703551772262698d6d44ad39836bc765da0ccf93cb7b9e638af388}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-AND-MEASURED-07/runner.log, sha256: da246104cbcd5d8f5e4c2286023437a4c159991921dec700815ff7370919c96d}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-AND-MEASURED-08/runner.log, sha256: 3a8fec32b4a6ab4dedb82c22af3fc7b3db2c40447480390e588950f8a58d7289}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-AND-MEASURED-09/runner.log, sha256: 70d06ff6a30ca5d0d11323c8d469cf51e0b672a3f2eed5c2eec44741b88962c6}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-AND-MEASURED-10/runner.log, sha256: 0d5fb7e17efef5dc05fccfb9e4fef2fd34c03b462db513f0d25be3a67dd7fd5c}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-AND-WARMUP-01/runner.log, sha256: e20642bab207b8532033f0876300df500ff5dd225abf38836e5235201bdd3c77}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-IOS-MEASURED-01/runner.log, sha256: de3f80f18f50f17c07050d36acc7cbe5ebfffacabf788f3c5fcb9ffb7dfc3014}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-IOS-MEASURED-02/runner.log, sha256: b31582d6d431bad2fba69043af40f4a5cc4afb7240e8c0298aa5a45cfb8beb70}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-IOS-MEASURED-03/runner.log, sha256: fd677f6afacaf0fc5d1cd9f6f10d98dc30a4e4adbb291f89c7f2e8d06904f350}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-IOS-MEASURED-04/runner.log, sha256: 6b66e7534203d0b8dc9774d2db45ec8b79a38a2ac75cfe80b345a555570cd40b}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-IOS-MEASURED-05/runner.log, sha256: 2410e885f02c2fe1f04de3dbb411df6254a9fb7b42e594fbc600678890f401ca}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-IOS-MEASURED-06/runner.log, sha256: 23a30e1c96f86ac1e8540e27870e8be0bfb814b524bd2118947013c220a7e570}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-IOS-MEASURED-07/runner.log, sha256: bf73ed7aa676d734e4df617a8bd2232360e43338ce9a09234db28b7285c20f6e}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-IOS-MEASURED-08/runner.log, sha256: 4914e31e872dd57f748a349ee854a2deb19567ab73d8c219e1556ad166681afc}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-IOS-MEASURED-09/runner.log, sha256: 39c364d75df4beb916a8ab10f4aa54c4be21f66ed7d44d55a8e210b99ffcd28a}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-IOS-MEASURED-10/runner.log, sha256: 81c58ed79713e73e4494a732fc1af498cb03bf2c3bd57e3d23090e285a5eeb38}
+    - {path: formal/MOBILE-QUALIFICATION-EXEC-AUTH-03/MQ3-IOS-WARMUP-01/runner.log, sha256: 3746369942575cb6c96f022b966b6bbf52f8a9607c368f8ee9c670d7871b1cf8}
+
+not_done: ["no artifact, Scenario realization, implementation lock, harness file, qualification package, or export record was modified, redacted, rewritten, or deleted", "no fragment or decoded claim value was reproduced in any record or report", "no request was sent to the SUT backend (credential usability was not tested)", "no rerun, dispatch, public export, push, or dashboard update"]
+next_required_human_action: REVIEW_ARTIFACT_HYGIENE_AND_AUTHORIZE_PUBLICATION_STRATEGY
