@@ -48,6 +48,15 @@
 # implementation baseline is manifests/mobile-qualification-implementation-lock-v2.yaml (lock v1 is immutable history).
 # MOBILE-QUALIFICATION-EXEC-AUTH-02 was superseded before dispatch and is refused, like AUTH-01. No retry, no rerun, no
 # change to runner images, versions, scenario order, N, warm-ups, timeouts, or attribution.
+#
+# RETIRED (2026-09-26; explicit human instruction "CLOSE PROTO-U18, EXPLICITLY RETIRE THE MOBILEWRIGHT QUALIFICATION PATH,
+# AND PUBLISH THE PRE-ISSUANCE APPIUM-SMOKE BASELINE"): MOBILEWRIGHT_QUALIFICATION_PATH_RETIRED_AFTER_VALID_FORMAL_GATE_AND_RUNNER_SELECTION.
+# The formal qualification is complete (MOBILE-QUALIFICATION-EXEC-AUTH-03, run 35938250936, attempt 1; result FAIL), AUTH-03
+# is consumed, and the frozen section 8 switch selected Appium 3, so the study already has a selected mobile runner. The
+# first step of the gate job refuses every dispatch, in both modes, before any other check; the platform jobs require the
+# gate's ready output and are therefore skipped. The historical gate logic below is kept unchanged for provenance and is
+# no longer reachable; the bytes that executed run 35938250936 are preserved by the Git commit that run used. Re-opening
+# this path requires a new explicit protocol decision, not merely a new authorization id.
 name: E03 Mobile Qualification
 
 on:
@@ -112,6 +121,39 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+      - name: Refuse qualification execution (Mobilewright qualification path retired)
+        run: |
+          set -euo pipefail
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - <<'PY'
+          import glob, os, sys, yaml
+          # Unconditional operational retirement: this step refuses every dispatch, whatever its inputs or mode. The
+          # facts below are reported only to show what the refusal rests on; a disagreement among them does not lift it.
+          def load(p):
+              try: return yaml.safe_load(open(p)) or {}
+              except Exception: return {}
+          tools = load('manifests/toolchain-manifest.yaml').get('tools') or {}
+          sel = tools.get('mobile_runner_selection') or {}
+          mp = tools.get('mobile_primary_candidate') or {}
+          a3 = [r for r in (load(p) for p in sorted(glob.glob('manifests/mobile-qualification-execution-auth-v*.yaml'))) if r.get('authorization_id') == 'MOBILE-QUALIFICATION-EXEC-AUTH-03']
+          a3 = a3[0] if len(a3) == 1 else {}
+          ns = 'qualification/mobilewright/formal/MOBILE-QUALIFICATION-EXEC-AUTH-03'
+          nfiles = sum(len(fs) for _, _, fs in os.walk(ns)) if os.path.isdir(ns) else 0
+          facts = [
+              ('formal qualification complete (formal namespace of MOBILE-QUALIFICATION-EXEC-AUTH-03 imported)', nfiles > 0, f'{nfiles} files'),
+              ('MOBILE-QUALIFICATION-EXEC-AUTH-03 consumed after its single dispatch', a3.get('dispatch_eligibility') == 'CONSUMED_AFTER_DISPATCH' and a3.get('dispatch_performed') is True, str(a3.get('dispatch_eligibility'))),
+              ('Mobilewright qualification result FAIL', mp.get('qualification_status') == 'FAILED', str(mp.get('qualification_status'))),
+              ('section 8 selected Appium 3', sel.get('selected_runner') == 'Appium 3' and 'section 8' in str(sel.get('basis')), str(sel.get('selected_runner'))),
+              ('the study has a selected mobile runner', bool(sel.get('selected_runner')) and sel.get('selected_runner') != 'none', str(sel.get('selected_runner'))),
+          ]
+          for name, ok, detail in facts:
+              print(('FACT ' if ok else 'FACT-DISAGREES ') + name + ': ' + detail)
+          print('REFUSED: MOBILEWRIGHT_QUALIFICATION_PATH_RETIRED_AFTER_VALID_FORMAL_GATE_AND_RUNNER_SELECTION -- '
+                'the Mobilewright qualification path is retired after the valid formal gate (MOBILE-QUALIFICATION-EXEC-AUTH-03, '
+                'run 35938250936, result FAIL) and the section 8 selection of Appium 3; no qualification or DEVELOPMENT execution '
+                'is admitted. Re-opening requires a new explicit protocol decision, not merely a new authorization id.')
+          sys.exit(1)
+          PY
       - name: Verify the qualification prerequisites (fail closed)
         id: gate
         run: |

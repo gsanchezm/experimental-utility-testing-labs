@@ -167,7 +167,8 @@ jobs:
           gov = open('protocol/agent-governance-v2.md').read()
           gm = re.search(r'\| Protocol state \| ([A-Z-]+) \|', gov)
           gate('agent-governance-v2 frozen', gm is not None and gm.group(1) in ('FROZEN-PRE-DATA', 'AMENDED'), gm.group(1) if gm else 'no header')
-          # G-7 mobile runner for mobile cells (protocol/mobile-runner-policy-v1.md sections 1, 7, 8, 9). PROTO-U14
+          # G-7 mobile runner for mobile cells (protocol/mobile-runner-policy-v2.md sections 1, 7, 8, 9; v1 AMENDED 2026-09-26,
+          # under which the qualification gate ran and the section 8 selection was made). PROTO-U14
           # (2026-09-24, prospective correction before E03 START): the selected runner is determined first, then only
           # the lineage of that runner is checked. Admissible paths: (A) Mobilewright selected after PASSING the gate;
           # (B) Appium 3 selected by the section 8 switch after Mobilewright FAILED the gate. Both require the
@@ -204,6 +205,52 @@ jobs:
               plat = surface.lower()
               smk_path = 'manifests/compatibility-smoke-status.yaml'
               smk = (yaml.safe_load(open(smk_path)) or {}) if os.path.isfile(smk_path) else {}
+              # PROTO-U18 (2026-09-26; IMPLEMENTATION_GAP_AGAINST_FROZEN_MOBILE_RUNNER_POLICY_V2; prospective, before any
+              # smoke outcome): study-wide fallback rule of protocol/mobile-runner-policy-v2.md, section 9.5, checked for
+              # EVERY mobile condition before its own smoke. The selected runner stays admissible only if the study-level
+              # status (toolchain mobile_runner_selection.mobile_runner_status) is exactly SELECTED and no compatibility-
+              # smoke record -- ORCHESTRATOR mirror or QUALIFIER-MOBILE-01 source table -- shows FAIL_RUNNER for the
+              # selected runner on ANY SUT x platform. A mirror FAIL_RUNNER counts as a verified observation only with its
+              # QUALIFIER provenance (an existing qualifier_record under qualification/compatibility-smoke/ whose row for
+              # the same SUT and platform reads FAIL_RUNNER with the selected runner's pin, the pin in the entry's
+              # runner_version, and an authorization id); an Appium 3 FAIL_RUNNER so verified, every source FAIL_RUNNER
+              # transcribed, and the status UNRESOLVED_AFTER_FALLBACK_FAILURE is FALLBACK_EXHAUSTED_VERIFIED; any other
+              # combination is PROVENANCE_INCONSISTENT_FAIL_CLOSED (no exhaustion is asserted until reconciled). Every
+              # non-admissible state blocks every mobile condition, including one whose own smoke passed.
+              src_path = 'qualification/compatibility-smoke/README.md'
+              def smoke_rows(path):
+                  # rows of the "Smoke records" table only (the "Attribution records" table has another column order)
+                  out = []
+                  if str(path).startswith('qualification/compatibility-smoke/') and os.path.isfile(path):
+                      text = open(path).read()
+                      if '## Smoke records' in text:
+                          text = text[text.index('## Smoke records'):]
+                          text = text[:text.index('\n## ', 4)] if '\n## ' in text[4:] else text
+                      for line in text.splitlines():
+                          cells = [c.strip() for c in line.strip().strip('|').split('|')]
+                          if line.startswith('|') and len(cells) >= 8 and cells[0].startswith('SUT-') and cells[1] in ('android', 'ios'):
+                              out.append(cells)
+                  return out
+              of_runner = lambda r: pin is not None and pin in r[5] and runner.split()[0] in r[5]
+              status = sel.get('mobile_runner_status')
+              src_fail = [r for r in smoke_rows(src_path) if r[7] == 'FAIL_RUNNER' and of_runner(r)]
+              mir_fail = [e for e in (smk.get('entries') or []) if isinstance(e, dict) and e.get('runner') == runner and e.get('result') == 'FAIL_RUNNER']
+              def verified(e):
+                  rs = [r for r in smoke_rows(str(e.get('qualifier_record') or '')) if r[0] == e.get('sut_id') and r[1] == e.get('platform')]
+                  return bool(e.get('authorization_id')) and bool(rs) and rs[-1][7] == 'FAIL_RUNNER' and of_runner(rs[-1]) and str(e.get('runner_version') or '').strip().split(' ')[0] == pin
+              ver_fail = [e for e in mir_fail if verified(e)]
+              untranscribed = [r for r in src_fail if not any(e.get('sut_id') == r[0] and e.get('platform') == r[1] for e in ver_fail)]
+              fail_evidence = bool(mir_fail or src_fail) or status == 'UNRESOLVED_AFTER_FALLBACK_FAILURE'
+              if not fail_evidence and status == 'SELECTED':
+                  fb_state = 'ADMISSIBLE'
+              elif runner == 'Appium 3' and ver_fail and len(ver_fail) == len(mir_fail) and not untranscribed and status == 'UNRESOLVED_AFTER_FALLBACK_FAILURE':
+                  fb_state = 'FALLBACK_EXHAUSTED_VERIFIED'
+              else:
+                  fb_state = 'PROVENANCE_INCONSISTENT_FAIL_CLOSED'
+              fb_detail = f"{fb_state}; status={status}; mirror FAIL_RUNNER={[(e.get('sut_id'), e.get('platform')) for e in mir_fail]} (verified {len(ver_fail)}); QUALIFIER FAIL_RUNNER rows={[(r[0], r[1]) for r in src_fail]}"
+              gate('study-level mobile-runner status is SELECTED (policy v2, 9.5)', status == 'SELECTED', str(status))
+              gate('no FAIL_RUNNER of the selected runner recorded for any SUT x platform (mirror or QUALIFIER record)', not (mir_fail or src_fail), fb_detail)
+              gate('the selected runner remains admissible study-wide (no exhausted or inconsistent fallback state)', fb_state == 'ADMISSIBLE', fb_detail)
               ents = [e for e in (smk.get('entries') or []) if isinstance(e, dict) and e.get('sut_id') == sut and e.get('platform') == plat and e.get('runner') == runner]
               gate(f'exactly one compatibility-smoke entry for {sut} x {plat} x {runner}', len(ents) == 1, f'{len(ents)} in {smk_path}')
               sm1 = ents[0] if len(ents) == 1 else {}

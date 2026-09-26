@@ -1,0 +1,823 @@
+# Appium 3 compatibility-smoke preparation record v1 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# ORCHESTRATOR provenance record of the human instruction PREPARE AND FREEZE APPIUM 3 COMPATIBILITY SMOKE (2026-09-24):
+# what was verified, pinned, locked, and prepared before any compatibility-smoke outcome exists. Preparation only: this
+# record, like the instruction, authorizes no issuance, dispatch, installation, execution, SUT (system under test) launch,
+# or E03 START. Nothing here is evidence about any SUT.
+record_class: COMPATIBILITY_SMOKE_PREPARATION_RECORD
+record_id: APPIUM3-COMPAT-SMOKE-PREPARATION-01
+study_id: EUS-2026-001
+protocol_version: v1
+recorded_by_role: ORCHESTRATOR
+recorded_on: "2026-09-24"
+human_instruction:
+  title: PREPARE AND FREEZE APPIUM 3 COMPATIBILITY SMOKE
+  issued_by: gilbertosanchez (human research lead; first-person instruction)
+  received: 2026-09-24, as a pasted first-person block in the ORCHESTRATOR's working session
+  authorizes: preparation only (instruction sections 1-20; hard stop section 22)
+  does_not_authorize: [smoke authorization issuance, workflow_dispatch, Appium installation or execution as a study operation, SUT-02 app launch or installation, Android emulator or iOS Simulator smoke, mirror update to PASS / FAIL_RUNNER / NOT_EXECUTED, public export, E03 START, E03 execution, any Mobilewright execution, AUTH-04, AUTH-03 re-run]
+  verbatim_sha256: 6e3adac6ec06fa2c3f220f6a030b050c9c0c12385276c9a461875e1a17b0a577
+  verbatim: |
+    # EUS-2026-001 — PREPARE AND FREEZE APPIUM 3 COMPATIBILITY SMOKE
+
+    I, gilbertosanchez, human research lead for EUS-2026-001, authorize a PRE-EXECUTION PREPARATION operation for the Appium 3 compatibility smoke required before the SUT-02 Android and iOS mobile conditions may become E03-ready.
+
+    This instruction authorizes preparation only.
+
+    It DOES NOT authorize execution of the compatibility smoke.
+
+    It DOES NOT authorize any SUT launch, Appium session, Android emulator smoke, iOS Simulator smoke, workflow_dispatch, E03 START, or E03 measured execution.
+
+    The objective is to produce a fully reviewable, version-pinned, fail-closed implementation baseline BEFORE any compatibility-smoke outcome is observed.
+
+    ## 1. AUTHORITATIVE STARTING STATE
+
+    Verify first from a fresh public v25 checkout:
+
+    Public HEAD:
+
+    `9540e03b203006027a4f76609f5d4f9a303280ff`
+
+    Expected public tree:
+
+    `a6220f379da6d5650a18d2cb70ca229022f01974`
+
+    Expected v25 canonical source:
+
+    `92b8c6e12a066d6f527d242122b3470e603ef5c8`
+
+    Expected selected mobile runner:
+
+    `Appium 3`
+
+    Expected selected version pin:
+
+    `3.7.0`
+
+    Expected state:
+
+    `MOBILEWRIGHT_QUALIFICATION = COMPLETE_FAIL`
+
+    `AUTH_03 = ISSUED_VALID_CONSUMED`
+
+    `AUTH_03_DISPATCH_COUNT = 1`
+
+    `COMPATIBILITY_SMOKE = NOT_STARTED`
+
+    `E03 = NOT_STARTED`
+
+    Verify before changing anything.
+
+    If these conditions do not hold, STOP.
+
+    ## 2. DO NOT REOPEN MOBILEWRIGHT
+
+    Do not:
+
+    - execute Mobilewright;
+    - create AUTH-04;
+    - rerun AUTH-03;
+    - alter the formal qualification result;
+    - alter the frozen Section 8 switch;
+    - change Appium 3 back to a candidate.
+
+    The study-selected mobile runner is already Appium 3.7.0 as a mechanical consequence of the frozen Section 8 switch rule.
+
+    This preparation is only for Section 9 compatibility smoke.
+
+    ## 3. VERIFY SUT-02 MOBILE-SURFACE PROVENANCE
+
+    Before preparing the smoke, reconcile the factual source records WITHOUT silently changing them.
+
+    Verify in:
+
+    `derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json`
+
+    that SUT-02 has:
+
+    Android Native:
+    - confirmation_state = CONFIRMED
+    - effective_confirmed_score = 3
+
+    iOS Native:
+    - confirmation_state = CONFIRMED
+    - effective_confirmed_score = 3
+
+    Verify the supporting E01 evidence ids.
+
+    Also inspect:
+
+    `manifests/sut-manifest.yaml`
+
+    The current public snapshot appears to retain:
+
+    `presence: UNCONFIRMED`
+
+    for the SUT-02 Android and iOS component entries despite the completed E01 adjudication.
+
+    Do NOT silently reinterpret or overwrite this discrepancy.
+
+    Determine whether this is:
+
+    - stale representation awaiting E01 transcription; or
+    - an intentional distinction between initial manifest presence and adjudicated E01 presence.
+
+    Record the determination and provenance.
+
+    If correcting the manifest would require a new human decision under existing governance, leave it unchanged and report the blocker.
+
+    The compatibility-smoke scope itself is justified only by the authoritative completed E01 result, never by inference.
+
+    ## 4. FIXED SMOKE SCOPE
+
+    Prepare exactly two compatibility-smoke realizations:
+
+    `SUT-02 × Android × Appium 3`
+
+    and
+
+    `SUT-02 × iOS × Appium 3`
+
+    No other SUT is part of this operation.
+
+    This does not waive future Section 9 smokes for other mobile-capable ecosystems before campaigns that require them.
+
+    The two results remain independent.
+
+    Android PASS must never imply iOS PASS.
+
+    iOS PASS must never imply Android PASS.
+
+    ## 5. GOVERNING FROZEN DEFINITION
+
+    Use only:
+
+    `protocol/mobile-runner-policy-v1.md`, Section 9.
+
+    Each SUT × platform smoke consists of one clean execution that:
+
+    - installs and launches the pinned build — MC-01;
+    - locates one element by stable identifier — MC-02;
+    - performs one navigation — MC-06;
+    - performs one native-control interaction — MC-04;
+    - reads one UI state — MC-08;
+    - captures execution artifacts — MC-10.
+
+    Result vocabulary remains:
+
+    `PASS`
+
+    `FAIL_RUNNER`
+
+    `NOT_EXECUTED`
+
+    Do not add additional pass criteria.
+
+    Do not use duration as a criterion.
+
+    Do not turn this into Appium-vs-Mobilewright benchmarking.
+
+    Do not use the smoke as evidence about SUT-02.
+
+    ## 6. PIN THE SUT-02 BUILDS BEFORE IMPLEMENTATION FREEZE
+
+    Verify the pinned source/release identities already present for SUT-02.
+
+    Expected Android lineage:
+
+    repository:
+    `https://github.com/saucelabs/my-demo-app-android`
+
+    commit:
+    `36b012eecdf6a2b488b9504e16b3d0c3ca9a0e7b`
+
+    release:
+    `2.2.0`
+
+    expected release artifact name:
+    `mda-2.2.0-25.apk`
+
+    Expected iOS lineage:
+
+    repository:
+    `https://github.com/saucelabs/my-demo-app-ios`
+
+    commit:
+    `031358f56903742103a02d086f8af76735bb31a7`
+
+    release:
+    `2.2.2`
+
+    reported release artifacts include:
+    `SauceLabs-Demo-App-Runner.Simulator.XCUITest.zip`
+
+    and an XCUITest IPA.
+
+    Verify the actual current release records and artifact availability.
+
+    Downloading artifacts for provenance/hash inspection is permitted.
+
+    Launching or installing them is NOT permitted under this instruction.
+
+    Compute and record SHA-256 for the exact artifacts that a future smoke would consume.
+
+    For iOS, verify statically that the chosen artifact actually contains or yields an application installable on the pinned iOS Simulator substrate.
+
+    Do not assume an IPA intended for physical devices is simulator-installable.
+
+    If no reproducible simulator-installable pinned artifact can be established, STOP with:
+
+    `IOS_SMOKE_PREPARATION_BLOCKED`
+
+    Do not substitute another release or rebuild from source without explicit human review.
+
+    ## 7. PIN THE APPIUM TOOLCHAIN COMPLETELY
+
+    Appium core alone is not a complete execution toolchain.
+
+    The existing selected core pin is:
+
+    `Appium 3.7.0`
+
+    Prepare exact compatible pins for the minimum additional tooling required to execute both smokes, including as applicable:
+
+    - Android Appium driver;
+    - iOS Appium driver;
+    - Node runtime;
+    - Appium client library;
+    - any package manager / lockfile inputs necessary for deterministic installation.
+
+    Use the minimum stack required.
+
+    Do not introduce Appium 2.
+
+    Do not globally install or execute Appium under this instruction.
+
+    Package metadata inspection and lockfile-only dependency resolution are permitted.
+
+    Record:
+
+    - exact package;
+    - exact version;
+    - integrity/hash where available;
+    - source/version provenance;
+    - compatibility with Appium 3.7.0;
+    - why each dependency is necessary.
+
+    Avoid optional plugins unless the frozen smoke steps genuinely require them.
+
+    ## 8. CONCRETE SMOKE REALIZATION MUST BE FIXED PRE-EXECUTION
+
+    Using static source inspection, release metadata and documented identifiers only, define the exact realization for each platform BEFORE execution.
+
+    For each SUT-02 platform predeclare:
+
+    - application/package/bundle identity;
+    - clean-start procedure;
+    - launch procedure;
+    - stable identifier used for MC-02;
+    - exact navigation action used for MC-06;
+    - exact native control used for MC-04;
+    - exact UI state read for MC-08;
+    - exact expected final state;
+    - artifact set for MC-10;
+    - timeout boundaries.
+
+    Do not discover or change the realization after seeing an execution result.
+
+    If static evidence is insufficient to establish a required identifier or expected state, report it as a preparation blocker.
+
+    Do not run the app merely to discover an easier locator.
+
+    ## 9. PLATFORM SUBSTRATES
+
+    Prepare the compatibility smoke to run on controlled CI substrates suitable for the pinned apps and selected Appium toolchain.
+
+    Prefer the already recorded study substrates where technically compatible:
+
+    Android:
+    - GitHub-hosted ubuntu-24.04;
+    - API 35 google_apis x86_64;
+    - pixel_7 profile;
+    - EMULATED.
+
+    iOS:
+    - GitHub-hosted macos-15;
+    - Xcode 16.4 build 16F6;
+    - iPhone 16;
+    - iOS 18.5;
+    - SIMULATED.
+
+    Verify compatibility rather than assuming it.
+
+    Do not execute either substrate in smoke mode.
+
+    Static workflow/configuration validation is permitted.
+
+    ## 10. CREATE A DEDICATED FAIL-CLOSED SMOKE WORKFLOW
+
+    No compatibility-smoke execution workflow currently exists.
+
+    Prepare one narrowly scoped workflow for this operation.
+
+    Treat it as E03 pre-start / qualification infrastructure and record the explicit human authorization for its creation.
+
+    It must NOT run on push.
+
+    It must require `workflow_dispatch`.
+
+    It must fail closed unless supplied with a future, separately issued compatibility-smoke execution authorization id and explicit confirmation token.
+
+    Prepare it so one future authorization can execute exactly:
+
+    - SUT-02 Android once;
+    - SUT-02 iOS once.
+
+    The two results must remain independently recorded.
+
+    Prefer a topology that makes provenance obvious, such as:
+
+    gate
+    → Android smoke
+    → iOS smoke
+
+    unless a documented technical reason requires another topology.
+
+    No native GitHub re-run may silently replace either observation.
+
+    Any repeat must require new explicit human authorization and new provenance.
+
+    ## 11. WORKFLOW READINESS GATE
+
+    Before either platform could run, the future workflow must verify at least:
+
+    - frozen mobile-runner policy exists;
+    - selected runner is exactly Appium 3;
+    - selected version pin is exactly 3.7.0;
+    - Mobilewright qualification is FAILED under the valid AUTH-03 lineage;
+    - frozen Section 8 switch is recorded;
+    - AUTH-03 is consumed and not being reused;
+    - smoke authorization record is VALID, ISSUED and dispatch-eligible;
+    - smoke implementation lock matches;
+    - SUT-02 build identities/hashes match;
+    - selected Appium dependency pins match;
+    - exact Android/iOS realization exists;
+    - output namespace for the new smoke authorization is absent/empty;
+    - source records under qualification/compatibility-smoke/ are not pre-populated with results;
+    - E03 remains NOT_STARTED.
+
+    Preparation checks may exercise this gate statically only.
+
+    Do not dispatch it.
+
+    ## 12. OUTPUT ISOLATION
+
+    Do not write execution data into the Mobilewright formal or quarantine trees.
+
+    Prepare a dedicated immutable namespace under:
+
+    `qualification/compatibility-smoke/`
+
+    for the future Appium authorization.
+
+    Do not create fake execution observations.
+
+    Pre-execution metadata or `.gitkeep` is acceptable if consistent with repository conventions.
+
+    The future platform executions must write separate Android and iOS artifacts with independent hashes.
+
+    ## 13. IMPLEMENTATION LOCK
+
+    Create an implementation lock for the compatibility-smoke realization analogous in purpose to the successful Mobilewright implementation lock, but do not copy unnecessary complexity.
+
+    Lock the exact execution-critical artifacts, including:
+
+    - workflow;
+    - harness source;
+    - package/lock files;
+    - concrete smoke realization;
+    - build acquisition/verification code;
+    - Appium configuration;
+    - platform scripts.
+
+    Compute SHA-256 for each.
+
+    Also compute one canonical hash for the complete concrete-realization section.
+
+    The future readiness gate must recompute these hashes rather than merely trusting the lock manifest.
+
+    ## 14. PREPARE, DO NOT ISSUE, THE EXECUTION AUTHORIZATION
+
+    Prepare a new compatibility-smoke execution authorization id.
+
+    Use a purpose-specific id, for example:
+
+    `APPIUM3-COMPAT-SMOKE-AUTH-01`
+
+    unless repository naming conventions require another exact form.
+
+    Initial lifecycle must be equivalent to:
+
+    `record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT`
+
+    `status: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION`
+
+    `authorizes_execution: false`
+
+    `dispatch_eligibility: NOT_ELIGIBLE_UNTIL_ISSUED`
+
+    `issued_by: null`
+
+    `issued_at: null`
+
+    This preparation is NOT issuance.
+
+    Do not freeze/issue a live execution authorization merely because this instruction exists.
+
+    The future human issuance must be a separate explicit act after review of this package.
+
+    The actual workflow dispatch must then be a further separate explicit act unless the prepared lifecycle deliberately and transparently requires issuance + dispatch as two distinct steps.
+
+    ## 15. WORKING PROMPT
+
+    Prepare the working QUALIFIER-MOBILE-01 prompt for the future smoke.
+
+    It must:
+
+    - identify Appium 3.7.0 as the selected study runner;
+    - restrict scope to SUT-02 Android and iOS;
+    - use only the frozen Section 9 smoke definition;
+    - forbid Mobilewright comparison;
+    - forbid SUT evidence claims;
+    - forbid changes to SUT/build/version;
+    - forbid outcome-responsive repair;
+    - forbid changing locators/steps after observing a failure;
+    - require Android and iOS independent results;
+    - require immutable artifacts;
+    - distinguish FAIL_RUNNER from NOT_EXECUTED;
+    - stop after the two smoke records are produced;
+    - not start E03.
+
+    Keep it WORKING / NOT DISPATCHABLE until separately frozen and issued.
+
+    ## 16. MIRROR UPDATE RULE
+
+    Do not change:
+
+    `manifests/compatibility-smoke-status.yaml`
+
+    to PASS during preparation.
+
+    Its two entries remain:
+
+    SUT-02 Android:
+    `NOT_STARTED`
+
+    SUT-02 iOS:
+    `NOT_STARTED`
+
+    Document the future transcription rule:
+
+    Only after QUALIFIER-MOBILE-01 has produced a valid executed smoke record may ORCHESTRATOR mirror that exact result.
+
+    No mirror value may precede its QUALIFIER source observation.
+
+    ## 17. TOOLCHAIN MANIFEST
+
+    Do not set Appium's study execution `version/install_date/platform` as though it had already been installed.
+
+    The selected version pin remains 3.7.0.
+
+    Any dependency pins prepared here are preparation metadata only.
+
+    Actual installation facts are recorded only when the future authorized smoke installs/observes them.
+
+    ## 18. STATUS DISCREPANCY HANDLING
+
+    The current public dashboard has a minor stale "Public remote status" description referring to early exports.
+
+    Do not let that affect this preparation.
+
+    It may be corrected in the next publication snapshot after the compatibility-smoke phase.
+
+    Do not create a new export solely for that cosmetic status text unless required by another correction.
+
+    ## 19. STATIC TEST MATRIX
+
+    Before returning, prove statically that the prepared workflow:
+
+    - refuses the prepared-but-not-issued smoke authorization;
+    - refuses a missing authorization;
+    - refuses wrong selected runner;
+    - refuses Appium 2;
+    - refuses wrong Appium core pin;
+    - refuses mismatched driver/client pins;
+    - refuses changed implementation hashes;
+    - refuses changed SUT build hash;
+    - refuses pre-existing output;
+    - refuses a second use of a consumed smoke authorization;
+    - distinguishes Android and iOS output;
+    - cannot START E03;
+    - cannot write measured E03 data.
+
+    Do not execute Appium or a SUT to perform these tests.
+
+    ## 20. PUBLICATION
+
+    Do NOT publish a new public snapshot under this instruction unless required solely for validation of repository syntax and the existing publication process explicitly requires it.
+
+    Preferred state at return:
+
+    preparation committed canonically,
+    not issued,
+    not dispatched,
+    not executed.
+
+    ## 21. RETURN PACKAGE
+
+    Return:
+
+    1. preparation commit SHA(s);
+    2. SUT-02 E01 Android/iOS confirmation verification;
+    3. disposition of the sut-manifest presence discrepancy;
+    4. exact Android pinned artifact + SHA-256;
+    5. exact iOS pinned simulator artifact + SHA-256;
+    6. Appium 3.7.0 pin verification;
+    7. exact Android driver pin;
+    8. exact iOS driver pin;
+    9. exact client-library/runtime pins;
+    10. concrete Android smoke realization;
+    11. concrete iOS smoke realization;
+    12. implementation-lock path and SHA-256;
+    13. concrete-realization SHA-256;
+    14. workflow path and static topology;
+    15. static fail-closed test results;
+    16. prepared authorization id/path/lifecycle;
+    17. working prompt path/SHA-256;
+    18. confirmation Appium was not executed;
+    19. confirmation no SUT was launched;
+    20. confirmation no workflow_dispatch occurred;
+    21. confirmation compatibility-smoke mirror remains NOT_STARTED/NOT_STARTED;
+    22. confirmation E03 remains NOT_STARTED.
+
+    ## 22. HARD STOP
+
+    After preparation:
+
+    STOP.
+
+    Do not issue the smoke authorization.
+
+    Do not dispatch the smoke.
+
+    Do not install/execute Appium as a study operation.
+
+    Do not launch either SUT-02 mobile app.
+
+    Do not update the smoke mirror to PASS/FAIL/NOT_EXECUTED.
+
+    Do not START E03.
+
+    The next human action is review of the frozen/prepared package.
+
+    ## 23. REQUIRED FINAL STATE
+
+    End exactly:
+
+    APPIUM3_COMPATIBILITY_SMOKE_PREPARATION:
+    COMPLETE
+
+    SELECTED_MOBILE_RUNNER:
+    APPIUM_3_3.7.0
+
+    SMOKE_SCOPE:
+    SUT02_ANDROID_AND_IOS
+
+    SMOKE_IMPLEMENTATION:
+    PREPARED_LOCKED_NOT_EXECUTED
+
+    SMOKE_AUTHORIZATION:
+    PREPARED_NOT_ISSUED
+
+    SMOKE_DISPATCH:
+    NOT_PERFORMED
+
+    APPIUM3_STUDY_EXECUTION:
+    NOT_PERFORMED
+
+    SUT02_ANDROID_SMOKE:
+    NOT_STARTED
+
+    SUT02_IOS_SMOKE:
+    NOT_STARTED
+
+    COMPATIBILITY_SMOKE_MIRROR:
+    NOT_STARTED_NOT_STARTED
+
+    E03_START:
+    NOT_AUTHORIZED
+
+    E03_EXECUTION:
+    NOT_STARTED
+
+    NEXT_REQUIRED_HUMAN_ACTION:
+    REVIEW_SMOKE_PREPARATION_THEN_SEPARATELY_ISSUE_THE_COMPATIBILITY_SMOKE_AUTHORIZATION
+starting_state_verification:  # instruction section 1, verified before any change
+  verified_on: "2026-09-24"
+  public_main_head: 9540e03b203006027a4f76609f5d4f9a303280ff  # GitHub API, equal to the expected value
+  public_main_tree: a6220f379da6d5650a18d2cb70ca229022f01974  # equal to the expected value
+  public_visibility: PUBLIC
+  v25_canonical_source: 92b8c6e12a066d6f527d242122b3470e603ef5c8  # PUBLIC-EXPORT-MANIFEST.yaml, export_log v25 main.canonical_commit; equal to the expected value
+  canonical_head_at_start: 3fde4b3  # the v25 export-log entry, canonical-only
+  selected_mobile_runner: Appium 3  # manifests/toolchain-manifest.yaml mobile_runner_selection.selected_runner
+  selected_version_pin: "3.7.0"
+  MOBILEWRIGHT_QUALIFICATION: COMPLETE_FAIL  # mobile_primary_candidate.qualification_status FAILED; decision in qualification/mobilewright/README.md
+  AUTH_03: ISSUED_VALID_CONSUMED  # record_validity VALID, status ISSUED, dispatch_eligibility CONSUMED_AFTER_DISPATCH, dispatch_performed true
+  AUTH_03_DISPATCH_COUNT: 1  # run 35938250936, attempt 1 (manifests/mobile-qualification-auth-03-dispatch-v1.yaml); no later E03 Mobile Qualification run exists
+  COMPATIBILITY_SMOKE: NOT_STARTED  # manifests/compatibility-smoke-status.yaml, both entries
+  E03: NOT_STARTED  # manifests/study-manifest.yaml
+  latest_public_run: 36023537268 (E03 Validate Configuration, push of v25)
+  outcome: every expected condition held; no STOP
+e01_sut02_mobile_verification:  # instruction section 3
+  matrix: derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json
+  matrix_sha256: 88a062ebac5af2a659c8396d70b36137c8a8d4d9c30569a325b742f98ccbe589  # equal to the frozen value
+  android_native: {confirmation_state: CONFIRMED, effective_confirmed_score: 3, evidence_ids: [SUT02-EV-0007, SUT02-EV-0008, SUT02-EV-0016], resolution_source: AUDITOR_ADJUDICATION, resolution_source_id: bdef52b12bbdad3ca1746c0f4c74f0d9ca248226}
+  ios_native: {confirmation_state: CONFIRMED, effective_confirmed_score: 3, evidence_ids: [SUT02-EV-0009, SUT02-EV-0017], resolution_source: AUDITOR_ADJUDICATION, resolution_source_id: bdef52b12bbdad3ca1746c0f4c74f0d9ca248226}
+  evidence_records: auditor branch audit/e01-sut02-saucelabs at bdef52b12bbdad3ca1746c0f4c74f0d9ca248226 (audits/SUT-02-saucelabs/evidence.csv); SUT02-EV-0007 and SUT02-EV-0008 (Android Native) and SUT02-EV-0009 (iOS Native) SOURCE_VERIFIED; SUT02-EV-0016 and SUT02-EV-0017 (Visual Testing rows cited by the adjudicated cells) SOURCE_VERIFIED
+  sut_manifest_presence:
+    observed: presence UNCONFIRMED for all 24 component surfaces of manifests/sut-manifest.yaml, SUT-02 android and ios included
+    determination: STALE_REPRESENTATION_AWAITING_E01_TRANSCRIPTION  # manifests/README.md defines UNCONFIRMED as the initialization value; step 3 of its provenance sequence (ORCHESTRATOR transcription after E01) has not been performed for any SUT
+    disposition: left unchanged; the transcription is study-wide (six SUTs, 24 surfaces, with controlled_instance_available) and outside this preparation-only instruction; escalated as protocol/unresolved.md PROTO-U16 (OPEN, awaiting an explicit human instruction; not a blocker)
+    smoke_scope_basis: the adjudicated E01 matrix and the SUT-02 audit only; no smoke gate reads the presence field
+scope:  # instruction section 4
+  realizations: [SUT-02 × Android × Appium 3, SUT-02 × iOS × Appium 3]
+  independence: two independent results; an Android PASS never implies an iOS PASS, nor the reverse
+  other_ecosystems: not in scope; their own section 9 smokes remain required before a campaign exercises their mobile surfaces
+governing_definition: protocol/mobile-runner-policy-v1.md section 9 only (MC-01, MC-02, MC-06, MC-04, MC-08, MC-10; results PASS, FAIL_RUNNER, NOT_EXECUTED; no added criterion, no duration criterion, no benchmarking, no SUT evidence)
+build_pins:  # instruction section 6; artifacts downloaded for hash and static inspection only, never installed or launched
+  android:
+    expected_lineage_matches: true  # repository, commit 36b012eecdf6a2b488b9504e16b3d0c3ca9a0e7b, release 2.2.0, asset mda-2.2.0-25.apk
+    release_record: tag 2.2.0, published 2024-11-14T09:36:59Z, target main; assets mda-2.2.0-25.apk (17931946 bytes) and mda-androidTest-2.2.0-25.apk (the vendor's instrumentation test APK, not used); the release API exposes no asset digest (null)
+    consumed_artifact: mda-2.2.0-25.apk
+    sha256: 318ef64bdcaff18e576d962ab1f557e0a2683b9b5210a6bb6b25cb0caeef62b4  # computed from the 2026-09-24 download
+    static_inspection: package com.saucelabs.mydemoapp.android; versionCode 25; versionName 2.2.0; minSdk 21; targetSdk 31; native ABIs arm64-v8a, armeabi-v7a, x86, x86_64 (x86_64 matches the pinned emulator image); signed (META-INF/CERT.RSA); debuggable true; the startup runtime-permission request is commented out in MainActivity
+  ios:
+    expected_lineage_matches: true  # repository, 031358f56903742103a02d086f8af76735bb31a7 (an annotated tag object that dereferences to commit ede6fa4b7f57a75bc31f626b6ca531339e83d5c0), release 2.2.2
+    release_record: tag 2.2.2, published 2026-04-17T22:01:10Z, target main; eight assets, each with a published SHA-256 digest
+    consumed_artifact: SauceLabs-Demo-App.Simulator.zip
+    sha256: 96b08d5ac74dd817d95fbd8332ae9385bb076af38d56d13d8465345cb1797139  # equal to the publisher digest and to the local recomputation
+    bytes: 4934069
+    reported_artifacts_not_used: SauceLabs-Demo-App-Runner.Simulator.XCUITest.zip (sha256 71f9e729877315cae83dfa0c815a4ea4be987145c755a4b90cf59ea3140f5199) contains MyDemoAppUITests-Runner.app, the vendor's UI-test runner bundle, not the application; SauceLabs-Demo-App-Runner.XCUITest.ipa, SauceLabs-Demo-App.XCUITest.ipa, SauceLabs-Demo-App.ipa, and SauceLabs-Demo-App-With-TestFairy.ipa are device builds; the .xctestrun and Simulator.XCUITest.zip serve the vendor's XCUITest runs
+    simulator_installability_static_evidence: Payload/My Demo App.app; CFBundleIdentifier com.saucelabs.mydemo.app.ios; CFBundleShortVersionString 2.2.2, build 1; CFBundleSupportedPlatforms iPhoneSimulator; Mach-O arm64 and x86_64 slices, both LC_BUILD_VERSION platform 7 (iOS Simulator), minos 16.6 (not above the pinned iOS 18.5 runtime), sdk iphonesimulator17.5; DTXcode 1540 (Xcode 15.4); ad-hoc signed; embedded TestFairy.framework also platform 7; the arm64 slice matches the arm64 macos-15 host
+    IOS_SMOKE_PREPARATION_BLOCKED: false
+toolchain_pins:  # instruction section 7; package metadata inspection and lockfile-only resolution only; nothing installed globally or executed
+  appium_core: {package: appium, version: "3.7.0", necessity: the study-selected runner core (frozen section 8 switch)}
+  android_driver: {package: appium-uiautomator2-driver, version: "8.7.0", peer: "appium ^3.0.0-rc.2", published: "2026-09-14", necessity: drives the Android emulator (UiAutomator2; bundles appium-uiautomator2-server 10.6.6 and appium-adb 16.0.5; Android API 26 or newer, satisfied by API 35)}
+  ios_driver: {package: appium-xcuitest-driver, version: "12.13.2", peer: "appium ^3.0.0-rc.2", published: "2026-09-23", necessity: drives the iOS Simulator (XCUITest; bundles appium-webdriveragent 16.12.10, appium-ios-simulator 10.1.1, appium-xcode 7.1.1)}
+  engines: all three declare node "^20.19.0 || ^22.12.0 || >=24.0.0" and npm ">=10"
+  node: {version: "22.23.2", necessity: runtime of Appium and the harness; within the declared engines; provisioned by actions/setup-node and refused by smoke-common.sh when different}
+  client_library: {choice: none, reason: "the harness speaks the W3C WebDriver protocol through the Node.js built-in fetch (harness/wd.mjs, about 100 lines); webdriverio was resolved first and dropped because its dependency tree carries install scripts that download browser-driver binaries (geckodriver, edgedriver) unrelated to the smoke"}
+  plugins: none
+  lockfile: {path: qualification/compatibility-smoke/harness/package-lock.json, lockfile_version: 3, resolution: "npm install --package-lock-only --ignore-scripts", registry: registry.npmjs.org only, appium_2_entries: 0}
+  install_scripts_note: npm ci on the runner executes install scripts that the lockfile-only resolution did not (appium postinstall autoinstall, a no-op without a driver list; @appium/coresim, a native build on macOS; optional appium-ios-tuntap); a failure there is a stop before the first runner action (PROTO-U17 (b))
+  runner_image_tools: JDK, Android SDK platform tools and emulator (ubuntu-24.04 image and the pinned emulator-runner action), Xcode 16.4 build 16F6 (macos-15 image); observed versions are recorded per execution, not pinned here
+  toolchain_manifest: tools.mobile_fallback.compatibility_smoke_preparation holds these pins as preparation metadata; version, install_date, platform stay null (instruction section 17)
+realization:  # instruction section 8
+  path: qualification/compatibility-smoke/README.md, section "Concrete realization (recorded before any execution)"
+  section_sha256: 3114ff5568bbcdbcd1ce2dc501ba72b52d4285c4c6eeec8e08a61bbad7e19d6c  # the canonical realization hash recomputed by the gate (extraction rule in the lock)
+  harness_realization_sha256: 1263dd1602ef972618247d7964450690ad31525c3bfc4a38838b68722adc4e3c  # realizationSha256() of the REALIZATION constant in harness/smoke.mjs, stamped on every smoke record; covered by the smoke.mjs file hash; a different quantity from section_sha256
+  basis: static source inspection at the pinned commits, release metadata, and the vendors' own UI tests; no app was run to find a locator
+  blockers: none
+substrates:  # instruction section 9; the recorded study substrates, statically checked
+  android: GitHub-hosted ubuntu-24.04; ReactiveCircus/android-emulator-runner a421e43855164a8197daf9d8d40fe71c6996bb0d; system-images;android-35;google_apis;x86_64; pixel_7; EMULATED
+  ios: GitHub-hosted macos-15; Xcode 16.4 build 16F6; iPhone 16; iOS 18.5; SIMULATED
+  static_compatibility: APK minSdk 21 and targetSdk 31 with an x86_64 ABI on API 35 x86_64; UiAutomator2 driver requires API 26 or newer; iOS app minimum 16.6 on the 18.5 runtime with a simulator arm64 slice on an arm64 host; WebDriverAgent deployment target 15.0. Not provable statically -- WebDriverAgent 16.12.10 building with Xcode 16.4 for iOS 18.5 (PROTO-U17 (d))
+  executed_in_smoke_mode: false
+workflow:  # instruction sections 10-11
+  path: .github/workflows/e03-compatibility-smoke.yml
+  sha256: c551bcb7f6fa60a37400e78ecfa6fe3a34092d0df1ca54c5c7c20c0e38a33e19
+  trigger: workflow_dispatch only; inputs instruction_id and confirm (EXECUTE-COMPATIBILITY-SMOKE)
+  topology: gate -> smoke-android -> smoke-ios (ios needs android and runs after it whatever its result; never concurrent; one concurrency group)
+  rerun: refused in the gate and in both platform jobs (run attempt 1 only)
+  permissions: contents read; no repository writes; nothing under raw-data/ or manifests/ is written
+  readiness_gate_covers_section_11: [frozen mobile-runner policy, selected runner exactly Appium 3, selected pin exactly 3.7.0 and equal to the fallback pin, Mobilewright FAILED, section 8 basis and AUTH-03 lineage, AUTH-03 consumed and not reusable, smoke authorization VALID / ISSUED / human-issued / ELIGIBLE / never dispatched / scoped, frozen launch prompt with rendered status and date, implementation lock recomputed (eight files and the realization section), SUT-02 build hashes and identities, Appium core / driver / Node.js pins and lockfile integrities, no Appium 2, exact Android and iOS realization present, output namespace absent or empty, smoke records and mirror not pre-populated, E03 NOT_STARTED, published copies UNCHANGED]
+  created_under: E03-CI-WRITE-AUTH-01 and this instruction (section 10), as E03 pre-start / qualification infrastructure
+  dispatched: false
+output_isolation:  # instruction section 12
+  android: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-01/SUT-02-android/
+  ios: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-01/SUT-02-ios/
+  state: absent (no .gitkeep and no metadata created)
+  separate_artifacts: one upload per platform, so the two results carry independent hashes
+implementation_lock:  # instruction section 13
+  path: manifests/compatibility-smoke-implementation-lock-v1.yaml
+  sha256: 4a4267eff31d729f5a0fd1ff82cd6ccf2785bbca230521177d5e8c50670dcecc
+  locked_files: 8
+  realization_section_sha256: 3114ff5568bbcdbcd1ce2dc501ba72b52d4285c4c6eeec8e08a61bbad7e19d6c
+prepared_authorization:  # instruction section 14
+  id: APPIUM3-COMPAT-SMOKE-AUTH-01
+  path: manifests/compatibility-smoke-execution-auth-v1-prepared.yaml
+  sha256: bef864f765537b882cfd923d643190df852b91bb03b57ef7e6742593f42f69cd
+  lifecycle: {record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT, status: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION, record_validity: null, authorizes_execution: false, dispatch_eligibility: NOT_ELIGIBLE_UNTIL_ISSUED, dispatch_performed: false, issued_by: null, issued_at: null}
+  steps_after_review: issuance (separate explicit human act; prompt frozen, record promoted in place), publication of the issued state (its own human authorization; GitHub Actions runs only from the public repository), dispatch (a further separate explicit human act; one dispatch, then the record is closed CONSUMED_AFTER_DISPATCH)
+working_prompt:  # instruction section 15
+  path: prompts/working/qualifier-mobile-01-appium3-compat-smoke-v1.md
+  sha256: 875a9aec63857232c3f92969bbb098605f230fef8d447426515d19c627eb46fb
+  status: WORKING / NOT DISPATCHABLE (the status and the issuance date are the only two launch placeholders rendered in a future frozen copy)
+mirror:  # instruction section 16
+  path: manifests/compatibility-smoke-status.yaml
+  values: SUT-02 android NOT_STARTED, SUT-02 ios NOT_STARTED (unchanged)
+  transcription_rule: documented in the file header (no mirror value precedes its QUALIFIER-MOBILE-01 source observation; runner_version begins with the observed core version)
+dashboard: not updated (instruction section 18)
+static_tests:  # instruction section 19; scratch fixtures, nothing dispatched, no Appium process, emulator, simulator, or app started
+  readiness_gate:
+    method: the gate's own Python, extracted verbatim from the committed workflow, run against scratch copies of the files it reads, one mutation per case; the positive controls use a hypothetically issued authorization and a frozen prompt that exist only inside the scratch fixture
+    result: 45 of 45 cases as expected
+    cases:
+    - {case: "as-prepared: prepared-but-not-issued authorization", expected: REFUSED, observed: REFUSED}
+    - {case: "positive control: hypothetically issued authorization + frozen prompt (fixture only)", expected: READY, observed: READY}
+    - {case: "positive control + .gitkeep-only output namespace", expected: READY, observed: READY}
+    - {case: "missing authorization id (empty input)", expected: REFUSED, observed: REFUSED}
+    - {case: "authorization id with no record (APPIUM3-COMPAT-SMOKE-AUTH-02)", expected: REFUSED, observed: REFUSED}
+    - {case: "two records carry the same authorization id", expected: REFUSED, observed: REFUSED}
+    - {case: "issued_by is an agent role (ORCHESTRATOR)", expected: REFUSED, observed: REFUSED}
+    - {case: "status ISSUED but record_class still DRAFT", expected: REFUSED, observed: REFUSED}
+    - {case: "consumed smoke authorization (second use)", expected: REFUSED, observed: REFUSED}
+    - {case: "dispatch_performed true while still ELIGIBLE", expected: REFUSED, observed: REFUSED}
+    - {case: "wrong confirmation token", expected: REFUSED, observed: REFUSED}
+    - {case: "GitHub re-run (run attempt 2)", expected: REFUSED, observed: REFUSED}
+    - {case: "selected runner Mobilewright", expected: REFUSED, observed: REFUSED}
+    - {case: "selected runner Appium 2 (fallback candidate and pin 2.x)", expected: REFUSED, observed: REFUSED}
+    - {case: "Appium 2 in the harness lockfile (appium 2.19.0)", expected: REFUSED, observed: REFUSED}
+    - {case: "selected core pin 3.8.0 in the toolchain manifest", expected: REFUSED, observed: REFUSED}
+    - {case: "harness core pin appium 3.8.0 (package.json), lock re-pointed", expected: REFUSED, observed: REFUSED}
+    - {case: "Android driver pin 8.6.0 (package.json)", expected: REFUSED, observed: REFUSED}
+    - {case: "iOS driver pin 12.13.1 in the lock only (lock re-pointed by the authorization)", expected: REFUSED, observed: REFUSED}
+    - {case: "Node.js pin changed in smoke-common.sh", expected: REFUSED, observed: REFUSED}
+    - {case: "client changed: one byte of harness/wd.mjs", expected: REFUSED, observed: REFUSED}
+    - {case: "harness changed: one byte of harness/smoke.mjs", expected: REFUSED, observed: REFUSED}
+    - {case: "workflow changed: one byte", expected: REFUSED, observed: REFUSED}
+    - {case: "realization section changed (one locator word)", expected: REFUSED, observed: REFUSED}
+    - {case: "lock file tampered (authorization hash no longer matches)", expected: REFUSED, observed: REFUSED}
+    - {case: "lock re-pointed to a changed smoke.mjs hash (lock and auth consistent, file unchanged)", expected: REFUSED, observed: REFUSED}
+    - {case: "Android build SHA-256 changed in smoke-common.sh", expected: REFUSED, observed: REFUSED}
+    - {case: "iOS build SHA-256 changed in the lock (authorization re-pointed)", expected: REFUSED, observed: REFUSED}
+    - {case: "SUT-02 android release changed in the sut-manifest", expected: REFUSED, observed: REFUSED}
+    - {case: "pre-existing output (android record.json)", expected: REFUSED, observed: REFUSED}
+    - {case: "pre-existing output (ios screenshot)", expected: REFUSED, observed: REFUSED}
+    - {case: "pre-populated smoke-records row in the QUALIFIER README", expected: REFUSED, observed: REFUSED}
+    - {case: "mirror pre-populated (android PASS)", expected: REFUSED, observed: REFUSED}
+    - {case: "E03-resetability IN_PROGRESS", expected: REFUSED, observed: REFUSED}
+    - {case: "Mobilewright qualification PASSED", expected: REFUSED, observed: REFUSED}
+    - {case: "AUTH-03 reopened (dispatch_eligibility ELIGIBLE)", expected: REFUSED, observed: REFUSED}
+    - {case: "section 8 basis removed from the selection", expected: REFUSED, observed: REFUSED}
+    - {case: "mobile-runner policy not FROZEN", expected: REFUSED, observed: REFUSED}
+    - {case: "frozen prompt absent (authorization names it)", expected: REFUSED, observed: REFUSED}
+    - {case: "frozen prompt with unrendered INSTRUCTION_DATE", expected: REFUSED, observed: REFUSED}
+    - {case: "frozen prompt with only INSTRUCTION_DATE rendered (status placeholder left)", expected: REFUSED, observed: REFUSED}
+    - {case: "frozen prompt whose status still reads WORKING / NOT DISPATCHABLE", expected: REFUSED, observed: REFUSED}
+    - {case: "frozen prompt edited after issuance", expected: REFUSED, observed: REFUSED}
+    - {case: "published checkout: every checked file exported UNCHANGED", expected: READY, observed: READY}
+    - {case: "published checkout: a locked file exported transformed", expected: REFUSED, observed: REFUSED}
+  structural:
+    result: 29 of 29 assertions hold
+    assertions:
+    - "trigger is workflow_dispatch only (never push, schedule, or another workflow)"
+    - "dispatch requires instruction_id and confirm inputs"
+    - "token permissions are contents: read only, no job-level override"
+    - "record class COMPATIBILITY_SMOKE"
+    - "topology: gate -> smoke-android -> smoke-ios"
+    - "both platform jobs require the gate output ready == true"
+    - "iOS starts only after the Android job has finished (never concurrent), whatever the Android result"
+    - "single concurrency group, no cancel-in-progress"
+    - "every platform job refuses a GitHub re-run (run attempt 1)"
+    - "gate job refuses a GitHub re-run"
+    - "Android and iOS outputs are distinct directories"
+    - "Android and iOS artifacts are distinct uploads"
+    - "uploads are only the authorization-specific smoke namespace"
+    - "no git commit or push in the workflow (cannot write the repository)"
+    - "raw-data/ appears only in comment lines stating that nothing is written there (no write path)"
+    - "no MEASURED_EXPERIMENT label anywhere in the smoke implementation"
+    - "workflow never writes manifests/ (cannot START E03 or change the mirror)"
+    - "E03 state is only read, and required to be NOT_STARTED"
+    - "Android job uses the pinned emulator-runner commit and API 35 google_apis x86_64 pixel_7"
+    - "iOS job runs on macos-15 with Xcode 16.4 selected"
+    - "Node.js pinned 22.23.2 in both platform jobs"
+    - "Appium 2 appears only inside gate refusal checks (never as a dependency or runner)"
+    - "the Mobilewright trees are never a write target"
+    - "smoke_init: Android writes only formal/<id>/SUT-02-android"
+    - "smoke_init: iOS writes only formal/<id>/SUT-02-ios"
+    - "smoke_init refuses a non-empty platform namespace (second execution under one id)"
+    - "smoke_init refuses GitHub run attempt 2"
+    - "smoke_init refuses a non-smoke authorization id"
+    - "smoke_init refuses a missing prompt version id"
+  harness_logic:
+    method: node, harness/smoke.mjs and harness/wd.mjs (committed bytes) against fake WebDriver clients and a fake fetch
+    result: Android and iOS SUCCESS paths (8 steps each), FAILURE at the MC-08 state read, navigation failure, W3C request shapes -- all as expected
+  lint: actionlint 1.7.7 on the workflow, no findings; bash -n on the three scripts; YAML and JSON parse
+  publication_hygiene: the validation workflow's tracked-file term, secret, and private-path scan and its workflow-name scan, run locally on every new or changed file -- clean; no locked file or the README contains a string the public export rewrites or a token-like remnant
+commits:
+  qualifier: 71a319518644019852799b8f100bc16638f755d0  # QUALIFIER-MOBILE-01 workspace, relayed
+  orchestrator_ci: 7da7b10702c6fac18241436520233baa001f791a  # workflow, lock, prepared authorization, working prompt (one commit: the lock hashes the workflow)
+publication: none (instruction section 20); public main remains 9540e03
+not_done: [no authorization issued, no prompt frozen, no workflow_dispatch, no Appium installation or execution as a study operation, no emulator or simulator started, no SUT-02 app installed or launched, no mirror value changed, no toolchain version / install_date / platform set, no Mobilewright execution, no AUTH-04, no AUTH-03 re-run, no change to the formal qualification result or the section 8 switch, no frozen protocol document changed, no public export, no dashboard update, no E03 START or execution]
+escalations: [protocol/unresolved.md PROTO-U16 (stale sut-manifest presence; OPEN), protocol/unresolved.md PROTO-U17 (untested harness, section 9 gaps, WebDriverAgent residual, dispatch-closure timing; OPEN, human decision before issuance)]
+next_required_human_action: REVIEW_SMOKE_PREPARATION_THEN_SEPARATELY_ISSUE_THE_COMPATIBILITY_SMOKE_AUTHORIZATION

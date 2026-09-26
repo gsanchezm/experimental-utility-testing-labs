@@ -2,16 +2,25 @@
 
 | Field | Value |
 |---|---|
-| Document | protocol/mobile-runner-policy-v1.md |
-| Protocol version | v1 |
-| Protocol state | AMENDED |
+| Document | protocol/mobile-runner-policy-v2.md |
+| Protocol version | v2 |
+| Protocol state | FROZEN-PRE-DATA |
 | Study | Experimental Utility of Software-Testing Laboratory Ecosystems (EUS-2026-001) |
-| Created | 2026-09-15 |
-| Last pre-freeze hardening iteration | instructed 2026-09-15, completed 2026-09-16 (state unchanged: DRAFT) |
-| Freeze approval | gilbertosanchez, 2026-09-16 (protocol v1 pre-data freeze; protocol/change-control-v1.md, section 6) |
-| Superseded by | protocol/mobile-runner-policy-v2.md |
+| Created | 2026-09-26 |
+| Supersedes | protocol/mobile-runner-policy-v1.md (transitions to AMENDED by this freeze, per protocol/change-control-v1.md, section 2 — `data_collection_started` is already true) |
+| Freeze approval | gilbertosanchez, 2026-09-25 (explicit human approval of the post-data amendment decision resolving protocol/unresolved.md PROTO-U17, instruction "RESOLVE PROTO-U17 THROUGH MOBILE-RUNNER-POLICY-V2 AND RE-LOCK THE APPIUM 3 COMPATIBILITY SMOKE", which authorized creating and freezing this document; text written by the ORCHESTRATOR from the approved rules and frozen on 2026-09-26 under that instruction; post-data-collection change under protocol/change-control-v1.md, section 5; record manifests/mobile-runner-policy-v2-amendment-v1.yaml) |
 
 This policy governs which mobile test runner the study uses for the Android Native and iOS Native modalities and the conditions under which it may be used. It applies to every evaluated ecosystem (system under test, SUT) identically.
+
+## What changed relative to v1, and why
+
+protocol/unresolved.md, PROTO-U17 (raised 2026-09-24 while the Appium 3 compatibility smoke for SUT-02 was being prepared, before any smoke outcome existed) showed that v1's Section 9 left the terminal and failure behavior of the compatibility smoke undefined once Appium 3 itself is the selected runner: v1 knew only NOT_EXECUTED for a build that cannot be obtained or installed, gave no result for an execution prevented by infrastructure or by a defect of the study-authored harness, and on a runner-caused failure required the smoke to be "repeated with the fallback runner", although after the Section 8 switch no further fallback exists. On 2026-09-25 the human research lead approved the amendment decision recorded here.
+
+**Only Section 9 changes in substance.** Its result vocabulary is unchanged (PASS, FAIL_RUNNER, NOT_EXECUTED) and PASS keeps its v1 criterion. New: the explicit definition of the selected runner's execution stack and of FAIL_RUNNER (9.2); NOT_EXECUTED extended from the build cause to three positively demonstrated causes outside the runner — SUT_BUILD, INFRASTRUCTURE, HARNESS_ORCHESTRATION — with a mandatory record (9.3); the conservative tie-break, uncertain attribution → FAIL_RUNNER (9.4); the effects of each result, including no automatic replacement attempt and the exhausted-fallback rule with the study-level mobile-runner status UNRESOLVED_AFTER_FALLBACK_FAILURE (9.5); per-platform independence (9.6). Section 11 (status) and Section 12 (versioning) are updated. The introductory paragraph, Sections 1–8, and Section 10 are carried over from v1 byte for byte, so the Mobilewright primary-candidate role, the Appium 3 fallback, the prohibition of Appium 2, the qualification SUT, MQ1–MQ3, MC-01 … MC-10, N, the Section 7 exclusion and attribution rules, the pass gate, and the Section 8 switch are unchanged; their status phrases ("Not executed at this time", "null / TBD now", "null / TBD until pinned") describe the state at v1's freeze of 2026-09-16 and are historical (current status: Section 11).
+
+**Prior data validity (protocol/change-control-v1.md, section 5, item 3).** E01-capability-audit: unaffected; all collected data and results remain valid. The H1 analysis: unaffected. The Mobilewright formal qualification (MOBILE-QUALIFICATION-EXEC-AUTH-03, 2026-09-24) is a tool-qualification record, not a campaign: unaffected, and valid under the v1 criteria used for that execution; it is not reinterpreted through this version, and the Section 8 selection of Appium 3 made under v1 stands. No compatibility-smoke data existed under v1. No experimental data requires re-collection or re-analysis.
+
+**Affected campaigns (prospectively; none has collected data):** E03-resetability (its SUT-02 Android and iOS conditions depend on the compatibility smoke); E06-cross-platform-parity and E07-cross-layer-continuity (Android and iOS surfaces); E12-localization-i18n for any mobile execution; and any future campaign exercising Android Native or iOS Native.
 
 ## 1. Decision
 
@@ -136,10 +145,60 @@ After the study mobile runner is selected (Mobilewright by passing the gate, or 
 
 - Executed by: QUALIFIER-MOBILE-01, on explicit instruction (as in Section 2). Recorded under qualification/compatibility-smoke/ (template in qualification/compatibility-smoke/README.md).
 - Scope per ecosystem × platform (each platform for which E01 confirmed a surface): install and launch the pinned build (MC-01); locate one element by stable identifier (MC-02); perform one navigation (MC-06); perform one native control interaction (MC-04); read one UI state (MC-08); capture artifacts (MC-10). One successful execution from a clean state passes the smoke for that ecosystem × platform.
-- The smoke is not Mobilewright-versus-Appium benchmarking, produces no duration comparison, and produces no evidence about any ecosystem. It establishes only that the selected runner can drive that ecosystem's mobile build.
-- A smoke that cannot be executed because the pinned build cannot be obtained or installed is recorded as NOT_EXECUTED with the reason; it is not a runner failure. Whether the ecosystem has a mobile surface is an E01 matter, never decided here.
-- A smoke that fails for a runner-caused reason on a mandatory capability, for any ecosystem in the experimental SUT set, means that the runner cannot reliably support that capability for the experimental SUT set; the switch rule (Section 8) applies to the whole study, and the smoke is repeated with the fallback runner. Appium 2 is never introduced under any outcome.
+- The smoke is not Mobilewright-versus-Appium benchmarking, produces no duration comparison, and produces no evidence about any ecosystem. It establishes only that the selected runner can drive that ecosystem's mobile build. Whether the ecosystem has a mobile surface is an E01 matter, never decided here.
 - The same smoke definition applies to every ecosystem, SUT-01 included, even though SUT-01 was the qualification SUT.
+
+### 9.1 Results
+
+Each smoke of one ecosystem × platform has exactly one of three results; no other execution result exists.
+
+| Result | Definition |
+|---|---|
+| PASS | One clean execution using the selected runner completed all six smoke capabilities: MC-01 (install and launch), MC-02 (stable-identifier location), MC-06 (navigation), MC-04 (native-control interaction), MC-08 (UI-state read), and MC-10 (artifact capture). |
+| FAIL_RUNNER | The failure belongs to the selected runner's execution stack while the smoke capabilities were being attempted (9.2), or its attribution remains uncertain (9.4). |
+| NOT_EXECUTED | Artifacts positively demonstrate that the selected runner was not fairly exercised because execution was prevented by a cause outside the runner (9.3). |
+
+### 9.2 Runner and toolchain failures
+
+The selected runner's execution stack is its pinned core, its pinned platform driver where the runner uses one, and the WebDriver-protocol behavior implemented by that stack. A failure belongs to that stack — result FAIL_RUNNER — when, on an otherwise valid pinned substrate and build, for example:
+
+- the runner server or driver cannot establish the required session;
+- a required stable-locator operation is unsupported or fails;
+- a required navigation cannot be driven;
+- a required native control cannot be driven;
+- a required UI state cannot be read;
+- runner-side artifact capture required by MC-10 cannot be completed.
+
+A dependency or version incompatibility inside the pinned runner execution stack is runner/toolchain evidence, not automatically infrastructure.
+
+### 9.3 Causes outside the runner
+
+A smoke is NOT_EXECUTED only when artifacts positively demonstrate one of the following causes.
+
+| Category | Demonstrated cause |
+|---|---|
+| SUT_BUILD | The pinned build cannot be obtained, verified, or installed, or is not executable on the predeclared compatible target despite the pinned artifact provenance (the v1 rule, preserved). |
+| INFRASTRUCTURE | For example: the emulator or simulator fails to boot or crashes before the runner is exercised; a CI host or resource failure; a network or package-registry outage; a platform service outage; a host tool outside the selected runner fails before the selected runner can exercise the smoke. |
+| HARNESS_ORCHESTRATION | A defect in the study-authored workflow, shell scripts, WebDriver client or harness, artifact plumbing, or configuration prevents the selected runner from being fairly exercised. This category requires positive artifacts demonstrating that defect; a failed runner command alone is never enough. |
+
+The study-authored workflow, scripts, WebDriver client, and harness are not the runner. Every NOT_EXECUTED record includes: SUT; platform; timestamp; failed phase; attributed category; concrete description; artifact pointers; recording role. If the artifacts do not demonstrate an allowed cause, the attempt is not eligible for NOT_EXECUTED.
+
+### 9.4 Conservative tie-break
+
+When attribution remains uncertain after the preserved artifacts have been inspected, the result is FAIL_RUNNER, not NOT_EXECUTED. Uncertainty is never used to exclude an unfavorable runner outcome. This mirrors Section 7.3 and the tie-break rule of protocol/capability-rubric-v1.md. In particular, when the evidence cannot distinguish a defect of the study-authored harness from a failure of the runner stack, the result is FAIL_RUNNER.
+
+### 9.5 Effects of each result
+
+- **PASS** satisfies the compatibility requirement of that ecosystem × platform only.
+- **NOT_EXECUTED** does not pass the smoke, does not fail the selected runner, and does not trigger the selection of another runner. The compatibility requirement of that exact ecosystem × platform remains unresolved, so every campaign condition that depends on it stays blocked. The authorized smoke stops there: nothing is repaired and continued within the same authorized smoke, and the next platform is not started when that would violate the prepared execution topology or make provenance ambiguous. A further attempt is never automatic; it requires the prior NOT_EXECUTED record and its artifacts preserved unchanged, the demonstrated cause corrected, and a new explicit human authorization. A continuous-integration re-run never substitutes for that authorization. If the correction changes execution-critical harness, workflow, or code, a successor implementation lock is created and approved before the new attempt.
+- **FAIL_RUNNER while Mobilewright is the selected runner:** the runner cannot reliably support that capability for the experimental SUT set; the switch rule (Section 8) applies to the whole study and selects Appium 3. Any Appium 3 execution then requires its own preparation and explicit authorization. This general rule is carried from v1; it does not revisit any completed selection.
+- **FAIL_RUNNER while Appium 3 is the selected runner** (selected under Section 8): the fallback is exhausted. Section 8 is not applied recursively to Appium 3; Appium 3 is not executed again to seek another result; Appium 2 is never introduced (Section 1); no other runner is selected, silently or otherwise. The affected ecosystem × platform result remains FAIL_RUNNER, and the ORCHESTRATOR records the study-level mobile-runner status UNRESOLVED_AFTER_FALLBACK_FAILURE in manifests/toolchain-manifest.yaml and in the change log (while the selected runner remains usable, that status is SELECTED). From that moment every experimental campaign that requires mobile execution is blocked from START and from measurement until a new explicit protocol amendment decides the mobile-runner strategy. The failure alters no E01 evidence or capability score and is not evidence about any SUT.
+
+A runner-caused failure of a mandatory capability for any ecosystem × platform in the experimental SUT set is a study-runner failure: one FAIL_RUNNER is sufficient for the two FAIL_RUNNER rules above.
+
+### 9.6 Per-platform independence
+
+The Android and iOS smokes of an ecosystem are distinct observations. A PASS on one platform never makes the other platform PASS; a NOT_EXECUTED on one platform does not alter the other platform's result. Results are never averaged, merged, or compensated across platforms or ecosystems. A FAIL_RUNNER on a single ecosystem × platform is nevertheless sufficient for 9.5.
 
 ## 10. Scope limit
 
@@ -147,16 +206,18 @@ Mobilewright vs Appium is NOT a primary research question of this study. The gat
 
 ## 11. Status
 
+Snapshot at the freeze of this version (2026-09-26); not updated in place. Live status: manifests/toolchain-manifest.yaml and manifests/compatibility-smoke-status.yaml.
+
 | Item | State |
 |---|---|
-| Qualification runs executed | none |
+| Qualification runs executed | Under v1: one protocol-valid gate (MOBILE-QUALIFICATION-EXEC-AUTH-03, GitHub Actions run 35938250936, 2026-09-24), result FAIL (qualification/mobilewright/README.md); an earlier execution of 2026-09-22 is preserved and quarantined (protocol/unresolved.md, PROTO-U10). Neither is reinterpreted under this version. |
 | Compatibility smokes executed | none |
 | Mobile runner installed | none |
-| Mobilewright version | null (manifests/toolchain-manifest.yaml) |
-| Appium 3 version | null (manifests/toolchain-manifest.yaml) |
-| Qualification SUT | OmniPizza (SUT-01); build provenance null / TBD until pinned by the ORCHESTRATOR under `qualification_build` in manifests/toolchain-manifest.yaml |
-| Runner decision | none |
+| Mobilewright version | 0.0.60 pinned (manifests/toolchain-manifest.yaml); qualification FAILED |
+| Appium 3 version | 3.7.0 pinned (manifests/toolchain-manifest.yaml); not installed |
+| Qualification SUT | OmniPizza (SUT-01); build pinned under `qualification_build` in manifests/toolchain-manifest.yaml |
+| Runner decision | Appium 3, pinned 3.7.0, selected by the Section 8 switch under v1 on 2026-09-24; study-level mobile-runner status SELECTED |
 
 ## 12. Versioning
 
-This document is protocol version v1, state FROZEN-PRE-DATA (frozen 2026-09-16, approved by gilbertosanchez, protocol/change-control-v1.md, section 6), and follows the protocol state lifecycle (DRAFT, FROZEN-PRE-DATA, AMENDED, SUPERSEDED) defined in protocol/change-control-v1.md. The scenario labels, the qualification SUT, the mandatory capabilities, the pass gate, and the compatibility smoke were fixed during the pre-freeze hardening iteration of 2026-09-15 while the document was DRAFT. It is never overwritten in place; any modification creates protocol/mobile-runner-policy-v2.md. Freezing this document does not select a mobile runner: Mobilewright remains the candidate, Appium 3 the fallback, and the qualification gate remains NOT_STARTED.
+This document is protocol version v2 of the mobile runner policy, state FROZEN-PRE-DATA (frozen 2026-09-26 under the explicit human approval of 2026-09-25 recorded in its header; no data had been collected under this version when it was frozen), and follows the protocol state lifecycle (DRAFT, FROZEN-PRE-DATA, AMENDED, SUPERSEDED) defined in protocol/change-control-v1.md. It supersedes protocol/mobile-runner-policy-v1.md, which is AMENDED and retained unchanged apart from its header. The introductory paragraph, Sections 1–8, and Section 10 are carried over from v1 verbatim; only Section 9 changed in substance, and Sections 11 and 12 were updated. It is never overwritten in place; any modification creates protocol/mobile-runner-policy-v3.md.

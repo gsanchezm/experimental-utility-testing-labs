@@ -759,3 +759,69 @@ token_remnant_redaction:  # section 9; normative rule: PUBLIC-EXPORT-MANIFEST.ya
     - {path: qualification/mobilewright/output/MQ3-IOS-WARMUP-01/runner.log, rule: R1, canonical_sha256: 01e26fab956285799c22030d3e1e41b406c2cf1f3e1ce659568625b34249ddc9, exported_sha256: eed4e919ccd2bf16b0f13a832b51cd837a3099e64f9b68ec269c247d3555a88c}
     - {path: qualification/mobilewright/output/environment/android-catalog-snapshot.json, rule: R2, canonical_sha256: 6d3900520807febfbcd4c70bb303d37dc55c048f09b40647d65e23619cbb205d, exported_sha256: c1421d34be79ed398b0816b5599a34c04d4ead9272967f99624ea8bbd78cc58b}
     - {path: qualification/mobilewright/output/environment/ios-catalog-snapshot.json, rule: R2, canonical_sha256: 850e9dad5466944624c420b8d3d98c71f80051e80b80ecf8796c343411ef83e1, exported_sha256: 45c61c1bfc89086777a24fd0bffa4dc9d701a4e0d5985f55d1c8ceac8dd601fe}
+
+dashboard:  # section 11; research-status.html, commit 92b8c6e12a066d6f527d242122b3470e603ef5c8 (descriptive only, updated after the authoritative artifacts were committed and verified; published in v25 together with them, as sections 11-12 direct)
+  shows: "AUTH-03 issued, valid, consumed; one formal dispatch (run 35938250936); Mobilewright qualification COMPLETE - FAIL; Android MQ3 0/10; iOS MQ3 10/10; MQ1/MQ2 10/10 on both platforms; workflow execution completed successfully distinguished from the qualification gate result FAIL; frozen switch rule triggered; selected runner Appium 3 (3.7.0); Appium execution NOT_PERFORMED; compatibility smoke NOT_STARTED per SUT x platform; formal qualification data imported; token-fragment publication handling resolved (export-only redaction from v25); G-7 corrected (PROTO-U14, PROTO-U15); E03 NOT_STARTED; protocol-issues table extended with PROTO-U10..U15; timeline and provenance anchors appended"
+  checks: "embedded script syntax-checked (node --check) and executed to completion under a DOM stub; HTML tag balance unchanged; headless browser render timed out on the operator host (known host limitation) and was not relied on"
+
+export_v25:  # sections 12-14; full entry in PUBLIC-EXPORT-MANIFEST.yaml export_log (export_version 25)
+  canonical_source_commit: 92b8c6e12a066d6f527d242122b3470e603ef5c8
+  canonical_tree: b4d343084b6b79ba282479270c3fc50d304160ac
+  export_repository: "fresh clone of the public repository (not a reused scratch export); export_build.py 25 append-main with the executable-mode patch and the QUALIFICATION_TOKEN_FRAGMENT_REDACTION implementation (R1, R2, fail-closed count, remnant, and expected-hash assertions)"
+  public_snapshot_commit: 9540e03b203006027a4f76609f5d4f9a303280ff  # public main after the push
+  public_root_tree: a6220f379da6d5650a18d2cb70ca229022f01974
+  exported_content_tree: 21b76dc690cbde73d94688eaadffb0e0c022b2c0
+  public_manifest_sha256: 239c26d4bee845652123d6ba773de6867d898e6f9935d6886d8772e483daa950  # equals the Export-Manifest-SHA256 trailer
+  counts: {files_exported: 1119, unchanged: 913, transformed: 206, excluded: 1, qualification_token_fragment_redaction: 141}
+  pushed_at: "2026-09-24T15:53:58Z"
+  push: "git push public main:main only; no tag, no force, no other branch"
+  validation_run: {run_id: 36023537268, event: push, head: 9540e03b203006027a4f76609f5d4f9a303280ff, conclusion: success, jobs: {"E03 Publication Hygiene": success, "E03 Configuration Integrity": success, "E03 Schema Validation": success, "E03 Workflow Lint": success}}
+  workflow_dispatch_performed: false  # E03 Mobile Qualification 7 runs (newest 35938250936, attempt 1 only; attempts/2 HTTP 404), E03 Measured Execution 0, E03 Environment Verification 0
+
+public_verification:  # section 13, on a fresh clone of the public repository after the push (static only; nothing dispatched)
+  "1_auth_03": "VALID / ISSUED / CONSUMED_AFTER_DISPATCH"
+  "2_readiness_refuses_auth_03": "shipped readiness gate run statically with the AUTH-03 inputs: 52 of 54 PASS; FAIL 'dispatch_eligibility is exactly ELIGIBLE' (CONSUMED_AFTER_DISPATCH) and 'formal output namespace is absent or empty' -> refused"
+  "3_no_second_qualification_run": "7 runs of the qualification workflow, the newest 35938250936"
+  "4_run_attempt": "35938250936 attempt 1 only (attempts/2 HTTP 404)"
+  "5_formal_namespace": "present: 432 files"
+  "6_formal_representation": "432 of 432 represented through declared transformations (364 UNCHANGED, 68 QUALIFICATION_TOKEN_FRAGMENT_REDACTION with canonical_sha256 equal to the canonical bytes); 431 of 431 import-record SHA-256 bridged via canonical_sha256"
+  "7_token_remnants": "0 in every exported text file of the tree (any length)"
+  "8_mobilewright_result": "qualification_status FAILED (decision FAIL)"
+  "9_selected_runner": "Appium 3, pinned 3.7.0"
+  "10_compatibility_smoke": "NOT_STARTED (mirror SUT-02 android and ios; study-level summaries NOT_STARTED)"
+  "11_g7_current": "E03-CS001-SUT02-ANDROID and E03-CS001-SUT02-IOS refused: selected-runner version absent; smoke entry not PASS; smoke runner_version absent; no QUALIFIER PASS row"
+  "12_g7_per_platform": "24 of 24 cases as expected; Android PASS with iOS NOT_STARTED admits only Android; the inverse admits only iOS"
+  "13_provenance": "the provenance job records mobile_runner.selected_runner and execution_runner = the study-selected runner (Appium 3 in the hypothetical valid state) with the condition's own smoke entry; Mobilewright only under historical_candidates; the old candidate-based provenance line is absent"
+  "14_e03": "NOT_STARTED"
+  integrity: "fresh clone: 7 branches, 0 tags, 31 distinct public commits (25 on main), 0 of 44 canonical trailer commits present, executable modes of the three gate scripts 100755, E01 matrix and H1 result sha256 equal to the frozen values"
+
+canonical_artifacts_unchanged:  # section 10, re-verified on the canonical tree after the export
+  formal: "431 of 431 import-record hashes; tree id 55369b192b71cf0c14d26fdb0dc5e37c777bd285 unchanged"
+  quarantine: "652 of 652; tree id 05b6884d90df86de834a40d66e2c57c3c24bce3e unchanged"
+  frozen: "implementation lock v2 def1d6d6...848e (10 of 10), package v2 914b3d82...e318, prompt v3 e7322c0a...e273, policy 87875807...d9b, Scenario-realization section f79acf63...9018 unchanged; screenshots and import records untouched"
+
+recording_commits:
+  g7_provenance_and_smoke_proto_u15: 1e2c8ad6f385d47e6eff1d5c9c65c8377f3bd9f6
+  token_remnant_redaction_extension: 4815e4d1b23cc8721f3f7d1fac21b9b55b8df4c7
+  status_synchronization: e7f2d94c09e8cd13b0ddc6e036906042ccc7037e
+  dashboard_and_export_source: 92b8c6e12a066d6f527d242122b3470e603ef5c8  # canonical source of public export v25
+  export_log_and_this_section: "the commit that adds this section (git log -1 --format=%H -- manifests/pre-e03-publication-completion-v1.yaml); canonical-only until the next export"
+
+state_after_this_operation:
+  MOBILEWRIGHT_QUALIFICATION: COMPLETE_FAIL
+  MOBILEWRIGHT_FORMAL_RUN: 35938250936_ATTEMPT_1
+  SELECTED_MOBILE_RUNNER: APPIUM_3_3.7.0
+  AUTH_03: ISSUED_VALID_CONSUMED
+  AUTH_03_DISPATCH_COUNT: 1
+  AUTH_03_REUSABLE: "NO"
+  G7_SELECTED_RUNNER_PATH: CORRECTED
+  G7_SMOKE_GRANULARITY: PER_SUT_PER_PLATFORM
+  MEASURED_PROVENANCE_RUNNER: SELECTED_RUNNER
+  APPIUM3_EXECUTION: NOT_PERFORMED
+  COMPATIBILITY_SMOKE: NOT_STARTED
+  QUALIFICATION_CANONICAL_ARTIFACTS: UNCHANGED
+  PUBLIC_EXPORT_TOKEN_FRAGMENT_POLICY: APPLIED
+  PUBLIC_EXPORT_V25: PUBLISHED_VERIFIED
+  E03_START: NOT_AUTHORIZED
+  E03_EXECUTION: NOT_STARTED
+  NEXT_REQUIRED_HUMAN_ACTION: REVIEW_V25_THEN_SEPARATELY_AUTHORIZE_APPIUM3_COMPATIBILITY_SMOKE

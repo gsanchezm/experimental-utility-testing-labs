@@ -1,0 +1,883 @@
+# Post-data protocol amendment record v1 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# protocol/mobile-runner-policy-v1.md -> protocol/mobile-runner-policy-v2.md, resolving protocol/unresolved.md PROTO-U17,
+# under protocol/change-control-v1.md sections 2, 4, 5. ORCHESTRATOR record. Sections are added additively by the commits
+# of this operation (protocol amendment first, then the compatibility-smoke re-lock); none is edited afterwards.
+record_class: POST_DATA_PROTOCOL_AMENDMENT_RECORD
+record_id: MOBILE-RUNNER-POLICY-V2-AMENDMENT-01
+study_id: EUS-2026-001
+recorded_by_role: ORCHESTRATOR
+recorded_on: "2026-09-26"
+human_instruction:
+  title: RESOLVE PROTO-U17 THROUGH MOBILE-RUNNER-POLICY-V2 AND RE-LOCK THE APPIUM 3 COMPATIBILITY SMOKE
+  issued_by: gilbertosanchez (human research lead; first-person instruction)
+  approval_date: "2026-09-25"
+  received: as a direct first-person message in the ORCHESTRATOR's working session, received on 2026-09-25 (session clock); recorded on 2026-09-26 (UTC)
+  authorizes: [create and freeze protocol/mobile-runner-policy-v2.md as the successor of v1, record the post-data amendment under protocol/change-control-v1.md, resolve PROTO-U17 by the stated rules, adapt the prepared Appium 3 compatibility-smoke implementation to v2, create a successor compatibility-smoke implementation lock, update the still-PREPARED smoke authorization and WORKING prompt to reference only the new locked implementation]
+  does_not_authorize: [compatibility-smoke execution, issuance of APPIUM3-COMPAT-SMOKE-AUTH-01, workflow_dispatch, Appium execution, SUT launch, E03 START, E03 measured execution, publication or push (unless validation absolutely requires a public snapshot -- it does not)]
+  verbatim_sha256: 6aa7dcd9e72f9b062439568003e4306d0652724340d4a73cc760f6ee69fe211a
+  verbatim: |
+    EUS-2026-001 — RESOLVE PROTO-U17 THROUGH MOBILE-RUNNER-POLICY-V2 AND RE-LOCK THE APPIUM 3 COMPATIBILITY SMOKE
+
+    I, gilbertosanchez, human research lead for EUS-2026-001, explicitly approve the following post-data protocol amendment decision for PROTO-U17.
+
+    This instruction authorizes:
+
+    1. creating and freezing protocol/mobile-runner-policy-v2.md as the successor of v1;
+    2. recording the post-data amendment under protocol/change-control-v1.md;
+    3. resolving PROTO-U17 according to the exact rules below;
+    4. adapting the prepared Appium 3 compatibility-smoke implementation to v2;
+    5. creating a successor compatibility-smoke implementation lock;
+    6. updating the still-PREPARED smoke authorization and WORKING prompt so they reference only the new locked implementation.
+
+    This instruction DOES NOT authorize:
+
+    * compatibility-smoke execution;
+    * issuance of APPIUM3-COMPAT-SMOKE-AUTH-01;
+    * workflow_dispatch;
+    * Appium execution;
+    * SUT launch;
+    * E03 START;
+    * E03 measured execution.
+
+    No compatibility-smoke outcome has yet been observed.
+
+    1. CHANGE-CONTROL CLASSIFICATION
+
+    data_collection_started is already true from E01.
+
+    PROTO-U17 affects classification and consequences of compatibility-smoke failures.
+
+    It is therefore SUBSTANTIVE.
+
+    Do NOT resolve it as:
+
+    * a non-substantive correction;
+    * an informal README clarification;
+    * an unresolved-log-only ruling.
+
+    Create:
+
+    protocol/mobile-runner-policy-v2.md
+
+    The v1 file remains historical.
+
+    Follow protocol/change-control-v1.md exactly for a post-data successor.
+
+    2. PRIOR DATA VALIDITY
+
+    The amendment changes ONLY compatibility-smoke handling in Section 9 and any directly necessary cross-reference/status wording.
+
+    Explicitly record:
+
+    * E01 Capability Audit: unaffected; all collected data/results remain valid.
+    * H1 analysis: unaffected.
+    * Mobilewright formal qualification AUTH-03: unaffected and remains valid under the v1 qualification criteria used for that execution.
+    * No compatibility-smoke data exists under v1.
+    * E03 is NOT_STARTED.
+    * No experimental data requires recollection.
+
+    Do NOT reinterpret the Mobilewright qualification through v2.
+
+    3. PRESERVE SECTIONS 1–8 IN SUBSTANCE
+
+    The following remain unchanged in methodological substance:
+
+    * Mobilewright primary-candidate role;
+    * Appium 3 fallback;
+    * Appium 2 prohibition;
+    * qualification SUT;
+    * MQ1–MQ3;
+    * MC-01…MC-10;
+    * qualification N;
+    * §7 qualification exclusions/attribution;
+    * qualification pass gate;
+    * §8 Mobilewright → Appium 3 switch that already selected Appium 3.
+
+    The reason for v2 is the previously undefined terminal/failure behavior of §9 once Appium 3 itself is the selected fallback runner.
+
+    4. SECTION 9 RESULT VOCABULARY REMAINS
+
+    Per SUT × platform, compatibility-smoke result vocabulary remains:
+
+    PASS
+
+    FAIL_RUNNER
+
+    NOT_EXECUTED
+
+    Do not add a fourth execution-result value merely to solve PROTO-U17.
+
+    Study-level state may separately describe that no acceptable mobile runner remains after fallback failure.
+
+    5. PASS
+
+    A SUT × platform smoke is PASS only when one clean execution using the selected runner successfully completes all frozen Section 9 capabilities:
+
+    * MC-01 install and launch;
+    * MC-02 stable-identifier location;
+    * MC-06 navigation;
+    * MC-04 native-control interaction;
+    * MC-08 UI-state read;
+    * MC-10 artifact capture.
+
+    No change to this criterion.
+
+    6. NOT_EXECUTED — EXPANDED EXPLICIT ATTRIBUTION
+
+    A smoke is NOT_EXECUTED only when artifacts positively demonstrate that the selected runner was not fairly exercised because execution was prevented by a cause outside the runner.
+
+    Allowed demonstrated causes:
+
+    SUT_BUILD
+
+    The pinned build cannot be obtained, verified, installed, or is not executable on the predeclared compatible target despite the pinned artifact provenance.
+
+    This preserves the existing v1 rule.
+
+    INFRASTRUCTURE
+
+    Examples:
+
+    * emulator/simulator fails to boot or crashes before the runner is exercised;
+    * CI host/resource failure;
+    * network or package-registry outage;
+    * platform service outage;
+    * host tool outside the selected runner fails before the selected runner can exercise the smoke.
+
+    HARNESS_ORCHESTRATION
+
+    A defect in study-authored workflow, shell script, WebDriver client/harness, artifact plumbing, or configuration prevents the selected runner from being fairly exercised.
+
+    This classification requires positive artifacts demonstrating the harness/orchestration defect.
+
+    A mere failed Appium command is NOT enough.
+
+    Every NOT_EXECUTED record must include:
+
+    * SUT;
+    * platform;
+    * timestamp;
+    * failed phase;
+    * attributed category;
+    * concrete description;
+    * artifact pointers;
+    * recording role.
+
+    If those artifacts do not demonstrate an allowed external cause, the attempt is NOT eligible for NOT_EXECUTED.
+
+    7. RUNNER / TOOLCHAIN FAILURES
+
+    FAIL_RUNNER applies when the failure belongs to the selected Appium 3 execution stack while attempting the frozen smoke capabilities.
+
+    The selected Appium execution stack includes the pinned:
+
+    * Appium 3 core;
+    * platform driver;
+    * WebDriver protocol behavior implemented by that runner stack.
+
+    Examples include:
+
+    * Appium server/driver cannot establish the required session on the otherwise valid pinned substrate/build;
+    * required stable locator operation is unsupported or fails;
+    * required navigation cannot be driven;
+    * required native control cannot be driven;
+    * required UI state cannot be read;
+    * runner-side artifact capture required by MC-10 cannot be completed.
+
+    A dependency/version incompatibility inside the pinned Appium execution stack is runner/toolchain evidence, not automatically infrastructure.
+
+    8. CONSERVATIVE TIE-BREAK
+
+    When attribution remains uncertain after inspecting the preserved artifacts:
+
+    FAIL_RUNNER
+
+    not NOT_EXECUTED.
+
+    The study must never use uncertainty to exclude an unfavorable runner outcome.
+
+    Record this rule explicitly in v2.
+
+    9. EFFECT OF NOT_EXECUTED
+
+    NOT_EXECUTED:
+
+    * does NOT pass the smoke;
+    * does NOT fail the selected runner;
+    * does NOT trigger selection of another runner;
+    * leaves that exact SUT × platform compatibility requirement unresolved;
+    * therefore leaves G-7 blocked for that condition.
+
+    A replacement attempt is NOT automatic.
+
+    A further attempt requires:
+
+    * preservation of the prior NOT_EXECUTED record/artifacts;
+    * correction of the demonstrated external cause;
+    * a new explicit human authorization.
+
+    No GitHub-native rerun substitutes for that authorization.
+
+    If correction changes execution-critical harness/workflow/code, create and approve a successor implementation lock before the new attempt.
+
+    10. EFFECT OF FAIL_RUNNER WHILE MOBILEWRIGHT IS SELECTED
+
+    Preserve the existing conceptual Section 9 behavior:
+
+    If a compatibility smoke under Mobilewright returns FAIL_RUNNER, frozen §8 selects Appium 3 as fallback.
+
+    Any Appium execution still requires its own proper preparation and authorization.
+
+    This clause is historical/general and does not change the already-completed AUTH-03 selection.
+
+    11. EFFECT OF FAIL_RUNNER WHILE APPIUM 3 IS SELECTED
+
+    This resolves the core PROTO-U17 gap.
+
+    If Appium 3 is already the selected runner under the §8 fallback and a compatibility smoke returns FAIL_RUNNER:
+
+    * the fallback is EXHAUSTED;
+    * do NOT apply §8 recursively to Appium 3;
+    * do NOT execute Appium 3 again merely to seek another result;
+    * do NOT introduce Appium 2;
+    * do NOT silently select any other runner.
+
+    Record study-level state equivalent to:
+
+    MOBILE_RUNNER_STATUS: UNRESOLVED_AFTER_FALLBACK_FAILURE
+
+    The affected SUT × platform smoke remains:
+
+    FAIL_RUNNER
+
+    Any experimental campaign requiring mobile execution remains blocked from START/measurement until a new explicit protocol amendment decides the mobile-runner strategy.
+
+    The failure does not alter E01 evidence or capability scores and is not evidence about the SUT.
+
+    12. PER-PLATFORM INDEPENDENCE
+
+    Android and iOS smoke observations remain distinct.
+
+    Example:
+
+    * Android PASS does not make iOS PASS.
+    * iOS PASS does not make Android PASS.
+    * Android NOT_EXECUTED does not alter iOS.
+    * Android FAIL_RUNNER is still sufficient to exhaust Appium 3 as a study-wide selected runner under the rule above because Section 9 defines a runner-caused mandatory-capability failure for any ecosystem in the experimental SUT set as a study-runner failure.
+
+    Do not average, merge, or compensate outcomes.
+
+    13. AFFECTED CAMPAIGNS
+
+    In the post-data amendment record, state explicitly:
+
+    Already collected:
+
+    * E01: unaffected; remains valid.
+    * Mobilewright qualification: unaffected; remains valid under the v1 rules used when executed.
+
+    Not yet started:
+
+    * E03: affected prospectively because it contains SUT-02 Android/iOS conditions whose G-7 readiness depends on compatibility smoke.
+    * E06/E07 and any future campaign exercising Android Native or iOS Native: affected prospectively.
+
+    No existing raw experimental data requires re-analysis or recollection.
+
+    14. VERSION STATES
+
+    Follow the exact lifecycle required by change-control-v1.
+
+    Expected conceptual outcome:
+
+    mobile-runner-policy-v1.md:
+    historical predecessor, marked AMENDED only in the narrow header manner allowed by change control, with successor pointer.
+
+    mobile-runner-policy-v2.md:
+    new successor containing the full policy plus the PROTO-U17 Section 9 amendment.
+
+    Because no data has been collected under v2 yet, freeze the exact approved v2 content according to the repository’s versioning semantics and record the human approval from this instruction.
+
+    Do not edit v1’s methodological body.
+
+    15. RESOLVE PROTO-U17
+
+    Update the unresolved record using its existing append-only/edit rules.
+
+    PROTO-U17 must become RESOLVED with:
+
+    * human decision date;
+    * reference to mobile-runner-policy-v2;
+    * exact rationale;
+    * statement that no compatibility-smoke outcome existed when the decision was made.
+
+    Do not erase the original problem statement.
+
+    16. REASSESS THE PREPARED SMOKE IMPLEMENTATION
+
+    The currently prepared implementation was locked against v1 before PROTO-U17 was resolved.
+
+    Do NOT execute it as-is.
+
+    Review these canonical preparation commits:
+
+    * 71a3195
+    * 7da7b10
+    * 62ff894
+    * 80604f6
+
+    Preserve them as historical pre-amendment preparation.
+
+    Update only what is required to make the future smoke implement v2 exactly.
+
+    In particular, the harness/workflow/result-writing logic must implement:
+
+    * PASS;
+    * FAIL_RUNNER;
+    * NOT_EXECUTED with explicit cause;
+    * conservative uncertain → FAIL_RUNNER;
+    * no automatic replacement;
+    * no Appium 3 recursive fallback;
+    * no automatic second execution.
+
+    17. HARNESS DEFECT HANDLING
+
+    The study-authored harness/wd.mjs and smoke orchestration are not automatically treated as Appium.
+
+    If preserved artifacts positively establish that a defect in this study-authored layer prevented fair Appium exercise:
+
+    result:
+
+    NOT_EXECUTED
+
+    cause:
+
+    HARNESS_ORCHESTRATION
+
+    Then STOP.
+
+    Do not patch and continue inside the same authorized smoke.
+
+    A later corrected attempt requires:
+
+    * corrected harness;
+    * new lock;
+    * new human authorization.
+
+    If the evidence cannot distinguish harness failure from Appium failure:
+
+    FAIL_RUNNER
+
+    under the conservative rule.
+
+    18. INFRASTRUCTURE FAILURE HANDLING
+
+    If a future GitHub substrate fails before fair runner exercise:
+
+    record:
+
+    NOT_EXECUTED
+
+    cause:
+
+    INFRASTRUCTURE
+
+    Preserve artifacts.
+
+    Do not proceed to the next platform if doing so would violate the prepared execution topology or make provenance ambiguous.
+
+    Do not use native rerun.
+
+    A replacement needs new human authorization.
+
+    19. RE-LOCK IMPLEMENTATION
+
+    Create a successor compatibility-smoke implementation lock.
+
+    Do not overwrite lock v1.
+
+    Expected new artifact conceptually:
+
+    manifests/compatibility-smoke-implementation-lock-v2.yaml
+
+    Lock every execution-critical artifact again after v2 integration.
+
+    Report:
+
+    * every locked path;
+    * every SHA-256;
+    * lock canonical SHA-256;
+    * concrete-realization SHA-256.
+
+    The old lock remains historical and must never be described as the active execution baseline after the amendment.
+
+    20. WORKFLOW AND STATIC TESTS
+
+    Update the prepared:
+
+    .github/workflows/e03-compatibility-smoke.yml
+
+    only as necessary for the v2 attribution semantics.
+
+    Still require:
+
+    gate → Android → iOS sequentially.
+
+    No execution.
+
+    Static tests must additionally prove:
+
+    * demonstrated infrastructure cause → NOT_EXECUTED path;
+    * demonstrated harness cause → NOT_EXECUTED path;
+    * ambiguous cause → FAIL_RUNNER;
+    * Appium session/driver mandatory-capability failure → FAIL_RUNNER;
+    * FAIL_RUNNER under selected Appium does not recursively invoke another runner;
+    * Appium 2 never appears;
+    * NOT_EXECUTED does not mark mirror PASS;
+    * FAIL_RUNNER does not mark mirror PASS;
+    * no automatic second attempt occurs;
+    * no native rerun is accepted.
+
+    Use fake/stubbed clients only.
+
+    21. PREPARED AUTHORIZATION REMAINS UNISSUED
+
+    APPIUM3-COMPAT-SMOKE-AUTH-01 remains the prepared id unless the repository lifecycle makes a successor draft id necessary because its frozen implementation reference changed before issuance.
+
+    Preferred approach:
+
+    update the still-PREPARED record in place to reference:
+
+    * mobile-runner-policy-v2;
+    * implementation-lock-v2;
+    * updated working prompt.
+
+    It must remain:
+
+    PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION
+
+    authorizes_execution: false
+
+    dispatch_eligibility: NOT_ELIGIBLE_UNTIL_ISSUED
+
+    issued_by: null
+
+    issued_at: null
+
+    Do not issue it.
+
+    22. WORKING PROMPT
+
+    Update the WORKING smoke prompt to encode v2 attribution exactly.
+
+    It must explicitly require:
+
+    * PASS / FAIL_RUNNER / NOT_EXECUTED semantics;
+    * positive evidence for NOT_EXECUTED;
+    * uncertainty → FAIL_RUNNER;
+    * harness defect → preserve + STOP;
+    * infrastructure failure → preserve + STOP;
+    * Appium FAIL_RUNNER → fallback exhausted + STOP;
+    * no repair-and-continue;
+    * no rerun;
+    * no E03 start.
+
+    It remains WORKING / NOT DISPATCHABLE.
+
+    Report its new SHA-256.
+
+    23. PROTO-U16
+
+    Do NOT conflate PROTO-U16 with this amendment.
+
+    The stale sut-manifest.yaml presence: UNCONFIRMED issue remains separately tracked.
+
+    The SUT-02 smoke scope remains grounded in the frozen E01 adjudicated matrix, which confirms Android Native and iOS Native.
+
+    Do not silently rewrite all 24 presence values under this operation.
+
+    Report whether PROTO-U16 blocks the future smoke; if not, explain why under existing authoritative E01 provenance.
+
+    24. PUBLICATION
+
+    Do NOT publish or push this amendment/preparation under this instruction unless repository validation absolutely requires a public snapshot.
+
+    Preferred outcome:
+
+    canonical amendment frozen,
+    implementation lock v2 prepared,
+    authorization still PREPARED,
+    no execution.
+
+    The issuance/publication sequence will be separately authorized after review.
+
+    25. RETURN PACKAGE
+
+    Return:
+
+    1. v2 policy commit SHA;
+    2. exact v1 lifecycle/header delta;
+    3. exact v2 state;
+    4. PROTO-U17 resolution record;
+    5. affected-campaign statement;
+    6. confirmation prior E01/Mobilewright data remain valid;
+    7. updated smoke workflow SHA-256;
+    8. implementation-lock-v2 path and SHA-256;
+    9. exact locked artifact list;
+    10. updated realization hash;
+    11. updated working-prompt SHA-256;
+    12. prepared authorization lifecycle/reference changes;
+    13. static attribution test matrix;
+    14. confirmation no Appium execution;
+    15. confirmation no SUT launch;
+    16. confirmation no workflow_dispatch;
+    17. confirmation mirror remains NOT_STARTED / NOT_STARTED;
+    18. PROTO-U16 status;
+    19. E03 status.
+
+    26. HARD STOP
+
+    After completing the amendment and re-lock:
+
+    STOP.
+
+    Do not issue the smoke authorization.
+
+    Do not dispatch.
+
+    Do not install/execute Appium as a study operation.
+
+    Do not launch SUT-02.
+
+    Do not populate executed smoke results.
+
+    Do not start E03.
+
+    27. REQUIRED FINAL STATE
+
+    End exactly:
+
+    PROTO_U17:
+    RESOLVED_BY_MOBILE_RUNNER_POLICY_V2
+
+    MOBILE_RUNNER_POLICY_V1:
+    AMENDED_HISTORICAL
+
+    MOBILE_RUNNER_POLICY_V2:
+    FROZEN_BEFORE_COMPATIBILITY_SMOKE_DATA
+
+    APPIUM3_COMPATIBILITY_SMOKE_PREPARATION:
+    RELOCKED_UNDER_V2
+
+    ACTIVE_SMOKE_IMPLEMENTATION_LOCK:
+    V2
+
+    SMOKE_AUTHORIZATION:
+    PREPARED_NOT_ISSUED
+
+    SMOKE_DISPATCH:
+    NOT_PERFORMED
+
+    APPIUM3_STUDY_EXECUTION:
+    NOT_PERFORMED
+
+    SUT02_ANDROID_SMOKE:
+    NOT_STARTED
+
+    SUT02_IOS_SMOKE:
+    NOT_STARTED
+
+    COMPATIBILITY_SMOKE_MIRROR:
+    NOT_STARTED_NOT_STARTED
+
+    PROTO_U16:
+    OPEN_SEPARATE
+
+    E03_START:
+    NOT_AUTHORIZED
+
+    E03_EXECUTION:
+    NOT_STARTED
+
+    NEXT_REQUIRED_HUMAN_ACTION:
+    REVIEW_V2_AND_RELOCKED_SMOKE_PACKAGE_THEN_SEPARATELY_ISSUE_APPIUM3_COMPAT_SMOKE_AUTH_01
+classification:
+  change_class: SUBSTANTIVE  # affects the classification and consequences of compatibility-smoke failures; not a non-substantive correction, README clarification, or log-only ruling
+  data_collection_started: true  # since 2026-09-17 (E01 campaign start)
+  procedure: protocol/change-control-v1.md section 5 (new version file, written rationale, affected-campaigns statement, change-log entry) with the lifecycle of sections 2 and 4
+  precedent: protocol/setup-effort-v1.md -> v2 (2026-09-21, manifests/issue-xviii-ruling-v1.yaml)
+decision_timing:
+  no_compatibility_smoke_outcome_existed: true
+  evidence: no compatibility smoke has been executed or dispatched; manifests/compatibility-smoke-status.yaml SUT-02 android and ios NOT_STARTED; qualification/compatibility-smoke/README.md smoke records empty; the compatibility-smoke workflow exists only canonically (never published, never dispatched); public main 9540e03b203006027a4f76609f5d4f9a303280ff, newest public run 36023537268 (E03 Validate Configuration, 2026-09-24)
+documents:
+  predecessor:
+    path: protocol/mobile-runner-policy-v1.md
+    state_change: FROZEN-PRE-DATA -> AMENDED
+    header_delta: ["| Protocol state | FROZEN-PRE-DATA | -> | Protocol state | AMENDED |", "row added after Freeze approval: | Superseded by | protocol/mobile-runner-policy-v2.md |"]
+    sha256_before: 8787580793fc75738c4ea10c4352adecc693cd16bb0eefda314770a693660d9b
+    sha256_after: 5fd5d401e14f9cd82a64b86950f38a476944e890842cd8b53d321f576c682a5d
+    body_unchanged: true  # from the introductory paragraph to the end of the file, byte-identical before and after
+    body_sha256: e2c46a81f305b3581bee41ba5b813f3c7d2e69f38b5c24dba85f3dde13801486
+    historical_hash_citations: manifests/pre-publication-corrections-v1.yaml and manifests/pre-e03-publication-completion-v1.yaml cite the pre-amendment SHA-256 as verification observations of 2026-09-24; they remain historically correct and are not edited. No frozen Mobilewright input (package v2, implementation lock v2, frozen prompts) pins the policy hash.
+  successor:
+    path: protocol/mobile-runner-policy-v2.md
+    protocol_version: v2
+    state: FROZEN-PRE-DATA  # no data collected under v2 when frozen (protocol/change-control-v1.md section 2)
+    created: "2026-09-26"
+    frozen: "2026-09-26"
+    human_approval: gilbertosanchez, 2026-09-25 (this instruction)
+    authorship: text written by the ORCHESTRATOR from the approved rules (instruction sections 3-12) and frozen under the instruction's authority (section 14); the human's review of the frozen text is the next required action
+    sha256: 5bed242e0096068dc2d34861299b10dc5404957e9d3aafea43f9c93de840d495
+    carried_over_byte_for_byte: {introductory_paragraph: 116d9ea9b02d815eee5265938e59b2b17fb5463ad465c9bb8861c587659e4451, sections_1_to_8: 3eacc2c568296be1cbec1d60893ab515061560ff2b719ae0a5aca190c4964d77, section_10: 2b3c49dc59cc782be1a7339cf9d098719063573c99d879ef0cf1eba79c972eef}
+    changed: [header, "What changed relative to v1, and why", section 9 (substance), section 11 (status snapshot), section 12 (versioning)]
+    export_note: like v1, v2 keeps (in carried section 3) the one reference the public export rewrites (PROVIDER_NEUTRAL_PATH_ALIAS); its public copy is therefore transformed and any hash check of it on a published checkout bridges through PUBLIC-EXPORT-MANIFEST.yaml
+rationale: >-
+  PROTO-U17 (2026-09-24) showed that v1 section 9 left the terminal and failure behavior of the compatibility smoke undefined
+  once Appium 3 itself is the selected fallback runner: v1 knew NOT_EXECUTED only for a build that cannot be obtained or
+  installed, gave no result for an execution prevented by infrastructure or by a defect of the study-authored harness, and on
+  a runner-caused failure required a repeat "with the fallback runner" although no further fallback exists after the section
+  8 switch. The approved rules define attribution with positive evidence for every exclusion, a conservative tie-break so
+  that uncertainty never excludes an unfavorable runner outcome, the effects of each result, and a terminal exhausted-fallback
+  state, without a fourth execution result and without changing the qualification gate or the switch rule.
+section_9_rules:
+  vocabulary: [PASS, FAIL_RUNNER, NOT_EXECUTED]  # unchanged; no fourth execution result
+  pass: one clean execution with the selected runner completes MC-01, MC-02, MC-06, MC-04, MC-08, MC-10 (unchanged)
+  fail_runner: failure of the selected runner's execution stack (pinned core, platform driver, WebDriver-protocol behavior) while attempting the smoke capabilities; in-stack dependency or version incompatibility is runner/toolchain evidence
+  not_executed: only on positively demonstrated SUT_BUILD, INFRASTRUCTURE, or HARNESS_ORCHESTRATION causes; record fields SUT, platform, timestamp, failed phase, attributed category, concrete description, artifact pointers, recording role; a failed runner command alone never demonstrates HARNESS_ORCHESTRATION
+  tie_break: uncertain attribution after inspecting the preserved artifacts -> FAIL_RUNNER
+  effect_not_executed: no pass, no runner failure, no runner selection; that SUT x platform stays unresolved and its conditions blocked (G-7); the authorized smoke stops; a further attempt needs the preserved record, the corrected cause, and a new explicit human authorization (successor lock if execution-critical code changes); no CI re-run
+  effect_fail_runner_mobilewright: section 8 selects Appium 3 (general rule carried from v1; the completed AUTH-03 selection is not revisited)
+  effect_fail_runner_appium3: fallback EXHAUSTED; no recursive section 8; no re-execution of Appium 3; Appium 2 never; no other runner; result stays FAIL_RUNNER; study-level mobile-runner status UNRESOLVED_AFTER_FALLBACK_FAILURE (SELECTED while usable), recorded by the ORCHESTRATOR in manifests/toolchain-manifest.yaml and the change log; every campaign requiring mobile execution blocked from START and measurement until a new explicit protocol amendment
+  independence: per-platform results distinct, never averaged, merged, or compensated; a single FAIL_RUNNER on any ecosystem x platform suffices for the FAIL_RUNNER rules
+prior_data_validity:  # protocol/change-control-v1.md section 5, item 3
+  E01-capability-audit: unaffected; all collected data and results remain valid (adjudicated matrix SHA-256 88a062ebac5af2a659c8396d70b36137c8a8d4d9c30569a325b742f98ccbe589 unchanged)
+  H1_analysis: unaffected (derived-data/h1-analysis/H1-result.json SHA-256 8684deefc09faa4ba209546c4223f0cd1ec969de0a4d091bb92e3b6dbf137be5 unchanged)
+  mobilewright_formal_qualification: MOBILE-QUALIFICATION-EXEC-AUTH-03 (a tool-qualification record, not a campaign) is unaffected and valid under the v1 criteria used for that execution; it is not reinterpreted through v2; the section 8 selection of Appium 3 made under v1 stands
+  compatibility_smoke_data_under_v1: none
+  re_collection_or_re_analysis_required: none
+affected_campaigns:
+  already_collected:
+    - {id: E01-capability-audit, statement: unaffected; remains valid}
+  not_yet_started:
+    - {id: E03-resetability, statement: affected prospectively -- its conditions E03-CS001-SUT02-ANDROID and E03-CS001-SUT02-IOS depend on the compatibility smoke through G-7; no data collected}
+    - {id: E06-cross-platform-parity, statement: affected prospectively (Android and iOS surfaces); no data collected}
+    - {id: E07-cross-layer-continuity, statement: affected prospectively (API->Android, API->iOS layers); no data collected}
+    - {id: E12-localization-i18n, statement: affected prospectively for any mobile execution (its README makes mobile executions subject to the policy and the smoke); no data collected}
+    - {id: any future campaign exercising Android Native or iOS Native, statement: affected prospectively}
+references:  # protocol/change-control-v1.md section 4: re-pointed only by this recorded change
+  re_pointed_to_v2: [the agent-instructions file (rule 14 general citation; where-the-rules-live row), README.md, protocol/README.md, experiments/E03-resetability/README.md, experiments/E03-resetability/ci-cd-execution-model.md, manifests/README.md, manifests/toolchain-manifest.yaml, manifests/compatibility-smoke-status.yaml, manifests/compatibility-smoke-execution-auth-v1-prepared.yaml, .github/workflows/e03-compatibility-smoke.yml, prompts/working/qualifier-mobile-01-appium3-compat-smoke-v1.md, qualification/README.md, qualification/compatibility-smoke/README.md, qualification/compatibility-smoke/smoke-common.sh, qualification/compatibility-smoke/harness/package.json, qualification/compatibility-smoke/harness/smoke.mjs]
+  not_re_pointed:
+    frozen_protocol_documents: protocol/study-design-v1.md, protocol/change-control-v1.md, protocol/agent-governance-v1.md and v2, protocol/repeatability-determinism-v1.md -- never edited in place; v1's Superseded-by row resolves their references
+    historical_records: the Mobilewright qualification records, packages, locks, authorizations, and frozen prompts; E01 records; earlier provenance, correction, and export records; protocol/CHANGELOG.md and protocol/unresolved.md rows; research-status.html (not updated by this operation) -- they describe what held under v1 and stay correct
+    historical_citations_kept_in_live_documents: citations of "protocol/mobile-runner-policy-v1.md section 8" (and section 2 in the PROTO-U10 narrative) name the rule under which the switch and the quarantine were decided; the selection basis string in manifests/toolchain-manifest.yaml is read by G-7 and stays unchanged
+    not_started_campaign_documents: experiments/README.md, experiments/E06-cross-platform-parity/README.md, experiments/E07-cross-layer-continuity/README.md, experiments/E12-localization-i18n/README.md, experiments/E03-resetability/campaign-configuration-draft.md -- re-pointed with each campaign's own configuration; meanwhile v1's Superseded-by row resolves them
+consequences:
+  mobile_qualification_workflow: .github/workflows/e03-mobile-qualification.yml checks that protocol/mobile-runner-policy-v1.md is FROZEN-PRE-DATA; that check now fails closed. Not modified (not authorized); no Mobilewright execution is authorized or contemplated (qualification COMPLETE_FAIL, runner selected).
+  measured_execution_gate: G-7 of .github/workflows/e03-measured-execution.yml does not yet read the study-level mobile-runner status v2 introduces; escalated as protocol/unresolved.md PROTO-U18 (OPEN; a prospective correction is required before E03 START); not modified by this operation
+  study_level_status_field: manifests/toolchain-manifest.yaml mobile_runner_selection.mobile_runner_status (SELECTED), added by this operation as the status v2 section 9.5 names
+proto_u17_resolution: protocol/unresolved.md PROTO-U17 -- status RESOLVED, human decision 2026-09-25, problem statement unchanged; resolution cell summarizes the item-by-item rules above
+proto_u16: separate and unaffected -- the stale sut-manifest presence representation remains OPEN; the smoke scope rests on the frozen E01 adjudicated matrix (SUT-02 Android Native and iOS Native CONFIRMED, effective score 3)
+changelog_rows: 2  # 2026-09-26: v1 FROZEN-PRE-DATA -> AMENDED; v2 DRAFT -> FROZEN-PRE-DATA
+compatibility_smoke_relock:  # appended by the re-lock commit of this operation (instruction sections 16-22)
+  preserved_pre_amendment_preparation: [71a3195, 7da7b10, 62ff894, 80604f6]  # historical, unchanged; lock v1 (4a4267eff31d729f5a0fd1ff82cd6ccf2785bbca230521177d5e8c50670dcecc) is never the execution baseline
+  commits_before_this_section: {protocol_amendment: ed2c18d46da0a9e207c1aa66f0c88b54cb6159a1, qualifier_adaptation: 24c3e1b4ece26e21da3df7125eaee27036151a4b}
+  implementation_lock_v2:
+    path: manifests/compatibility-smoke-implementation-lock-v2.yaml
+    sha256: 1382b7ee719d408ab240fe4b1ef5184ad838880af07ea5b55339c49f4652ee4e
+    lock_id: APPIUM3-COMPAT-SMOKE-IMPLEMENTATION-LOCK-02
+    governing_policy: {path: protocol/mobile-runner-policy-v2.md, sha256: 5bed242e0096068dc2d34861299b10dc5404957e9d3aafea43f9c93de840d495}
+    artifacts:
+    - {path: .github/workflows/e03-compatibility-smoke.yml, sha256: 5d28da204aff2e564de1951cf513a622276e579284e6be066b77af167f28de75, changed_since_lock_v1: true}
+    - {path: qualification/compatibility-smoke/smoke-common.sh, sha256: 9beae27f260e708990bcc7a8de725821a93ad0647b2af8f463cf8016a1ad3525, changed_since_lock_v1: true}
+    - {path: qualification/compatibility-smoke/run-smoke-android.sh, sha256: 3de83ad84cf9e2308eaee5c80bdea8321b93b713c4f6fd2b321ea0dbc6f2a703, changed_since_lock_v1: true}
+    - {path: qualification/compatibility-smoke/run-smoke-ios.sh, sha256: c48e99fb6bf3ef68afd33158f140346424924689e0955f0fcb8eb516f1eb25a9, changed_since_lock_v1: true}
+    - {path: qualification/compatibility-smoke/harness/package.json, sha256: 0c7807598f7b5a2e80aed27a8bdf7aed71b23d0ab3a21a48a764c8b347770242, changed_since_lock_v1: true}
+    - {path: qualification/compatibility-smoke/harness/package-lock.json, sha256: 8a4a02cafa1edec0e8eb7704cec107ab6a2c398dd1e0c8e8a9df3dcb9ac3b3f5, changed_since_lock_v1: false}
+    - {path: qualification/compatibility-smoke/harness/wd.mjs, sha256: 917bad5188794fc69fca366882d14ded29623ea4d6a91188803f768cc5eaa757, changed_since_lock_v1: true}
+    - {path: qualification/compatibility-smoke/harness/smoke.mjs, sha256: 047684a29dbe5e381f84bce54b29e28555eb65cf6e4b437ad97917d80b0ed3d2, changed_since_lock_v1: true}
+    realization_section_sha256: 3114ff5568bbcdbcd1ce2dc501ba72b52d4285c4c6eeec8e08a61bbad7e19d6c  # unchanged since lock v1: no capability, locator, step, expected state, timeout, or artifact set changed
+    harness_realization_sha256: 1263dd1602ef972618247d7964450690ad31525c3bfc4a38838b68722adc4e3c  # realizationSha256() of smoke.mjs, unchanged
+  workflow: {path: .github/workflows/e03-compatibility-smoke.yml, sha256: 5d28da204aff2e564de1951cf513a622276e579284e6be066b77af167f28de75}
+  working_prompt: {path: prompts/working/qualifier-mobile-01-appium3-compat-smoke-v1.md, sha256: 5403ea43eae4425c088a7aac1250e146d28ba5e2d29fa3ca1d91c2e9c90e8034, status: WORKING / NOT DISPATCHABLE, previous_sha256: 875a9aec63857232c3f92969bbb098605f230fef8d447426515d19c627eb46fb}
+  prepared_authorization:
+    path: manifests/compatibility-smoke-execution-auth-v1-prepared.yaml
+    id: APPIUM3-COMPAT-SMOKE-AUTH-01
+    lifecycle_unchanged: {record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT, status: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION, record_validity: null, authorizes_execution: false, dispatch_eligibility: NOT_ELIGIBLE_UNTIL_ISSUED, dispatch_performed: false, issued_by: null, issued_at: null}
+    references_changed: {governing_policy: protocol/mobile-runner-policy-v2.md, implementation_lock: manifests/compatibility-smoke-implementation-lock-v2.yaml, working_copy_sha256: 5403ea43eae4425c088a7aac1250e146d28ba5e2d29fa3ca1d91c2e9c90e8034}
+    successor_draft_id_needed: false  # never issued; updated in place with an amendment_history entry
+  v2_semantics_implemented: [PASS only from outcome SUCCESS, FAIL_RUNNER for every failure after the session request (conservative), NOT_EXECUTED proposed only before any runner action with a demonstrated SUT_BUILD / INFRASTRUCTURE / HARNESS_ORCHESTRATION cause, harness exceptions after the session request kept as candidate evidence for the QUALIFIER, no retry or repeat anywhere, iOS only after an Android proposed PASS, gate refuses an exhausted fallback (mobile_runner_status) and any FAIL_RUNNER in the mirror, attribution records table in the QUALIFIER README]
+  first_attempt_only: the gate requires unpopulated smoke and attribution records and a NOT_STARTED mirror; a further attempt after a recorded NOT_EXECUTED needs a successor lock whose gate admits the preserved record, a corrected cause, and a new explicit human authorization (declared in lock v2 change_rule, the authorization, and the working prompt)
+  measured_gate_note: the G-7 demonstration case shows the PROTO-U18 gap on the unchanged G-7 code (an Android PASS remains admissible after an iOS FAIL_RUNNER with status UNRESOLVED_AFTER_FALLBACK_FAILURE); recorded, not corrected
+  static_tests:  # scratch fixtures; nothing dispatched; no Appium process, emulator, simulator, or SUT app started
+  readiness_gate:
+    method: "the gate Python extracted from the workflow, run on scratch copies of the files it reads, one mutation per case; positive controls use a hypothetically issued authorization and frozen prompt inside the fixture only"
+    result: "58 of 58 as expected"
+    cases:
+      - "as-prepared: prepared-but-not-issued authorization"
+      - "positive control: hypothetically issued authorization + frozen prompt (fixture only)"
+      - "positive control + .gitkeep-only output namespace"
+      - "missing authorization id (empty input)"
+      - "authorization id with no record (APPIUM3-COMPAT-SMOKE-AUTH-02)"
+      - "two records carry the same authorization id"
+      - "issued_by is an agent role (ORCHESTRATOR)"
+      - "status ISSUED but record_class still DRAFT"
+      - "consumed smoke authorization (second use)"
+      - "dispatch_performed true while still ELIGIBLE"
+      - "wrong confirmation token"
+      - "GitHub re-run (run attempt 2)"
+      - "selected runner Mobilewright"
+      - "selected runner Appium 2 (fallback candidate and pin 2.x)"
+      - "Appium 2 in the harness lockfile (appium 2.19.0)"
+      - "selected core pin 3.8.0 in the toolchain manifest"
+      - "harness core pin appium 3.8.0 (package.json), lock re-pointed"
+      - "Android driver pin 8.6.0 (package.json)"
+      - "iOS driver pin 12.13.1 in the lock only (lock re-pointed by the authorization)"
+      - "Node.js pin changed in smoke-common.sh"
+      - "client changed: one byte of harness/wd.mjs"
+      - "harness changed: one byte of harness/smoke.mjs"
+      - "workflow changed: one byte"
+      - "realization section changed (one locator word)"
+      - "lock file tampered (authorization hash no longer matches)"
+      - "lock re-pointed to a changed smoke.mjs hash (lock and auth consistent, file unchanged)"
+      - "Android build SHA-256 changed in smoke-common.sh"
+      - "iOS build SHA-256 changed in the lock (authorization re-pointed)"
+      - "SUT-02 android release changed in the sut-manifest"
+      - "pre-existing output (android record.json)"
+      - "pre-existing output (ios screenshot)"
+      - "pre-populated smoke-records row in the QUALIFIER README"
+      - "mirror pre-populated (android PASS)"
+      - "E03-resetability IN_PROGRESS"
+      - "Mobilewright qualification PASSED"
+      - "AUTH-03 reopened (dispatch_eligibility ELIGIBLE)"
+      - "section 8 basis removed from the selection"
+      - "policy v2 not FROZEN (DRAFT)"
+      - "policy v1 not AMENDED (reverted to FROZEN-PRE-DATA)"
+      - "policy v2 section 9 edited (one byte)"
+      - "policy v2 missing"
+      - "authorization still names policy v1"
+      - "authorization still names lock v1 (hash of lock v1)"
+      - "fallback exhausted: mobile_runner_status UNRESOLVED_AFTER_FALLBACK_FAILURE"
+      - "mobile_runner_status absent"
+      - "mirror records FAIL_RUNNER for Appium 3 (ios)"
+      - "mirror records NOT_EXECUTED (android): first-attempt-only gate"
+      - "pre-populated attribution-records row"
+      - "frozen prompt absent (authorization names it)"
+      - "frozen prompt with unrendered INSTRUCTION_DATE"
+      - "frozen prompt with only INSTRUCTION_DATE rendered (status placeholder left)"
+      - "frozen prompt whose status still reads WORKING / NOT DISPATCHABLE"
+      - "frozen prompt edited after issuance"
+      - "published checkout: locked files UNCHANGED, policy v2 transformed and bridged"
+      - "published checkout: policy v2 bridged with a wrong canonical hash"
+      - "published checkout: policy v2 on-disk bytes differ from the declared export"
+      - "published checkout: policy v2 with an unreviewed transformation class"
+      - "published checkout: a locked file exported transformed"
+  harness_attribution:
+    method: "node; harness/smoke.mjs and harness/wd.mjs against fake WebDriver clients, a fake fetch, and the CLI with a malformed context (no server contacted)"
+    result: "25 of 25 as expected"
+    cases:
+      - "android: clean execution -> PASS (all six capabilities)"
+      - "android: Appium session cannot be established (server answers 'session not created') -> FAIL_RUNNER"
+      - "android: stable-locator strategy unsupported by the driver -> FAIL_RUNNER"
+      - "android: navigation cannot be driven (detail never reached) -> FAIL_RUNNER"
+      - "android: native control does not change the state (MC-04/MC-08) -> FAIL_RUNNER"
+      - "android: runner-side screenshot for MC-10 fails -> FAIL_RUNNER"
+      - "android: no runner answer (transport failure) -> FAIL_RUNNER by the conservative tie-break"
+      - "android: harness exception after the session request -> FAIL_RUNNER with candidate HARNESS_ORCHESTRATION evidence"
+      - "ios: clean execution -> PASS (all six capabilities)"
+      - "ios: Appium session cannot be established (server answers 'session not created') -> FAIL_RUNNER"
+      - "ios: stable-locator strategy unsupported by the driver -> FAIL_RUNNER"
+      - "ios: navigation cannot be driven (detail never reached) -> FAIL_RUNNER"
+      - "ios: native control does not change the state (MC-04/MC-08) -> FAIL_RUNNER"
+      - "ios: runner-side screenshot for MC-10 fails -> FAIL_RUNNER"
+      - "ios: no runner answer (transport failure) -> FAIL_RUNNER by the conservative tie-break"
+      - "ios: harness exception after the session request -> FAIL_RUNNER with candidate HARNESS_ORCHESTRATION evidence"
+      - "waitFor rethrows a harness exception at once (no retry that would disguise it as not-reached)"
+      - "waitFor timeout on a runner error -> WebDriverError kind not_reached"
+      - "wd.mjs: transport failure is kind transport; W3C error is kind response; missing element reference is kind protocol"
+      - "attributeFailure never proposes NOT_EXECUTED after the first runner action (every kind)"
+      - "demonstrated harness cause before any runner action (malformed context file) -> NOT_EXECUTED / HARNESS_ORCHESTRATION"
+      - "demonstrated harness cause before any runner action (unknown platform) -> NOT_EXECUTED / HARNESS_ORCHESTRATION"
+      - "CLI: runner unreachable at the session request -> record FAIL_RUNNER (uncertain), exit 1, exactly one execution"
+      - "proposed PASS occurs only with outcome SUCCESS in every recorded case (NOT_EXECUTED and FAIL_RUNNER never become PASS)"
+      - "the harness names no runner other than Appium and no fallback path (no recursive runner)"
+  shell_stop_paths:
+    method: "the locked platform scripts run from a scratch copy with stubbed adb, java, curl, node, npm, npx, xcodebuild, xcrun, seq, sleep; a bash-3.2 mapfile shim exported for the local host (the ubuntu-24.04 runner has bash 5); nothing installed or launched"
+    result: "15 of 15 as expected"
+    cases:
+      - "android: no online device"
+      - "android: emulator never completes boot"
+      - "android: emulator API level 34 instead of 35"
+      - "android: pinned build cannot be obtained (HTTP 404)"
+      - "android: pinned build digest mismatch"
+      - "android: host Node.js is not the pin"
+      - "android: npm ci of the pinned Appium stack fails (dependency resolution)"
+      - "android: installed driver version differs from the pin"
+      - "android: Appium server never becomes ready"
+      - "android: harness process ends without a record"
+      - "android: second execution under the same authorization id (namespace already holds a record)"
+      - "android: GitHub re-run (run attempt 2)"
+      - "ios: Xcode is not 16.4 (16F6)"
+      - "ios: no iPhone 16 / iOS 18.5 simulator available"
+      - "ios: pinned simulator build digest mismatch"
+  structural:
+    method: "parsed workflow and scripts; smoke_init sourced in a scratch copy"
+    result: "32 of 32 as expected"
+    cases:
+      - "trigger is workflow_dispatch only (never push, schedule, or another workflow)"
+      - "dispatch requires instruction_id and confirm inputs"
+      - "token permissions are contents: read only, no job-level override"
+      - "record class COMPATIBILITY_SMOKE"
+      - "topology: gate -> smoke-android -> smoke-ios"
+      - "both platform jobs require the gate output ready == true"
+      - "iOS starts only after the Android job succeeded with proposed PASS (policy v2, 9.5)"
+      - "the Android job exports its proposed result from record.json (always, even after a failure)"
+      - "no job, step, or input names another runner (no recursive fallback in the workflow)"
+      - "no step retries or continues on error (no automatic second attempt)"
+      - "single concurrency group, no cancel-in-progress"
+      - "every platform job refuses a GitHub re-run (run attempt 1)"
+      - "gate job refuses a GitHub re-run"
+      - "Android and iOS outputs are distinct directories"
+      - "Android and iOS artifacts are distinct uploads"
+      - "uploads are only the authorization-specific smoke namespace"
+      - "no git commit or push in the workflow (cannot write the repository)"
+      - "raw-data/ appears only in comment lines stating that nothing is written there (no write path)"
+      - "no MEASURED_EXPERIMENT label anywhere in the smoke implementation"
+      - "workflow never writes manifests/ (cannot START E03 or change the mirror)"
+      - "E03 state is only read, and required to be NOT_STARTED"
+      - "Android job uses the pinned emulator-runner commit and API 35 google_apis x86_64 pixel_7"
+      - "iOS job runs on macos-15 with Xcode 16.4 selected"
+      - "Node.js pinned 22.23.2 in both platform jobs"
+      - "Appium 2 appears only inside gate refusal checks (never as a dependency or runner)"
+      - "the Mobilewright trees are never a write target"
+      - "smoke_init: Android writes only formal/<id>/SUT-02-android"
+      - "smoke_init: iOS writes only formal/<id>/SUT-02-ios"
+      - "smoke_init refuses a non-empty platform namespace (second execution under one id)"
+      - "smoke_init refuses GitHub run attempt 2"
+      - "smoke_init refuses a non-smoke authorization id"
+      - "smoke_init refuses a missing prompt version id"
+  topology_and_validate_invariants:
+    method: "the iOS job condition evaluated for 24 Android result combinations; the Android proposal step run on sample records; the e03-validate.yml regression step mutated"
+    result: "11 of 11 as expected"
+    cases:
+      - "iOS job runs only for Android success + proposed PASS (24 combinations)"
+      - "iOS job never runs when the gate is not ready"
+      - "Android proposal step: PASS only from outcome SUCCESS; no record -> NO_RECORD; inconsistent -> INCONSISTENT"
+      - "validate: baseline (prepared, nothing recorded)"
+      - "validate: mirror PASS over a QUALIFIER NOT_EXECUTED row"
+      - "validate: mirror PASS over a QUALIFIER FAIL_RUNNER row"
+      - "validate: mirror PASS with no QUALIFIER row"
+      - "validate: mirror NOT_EXECUTED equal to the QUALIFIER row"
+      - "validate: Appium FAIL_RUNNER recorded while status stays SELECTED"
+      - "validate: Appium FAIL_RUNNER recorded with status UNRESOLVED_AFTER_FALLBACK_FAILURE"
+      - "validate: status outside the v2 vocabulary"
+  measured_gate_g7:
+    method: "G-7 of e03-measured-execution.yml (unchanged) run on scratch fixtures"
+    result: "5 of 5 as expected"
+    cases:
+      - "mirror android PASS but the QUALIFIER row reads NOT_EXECUTED"
+      - "mirror android PASS but the QUALIFIER row reads FAIL_RUNNER"
+      - "mirror and row android NOT_EXECUTED"
+      - "mirror and row android FAIL_RUNNER"
+      - "PROTO-U18 evidence: android PASS + ios FAIL_RUNNER with status UNRESOLVED_AFTER_FALLBACK_FAILURE (current, uncorrected G-7)"
+  static_tests_total: "146 of 146 as expected"
+  lint: actionlint 1.7.7 on every workflow, no findings; bash -n on the three scripts; node --check on the harness; every touched YAML and JSON file parses
+  not_done: [no authorization issued, no prompt frozen, no workflow_dispatch, no Appium installation or execution as a study operation, no emulator or simulator started, no SUT-02 app installed or launched, no smoke result or mirror value written, no toolchain version / install_date / platform set, no E03 START, no public export, no dashboard update]

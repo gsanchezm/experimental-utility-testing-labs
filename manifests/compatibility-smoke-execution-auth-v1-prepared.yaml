@@ -1,0 +1,82 @@
+# Compatibility-smoke execution authorization v1 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# PREPARED, NOT ISSUED. This record authorizes nothing: it is a draft prepared by the ORCHESTRATOR under the human
+# instruction PREPARE AND FREEZE APPIUM 3 COMPATIBILITY SMOKE (2026-09-24), which authorized preparation only. The
+# readiness gate of .github/workflows/e03-compatibility-smoke.yml refuses it as long as any lifecycle field below differs
+# from the issued values (record_class COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION, record_validity VALID, status ISSUED,
+# a human issued_by, authorizes_execution true, dispatch_eligibility ELIGIBLE, a frozen launch prompt). Issuance is a
+# separate explicit human act after review of the preparation package; dispatch is a further separate explicit human act.
+# Updated in place on 2026-09-26, still PREPARED and NOT ISSUED, to reference only protocol/mobile-runner-policy-v2.md, the
+# successor implementation lock v2, and the updated working prompt (human instruction RESOLVE PROTO-U17 THROUGH
+# MOBILE-RUNNER-POLICY-V2 AND RE-LOCK THE APPIUM 3 COMPATIBILITY SMOKE; see amendment_history below).
+authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-01
+authorization_type: COMPATIBILITY_SMOKE_EXECUTION
+record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT
+status: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION
+record_validity: null
+authorizes_execution: false
+dispatch_eligibility: NOT_ELIGIBLE_UNTIL_ISSUED
+dispatch_performed: false
+issued_by: null
+issued_at: null
+study_id: EUS-2026-001
+protocol_version: v1
+prepared_by_role: ORCHESTRATOR
+prepared_on: "2026-09-24"
+prepared_under: PREPARE AND FREEZE APPIUM 3 COMPATIBILITY SMOKE (gilbertosanchez, 2026-09-24; verbatim in manifests/appium3-compat-smoke-preparation-v1.yaml)
+re_locked_under: RESOLVE PROTO-U17 THROUGH MOBILE-RUNNER-POLICY-V2 AND RE-LOCK THE APPIUM 3 COMPATIBILITY SMOKE (gilbertosanchez, approval 2026-09-25; verbatim in manifests/mobile-runner-policy-v2-amendment-v1.yaml)
+governing_policy: protocol/mobile-runner-policy-v2.md  # section 9 (FROZEN-PRE-DATA); v1 AMENDED 2026-09-26
+executing_role: QUALIFIER-MOBILE-01 (relayed by the ORCHESTRATOR)
+scope:
+  sut_id: SUT-02
+  platforms: [android, ios]
+  runner: Appium 3
+  runner_version: "3.7.0"
+  executions_per_platform: 1
+  e03_conditions: [E03-CS001-SUT02-ANDROID, E03-CS001-SUT02-IOS]
+  independence: one result per platform, recorded separately; an Android result never implies an iOS result, nor the reverse
+  result_vocabulary: [PASS, FAIL_RUNNER, NOT_EXECUTED]
+  not_in_scope: any other SUT, platform, or runner; any Mobilewright execution or comparison; E03 START or any E03 execution
+selected_runner_lineage:
+  selected_runner: Appium 3
+  selected_version_pin: "3.7.0"
+  basis: frozen switch rule, protocol/mobile-runner-policy-v1.md section 8, after the formal Mobilewright gate FAILED
+  gate_authorization: MOBILE-QUALIFICATION-EXEC-AUTH-03 (VALID, ISSUED, CONSUMED_AFTER_DISPATCH; never reused)
+launch_prompt:
+  working_copy: prompts/working/qualifier-mobile-01-appium3-compat-smoke-v1.md
+  working_copy_sha256: 5403ea43eae4425c088a7aac1250e146d28ba5e2d29fa3ca1d91c2e9c90e8034
+  frozen_copy: null
+  sha256: null
+  prompt_version_id: qualifier-mobile-01-appium3-compat-smoke-v1
+  rendering_at_issuance: the frozen copy is a byte-for-byte copy of the working copy with exactly two launch placeholders rendered -- PROMPT_STATUS to FROZEN LAUNCH PROMPT OF APPIUM3-COMPAT-SMOKE-AUTH-01, and INSTRUCTION_DATE to the human issuance date (YYYY-MM-DD); no other byte differs
+implementation_lock:
+  path: manifests/compatibility-smoke-implementation-lock-v2.yaml
+  sha256: 1382b7ee719d408ab240fe4b1ef5184ad838880af07ea5b55339c49f4652ee4e
+workflow:
+  path: .github/workflows/e03-compatibility-smoke.yml
+  trigger: workflow_dispatch only
+  inputs:
+    instruction_id: APPIUM3-COMPAT-SMOKE-AUTH-01
+    confirm: EXECUTE-COMPATIBILITY-SMOKE
+  topology: readiness gate, then SUT-02 android, then SUT-02 ios only after the android job succeeded with proposed PASS (any other android outcome stops the authorized smoke; policy v2, 9.5); never concurrent
+  rerun: refused in every job (run attempt must be 1)
+output_namespace:
+  android: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-01/SUT-02-android/
+  ios: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-01/SUT-02-ios/
+  state_at_preparation: absent
+issuance_procedure:
+  - The human research lead reviews the preparation package (manifests/appium3-compat-smoke-preparation-v1.yaml, the re-lock under policy v2 in manifests/mobile-runner-policy-v2-amendment-v1.yaml, and the files they name).
+  - On a separate explicit human issuance instruction only, the ORCHESTRATOR freezes the launch prompt (prompts/frozen/qualifier-mobile-01-appium3-compat-smoke-v1.md, rendering only PROMPT_STATUS and INSTRUCTION_DATE) and promotes this record in place (the filename suffix then becomes historical, as for MOBILE-QUALIFICATION-EXEC-AUTH-03) to record_class COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION, record_validity VALID, status ISSUED, authorizes_execution true, dispatch_eligibility ELIGIBLE, issued_by the human issuer, issued_at the issuance date, launch_prompt.frozen_copy and launch_prompt.sha256 of the frozen copy. No locked byte changes at issuance.
+  - Because GitHub Actions runs only from the public repository, the issued record, the frozen prompt, and the locked files must be present in a published snapshot before any dispatch; that publication needs its own human authorization under the export procedure. The gate requires every locked file, the README, the lock, and the frozen prompt to be exported UNCHANGED.
+  - On a further separate explicit human dispatch instruction only, exactly one dispatch is made and its run id recorded; afterwards this record is closed in place (dispatch_performed true, dispatch_eligibility CONSUMED_AFTER_DISPATCH), so the gate refuses any second use. A repeat of either platform needs a new authorization id.
+first_attempt_only: the workflow's gate admits this authorization only with unpopulated smoke and attribution records and a NOT_STARTED mirror; a further attempt after a recorded NOT_EXECUTED (policy v2, 9.5) needs a new authorization id and a successor implementation lock whose gate admits the preserved record
+amendment_history:
+  - on: "2026-09-26"
+    instruction: RESOLVE PROTO-U17 THROUGH MOBILE-RUNNER-POLICY-V2 AND RE-LOCK THE APPIUM 3 COMPATIBILITY SMOKE (approval 2026-09-25)
+    changed:
+      governing_policy: "protocol/mobile-runner-policy-v1.md, section 9 -> protocol/mobile-runner-policy-v2.md"
+      implementation_lock: "manifests/compatibility-smoke-implementation-lock-v1.yaml (4a4267eff31d729f5a0fd1ff82cd6ccf2785bbca230521177d5e8c50670dcecc) -> manifests/compatibility-smoke-implementation-lock-v2.yaml (1382b7ee719d408ab240fe4b1ef5184ad838880af07ea5b55339c49f4652ee4e)"
+      launch_prompt.working_copy_sha256: "875a9aec63857232c3f92969bbb098605f230fef8d447426515d19c627eb46fb -> 5403ea43eae4425c088a7aac1250e146d28ba5e2d29fa3ca1d91c2e9c90e8034"
+      workflow.topology: the iOS job starts only after an Android proposed PASS
+      added: [re_locked_under, first_attempt_only, amendment_history]
+    unchanged: [authorization_id, authorization_type, record_class, status, record_validity, authorizes_execution, dispatch_eligibility, dispatch_performed, issued_by, issued_at, scope, selected_runner_lineage, prompt_version_id, output_namespace]
+    reason: the implementation was locked against policy v1 before PROTO-U17 was resolved; no smoke outcome existed; a successor draft id was not necessary because the record was never issued

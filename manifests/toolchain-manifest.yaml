@@ -58,6 +58,7 @@ tools:
     selected_runner: "Appium 3"  # vocabulary as in superseded_2026_09_22 below; was none (PROTO-U10 restored state, 2026-09-22 to 2026-09-24; policy section 11 "Runner decision: none")
     selected_version_pin: "3.7.0"  # tools.mobile_fallback.pinned_candidate_version
     selected_on: "2026-09-24"
+    mobile_runner_status: SELECTED  # study-level mobile-runner status of protocol/mobile-runner-policy-v2.md, section 9.5 (added 2026-09-26): SELECTED while the selected runner is usable; UNRESOLVED_AFTER_FALLBACK_FAILURE from a FAIL_RUNNER of the selected Appium 3 (fallback exhausted; every campaign requiring mobile execution blocked until a new protocol amendment). Recorded by the ORCHESTRATOR; read by the compatibility-smoke readiness gate and, since 2026-09-26, by G-7 of the measured workflow for every mobile condition (protocol/unresolved.md PROTO-U18, RESOLVED)
     selection_kind: MECHANICAL_FROZEN_SECTION_8_SWITCH  # NON-NORMATIVE provenance field: records how the value was reached (not a discretionary human selection); creates no selection criterion, is read by no gate, and never substitutes for `basis` (the frozen section 8 basis)
     basis: "frozen switch rule, protocol/mobile-runner-policy-v1.md section 8, following the formal Mobilewright qualification FAIL under MOBILE-QUALIFICATION-EXEC-AUTH-03 (run 35938250936, attempt 1, 2026-09-24; 60 measured executions + 6 warm-ups, 0 excluded, no manual intervention): 7.2.1 FAIL (MC-07, deep link carrying parameters, exercised by the predeclared scenario MQ3, not supported on the Android emulator: 0 successful measured executions, failures runner-caused under the conservative section 7.3 rule), 7.2.2 FAIL (MQ3 x Android emulator 0 of 10), 7.2.3 FAIL (the same MQ3 / MC-07 blocker in 1 warm-up and 10 measured executions), 7.2.4 PASS. The specific root cause is unresolved: the artifacts do not demonstrate where the parameter / state transfer was lost, and none demonstrates an allowed cause outside the runner. Decision record: qualification/mobilewright/README.md (QUALIFIER-MOBILE-01, prompt version qualifier-mobile-01-mobilewright-gate-v3)"
     decided_by_role: QUALIFIER-MOBILE-01
@@ -87,6 +88,19 @@ tools:
       pinned_by: ORCHESTRATOR
       pinned_at: "2026-09-22"
     compatibility_smoke_status: NOT_STARTED  # study-level convenience summary of the Appium 3 smokes (added 2026-09-24, PROTO-U14); NOT read by gate G-7 since PROTO-U15 (same day): the authoritative per-condition result is the SUT x platform x runner entry of manifests/compatibility-smoke-status.yaml (mirror of qualification/compatibility-smoke/; for E03-resetability SUT-02 android and SUT-02 ios). NOT AUTHORIZED; Appium 3 is not installed and has not been executed
+    compatibility_smoke_preparation:  # preparation metadata only (human instruction PREPARE AND FREEZE APPIUM 3 COMPATIBILITY SMOKE, 2026-09-24; manifests/appium3-compat-smoke-preparation-v1.yaml; re-locked under protocol/mobile-runner-policy-v2.md on 2026-09-26, manifests/mobile-runner-policy-v2-amendment-v1.yaml). Pins, not install facts: version/install_date/platform below stay null until an authorized smoke installs and observes them
+      status: RELOCKED_UNDER_POLICY_V2_NOT_EXECUTED
+      governing_policy: protocol/mobile-runner-policy-v2.md  # section 9; v1 AMENDED 2026-09-26
+      authorization: APPIUM3-COMPAT-SMOKE-AUTH-01  # PREPARED, NOT ISSUED (manifests/compatibility-smoke-execution-auth-v1-prepared.yaml)
+      implementation_lock: manifests/compatibility-smoke-implementation-lock-v2.yaml  # active baseline; manifests/compatibility-smoke-implementation-lock-v1.yaml is historical (pre-amendment) and never the execution baseline
+      workflow: .github/workflows/e03-compatibility-smoke.yml  # dispatch only; never dispatched
+      core_pin: "3.7.0"
+      android_driver_pin: "appium-uiautomator2-driver 8.7.0"
+      ios_driver_pin: "appium-xcuitest-driver 12.13.2"
+      node_pin: "22.23.2"
+      client_library: none  # the harness speaks the W3C WebDriver protocol itself (qualification/compatibility-smoke/harness/wd.mjs)
+      plugins: none
+      install_method: "npm ci from qualification/compatibility-smoke/harness/package-lock.json; APPIUM_HOME = the harness directory; no global install"
     version: null
     install_date: null
     platform: null

@@ -1,7 +1,7 @@
 # manifests/compatibility-smoke-status.yaml
 # Machine-readable ORCHESTRATOR mirror of the per-SUT x platform compatibility-smoke results of
-# protocol/mobile-runner-policy-v1.md, section 9 (one smoke per mobile-capable ecosystem x platform, with the selected
-# runner). Created 2026-09-24 (PROTO-U15) so that gate G-7 of .github/workflows/e03-measured-execution.yml can check
+# protocol/mobile-runner-policy-v2.md, section 9 (v1 AMENDED 2026-09-26; one smoke per mobile-capable ecosystem x
+# platform, with the selected runner). Created 2026-09-24 (PROTO-U15) so that gate G-7 of .github/workflows/e03-measured-execution.yml can check
 # the smoke of a mobile condition's exact SUT, platform, and selected runner.
 #
 # Source of truth: the QUALIFIER-MOBILE-01 records under qualification/compatibility-smoke/ (the "Smoke records" table
@@ -10,6 +10,23 @@
 # no smoke criterion, procedure, or result vocabulary of its own. NOT_STARTED means that no smoke has been executed for
 # the entry. An entry is changed only after QUALIFIER-MOBILE-01 has recorded an executed smoke there, under a separate
 # explicit human authorization, and only by transcription.
+#
+# Transcription rule (documented 2026-09-24 with the preparation of APPIUM3-COMPAT-SMOKE-AUTH-01, which is PREPARED, NOT
+# ISSUED; manifests/appium3-compat-smoke-preparation-v1.yaml). Only after QUALIFIER-MOBILE-01 has produced a valid
+# executed smoke record -- a filled row of the README "Smoke records" table, backed by that platform's imported record
+# under qualification/compatibility-smoke/formal/<authorization id>/ -- may the ORCHESTRATOR mirror that exact result into
+# the matching entry. No mirror value may precede its QUALIFIER source observation; nothing is inferred or completed. Each
+# platform entry is transcribed from its own row only: an Android result never fills the iOS entry, nor the reverse. A row
+# whose result the QUALIFIER left unfilled (a stop that is none of PASS / FAIL_RUNNER / NOT_EXECUTED) is not transcribed.
+# Field mapping: result = the row's result cell; runner_version = the observed Appium core version as its first
+# whitespace-separated token (for example "3.7.0 appium-uiautomator2-driver 8.7.0"), because G-7 compares that first
+# token with the selected pin; qualifier_record = qualification/compatibility-smoke/README.md; executed_at = the row's
+# timestamp; authorization_id = the executing authorization id; transcribed_by / transcribed_at = ORCHESTRATOR and the
+# transcription date. The ORCHESTRATOR never edits the QUALIFIER record, and preparation never changes any value below.
+# Under policy v2 (2026-09-26) the entry's result must equal the pointed README row's result cell for the same SUT and
+# platform (a NOT_EXECUTED or FAIL_RUNNER row never becomes PASS here; e03-validate.yml asserts it); a FAIL_RUNNER of the
+# selected Appium 3 is transcribed together with the study-level status UNRESOLVED_AFTER_FALLBACK_FAILURE in
+# manifests/toolchain-manifest.yaml (mobile_runner_selection.mobile_runner_status).
 #
 # Gate G-7 admits an ANDROID or IOS condition only if exactly one entry matches the condition's SUT, platform, and the
 # selected runner, that entry's result is PASS with runner_version equal to the selected runner's pin, and its
@@ -21,7 +38,7 @@
 # Editable by ORCHESTRATOR only. Unknown values are null, never a guess.
 record_class: COMPATIBILITY_SMOKE_STATUS_MIRROR
 study_id: EUS-2026-001
-governing_policy: protocol/mobile-runner-policy-v1.md  # section 9; FROZEN-PRE-DATA
+governing_policy: protocol/mobile-runner-policy-v2.md  # section 9; FROZEN-PRE-DATA (v1 AMENDED 2026-09-26)
 source_of_truth: qualification/compatibility-smoke/README.md  # QUALIFIER-MOBILE-01 workspace
 result_vocabulary: [NOT_STARTED, PASS, FAIL_RUNNER, NOT_EXECUTED]  # PASS, FAIL_RUNNER, NOT_EXECUTED as defined by the source template; NOT_STARTED = not executed yet
 selected_runner_at_creation: "Appium 3"  # manifests/toolchain-manifest.yaml mobile_runner_selection (frozen section 8 switch, 2026-09-24)

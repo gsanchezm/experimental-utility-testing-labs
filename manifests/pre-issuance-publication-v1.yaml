@@ -1,0 +1,725 @@
+# Pre-issuance publication operation record v1 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# ORCHESTRATOR record of the human instruction CLOSE PROTO-U18, EXPLICITLY RETIRE THE MOBILEWRIGHT QUALIFICATION PATH, AND
+# PUBLISH THE PRE-ISSUANCE APPIUM-SMOKE BASELINE (2026-09-26): canonical changes and their static verification. The public
+# export v26 built from the resulting canonical state, its validation run, and its post-push audit are recorded in the export
+# log (PUBLIC-EXPORT-MANIFEST.yaml, canonical-only, excluded from the export), not here, so that no export loop arises.
+# This operation authorizes no issuance, dispatch, Appium or Mobilewright execution, SUT launch, or E03 START.
+record_class: PRE_ISSUANCE_PUBLICATION_OPERATION_RECORD
+record_id: PRE-ISSUANCE-PUBLICATION-01
+study_id: EUS-2026-001
+recorded_by_role: ORCHESTRATOR
+recorded_on: "2026-09-26"
+human_instruction:
+  title: CLOSE PROTO-U18, EXPLICITLY RETIRE THE MOBILEWRIGHT QUALIFICATION PATH, AND PUBLISH THE PRE-ISSUANCE APPIUM-SMOKE BASELINE
+  issued_by: gilbertosanchez (human research lead; first-person instruction)
+  received: 2026-09-26, as a pasted first-person block in the ORCHESTRATOR's working session
+  authorizes: [G-7 correction implementing the policy v2 terminal Appium-fallback rule, PROTO-U18 resolution, explicit fail-closed retirement of the Mobilewright qualification workflow, status and dashboard update, public export v26 of the pre-issuance preparation, static and public verification]
+  does_not_authorize: [issuance of APPIUM3-COMPAT-SMOKE-AUTH-01, compatibility-smoke workflow_dispatch, Appium execution, emulator or simulator smoke execution, SUT launch, Mobilewright execution, E03 START, E03 measured execution]
+  verbatim_sha256: 484e8c22511895b2e9c20b46708350c9c81ff79e59d52e9cd8ec971f2c54ca1d
+  verbatim: |
+    # EUS-2026-001 — CLOSE PROTO-U18, EXPLICITLY RETIRE THE MOBILEWRIGHT QUALIFICATION PATH, AND PUBLISH THE PRE-ISSUANCE APPIUM-SMOKE BASELINE
+
+    I, gilbertosanchez, human research lead for EUS-2026-001, authorize this narrow PRE-ISSUANCE corrective and publication operation.
+
+    This instruction authorizes:
+
+    1. correcting measured-execution gate G-7 so it implements mobile-runner-policy-v2's terminal Appium-fallback-failure rule;
+    2. resolving PROTO-U18;
+    3. making the historical Mobilewright qualification workflow explicitly fail closed now that qualification is complete and Appium 3 is selected;
+    4. updating status/dashboard representation;
+    5. publishing the complete PRE-ISSUANCE Appium 3 compatibility-smoke preparation as public export v26;
+    6. performing static/public verification only.
+
+    This instruction DOES NOT authorize:
+
+    - issuance of `APPIUM3-COMPAT-SMOKE-AUTH-01`;
+    - compatibility-smoke workflow_dispatch;
+    - Appium execution;
+    - emulator/simulator smoke execution;
+    - SUT launch;
+    - Mobilewright execution;
+    - E03 START;
+    - E03 measured execution.
+
+    ## 1. VERIFY THE CANONICAL STARTING STATE
+
+    Canonical HEAD expected from the previous operation:
+
+    `e68e1ee`
+
+    Verify ancestry includes:
+
+    - `ed2c18d`
+    - `24c3e1b`
+    - `4450bb3`
+    - `e68e1ee`
+
+    Verify:
+
+    `PROTO-U17 = RESOLVED`
+
+    `mobile-runner-policy-v1 = AMENDED historical`
+
+    `mobile-runner-policy-v2 = FROZEN-PRE-DATA`
+
+    `Appium 3.7.0 = selected runner`
+
+    active smoke implementation lock:
+
+    `v2`
+
+    smoke authorization:
+
+    `APPIUM3-COMPAT-SMOKE-AUTH-01`
+
+    lifecycle:
+
+    `PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION`
+
+    `authorizes_execution = false`
+
+    `dispatch_eligibility = NOT_ELIGIBLE_UNTIL_ISSUED`
+
+    Android smoke:
+
+    `NOT_STARTED`
+
+    iOS smoke:
+
+    `NOT_STARTED`
+
+    E03:
+
+    `NOT_STARTED`
+
+    If any of these do not hold:
+
+    STOP.
+
+    ## 2. PROTO-U18 CLASSIFICATION
+
+    PROTO-U18 is NOT a new methodological gap.
+
+    `mobile-runner-policy-v2` already defines the consequence of a runner-caused compatibility-smoke failure under selected Appium 3:
+
+    fallback exhausted,
+    no recursive switch,
+    no Appium 2,
+    no silent replacement runner,
+    mobile experimental execution blocked pending a new explicit protocol decision.
+
+    PROTO-U18 exists because:
+
+    `.github/workflows/e03-measured-execution.yml`
+
+    does not yet enforce that already-frozen rule study-wide.
+
+    Classify PROTO-U18 as:
+
+    `IMPLEMENTATION_GAP_AGAINST_FROZEN_MOBILE_RUNNER_POLICY_V2`
+
+    not a new policy amendment.
+
+    Do NOT create mobile-runner-policy-v3.
+
+    ## 3. G-7 STUDY-WIDE FALLBACK-EXHAUSTION RULE
+
+    Correct G-7 prospectively before any Appium smoke outcome exists.
+
+    For every ANDROID or IOS measured condition, G-7 must first verify that the selected study mobile runner remains experimentally admissible.
+
+    If the selected runner is Appium 3 and a valid compatibility-smoke observation has produced:
+
+    `FAIL_RUNNER`
+
+    for ANY ecosystem × mobile platform governed by Section 9, then:
+
+    ALL mobile measured conditions must fail G-7.
+
+    This includes a condition whose own platform previously passed.
+
+    Example:
+
+    SUT-02 Android = PASS
+    SUT-02 iOS = FAIL_RUNNER
+
+    Result:
+
+    - Android G-7 = FAIL
+    - iOS G-7 = FAIL
+
+    because Appium 3 is the study-level selected runner and its fallback has been exhausted.
+
+    Do not permit Android merely because its individual smoke passed.
+
+    ## 4. STUDY-LEVEL RUNNER STATUS
+
+    Use the exact study-level status representation already introduced under policy v2, if one exists.
+
+    The terminal state is conceptually:
+
+    `UNRESOLVED_AFTER_FALLBACK_FAILURE`
+
+    Do not invent a conflicting duplicate vocabulary.
+
+    If an ORCHESTRATOR mirror/status field is required for CI, it must be a transcription of the QUALIFIER result and policy consequence, never a substitute for the underlying smoke record.
+
+    G-7 should fail closed if either:
+
+    A. the authoritative study-level mobile-runner status is:
+
+    `UNRESOLVED_AFTER_FALLBACK_FAILURE`;
+
+    OR
+
+    B. the compatibility-smoke records demonstrate a valid `FAIL_RUNNER` under selected Appium 3 but the study-level status has not yet been transcribed consistently.
+
+    A provenance disagreement must block mobile execution, not admit it.
+
+    ## 5. SOURCE-VERIFIED TERMINAL FAILURE
+
+    Do not let a bare mutable mirror entry alone create scientific terminal state.
+
+    For an Appium `FAIL_RUNNER` to be treated as an observed compatibility-smoke failure, require its normal provenance linkage to the QUALIFIER-owned compatibility-smoke record.
+
+    The gate may nevertheless fail closed on inconsistent or incomplete provenance.
+
+    In other words:
+
+    - verified FAIL_RUNNER → terminal mobile block;
+    - inconsistent FAIL_RUNNER representation → fail closed pending reconciliation;
+    - NOT_STARTED / absent → no terminal-failure conclusion, but the individual condition remains blocked because its smoke is not PASS;
+    - NOT_EXECUTED → no terminal runner failure, but that exact condition remains blocked.
+
+    ## 6. PER-CONDITION PASS STILL REQUIRED
+
+    When no study-wide fallback failure exists, preserve the current per-SUT × platform rule.
+
+    For a mobile condition to pass G-7:
+
+    1. selected runner lineage valid;
+    2. selected runner exact version recorded;
+    3. no terminal Appium fallback failure exists anywhere in the applicable smoke set;
+    4. exact condition's SUT × platform × selected-runner smoke = PASS;
+    5. QUALIFIER source record verifies that PASS.
+
+    Thus:
+
+    Android PASS / iOS NOT_STARTED:
+    - Android may pass the smoke portion of G-7;
+    - iOS fails.
+
+    Android PASS / iOS FAIL_RUNNER:
+    - both fail because fallback is exhausted.
+
+    ## 7. STATIC G-7 MATRIX
+
+    Add static tests covering at minimum:
+
+    ### No terminal failure
+
+    Android PASS / iOS NOT_STARTED:
+    - Android PASS
+    - iOS FAIL
+
+    Android NOT_STARTED / iOS PASS:
+    - Android FAIL
+    - iOS PASS
+
+    Android PASS / iOS PASS:
+    - both PASS mobile-runner portion.
+
+    ### Terminal Appium failure
+
+    Android FAIL_RUNNER / iOS NOT_STARTED:
+    - both FAIL.
+
+    Android FAIL_RUNNER / iOS PASS:
+    - both FAIL.
+
+    Android PASS / iOS FAIL_RUNNER:
+    - both FAIL.
+
+    Android NOT_EXECUTED / iOS PASS:
+    - Android FAIL;
+    - iOS may PASS provided no other gate blocks it.
+
+    Android PASS / iOS NOT_EXECUTED:
+    - Android may PASS;
+    - iOS FAIL.
+
+    ### Provenance inconsistency
+
+    Mirror says FAIL_RUNNER but QUALIFIER record absent/inconsistent:
+    - both mobile conditions FAIL CLOSED;
+    - do not assert scientific fallback exhaustion until provenance is reconciled.
+
+    Study status says UNRESOLVED_AFTER_FALLBACK_FAILURE but smoke provenance is missing/inconsistent:
+    - both FAIL CLOSED.
+
+    Study status claims usable runner after verified Appium FAIL_RUNNER:
+    - both FAIL CLOSED.
+
+    ## 8. PROVENANCE OF FUTURE MEASURED RUNS
+
+    Preserve the already corrected selected-runner provenance.
+
+    A mobile measured run must still record:
+
+    `selected_runner = Appium 3`
+
+    `execution_runner = Appium 3`
+
+    exact installed runner version,
+    selection basis,
+    selection authorization,
+    condition-specific compatibility-smoke provenance.
+
+    Do not regress to Mobilewright-as-primary-candidate provenance.
+
+    ## 9. RESOLVE PROTO-U18
+
+    After static verification, set PROTO-U18 to RESOLVED according to the unresolved-record editing rules.
+
+    Record:
+
+    - discovered before compatibility-smoke execution;
+    - no Appium smoke outcome existed when corrected;
+    - mobile-runner-policy-v2 already defined the scientific rule;
+    - correction is prospective CI enforcement only;
+    - no scientific data changed;
+    - no prior measured E03 execution exists.
+
+    Do not alter the original problem description.
+
+    ## 10. MOBILEWRIGHT QUALIFICATION WORKFLOW — EXPLICIT RETIREMENT
+
+    The current Mobilewright qualification workflow now fails because its historical check expects policy v1 to remain FROZEN-PRE-DATA.
+
+    Do not leave this as the primary reason future runs fail.
+
+    Modify the current workflow prospectively so it explicitly refuses qualification execution because:
+
+    - the formal qualification is complete;
+    - AUTH-03 is consumed;
+    - Mobilewright qualification result is FAIL;
+    - Section 8 selected Appium 3;
+    - the study already has a selected mobile runner.
+
+    This is an operational retirement/fail-closed safeguard.
+
+    Do NOT change or reinterpret historical run `35938250936`.
+
+    Its workflow bytes are preserved by the historical Git commit used for that run.
+
+    The current workflow may state clearly:
+
+    `MOBILEWRIGHT_QUALIFICATION_PATH_RETIRED_AFTER_VALID_FORMAL_GATE_AND_RUNNER_SELECTION`
+
+    A future re-opening would require a new explicit protocol decision, not merely a new authorization id.
+
+    ## 11. NO NEW MOBILEWRIGHT AUTHORIZATION
+
+    Do not create:
+
+    - AUTH-04;
+    - new Mobilewright prompt;
+    - new qualification namespace;
+    - new qualification lock.
+
+    AUTH-03 remains:
+
+    VALID,
+    ISSUED,
+    CONSUMED,
+    one dispatch only.
+
+    ## 12. SMOKE LOCK V2 MUST REMAIN VALID
+
+    Reverify:
+
+    `manifests/compatibility-smoke-implementation-lock-v2.yaml`
+
+    and every locked execution-critical artifact.
+
+    If the PROTO-U18 G-7 correction or Mobilewright-workflow retirement does NOT touch a smoke-lock-v2 artifact, lock v2 remains unchanged.
+
+    If anything under lock v2 must change, STOP and report why before silently creating lock v3.
+
+    Expected outcome:
+
+    lock v2 unchanged.
+
+    ## 13. AUTH-01 REMAINS PREPARED
+
+    Do NOT issue:
+
+    `APPIUM3-COMPAT-SMOKE-AUTH-01`
+
+    It must remain:
+
+    DRAFT authorization class,
+    PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION,
+    authorizes_execution false,
+    dispatch_eligibility NOT_ELIGIBLE_UNTIL_ISSUED,
+    issued_by null,
+    issued_at null.
+
+    Do not freeze the working prompt as an issued execution prompt yet unless repository rules explicitly define prompt freezing as a separate pre-issuance step.
+
+    Prefer keeping issuance/freeze together in the next explicit human act.
+
+    ## 14. PROTO-U16
+
+    Leave PROTO-U16 OPEN and separate.
+
+    Do not perform the 24-surface post-E01 manifest transcription in this operation.
+
+    Record explicitly:
+
+    - it does not block Appium compatibility-smoke execution;
+    - the smoke scope is grounded in frozen E01 adjudication;
+    - it must be resolved before E03 campaign START so campaign manifests do not carry stale surface-presence representation.
+
+    ## 15. DASHBOARD
+
+    Update `research-status.html`.
+
+    Correct the stale public-remote-status text that still refers to early exports.
+
+    Represent accurately:
+
+    - public v25 before this operation;
+    - policy v2 frozen canonically;
+    - PROTO-U17 resolved;
+    - Appium smoke implementation lock v2 prepared;
+    - AUTH-01 PREPARED / NOT ISSUED;
+    - no Appium smoke executed;
+    - Android NOT_STARTED;
+    - iOS NOT_STARTED;
+    - E03 NOT_STARTED;
+    - PROTO-U16 OPEN;
+    - PROTO-U18 resolved after this operation.
+
+    Do not imply v2 or the preparation is already public until v26 is actually published.
+
+    ## 16. BUILD PUBLIC EXPORT V26
+
+    After all static checks pass, build and publish a new reproducibility export v26.
+
+    The export must include:
+
+    - mobile-runner-policy-v2;
+    - v1 AMENDED header state;
+    - PROTO-U17 resolution;
+    - PROTO-U18 resolution;
+    - smoke workflow;
+    - smoke harness;
+    - implementation lock v2;
+    - prepared AUTH-01 record;
+    - WORKING / NOT-DISPATCHABLE smoke prompt;
+    - Appium/toolchain pins;
+    - compatibility-smoke mirror;
+    - dashboard/status records;
+    - corrected G-7;
+    - explicitly retired Mobilewright qualification workflow.
+
+    AUTH-01 must still be PREPARED in the public snapshot.
+
+    Publishing preparation does NOT issue it.
+
+    ## 17. PUBLIC EXPORT TRANSFORMATIONS
+
+    Use the established deterministic export mechanism.
+
+    Do not alter canonical smoke hashes silently.
+
+    Where provider-neutral path transformations change exported bytes, preserve canonical SHA-256 ↔ exported SHA-256 provenance in PUBLIC-EXPORT-MANIFEST.
+
+    The implementation lock and execution authorization continue to refer to canonical hashes according to the established canonical/export bridge.
+
+    Do not introduce a new scientific transformation.
+
+    ## 18. PUSH-TRIGGERED VALIDATION ONLY
+
+    Push v26.
+
+    Only normal push-triggered validation may run.
+
+    Do NOT `workflow_dispatch`:
+
+    - compatibility smoke;
+    - qualification;
+    - environment verification;
+    - measured E03.
+
+    Report every validation job and conclusion.
+
+    Any failure:
+
+    STOP.
+
+    ## 19. PUBLIC POST-PUSH AUDIT
+
+    On a fresh public clone verify:
+
+    1. public export version = 26;
+    2. policy v2 present and correctly represented;
+    3. policy v1 historical state = AMENDED;
+    4. PROTO-U17 = RESOLVED;
+    5. PROTO-U18 = RESOLVED;
+    6. Appium smoke workflow exists but cannot execute under PREPARED AUTH-01;
+    7. AUTH-01 remains NOT_ELIGIBLE_UNTIL_ISSUED;
+    8. smoke lock v2 hashes bridge correctly to canonical;
+    9. Android smoke = NOT_STARTED;
+    10. iOS smoke = NOT_STARTED;
+    11. G-7 current Android/iOS conditions still fail because smoke PASS does not exist;
+    12. hypothetical Android PASS / iOS FAIL_RUNNER blocks BOTH mobile measured conditions;
+    13. hypothetical Android PASS / iOS NOT_STARTED allows only Android smoke-gate portion;
+    14. Mobilewright qualification workflow explicitly refuses future qualification rather than relying merely on v1's AMENDED state;
+    15. AUTH-03 remains consumed;
+    16. no new qualification dispatch exists;
+    17. no smoke dispatch exists;
+    18. no E03 run exists.
+
+    ## 20. NO EXECUTION
+
+    Reconfirm externally after publication:
+
+    - newest workflow runs;
+    - no compatibility-smoke workflow_dispatch;
+    - no new Mobilewright workflow_dispatch;
+    - no measured execution;
+    - no Appium process;
+    - no SUT launch.
+
+    ## 21. EXPORT LOG
+
+    Record v26 under the existing publication bookkeeping convention.
+
+    If the post-publication canonical export-log commit is intentionally not itself represented until v27 under the existing design, preserve that convention.
+
+    Do not create an unnecessary export loop.
+
+    ## 22. RETURN PACKAGE
+
+    Return:
+
+    1. PROTO-U18 correction commit SHA;
+    2. exact G-7 terminal-fallback delta;
+    3. static matrix result count;
+    4. Mobilewright-workflow retirement delta;
+    5. confirmation lock v2 unchanged;
+    6. confirmation AUTH-01 lifecycle unchanged;
+    7. dashboard commit;
+    8. canonical export-source HEAD;
+    9. public HEAD;
+    10. public tree;
+    11. export-manifest SHA-256;
+    12. validation run id;
+    13. validation jobs and conclusions;
+    14. public AUTH-01 refusal result;
+    15. public G-7 terminal-failure static results;
+    16. public Mobilewright-retirement refusal result;
+    17. public workflow-run inventory proving no dispatch;
+    18. PROTO-U16 state;
+    19. E03 state.
+
+    ## 23. HARD STOP
+
+    After v26 verification:
+
+    STOP.
+
+    Do not issue AUTH-01.
+
+    Do not dispatch compatibility smoke.
+
+    Do not execute Appium.
+
+    Do not launch SUT-02.
+
+    Do not change smoke results.
+
+    Do not start E03.
+
+    ## 24. REQUIRED FINAL STATE
+
+    End exactly:
+
+    PROTO_U17:
+    RESOLVED_BY_MOBILE_RUNNER_POLICY_V2
+
+    PROTO_U18:
+    RESOLVED_BY_G7_V2_ENFORCEMENT
+
+    MOBILE_RUNNER_POLICY_V2:
+    FROZEN_PUBLICLY_VERIFIED
+
+    MOBILEWRIGHT_QUALIFICATION_PATH:
+    RETIRED_FAIL_CLOSED
+
+    ACTIVE_SMOKE_IMPLEMENTATION_LOCK:
+    V2
+
+    SMOKE_AUTHORIZATION:
+    PREPARED_NOT_ISSUED
+
+    SMOKE_AUTHORIZATION_PUBLIC:
+    YES_PREPARED_ONLY
+
+    SMOKE_DISPATCH:
+    NOT_PERFORMED
+
+    APPIUM3_STUDY_EXECUTION:
+    NOT_PERFORMED
+
+    SUT02_ANDROID_SMOKE:
+    NOT_STARTED
+
+    SUT02_IOS_SMOKE:
+    NOT_STARTED
+
+    COMPATIBILITY_SMOKE_MIRROR:
+    NOT_STARTED_NOT_STARTED
+
+    PROTO_U16:
+    OPEN_SEPARATE_BLOCKS_E03_START_NOT_SMOKE
+
+    PUBLIC_EXPORT_V26:
+    PUBLISHED_VERIFIED
+
+    E03_START:
+    NOT_AUTHORIZED
+
+    E03_EXECUTION:
+    NOT_STARTED
+
+    NEXT_REQUIRED_HUMAN_ACTION:
+    INDEPENDENTLY_REVIEW_PUBLIC_V26_THEN_SEPARATELY_ISSUE_APPIUM3_COMPAT_SMOKE_AUTH_01
+starting_state_verification:  # instruction section 1; all held, no STOP
+  canonical_head: e68e1ee
+  ancestors_verified: [ed2c18d, 24c3e1b, 4450bb3, e68e1ee]
+  PROTO-U17: RESOLVED
+  mobile_runner_policy_v1: AMENDED (Superseded-by row present)
+  mobile_runner_policy_v2: FROZEN-PRE-DATA
+  selected_runner: Appium 3, pin 3.7.0
+  active_smoke_implementation_lock: manifests/compatibility-smoke-implementation-lock-v2.yaml
+  smoke_authorization: {id: APPIUM3-COMPAT-SMOKE-AUTH-01, status: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION, authorizes_execution: false, dispatch_eligibility: NOT_ELIGIBLE_UNTIL_ISSUED}
+  smoke_mirror: SUT-02 android NOT_STARTED, SUT-02 ios NOT_STARTED
+  E03: NOT_STARTED
+proto_u18:
+  classification: IMPLEMENTATION_GAP_AGAINST_FROZEN_MOBILE_RUNNER_POLICY_V2  # not a methodological gap; no mobile-runner-policy-v3
+  correction_commit: b4d1cd65977db0e865abe434328211d9acd618da
+  g7_delta: >-
+    In .github/workflows/e03-measured-execution.yml, gate G-7, for every ANDROID or IOS condition, after the selected-runner
+    lineage and version checks and before the condition's own smoke checks, three new gates: "study-level mobile-runner status
+    is SELECTED (policy v2, 9.5)"; "no FAIL_RUNNER of the selected runner recorded for any SUT x platform (mirror or QUALIFIER
+    record)"; "the selected runner remains admissible study-wide (no exhausted or inconsistent fallback state)", whose state is
+    ADMISSIBLE only when the status is SELECTED and no FAIL_RUNNER evidence exists; FALLBACK_EXHAUSTED_VERIFIED when Appium 3 is
+    selected, every mirror FAIL_RUNNER is linked to its QUALIFIER-owned row (same SUT and platform, FAIL_RUNNER, the pin, an
+    authorization id), every source FAIL_RUNNER row is transcribed, and the status is UNRESOLVED_AFTER_FALLBACK_FAILURE; and
+    PROVENANCE_INCONSISTENT_FAIL_CLOSED otherwise. Smoke rows are read from the Smoke records table only. The per-condition
+    checks (exactly one entry, result PASS, runner_version equal to the pin, a QUALIFIER PASS row) are unchanged and follow.
+    The G-7 header comment names policy v2 (v1 AMENDED). The measured provenance job is unchanged.
+  resolution: protocol/unresolved.md PROTO-U18 RESOLVED (decision 2026-09-26; problem statement unchanged)
+  facts: [discovered before any compatibility-smoke execution, no Appium smoke outcome existed when corrected, mobile-runner-policy-v2 already defined the scientific rule, correction is prospective CI enforcement only, no scientific data changed, no measured E03 execution exists]
+mobilewright_qualification_retirement:
+  commit: a9f7293d046991b32cc151a0807cd3868cac32ad
+  statement: MOBILEWRIGHT_QUALIFICATION_PATH_RETIRED_AFTER_VALID_FORMAL_GATE_AND_RUNNER_SELECTION
+  delta: >-
+    .github/workflows/e03-mobile-qualification.yml: header note; a new second step of the gate job ("Refuse qualification
+    execution (Mobilewright qualification path retired)"), unconditional and before the historical gate step, reports the facts
+    (formal namespace of MOBILE-QUALIFICATION-EXEC-AUTH-03 imported, AUTH-03 CONSUMED_AFTER_DISPATCH, Mobilewright qualification
+    FAILED, section 8 selected Appium 3, a runner is selected) and exits 1 for every dispatch in QUALIFICATION or DEVELOPMENT mode;
+    the platform jobs require the gate's ready output and are skipped. The historical gate logic is unchanged and unreachable.
+  historical_run: 35938250936 is not changed or reinterpreted; its workflow bytes are preserved by the commit it used
+  not_created: [AUTH-04, Mobilewright prompt, qualification namespace, qualification lock]
+  auth_03: VALID, ISSUED, CONSUMED_AFTER_DISPATCH, one dispatch
+  mobilewright_lock_note: manifests/mobile-qualification-implementation-lock-v2.yaml records the workflow hash only as informational (not gate-checked); it is unchanged
+smoke_lock_v2:
+  unchanged: true
+  path: manifests/compatibility-smoke-implementation-lock-v2.yaml
+  sha256: 1382b7ee719d408ab240fe4b1ef5184ad838880af07ea5b55339c49f4652ee4e
+  locked_artifacts_matching: "8 of 8"
+  reason: neither correction touches a locked artifact (the locked workflow is e03-compatibility-smoke.yml; G-7 and the Mobilewright workflow are not locked)
+auth_01_unchanged: {record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT, status: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION, authorizes_execution: false, dispatch_eligibility: NOT_ELIGIBLE_UNTIL_ISSUED, issued_by: null, issued_at: null, sha256: 03c8ac409401fb54a862d9aa61cdc89829c2db7f9c54f3903788fc87699aaf2d}
+working_prompt: not frozen (issuance and freeze stay together in the next explicit human act); sha256 5403ea43eae4425c088a7aac1250e146d28ba5e2d29fa3ca1d91c2e9c90e8034
+proto_u16: OPEN and separate; timing decision appended to its row -- it does not block the compatibility smoke (scope rests on the frozen E01 adjudicated matrix) and must be resolved before E03 campaign START
+static_tests:  # scratch fixtures; nothing dispatched; no Appium, emulator, simulator, or SUT process
+  g7_matrix:
+    result: "42 of 42 as expected; measured provenance as expected (Appium 3 selected and execution runner)"
+    cases:
+      - {case: "PROTO-U15 regression: current canonical state (Appium 3 selected; version not recorded; smoke NOT_STARTED, no QUALIFIER record)", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: current state with the Appium 3 version recorded (smoke still NOT_STARTED)", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: Appium 3 selected, SUT-02 Android smoke PASS, iOS NOT_STARTED", expected: {"ANDROID": "PASS", "IOS": "FAIL"}, observed: {"ANDROID": "PASS", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: Appium 3 selected, SUT-02 iOS smoke PASS, Android NOT_STARTED (inverse)", expected: {"ANDROID": "FAIL", "IOS": "PASS"}, observed: {"ANDROID": "FAIL", "IOS": "PASS"}}
+      - {case: "PROTO-U15 regression: Appium 3 selected, both SUT-02 smokes PASS", expected: {"ANDROID": "PASS", "IOS": "PASS"}, observed: {"ANDROID": "PASS", "IOS": "PASS"}}
+      - {case: "PROTO-U15 regression: no runner selected (Mobilewright FAILED, no Appium selection), both smokes PASS", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: selected runner Appium 2", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: wrong selected version pin (3.8.0)", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: recorded Appium version differs from the 3.7.0 pin", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: selected-runner version missing", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: both SUT-02 smokes FAIL_RUNNER", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: both SUT-02 smokes NOT_EXECUTED", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: both SUT-02 smokes NOT_STARTED", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: smoke PASS records for the wrong SUT (SUT-01) only", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: smoke PASS records for the wrong runner (Mobilewright) only", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: mirror says PASS but the QUALIFIER-owned record has no PASS row", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: mirror says PASS but the QUALIFIER-owned rows say FAIL_RUNNER", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: mirror PASS without a qualifier_record pointer", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: duplicate Android entries (ambiguous) with iOS PASS", expected: {"ANDROID": "FAIL", "IOS": "PASS"}, observed: {"ANDROID": "FAIL", "IOS": "PASS"}}
+      - {case: "PROTO-U15 regression: Appium 3 selection on the quarantined AUTH-01 lineage", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: Appium 3 selected while Mobilewright qualification_status PASSED", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "PROTO-U15 regression: hypothetical valid Mobilewright path with Mobilewright smokes PASS", expected: {"ANDROID": "PASS", "IOS": "PASS"}, observed: {"ANDROID": "PASS", "IOS": "PASS"}}
+      - {case: "PROTO-U15 regression: Mobilewright path with only Appium smoke records", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}}
+      - {case: "WEB condition (G-7 not evaluated)", expected: {"WEB": "NOT_EVALUATED"}, observed: {"WEB": "NOT_EVALUATED"}}
+      - {case: "Android PASS / iOS NOT_STARTED", expected: {"ANDROID": "PASS", "IOS": "FAIL"}, observed: {"ANDROID": "PASS", "IOS": "FAIL"}, state: {"ANDROID": "ADMISSIBLE", "IOS": "ADMISSIBLE"}}
+      - {case: "Android NOT_STARTED / iOS PASS", expected: {"ANDROID": "FAIL", "IOS": "PASS"}, observed: {"ANDROID": "FAIL", "IOS": "PASS"}, state: {"ANDROID": "ADMISSIBLE", "IOS": "ADMISSIBLE"}}
+      - {case: "Android PASS / iOS PASS", expected: {"ANDROID": "PASS", "IOS": "PASS"}, observed: {"ANDROID": "PASS", "IOS": "PASS"}, state: {"ANDROID": "ADMISSIBLE", "IOS": "ADMISSIBLE"}}
+      - {case: "Android FAIL_RUNNER / iOS NOT_STARTED (verified, status UNRESOLVED)", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}, state: {"ANDROID": "FALLBACK_EXHAUSTED_VERIFIED", "IOS": "FALLBACK_EXHAUSTED_VERIFIED"}}
+      - {case: "Android FAIL_RUNNER / iOS PASS (verified, status UNRESOLVED)", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}, state: {"ANDROID": "FALLBACK_EXHAUSTED_VERIFIED", "IOS": "FALLBACK_EXHAUSTED_VERIFIED"}}
+      - {case: "Android PASS / iOS FAIL_RUNNER (verified, status UNRESOLVED)", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}, state: {"ANDROID": "FALLBACK_EXHAUSTED_VERIFIED", "IOS": "FALLBACK_EXHAUSTED_VERIFIED"}}
+      - {case: "Android PASS / iOS FAIL_RUNNER with an attribution-records row present", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}, state: {"ANDROID": "FALLBACK_EXHAUSTED_VERIFIED", "IOS": "FALLBACK_EXHAUSTED_VERIFIED"}}
+      - {case: "Android NOT_EXECUTED / iOS PASS", expected: {"ANDROID": "FAIL", "IOS": "PASS"}, observed: {"ANDROID": "FAIL", "IOS": "PASS"}, state: {"ANDROID": "ADMISSIBLE", "IOS": "ADMISSIBLE"}}
+      - {case: "Android PASS / iOS NOT_EXECUTED", expected: {"ANDROID": "PASS", "IOS": "FAIL"}, observed: {"ANDROID": "PASS", "IOS": "FAIL"}, state: {"ANDROID": "ADMISSIBLE", "IOS": "ADMISSIBLE"}}
+      - {case: "mirror iOS FAIL_RUNNER but no QUALIFIER row for it (status UNRESOLVED)", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}, state: {"ANDROID": "PROVENANCE_INCONSISTENT_FAIL_CLOSED", "IOS": "PROVENANCE_INCONSISTENT_FAIL_CLOSED"}}
+      - {case: "mirror iOS FAIL_RUNNER but the QUALIFIER row reads PASS (status UNRESOLVED)", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}, state: {"ANDROID": "PROVENANCE_INCONSISTENT_FAIL_CLOSED", "IOS": "PROVENANCE_INCONSISTENT_FAIL_CLOSED"}}
+      - {case: "mirror iOS FAIL_RUNNER without an authorization id (status UNRESOLVED)", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}, state: {"ANDROID": "PROVENANCE_INCONSISTENT_FAIL_CLOSED", "IOS": "PROVENANCE_INCONSISTENT_FAIL_CLOSED"}}
+      - {case: "status UNRESOLVED_AFTER_FALLBACK_FAILURE but no FAIL_RUNNER anywhere (both PASS)", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}, state: {"ANDROID": "PROVENANCE_INCONSISTENT_FAIL_CLOSED", "IOS": "PROVENANCE_INCONSISTENT_FAIL_CLOSED"}}
+      - {case: "status SELECTED after a verified iOS FAIL_RUNNER", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}, state: {"ANDROID": "PROVENANCE_INCONSISTENT_FAIL_CLOSED", "IOS": "PROVENANCE_INCONSISTENT_FAIL_CLOSED"}}
+      - {case: "QUALIFIER row iOS FAIL_RUNNER not transcribed (mirror iOS NOT_STARTED, status SELECTED)", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}, state: {"ANDROID": "PROVENANCE_INCONSISTENT_FAIL_CLOSED", "IOS": "PROVENANCE_INCONSISTENT_FAIL_CLOSED"}}
+      - {case: "QUALIFIER row iOS FAIL_RUNNER not transcribed (mirror iOS NOT_STARTED, status UNRESOLVED)", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}, state: {"ANDROID": "PROVENANCE_INCONSISTENT_FAIL_CLOSED", "IOS": "PROVENANCE_INCONSISTENT_FAIL_CLOSED"}}
+      - {case: "study-level status absent (both PASS)", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}, state: {"ANDROID": "PROVENANCE_INCONSISTENT_FAIL_CLOSED", "IOS": "PROVENANCE_INCONSISTENT_FAIL_CLOSED"}}
+      - {case: "FAIL_RUNNER of another SUT x platform (SUT-01 android, verified) blocks SUT-02 too", expected: {"ANDROID": "FAIL", "IOS": "FAIL"}, observed: {"ANDROID": "FAIL", "IOS": "FAIL"}, state: {"ANDROID": "FALLBACK_EXHAUSTED_VERIFIED", "IOS": "FALLBACK_EXHAUSTED_VERIFIED"}}
+  mobilewright_retirement:
+    result: "9 of 9 as expected"
+    cases:
+      - "retirement step refuses (QUALIFICATION, id MOBILE-QUALIFICATION-EXEC-AUTH-03)"
+      - "retirement step refuses (DEVELOPMENT, id MOBILE-QUALIFICATION-EXEC-AUTH-04)"
+      - "retirement step refuses (QUALIFICATION, id none)"
+      - "retirement step precedes the historical gate step and has no condition"
+      - "platform jobs are skipped when the gate step never sets ready (android)"
+      - "platform jobs are skipped when the gate step never sets ready (ios, both platform modes)"
+      - "validate fails if the retirement step is removed"
+      - "validate fails if the G-7 admissibility gate is removed"
+      - "validate passes on the unmodified tree"
+  compatibility_smoke_gate: "58 of 58 as expected (lock v2 unchanged; the prepared AUTH-01 is refused)"
+  topology_and_validate_invariants:
+    result: "13 of 13 as expected"
+    cases:
+      - "iOS job runs only for Android success + proposed PASS (24 combinations)"
+      - "iOS job never runs when the gate is not ready"
+      - "Android proposal step: PASS only from outcome SUCCESS; no record -> NO_RECORD; inconsistent -> INCONSISTENT"
+      - "validate: baseline (prepared, nothing recorded)"
+      - "validate: mirror PASS over a QUALIFIER NOT_EXECUTED row"
+      - "validate: mirror PASS over a QUALIFIER FAIL_RUNNER row"
+      - "validate: mirror PASS with no QUALIFIER row"
+      - "validate: mirror NOT_EXECUTED equal to the QUALIFIER row"
+      - "validate: Appium FAIL_RUNNER recorded while status stays SELECTED"
+      - "validate: Appium FAIL_RUNNER recorded with status UNRESOLVED_AFTER_FALLBACK_FAILURE"
+      - "validate: status outside the v2 vocabulary"
+      - "validate: mirror NOT_EXECUTED equal to the QUALIFIER row, with its attribution-records row present"
+      - "validate: mirror PASS over a NOT_EXECUTED row with an attribution row present"
+  lint: actionlint 1.7.7 on every workflow, no findings; every validation-workflow step run locally
+publication: public export v26 of the canonical state that includes this record and the dashboard update; its build report, validation run, and post-push audit are recorded in PUBLIC-EXPORT-MANIFEST.yaml (export_log v26)

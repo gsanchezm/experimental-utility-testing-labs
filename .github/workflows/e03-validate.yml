@@ -260,12 +260,104 @@ jobs:
           ios = w['jobs']['qualification-ios']
           needs = ios.get('needs') if isinstance(ios.get('needs'), list) else [ios.get('needs')]
           checks.append(('the iOS job needs the Android job and runs under platform both only after Android succeeded', 'qualification-android' in needs and "inputs.platform == 'both' && needs.qualification-android.result == 'success'" in str(ios.get('if', ''))))
+          # Retirement (2026-09-26): the first step after checkout refuses every dispatch unconditionally, before the gate.
+          gsteps = w['jobs']['gate']['steps']
+          ret = gsteps[1] if len(gsteps) > 2 else {}
+          checks.append(('the Mobilewright qualification path is retired: the gate job refuses every dispatch before its checks', 'MOBILEWRIGHT_QUALIFICATION_PATH_RETIRED_AFTER_VALID_FORMAL_GATE_AND_RUNNER_SELECTION' in str(ret.get('run', '')) and str(ret.get('run', '')).rstrip().endswith('PY') and '\nsys.exit(1)\nPY' in str(ret.get('run', '')) and 'if' not in ret and gsteps[2].get('id') == 'gate'))
           bad_checks = [name for name, ok in checks if not ok]
           for name, ok in checks:
               print(('PASS ' if ok else 'FAIL ') + name)
           if bad_checks:
               print('mobile-qualification authorization resolution regression check FAILED'); sys.exit(1)
           print('mobile-qualification authorization resolution regression check ok')
+          PY
+      - name: Assert G-7 enforces the study-wide exhausted-fallback rule of mobile-runner-policy-v2 (PROTO-U18)
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import sys
+          wf = open('.github/workflows/e03-measured-execution.yml').read()
+          checks = [
+              ('G-7 requires the study-level mobile-runner status SELECTED', "gate('study-level mobile-runner status is SELECTED (policy v2, 9.5)', status == 'SELECTED'" in wf),
+              ('G-7 refuses any FAIL_RUNNER of the selected runner on any SUT x platform (mirror or QUALIFIER record)', "gate('no FAIL_RUNNER of the selected runner recorded for any SUT x platform (mirror or QUALIFIER record)', not (mir_fail or src_fail)" in wf),
+              ('G-7 classifies the study-wide state and admits only ADMISSIBLE', "fb_state == 'ADMISSIBLE'" in wf and "'FALLBACK_EXHAUSTED_VERIFIED'" in wf and "'PROVENANCE_INCONSISTENT_FAIL_CLOSED'" in wf),
+              ('the study-wide check precedes the per-condition smoke check', wf.index("fb_state == 'ADMISSIBLE'") < wf.index("gate(f'exactly one compatibility-smoke entry for")),
+          ]
+          for n, ok in checks:
+              print(('PASS ' if ok else 'FAIL ') + n)
+          if not all(ok for _, ok in checks):
+              print('G-7 exhausted-fallback regression check FAILED'); sys.exit(1)
+          print('G-7 exhausted-fallback regression check ok')
+          PY
+      - name: Assert the compatibility-smoke workflow stays dispatch-only and fail-closed
+        run: |
+          set -euo pipefail
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - <<'PY'
+          import glob, os, sys, yaml
+          # Appium 3 compatibility smoke (human instruction PREPARE AND FREEZE APPIUM 3 COMPATIBILITY SMOKE, 2026-09-24;
+          # manifests/appium3-compat-smoke-preparation-v1.yaml; adapted to protocol/mobile-runner-policy-v2.md on 2026-09-26,
+          # manifests/mobile-runner-policy-v2-amendment-v1.yaml). Structure is parsed, not string-matched, where possible.
+          p = '.github/workflows/e03-compatibility-smoke.yml'
+          wf = open(p).read(); w = yaml.safe_load(wf)
+          on = w.get(True, w.get('on')) or {}
+          jobs = w.get('jobs') or {}
+          ups = {j: [s for s in (jobs.get(j) or {}).get('steps', []) if str(s.get('uses', '')).startswith('actions/upload-artifact')] for j in ('smoke-android', 'smoke-ios')}
+          checks = [
+              ('triggered by workflow_dispatch only (never push)', list(on) == ['workflow_dispatch']),
+              ('token permissions contents: read, no job-level override', w.get('permissions') == {'contents': 'read'} and all('permissions' not in j for j in jobs.values())),
+              ('topology gate -> smoke-android -> smoke-ios', set(jobs) == {'gate', 'smoke-android', 'smoke-ios'} and jobs['smoke-android'].get('needs') == 'gate' and jobs['smoke-ios'].get('needs') == ['gate', 'smoke-android']),
+              ('both platform jobs require the gate output ready', all("needs.gate.outputs.ready == 'true'" in str(jobs[j].get('if', '')) for j in ('smoke-android', 'smoke-ios'))),
+              ('iOS starts only after the Android job succeeded with proposed PASS (policy v2, 9.5)', "needs.smoke-android.result == 'success'" in str(jobs['smoke-ios'].get('if', '')) and "needs.smoke-android.outputs.proposed_result == 'PASS'" in str(jobs['smoke-ios'].get('if', '')) and 'always()' not in str(jobs['smoke-ios'].get('if', '')) and 'cancelled()' not in str(jobs['smoke-ios'].get('if', ''))),
+              ('the gate requires policy v2 FROZEN, v1 AMENDED, and the study-level mobile-runner status SELECTED', "'| Superseded by | protocol/mobile-runner-policy-v2.md |' in pol1" in wf and "sel.get('mobile_runner_status') == 'SELECTED'" in wf and "auth.get('governing_policy') == 'protocol/mobile-runner-policy-v2.md'" in wf),
+              ('resolves the smoke authorization by globbing its record family', "glob.glob('manifests/compatibility-smoke-execution-auth-v*.yaml')" in wf and 'len(matches) == 1' in wf),
+              ('requires an issued, non-draft, VALID, human-issued, executable record', "auth.get('record_class') == 'COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION'" in wf and "auth.get('status') == 'ISSUED'" in wf and "auth.get('record_validity') == 'VALID'" in wf and "auth.get('authorizes_execution') is True" in wf and "'orchestrator'" in wf),
+              ('requires dispatch_eligibility exactly ELIGIBLE and no prior dispatch', "auth.get('dispatch_eligibility') == 'ELIGIBLE'" in wf and "auth.get('dispatch_performed') is not True" in wf),
+              ('recomputes the implementation-lock hashes and the realization section hash', "os.path.isfile(p) and sha(p) == a.get('sha256')" in wf and "hashlib.sha256(sec.encode('utf-8')).hexdigest() == rs.get('sha256')" in wf),
+              ('refuses a GitHub re-run in the gate and in both platform jobs', "os.environ.get('GITHUB_RUN_ATTEMPT', '1') == '1'" in wf and wf.count('test "') >= 2),
+              ('requires E03-resetability NOT_STARTED', "st.get('E03-resetability') == 'NOT_STARTED'" in wf),
+              ('uploads each platform only from its own authorization-specific directory', len(ups['smoke-android']) == 1 and len(ups['smoke-ios']) == 1 and str(ups['smoke-android'][0]['with']['path']).endswith('/SUT-02-android') and str(ups['smoke-ios'][0]['with']['path']).endswith('/SUT-02-ios')),
+              ('writes nothing to raw-data/ and never labels a measured experiment', all('raw-data' not in s.get('run', '') for j in jobs.values() for s in j.get('steps', [])) and 'MEASURED_EXPERIMENT' not in wf),
+          ]
+          # Lifecycle consistency of the smoke authorization records (a prepared record never authorizes anything).
+          for f in sorted(glob.glob('manifests/compatibility-smoke-execution-auth-v*.yaml')):
+              a = yaml.safe_load(open(f)) or {}
+              if str(a.get('status', '')).startswith('PREPARED'):
+                  checks.append((f + ': prepared record authorizes nothing', a.get('record_class', '').endswith('_DRAFT') and a.get('authorizes_execution') is False and a.get('dispatch_eligibility') == 'NOT_ELIGIBLE_UNTIL_ISSUED' and a.get('issued_by') is None and a.get('dispatch_performed') is not True))
+              if a.get('dispatch_eligibility') == 'ELIGIBLE':
+                  fc = (a.get('launch_prompt') or {}).get('frozen_copy') or ''
+                  checks.append((f + ': an ELIGIBLE record is ISSUED, VALID, human-issued, with its frozen prompt', a.get('status') == 'ISSUED' and a.get('record_validity') == 'VALID' and a.get('authorizes_execution') is True and bool(a.get('issued_by')) and bool(fc) and os.path.isfile(fc)))
+          # Mirror transcription rule: a value other than NOT_STARTED needs its QUALIFIER source record and must equal that
+          # record's result for the same SUT and platform (a NOT_EXECUTED or FAIL_RUNNER row never becomes PASS here).
+          m = yaml.safe_load(open('manifests/compatibility-smoke-status.yaml')) or {}
+          for e in m.get('entries') or []:
+              if e.get('result') != 'NOT_STARTED':
+                  qr = str(e.get('qualifier_record') or '')
+                  rows = []
+                  if qr.startswith('qualification/compatibility-smoke/') and os.path.isfile(qr):
+                      text = open(qr).read()
+                      if '## Smoke records' in text:  # the "Attribution records" table has another column order
+                          text = text[text.index('## Smoke records'):]
+                          text = text[:text.index('\n## ', 4)] if '\n## ' in text[4:] else text
+                      for line in text.splitlines():
+                          cells = [c.strip() for c in line.strip().strip('|').split('|')]
+                          if line.startswith('|') and len(cells) >= 8 and cells[0] == e.get('sut_id') and cells[1] == e.get('platform'):
+                              rows.append(cells)
+                  checks.append((f"mirror {e.get('sut_id')} {e.get('platform')}: transcribed from an existing QUALIFIER record", qr.startswith('qualification/compatibility-smoke/') and os.path.isfile(qr) and bool(e.get('runner_version')) and bool(e.get('authorization_id'))))
+                  checks.append((f"mirror {e.get('sut_id')} {e.get('platform')}: result equals the QUALIFIER row ({e.get('result')})", len(rows) >= 1 and rows[-1][7] == e.get('result')))
+          # Study-level status (policy v2, 9.5): a recorded FAIL_RUNNER of the selected runner exhausts the fallback.
+          tm = (yaml.safe_load(open('manifests/toolchain-manifest.yaml')) or {}).get('tools') or {}
+          sel = tm.get('mobile_runner_selection') or {}
+          status = sel.get('mobile_runner_status')
+          checks.append(('study-level mobile-runner status is SELECTED or UNRESOLVED_AFTER_FALLBACK_FAILURE', status in ('SELECTED', 'UNRESOLVED_AFTER_FALLBACK_FAILURE')))
+          if [e for e in m.get('entries') or [] if e.get('runner') == sel.get('selected_runner') == 'Appium 3' and e.get('result') == 'FAIL_RUNNER']:
+              checks.append(('a FAIL_RUNNER of the selected Appium 3 is recorded with status UNRESOLVED_AFTER_FALLBACK_FAILURE', status == 'UNRESOLVED_AFTER_FALLBACK_FAILURE'))
+          bad = [n for n, ok in checks if not ok]
+          for n, ok in checks:
+              print(('PASS ' if ok else 'FAIL ') + n)
+          if bad:
+              print('compatibility-smoke workflow regression check FAILED'); sys.exit(1)
+          print('compatibility-smoke workflow regression check ok')
           PY
       - name: Assert every workflow, job, step, and artifact name is domain-oriented
         run: |

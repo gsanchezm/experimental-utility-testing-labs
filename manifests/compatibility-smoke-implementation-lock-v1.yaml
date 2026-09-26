@@ -1,0 +1,157 @@
+# Compatibility-smoke implementation lock v1 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# Locks the exact execution-critical bytes of the Appium 3 per-SUT compatibility smoke (protocol/mobile-runner-policy-v1.md,
+# section 9) for SUT-02 (system under test SUT-02, Sauce Labs Demo Ecosystem) x Android and SUT-02 x iOS, BEFORE any smoke
+# outcome is observed. The readiness gate of .github/workflows/e03-compatibility-smoke.yml recomputes every hash below from
+# its own checkout and fails closed on any mismatch; it never trusts this file's values without recomputation.
+record_class: COMPATIBILITY_SMOKE_IMPLEMENTATION_LOCK
+lock_id: APPIUM3-COMPAT-SMOKE-IMPLEMENTATION-LOCK-01
+study_id: EUS-2026-001
+protocol_version: v1
+created_on: "2026-09-24"
+created_by_role: ORCHESTRATOR
+locked_artifact_authorship: ORCHESTRATOR (workflow, under E03-CI-WRITE-AUTH-01); QUALIFIER-MOBILE-01, relayed (harness, scripts, realization)
+human_instruction: PREPARE AND FREEZE APPIUM 3 COMPATIBILITY SMOKE (gilbertosanchez, 2026-09-24; verbatim in manifests/appium3-compat-smoke-preparation-v1.yaml)
+status: LOCKED_NOT_EXECUTED
+governing_definition: protocol/mobile-runner-policy-v1.md, section 9 (FROZEN-PRE-DATA); result vocabulary PASS, FAIL_RUNNER, NOT_EXECUTED
+scope:
+  sut_id: SUT-02
+  platforms: [android, ios]
+  runner: Appium 3
+  runner_version: "3.7.0"
+  executions_per_platform: 1
+  independence: an Android result never implies an iOS result, nor the reverse
+hash_convention: SHA-256 (hex) of the exact committed bytes of each file at its repository path.
+artifacts:
+  - path: .github/workflows/e03-compatibility-smoke.yml
+    authored_by_role: ORCHESTRATOR
+    role: "dispatch-only workflow: readiness gate, then SUT-02 Android, then SUT-02 iOS"
+    bytes: 21723
+    sha256: c551bcb7f6fa60a37400e78ecfa6fe3a34092d0df1ca54c5c7c20c0e38a33e19
+  - path: qualification/compatibility-smoke/smoke-common.sh
+    authored_by_role: QUALIFIER-MOBILE-01
+    role: "build acquisition and SHA-256 verification, toolchain install and pin check, Appium server start, harness invocation, stop records"
+    bytes: 11674
+    sha256: 9a2435def2d5176267adfdcc8ad4b92ddb8cdc0f21000037f8b832e27add1d4b
+  - path: qualification/compatibility-smoke/run-smoke-android.sh
+    authored_by_role: QUALIFIER-MOBILE-01
+    role: "Android platform script: single emulator, API 35 check, clean start, run"
+    bytes: 2271
+    sha256: 2abcc47d40660d7ca23169652c7684842d48a2043b687b1d77fbed3b59744c60
+  - path: qualification/compatibility-smoke/run-smoke-ios.sh
+    authored_by_role: QUALIFIER-MOBILE-01
+    role: "iOS platform script: Xcode 16.4 (16F6) check, single iPhone 16 / iOS 18.5 simulator, unpack and identity checks, clean start, run"
+    bytes: 2471
+    sha256: c27d7ca00a1dff2870a5ac9bac488283f76a43dc67869cfea927818bec805dbc
+  - path: qualification/compatibility-smoke/harness/package.json
+    authored_by_role: QUALIFIER-MOBILE-01
+    role: "Appium configuration: exact core and driver pins, Node.js engine range"
+    bytes: 654
+    sha256: 7467dc264940abad41ba353e98e3e55d31ffbddb289c8109987d2393691d0c22
+  - path: qualification/compatibility-smoke/harness/package-lock.json
+    authored_by_role: QUALIFIER-MOBILE-01
+    role: "deterministic install input for npm ci (lockfileVersion 3)"
+    bytes: 299886
+    sha256: 8a4a02cafa1edec0e8eb7704cec107ab6a2c398dd1e0c8e8a9df3dcb9ac3b3f5
+  - path: qualification/compatibility-smoke/harness/wd.mjs
+    authored_by_role: QUALIFIER-MOBILE-01
+    role: "harness-owned minimal W3C WebDriver client (no client library)"
+    bytes: 4480
+    sha256: 72ace59c31a5d58a71795b162012e2ead139773ac02e7927ce20f65f1f0c3c26
+  - path: qualification/compatibility-smoke/harness/smoke.mjs
+    authored_by_role: QUALIFIER-MOBILE-01
+    role: "harness: executable realization of MC-01, MC-02, MC-06, MC-04, MC-08, MC-10 per platform, record writer"
+    bytes: 12281
+    sha256: 7120d314c87cf93ae3c053f635faf5e7ca7fbb298845d6155f393595ab548a5a
+realization_section:
+  path: qualification/compatibility-smoke/README.md
+  heading: "## Concrete realization (recorded before any execution)"
+  extraction: >-
+    UTF-8 text of the file from the first character of the only line starting with "## Concrete realization" up to, and
+    excluding, the line feed that immediately precedes the line starting with "## Implementation"; SHA-256 of that
+    string encoded as UTF-8.
+  sha256: 3114ff5568bbcdbcd1ce2dc501ba72b52d4285c4c6eeec8e08a61bbad7e19d6c
+  characters: 6154
+  note: >-
+    The rest of the README is not locked: its smoke-records table and outcome section are where QUALIFIER-MOBILE-01
+    records the results after an authorized execution. The gate separately requires that table to have zero rows
+    before dispatch. smoke.mjs exposes realizationSha256() (SHA-256 of its REALIZATION constant) and stamps it on every
+    smoke record; it is covered by the smoke.mjs hash above.
+sut_builds:
+  android:
+    sut_component_id: SUT-02-android
+    repository: https://github.com/saucelabs/my-demo-app-android
+    release: "2.2.0"
+    commit_sha_or_tag: 36b012eecdf6a2b488b9504e16b3d0c3ca9a0e7b
+    asset: mda-2.2.0-25.apk
+    url: https://github.com/saucelabs/my-demo-app-android/releases/download/2.2.0/mda-2.2.0-25.apk
+    bytes: 17931946
+    sha256: 318ef64bdcaff18e576d962ab1f557e0a2683b9b5210a6bb6b25cb0caeef62b4
+    sha256_basis: local download and recomputation 2026-09-24; the publisher exposes no asset digest for this 2024 release (digest null)
+    application_id: com.saucelabs.mydemoapp.android
+    version_code: 25
+    version_name: "2.2.0"
+  ios:
+    sut_component_id: SUT-02-ios
+    repository: https://github.com/saucelabs/my-demo-app-ios
+    release: "2.2.2"
+    commit_sha_or_tag: 031358f56903742103a02d086f8af76735bb31a7
+    tag_object_dereferences_to_commit: ede6fa4b7f57a75bc31f626b6ca531339e83d5c0
+    asset: SauceLabs-Demo-App.Simulator.zip
+    url: https://github.com/saucelabs/my-demo-app-ios/releases/download/2.2.2/SauceLabs-Demo-App.Simulator.zip
+    bytes: 4934069
+    sha256: 96b08d5ac74dd817d95fbd8332ae9385bb076af38d56d13d8465345cb1797139
+    sha256_basis: publisher asset digest (GitHub release metadata) equal to local download and recomputation 2026-09-24
+    application_path_in_archive: Payload/My Demo App.app
+    bundle_id: com.saucelabs.mydemo.app.ios
+    short_version: "2.2.2"
+    build: "1"
+    supported_platform: iPhoneSimulator
+    not_used: >-
+      SauceLabs-Demo-App-Runner.Simulator.XCUITest.zip and the .ipa assets of the same release: the Runner archive is the
+      vendor's UI-test runner bundle (MyDemoAppUITests-Runner.app), not the application; the .ipa assets are device builds.
+toolchain:
+  appium_core:
+    package: appium
+    version: "3.7.0"
+    integrity: sha512-2AWajtPbjYGTJmVqpavGctO7zK9M7Q74L3vK9lFKPs6qr3N3/xy3STHnkXJk/wgaZ+BDgeKD68zQQ5sAP6A/cA==
+  android_driver:
+    package: appium-uiautomator2-driver
+    version: "8.7.0"
+    integrity: sha512-5ABLmKeAkE13QkNB2Qd9hTOYl2nfia6ZQ5QNCXefMzlr2HOdsq7T79FZ8Ad2kOydjdI9c1hb6LZ3ctanbUUbOA==
+  ios_driver:
+    package: appium-xcuitest-driver
+    version: "12.13.2"
+    integrity: sha512-89yRd+EEBsF909JyhpGdy8XBYpiEZFmlqNWdVL+g2Kz8Miu4e+vhUQPNQrKOQ0cKnea0qR4EcZFc1zHhgz4sTA==
+  client:
+    library: none
+    kind: harness-owned minimal W3C WebDriver client over the Node.js built-in fetch (qualification/compatibility-smoke/harness/wd.mjs, locked above)
+  node:
+    version: "22.23.2"
+    provisioned_by: actions/setup-node@v4 (node-version pinned in the workflow; smoke-common.sh refuses any other version)
+  package_manager: npm bundled with the pinned Node.js; install is npm ci from the locked package-lock.json only
+  lockfile:
+    path: qualification/compatibility-smoke/harness/package-lock.json
+    lockfile_version: 3
+    package_entries: 820 (the root project plus 819 packages -- 324 resolved from registry.npmjs.org, each with an integrity hash; 495 marked inBundle, shipped inside the appium-uiautomator2-driver and appium-xcuitest-driver tarballs and covered by those tarballs' integrity hashes)
+    appium_2_entries: 0
+    resolution: npm install --package-lock-only --ignore-scripts on 2026-09-24 (metadata resolution only; nothing installed or executed)
+  bundled_components_resolved: {"appium-uiautomator2-server": "10.6.6", "appium-adb": "16.0.5", "appium-webdriveragent": "16.12.10", "appium-ios-simulator": "10.1.1", "appium-xcode": "7.1.1", "@appium/base-driver": "10.8.0"}
+  appium_home: the harness directory (drivers are npm dependencies; no global install, no appium driver install command)
+  plugins: none
+substrates:
+  android: GitHub-hosted ubuntu-24.04; ReactiveCircus/android-emulator-runner pinned at a421e43855164a8197daf9d8d40fe71c6996bb0d; system-images;android-35;google_apis;x86_64; profile pixel_7; environment_type EMULATED
+  ios: GitHub-hosted macos-15; Xcode 16.4 build 16F6 selected with xcode-select; iPhone 16; iOS 18.5 runtime; environment_type SIMULATED
+  recorded_at_execution: runner image version, emulator build fingerprint, Java runtime (Android), Xcode and macOS versions (iOS), installed core and driver versions
+output_namespace:
+  android: qualification/compatibility-smoke/formal/<authorization id>/SUT-02-android/
+  ios: qualification/compatibility-smoke/formal/<authorization id>/SUT-02-ios/
+  rule: absent or empty (only .gitkeep) before the execution; never the Mobilewright formal or quarantine trees; never raw-data/
+publication_integrity: >-
+  At lock time no locked file and not the README contains any string the public export rewrites (the export's
+  PROVIDER_NEUTRAL_PATH_ALIAS and PROVIDER_NEUTRAL_METADATA_REWRITE classes) or any token-like remnant, so every locked
+  file is exported byte-identical (UNCHANGED). In a published checkout the gate additionally requires the
+  PUBLIC-EXPORT-MANIFEST.yaml entry of each locked file, the README, this lock, and the frozen launch prompt to be UNCHANGED.
+change_rule: >-
+  Any change to a locked byte, the realization section, a build pin, or a toolchain pin requires a new lock version
+  (a new file; this one is never edited in place) and a new or re-issued authorization record that names it. A change
+  made after observing any smoke outcome is outcome-responsive and is not admissible for the same authorization.
