@@ -1,23 +1,49 @@
 # Compatibility-smoke execution authorization v1 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
-# PREPARED, NOT ISSUED. This record authorizes nothing: it is a draft prepared by the ORCHESTRATOR under the human
-# instruction PREPARE AND FREEZE APPIUM 3 COMPATIBILITY SMOKE (2026-09-24), which authorized preparation only. The
-# readiness gate of .github/workflows/e03-compatibility-smoke.yml refuses it as long as any lifecycle field below differs
-# from the issued values (record_class COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION, record_validity VALID, status ISSUED,
-# a human issued_by, authorizes_execution true, dispatch_eligibility ELIGIBLE, a frozen launch prompt). Issuance is a
-# separate explicit human act after review of the preparation package; dispatch is a further separate explicit human act.
-# Updated in place on 2026-09-26, still PREPARED and NOT ISSUED, to reference only protocol/mobile-runner-policy-v2.md, the
-# successor implementation lock v2, and the updated working prompt (human instruction RESOLVE PROTO-U17 THROUGH
-# MOBILE-RUNNER-POLICY-V2 AND RE-LOCK THE APPIUM 3 COMPATIBILITY SMOKE; see amendment_history below).
+# STATUS: ISSUED (promoted in place 2026-09-26; see the ISSUANCE note below), NOT DISPATCHED. The "-prepared" filename is
+# HISTORICAL / PROVENANCE-ORIENTED ONLY: it names the file that carried this authorization_id from its PREPARED state
+# through issuance, per the issuance procedure this file itself recorded (no second file may ever carry this
+# authorization_id; the MOBILE-QUALIFICATION-EXEC-AUTH-03 precedent). The lifecycle fields below (record_class, status,
+# record_validity, issued_by, issued_at, authorizes_execution, dispatch_eligibility, dispatch_performed) are authoritative;
+# the filename is not renamed.
+#
+# History preserved (this file was NOT an authorization before the issuance below; git history shows its PREPARED text
+# verbatim): it was prepared by the ORCHESTRATOR under the human instruction PREPARE AND FREEZE APPIUM 3 COMPATIBILITY
+# SMOKE (2026-09-24), which authorized preparation only, and updated in place on 2026-09-26, still PREPARED and NOT
+# ISSUED, to reference only protocol/mobile-runner-policy-v2.md, the successor implementation lock v2, and the updated
+# working prompt (human instruction RESOLVE PROTO-U17 THROUGH MOBILE-RUNNER-POLICY-V2 AND RE-LOCK THE APPIUM 3
+# COMPATIBILITY SMOKE; amendment_history below). While PREPARED, record_class was
+# COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT, status PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION, record_validity
+# null, authorizes_execution false, dispatch_eligibility NOT_ELIGIBLE_UNTIL_ISSUED, issued_by and issued_at null, and
+# launch_prompt.frozen_copy null: the readiness gate of .github/workflows/e03-compatibility-smoke.yml refused the record on
+# each ground, and public export v26 (2026-09-26) published it in that PREPARED state.
+#
+# ISSUANCE (2026-09-26): the human research lead explicitly issued and approved APPIUM3-COMPAT-SMOKE-AUTH-01 as live session
+# input to the ORCHESTRATOR ("EUS-2026-001 -- EXPLICIT APPIUM3-COMPAT-SMOKE-AUTH-01 ISSUANCE AND PUBLICATION": "I,
+# gilbertosanchez, human research lead for EUS-2026-001, have reviewed the public v26 Appium 3 compatibility-smoke
+# preparation and deliberately adopt this instruction as my own authorization. I explicitly issue and approve:
+# APPIUM3-COMPAT-SMOKE-AUTH-01"), reproduced verbatim below (issuance_instruction_verbatim, sha256 alongside). The
+# instruction restates the prepared scope unchanged and explicitly withholds dispatch ("THIS INSTRUCTION ISSUES AUTH-01. IT
+# DOES NOT DISPATCH AUTH-01."). Issuance is not dispatch: no workflow was dispatched, and neither Appium, the smoke harness,
+# an emulator, a simulator, nor the SUT-02 application was executed at issuance (only static checks were run). Because
+# GitHub Actions evaluates only the public repository, the issued record and its frozen launch prompt must be published
+# (public export v27, authorized by the same instruction) before any dispatch; the dispatch itself requires another,
+# separate explicit human instruction.
 authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-01
 authorization_type: COMPATIBILITY_SMOKE_EXECUTION
-record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT
-status: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION
-record_validity: null
-authorizes_execution: false
-dispatch_eligibility: NOT_ELIGIBLE_UNTIL_ISSUED
-dispatch_performed: false
-issued_by: null
-issued_at: null
+record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION  # promoted 2026-09-26 at explicit human issuance; was COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT while PREPARED
+status: ISSUED  # was PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION until the explicit human issuance of 2026-09-26
+record_validity: VALID  # null while PREPARED; set at issuance
+authorizes_execution: true  # was false while PREPARED; permits exactly the scope below, once, and only on a separate explicit human dispatch instruction
+dispatch_eligibility: ELIGIBLE  # was NOT_ELIGIBLE_UNTIL_ISSUED while PREPARED; closed in place to CONSUMED_AFTER_DISPATCH after its one dispatch
+dispatch_performed: false  # unchanged at issuance: issuance, publication, and static readiness checks are not dispatch and do not consume this authorization
+issued_by: gilbertosanchez  # explicit human issuance, live session input, 2026-09-26 -- see the ISSUANCE note above
+issued_at: "2026-09-26"
+issued_under_instruction: "EUS-2026-001 -- EXPLICIT APPIUM3-COMPAT-SMOKE-AUTH-01 ISSUANCE AND PUBLICATION (explicit human instruction, live session input to the ORCHESTRATOR, 2026-09-26; verbatim below); it issues AUTH-01, authorizes its publication as public export v27, and explicitly withholds dispatch"
+issuance_basis: "explicit human adoption and issuance as live instruction (issuance_procedure step 2): the instruction states 'I ... deliberately adopt this instruction as my own authorization' and 'I explicitly issue and approve: APPIUM3-COMPAT-SMOKE-AUTH-01'; the origin of the wording is not a criterion"
+lifecycle_before_issuance: {record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT, status: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION, record_validity: null, authorizes_execution: false, dispatch_eligibility: NOT_ELIGIBLE_UNTIL_ISSUED, dispatch_performed: false, issued_by: null, issued_at: null, launch_prompt_frozen_copy: null}
+execution_at_issuance: none  # no workflow_dispatch, no Appium, no smoke harness, no emulator or simulator, no SUT-02 launch, no smoke result, no mirror transcription; static checks only
+publication_before_dispatch: "required: GitHub Actions evaluates only the public repository, so the issued record, the frozen launch prompt, and every locked file must be present, exported UNCHANGED, in a published snapshot before any dispatch (public export v27, authorized by the issuing instruction; the export log records it)"
+dispatch_requires: "another, separate explicit human dispatch instruction naming this authorization; exactly one dispatch; its run id recorded; this record then closed in place (dispatch_performed true, dispatch_eligibility CONSUMED_AFTER_DISPATCH)"
 study_id: EUS-2026-001
 protocol_version: v1
 prepared_by_role: ORCHESTRATOR
@@ -44,8 +70,13 @@ selected_runner_lineage:
 launch_prompt:
   working_copy: prompts/working/qualifier-mobile-01-appium3-compat-smoke-v1.md
   working_copy_sha256: 5403ea43eae4425c088a7aac1250e146d28ba5e2d29fa3ca1d91c2e9c90e8034
-  frozen_copy: null
-  sha256: null
+  frozen_copy: prompts/frozen/qualifier-mobile-01-appium3-compat-smoke-v1.md  # frozen 2026-09-26 at issuance: byte-for-byte copy of the working copy (sha256 5403ea43...8034, verified before freezing; retained unchanged as preparation provenance) with only its two declared launch placeholders rendered -- 4 substitutions on lines 3, 11, 12, and 45; 71 lines each, no other line differs
+  sha256: 8d4439a2c9f14126fce728533293d7b2c7e42544527639b32c5b98859370b75a  # canonical sha256 of the frozen copy; exported UNCHANGED (the readiness gate requires it)
+  rendered_variables:
+    PROMPT_STATUS: FROZEN LAUNCH PROMPT OF APPIUM3-COMPAT-SMOKE-AUTH-01  # 2 substitutions (status line 3; launch-variable list line 11)
+    INSTRUCTION_DATE: "2026-09-26"  # the human issuance date; 2 substitutions (launch-variable list line 12; procedure step 1, line 45)
+    INSTRUCTION_ID: APPIUM3-COMPAT-SMOKE-AUTH-01  # already literal in the working copy; not rendered
+    PROMPT_VERSION_ID: qualifier-mobile-01-appium3-compat-smoke-v1  # already literal in the working copy; not rendered
   prompt_version_id: qualifier-mobile-01-appium3-compat-smoke-v1
   rendering_at_issuance: the frozen copy is a byte-for-byte copy of the working copy with exactly two launch placeholders rendered -- PROMPT_STATUS to FROZEN LAUNCH PROMPT OF APPIUM3-COMPAT-SMOKE-AUTH-01, and INSTRUCTION_DATE to the human issuance date (YYYY-MM-DD); no other byte differs
 implementation_lock:
@@ -63,6 +94,7 @@ output_namespace:
   android: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-01/SUT-02-android/
   ios: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-01/SUT-02-ios/
   state_at_preparation: absent
+  state_at_issuance: absent  # 2026-09-26; nothing executed
 issuance_procedure:
   - The human research lead reviews the preparation package (manifests/appium3-compat-smoke-preparation-v1.yaml, the re-lock under policy v2 in manifests/mobile-runner-policy-v2-amendment-v1.yaml, and the files they name).
   - On a separate explicit human issuance instruction only, the ORCHESTRATOR freezes the launch prompt (prompts/frozen/qualifier-mobile-01-appium3-compat-smoke-v1.md, rendering only PROMPT_STATUS and INSTRUCTION_DATE) and promotes this record in place (the filename suffix then becomes historical, as for MOBILE-QUALIFICATION-EXEC-AUTH-03) to record_class COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION, record_validity VALID, status ISSUED, authorizes_execution true, dispatch_eligibility ELIGIBLE, issued_by the human issuer, issued_at the issuance date, launch_prompt.frozen_copy and launch_prompt.sha256 of the frozen copy. No locked byte changes at issuance.
@@ -80,3 +112,561 @@ amendment_history:
       added: [re_locked_under, first_attempt_only, amendment_history]
     unchanged: [authorization_id, authorization_type, record_class, status, record_validity, authorizes_execution, dispatch_eligibility, dispatch_performed, issued_by, issued_at, scope, selected_runner_lineage, prompt_version_id, output_namespace]
     reason: the implementation was locked against policy v1 before PROTO-U17 was resolved; no smoke outcome existed; a successor draft id was not necessary because the record was never issued
+  - on: "2026-09-26"
+    instruction: EUS-2026-001 -- EXPLICIT APPIUM3-COMPAT-SMOKE-AUTH-01 ISSUANCE AND PUBLICATION (verbatim below)
+    changed:
+      lifecycle: "PREPARED -> ISSUED: record_class COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT -> COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION; status PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION -> ISSUED; record_validity null -> VALID; authorizes_execution false -> true; dispatch_eligibility NOT_ELIGIBLE_UNTIL_ISSUED -> ELIGIBLE; issued_by null -> gilbertosanchez; issued_at null -> 2026-09-26"
+      launch_prompt: "frozen_copy null -> prompts/frozen/qualifier-mobile-01-appium3-compat-smoke-v1.md; sha256 null -> the frozen copy's sha256; rendered_variables added"
+      added: [issued_under_instruction, issuance_basis, lifecycle_before_issuance, execution_at_issuance, publication_before_dispatch, dispatch_requires, output_namespace.state_at_issuance, human_instruction_verbatim_sha256, issuance_instruction_verbatim]
+      header_comment: rewritten to the issued state; the prepared history is preserved in it and in git history
+    unchanged: [authorization_id, authorization_type, dispatch_performed (false), study_id, protocol_version, prepared_by_role, prepared_on, prepared_under, re_locked_under, governing_policy, executing_role, scope (SUT-02; android and ios; Appium 3; 3.7.0; one execution per platform; E03 conditions; independence; result vocabulary PASS / FAIL_RUNNER / NOT_EXECUTED; not_in_scope), selected_runner_lineage, launch_prompt.working_copy, launch_prompt.working_copy_sha256, launch_prompt.prompt_version_id, launch_prompt.rendering_at_issuance, implementation_lock (lock v2, 1382b7ee...4ee4e), workflow (trigger, inputs, topology, rerun), output_namespace paths, issuance_procedure, first_attempt_only]
+    reason: explicit human issuance after review of public export v26; no locked byte changed (lock v2, its eight artifacts, the realization section 3114ff55...d6c, and policy v2 re-verified before issuance); the build identities, the attribution rules of policy v2 section 9, and the workflow are unchanged
+human_instruction_verbatim_sha256: 0cb5f9fa1ca04aff27efe8d0607fd6b1f023e0422dc42397308787395ce0df4b  # sha256 of issuance_instruction_verbatim as a file with one trailing line feed (the text as received in the session)
+issuance_instruction_verbatim: |
+  EUS-2026-001 — EXPLICIT APPIUM3-COMPAT-SMOKE-AUTH-01 ISSUANCE AND PUBLICATION
+
+  I, gilbertosanchez, human research lead for EUS-2026-001, have reviewed the public v26 Appium 3 compatibility-smoke preparation and deliberately adopt this instruction as my own authorization.
+
+  I explicitly issue and approve:
+
+  APPIUM3-COMPAT-SMOKE-AUTH-01
+
+  for the already-prepared and locked Appium 3 compatibility smoke of:
+
+  * SUT-02 × Android
+  * SUT-02 × iOS
+
+  under:
+
+  protocol/mobile-runner-policy-v2.md
+
+  and:
+
+  manifests/compatibility-smoke-implementation-lock-v2.yaml
+
+  THIS INSTRUCTION ISSUES AUTH-01.
+
+  IT DOES NOT DISPATCH AUTH-01.
+
+  It also authorizes publication of the issued authorization and its frozen prompt as public export v27 so that the public GitHub Actions gate can later evaluate the issued record.
+
+  It does NOT authorize:
+
+  * workflow_dispatch;
+  * Appium execution;
+  * Android emulator smoke execution;
+  * iOS Simulator smoke execution;
+  * SUT launch;
+  * any smoke result;
+  * any mirror transcription;
+  * E03 START;
+  * E03 measured execution.
+
+  1. VERIFY PUBLIC V26 BEFORE ISSUANCE
+
+  Verify current public state exactly:
+
+  Public HEAD:
+
+  91edef15b6b6ff8ce67ed8c5e3417ef7ac6dc1e4
+
+  Public tree:
+
+  5b6315f410ab5166941b17fbea08cb4fd2d34f79
+
+  Export manifest SHA-256:
+
+  6fe9cb3640c54e05920742b9aa6ef1409c195ec0f5478d7dcd5b385d58582359
+
+  Verify:
+
+  * PROTO-U17 = RESOLVED
+  * PROTO-U18 = RESOLVED
+  * mobile-runner-policy-v2 = FROZEN-PRE-DATA
+  * selected runner = Appium 3
+  * selected version pin = 3.7.0
+  * mobile_runner_status = SELECTED
+  * active smoke lock = v2
+  * AUTH-01 = PREPARED / NOT ISSUED
+  * Android smoke = NOT_STARTED
+  * iOS smoke = NOT_STARTED
+  * compatibility-smoke workflow run count = 0
+  * E03 = NOT_STARTED
+
+  If any of these conditions do not hold:
+
+  STOP.
+
+  2. REVERIFY THE ACTIVE IMPLEMENTATION LOCK
+
+  Before issuance verify:
+
+  manifests/compatibility-smoke-implementation-lock-v2.yaml
+
+  SHA-256:
+
+  1382b7ee719d408ab240fe4b1ef5184ad838880af07ea5b55339c49f4652ee4e
+
+  Verify every locked artifact against its recorded SHA-256.
+
+  Expected:
+
+  8/8 execution-critical artifacts match.
+
+  Verify governing policy pin.
+
+  Verify concrete-realization hash remains:
+
+  3114ff5568bbcdbcd1ce2dc501ba72b52d4285c4c6eeec8e08a61bbad7e19d6c
+
+  No locked execution-critical byte may change during issuance.
+
+  If any lock mismatch exists:
+
+  STOP BEFORE ISSUANCE.
+
+  3. VERIFY WORKING PROMPT
+
+  Expected working prompt:
+
+  prompts/working/qualifier-mobile-01-appium3-compat-smoke-v1.md
+
+  Expected SHA-256:
+
+  5403ea43eae4425c088a7aac1250e146d28ba5e2d29fa3ca1d91c2e9c90e8034
+
+  Verify it remains:
+
+  WORKING / NOT DISPATCHABLE
+
+  and contains exactly the two declared launch placeholders:
+
+  * PROMPT_STATUS
+  * INSTRUCTION_DATE
+
+  Verify no additional launch variable requires rendering.
+
+  If anything differs:
+
+  STOP.
+
+  4. FREEZE THE LAUNCH PROMPT
+
+  Create:
+
+  prompts/frozen/qualifier-mobile-01-appium3-compat-smoke-v1.md
+
+  from the verified working prompt.
+
+  Render exactly:
+
+  PROMPT_STATUS
+
+  to:
+
+  FROZEN LAUNCH PROMPT OF APPIUM3-COMPAT-SMOKE-AUTH-01
+
+  and:
+
+  INSTRUCTION_DATE
+
+  to:
+
+  2026-09-26
+
+  Do not change any other byte.
+
+  Report:
+
+  * working SHA-256;
+  * frozen SHA-256;
+  * exact number of substitutions;
+  * exact diff summary.
+
+  The frozen prompt becomes immutable execution provenance.
+
+  Do not modify the working copy merely to make it match the frozen copy.
+
+  5. PROMOTE AUTH-01 IN PLACE
+
+  Promote the existing record:
+
+  manifests/compatibility-smoke-execution-auth-v1-prepared.yaml
+
+  in place.
+
+  Do not create a second file carrying:
+
+  APPIUM3-COMPAT-SMOKE-AUTH-01
+
+  The filename suffix -prepared becomes historical provenance only.
+
+  Change the lifecycle from draft/prepared to:
+
+  record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION
+
+  status: ISSUED
+
+  record_validity: VALID
+
+  authorizes_execution: true
+
+  dispatch_eligibility: ELIGIBLE
+
+  issued_by: gilbertosanchez
+
+  issued_at: "2026-09-26"
+
+  Preserve:
+
+  dispatch_performed: false
+
+  Populate:
+
+  launch_prompt.frozen_copy
+
+  with:
+
+  prompts/frozen/qualifier-mobile-01-appium3-compat-smoke-v1.md
+
+  Populate:
+
+  launch_prompt.sha256
+
+  with the exact frozen-prompt SHA-256.
+
+  Do not modify:
+
+  * authorization id;
+  * smoke scope;
+  * runner;
+  * runner version;
+  * platforms;
+  * executions_per_platform;
+  * build identities;
+  * implementation lock reference;
+  * workflow topology;
+  * result vocabulary;
+  * attribution rules.
+
+  6. RECORD ISSUANCE PROVENANCE
+
+  Record this explicit human issuance.
+
+  The issuance provenance must make clear:
+
+  * AUTH-01 was PREPARED before this instruction;
+  * this instruction explicitly ISSUES it;
+  * issuance does not equal dispatch;
+  * no execution occurred at issuance;
+  * public publication is required before dispatch because GitHub Actions evaluates the public repository;
+  * dispatch requires another, separate explicit human instruction.
+
+  Preserve this instruction text or its exact hash according to the established repository convention.
+
+  7. NO EXECUTION DURING ISSUANCE
+
+  Do NOT invoke:
+
+  * Appium;
+  * Node smoke harness;
+  * emulator;
+  * simulator;
+  * SUT-02 application;
+  * compatibility-smoke workflow;
+  * environment verification workflow;
+  * measured workflow.
+
+  Only static checks are permitted.
+
+  8. STATIC READINESS AFTER ISSUANCE
+
+  After promotion but before publication, run the smoke readiness gate statically against canonical bytes.
+
+  Expected:
+
+  all authorization/prompt/lock/policy checks PASS.
+
+  The only thing that must remain absent is an actual execution result.
+
+  Verify:
+
+  * AUTH-01 exactly one record;
+  * VALID;
+  * ISSUED;
+  * human issuer present;
+  * authorizes_execution = true;
+  * dispatch_eligibility = ELIGIBLE;
+  * dispatch_performed = false;
+  * frozen prompt exists;
+  * frozen prompt SHA matches;
+  * implementation lock v2 matches;
+  * Appium 3.7.0 selected;
+  * mobile_runner_status = SELECTED;
+  * no prior smoke observations;
+  * mirror Android NOT_STARTED;
+  * mirror iOS NOT_STARTED;
+  * output namespace absent/empty;
+  * E03 NOT_STARTED.
+
+  Report exact pass count.
+
+  Do NOT dispatch merely because readiness passes.
+
+  9. DASHBOARD
+
+  Update research-status.html for v27.
+
+  Correct the v26 lag.
+
+  Show accurately:
+
+  * v26 was publicly published and verified;
+  * policy v2 public;
+  * PROTO-U17 resolved;
+  * PROTO-U18 resolved;
+  * Mobilewright qualification path retired;
+  * Appium smoke lock v2;
+  * AUTH-01 ISSUED but NOT DISPATCHED;
+  * Appium smoke execution NOT_STARTED;
+  * Android NOT_STARTED;
+  * iOS NOT_STARTED;
+  * PROTO-U16 still OPEN and blocks E03 START, not the smoke;
+  * E03 NOT_STARTED.
+
+  Do not say the smoke has begun.
+
+  10. BUILD PUBLIC EXPORT V27
+
+  Build a new deterministic public export v27 from the issued canonical state.
+
+  It must contain:
+
+  * issued AUTH-01;
+  * frozen launch prompt;
+  * policy v2;
+  * lock v2;
+  * compatibility-smoke workflow;
+  * smoke harness;
+  * G-7 corrected state;
+  * Mobilewright retirement;
+  * dashboard;
+  * all required provenance/status records.
+
+  No execution artifact can exist because no execution is authorized.
+
+  Use the established export mechanism and canonical/export hash bridge.
+
+  No new transformation class should be necessary merely because the prompt is frozen.
+
+  11. PUBLICATION VALIDATION
+
+  Push v27.
+
+  Only push-triggered validation is permitted.
+
+  Do NOT use workflow_dispatch.
+
+  Report:
+
+  * public HEAD;
+  * public tree;
+  * export-manifest SHA-256;
+  * canonical export-source HEAD;
+  * validation run id;
+  * every validation job/conclusion.
+
+  Any validation failure:
+
+  STOP.
+
+  12. PUBLIC READINESS AUDIT
+
+  From a fresh public v27 clone, run the compatibility-smoke gate statically using:
+
+  instruction id:
+
+  APPIUM3-COMPAT-SMOKE-AUTH-01
+
+  confirmation input:
+
+  EXECUTE-COMPATIBILITY-SMOKE
+
+  but DO NOT invoke the workflow.
+
+  This is only static gate evaluation.
+
+  Expected:
+
+  the complete readiness gate now PASSES because the authorization is legitimately issued and published.
+
+  Report exact check count.
+
+  Also verify:
+
+  * implementation lock bridge correct;
+  * frozen prompt bridge correct;
+  * output namespace empty/absent;
+  * mirror still NOT_STARTED/NOT_STARTED;
+  * no smoke record exists;
+  * mobile_runner_status = SELECTED.
+
+  13. CONFIRM NO DISPATCH
+
+  After public verification, query GitHub Actions.
+
+  Compatibility Smoke workflow run count must still be:
+
+  0
+
+  Mobile Qualification newest run must still be:
+
+  35938250936
+
+  Measured Execution run count must still be:
+
+  0
+
+  No new workflow_dispatch of any kind authorized by this instruction may exist.
+
+  If any compatibility-smoke run exists:
+
+  STOP AND REPORT UNAUTHORIZED EXECUTION.
+
+  14. AUTHORIZATION REMAINS UNUSED AFTER PUBLICATION
+
+  At the end of this operation:
+
+  AUTH-01 is:
+
+  VALID
+  ISSUED
+  ELIGIBLE
+  UNUSED
+
+  Specifically:
+
+  dispatch_performed: false
+
+  Do NOT consume it merely because it was published or statically checked.
+
+  The next human action will be a separate explicit dispatch authorization.
+
+  15. PROTO-U16
+
+  Leave PROTO-U16 OPEN.
+
+  Do not perform post-E01 surface transcription now.
+
+  It continues to:
+
+  * not block the compatibility smoke;
+  * block E03 START until resolved.
+
+  16. EXPORT LOG
+
+  Record v27 using the existing publication bookkeeping convention.
+
+  Do not create an export loop.
+
+  17. RETURN PACKAGE
+
+  Return:
+
+  1. issuance commit SHA;
+  2. frozen prompt path;
+  3. frozen prompt SHA-256;
+  4. exact working→frozen diff/substitution count;
+  5. AUTH-01 exact lifecycle before/after;
+  6. confirmation implementation lock v2 unchanged;
+  7. confirmation realization hash unchanged;
+  8. static canonical readiness count;
+  9. dashboard commit;
+  10. canonical export-source HEAD;
+  11. public HEAD;
+  12. public tree;
+  13. export-manifest SHA-256;
+  14. validation run id;
+  15. validation jobs/conclusions;
+  16. public static readiness check count;
+  17. compatibility-smoke workflow public run count;
+  18. confirmation no Appium execution;
+  19. confirmation no SUT launch;
+  20. confirmation Android/iOS mirror remains NOT_STARTED;
+  21. PROTO-U16 status;
+  22. E03 status.
+
+  18. HARD STOP
+
+  After issuance + v27 publication + static public verification:
+
+  STOP.
+
+  Do NOT dispatch AUTH-01.
+
+  Do NOT execute Appium.
+
+  Do NOT start Android smoke.
+
+  Do NOT start iOS smoke.
+
+  Do NOT change smoke results.
+
+  Do NOT consume AUTH-01.
+
+  Do NOT start E03.
+
+  19. REQUIRED FINAL STATE
+
+  End exactly:
+
+  APPIUM3_COMPAT_SMOKE_AUTH_01:
+  ISSUED_VALID_UNUSED
+
+  SMOKE_AUTHORIZATION_PUBLIC:
+  YES
+
+  FROZEN_SMOKE_PROMPT:
+  PUBLISHED_VERIFIED
+
+  ACTIVE_SMOKE_IMPLEMENTATION_LOCK:
+  V2_UNCHANGED
+
+  SMOKE_STATIC_READINESS:
+  PASS
+
+  SMOKE_DISPATCH:
+  NOT_PERFORMED
+
+  SMOKE_WORKFLOW_RUN_COUNT:
+  0
+
+  APPIUM3_STUDY_EXECUTION:
+  NOT_PERFORMED
+
+  SUT02_ANDROID_SMOKE:
+  NOT_STARTED
+
+  SUT02_IOS_SMOKE:
+  NOT_STARTED
+
+  COMPATIBILITY_SMOKE_MIRROR:
+  NOT_STARTED_NOT_STARTED
+
+  MOBILE_RUNNER_STATUS:
+  SELECTED
+
+  PROTO_U16:
+  OPEN_SEPARATE_BLOCKS_E03_START_NOT_SMOKE
+
+  PUBLIC_EXPORT_V27:
+  PUBLISHED_VERIFIED
+
+  E03_START:
+  NOT_AUTHORIZED
+
+  E03_EXECUTION:
+  NOT_STARTED
+
+  NEXT_REQUIRED_HUMAN_ACTION:
+  SEPARATELY_AUTHORIZE_ONE_FORMAL_DISPATCH_OF_APPIUM3_COMPAT_SMOKE_AUTH_01
