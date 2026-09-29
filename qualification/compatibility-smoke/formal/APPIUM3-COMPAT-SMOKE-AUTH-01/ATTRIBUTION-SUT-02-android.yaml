@@ -1,0 +1,123 @@
+# qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-01/ATTRIBUTION-SUT-02-android.yaml
+# Detailed attribution record of the SUT-02 Android compatibility smoke executed under APPIUM3-COMPAT-SMOKE-AUTH-01
+# (protocol/mobile-runner-policy-v2.md, section 9.3: every NOT_EXECUTED record carries SUT, platform, timestamp, failed
+# phase, attributed category, concrete description, artifact pointers, recording role). Written by QUALIFIER-MOBILE-01
+# under the human instruction EUS-2026-001 -- POST-RUN RECORDING OF APPIUM3-COMPAT-SMOKE-AUTH-01 (2026-09-27; verbatim in
+# manifests/appium3-compat-smoke-auth-01-postrun-recording-v1.yaml), which records the result after the human research
+# lead's review of the preserved evidence; every evidence item below was re-read from the imported artifacts and from the
+# pinned SUT-02 source by QUALIFIER-MOBILE-01 before recording. Tool qualification only: nothing here is evidence about
+# SUT-02 or any other system under test, and nothing here scores any capability of SUT-02.
+record_class: COMPATIBILITY_SMOKE_ATTRIBUTION_RECORD
+recorded_by: QUALIFIER-MOBILE-01
+recorded_at: "2026-09-27T20:33:12Z"
+authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-01
+prompt_version_id: qualifier-mobile-01-appium3-compat-smoke-v1
+run: {run_id: 36340774530, run_attempt: 1, event: workflow_dispatch, head_sha: eca8f85b6590362ad0076b872e5fba742a184d2d, android_job_id: 108680321353}
+import_record: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-01/IMPORT-RECORD.yaml
+
+# --- policy 9.3 fields ---
+sut_id: SUT-02
+platform: android
+environment_type: EMULATED  # system-images;android-35;google_apis;x86_64, API 35, AVD eus-compat-smoke-pixel7-api35 (environment/device.json)
+timestamp: "2026-09-27T18:32:44.826Z"  # end of the failed step (record.json steps[3].ended_at); execution 18:30:49.040Z to 18:32:45.746Z
+failed_phase: product detail screen reached (MC-06, MC-08)  # record.json failed_step.name
+result: NOT_EXECUTED
+attributed_category: HARNESS_ORCHESTRATION
+attribution_basis: demonstrated  # positive artifacts; the conservative tie-break (9.4) is not reached because the artifacts distinguish the harness defect from a runner failure (see distinguishability below)
+concrete_description: >-
+  The study-authored frozen realization (README "Concrete realization", row "Navigation (MC-06)"; harness/smoke.mjs
+  REALIZATION.android.steps.navigate) performs the product navigation by clicking the catalog element
+  com.saucelabs.mydemoapp.android:id/titleTV whose text is "Sauce Labs Backpack". Appium 3.7.0 with UiAutomator2 8.7.0
+  located that element and executed the click without error (HTTP 200). That element is not clickable and has no clickable
+  ancestor in the captured catalog hierarchy, and the pinned SUT-02 Android source attaches the product-navigation click
+  listener only to com.saucelabs.mydemoapp.android:id/productIV, never to titleTV. The application stayed on the Products
+  catalog. The realization therefore targeted a non-navigation element: the selected runner's navigation capability
+  (MC-06), and the downstream control interaction and state read that depend on reaching the detail screen, were not
+  fairly exercised.
+recording_role: QUALIFIER-MOBILE-01 (post-run recording instructed by the human research lead after review, 2026-09-27; relayed by the ORCHESTRATOR)
+artifact_pointers:
+  - SUT-02-android/record.json  # sha256 0fbb2cec34b51f53dec1bcb391089c296664aead47f980435502b462d6c9a805
+  - SUT-02-android/appium-server.log  # sha256 13b3db10e8b54cae370f51b7c86ccef87f480038b2a722878786ab2556ce5526
+  - SUT-02-android/source-failure.xml  # sha256 4718121408f269f1e5b1cd68ddeb540480865d4a81cb6604d10d30fa35d2b487
+  - SUT-02-android/failure.png  # sha256 019f941db4c2f887d81240ea26b0eca5768750819f6a454c92d5b659cde198d1
+  - SUT-02-android/harness.log  # sha256 9fa7697575d09311f8a95558e1a53b5f1bcf9935f9c29ea11eba55a95d6f4b22
+  - SUT-02-android/environment/  # build-verification.json (digest_match true), toolchain-install.json (pins_match_observed true), device.json, npm-ci.log
+
+# --- harness proposal (preserved, never edited) versus the QUALIFIER result ---
+harness_proposal:  # literal values of SUT-02-android/record.json; the file is kept unchanged
+  outcome: FAILURE
+  proposed_result: FAIL_RUNNER
+  proposed_category: SELECTED_RUNNER_STACK
+  basis: REQUIRED_ELEMENT_OR_STATE_NOT_REACHED
+  failure_kind: not_reached
+  harness_exception: null
+  runner_action_started: true
+  error: 'not found within 90000 ms: id "com.saucelabs.mydemoapp.android:id/productTV" (last: condition not met for id "com.saucelabs.mydemoapp.android:id/productTV")'
+proposal_versus_result: >-
+  Under policy v2 the harness output is a proposal, never the result (README "Result recording rule"; frozen prompt step 4).
+  By design the harness proposes FAIL_RUNNER for every failure after the first runner action, because a cause outside the
+  runner can only be demonstrated by inspecting the preserved artifacts, which the harness cannot do. The post-run review
+  of those artifacts determines whether an allowed, positively demonstrated outside-runner cause exists (9.3). Here it
+  does, so the recorded result is NOT_EXECUTED / HARNESS_ORCHESTRATION and the proposal FAIL_RUNNER / SELECTED_RUNNER_STACK
+  is not adopted; it stays preserved in record.json as the observed proposal.
+
+# --- evidence chain ---
+evidence_chain:
+  1_frozen_realization:
+    readme_section: qualification/compatibility-smoke/README.md, "Concrete realization (recorded before any execution)", row "Navigation (MC-06)" (section sha256 3114ff5568bbcdbcd1ce2dc501ba72b52d4285c4c6eeec8e08a61bbad7e19d6c, locked by manifests/compatibility-smoke-implementation-lock-v2.yaml)
+    readme_text: 'tap the catalog entry located by `new UiSelector().resourceId("com.saucelabs.mydemoapp.android:id/titleTV").text("Sauce Labs Backpack")`; arrival: `com.saucelabs.mydemoapp.android:id/productTV` has text `Sauce Labs Backpack` and `com.saucelabs.mydemoapp.android:id/plusIV` is present'
+    harness: 'qualification/compatibility-smoke/harness/smoke.mjs (sha256 047684a29dbe5e381f84bce54b29e28555eb65cf6e4b437ad97917d80b0ed3d2, locked), line 47 (REALIZATION.android.steps.navigate, locator -android uiautomator titleTV text "Sauce Labs Backpack") and lines 221-224 (step "open the product from the catalog": waitFor the locator, then client.click on the returned element)'
+    client: qualification/compatibility-smoke/harness/wd.mjs line 80 (click = W3C POST /session/{id}/element/{elementId}/click)
+    stated_basis_divergence: "the realization cites the vendor Espresso test DashboardToCheckout.java as static basis (README row 'Static evidence basis'); at the pinned commit that test opens the product with RecyclerViewActions.actionOnItemAtPosition(0, click()) (lines 53-54), i.e. a click on the whole first catalog item, not on titleTV"
+  2_runner_behavior:  # SUT-02-android/appium-server.log
+    session: "line 54: session created (UiAutomator2 driver); Appium v3.7.0 at line 1"
+    find: "lines 237-245: POST /element with -android uiautomator titleTV text 'Sauce Labs Backpack' -> HTTP 200, element 00000000-0000-000b-ffff-ffff0000005d"
+    click: "lines 246-252: POST /element/00000000-0000-000b-ffff-ffff0000005d/click proxied to UiAutomator2 -> status 200, value null; HTTP 200 in 126 ms"
+    after_click: "lines 253-268 onward: 87 look-ups of productTV return text 'Products' (the catalog heading) until the 90 s arrival timeout"
+    whole_log: "183 HTTP responses, all status 200; no error or exception line; commands findElement 89, getText 87, getStatus 6, createSession 1, getAttribute 1, click 1, getScreenshot 1, getPageSource 1"
+  3_runtime_ui:  # SUT-02-android/source-failure.xml (page source captured at the failure)
+    heading: "line 21: productTV text 'Products' (catalog heading)"
+    target: "line 27: TextView resource-id titleTV, text 'Sauce Labs Backpack', clickable false, bounds [52,1109][411,1160]"
+    navigation_view: "line 26: ImageView resource-id productIV, content-desc 'Product Image', clickable true, bounds [52,513][519,1096] (no overlap with the titleTV bounds)"
+    ancestors: "line 25: the item ViewGroup (bounds [52,513][519,1405]) clickable false; the productRV RecyclerView and every enclosing container up to the window root clickable false: no clickable ancestor receives a tap on titleTV"
+    all_catalog_items: "4 titleTV nodes, all clickable false; 4 productIV nodes, all clickable true"
+  4_screenshot: "SUT-02-android/failure.png: the Products catalog (first item 'Sauce Labs Backpack'), captured at the failure after the 90 s arrival wait"
+  5_pinned_sut_source:  # saucelabs/my-demo-app-android at the pinned commit (manifests/sut-manifest.yaml, SUT-02 android; lock v2 sut_builds); read through the GitHub API, not copied into the repository
+    commit: 36b012eecdf6a2b488b9504e16b3d0c3ca9a0e7b  # committer date 2024-10-30T12:10:48Z; release 2.2.0 (mda-2.2.0-25.apk, sha256 318ef64bdcaff18e576d962ab1f557e0a2683b9b5210a6bb6b25cb0caeef62b4)
+    files:
+      - path: app/src/main/java/com/saucelabs/mydemoapp/android/view/adapters/ProductsAdapter.java
+        git_blob: 38640e3a787c7f0d10882ba5acc8a82ff0737dbf
+        sha256: ccd2fd6a6f1d4b8f7fd2e89691cb06b0816a18a9b1d99924f74f5e4d3521da7f
+        facts: "lines 46-47: titleTV receives only setText(model.getTitle()) and setContentDescription('Product Title'); lines 51-59: productIV receives setOnClickListener whose onClick calls clickListener.OnClick(position, 1); lines 70-78: the ViewHolder sets click listeners only on the five rating stars (start1IV..start5IV); no listener is set on titleTV or on the item root"
+      - path: app/src/main/res/layout/item_products.xml
+        git_blob: 68b653fca9f3cf14649b0cde28864898a63f3016
+        sha256: 40e6baead553a9beaa6452f721882f6de40d976baa2cfa239eec271233e69ff3
+        facts: "lines 4-9: ConstraintLayout item root without clickable or onClick; lines 11-20: ImageView productIV; lines 22-30: TextView titleTV without clickable or onClick"
+      - path: app/src/main/java/com/saucelabs/mydemoapp/android/view/fragments/ProductCatalogFragment.java
+        git_blob: 4cb958d8bbac87cabdf3419db548684f65a6a70b
+        sha256: 298e576efcdeac0f2a6006aa7df460db81053c69249e3d39a8a6480d56d2fa62
+        facts: "lines 149-160: the adapter callback (invoked by the productIV listener) builds the MainActivity.FRAGMENT_PRODUCT_DETAIL bundle for the product and starts the product-detail screen"
+      - path: app/src/androidTest/java/com/saucelabs/mydemoapp/android/view/activities/DashboardToCheckout.java
+        git_blob: a476a5ad8dc759e88aee7f0b7ce4f8d0acfe3020
+        sha256: 1bb0c80efecf868b1a0678fcfe863ef64779db5d08a137f037ecca22cad12291
+        facts: "lines 53-54: the vendor UI test opens the first product with RecyclerViewActions.actionOnItemAtPosition(0, click()); line 57: it then expects productTV 'Sauce Labs Backpack'"
+  inference: "the targeted element cannot start navigation in the pinned build: it has no navigation listener and no clickable receiver, so a correctly delivered click on it leaves the catalog displayed; the selected runner's navigation capability was therefore not fairly exercised by this realization"
+  distinguishability: "the runner completed every command it was sent (locate, click, text reads, screenshot, page source) without error, and the observed end state (catalog still displayed) is fully explained by the realization's choice of target independently of the runner; the evidence therefore distinguishes a harness defect from a runner failure, and the 9.4 tie-break does not apply"
+  not_concluded: "no statement is made about the result the runner would produce with a different target; no conclusion that Appium failed MC-06 or MC-08; nothing about SUT-02's capabilities"
+
+capabilities_observed:  # literal step outcomes of record.json (harness step labels in parentheses)
+  - "install and launch the pinned build (MC-01): OK (session established, app launched)"
+  - "locate productRV by stable identifier (MC-02, MC-08): OK"
+  - "open the product from the catalog (MC-04, MC-06): OK as a runner action (click delivered to titleTV, HTTP 200)"
+  - "product detail screen reached (MC-06, MC-08): FAILED (productTV never read 'Sauce Labs Backpack'; catalog still displayed)"
+  - "quantity control plusIV (MC-04) and quantity state noTV (MC-08) on the detail screen: not reached"
+  - "artifact capture: screenshot and page source captured by the runner at the failure (HTTP 200); no MC-10 determination is made"
+fairly_exercised: {MC-01: yes, MC-02: yes, MC-06: no (harness target), MC-04: no (not reached), MC-08: no (detail state not reached)}
+
+effects:  # policy v2, 9.5 and 9.6
+  android: "NOT_EXECUTED: does not pass the smoke, does not fail the selected runner, triggers no runner selection; the SUT-02 android compatibility requirement remains unresolved and E03-CS001-SUT02-ANDROID stays blocked"
+  ios: "not attempted: the frozen topology starts iOS only after an Android proposed PASS; no iOS result, row, or artifact exists; SUT-02 ios remains NOT_STARTED and E03-CS001-SUT02-IOS stays blocked"
+  study_level_status: "SELECTED (unchanged): no FAIL_RUNNER was recorded, so the fallback is not exhausted"
+  authorization: "APPIUM3-COMPAT-SMOKE-AUTH-01 is consumed by its single dispatch (run 36340774530, attempt 1); it is never reused and nothing is continued under it"
+successor_requirement: "a further attempt needs, in this order: this record and the imported artifacts preserved unchanged; the demonstrated realization defect corrected, with the corrected navigation target justified from the pinned SUT-02 source before freeze; a successor implementation lock (conceptually lock v3; the workflow gate also admits only a first attempt with no recorded result); a new explicit human authorization with a new id; a new formal attempt. None of these is performed by this record (qualification/unresolved.md, QUAL-U04)"
+no_repair: "no locator, step, timeout, version, build, or harness byte was changed before, during, or after the execution; implementation lock v2 and the realization section are unchanged"

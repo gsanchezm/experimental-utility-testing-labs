@@ -1,0 +1,163 @@
+{
+  "record_class": "COMPATIBILITY_SMOKE",
+  "study_id": "EUS-2026-001",
+  "policy": "protocol/mobile-runner-policy-v2.md, section 9",
+  "instruction_id": "APPIUM3-COMPAT-SMOKE-AUTH-01",
+  "prompt_version_id": "qualifier-mobile-01-appium3-compat-smoke-v1",
+  "sut_id": "SUT-02",
+  "component": "SUT-02-android",
+  "platform": "android",
+  "environment_type": "EMULATED",
+  "app_identity": "com.saucelabs.mydemoapp.android (versionName 2.2.0, versionCode 25)",
+  "build": {
+    "asset": "mda-2.2.0-25.apk",
+    "sha256": "318ef64bdcaff18e576d962ab1f557e0a2683b9b5210a6bb6b25cb0caeef62b4",
+    "source": "https://github.com/saucelabs/my-demo-app-android/releases/download/2.2.0/mda-2.2.0-25.apk"
+  },
+  "runner": {
+    "name": "Appium",
+    "core_pin": "3.7.0",
+    "core_observed": "3.7.0",
+    "driver": "uiautomator2",
+    "driver_pin": "8.7.0",
+    "driver_observed": "8.7.0"
+  },
+  "device": {
+    "kind": "Android emulator",
+    "environment_type": "EMULATED",
+    "serial": "emulator-5554",
+    "android_release": "15",
+    "api_level": "35",
+    "model": "sdk_gphone64_x86_64",
+    "abi": "x86_64",
+    "avd_name": "eus-compat-smoke-pixel7-api35",
+    "build_fingerprint": "google/sdk_gphone64_x86_64/emu64xa:15/AE3A.240806.043/12960925:userdebug/dev-keys",
+    "java": "openjdk version \"17.0.20.1\" 2026-08-18",
+    "pinned_identity": "system-images;android-35;google_apis;x86_64, API 35, profile pixel_7 (manifests/toolchain-manifest.yaml environments.android_emulator)"
+  },
+  "realization_sha256": "1263dd1602ef972618247d7964450690ad31525c3bfc4a38838b68722adc4e3c",
+  "capabilities_requested": {
+    "platformName": "Android",
+    "appium:automationName": "UiAutomator2",
+    "appium:appPackage": "com.saucelabs.mydemoapp.android",
+    "appium:appActivity": "com.saucelabs.mydemoapp.android.view.activities.SplashActivity",
+    "appium:appWaitActivity": "com.saucelabs.mydemoapp.android.view.activities.MainActivity",
+    "appium:appWaitDuration": 60000,
+    "appium:autoGrantPermissions": true,
+    "appium:disableWindowAnimation": true,
+    "appium:androidInstallTimeout": 300000,
+    "appium:uiautomator2ServerInstallTimeout": 120000,
+    "appium:uiautomator2ServerLaunchTimeout": 120000,
+    "appium:adbExecTimeout": 120000,
+    "appium:newCommandTimeout": 300,
+    "appium:app": "<host-path>/mda-2.2.0-25.apk",
+    "appium:udid": "emulator-5554"
+  },
+  "steps": [
+    {
+      "name": "install and launch the pinned build (MC-01)",
+      "capabilities": [
+        "MC-01"
+      ],
+      "started_at": "2026-09-27T18:30:49.040Z",
+      "status": "OK",
+      "detail": {
+        "session_capabilities": {
+          "platformName": "Android"
+        }
+      },
+      "ended_at": "2026-09-27T18:31:12.217Z"
+    },
+    {
+      "name": "locate \"com.saucelabs.mydemoapp.android:id/productRV\" by stable identifier (MC-02, MC-08)",
+      "capabilities": [
+        "MC-02",
+        "MC-08"
+      ],
+      "started_at": "2026-09-27T18:31:12.217Z",
+      "status": "OK",
+      "detail": null,
+      "ended_at": "2026-09-27T18:31:14.451Z"
+    },
+    {
+      "name": "open the product from the catalog (MC-04, MC-06)",
+      "capabilities": [
+        "MC-04",
+        "MC-06"
+      ],
+      "started_at": "2026-09-27T18:31:14.451Z",
+      "status": "OK",
+      "detail": null,
+      "ended_at": "2026-09-27T18:31:14.640Z"
+    },
+    {
+      "name": "product detail screen reached (MC-06, MC-08)",
+      "capabilities": [
+        "MC-06",
+        "MC-08"
+      ],
+      "started_at": "2026-09-27T18:31:14.640Z",
+      "status": "FAILED",
+      "detail": null,
+      "error": "not found within 90000 ms: id \"com.saucelabs.mydemoapp.android:id/productTV\" (last: condition not met for id \"com.saucelabs.mydemoapp.android:id/productTV\")",
+      "ended_at": "2026-09-27T18:32:44.826Z"
+    }
+  ],
+  "capabilities_exercised": [
+    "MC-01",
+    "MC-02",
+    "MC-04",
+    "MC-06",
+    "MC-08"
+  ],
+  "expected_final_state": "product detail of \"Sauce Labs Backpack\" (productTV text) with quantity noTV text \"2\"",
+  "outcome": "FAILURE",
+  "failed_step": {
+    "name": "product detail screen reached (MC-06, MC-08)",
+    "capabilities": [
+      "MC-06",
+      "MC-08"
+    ],
+    "error": "not found within 90000 ms: id \"com.saucelabs.mydemoapp.android:id/productTV\" (last: condition not met for id \"com.saucelabs.mydemoapp.android:id/productTV\")"
+  },
+  "proposed_result": "FAIL_RUNNER",
+  "attribution": {
+    "proposed_category": "SELECTED_RUNNER_STACK",
+    "basis": "REQUIRED_ELEMENT_OR_STATE_NOT_REACHED",
+    "failure_kind": "not_reached",
+    "harness_exception": null,
+    "failed_phase": "product detail screen reached (MC-06, MC-08)",
+    "failed_capabilities": [
+      "MC-06",
+      "MC-08"
+    ],
+    "description": "not found within 90000 ms: id \"com.saucelabs.mydemoapp.android:id/productTV\" (last: condition not met for id \"com.saucelabs.mydemoapp.android:id/productTV\")",
+    "runner_action_started": true,
+    "evidence": [
+      "failure.png",
+      "source-failure.xml",
+      "record.json",
+      "harness.log",
+      "appium-server.log",
+      "environment/"
+    ]
+  },
+  "recording_role": "proposal by the harness; QUALIFIER-MOBILE-01 records the result (policy v2, section 9: NOT_EXECUTED only on a positively demonstrated cause outside the runner; uncertain attribution is FAIL_RUNNER)",
+  "automatic_repeat": "none (policy v2, 9.5)",
+  "started_at": "2026-09-27T18:30:49.040Z",
+  "ended_at": "2026-09-27T18:32:45.746Z",
+  "duration_ms": 116706,
+  "duration_note": "information only; not a criterion (policy section 9)",
+  "artifacts": [
+    "failure.png",
+    "source-failure.xml"
+  ],
+  "github": {
+    "run_id": "36340774530",
+    "run_attempt": "1",
+    "sha": "eca8f85b6590362ad0076b872e5fba742a184d2d",
+    "workflow_ref": "gsanchezm/experimental-utility-testing-labs/.github/workflows/e03-compatibility-smoke.yml@refs/heads/main",
+    "image_os": "ubuntu24",
+    "image_version": "20260920.314.1"
+  }
+}

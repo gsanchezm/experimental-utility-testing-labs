@@ -1,7 +1,7 @@
 # qualification/compatibility-smoke/smoke-common.sh
 # Shared library of the Appium 3 per-SUT compatibility smoke (protocol/mobile-runner-policy-v2.md, section 9) for
 # SUT-02 Android and SUT-02 iOS. Sourced by run-smoke-android.sh and run-smoke-ios.sh inside the dispatch-only
-# workflow .github/workflows/e03-compatibility-smoke.yml. Locked by manifests/compatibility-smoke-implementation-lock-v2.yaml.
+# workflow .github/workflows/e03-compatibility-smoke.yml. Locked by manifests/compatibility-smoke-implementation-lock-v3.yaml.
 # Tool qualification only: nothing recorded is evidence about any system under test; nothing is written to raw-data/.
 set -euo pipefail
 
@@ -85,7 +85,7 @@ import json, sys, datetime, os
 out, name, url, expected, observed = sys.argv[1:6]
 json.dump({"record_class": "COMPATIBILITY_SMOKE_ENVIRONMENT", "asset": name, "source": url, "pinned_sha256": expected,
            "observed_sha256": observed, "digest_match": expected == observed,
-           "pin_source": "manifests/compatibility-smoke-implementation-lock-v2.yaml, sut_builds",
+           "pin_source": "manifests/compatibility-smoke-implementation-lock-v3.yaml, sut_builds",
            "at": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z")}, open(out, "w"), indent=2)
 PY
   [[ "$observed" == "$sha" ]] || smoke_stop NOT_EXECUTED SUT_BUILD DEMONSTRATED BUILD_VERIFICATION "digest mismatch for $file (pinned $sha, observed $observed)"

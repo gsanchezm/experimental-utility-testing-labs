@@ -139,6 +139,45 @@ jobs:
           set -euo pipefail
           for f in audits/SUT-0*/evidence.csv; do head -n 1 "$f"; done | sort -u | tee /tmp/headers.txt
           test "$(wc -l < /tmp/headers.txt)" -eq 1
+      - name: Assert the imported compatibility-smoke evidence is stored byte-exact (QUAL-U05)
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import glob, hashlib, os, subprocess, sys, yaml, zipfile
+          # QUAL-U05 (2026-09-27): a host with core.autocrlf=input once stored a CRLF text artifact end-of-line normalized.
+          # Every imported compatibility-smoke artifact must equal its import record, its archive digest, and its archive
+          # members byte for byte, and the formal tree must keep the byte-exact attribute (no end-of-line conversion).
+          sha = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
+          ga = 'qualification/compatibility-smoke/formal/.gitattributes'
+          bad = []
+          if not (os.path.isfile(ga) and '* -text' in open(ga).read().splitlines()):
+              bad.append(ga + ': byte-exact attribute missing')
+          n = 0
+          for rec in sorted(glob.glob('qualification/compatibility-smoke/formal/*/IMPORT-RECORD.yaml')):
+              base = os.path.dirname(rec) + '/'
+              r = yaml.safe_load(open(rec)) or {}
+              for f in r.get('files') or []:
+                  p = base + str(f.get('path')); n += 1
+                  if not (os.path.isfile(p) and sha(p) == f.get('sha256')):
+                      bad.append(p + ': sha256 differs from the import record')
+                  attr = subprocess.run(['git', 'check-attr', 'text', '--', p], capture_output=True, text=True).stdout.strip()
+                  if not attr.endswith(': text: unset'):
+                      bad.append(p + ': end-of-line conversion not disabled (' + attr + ')')
+              for a in r.get('artifacts') or []:
+                  zp = base + str(a.get('downloaded_archive'))
+                  if not (os.path.isfile(zp) and sha(zp) == a.get('downloaded_archive_sha256') and 'sha256:' + sha(zp) == a.get('github_digest')):
+                      bad.append(zp + ': archive digest differs from the import record'); continue
+                  with zipfile.ZipFile(zp) as z:
+                      for m in z.namelist():
+                          if m.endswith('/'):
+                              continue
+                          fp = base + str(a.get('extracted_to')) + m
+                          if not (os.path.isfile(fp) and open(fp, 'rb').read() == z.read(m)):
+                              bad.append(fp + ': differs from its archive member')
+          if bad:
+              print('\n'.join(bad)); sys.exit(1)
+          print('imported compatibility-smoke evidence byte-exact:', n, 'file(s)')
+          PY
 
   publication-hygiene:
     name: E03 Publication Hygiene

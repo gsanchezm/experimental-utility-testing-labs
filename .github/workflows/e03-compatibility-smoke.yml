@@ -5,7 +5,10 @@
 # (verbatim in manifests/appium3-compat-smoke-preparation-v1.yaml), as E03 pre-start / qualification infrastructure;
 # adapted to protocol/mobile-runner-policy-v2.md before any execution under the human instruction RESOLVE PROTO-U17
 # THROUGH MOBILE-RUNNER-POLICY-V2 AND RE-LOCK THE APPIUM 3 COMPATIBILITY SMOKE (approval 2026-09-25; verbatim in
-# manifests/mobile-runner-policy-v2-amendment-v1.yaml).
+# manifests/mobile-runner-policy-v2-amendment-v1.yaml). Successor implementation lock v3 (the Android navigation realization
+# corrected after the preserved APPIUM3-COMPAT-SMOKE-AUTH-01 NOT_EXECUTED / HARNESS_ORCHESTRATION record; the gate admits that
+# preserved record) under the human instruction CORRECT THE ANDROID COMPATIBILITY-SMOKE REALIZATION, PREPARE LOCK V3 AND
+# APPIUM3-COMPAT-SMOKE-AUTH-02 (2026-09-28; manifests/appium3-compat-smoke-lock-v3-preparation-v1.yaml).
 #
 # GitHub Actions path of the per-SUT compatibility smoke of protocol/mobile-runner-policy-v2.md, section 9, for the
 # study-selected mobile runner Appium 3 (pinned 3.7.0; frozen section 8 switch): exactly one clean execution of
@@ -20,9 +23,11 @@
 # checkout); policy v2 frozen (v1 AMENDED) at the locked hash; the SUT-02 build and toolchain pins; the selected-runner
 # lineage (Appium 3, 3.7.0, Mobilewright FAILED under the consumed MOBILE-QUALIFICATION-EXEC-AUTH-03, section 8 basis)
 # with the study-level mobile-runner status SELECTED (never UNRESOLVED_AFTER_FALLBACK_FAILURE: an exhausted fallback is
-# never executed again); an absent or empty output namespace; unpopulated smoke and attribution records and mirror; E03
-# NOT_STARTED. The gate admits only a first attempt: a further attempt after a recorded NOT_EXECUTED needs a successor
-# implementation lock and a new authorization (policy v2, 9.5). Topology: gate -> Android -> iOS, never concurrent; the
+# never executed again); an absent or empty output namespace for this authorization; smoke and attribution records and
+# mirror either unpopulated or holding only preserved NOT_EXECUTED records of earlier, consumed authorizations whose
+# imported artifacts still verify byte-exact (a PASS, a FAIL_RUNNER, or a record of this authorization fails closed); E03
+# NOT_STARTED. A further attempt after a recorded NOT_EXECUTED needs the corrected cause, a successor implementation lock, and
+# a new authorization id (policy v2, 9.5). Topology: gate -> Android -> iOS, never concurrent; the
 # iOS job starts only when the Android job ended with outcome SUCCESS (proposed PASS); any other Android outcome stops
 # the authorized smoke (policy v2, 9.5). The two results stay independent. A GitHub re-run is refused in every job (run
 # attempt must be 1): a repeat needs a new explicit human authorization and a new id.
@@ -191,28 +196,50 @@ jobs:
               gate(f'SUT-02 {plat} pinned identity equals the lock', str(c.get('release')) == str(b.get('release')) and str(c.get('commit_sha')) == str(b.get('commit_sha_or_tag')), f"{c.get('release')} {c.get('commit_sha')}")
           wf = open('.github/workflows/e03-compatibility-smoke.yml').read()
           gate('workflow Node.js pin equals the lock', f'node-version: "{(tc.get("node") or {}).get("version")}"' in wf)
-          # G-7 output isolation and unpopulated source records
+          # G-7 output isolation and admissible prior records (implementation lock v3; policy v2, 9.5): a further attempt is
+          # admitted only after preserved NOT_EXECUTED records of earlier, consumed authorizations whose imported artifacts still
+          # verify byte-exact (import record, archive digest, archive members); a PASS, a FAIL_RUNNER, or any record of this
+          # instruction fails closed.
           ns = 'qualification/compatibility-smoke/formal/' + instruction
           present = [os.path.relpath(os.path.join(d, f), ns) for d, _, fs in os.walk(ns) for f in fs if f != '.gitkeep'] if os.path.isdir(ns) else []
           gate('output namespace absent or empty (only .gitkeep allowed)', bool(instruction) and not (os.path.exists(ns) and not os.path.isdir(ns)) and not present, ns + (': ' + ', '.join(present[:5]) if present else ''))
           gate('output namespace is outside the Mobilewright trees', not ns.startswith('qualification/mobilewright/'))
-          rows = []
-          if '## Smoke records' in readme:
-              body = readme[readme.index('## Smoke records'):]
-              body = body[:body.index('\n## ', 4)] if '\n## ' in body[4:] else body
-              tl = [l for l in body.splitlines() if l.startswith('|')]
-              rows = [l for l in tl[2:] if l.strip('| -')]
-          gate('smoke records table present and not pre-populated', '| sut_id | platform (android / ios) |' in readme and not rows, f'{len(rows)} row(s)')
-          arows = []
-          if '## Attribution records' in readme:
-              body = readme[readme.index('## Attribution records'):]
-              body = body[:body.index('\n## ', 4)] if '\n## ' in body[4:] else body
-              tl = [l for l in body.splitlines() if l.startswith('|')]
-              arows = [l for l in tl[2:] if l.strip('| -')]
-          gate('attribution records table present and not pre-populated', '| sut_id | platform | timestamp | result | failed phase |' in readme and not arows, f'{len(arows)} row(s)')
+          def table(title, header):
+              out = []
+              if title in readme:
+                  body = readme[readme.index(title):]
+                  body = body[:body.index('\n## ', 4)] if '\n## ' in body[4:] else body
+                  tl = [l for l in body.splitlines() if l.startswith('|')]
+                  out = [[c.strip() for c in l.strip().strip('|').split('|')] for l in tl[2:] if l.strip('| -')]
+              return header in readme, out
+          has_s, rows = table('## Smoke records', '| sut_id | platform (android / ios) |')
+          gate('smoke records table present; every recorded row is a preserved NOT_EXECUTED (no PASS or FAIL_RUNNER to repeat)', has_s and all(len(c) >= 10 and c[7] == 'NOT_EXECUTED' for c in rows), f'{len(rows)} row(s): ' + ', '.join(f'{c[0]} {c[1]} {c[7]}' for c in rows if len(c) >= 8))
+          has_a, arows = table('## Attribution records', '| sut_id | platform | timestamp | result | failed phase |')
+          gate('attribution records table present; exactly one NOT_EXECUTED attribution row per recorded smoke row', has_a and all(len(c) >= 10 and c[3] == 'NOT_EXECUTED' for c in arows) and sorted((c[0], c[1]) for c in arows) == sorted((c[0], c[1]) for c in rows), f'{len(arows)} row(s)')
+          row_ids = [sorted(set(re.findall(r'formal/(APPIUM3-COMPAT-SMOKE-AUTH-[0-9]{2})/', c[8]))) if len(c) >= 10 else [] for c in rows]
+          prior_ids = sorted({i[0] for i in row_ids if len(i) == 1})
+          gate('every recorded row names the formal namespace of exactly one earlier authorization, never this one', all(len(i) == 1 and i[0] != instruction for i in row_ids), str(prior_ids))
+          for pid in prior_ids:
+              pr = [r for r in (load(p) for p in cands) if r.get('authorization_id') == pid]
+              pr = pr[0] if len(pr) == 1 else {}
+              gate(f'earlier authorization {pid} is VALID, ISSUED, and consumed after its single dispatch', pr.get('record_validity') == 'VALID' and pr.get('status') == 'ISSUED' and pr.get('dispatch_performed') is True and pr.get('dispatch_eligibility') == 'CONSUMED_AFTER_DISPATCH', str(pr.get('dispatch_eligibility')))
+              base = 'qualification/compatibility-smoke/formal/' + pid + '/'
+              ir = load(base + 'IMPORT-RECORD.yaml')
+              bad = [f.get('path') for f in (ir.get('files') or []) if not (os.path.isfile(base + str(f.get('path'))) and sha(base + str(f.get('path'))) == f.get('sha256'))]
+              for art in ir.get('artifacts') or []:
+                  zp = base + str(art.get('downloaded_archive'))
+                  if not (os.path.isfile(zp) and sha(zp) == art.get('downloaded_archive_sha256') and 'sha256:' + sha(zp) == art.get('github_digest')):
+                      bad.append(str(art.get('downloaded_archive'))); continue
+                  import zipfile
+                  with zipfile.ZipFile(zp) as z:
+                      for m in z.namelist():
+                          if m.endswith('/'): continue
+                          fp = base + str(art.get('extracted_to')) + m
+                          if not (os.path.isfile(fp) and open(fp, 'rb').read() == z.read(m)): bad.append(m)
+              gate(f'preserved artifacts of {pid} verify byte-exact (import record, archive digest, archive members)', bool(ir.get('files')) and bool(ir.get('artifacts')) and not bad, ', '.join(bad[:5]))
           mirror = load('manifests/compatibility-smoke-status.yaml')
           me = mirror.get('entries') or []
-          gate('compatibility-smoke mirror not pre-populated (every entry NOT_STARTED, no record pointer)', bool(me) and all(e.get('result') == 'NOT_STARTED' and e.get('qualifier_record') is None and e.get('runner_version') is None for e in me))
+          gate('compatibility-smoke mirror admits the attempt (each entry NOT_STARTED without pointers, or the preserved NOT_EXECUTED of an earlier consumed authorization)', bool(me) and all((e.get('result') == 'NOT_STARTED' and e.get('qualifier_record') is None and e.get('runner_version') is None and e.get('authorization_id') is None) or (e.get('result') == 'NOT_EXECUTED' and e.get('authorization_id') in prior_ids and e.get('authorization_id') != instruction and e.get('qualifier_record') == readme_path and (e.get('sut_id'), e.get('platform')) in [(c[0], c[1]) for c in rows]) for e in me))
           gate('no FAIL_RUNNER recorded for the selected runner (the fallback is not exhausted)', not [e for e in me if e.get('runner') == 'Appium 3' and e.get('result') == 'FAIL_RUNNER'])
           # G-8 E03 untouched
           st = {c['id']: c['status'] for c in (load('manifests/study-manifest.yaml').get('campaigns') or [])}

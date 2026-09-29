@@ -1,0 +1,82 @@
+# Compatibility-smoke execution authorization v2 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# PREPARED, NOT ISSUED. This record authorizes nothing: it is a draft prepared by the ORCHESTRATOR under the human instruction
+# CORRECT THE ANDROID COMPATIBILITY-SMOKE REALIZATION, PREPARE LOCK V3 AND APPIUM3-COMPAT-SMOKE-AUTH-02 (2026-09-28; verbatim in
+# manifests/appium3-compat-smoke-lock-v3-preparation-v1.yaml), which authorized preparation only. The readiness gate of
+# .github/workflows/e03-compatibility-smoke.yml refuses it as long as any lifecycle field below differs from the issued values
+# (record_class COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION, record_validity VALID, status ISSUED, a human issued_by,
+# authorizes_execution true, dispatch_eligibility ELIGIBLE, a frozen launch prompt). Issuance is a separate explicit human
+# act after independent review of the preparation; dispatch is a further separate explicit human act.
+# This is a NEW formal attempt under a new id after the preserved APPIUM3-COMPAT-SMOKE-AUTH-01 record, never a re-run of it.
+authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-02
+authorization_type: COMPATIBILITY_SMOKE_EXECUTION
+record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT
+status: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION
+record_validity: null
+authorizes_execution: false
+dispatch_eligibility: NOT_ELIGIBLE_UNTIL_ISSUED
+dispatch_performed: false
+issued_by: null
+issued_at: null
+study_id: EUS-2026-001
+protocol_version: v1
+prepared_by_role: ORCHESTRATOR
+prepared_on: "2026-09-28"
+prepared_under: CORRECT THE ANDROID COMPATIBILITY-SMOKE REALIZATION, PREPARE LOCK V3 AND APPIUM3-COMPAT-SMOKE-AUTH-02 (gilbertosanchez, 2026-09-28; verbatim in manifests/appium3-compat-smoke-lock-v3-preparation-v1.yaml)
+governing_policy: protocol/mobile-runner-policy-v2.md  # section 9 (FROZEN-PRE-DATA); v1 AMENDED 2026-09-26
+executing_role: QUALIFIER-MOBILE-01 (relayed by the ORCHESTRATOR)
+scope:
+  sut_id: SUT-02
+  platforms: [android, ios]
+  runner: Appium 3
+  runner_version: "3.7.0"
+  executions_per_platform: 1
+  e03_conditions: [E03-CS001-SUT02-ANDROID, E03-CS001-SUT02-IOS]
+  independence: one result per platform, recorded separately; an Android result never implies an iOS result, nor the reverse
+  result_vocabulary: [PASS, FAIL_RUNNER, NOT_EXECUTED]
+  not_in_scope: any other SUT, platform, or runner; any Mobilewright execution or comparison; E03 START or any E03 execution
+predecessor_attempt:  # preserved; never re-run, repaired, re-recorded, or reinterpreted
+  authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-01
+  record: manifests/compatibility-smoke-execution-auth-v1-prepared.yaml  # VALID, ISSUED, CONSUMED_AFTER_DISPATCH
+  run: {run_id: 36340774530, run_attempt: 1, head_sha: eca8f85b6590362ad0076b872e5fba742a184d2d}
+  results: {SUT-02 android: NOT_EXECUTED / HARNESS_ORCHESTRATION, SUT-02 ios: NOT_STARTED (not attempted; frozen topology)}
+  qualifier_record: qualification/compatibility-smoke/README.md  # Smoke and Attribution records; formal/APPIUM3-COMPAT-SMOKE-AUTH-01/ATTRIBUTION-SUT-02-android.yaml; qualification/unresolved.md QUAL-U04
+  preserved_artifacts: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-01/  # IMPORT-RECORD.yaml; the gate re-verifies them byte-exact before this attempt
+  implementation_lock: manifests/compatibility-smoke-implementation-lock-v2.yaml  # historical execution provenance of that run; unchanged
+why_a_new_authorization: "protocol/mobile-runner-policy-v2.md, 9.5: a NOT_EXECUTED does not pass the smoke and triggers no automatic repeat; a further attempt requires the prior record and artifacts preserved unchanged, the demonstrated cause corrected, a successor implementation lock because the correction changes execution-critical harness and workflow bytes, and a new explicit human authorization. AUTH-01 is consumed and never reused; a GitHub re-run never substitutes for this authorization"
+selected_runner_lineage:
+  selected_runner: Appium 3
+  selected_version_pin: "3.7.0"
+  basis: frozen switch rule, protocol/mobile-runner-policy-v1.md section 8, after the formal Mobilewright gate FAILED
+  gate_authorization: MOBILE-QUALIFICATION-EXEC-AUTH-03 (VALID, ISSUED, CONSUMED_AFTER_DISPATCH; never reused)
+  mobile_runner_status: SELECTED  # no FAIL_RUNNER recorded; the fallback is not exhausted
+launch_prompt:
+  working_copy: prompts/working/qualifier-mobile-01-appium3-compat-smoke-v2.md
+  working_copy_sha256: 3d1bc35ff45385571a8415e24b21503081c3cf099141da941d0ae9e2324c896c
+  frozen_copy: null
+  sha256: null
+  prompt_version_id: qualifier-mobile-01-appium3-compat-smoke-v2
+  predecessor_prompt_version_id: qualifier-mobile-01-appium3-compat-smoke-v1  # launch prompt of AUTH-01; frozen copy unchanged
+  rendering_at_issuance: the frozen copy is a byte-for-byte copy of the working copy with exactly two launch placeholders rendered -- PROMPT_STATUS to FROZEN LAUNCH PROMPT OF APPIUM3-COMPAT-SMOKE-AUTH-02, and INSTRUCTION_DATE to the human issuance date (YYYY-MM-DD); no other byte differs
+implementation_lock:
+  path: manifests/compatibility-smoke-implementation-lock-v3.yaml
+  sha256: 6c4c29ac107119a04c0ec47da97c38f10695a0e3f296809145a469ab1087bef5
+  realization_section_sha256: 5988a4e87c9872bda643238498decb85595a8e4499bf0e3e99b9ab809db94af1  # the corrected concrete realization (README), recomputed by the gate
+  correction: the Android navigation target is the productIV of the catalog item whose titleTV reads Sauce Labs Backpack (lock v2 clicked that titleTV); iOS unchanged
+workflow:
+  path: .github/workflows/e03-compatibility-smoke.yml
+  trigger: workflow_dispatch only
+  inputs:
+    instruction_id: APPIUM3-COMPAT-SMOKE-AUTH-02
+    confirm: EXECUTE-COMPATIBILITY-SMOKE
+  topology: readiness gate, then SUT-02 android, then SUT-02 ios only after the android job succeeded with proposed PASS (any other android outcome stops the authorized smoke; policy v2, 9.5); never concurrent
+  rerun: refused in every job (run attempt must be 1)
+output_namespace:
+  android: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/SUT-02-android/
+  ios: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/SUT-02-ios/
+  state_at_preparation: absent
+issuance_procedure:
+  - The human research lead independently reviews the preparation (manifests/appium3-compat-smoke-lock-v3-preparation-v1.yaml, lock v3, the corrected realization, and the files they name) in a published snapshot.
+  - On a separate explicit human issuance instruction only, the ORCHESTRATOR freezes the launch prompt (prompts/frozen/qualifier-mobile-01-appium3-compat-smoke-v2.md, rendering only PROMPT_STATUS and INSTRUCTION_DATE) and promotes this record in place (the filename suffix then becomes historical) to record_class COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION, record_validity VALID, status ISSUED, authorizes_execution true, dispatch_eligibility ELIGIBLE, issued_by the human issuer, issued_at the issuance date, launch_prompt.frozen_copy and launch_prompt.sha256 of the frozen copy. No locked byte changes at issuance.
+  - Because GitHub Actions runs only from the public repository, the issued record, the frozen prompt, and the locked files must be present in a published snapshot before any dispatch; that publication needs its own human authorization. The gate requires every locked file, the README, the lock, and the frozen prompt to be exported UNCHANGED, and the preserved AUTH-01 artifacts to verify byte-exact.
+  - On a further separate explicit human dispatch instruction only, exactly one dispatch is made and its run id recorded; afterwards this record is closed in place (dispatch_performed true, dispatch_eligibility CONSUMED_AFTER_DISPATCH), so the gate refuses any second use. A repeat of either platform needs a new authorization id.
+admission_rule: the workflow's gate (lock v3) admits this authorization only while every recorded smoke and attribution row and every mirror entry other than NOT_STARTED is a preserved NOT_EXECUTED record of an earlier, consumed authorization whose imported artifacts verify byte-exact, while no FAIL_RUNNER is recorded, and while its own output namespace is absent or empty

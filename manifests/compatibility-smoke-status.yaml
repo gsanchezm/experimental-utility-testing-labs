@@ -11,7 +11,7 @@
 # the entry. An entry is changed only after QUALIFIER-MOBILE-01 has recorded an executed smoke there, under a separate
 # explicit human authorization, and only by transcription.
 #
-# Transcription rule (documented 2026-09-24 with the preparation of APPIUM3-COMPAT-SMOKE-AUTH-01, which is PREPARED, NOT
+# Transcription rule (documented 2026-09-24 with the preparation of APPIUM3-COMPAT-SMOKE-AUTH-01, then PREPARED, NOT
 # ISSUED; manifests/appium3-compat-smoke-preparation-v1.yaml). Only after QUALIFIER-MOBILE-01 has produced a valid
 # executed smoke record -- a filled row of the README "Smoke records" table, backed by that platform's imported record
 # under qualification/compatibility-smoke/formal/<authorization id>/ -- may the ORCHESTRATOR mirror that exact result into
@@ -47,13 +47,13 @@ entries:
   - sut_id: SUT-02
     platform: android
     runner: "Appium 3"
-    runner_version: null  # set by transcription from the QUALIFIER record after an executed smoke
-    result: NOT_STARTED
-    qualifier_record: null  # path under qualification/compatibility-smoke/ after an executed smoke
-    executed_at: null
-    authorization_id: null  # the separate explicit human authorization of the smoke
-    transcribed_by: null
-    transcribed_at: null
+    runner_version: "3.7.0 appium-uiautomator2-driver 8.7.0"  # observed core first (README Smoke records row: Appium 3.7.0 + appium-uiautomator2-driver 8.7.0)
+    result: NOT_EXECUTED  # HARNESS_ORCHESTRATION, demonstrated (README Attribution records; formal/APPIUM3-COMPAT-SMOKE-AUTH-01/ATTRIBUTION-SUT-02-android.yaml); does not pass the smoke and does not fail the runner (policy v2, 9.5); E03-CS001-SUT02-ANDROID stays blocked
+    qualifier_record: qualification/compatibility-smoke/README.md  # "Smoke records" row SUT-02 android, recorded by QUALIFIER-MOBILE-01 (commit 7288db8)
+    executed_at: "2026-09-27T18:30:49.040Z"  # run 36340774530, attempt 1
+    authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-01
+    transcribed_by: ORCHESTRATOR
+    transcribed_at: "2026-09-27"
     e03_condition: E03-CS001-SUT02-ANDROID
   - sut_id: SUT-02
     platform: ios

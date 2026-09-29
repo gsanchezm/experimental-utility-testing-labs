@@ -1,7 +1,7 @@
 // Appium 3 per-SUT compatibility smoke (protocol/mobile-runner-policy-v2.md, section 9) for SUT-02 (Sauce Labs
 // Demo Ecosystem), one clean execution per platform. REALIZATION below is the executable form of the
-// "Concrete realization" section of qualification/compatibility-smoke/README.md, recorded before any execution;
-// both are locked by manifests/compatibility-smoke-implementation-lock-v2.yaml. Tool qualification only: nothing
+// "Concrete realization" section of qualification/compatibility-smoke/README.md, recorded before the execution it governs;
+// both are locked by manifests/compatibility-smoke-implementation-lock-v3.yaml (lock v2 is historical execution provenance). Tool qualification only: nothing
 // recorded here is evidence about any system under test. The harness records what happened and proposes a
 // result with its attribution; QUALIFIER-MOBILE-01 records the result. Proposals (policy v2, 9.1-9.4): PASS when
 // every step completed; after the first runner action (the session request) every failure is proposed as
@@ -44,7 +44,7 @@ export const REALIZATION = {
     assertion_timeout_ms: 30000,
     steps: {
       mc02: { using: 'id', value: 'com.saucelabs.mydemoapp.android:id/productRV' },
-      navigate: { using: '-android uiautomator', value: 'new UiSelector().resourceId("com.saucelabs.mydemoapp.android:id/titleTV").text("Sauce Labs Backpack")' },
+      navigate: { using: 'xpath', value: '//*[@resource-id="com.saucelabs.mydemoapp.android:id/productIV" and ../*[@resource-id="com.saucelabs.mydemoapp.android:id/titleTV" and @text="Sauce Labs Backpack"]]' },
       arrival: [
         { using: 'id', value: 'com.saucelabs.mydemoapp.android:id/productTV', text: 'Sauce Labs Backpack' },
         { using: 'id', value: 'com.saucelabs.mydemoapp.android:id/plusIV' },

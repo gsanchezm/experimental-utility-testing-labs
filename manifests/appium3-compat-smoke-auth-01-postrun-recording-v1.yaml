@@ -1,0 +1,614 @@
+# manifests/appium3-compat-smoke-auth-01-postrun-recording-v1.yaml
+# Operation record of the POST-RUN RECORDING of APPIUM3-COMPAT-SMOKE-AUTH-01 (explicit human instruction, 2026-09-27;
+# verbatim below). Written by the ORCHESTRATOR. It lists what was verified, recorded, and transcribed, by which role, in
+# which commits, and what was deliberately not done. It is not qualification evidence, records no result of its own (the
+# QUALIFIER-MOBILE-01 record is the source of truth), and authorizes nothing beyond the recording it describes.
+record_id: APPIUM3-COMPAT-SMOKE-AUTH-01-POSTRUN-RECORDING-01
+record_class: POST_RUN_RECORDING_OPERATION_RECORD
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-09-27T20:45:34Z"
+authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-01
+run: {run_id: 36340774530, run_attempt: 1, event: workflow_dispatch, head_sha: eca8f85b6590362ad0076b872e5fba742a184d2d, conclusion: failure, jobs: "gate 108680289954 success; android 108680321353 failure; ios 108681078617 skipped"}
+instruction:
+  title: EUS-2026-001 -- POST-RUN RECORDING OF APPIUM3-COMPAT-SMOKE-AUTH-01
+  given_by: gilbertosanchez  # human research lead
+  given_on: "2026-09-27"
+  how_the_instruction_arrived: "direct live session input to the ORCHESTRATOR session, first person ('I, gilbertosanchez, human research lead for EUS-2026-001, have reviewed the formal compatibility-smoke run ... I explicitly authorize the POST-RUN RECORDING operation for this one formal dispatch'), after the ORCHESTRATOR's return package of the single dispatch"
+  verbatim_sha256: f7f911f0deb229d0bdbe2a8890c0bb3e7fa1fb18fbf8934943cf0326faed727e  # sha256 of instruction_verbatim below as a file with one trailing line feed
+  determination_source: "the human research lead's reviewed determination (Android NOT_EXECUTED / HARNESS_ORCHESTRATION), recorded by QUALIFIER-MOBILE-01 after it re-verified every evidence item from the imported artifacts and the pinned SUT-02 source; no item contradicted the determination"
+verification_before_recording:
+  run_identity: "run 36340774530, attempt 1 (attempts/2 HTTP 404), workflow_dispatch, head eca8f85, conclusion failure; jobs as above; the only compatibility-smoke run"
+  artifact: "artifact 10938454865 (E03-COMPATIBILITY_SMOKE-SUT-02-android-run36340774530-a1), 482452 bytes, GitHub digest sha256:78cdb8cd6804f04084a4d1ced44630a9e508896c4a7790b25e484580c212a806 equal to the downloaded archive; the five hashes named by the instruction equal the extracted files"
+  frozen_realization: "README Concrete realization row Navigation (MC-06) and harness/smoke.mjs line 47 target titleTV 'Sauce Labs Backpack'; smoke.mjs lines 221-224 locate it and send one W3C click"
+  appium_log: "find titleTV HTTP 200 (lines 237-245); click HTTP 200, value null (lines 246-252); 183 HTTP responses all 200; no error or exception line; 87 productTV reads all 'Products'"
+  page_source: "titleTV 'Sauce Labs Backpack' clickable false, bounds [52,1109][411,1160]; sibling productIV clickable true, bounds [52,513][519,1096]; no clickable ancestor; all 4 titleTV false, all 4 productIV true"
+  screenshot: "failure.png shows the Products catalog"
+  sut_source: "commit 36b012eecdf6a2b488b9504e16b3d0c3ca9a0e7b: ProductsAdapter.java lines 46-47 (titleTV text only) and 51-59 (productIV OnClickListener -> clickListener.OnClick(position, 1)); item_products.xml (no clickable or onClick on the root or titleTV); ProductCatalogFragment.java lines 149-160 (callback opens FRAGMENT_PRODUCT_DETAIL); vendor Espresso DashboardToCheckout.java lines 53-54 click the whole first item"
+  policy: "protocol/mobile-runner-policy-v2.md 9.3 (HARNESS_ORCHESTRATION: a defect of the study-authored harness that prevents the runner from being fairly exercised, positively demonstrated) and 9.4 (tie-break not reached: the evidence distinguishes the harness defect from a runner failure)"
+commits:
+  - {commit: 6afb859, role: QUALIFIER-MOBILE-01, content: "artifact import (9 files unchanged, archive kept, IMPORT-RECORD.yaml)"}
+  - {commit: 88982ad, role: QUALIFIER-MOBILE-01, content: "byte-exact correction of the import (QUAL-U05): one CRLF text file had been stored EOL-normalized by the host core.autocrlf=input; formal/.gitattributes (* -text); verified 9 of 9 via committed blob, git archive, and fresh clone"}
+  - {commit: 7288db8, role: QUALIFIER-MOBILE-01, content: "result NOT_EXECUTED / HARNESS_ORCHESTRATION for SUT-02 android (README Smoke and Attribution records, Outcome, Status, instruction field recorded post-run), ATTRIBUTION-SUT-02-android.yaml, QUAL-U04, QUAL-U05, qualification/README.md"}
+  - {commit: this record's commit, role: ORCHESTRATOR, content: "AUTH-01 lifecycle closed (dispatch_performed true, CONSUMED_AFTER_DISPATCH; VALID / ISSUED unchanged); mirror SUT-02 android NOT_EXECUTED (iOS NOT_STARTED unchanged); toolchain comments, compatibility_smoke_preparation.status, and next_step; CHANGELOG row; this record"}
+state_after:
+  android: NOT_EXECUTED / HARNESS_ORCHESTRATION (harness proposal FAIL_RUNNER preserved, not adopted)
+  ios: NOT_STARTED (not attempted; frozen topology)
+  mobile_runner_status: SELECTED  # unchanged; no FAIL_RUNNER recorded, the fallback is not exhausted
+  auth_01: "VALID, ISSUED, CONSUMED_AFTER_DISPATCH; never reused"
+  implementation_lock_v2: "unchanged (1382b7ee719d408ab240fe4b1ef5184ad838880af07ea5b55339c49f4652ee4e); historical execution provenance of run 36340774530"
+  successor_requirement: "correction of the demonstrated realization defect (target justified from the pinned SUT-02 source before freeze), successor implementation lock (conceptually v3), new explicit human authorization with a new id, new formal attempt (policy v2, 9.5); not performed"
+  e03: NOT_STARTED  # PROTO-U16 OPEN; no environment verification or measured execution
+not_done: [re-run, second dispatch, iOS execution, harness or locator correction, lock v3, new authorization, mobile-runner-policy-v3, mobile_runner_status change, toolchain version / install_date / platform, dashboard update, public export, push, PROTO-U16 resolution, E03 START]
+open_item_for_human_decision: "tools.mobile_fallback.compatibility_smoke_status in manifests/toolchain-manifest.yaml (a study-level convenience summary read by no gate) keeps its preparation-time value NOT_STARTED because it has no value for mixed per-platform states; its comment now states the actual per-platform state; the per-entry mirror is authoritative"
+
+instruction_verbatim: |
+  EUS-2026-001 — POST-RUN RECORDING OF APPIUM3-COMPAT-SMOKE-AUTH-01
+
+  I, gilbertosanchez, human research lead for EUS-2026-001, have reviewed the formal compatibility-smoke run:
+
+  36340774530
+
+  attempt:
+
+  1
+
+  and the preserved Android artifact evidence.
+
+  I explicitly authorize the POST-RUN RECORDING operation for this one formal dispatch.
+
+  This instruction records the Android compatibility-smoke result as:
+
+  NOT_EXECUTED
+
+  with demonstrated cause:
+
+  HARNESS_ORCHESTRATION
+
+  It does NOT authorize a rerun, a corrected smoke execution, a new Appium dispatch, iOS execution, or E03 START.
+
+  1. FORMAL RUN IDENTITY
+
+  Verify exactly:
+
+  Authorization:
+
+  APPIUM3-COMPAT-SMOKE-AUTH-01
+
+  Run:
+
+  36340774530
+
+  Attempt:
+
+  1
+
+  Event:
+
+  workflow_dispatch
+
+  Head SHA:
+
+  eca8f85b6590362ad0076b872e5fba742a184d2d
+
+  Workflow conclusion:
+
+  failure
+
+  Jobs:
+
+  * gate 108680289954 = success;
+  * Android 108680321353 = failure;
+  * iOS 108681078617 = skipped.
+
+  Verify no attempt 2 and no second compatibility-smoke dispatch.
+
+  If anything differs:
+
+  STOP.
+
+  2. PRESERVE THE RAW EXECUTION ARTIFACT
+
+  GitHub artifact:
+
+  id:
+
+  10938454865
+
+  name:
+
+  E03-COMPATIBILITY_SMOKE-SUT-02-android-run36340774530-a1
+
+  GitHub ZIP SHA-256:
+
+  78cdb8cd6804f04084a4d1ced44630a9e508896c4a7790b25e484580c212a806
+
+  Preserve the downloaded artifact bytes unchanged.
+
+  Canonical import must retain the exact execution files.
+
+  Known hashes independently verified after download include:
+
+  record.json
+  0fbb2cec34b51f53dec1bcb391089c296664aead47f980435502b462d6c9a805
+
+  source-failure.xml
+  4718121408f269f1e5b1cd68ddeb540480865d4a81cb6604d10d30fa35d2b487
+
+  failure.png
+  019f941db4c2f887d81240ea26b0eca5768750819f6a454c92d5b659cde198d1
+
+  appium-server.log
+  13b3db10e8b54cae370f51b7c86ccef87f480038b2a722878786ab2556ce5526
+
+  harness.log
+  9fa7697575d09311f8a95558e1a53b5f1bcf9935f9c29ea11eba55a95d6f4b22
+
+  Verify all artifact files and create the normal import/provenance record.
+
+  Do NOT rewrite record.json.
+
+  Its:
+
+  proposed_result: FAIL_RUNNER
+
+  must remain preserved as the harness proposal that was observed.
+
+  The QUALIFIER decision is a separate post-run determination.
+
+  3. HUMAN REVIEW OF THE FAILURE
+
+  The following evidence has been independently reviewed.
+
+  3.1 Frozen harness realization
+
+  The execution-critical harness in public v27 contains an Android navigation realization equivalent to:
+
+  * locate titleTV whose text is Sauce Labs Backpack;
+  * call WebDriver/Appium click() on that titleTV;
+  * then wait for the product-detail state.
+
+  Preserve the exact frozen bytes and hashes.
+
+  4. APPIUM BEHAVIOR OBSERVED
+
+  The Appium log establishes that:
+
+  1. UiAutomator2 successfully located the requested titleTV element.
+  2. Appium accepted the click request.
+  3. The WebDriver click returned HTTP 200.
+  4. There is no demonstrated Appium server/driver exception for that action.
+  5. The application remained on the catalog screen.
+
+  Do not characterize this as an Appium inability to locate or click the requested element.
+
+  5. SUT SOURCE EVIDENCE
+
+  Verify against the exact pinned SUT-02 Android source commit:
+
+  36b012eecdf6a2b488b9504e16b3d0c3ca9a0e7b
+
+  File:
+
+  app/src/main/java/com/saucelabs/mydemoapp/android/view/adapters/ProductsAdapter.java
+
+  The source establishes:
+
+  * titleTV is populated with the product title;
+  * productIV is the view given the product-navigation OnClickListener;
+  * no equivalent product-navigation OnClickListener is assigned to titleTV.
+
+  Also verify the pinned layout:
+
+  app/src/main/res/layout/item_products.xml
+
+  and preserve the relevant provenance.
+
+  6. RUNTIME UI EVIDENCE
+
+  The preserved failure page source establishes for the catalog state:
+
+  titleTV with:
+
+  text = Sauce Labs Backpack
+
+  is:
+
+  clickable = false
+
+  while the corresponding:
+
+  productIV
+
+  is:
+
+  clickable = true.
+
+  The preserved screenshot likewise shows that after the harness navigation action the app remained on the Products catalog.
+
+  This is positive evidence that the prepared study harness selected the wrong interaction target for navigation.
+
+  7. QUALIFIER RESULT
+
+  Under:
+
+  protocol/mobile-runner-policy-v2.md
+
+  Section 9.3,
+
+  record the Android result as:
+
+  NOT_EXECUTED
+
+  cause category:
+
+  HARNESS_ORCHESTRATION
+
+  Reason:
+
+  the study-authored frozen compatibility-smoke realization attempted product navigation by clicking the non-navigation titleTV rather than the productIV view to which the pinned SUT implementation attaches its navigation listener.
+
+  Therefore the selected Appium runner was not fairly exercised for the required navigation capability.
+
+  This is NOT:
+
+  FAIL_RUNNER.
+
+  Do not adopt the harness proposal as the QUALIFIER result.
+
+  8. RELATION BETWEEN PROPOSAL AND OFFICIAL RESULT
+
+  Preserve explicitly:
+
+  Harness proposal:
+
+  FAIL_RUNNER
+
+  Harness proposed category:
+
+  SELECTED_RUNNER_STACK
+
+  QUALIFIER-MOBILE-01 final recorded result:
+
+  NOT_EXECUTED
+
+  Final cause:
+
+  HARNESS_ORCHESTRATION
+
+  Explain that policy v2 intentionally makes the harness output a proposal; post-run evidence review determines whether an allowed demonstrated outside-runner cause exists.
+
+  Here, such evidence exists.
+
+  Do not edit or erase the proposal.
+
+  9. MC CAPABILITY INTERPRETATION
+
+  Do NOT record a scientific conclusion that Appium failed MC-06 or MC-08.
+
+  Observed facts are:
+
+  * MC-01 path completed;
+  * Appium session established;
+  * MC-02 stable-location path operated;
+  * the frozen harness sent a click to the wrong SUT interaction target;
+  * therefore navigation and downstream state-read capability were not fairly tested.
+
+  The compatibility smoke is tool qualification only and is not SUT evidence.
+
+  10. IOS RESULT
+
+  Record:
+
+  IOS_NOT_STARTED_BY_FROZEN_TOPOLOGY
+
+  No iOS compatibility-smoke execution occurred.
+
+  Do not record:
+
+  PASS,
+  FAIL_RUNNER,
+  or NOT_EXECUTED
+
+  for iOS, because no iOS smoke attempt was made.
+
+  Its compatibility state remains:
+
+  NOT_STARTED.
+
+  11. SOURCE-OF-TRUTH QUALIFIER RECORD
+
+  Update the QUALIFIER-owned compatibility-smoke record according to repository conventions.
+
+  The Android Smoke records row must record:
+
+  * SUT-02;
+  * android;
+  * EMULATED;
+  * pinned build identity;
+  * execution timestamp;
+  * observed Appium 3.7.0 / UiAutomator2 8.7.0;
+  * capabilities actually attempted;
+  * result = NOT_EXECUTED;
+  * artifact references;
+  * reason = HARNESS_ORCHESTRATION.
+
+  Create a detailed attribution record that points to:
+
+  * record.json;
+  * appium-server.log;
+  * source-failure.xml;
+  * failure.png;
+  * exact pinned SUT source files / commit;
+  * frozen harness realization.
+
+  Do not fabricate an iOS row.
+
+  12. QUAL-U04
+
+  Use the next available qualification issue id.
+
+  If QUAL-U04 is free, record:
+
+  QUAL-U04 — Appium compatibility-smoke Android navigation realization selected a non-navigation SUT element
+
+  Class:
+
+  IMPLEMENTATION_REALIZATION_DEFECT
+
+  Resolution:
+
+  NOT_EXECUTED / HARNESS_ORCHESTRATION
+
+  Record that:
+
+  * discovered only after the one formal AUTH-01 execution;
+  * the raw observation is preserved;
+  * no outcome-responsive repair occurred during the execution;
+  * future correction requires a successor implementation lock and a new human authorization.
+
+  If another issue already occupies QUAL-U04, use the next free id.
+
+  This is not a protocol-methodology defect.
+
+  Do not create mobile-runner-policy-v3.
+
+  13. MIRROR TRANSCRIPTION
+
+  After the QUALIFIER-owned source record is complete, transcribe the exact Android result into:
+
+  manifests/compatibility-smoke-status.yaml
+
+  Android:
+
+  result: NOT_EXECUTED
+
+  with:
+
+  * observed runner version;
+  * QUALIFIER source-record pointer;
+  * execution timestamp;
+  * authorization id;
+  * transcription role/date.
+
+  iOS remains:
+
+  NOT_STARTED.
+
+  Do not infer any iOS value.
+
+  14. MOBILE RUNNER STATUS
+
+  Keep:
+
+  mobile_runner_status: SELECTED
+
+  Appium 3 is NOT fallback-exhausted.
+
+  Do NOT write:
+
+  UNRESOLVED_AFTER_FALLBACK_FAILURE.
+
+  Reason:
+
+  there is no official Appium FAIL_RUNNER result from this run.
+
+  The Android compatibility requirement remains unresolved because its result is NOT_EXECUTED.
+
+  15. AUTH-01 LIFECYCLE CLOSURE
+
+  AUTH-01 was dispatched exactly once.
+
+  Close it in place:
+
+  dispatch_performed: true
+
+  dispatch_eligibility: CONSUMED_AFTER_DISPATCH
+
+  Record:
+
+  * run id 36340774530;
+  * attempt 1;
+  * expected public HEAD;
+  * timestamps;
+  * Android NOT_EXECUTED / HARNESS_ORCHESTRATION;
+  * iOS not started by frozen topology;
+  * no rerun.
+
+  Do not invalidate or supersede the authorization.
+
+  It remains historically VALID and ISSUED.
+
+  16. NO REUSE
+
+  AUTH-01 may never be used again.
+
+  Do not:
+
+  * re-dispatch AUTH-01;
+  * use GitHub native rerun;
+  * continue iOS separately under AUTH-01.
+
+  A future attempt requires a new authorization id.
+
+  17. IMPLEMENTATION LOCK V2
+
+  Preserve:
+
+  manifests/compatibility-smoke-implementation-lock-v2.yaml
+
+  unchanged as the exact implementation that produced this NOT_EXECUTED observation.
+
+  Do NOT correct the navigation locator in this post-run recording operation.
+
+  Lock v2 becomes historical execution provenance.
+
+  18. SUCCESSOR REQUIREMENT
+
+  Record prospectively, but do NOT implement yet:
+
+  because the demonstrated cause is an execution-critical harness realization defect, policy v2 §9.5 requires:
+
+  1. correction of the demonstrated harness defect;
+  2. successor compatibility-smoke implementation lock;
+  3. new explicit human authorization;
+  4. new formal attempt.
+
+  Conceptually the next baseline will be lock v3.
+
+  The corrected target must be justified from the pinned SUT source before freeze.
+
+  Do not create lock v3 under this instruction.
+
+  19. E03
+
+  Keep:
+
+  E03 = NOT_STARTED
+
+  Do not resolve PROTO-U16 in this operation.
+
+  Do not execute environment verification.
+
+  Do not execute measured E03.
+
+  Android compatibility remains unresolved.
+
+  20. NO PUBLICATION YET
+
+  Do not publish a new public export under this instruction.
+
+  First complete the canonical post-run record and return it for review.
+
+  Do not push.
+
+  21. INTEGRITY CHECKS
+
+  After recording verify:
+
+  * raw imported artifact bytes match the GitHub artifact;
+  * ZIP SHA-256 matches 78cdb8cd...a806;
+  * record.json remains 0fbb2cec...a805;
+  * frozen prompt unchanged;
+  * lock v2 unchanged;
+  * policy v2 unchanged;
+  * no second dispatch;
+  * no attempt 2;
+  * no Appium rerun;
+  * no iOS execution;
+  * no E03 execution.
+
+  22. RETURN PACKAGE
+
+  Return:
+
+  1. canonical artifact-import commit SHA;
+  2. QUALIFIER post-run decision commit SHA;
+  3. lifecycle/mirror transcription commit SHA(s);
+  4. exact imported artifact path;
+  5. complete imported file/hash inventory;
+  6. Android final QUALIFIER result;
+  7. exact HARNESS_ORCHESTRATION evidence chain;
+  8. exact pinned SUT source references supporting the determination;
+  9. QUAL-U04 or next issue id and resolution;
+  10. Android mirror value;
+  11. iOS mirror value;
+  12. mobile_runner_status;
+  13. AUTH-01 terminal lifecycle state;
+  14. confirmation lock v2 unchanged;
+  15. confirmation no implementation correction occurred;
+  16. confirmation no rerun/second dispatch;
+  17. confirmation iOS was never executed;
+  18. confirmation E03 remains NOT_STARTED.
+
+  23. HARD STOP
+
+  After canonical post-run recording:
+
+  STOP.
+
+  Do not correct the harness.
+
+  Do not prepare lock v3.
+
+  Do not issue AUTH-02.
+
+  Do not dispatch.
+
+  Do not publish.
+
+  Do not start E03.
+
+  Wait for separate human review.
+
+  24. REQUIRED FINAL STATE
+
+  End exactly:
+
+  APPIUM3_COMPAT_SMOKE_AUTH_01:
+  ISSUED_VALID_CONSUMED
+
+  FORMAL_SMOKE_RUN:
+  36340774530_ATTEMPT_1
+
+  ANDROID_HARNESS_PROPOSAL:
+  FAIL_RUNNER
+
+  ANDROID_QUALIFIER_RESULT:
+  NOT_EXECUTED
+
+  ANDROID_NOT_EXECUTED_CAUSE:
+  HARNESS_ORCHESTRATION
+
+  IOS_SMOKE:
+  NOT_STARTED_BY_FROZEN_TOPOLOGY
+
+  MOBILE_RUNNER_STATUS:
+  SELECTED
+
+  FALLBACK_EXHAUSTED:
+  NO
+
+  ACTIVE_EXECUTED_SMOKE_LOCK:
+  V2_HISTORICAL
+
+  SUCCESSOR_SMOKE_LOCK_REQUIRED:
+  YES
+
+  RERUN:
+  NOT_PERFORMED
+
+  AUTH_01_REUSABLE:
+  NO
+
+  PROTO_U16:
+  OPEN
+
+  E03_START:
+  NOT_AUTHORIZED
+
+  E03_EXECUTION:
+  NOT_STARTED
+
+  NEXT_REQUIRED_HUMAN_ACTION:
+  REVIEW_POSTRUN_RECORD_THEN_PREPARE_CORRECTED_SMOKE_IMPLEMENTATION_LOCK_V3_AND_NEW_AUTHORIZATION

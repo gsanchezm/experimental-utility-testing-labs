@@ -1,0 +1,744 @@
+# manifests/appium3-compat-smoke-lock-v3-preparation-v1.yaml
+# Operation record of the correction of the Android compatibility-smoke realization, the successor implementation lock v3,
+# and the preparation of APPIUM3-COMPAT-SMOKE-AUTH-02 (explicit human instruction, 2026-09-28; verbatim below). Written by
+# the ORCHESTRATOR. Preparation and static tests only: no workflow was dispatched, no Appium, emulator, simulator, or SUT was
+# executed, AUTH-02 is PREPARED and NOT ISSUED, and no frozen AUTH-02 launch prompt exists. Not qualification evidence.
+record_id: APPIUM3-COMPAT-SMOKE-LOCK-V3-PREPARATION-01
+record_class: PREPARATION_OPERATION_RECORD
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-09-29T00:00:05Z"
+instruction:
+  title: EUS-2026-001 -- CORRECT THE ANDROID COMPATIBILITY-SMOKE REALIZATION, PREPARE LOCK V3 AND APPIUM3-COMPAT-SMOKE-AUTH-02
+  given_by: gilbertosanchez  # human research lead
+  given_on: "2026-09-28"
+  how_the_instruction_arrived: "live session input to the ORCHESTRATOR session as a pasted block, first person ('I, gilbertosanchez, human research lead for EUS-2026-001, have reviewed the post-run record ... and authorize a prospective correction'), after the ORCHESTRATOR's post-run return package; it authorizes preparation, static tests, and one publication, and explicitly withholds issuance and dispatch"
+  verbatim_sha256: 25173437b6073b597676d27554949fbba13f20582ce438aea519f1666b826e23  # sha256 of instruction_verbatim below as a file with one trailing line feed
+verification_before_change:
+  commit_chain: "6afb859, 88982ad, 7288db8, 1300cfd, 2852e15 are ancestors of the starting HEAD 2852e15 (no rewrite)"
+  state: "AUTH-01 VALID / ISSUED / CONSUMED_AFTER_DISPATCH (run 36340774530, attempt 1); SUT-02 android NOT_EXECUTED / HARNESS_ORCHESTRATION (Smoke and Attribution rows); SUT-02 ios NOT_STARTED; Appium 3 pinned 3.7.0, mobile_runner_status SELECTED (no FAIL_RUNNER: fallback not exhausted); E03-resetability NOT_STARTED"
+  auth_01_evidence: "a fresh download of GitHub artifact 10938454865 has sha256 78cdb8cd6804f04084a4d1ced44630a9e508896c4a7790b25e484580c212a806; the archive and the 9 imported files are byte-identical in the working tree, as committed blobs, through git archive, and in a fresh clone (10 of 10 paths each); IMPORT-RECORD.yaml 9 of 9; record.json 0fbb2cec..., source-failure.xml 47181214..., failure.png 019f941d..., appium-server.log 13b3db10..., harness.log 9fa76975... as instructed; qualification/compatibility-smoke/formal/.gitattributes keeps text unset"
+  lock_v2: "manifests/compatibility-smoke-implementation-lock-v2.yaml unchanged since 4450bb3, sha256 1382b7ee719d408ab240fe4b1ef5184ad838880af07ea5b55339c49f4652ee4e; kept as the historical execution provenance of AUTH-01"
+correction:
+  defect: "lock v2 Android navigation (MC-06) clicked com.saucelabs.mydemoapp.android:id/titleTV 'Sauce Labs Backpack', which has no click listener in the pinned build (QUAL-U04)"
+  delta_old: "navigate: -android uiautomator, new UiSelector().resourceId(\"com.saucelabs.mydemoapp.android:id/titleTV\").text(\"Sauce Labs Backpack\")"
+  delta_new: "navigate: xpath, //*[@resource-id=\"com.saucelabs.mydemoapp.android:id/productIV\" and ../*[@resource-id=\"com.saucelabs.mydemoapp.android:id/titleTV\" and @text=\"Sauce Labs Backpack\"]]"
+  unchanged: "the click step itself (locate, then one W3C element click), the arrival lookups (productTV reads Sauce Labs Backpack, plusIV present), the quantity reads 1 then 2 around one plusIV tap, the MC list, all timeouts, the builds, Appium 3.7.0 and the drivers, the substrates, the attribution, and the whole iOS realization (REALIZATION.ios and every iOS README cell byte-identical)"
+  source_justification: "manifests/compatibility-smoke-implementation-lock-v3.yaml, correction.source_justification: ProductsAdapter.java binds the title to titleTV and the product-navigation listener to productIV of the same view holder and position; item_products.xml makes both direct children of the same item root, which declares no click handler; ProductCatalogFragment.java opens the detail of that product from the callback; the vendor Espresso test opens the first product by clicking the catalog item (pinned commit 36b012eecdf6a2b488b9504e16b3d0c3ca9a0e7b)"
+  runtime_cross_check: "the new XPath, evaluated with lxml against the preserved AUTH-01 runtime page source (source-failure.xml), selects exactly one node: productIV, clickable true, bounds [52,513][519,1096], line 26, whose parent item (bounds [52,513][519,1405], clickable false) also holds the titleTV reading Sauce Labs Backpack; the lock-v2 target resolves to that titleTV (clickable false, line 27). The exact-text predicate excludes the green, orange, and red variants. Not used as a README justification (the README cites the pinned source only)"
+  locator_strategy: "xpath is listed as a valid strategy by the pinned UiAutomator2 driver (preserved appium-server.log, line 239); wd.mjs needs no change (it already sends any strategy and supports element-scoped look-ups)"
+  gate_change: "the lock-v2 gate required unpopulated records (first attempt only); the lock-v3 gate admits prior smoke and attribution rows and mirror entries only as preserved NOT_EXECUTED records of earlier, VALID, ISSUED, CONSUMED_AFTER_DISPATCH authorizations whose imported artifacts re-verify byte-exact (import record, archive digest, archive members), and fails closed on a PASS, a FAIL_RUNNER, a record of the current authorization, or a non-empty namespace; lock v2's change_rule anticipated this successor"
+commits:
+  - {commit: 01fff6b, role: QUALIFIER-MOBILE-01, content: "harness/smoke.mjs navigation locator and header comment; smoke-common.sh two mechanical lock references; README realization heading, intro, Android Navigation and Static evidence basis cells, Implementation-section note"}
+  - {commit: 61f050f, role: ORCHESTRATOR, content: "e03-compatibility-smoke.yml gate block G-7 and header comment; e03-validate.yml QUAL-U05 byte-exact evidence step"}
+  - {commit: this record's commit, role: ORCHESTRATOR, content: "lock v3, AUTH-02 prepared, working prompt v2, this record, toolchain scalar and preparation fields, CHANGELOG rows"}
+lock_v3:
+  path: manifests/compatibility-smoke-implementation-lock-v3.yaml
+  sha256: 6c4c29ac107119a04c0ec47da97c38f10695a0e3f296809145a469ab1087bef5
+  changed_since_lock_v2: [.github/workflows/e03-compatibility-smoke.yml, qualification/compatibility-smoke/smoke-common.sh, qualification/compatibility-smoke/harness/smoke.mjs, "README realization section"]
+  unchanged_since_lock_v2: [qualification/compatibility-smoke/run-smoke-android.sh, qualification/compatibility-smoke/run-smoke-ios.sh, qualification/compatibility-smoke/harness/package.json, qualification/compatibility-smoke/harness/package-lock.json, qualification/compatibility-smoke/harness/wd.mjs, protocol/mobile-runner-policy-v2.md]
+  realization_section_sha256: 5988a4e87c9872bda643238498decb85595a8e4499bf0e3e99b9ab809db94af1
+  harness_realization_sha256: 89ad823f215d9287e8411e3c22161e75c0243f9ce94df787b5c62b9c0fe716db
+auth_02: {path: manifests/compatibility-smoke-execution-auth-v2-prepared.yaml, sha256: 5a4957b9da166f654f358bc74313718bba3924cef398bfcd26bfd2f262d5075c, lifecycle: "COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT, PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION, record_validity null, authorizes_execution false, NOT_ELIGIBLE_UNTIL_ISSUED, dispatch_performed false, issued_by null, issued_at null"}
+working_prompt_v2: {path: prompts/working/qualifier-mobile-01-appium3-compat-smoke-v2.md, sha256: 3d1bc35ff45385571a8415e24b21503081c3cf099141da941d0ae9e2324c896c, state: WORKING / NOT DISPATCHABLE, frozen_copy: none}
+toolchain_scalar_decision: "tools.mobile_fallback.compatibility_smoke_status: NOT_STARTED -> null. No schema constrains manifests/toolchain-manifest.yaml (schemas/ covers run manifests, audits, adjudication, and the matrix only) and no gate reads the scalar (G-7 reads the per-entry mirror since PROTO-U15; the smoke gate reads only runner and version fields of mobile_fallback); null follows the repository convention for a value that cannot be stated, and its comment names the authoritative mirror. The Mobilewright-path scalar (NOT_STARTED, true for that path) is unchanged"
+static_tests:  # scratch scripts; nothing launched; counts are passed / total
+  harness_fake_webdriver: "23/23 -- v3 Android success (click on the productIV of the Backpack item, line 26; detail lookup only after that click; one session, one navigation click, one control click; MC-10 artifacts; lock-v3 realization hash stamped), regression of the lock-v2 realization on the same fake (click on titleTV line 27, FAILURE at product detail screen reached, FAIL_RUNNER not_reached, lock-v2 hash 1263dd16...), Android navigation failure, runner failure at session creation, runner error on the click, ambiguous attribution (no runner answer while polling; no runner answer to the click: NO_RUNNER_ANSWER_ATTRIBUTION_UNCERTAIN), harness exception after a runner action (candidate HARNESS_ORCHESTRATION, proposal FAIL_RUNNER), demonstrated harness failure before any runner action (CLI: NOT_EXECUTED / HARNESS_ORCHESTRATION), runner-side artifact capture failure, iOS success, REALIZATION.ios identical and REALIZATION.android differing only in steps.navigate"
+  shell_stop_paths: "14/14 (bash 3.2.57) -- run attempt 2 refused, non-empty namespace refused, malformed authorization id and missing prompt version refused, SUT_BUILD (acquisition, digest mismatch; build-verification names lock v3), INFRASTRUCTURE (host runtime), conservative FAIL_RUNNER (toolchain install, toolchain verify, server start, harness without record), a harness record is never overwritten, no step repeated"
+  readiness_gate_matrix: "24/24 on the canonical tree -- AUTH-02 as prepared refused on exactly 14 authorization-lifecycle and frozen-prompt checks while the 52 lock, build, runner, realization, and prior-record checks pass; a hypothetical issued AUTH-02 with a frozen prompt (scratch fixture only) READY with 66 of 66 checks; AUTH-01 refused (consumed, dispatched, namespace); run attempt 2, wrong confirmation, a recorded FAIL_RUNNER with the exhausted status (no recursive fallback), the exhausted status alone, a tampered or end-of-line-normalized preserved artifact, a changed archive, a missing import record, a row of the current authorization, a recorded PASS or FAIL_RUNNER row, a row without attribution, a prior authorization not consumed, a mirror entry of the current authorization, a non-empty AUTH-02 namespace, the reverted titleTV locator, a changed realization section, an Appium 2 lockfile entry, and E03 not NOT_STARTED each refused; the lock-v2 gate refuses even an issued AUTH-02 because the records are populated"
+  qual_u05_preservation: "4/4 -- the new validate step passes with the byte-exact attribute under core.autocrlf=input (commit and fresh clone), fails when the QUAL-U05 deviation is reproduced (attribute absent, core.autocrlf=input), fails when the attribute is missing, and fails on a one-byte change"
+  structural: "8/8 -- every changed workflow line lies in the header comment or the G-7 gate block; triggers, permissions, concurrency, env, both platform jobs, and the gate job structure identical to lock v2; no retry or continue-on-error; run attempt refused in the gate and both platform jobs; Mobilewright mentions identical to lock v2 and Appium 2 only in refusal checks; the canonical agent-instructions file name absent"
+  validate_python_steps: "10/10 on the working tree (including the new QUAL-U05 step: 9 files byte-exact); actionlint 1.7.7 clean locally without shellcheck (hosted CI runs the full lint)"
+  measured_g7_unchanged: "e03-measured-execution.yml not modified; its G-7 run statically: study-wide ADMISSIBLE; E03-CS001-SUT02-ANDROID refused (smoke NOT_EXECUTED), E03-CS001-SUT02-IOS refused (smoke NOT_STARTED)"
+not_done: [AUTH-02 issuance, frozen AUTH-02 launch prompt, workflow_dispatch of any workflow, GitHub re-run, Appium or harness execution, emulator or simulator, SUT-02 launch, any smoke result, mirror change, mobile_runner_status change, PROTO-U16 transcription, E03 START, E03 environment verification or measured execution, mobile-runner-policy-v3]
+
+instruction_verbatim: |
+  # EUS-2026-001 — CORRECT THE ANDROID COMPATIBILITY-SMOKE REALIZATION, PREPARE LOCK V3 AND APPIUM3-COMPAT-SMOKE-AUTH-02
+
+  I, gilbertosanchez, human research lead for EUS-2026-001, have reviewed the post-run record of:
+
+  `APPIUM3-COMPAT-SMOKE-AUTH-01`
+
+  formal run:
+
+  `36340774530`
+
+  attempt:
+
+  `1`
+
+  I accept the recorded Android result:
+
+  `NOT_EXECUTED / HARNESS_ORCHESTRATION`
+
+  and authorize a prospective correction of that demonstrated implementation-realization defect.
+
+  This instruction authorizes:
+
+  1. preserving and verifying the complete AUTH-01 post-run record;
+  2. correcting only the demonstrated Android navigation realization defect;
+  3. creating successor compatibility-smoke implementation lock v3;
+  4. preparing a NEW execution authorization:
+     `APPIUM3-COMPAT-SMOKE-AUTH-02`;
+  5. preparing a successor WORKING QUALIFIER prompt;
+  6. performing static tests only;
+  7. publishing a new public reproducibility snapshot after preparation so the corrected baseline can be independently reviewed.
+
+  This instruction DOES NOT authorize:
+
+  - issuance of AUTH-02;
+  - workflow_dispatch;
+  - Appium execution;
+  - Android smoke execution;
+  - iOS smoke execution;
+  - SUT launch;
+  - GitHub rerun;
+  - E03 START;
+  - E03 measured execution.
+
+  ## 1. VERIFY POST-RUN CANONICAL STATE
+
+  Verify canonical ancestry includes, without rewriting:
+
+  - `6afb859` — initial artifact import;
+  - `88982ad` — byte-exact import correction;
+  - `7288db8` — QUALIFIER decision;
+  - `1300cfd` — lifecycle/mirror transcription;
+  - `2852e15` — status synchronization.
+
+  Verify:
+
+  AUTH-01:
+
+  `VALID / ISSUED / CONSUMED_AFTER_DISPATCH`
+
+  Run:
+
+  `36340774530`
+
+  Attempt:
+
+  `1`
+
+  Android official result:
+
+  `NOT_EXECUTED`
+
+  Android cause:
+
+  `HARNESS_ORCHESTRATION`
+
+  iOS:
+
+  `NOT_STARTED`
+
+  mobile runner:
+
+  `Appium 3`
+
+  mobile runner status:
+
+  `SELECTED`
+
+  fallback exhausted:
+
+  `NO`
+
+  E03:
+
+  `NOT_STARTED`
+
+  If anything differs:
+
+  STOP.
+
+  ## 2. PRESERVE AUTH-01 EVIDENCE FOREVER
+
+  Do not modify any byte under the imported AUTH-01 formal evidence namespace.
+
+  Verify the GitHub ZIP:
+
+  `78cdb8cd6804f04084a4d1ced44630a9e508896c4a7790b25e484580c212a806`
+
+  and the complete imported inventory.
+
+  Verify in particular:
+
+  `record.json`
+  `0fbb2cec34b51f53dec1bcb391089c296664aead47f980435502b462d6c9a805`
+
+  `source-failure.xml`
+  `4718121408f269f1e5b1cd68ddeb540480865d4a81cb6604d10d30fa35d2b487`
+
+  `failure.png`
+  `019f941db4c2f887d81240ea26b0eca5768750819f6a454c92d5b659cde198d1`
+
+  `appium-server.log`
+  `13b3db10e8b54cae370f51b7c86ccef87f480038b2a722878786ab2556ce5526`
+
+  `harness.log`
+  `9fa7697575d09311f8a95558e1a53b5f1bcf9935f9c29ea11eba55a95d6f4b22`
+
+  Verify byte equality through:
+
+  - working tree;
+  - Git blob;
+  - `git archive`;
+  - fresh clone/archive reconstruction.
+
+  Do not rewrite commit `6afb859`.
+
+  Keep `.gitattributes` protection introduced by `88982ad`.
+
+  ## 3. LOCK V2 IS HISTORICAL EXECUTION PROVENANCE
+
+  Preserve:
+
+  `manifests/compatibility-smoke-implementation-lock-v2.yaml`
+
+  unchanged.
+
+  It describes the exact implementation that produced AUTH-01.
+
+  Do not silently repair lock v2.
+
+  The corrected execution baseline must be a NEW:
+
+  `manifests/compatibility-smoke-implementation-lock-v3.yaml`
+
+  ## 4. AUTHORITATIVE DEFECT TO CORRECT
+
+  The demonstrated defect is narrowly defined.
+
+  The v2 Android realization:
+
+  - used `titleTV` with text `Sauce Labs Backpack` as the navigation target;
+  - called Appium/WebDriver `click()` on that `titleTV`.
+
+  The pinned SUT source at:
+
+  `36b012eecdf6a2b488b9504e16b3d0c3ca9a0e7b`
+
+  demonstrates:
+
+  - `titleTV` identifies/displays the product title;
+  - product navigation is wired to `productIV`;
+  - `titleTV` has no equivalent product-navigation listener.
+
+  The preserved runtime page source additionally shows:
+
+  - target `titleTV` = `clickable=false`;
+  - corresponding `productIV` = `clickable=true`.
+
+  Correct only this demonstrated realization defect.
+
+  ## 5. CORRECTED ANDROID NAVIGATION REALIZATION
+
+  Keep the semantic smoke scenario unchanged:
+
+  Catalog
+  → open `Sauce Labs Backpack`
+  → product-detail screen
+  → read quantity
+  → increment quantity
+  → read updated quantity.
+
+  Do NOT change:
+
+  - MC list;
+  - product semantic target;
+  - expected detail state;
+  - quantity assertions;
+  - timeouts merely because AUTH-01 failed;
+  - Appium core;
+  - UiAutomator2 version;
+  - Android build;
+  - emulator substrate.
+
+  Change only the interaction target required to correctly exercise product navigation.
+
+  The corrected navigation must click the clickable `productIV` belonging to the `Sauce Labs Backpack` catalog item.
+
+  Prefer the strongest source-supported association between:
+
+  `titleTV = Sauce Labs Backpack`
+
+  and that row's:
+
+  `productIV`.
+
+  Do not choose a global first-image locator merely for convenience unless the frozen source evidence independently proves that ordering is stable and semantically identifies the same product.
+
+  If the WebDriver helper needs a scoped child/relative lookup to identify `productIV` in the same catalog item, implement the minimum deterministic support required.
+
+  Do not introduce general framework functionality unrelated to this realization.
+
+  ## 6. STATIC SOURCE JUSTIFICATION
+
+  Document the corrected realization using the pinned source only.
+
+  At minimum cite internally:
+
+  - `ProductsAdapter.java`
+  - `item_products.xml`
+  - `ProductCatalogFragment.java`
+  - the vendor Espresso navigation test already used in the investigation.
+
+  Record exactly why the corrected clickable target corresponds to the same semantic action originally intended.
+
+  This is correction of execution realization, not modification of the Section 9 capability definition.
+
+  ## 7. IOS REALIZATION
+
+  AUTH-01 never executed iOS.
+
+  There is no observed evidence justifying a change to the iOS realization.
+
+  Therefore:
+
+  preserve the iOS concrete realization semantically and, where possible, byte-for-byte.
+
+  Any iOS change must be limited to mechanical references required by the new authorization/lock/prompt version.
+
+  Do not “improve” the iOS scenario prospectively without a demonstrated reason.
+
+  ## 8. HARNESS ATTRIBUTION
+
+  Keep policy-v2 attribution unchanged.
+
+  The corrected harness must still distinguish:
+
+  - PASS;
+  - NOT_EXECUTED / SUT_BUILD;
+  - NOT_EXECUTED / INFRASTRUCTURE;
+  - NOT_EXECUTED / HARNESS_ORCHESTRATION;
+  - FAIL_RUNNER;
+  - uncertainty → FAIL_RUNNER.
+
+  Do not weaken the conservative tie-break.
+
+  Do not make the corrected locator itself evidence that AUTH-01 “would have passed”.
+
+  AUTH-01 remains NOT_EXECUTED permanently.
+
+  ## 9. SUCCESSOR LOCK V3
+
+  Create:
+
+  `manifests/compatibility-smoke-implementation-lock-v3.yaml`
+
+  Lock every execution-critical artifact.
+
+  Expected scope includes at least:
+
+  - `.github/workflows/e03-compatibility-smoke.yml`;
+  - `qualification/compatibility-smoke/smoke-common.sh`;
+  - Android run script;
+  - iOS run script;
+  - harness `package.json`;
+  - harness lockfile;
+  - `wd.mjs`;
+  - `smoke.mjs`;
+  - governing policy v2;
+  - corrected concrete-realization section.
+
+  Report:
+
+  - exact changed paths relative to lock v2;
+  - unchanged paths;
+  - SHA-256 for every locked artifact;
+  - lock-v3 SHA-256;
+  - corrected concrete-realization SHA-256.
+
+  The version delta must be minimal.
+
+  ## 10. STATIC TEST OF THE ORIGINAL DEFECT
+
+  Add a regression assertion that would fail the old v2 realization.
+
+  The test must establish at minimum:
+
+  - `titleTV` is not the navigation click target;
+  - the corrected target is `productIV` associated with the intended product;
+  - the harness sends the click to the corrected element;
+  - downstream detail-state lookup occurs only after that click.
+
+  Use fake/stubbed WebDriver behavior.
+
+  Do not launch the real app.
+
+  ## 11. STATIC SUCCESS/FALIURE PATHS
+
+  Re-run all existing compatibility-smoke static suites against lock v3.
+
+  Include:
+
+  - successful Android fake path;
+  - Android navigation failure;
+  - Android runner failure;
+  - demonstrated harness failure;
+  - demonstrated infrastructure failure;
+  - ambiguous attribution;
+  - successful iOS fake path;
+  - no recursive fallback;
+  - no Appium 2;
+  - no automatic retry;
+  - run-attempt >1 refusal.
+
+  Report exact counts.
+
+  ## 12. AUTH-02 — NEW AUTHORIZATION ID
+
+  Do NOT reuse AUTH-01.
+
+  Prepare:
+
+  `APPIUM3-COMPAT-SMOKE-AUTH-02`
+
+  Initial lifecycle:
+
+  `record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT`
+
+  `status: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION`
+
+  `record_validity: null`
+
+  `authorizes_execution: false`
+
+  `dispatch_eligibility: NOT_ELIGIBLE_UNTIL_ISSUED`
+
+  `dispatch_performed: false`
+
+  `issued_by: null`
+
+  `issued_at: null`
+
+  AUTH-02 must explicitly reference:
+
+  - policy v2;
+  - implementation lock v3;
+  - corrected realization hash;
+  - successor working prompt;
+  - AUTH-01 as the preserved predecessor attempt;
+  - AUTH-01 result `NOT_EXECUTED / HARNESS_ORCHESTRATION`;
+  - reason a new authorization is required under policy v2 §9.5.
+
+  ## 13. AUTH-02 SCOPE
+
+  Prepare AUTH-02 for exactly:
+
+  - SUT-02 Android, one attempt;
+  - SUT-02 iOS, one attempt if Android reaches the predeclared PASS condition.
+
+  The sequence remains:
+
+  gate
+  → Android
+  → iOS only after Android PASS.
+
+  This is a NEW formal attempt, not a rerun of AUTH-01.
+
+  Do not use GitHub native rerun semantics.
+
+  ## 14. SUCCESSOR WORKING PROMPT
+
+  Create a new prompt version, preferably:
+
+  `prompts/working/qualifier-mobile-01-appium3-compat-smoke-v2.md`
+
+  Do not alter the already-frozen AUTH-01 launch prompt.
+
+  The successor prompt must reference:
+
+  - AUTH-02;
+  - lock v3;
+  - policy v2;
+  - prior AUTH-01 NOT_EXECUTED record;
+  - corrected navigation realization;
+  - no reuse/rerun;
+  - Android→iOS frozen topology;
+  - existing attribution rules;
+  - no E03 START.
+
+  Keep it:
+
+  WORKING / NOT DISPATCHABLE.
+
+  Do not create a frozen copy.
+
+  Do not issue AUTH-02.
+
+  ## 15. QUAL-U04
+
+  Once the corrected implementation is statically locked under v3, update QUAL-U04 according to its existing edit rules.
+
+  Preserve:
+
+  - AUTH-01 result = NOT_EXECUTED;
+  - original defect;
+  - discovery after AUTH-01;
+  - no repair during AUTH-01.
+
+  The correction portion may become RESOLVED by the prospectively frozen v3 implementation.
+
+  Do not rewrite the historical result.
+
+  ## 16. QUAL-U05
+
+  Leave QUAL-U05 resolved.
+
+  Reverify that `.gitattributes` prevents text normalization for formal compatibility-smoke evidence.
+
+  Add a static preservation check if one does not already exist.
+
+  This check must detect the exact type of CRLF→LF storage deviation that occurred in the first import commit.
+
+  ## 17. NON-AUTHORITATIVE TOOLCHAIN SUMMARY FIELD
+
+  Inspect:
+
+  `tools.mobile_fallback.compatibility_smoke_status`
+
+  and every schema/consumer of that field.
+
+  It currently cannot faithfully encode:
+
+  Android = NOT_EXECUTED
+  iOS = NOT_STARTED.
+
+  No scientific gate may depend on this scalar.
+
+  Do NOT invent a methodological result.
+
+  If the schema permits `null`, prefer a representation equivalent to:
+
+  `null`
+
+  with an explicit comment that the study-level convenience scalar is non-authoritative in mixed per-platform states and the authoritative values are in:
+
+  `manifests/compatibility-smoke-status.yaml`.
+
+  If repository conventions already contain a suitable existing non-authoritative value, use that instead.
+
+  If neither option is valid without inventing vocabulary, leave the scalar unchanged and document the limitation.
+
+  Report the decision.
+
+  ## 18. STALE STATUS TEXT
+
+  Correct representation-only stale text, including:
+
+  - comments saying AUTH-01 is PREPARED / NOT ISSUED;
+  - live README/status wording that contradicts the recorded AUTH-01 execution;
+  - dashboard status when the next public export is built.
+
+  Do not edit frozen prompts or historical execution evidence.
+
+  ## 19. PROTO-U16
+
+  Keep PROTO-U16 OPEN.
+
+  It still:
+
+  - does not block this corrected compatibility-smoke preparation;
+  - does block E03 START.
+
+  Do not perform the global 24-surface transcription in this operation.
+
+  ## 20. E03
+
+  Keep:
+
+  `E03 = NOT_STARTED`
+
+  Do not dispatch Environment Verification.
+
+  Do not dispatch Measured Execution.
+
+  Do not freeze/start E03.
+
+  ## 21. PRE-PUBLICATION STATIC GATE
+
+  AUTH-02 must remain non-dispatchable.
+
+  Run readiness statically and verify it fails specifically because AUTH-02 is PREPARED / not issued / frozen prompt absent.
+
+  At the same time verify all lock-v3, build, runner and realization checks pass.
+
+  Also verify:
+
+  AUTH-01 is consumed and rejected.
+
+  ## 22. PUBLIC EXPORT V28
+
+  After all preparation/static checks pass, publish a new deterministic public snapshot v28.
+
+  The public snapshot must include:
+
+  ### Preserved post-run provenance
+  - AUTH-01 consumed lifecycle;
+  - exact imported AUTH-01 artifact/evidence;
+  - QUALIFIER NOT_EXECUTED decision;
+  - attribution record;
+  - QUAL-U04;
+  - QUAL-U05;
+  - Android mirror NOT_EXECUTED;
+  - iOS mirror NOT_STARTED;
+  - mobile_runner_status SELECTED.
+
+  ### New preparation
+  - corrected harness/workflow;
+  - lock v3;
+  - AUTH-02 PREPARED only;
+  - successor WORKING prompt;
+  - static-test/provenance records;
+  - corrected dashboard/live status.
+
+  Do NOT publish a frozen AUTH-02 prompt because AUTH-02 is not issued.
+
+  ## 23. EVIDENCE PUBLICATION INTEGRITY
+
+  The AUTH-01 formal artifact is scientific/provenance evidence and must remain traceable byte-for-byte to the canonical import.
+
+  Do not apply a transformation to those execution files unless an actual hygiene/security issue is independently found and documented.
+
+  Record canonical/export hashes through the existing public-export mechanism.
+
+  The ZIP archive itself should remain byte-identical.
+
+  ## 24. PUSH-TRIGGERED VALIDATION ONLY
+
+  Push v28.
+
+  Only normal push validation is allowed.
+
+  Do NOT dispatch compatibility smoke.
+
+  Report every validation job/conclusion.
+
+  ## 25. PUBLIC POST-PUSH AUDIT
+
+  On a fresh v28 clone verify:
+
+  1. AUTH-01 = VALID / ISSUED / CONSUMED;
+  2. AUTH-01 cannot dispatch again;
+  3. run 36340774530 remains attempt 1;
+  4. Android official result = NOT_EXECUTED / HARNESS_ORCHESTRATION;
+  5. Android harness proposal remains preserved as FAIL_RUNNER;
+  6. iOS = NOT_STARTED;
+  7. mobile_runner_status = SELECTED;
+  8. fallback exhausted = NO;
+  9. AUTH-01 artifact ZIP matches canonical SHA-256;
+  10. all imported artifact files match canonical hashes;
+  11. lock v2 remains unchanged historical provenance;
+  12. lock v3 is the prepared successor baseline;
+  13. corrected Android realization targets the source-supported clickable navigation element;
+  14. AUTH-02 = PREPARED / NOT ISSUED;
+  15. AUTH-02 readiness refuses execution;
+  16. compatibility-smoke workflow total historical runs remains exactly 1;
+  17. no Appium execution occurred during preparation;
+  18. no SUT launch occurred during preparation;
+  19. PROTO-U16 OPEN;
+  20. E03 NOT_STARTED.
+
+  ## 26. HARD STOP
+
+  After public v28 verification:
+
+  STOP.
+
+  Do not issue AUTH-02.
+
+  Do not freeze the AUTH-02 launch prompt.
+
+  Do not dispatch.
+
+  Do not run Appium.
+
+  Do not launch either SUT.
+
+  Do not start E03.
+
+  ## 27. RETURN PACKAGE
+
+  Return:
+
+  1. post-run baseline commit chain confirmed;
+  2. corrected implementation commit SHA(s);
+  3. exact old→new Android realization delta;
+  4. exact source justification;
+  5. lock-v3 path and SHA-256;
+  6. full lock-v3 artifact/hash list;
+  7. corrected realization SHA-256;
+  8. regression/static test counts;
+  9. AUTH-02 path/lifecycle;
+  10. successor working-prompt path/SHA-256;
+  11. QUAL-U04 final state;
+  12. QUAL-U05 verification;
+  13. disposition of `mobile_fallback.compatibility_smoke_status`;
+  14. dashboard/status commit;
+  15. canonical export-source HEAD;
+  16. public v28 HEAD;
+  17. public tree;
+  18. export-manifest SHA-256;
+  19. validation run id/jobs;
+  20. public artifact-integrity verification;
+  21. compatibility-smoke run count;
+  22. confirmation no dispatch/execution;
+  23. PROTO-U16 state;
+  24. E03 state.
+
+  ## 28. REQUIRED FINAL STATE
+
+  End exactly:
+
+  AUTH_01:
+  ISSUED_VALID_CONSUMED
+
+  AUTH_01_ANDROID_RESULT:
+  NOT_EXECUTED_HARNESS_ORCHESTRATION
+
+  AUTH_01_IOS_RESULT:
+  NOT_STARTED
+
+  AUTH_01_RERUN:
+  NOT_PERFORMED
+
+  LOCK_V2:
+  HISTORICAL_EXECUTION_PROVENANCE_UNCHANGED
+
+  LOCK_V3:
+  PREPARED_CORRECTED_NOT_EXECUTED
+
+  AUTH_02:
+  PREPARED_NOT_ISSUED
+
+  AUTH_02_DISPATCH:
+  NOT_PERFORMED
+
+  ANDROID_CORRECTED_REALIZATION:
+  SOURCE_SUPPORTED_PRODUCTIV_NAVIGATION_TARGET
+
+  IOS_REALIZATION:
+  UNCHANGED_FROM_PREVIOUS_BASELINE
+
+  MOBILE_RUNNER_STATUS:
+  SELECTED
+
+  FALLBACK_EXHAUSTED:
+  NO
+
+  PROTO_U16:
+  OPEN_BLOCKS_E03_START_NOT_SMOKE
+
+  PUBLIC_EXPORT_V28:
+  PUBLISHED_VERIFIED
+
+  E03_START:
+  NOT_AUTHORIZED
+
+  E03_EXECUTION:
+  NOT_STARTED
+
+  NEXT_REQUIRED_HUMAN_ACTION:
+  INDEPENDENTLY_REVIEW_PUBLIC_V28_THEN_SEPARATELY_ISSUE_APPIUM3_COMPAT_SMOKE_AUTH_02

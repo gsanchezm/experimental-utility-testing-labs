@@ -28,14 +28,24 @@
 # GitHub Actions evaluates only the public repository, the issued record and its frozen launch prompt must be published
 # (public export v27, authorized by the same instruction) before any dispatch; the dispatch itself requires another,
 # separate explicit human instruction.
+#
+# DISPATCH LIFECYCLE CLOSED (2026-09-27): the one formal dispatch this authorization permitted was performed on the
+# separate explicit human dispatch instruction (manifests/appium3-compat-smoke-auth-01-dispatch-v1.yaml, recorded before
+# the dispatch): GitHub Actions run 36340774530, attempt 1, on public export v27 (head eca8f85); no re-run exists or is
+# authorized. By the human research lead's instruction POST-RUN RECORDING OF APPIUM3-COMPAT-SMOKE-AUTH-01 (verbatim in
+# manifests/appium3-compat-smoke-auth-01-postrun-recording-v1.yaml) this record was updated in place: dispatch_performed
+# false -> true, dispatch_eligibility ELIGIBLE -> CONSUMED_AFTER_DISPATCH, and the dispatch_lifecycle block added.
+# record_validity (VALID), status (ISSUED), issued_by, issued_at, and authorizes_execution are unchanged: the issuance and
+# the execution performed under it remain valid historical provenance. The record is neither INVALID nor SUPERSEDED; it is
+# consumed and never reused (the readiness gate admits only exact ELIGIBLE). A further attempt needs a new authorization id.
 authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-01
 authorization_type: COMPATIBILITY_SMOKE_EXECUTION
 record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION  # promoted 2026-09-26 at explicit human issuance; was COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT while PREPARED
 status: ISSUED  # was PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION until the explicit human issuance of 2026-09-26
 record_validity: VALID  # null while PREPARED; set at issuance
 authorizes_execution: true  # was false while PREPARED; permits exactly the scope below, once, and only on a separate explicit human dispatch instruction
-dispatch_eligibility: ELIGIBLE  # was NOT_ELIGIBLE_UNTIL_ISSUED while PREPARED; closed in place to CONSUMED_AFTER_DISPATCH after its one dispatch
-dispatch_performed: false  # unchanged at issuance: issuance, publication, and static readiness checks are not dispatch and do not consume this authorization
+dispatch_eligibility: CONSUMED_AFTER_DISPATCH  # terminal, fail-closed post-dispatch value (2026-09-27; the AUTH-03 precedent vocabulary). History: NOT_ELIGIBLE_UNTIL_ISSUED while PREPARED; ELIGIBLE from issuance (2026-09-26) until this closure
+dispatch_performed: true  # exactly once (2026-09-27, run 36340774530, attempt 1); was false from preparation through issuance, publication, and the static readiness checks
 issued_by: gilbertosanchez  # explicit human issuance, live session input, 2026-09-26 -- see the ISSUANCE note above
 issued_at: "2026-09-26"
 issued_under_instruction: "EUS-2026-001 -- EXPLICIT APPIUM3-COMPAT-SMOKE-AUTH-01 ISSUANCE AND PUBLICATION (explicit human instruction, live session input to the ORCHESTRATOR, 2026-09-26; verbatim below); it issues AUTH-01, authorizes its publication as public export v27, and explicitly withholds dispatch"
@@ -44,6 +54,27 @@ lifecycle_before_issuance: {record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZ
 execution_at_issuance: none  # no workflow_dispatch, no Appium, no smoke harness, no emulator or simulator, no SUT-02 launch, no smoke result, no mirror transcription; static checks only
 publication_before_dispatch: "required: GitHub Actions evaluates only the public repository, so the issued record, the frozen launch prompt, and every locked file must be present, exported UNCHANGED, in a published snapshot before any dispatch (public export v27, authorized by the issuing instruction; the export log records it)"
 dispatch_requires: "another, separate explicit human dispatch instruction naming this authorization; exactly one dispatch; its run id recorded; this record then closed in place (dispatch_performed true, dispatch_eligibility CONSUMED_AFTER_DISPATCH)"
+dispatch_lifecycle:  # added 2026-09-27 by the ORCHESTRATOR (POST-RUN RECORDING OF APPIUM3-COMPAT-SMOKE-AUTH-01); values read from the GitHub Actions API and the QUALIFIER-MOBILE-01 records
+  dispatch_count: 1
+  dispatch_instruction_record: manifests/appium3-compat-smoke-auth-01-dispatch-v1.yaml  # the separate explicit human dispatch instruction (2026-09-27), committed before the dispatch
+  run_identity_record: manifests/appium3-compat-smoke-auth-01-run-v1.yaml
+  workflow: .github/workflows/e03-compatibility-smoke.yml
+  run_id: 36340774530
+  run_number: 1
+  run_attempt: 1  # GET actions/runs/36340774530/attempts/2 returns HTTP 404: no attempt 2
+  event: workflow_dispatch
+  head_sha: eca8f85b6590362ad0076b872e5fba742a184d2d  # public export v27, the expected snapshot
+  dispatch_command_issued_at: "2026-09-27T18:28:27Z"
+  created_at: "2026-09-27T18:28:28Z"
+  completed_at: "2026-09-27T18:32:51Z"  # run updated_at; workflow conclusion failure (the GitHub conclusion, not a smoke result)
+  jobs: "gate 108680289954 success; SUT-02 android 108680321353 failure; SUT-02 ios 108681078617 skipped (never ran)"
+  results:
+    SUT-02 android: "NOT_EXECUTED / HARNESS_ORCHESTRATION (QUALIFIER-MOBILE-01, qualification/compatibility-smoke/README.md; the harness proposal FAIL_RUNNER is preserved in record.json and was not adopted)"
+    SUT-02 ios: "not attempted: NOT_STARTED by the frozen topology (iOS starts only after an Android proposed PASS)"
+  artifacts_imported: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-01/  # IMPORT-RECORD.yaml; artifact 10938454865, digest sha256:78cdb8cd6804f04084a4d1ced44630a9e508896c4a7790b25e484580c212a806
+  rerun_authorized: false
+  second_dispatch: none  # 36340774530 is the only run of the compatibility-smoke workflow
+  reuse: never; a further attempt (SUT-02 android corrected, SUT-02 ios) needs a corrected realization, a successor implementation lock, and a new explicit human authorization with a new id (policy v2, 9.5; qualification/unresolved.md, QUAL-U04)
 study_id: EUS-2026-001
 protocol_version: v1
 prepared_by_role: ORCHESTRATOR
@@ -121,6 +152,15 @@ amendment_history:
       header_comment: rewritten to the issued state; the prepared history is preserved in it and in git history
     unchanged: [authorization_id, authorization_type, dispatch_performed (false), study_id, protocol_version, prepared_by_role, prepared_on, prepared_under, re_locked_under, governing_policy, executing_role, scope (SUT-02; android and ios; Appium 3; 3.7.0; one execution per platform; E03 conditions; independence; result vocabulary PASS / FAIL_RUNNER / NOT_EXECUTED; not_in_scope), selected_runner_lineage, launch_prompt.working_copy, launch_prompt.working_copy_sha256, launch_prompt.prompt_version_id, launch_prompt.rendering_at_issuance, implementation_lock (lock v2, 1382b7ee...4ee4e), workflow (trigger, inputs, topology, rerun), output_namespace paths, issuance_procedure, first_attempt_only]
     reason: explicit human issuance after review of public export v26; no locked byte changed (lock v2, its eight artifacts, the realization section 3114ff55...d6c, and policy v2 re-verified before issuance); the build identities, the attribution rules of policy v2 section 9, and the workflow are unchanged
+  - on: "2026-09-27"
+    instruction: EUS-2026-001 -- POST-RUN RECORDING OF APPIUM3-COMPAT-SMOKE-AUTH-01 (verbatim in manifests/appium3-compat-smoke-auth-01-postrun-recording-v1.yaml)
+    changed:
+      dispatch_performed: "false -> true"
+      dispatch_eligibility: "ELIGIBLE -> CONSUMED_AFTER_DISPATCH"
+      added: [dispatch_lifecycle]
+      header_comment: DISPATCH LIFECYCLE CLOSED block added
+    unchanged: [record_class, status (ISSUED), record_validity (VALID), authorizes_execution, issued_by, issued_at, scope, selected_runner_lineage, launch_prompt, implementation_lock (lock v2, historical execution provenance), workflow, output_namespace, issuance_procedure, first_attempt_only, the issuance verbatim]
+    reason: the authorization consumed its single dispatch (run 36340774530, attempt 1); it is closed so that the readiness gate refuses any reuse
 human_instruction_verbatim_sha256: 0cb5f9fa1ca04aff27efe8d0607fd6b1f023e0422dc42397308787395ce0df4b  # sha256 of issuance_instruction_verbatim as a file with one trailing line feed (the text as received in the session)
 issuance_instruction_verbatim: |
   EUS-2026-001 — EXPLICIT APPIUM3-COMPAT-SMOKE-AUTH-01 ISSUANCE AND PUBLICATION
