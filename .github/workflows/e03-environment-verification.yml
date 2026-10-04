@@ -607,7 +607,11 @@ jobs:
           mvn -v | tee "$GITHUB_WORKSPACE/maven-version.txt"
           cd sut
           mvn -B -q clean install -DskipTests
-          ls -1 */target/*-exec.jar | tee "$GITHUB_WORKSPACE/built-jars.txt"
+          shopt -s nullglob
+          jars=(./*/target/*-exec.jar)
+          shopt -u nullglob
+          [ "${#jars[@]}" -gt 0 ] || { echo "no service exec jar was built under */target/" >&2; exit 1; }
+          printf '%s\n' "${jars[@]}" | tee "$GITHUB_WORKSPACE/built-jars.txt"
       - name: Provision and start the platform with its documented docker-compose deployment
         id: provision
         run: |
