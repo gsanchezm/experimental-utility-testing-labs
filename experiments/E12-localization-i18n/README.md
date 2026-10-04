@@ -29,7 +29,7 @@ Determine whether each evaluated ecosystem (each a system under test, SUT) expos
 - Screenshots (UI surfaces) and response records (API surface) capturing the observed outcome.
 - One run manifest per locale × surface execution conforming to schemas/run-manifest.schema.json, carrying `environment_type`.
 - Explicit record for every locale × surface cell that is not applicable or not testable, with reason.
-- Mobile executions comply with protocol/mobile-runner-policy-v1.md, including the per-SUT compatibility smoke.
+- Mobile executions comply with protocol/mobile-runner-policy-v3.md, including the per-SUT compatibility smoke.
 - Raw observations in `raw-data/E12-localization-i18n/`.
 
 ## Current status

@@ -57,6 +57,7 @@ jobs:
           print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
           PY
       - name: Clone the pinned SUT source
+        id: clone
         run: |
           set -euo pipefail
           git clone --quiet "${{ steps.pin.outputs.repo }}" sut
@@ -71,6 +72,7 @@ jobs:
         with:
           node-version: "24"
       - name: Provision and start the api instance
+        id: api
         run: |
           set -euo pipefail
           cd sut/backend
@@ -79,6 +81,7 @@ jobs:
           for _ in $(seq 1 60); do curl -fsS http://127.0.0.1:8000/health >/dev/null 2>&1 && break; sleep 2; done
           curl -fsS http://127.0.0.1:8000/health
       - name: Provision, build, and serve the web instance
+        id: web
         run: |
           set -euo pipefail
           npm install -g pnpm@10 --no-audit --no-fund
@@ -88,6 +91,7 @@ jobs:
           nohup pnpm exec vite preview --host 127.0.0.1 --port 3000 --strictPort > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &
           for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
       - name: Verify surface and reset-mechanism reachability (no state established, nothing measured)
+        id: verify
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -126,6 +130,35 @@ jobs:
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           assert ok, 'environment verification failed'
           PY
+      - name: Write a NOT_VERIFIED record when the verification step did not write one
+        if: always()
+        env:
+          EV_SUT: SUT-01
+          EV_SURFACES: WEB API
+          EV_CONDITIONS: E03-CS001-SUT01-WEB E03-CS001-SUT01-API
+          EV_ENVIRONMENT_TYPE: SELF_HOSTED
+          EV_MECHANISM: "POST /api/session/reset (SUT01-EV-0006); reachability only"
+          EV_REPOSITORY: ${{ steps.pin.outputs.repo }}
+          EV_COMMIT: ${{ steps.pin.outputs.sha }}
+          EV_STEP_OUTCOMES: pin=${{ steps.pin.outcome }} clone=${{ steps.clone.outcome }} api=${{ steps.api.outcome }} web=${{ steps.web.outcome }} verify=${{ steps.verify.outcome }}
+        run: |
+          if [ -f environment-verification.json ]; then exit 0; fi
+          python3 - <<'PY'
+          import json, os, datetime
+          e = os.environ
+          unread = 'UNREAD (the pin step did not complete)'
+          rec = {'record_class': e['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
+                 'sut_id': e['EV_SUT'], 'surfaces': e['EV_SURFACES'].split(), 'conditions_covered': e['EV_CONDITIONS'].split(), 'environment_type': e['EV_ENVIRONMENT_TYPE'],
+                 'sut_provenance': {'repository': e.get('EV_REPOSITORY') or unread, 'commit_sha': e.get('EV_COMMIT') or unread},
+                 'reset_mechanism_under_verification': e['EV_MECHANISM'],
+                 'step_outcomes': dict(kv.split('=', 1) for kv in e['EV_STEP_OUTCOMES'].split()),
+                 'checks': {}, 'verification_result': 'NOT_VERIFIED',
+                 'not_verified_reason': 'a provisioning or verification step did not complete (see step_outcomes); nothing was verified',
+                 'runner': {'os': e.get('RUNNER_OS'), 'image': e.get('ImageOS'), 'image_version': e.get('ImageVersion'), 'arch': e.get('RUNNER_ARCH')},
+                 'github': {'run_id': e.get('GITHUB_RUN_ID'), 'run_attempt': e.get('GITHUB_RUN_ATTEMPT'), 'job': e.get('GITHUB_JOB'), 'repository_sha': e.get('GITHUB_SHA'), 'workflow_ref': e.get('GITHUB_WORKFLOW_REF')},
+                 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
+          json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
         uses: actions/upload-artifact@v4
@@ -158,6 +191,7 @@ jobs:
           print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
           PY
       - name: Clone the pinned SUT source
+        id: clone
         run: |
           set -euo pipefail
           git clone --quiet "${{ steps.pin.outputs.repo }}" sut
@@ -168,6 +202,7 @@ jobs:
         with:
           node-version: "24"
       - name: Provision, build, and serve the web instance
+        id: provision
         run: |
           set -euo pipefail
           cd sut
@@ -176,6 +211,7 @@ jobs:
           nohup npx vite preview --host 127.0.0.1 --port 3000 --strictPort > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &
           for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
       - name: Verify surface and reset-mechanism reachability (nothing measured)
+        id: verify
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -198,6 +234,35 @@ jobs:
                  'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'job': '${{ github.job }}', 'repository_sha': '${{ github.sha }}', 'workflow_ref': '${{ github.workflow_ref }}'},
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2)); assert ok
+          PY
+      - name: Write a NOT_VERIFIED record when the verification step did not write one
+        if: always()
+        env:
+          EV_SUT: SUT-02
+          EV_SURFACES: WEB
+          EV_CONDITIONS: E03-CS001-SUT02-WEB
+          EV_ENVIRONMENT_TYPE: SELF_HOSTED
+          EV_MECHANISM: "'Reset App State' in-app control (SUT02-EV-0002); presence at source level and served web surface"
+          EV_REPOSITORY: ${{ steps.pin.outputs.repo }}
+          EV_COMMIT: ${{ steps.pin.outputs.sha }}
+          EV_STEP_OUTCOMES: pin=${{ steps.pin.outcome }} clone=${{ steps.clone.outcome }} provision=${{ steps.provision.outcome }} verify=${{ steps.verify.outcome }}
+        run: |
+          if [ -f environment-verification.json ]; then exit 0; fi
+          python3 - <<'PY'
+          import json, os, datetime
+          e = os.environ
+          unread = 'UNREAD (the pin step did not complete)'
+          rec = {'record_class': e['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
+                 'sut_id': e['EV_SUT'], 'surfaces': e['EV_SURFACES'].split(), 'conditions_covered': e['EV_CONDITIONS'].split(), 'environment_type': e['EV_ENVIRONMENT_TYPE'],
+                 'sut_provenance': {'repository': e.get('EV_REPOSITORY') or unread, 'commit_sha': e.get('EV_COMMIT') or unread},
+                 'reset_mechanism_under_verification': e['EV_MECHANISM'],
+                 'step_outcomes': dict(kv.split('=', 1) for kv in e['EV_STEP_OUTCOMES'].split()),
+                 'checks': {}, 'verification_result': 'NOT_VERIFIED',
+                 'not_verified_reason': 'a provisioning or verification step did not complete (see step_outcomes); nothing was verified',
+                 'runner': {'os': e.get('RUNNER_OS'), 'image': e.get('ImageOS'), 'image_version': e.get('ImageVersion'), 'arch': e.get('RUNNER_ARCH')},
+                 'github': {'run_id': e.get('GITHUB_RUN_ID'), 'run_attempt': e.get('GITHUB_RUN_ATTEMPT'), 'job': e.get('GITHUB_JOB'), 'repository_sha': e.get('GITHUB_SHA'), 'workflow_ref': e.get('GITHUB_WORKFLOW_REF')},
+                 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
+          json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
@@ -229,6 +294,7 @@ jobs:
           print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}"); print(f"release={c['release']}")
           PY
       - name: Download the pinned release artifact
+        id: download
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -241,7 +307,26 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
+      - name: Write the android verification script (the emulator action runs each script line in its own sh, so the checks run as one bash script)
+        run: |
+          cat > sut02-android-verify.sh <<'SH'
+          set -euo pipefail
+          APK="$(cat apk-name.txt)"
+          adb install -r "$APK"
+          PKG="$(adb shell pm list packages -3 | sed 's/package://' | tr -d '\r' | grep -i sauce | head -1)"
+          echo "package=$PKG" | tee package.txt
+          adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1
+          sleep 15
+          adb shell dumpsys activity activities | grep -E 'mResumedActivity|topResumedActivity' | tee resumed.txt
+          adb shell uiautomator dump /sdcard/ui.xml && adb pull /sdcard/ui.xml ui-dump.xml
+          adb exec-out screencap -p > launch-screenshot.png
+          unzip -o -q "$APK" resources.arsc -d apk-res && (strings apk-res/resources.arsc | grep -c 'Reset App State' | tee reset-string-count.txt)
+          adb shell getprop ro.build.version.release | tr -d '\r' > android-version.txt
+          adb shell getprop ro.build.version.sdk | tr -d '\r' > android-sdk.txt
+          SH
+          bash -n sut02-android-verify.sh
       - name: Boot an Android emulator (API 35, google_apis, x86_64) and verify install, launch, and mechanism presence
+        id: emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
@@ -250,20 +335,7 @@ jobs:
           profile: pixel_7
           emulator-boot-timeout: 900
           disable-animations: true
-          script: |
-            set -euo pipefail
-            APK="$(cat apk-name.txt)"
-            adb install -r "$APK"
-            PKG="$(adb shell pm list packages -3 | sed 's/package://' | tr -d '\r' | grep -i sauce | head -1)"
-            echo "package=$PKG" | tee package.txt
-            adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1
-            sleep 15
-            adb shell dumpsys activity activities | grep -E 'mResumedActivity|topResumedActivity' | tee resumed.txt
-            adb shell uiautomator dump /sdcard/ui.xml && adb pull /sdcard/ui.xml ui-dump.xml
-            adb exec-out screencap -p > launch-screenshot.png
-            unzip -o -q "$APK" resources.arsc -d apk-res && (strings apk-res/resources.arsc | grep -c 'Reset App State' | tee reset-string-count.txt)
-            adb shell getprop ro.build.version.release | tr -d '\r' > android-version.txt
-            adb shell getprop ro.build.version.sdk | tr -d '\r' > android-sdk.txt
+          script: bash ./sut02-android-verify.sh
       - name: Write the ENVIRONMENT_VERIFICATION record
         if: always()
         run: |
@@ -273,16 +345,18 @@ jobs:
               try: return open(p).read().strip()
               except FileNotFoundError: return d
           count = rd('reset-string-count.txt', '0')
-          ok = bool(rd('resumed.txt')) and count.isdigit() and int(count) > 0
+          unread = 'UNREAD (the pin step did not complete)'
+          ok = '${{ steps.pin.outcome }}' == 'success' and bool(rd('resumed.txt')) and count.isdigit() and int(count) > 0
           rec = {'record_class': os.environ['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
                  'sut_id': 'SUT-02', 'surfaces': ['ANDROID'], 'conditions_covered': ['E03-CS001-SUT02-ANDROID'], 'environment_type': 'EMULATED',
-                 'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}', 'commit_sha': '${{ steps.pin.outputs.sha }}', 'release': '${{ steps.pin.outputs.release }}', 'artifact_sha256': rd('apk.sha256')},
+                 'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}' or unread, 'commit_sha': '${{ steps.pin.outputs.sha }}' or unread, 'release': '${{ steps.pin.outputs.release }}' or unread, 'artifact_sha256': rd('apk.sha256')},
+                 'step_outcomes': {'pin': '${{ steps.pin.outcome }}', 'download': '${{ steps.download.outcome }}', 'emulator': '${{ steps.emulator.outcome }}'},
                  'emulator': {'api_level': 35, 'target': 'google_apis', 'arch': 'x86_64', 'profile': 'pixel_7', 'android_release': rd('android-version.txt'), 'sdk': rd('android-sdk.txt')},
                  'reset_mechanism_under_verification': "'Reset App State' menu item behind a confirmation dialog (SUT02-EV-0008); presence in the installed artifact's resources; app install and launch verified; the reset itself is not exercised",
                  'checks': {'package': rd('package.txt'), 'resumed_activity': rd('resumed.txt'), 'reset_string_occurrences_in_resources': count, 'ui_dump_captured': os.path.exists('ui-dump.xml')},
                  'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
                  'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH')},
-                 'mobile_runner': 'none (no mobile test runner is used for environment verification; Mobilewright qualification is a separate, not-yet-executed gate)',
+                 'mobile_runner': 'none (no mobile test runner is used for environment verification)',
                  'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'job': '${{ github.job }}', 'repository_sha': '${{ github.sha }}', 'workflow_ref': '${{ github.workflow_ref }}'},
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
@@ -311,16 +385,17 @@ jobs:
     steps:
       - name: Check out study repository
         uses: actions/checkout@v4
-      - name: Read the pinned SUT-02 ios release
+      - name: Read the pinned SUT-02 ios release (Ruby Psych; the macos-15 image refuses pip installs under PEP 668)
         id: pin
         run: |
-          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
-          python3 - >> "$GITHUB_OUTPUT" <<'PY'
-          import yaml
-          c = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-02']['components']['ios']
-          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}"); print(f"release={c['release']}")
-          PY
+          ruby -ryaml -rdate -e '
+            m = YAML.safe_load(File.read("manifests/sut-manifest.yaml"), permitted_classes: [Date, Time], aliases: true)
+            c = m["suts"]["SUT-02"]["components"]["ios"]
+            %w[repository commit_sha release].each { |k| abort("empty pin field: #{k}") if c[k].to_s.empty? }
+            puts "repo=#{c["repository"]}", "sha=#{c["commit_sha"]}", "release=#{c["release"]}"
+          ' >> "$GITHUB_OUTPUT"
       - name: Download the pinned simulator build
+        id: download
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -332,6 +407,7 @@ jobs:
           plutil -p "$(cat app-path.txt)/Info.plist" | grep -E 'CFBundleIdentifier|CFBundleShortVersionString|MinimumOSVersion|DTSDKName' | tee app-info.txt
           plutil -extract CFBundleIdentifier raw "$(cat app-path.txt)/Info.plist" > bundle-id.txt
       - name: Boot an iOS Simulator, install, launch, and verify mechanism presence
+        id: simulator
         run: |
           set -euo pipefail
           xcodebuild -version | tee xcode-version.txt
@@ -356,16 +432,18 @@ jobs:
               try: return open(p).read().strip()
               except FileNotFoundError: return d
           count = rd('reset-string-count.txt', '0')
-          ok = ': ' in rd('launch.txt') and bool(rd('container.txt')) and count.isdigit() and int(count) > 0
+          unread = 'UNREAD (the pin step did not complete)'
+          ok = '${{ steps.pin.outcome }}' == 'success' and ': ' in rd('launch.txt') and bool(rd('container.txt')) and count.isdigit() and int(count) > 0
           rec = {'record_class': os.environ['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
                  'sut_id': 'SUT-02', 'surfaces': ['IOS'], 'conditions_covered': ['E03-CS001-SUT02-IOS'], 'environment_type': 'SIMULATED',
-                 'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}', 'commit_sha': '${{ steps.pin.outputs.sha }}', 'release': '${{ steps.pin.outputs.release }}', 'artifact_sha256': rd('app.sha256')},
+                 'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}' or unread, 'commit_sha': '${{ steps.pin.outputs.sha }}' or unread, 'release': '${{ steps.pin.outputs.release }}' or unread, 'artifact_sha256': rd('app.sha256')},
+                 'step_outcomes': {'pin': '${{ steps.pin.outcome }}', 'download': '${{ steps.download.outcome }}', 'simulator': '${{ steps.simulator.outcome }}'},
                  'simulator': {'booted': rd('booted.txt'), 'xcode': rd('xcode-version.txt'), 'runtimes': rd('runtimes.txt'), 'app_info': rd('app-info.txt')},
                  'reset_mechanism_under_verification': "'Reset App State' in the Menu screen behind a confirmation (SUT02-EV-0009); presence in the installed binary; install and launch verified; the reset itself is not exercised",
                  'checks': {'launch': rd('launch.txt'), 'app_container': rd('container.txt'), 'reset_string_occurrences_in_binary': count},
                  'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
                  'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH')},
-                 'mobile_runner': 'none (no mobile test runner is used for environment verification; Mobilewright qualification is a separate, not-yet-executed gate)',
+                 'mobile_runner': 'none (no mobile test runner is used for environment verification)',
                  'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'job': '${{ github.job }}', 'repository_sha': '${{ github.sha }}', 'workflow_ref': '${{ github.workflow_ref }}'},
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
@@ -404,6 +482,7 @@ jobs:
           print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
           PY
       - name: Clone the pinned SUT source
+        id: clone
         run: |
           set -euo pipefail
           git clone --quiet "${{ steps.pin.outputs.repo }}" sut
@@ -414,6 +493,7 @@ jobs:
         with:
           node-version: "14"
       - name: Provision, build, and serve the web instance
+        id: provision
         run: |
           set -euo pipefail
           cd sut
@@ -424,6 +504,7 @@ jobs:
           nohup npx next start -p 3000 > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &
           for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
       - name: Verify surface and reset-mechanism reachability (nothing measured)
+        id: verify
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -447,6 +528,35 @@ jobs:
                  'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'job': '${{ github.job }}', 'repository_sha': '${{ github.sha }}', 'workflow_ref': '${{ github.workflow_ref }}'},
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2)); assert ok
+          PY
+      - name: Write a NOT_VERIFIED record when the verification step did not write one
+        if: always()
+        env:
+          EV_SUT: SUT-03
+          EV_SURFACES: WEB
+          EV_CONDITIONS: E03-CS001-SUT03-WEB
+          EV_ENVIRONMENT_TYPE: SELF_HOSTED
+          EV_MECHANISM: "Sign-Out -> store2.session.clearAll() (SUT03-EV-0030, SUT03-EV-0031); presence at source level and served web surface"
+          EV_REPOSITORY: ${{ steps.pin.outputs.repo }}
+          EV_COMMIT: ${{ steps.pin.outputs.sha }}
+          EV_STEP_OUTCOMES: pin=${{ steps.pin.outcome }} clone=${{ steps.clone.outcome }} provision=${{ steps.provision.outcome }} verify=${{ steps.verify.outcome }}
+        run: |
+          if [ -f environment-verification.json ]; then exit 0; fi
+          python3 - <<'PY'
+          import json, os, datetime
+          e = os.environ
+          unread = 'UNREAD (the pin step did not complete)'
+          rec = {'record_class': e['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
+                 'sut_id': e['EV_SUT'], 'surfaces': e['EV_SURFACES'].split(), 'conditions_covered': e['EV_CONDITIONS'].split(), 'environment_type': e['EV_ENVIRONMENT_TYPE'],
+                 'sut_provenance': {'repository': e.get('EV_REPOSITORY') or unread, 'commit_sha': e.get('EV_COMMIT') or unread},
+                 'reset_mechanism_under_verification': e['EV_MECHANISM'],
+                 'step_outcomes': dict(kv.split('=', 1) for kv in e['EV_STEP_OUTCOMES'].split()),
+                 'checks': {}, 'verification_result': 'NOT_VERIFIED',
+                 'not_verified_reason': 'a provisioning or verification step did not complete (see step_outcomes); nothing was verified',
+                 'runner': {'os': e.get('RUNNER_OS'), 'image': e.get('ImageOS'), 'image_version': e.get('ImageVersion'), 'arch': e.get('RUNNER_ARCH')},
+                 'github': {'run_id': e.get('GITHUB_RUN_ID'), 'run_attempt': e.get('GITHUB_RUN_ATTEMPT'), 'job': e.get('GITHUB_JOB'), 'repository_sha': e.get('GITHUB_SHA'), 'workflow_ref': e.get('GITHUB_WORKFLOW_REF')},
+                 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
+          json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
@@ -478,12 +588,28 @@ jobs:
           print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
           PY
       - name: Clone the pinned SUT source
+        id: clone
         run: |
           set -euo pipefail
           git clone --quiet "${{ steps.pin.outputs.repo }}" sut
           git -C sut checkout --quiet "${{ steps.pin.outputs.sha }}"
           test "$(git -C sut rev-parse HEAD)" = "${{ steps.pin.outputs.sha }}"
+      - name: Set up JDK 26 (the SUT README requires JDK 26 or higher; SUT04-PROV-0001 built with Temurin 26)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "26"
+      - name: Build the service jars with Maven (the documented build, tests skipped as in SUT04-PROV-0001)
+        id: build
+        run: |
+          set -euo pipefail
+          java -version 2>&1 | tee "$GITHUB_WORKSPACE/java-version.txt"
+          mvn -v | tee "$GITHUB_WORKSPACE/maven-version.txt"
+          cd sut
+          mvn -B -q clean install -DskipTests
+          ls -1 */target/*-exec.jar | tee "$GITHUB_WORKSPACE/built-jars.txt"
       - name: Provision and start the platform with its documented docker-compose deployment
+        id: provision
         run: |
           set -euo pipefail
           cd sut
@@ -492,6 +618,7 @@ jobs:
           for _ in $(seq 1 90); do curl -fsS -o /dev/null http://127.0.0.1:3004/auth/validate -X POST -H 'Content-Type: application/json' -d '{"token":"x"}' 2>/dev/null && break; sleep 5; done
           docker compose ps | tee "$GITHUB_WORKSPACE/compose-ps.txt"
       - name: Verify surface and reset-mechanism reachability (nothing measured)
+        id: verify
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -517,7 +644,7 @@ jobs:
                  'reset_mechanism_under_verification': 'DELETE /booking/{bookingid} (SUT04-EV-0006); reachability only, against a non-existent id, unauthenticated',
                  'checks': checks, 'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
                  'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH')},
-                 'tool_versions': {'docker_compose': open('compose-version.txt').read().strip()},
+                 'tool_versions': {'docker_compose': open('compose-version.txt').read().strip(), 'java': open('java-version.txt').read().strip(), 'maven': open('maven-version.txt').read().strip()},
                  'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'job': '${{ github.job }}', 'repository_sha': '${{ github.sha }}', 'workflow_ref': '${{ github.workflow_ref }}'},
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2)); assert ok
@@ -527,6 +654,35 @@ jobs:
         run: |
           cd sut || exit 0
           docker compose logs --no-color > "$GITHUB_WORKSPACE/compose-logs.txt" 2>&1 || true
+      - name: Write a NOT_VERIFIED record when the verification step did not write one
+        if: always()
+        env:
+          EV_SUT: SUT-04
+          EV_SURFACES: WEB API
+          EV_CONDITIONS: E03-CS001-SUT04-WEB E03-CS001-SUT04-API
+          EV_ENVIRONMENT_TYPE: SELF_HOSTED
+          EV_MECHANISM: "DELETE /booking/{bookingid} (SUT04-EV-0006); reachability only, against a non-existent id, unauthenticated"
+          EV_REPOSITORY: ${{ steps.pin.outputs.repo }}
+          EV_COMMIT: ${{ steps.pin.outputs.sha }}
+          EV_STEP_OUTCOMES: pin=${{ steps.pin.outcome }} clone=${{ steps.clone.outcome }} build=${{ steps.build.outcome }} provision=${{ steps.provision.outcome }} verify=${{ steps.verify.outcome }}
+        run: |
+          if [ -f environment-verification.json ]; then exit 0; fi
+          python3 - <<'PY'
+          import json, os, datetime
+          e = os.environ
+          unread = 'UNREAD (the pin step did not complete)'
+          rec = {'record_class': e['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
+                 'sut_id': e['EV_SUT'], 'surfaces': e['EV_SURFACES'].split(), 'conditions_covered': e['EV_CONDITIONS'].split(), 'environment_type': e['EV_ENVIRONMENT_TYPE'],
+                 'sut_provenance': {'repository': e.get('EV_REPOSITORY') or unread, 'commit_sha': e.get('EV_COMMIT') or unread},
+                 'reset_mechanism_under_verification': e['EV_MECHANISM'],
+                 'step_outcomes': dict(kv.split('=', 1) for kv in e['EV_STEP_OUTCOMES'].split()),
+                 'checks': {}, 'verification_result': 'NOT_VERIFIED',
+                 'not_verified_reason': 'a provisioning or verification step did not complete (see step_outcomes); nothing was verified',
+                 'runner': {'os': e.get('RUNNER_OS'), 'image': e.get('ImageOS'), 'image_version': e.get('ImageVersion'), 'arch': e.get('RUNNER_ARCH')},
+                 'github': {'run_id': e.get('GITHUB_RUN_ID'), 'run_attempt': e.get('GITHUB_RUN_ATTEMPT'), 'job': e.get('GITHUB_JOB'), 'repository_sha': e.get('GITHUB_SHA'), 'workflow_ref': e.get('GITHUB_WORKFLOW_REF')},
+                 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
+          json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
         uses: actions/upload-artifact@v4
@@ -534,6 +690,9 @@ jobs:
           name: E03-ENVIRONMENT_VERIFICATION-SUT-04-web-api-run${{ github.run_id }}-a${{ github.run_attempt }}
           path: |
             environment-verification.json
+            java-version.txt
+            maven-version.txt
+            built-jars.txt
             compose-version.txt
             compose-ps.txt
             compose-logs.txt
@@ -558,25 +717,29 @@ jobs:
           print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
           PY
       - name: Clone the pinned SUT source
+        id: clone
         run: |
           set -euo pipefail
           git clone --quiet "${{ steps.pin.outputs.repo }}" sut
           git -C sut checkout --quiet "${{ steps.pin.outputs.sha }}"
           test "$(git -C sut rev-parse HEAD)" = "${{ steps.pin.outputs.sha }}"
-      - name: Set up Node.js (engines 22 - 26 at the pinned commit)
+      - name: Set up Node.js 24.21.0 (engines 22 - 26 at the pinned commit; the version of SUT05-PROV-0001)
         uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: "24.21.0"
       - name: Provision (source build at the pinned commit) and start the api instance
+        id: provision
         run: |
           set -euo pipefail
           cd sut
-          npm install --no-audit --no-fund 2>&1 | tail -5
+          npm install --no-audit --no-fund > "$GITHUB_WORKSPACE/npm-install.log" 2>&1 || { tail -n 60 "$GITHUB_WORKSPACE/npm-install.log"; exit 1; }
+          tail -n 5 "$GITHUB_WORKSPACE/npm-install.log"
           nohup npm start > "$GITHUB_WORKSPACE/api-stdout-1.log" 2> "$GITHUB_WORKSPACE/api-stderr-1.log" &
           echo $! > "$GITHUB_WORKSPACE/pid1.txt"
           for _ in $(seq 1 90); do curl -fsS -o /dev/null http://127.0.0.1:3000/rest/admin/application-version && break; sleep 3; done
           curl -fsS http://127.0.0.1:3000/rest/admin/application-version | tee "$GITHUB_WORKSPACE/version-1.json"
       - name: Verify api reachability and the process-restart reset mechanism (nothing measured)
+        id: verify
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -615,6 +778,41 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2)); assert ok
           PY
+      - name: Collect the npm logs (diagnosis of a failed source build)
+        if: always()
+        run: |
+          mkdir -p npm-logs
+          cp -p "$HOME"/.npm/_logs/*.log npm-logs/ 2>/dev/null || true
+          ls -la npm-logs
+      - name: Write a NOT_VERIFIED record when the verification step did not write one
+        if: always()
+        env:
+          EV_SUT: SUT-05
+          EV_SURFACES: API
+          EV_CONDITIONS: E03-CS001-SUT05-API
+          EV_ENVIRONMENT_TYPE: SELF_HOSTED
+          EV_MECHANISM: "full process restart (sequelize.sync force on start, SUT05-EV-0003); stop/start reachability only, no business state established"
+          EV_REPOSITORY: ${{ steps.pin.outputs.repo }}
+          EV_COMMIT: ${{ steps.pin.outputs.sha }}
+          EV_STEP_OUTCOMES: pin=${{ steps.pin.outcome }} clone=${{ steps.clone.outcome }} provision=${{ steps.provision.outcome }} verify=${{ steps.verify.outcome }}
+        run: |
+          if [ -f environment-verification.json ]; then exit 0; fi
+          python3 - <<'PY'
+          import json, os, datetime
+          e = os.environ
+          unread = 'UNREAD (the pin step did not complete)'
+          rec = {'record_class': e['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
+                 'sut_id': e['EV_SUT'], 'surfaces': e['EV_SURFACES'].split(), 'conditions_covered': e['EV_CONDITIONS'].split(), 'environment_type': e['EV_ENVIRONMENT_TYPE'],
+                 'sut_provenance': {'repository': e.get('EV_REPOSITORY') or unread, 'commit_sha': e.get('EV_COMMIT') or unread},
+                 'reset_mechanism_under_verification': e['EV_MECHANISM'],
+                 'step_outcomes': dict(kv.split('=', 1) for kv in e['EV_STEP_OUTCOMES'].split()),
+                 'checks': {}, 'verification_result': 'NOT_VERIFIED',
+                 'not_verified_reason': 'a provisioning or verification step did not complete (see step_outcomes); nothing was verified',
+                 'runner': {'os': e.get('RUNNER_OS'), 'image': e.get('ImageOS'), 'image_version': e.get('ImageVersion'), 'arch': e.get('RUNNER_ARCH')},
+                 'github': {'run_id': e.get('GITHUB_RUN_ID'), 'run_attempt': e.get('GITHUB_RUN_ATTEMPT'), 'job': e.get('GITHUB_JOB'), 'repository_sha': e.get('GITHUB_SHA'), 'workflow_ref': e.get('GITHUB_WORKFLOW_REF')},
+                 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
+          json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
         uses: actions/upload-artifact@v4
@@ -622,6 +820,8 @@ jobs:
           name: E03-ENVIRONMENT_VERIFICATION-SUT-05-api-run${{ github.run_id }}-a${{ github.run_attempt }}
           path: |
             environment-verification.json
+            npm-install.log
+            npm-logs/
             version-1.json
             api-stdout-1.log
             api-stderr-1.log

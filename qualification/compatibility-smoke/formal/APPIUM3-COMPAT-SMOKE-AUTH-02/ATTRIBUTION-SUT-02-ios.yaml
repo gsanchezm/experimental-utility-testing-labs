@@ -1,0 +1,103 @@
+# qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/ATTRIBUTION-SUT-02-ios.yaml
+# Detailed attribution record of the SUT-02 iOS compatibility smoke executed under APPIUM3-COMPAT-SMOKE-AUTH-02
+# (protocol/mobile-runner-policy-v2.md, section 9; a FAIL_RUNNER row names the failed capability and whether the attribution
+# was demonstrated or reached by the conservative tie-break). Written by QUALIFIER-MOBILE-01 under the human instruction
+# EUS-2026-001 -- POST-RUN RECORDING OF APPIUM3-COMPAT-SMOKE-AUTH-02 UNDER THE FROZEN CONSERVATIVE TIE-BREAK (2026-09-29;
+# verbatim in manifests/appium3-compat-smoke-auth-02-postrun-recording-v1.yaml), which records the result after the human
+# research lead's review of the preserved Android and iOS evidence. Every fact below was re-read from the imported artifacts
+# and the locked harness by QUALIFIER-MOBILE-01 before recording. Tool qualification only: nothing here is evidence about
+# SUT-02 or any other system under test, and nothing here scores any capability of SUT-02.
+record_class: COMPATIBILITY_SMOKE_ATTRIBUTION_RECORD
+recorded_by: QUALIFIER-MOBILE-01
+recorded_at: "2026-09-29T16:40:00Z"
+authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-02
+prompt_version_id: qualifier-mobile-01-appium3-compat-smoke-v2
+run: {run_id: 36539790536, run_number: 2, run_attempt: 1, event: workflow_dispatch, head_sha: 34c0453053a29492a34b6a20676bd8f1f046738b, ios_job_id: 109313112821}
+import_record: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/IMPORT-RECORD.yaml
+
+# --- section 9 fields ---
+sut_id: SUT-02
+platform: ios
+environment_type: SIMULATED  # iPhone 16, iOS 18.5 runtime, Xcode 16.4 build 16F6, host macOS 15.7.9 (environment/device.json)
+timestamp: "2026-09-29T08:09:23.924Z"  # end of the failed step (record.json steps[0].ended_at); execution 08:02:54.548Z to 08:09:23.924Z
+failed_phase: install and launch the pinned build (MC-01)  # record.json failed_step.name
+failed_capabilities: [MC-01]
+observed_error: "POST /session: transport failure: fetch failed"  # record.json steps[0].error, verbatim
+result: FAIL_RUNNER
+attributed_category: SELECTED_RUNNER_STACK
+attribution_basis: CONSERVATIVE_TIE_BREAK_ATTRIBUTION_UNCERTAIN  # protocol/mobile-runner-policy-v2.md, 9.4; README basis column: conservative tie-break
+policy_reference: protocol/mobile-runner-policy-v2.md §9.4
+concrete_description: >-
+  During MC-01 the session request POST /session reached Appium 3.7.0, and the XCUITest driver 12.13.2 began session setup:
+  the iOS Simulator booted, the pinned application was installed, the WebDriverAgent build began, and the driver kept polling
+  WebDriverAgent. No session was returned. The study-authored WebDriver client ultimately reported "POST /session:
+  transport failure: fetch failed", and no normal Appium HTTP response to POST /session was preserved. Appium/XCUITest
+  activity continued after the harness had produced its failure record. The exact lower-level reason for "fetch failed" is
+  not available from the artifacts. After inspection of the preserved artifacts, attribution remains uncertain between the
+  study-authored WebDriver transport and the selected Appium/XCUITest execution stack; the positive demonstration that
+  NOT_EXECUTED requires (9.3) is not met, so the conservative tie-break (9.4) records FAIL_RUNNER. This result does not prove
+  which internal Appium/XCUITest component failed; it is the protocol-prescribed result for unresolved attribution.
+recording_role: QUALIFIER-MOBILE-01 (post-run recording instructed by the human research lead after review, 2026-09-29; relayed by the ORCHESTRATOR)
+determination_source: "the human research lead's reviewed determination (SUT-02 ios FAIL_RUNNER under 9.4), recorded by QUALIFIER-MOBILE-01; no preserved artifact positively demonstrates an allowed outside-runner cause"
+artifact_pointers:
+  - SUT-02-ios/record.json  # sha256 51f2ab34b5808e11b68eb557b6e73132d96d75c332df4a6c1b22c53aef0eefb3
+  - SUT-02-ios/appium-server.log  # sha256 7d09fc74fb2075bd87a2157f560b73303effa664573585c6c9405944f777b535
+  - SUT-02-ios/harness.log  # sha256 2d46eda732f73c1cfb3343cb64d3fae82a2eec55c53a7ea3eba040dcc618170d
+  - SUT-02-ios/environment/  # build-verification.json (digest_match true), toolchain-install.json (pins_match_observed true; node v22.23.2), device.json, npm-ci.log
+
+# --- harness proposal (preserved, never edited) versus the QUALIFIER result ---
+harness_proposal:  # literal values of SUT-02-ios/record.json; the file is kept unchanged
+  outcome: FAILURE
+  proposed_result: FAIL_RUNNER
+  proposed_category: SELECTED_RUNNER_STACK
+  basis: NO_RUNNER_ANSWER_ATTRIBUTION_UNCERTAIN
+  failure_kind: transport
+  harness_exception: null
+  runner_action_started: true
+  error: "POST /session: transport failure: fetch failed"
+proposal_versus_result: >-
+  The harness output is a proposal, never the result (README "Result recording rule"; frozen prompt step 4). Here the
+  recorded result equals the proposal (FAIL_RUNNER / SELECTED_RUNNER_STACK); the recorded basis is the conservative
+  tie-break of 9.4, not a demonstration.
+
+# --- observed facts (no causal statement) ---
+observed_facts:  # SUT-02-ios/appium-server.log unless stated otherwise
+  runner_versions: "Appium v3.7.0 (line 1); xcuitest@12.13.2 (line 13; 'Appium v3.7.0 creating new XCUITestDriver (v12.13.2) session' at line 27); pins matched (environment/toolchain-install.json)"
+  session_request_reached_appium: "line 20: --> POST /session at 08:02:54.633; line 21: AppiumDriver.createSession() called"
+  session_setup_began: "line 32 onward: XCUITestDriver session setup with the W3C capabilities; line 52: driver-internal session id 790e2ec9 assigned (no session was returned to the client)"
+  simulator_boot_completed: "line 98: simulator booted in 88.924 s (08:04:25.597)"
+  application_install_completed: "line 110: the app has been successfully installed (08:07:27.581)"
+  webdriveragent_build_began: "line 134: xcodebuild build-for-testing test-without-building started (08:07:30.050); line 137: Waiting up to 600000ms for WebDriverAgent to start (08:07:33.078)"
+  webdriveragent_polling_continued: "WebDriverAgent /status polls with connection refused from line 148 onward, through the end of the log"
+  client_error: "record.json steps[0].error and failed_step.error: POST /session: transport failure: fetch failed (step ended 08:09:23.924Z)"
+  no_normal_response_preserved: "line 2177: <-- POST /session - - ms - - (08:09:23.988): the end line of the request carries no status and no response time"
+  activity_after_failure_record: "driver polling and xcodebuild output continue after line 2177 to the last line 2283 (08:09:30.221); the job log records 'record written; harness exit 1' at 08:09:25.29"
+  declared_limits:
+    harness_session_timeout_ms: 1200000  # harness/smoke.mjs line 75 (lock v3); README Concrete realization "session start limit 1200 s"
+    wdaLaunchTimeout: 600000  # appium capability, record.json capabilities_requested; harness/smoke.mjs line 70
+    wdaConnectionTimeout: 600000  # appium capability, record.json capabilities_requested; harness/smoke.mjs line 71
+
+# --- study-authored client defect (an implementation fact, recorded separately; no causal role asserted) ---
+client_defect:
+  issue: qualification/unresolved.md QUAL-U06 (IMPLEMENTATION_DEFECT_OBSERVED_POST_RUN)
+  facts: "harness/wd.mjs (lock v3, sha256 917bad51...a757) uses Node built-in globalThis.fetch (line 22) and its own AbortController-based request timeout (lines 26-28 and 40); it does not explicitly coordinate the underlying HTTP dispatcher timeout with the larger declared session timeout; for non-AbortError fetch failures it records only e.message (line 38), so the underlying e.cause is not preserved and the exact lower-level reason for 'fetch failed' is unavailable from the formal artifacts"
+  causal_role_in_this_attempt: NOT_ESTABLISHED  # the defect may be relevant, but it is not positively demonstrated to have caused this failure (9.3); it does not override the 9.4 result
+
+not_concluded:
+  - "no statement that Appium or the XCUITest driver caused the end of the session request"
+  - "no statement that the Node.js fetch implementation or the study-authored client caused the failure"
+  - "no identification of any internal Appium/XCUITest component as failed"
+  - "nothing about the result a different client or longer run would produce"
+  - "nothing about SUT-02's capabilities"
+
+capabilities_observed:  # literal step outcome of record.json
+  - "install and launch the pinned build (MC-01): FAILED (session not returned; POST /session: transport failure: fetch failed)"
+  - "MC-02, MC-06, MC-04, MC-08, MC-10: not reached"
+
+effects:  # policy v2, 9.5 and 9.6
+  ios: "FAIL_RUNNER of SUT-02 ios with the selected Appium 3 (tie-break)"
+  study_level: "Appium 3 is the fallback selected under Section 8, so one FAIL_RUNNER exhausts it (FALLBACK_EXHAUSTED = YES): the ORCHESTRATOR records mobile_runner_status UNRESOLVED_AFTER_FALLBACK_FAILURE; Section 8 is not applied again; Appium 3 is not executed again; Appium 2 is never introduced; no other runner is selected; every campaign requiring Android or iOS execution is blocked from START and measurement until a new explicit protocol amendment decides the mobile-runner strategy"
+  android: "the SUT-02 android PASS of the same run is an independent platform observation (9.6) and is not altered; it does not keep the study mobile runner admissible"
+  authorization: "APPIUM3-COMPAT-SMOKE-AUTH-02 is consumed by its single dispatch (run 36539790536, attempt 1); it is never reused and nothing is continued under it"
+  evidence_status: "not evidence about SUT-02 or any ecosystem; E01, H1, the Mobilewright qualification under MOBILE-QUALIFICATION-EXEC-AUTH-03, and the AUTH-01 record are unaffected"
+no_repair: "no locator, step, timeout, version, build, or harness byte was changed before, during, or after the execution; implementation lock v3 and the realization section are unchanged (historical execution provenance)"

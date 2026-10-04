@@ -1,0 +1,35 @@
+# manifests/appium3-toolchain-version-transcription-v1.yaml
+# Provenance record of one factual manifest transcription: tools.mobile_fallback.version in manifests/toolchain-manifest.yaml
+# null -> "3.7.0". Written by the ORCHESTRATOR on the human instruction HARDEN MOBILE-RUNNER-POLICY-V3 DRAFT BEFORE HUMAN
+# APPROVAL (gilbertosanchez, 2026-09-29), section 7 ("the only live non-DRAFT state change allowed by this instruction"); the
+# instruction is reproduced verbatim in manifests/mobile-runner-policy-v3-amendment-proposal-v2.yaml. This is a transcription
+# of a formally observed fact, not a runner selection, not an installation for study use, and not a protocol change: no
+# protocol/CHANGELOG.md row is written for it (the change log records protocol, campaign, and mapping changes; the
+# mobile-runner status and the pin are untouched).
+record_id: APPIUM3-TOOLCHAIN-VERSION-TRANSCRIPTION-01
+record_class: TOOLCHAIN_FACT_TRANSCRIPTION
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-09-29"
+instruction: {title: "EUS-2026-001 -- HARDEN MOBILE-RUNNER-POLICY-V3 DRAFT BEFORE HUMAN APPROVAL", given_by: gilbertosanchez, given_on: "2026-09-29", verbatim_sha256: bf1f42fbda3d85091230cd7d8221f4fdcad9e489c5f9dccb5f932bcdf4e90a80, verbatim_in: manifests/mobile-runner-policy-v3-amendment-proposal-v2.yaml}
+field: tools.mobile_fallback.version
+value_before: null
+value_after: "3.7.0"
+semantics_supporting_the_transcription:
+  - "manifests/toolchain-manifest.yaml, tools.mobile_fallback.compatibility_smoke_preparation (comment since 2026-09-24): 'Pins, not install facts: version/install_date/platform below stay null until an authorized smoke installs and observes them' -- two authorized smokes installed and observed Appium 3.7.0"
+  - "manifests/pre-publication-corrections-v1.yaml (PROTO-U14, 2026-09-24), the design of the G-7 version check: 'Correct it so the exact selected runner's installed/recorded version must be present. For the Appium path, once compatibility smoke has legitimately executed in a later authorization, the recorded Appium version must correspond to the selected/pinned Appium 3.7.0 lineage.'"
+  - "manifests/toolchain-manifest.yaml, policy: version fields are recorded (exact version) before the first run that uses the tool"
+observations:  # formal toolchain-install.json records (appium_core_observed; pins_match_observed)
+  - {authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-02, run_id: 36539790536, run_attempt: 1, platform: android, appium_core_observed: "3.7.0", driver_observed: "uiautomator2 8.7.0", install_date: "2026-09-29", host: "Linux x86_64, ubuntu-24.04 image 20260920.314.1", pins_match_observed: true, record: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/SUT-02-android/environment/toolchain-install.json}
+  - {authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-02, run_id: 36539790536, run_attempt: 1, platform: ios, appium_core_observed: "3.7.0", driver_observed: "xcuitest 12.13.2", install_date: "2026-09-29", host: "Darwin arm64, macos-15 image 20260907.0337.1", pins_match_observed: true, record: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/SUT-02-ios/environment/toolchain-install.json}
+  - {authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-01, run_id: 36340774530, run_attempt: 1, platform: android, appium_core_observed: "3.7.0", driver_observed: "uiautomator2 8.7.0", install_date: "2026-09-27", host: "Linux x86_64, ubuntu-24.04 image 20260920.314.1", pins_match_observed: true, record: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-01/SUT-02-android/environment/toolchain-install.json}
+install_date_and_platform: "left null: the observations are ephemeral GitHub-hosted installs on two dates (2026-09-27, 2026-09-29) and two host platforms (Linux x86_64 for Android, Darwin arm64 for iOS); a single value would misrepresent them. Following the repository convention for formal ephemeral installations (tools.mobile_primary_candidate.formal_gate_observation_auth_03), the per-run observations are recorded in tools.mobile_fallback.compatibility_smoke_observations; no permanent installation is claimed (top-level installed: false kept, with a comment)"
+also_corrected_in_the_same_file: "tools.mobile_fallback.notes (it said version/install_date/platform stay null) and the compatibility_smoke_preparation comment (condition now met); the top-level installed flag keeps its value false and gains a comment"
+consumers_checked:  # every reader of tools.mobile_fallback.version in the repository
+  - ".github/workflows/e03-measured-execution.yml G-7 'the version of the selected runner itself is recorded and equals its pin' (reads version, compares its first token with the 3.7.0 pin): now PASS; the check itself is unchanged"
+  - ".github/workflows/e03-measured-execution.yml G-7 'Appium 2 never selected' (version must not name Appium 2 or start with 2): PASS"
+  - ".github/workflows/e03-measured-execution.yml measured provenance execution_runner_version (reads version): would carry 3.7.0"
+  - ".github/workflows/e03-compatibility-smoke.yml readiness gate 'Appium 2 never selected' (reads version): PASS"
+  - "no schema under schemas/ describes manifests/toolchain-manifest.yaml; no other workflow or record reads the field"
+unchanged: [tools.mobile_runner_selection.mobile_runner_status (UNRESOLVED_AFTER_FALLBACK_FAILURE), tools.mobile_runner_selection.fallback_exhausted, tools.mobile_runner_selection.selected_version_pin (3.7.0), tools.mobile_fallback.pinned_candidate_version, every smoke result, the mirror, every authorization record, lock v3]
+effect: "none on admissibility: G-7 still fails closed for every mobile condition (fallback state FALLBACK_EXHAUSTED_VERIFIED); only the version check, which had failed on the absent value, now reads the formally observed version"

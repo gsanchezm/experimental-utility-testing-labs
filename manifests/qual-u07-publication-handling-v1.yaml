@@ -1,0 +1,180 @@
+# QUAL-U07 publication-handling record v1 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# The human research lead's decision on qualification/unresolved.md QUAL-U07 (option A), the two publication-only transformations
+# it requires (normative rules in PUBLIC-EXPORT-MANIFEST.yaml), their expected hashes, and the public-checkout bridge of the
+# validation step QUAL-U05 (operation OP-PUB-01). ORCHESTRATOR record, prepared in Phase A, independently audited, and committed
+# in Phase B; never edited afterwards (a correction is a new version file). Exports, publishes, and executes nothing.
+record_class: PUBLICATION_HANDLING_DECISION_RECORD
+record_id: QUAL-U07-PUBLICATION-HANDLING-01
+study_id: EUS-2026-001
+operation_id: OP-PUB-01
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-10-03'
+qualification_evidence: false
+measured_experiment: false
+executes_anything: false
+nature: 'publication hygiene only: two publication-only transformations of the public export, their expected hashes, and the public-checkout bridge of one validation step; no canonical evidence byte, result, attribution, mirror, runner status, lock, authorization, gate, harness, or protocol document changes; not a protocol change'
+precedent: the QUAL-U03 handling (manifests/pre-publication-corrections-v1.yaml, token_fragment_redaction; class QUALIFICATION_TOKEN_FRAGMENT_REDACTION)
+human_decision:
+  given_by: gilbertosanchez (human research lead)
+  given_at: 2026-10-03T00:18:40Z and 2026-10-03T00:19:41Z (2026-10-02 18:18 and 18:19 America/Mexico_City)
+  decision_date: '2026-10-02'
+  decision_date_note: the America/Mexico_City calendar date of the decision, the study's convention for human decisions; the operation instruction writes the UTC date 2026-10-03
+  channel: given by the human research lead to the study's independent orchestration reviewer and relayed verbatim to the ORCHESTRATOR in a reviewer message of 2026-10-03T00:23Z (UTC); both answers, with their timestamps, are also quoted in the operation instruction OP-PUB-01 (sha256 853c295be114a4a501c1ec443c8d0b597d104c2742d351eca7f72ebf7987bdd0, 6735 bytes)
+  relayed_by: the study's independent orchestration reviewer (an external review function; not a role of protocol/agent-governance-v2.md)
+  item_as_presented_verbatim: null
+  item_note: 'the full option items presented to him and the reviewer''s clarifying question were not relayed verbatim (the full QUAL-U07 item names a host path and cannot enter a tracked file); OP-PUB-01 quotes the core wording of the QUAL-U07 option A ("log de iOS redactado + zip iOS re-empaquetado y saneado de forma determinista"); the reviewer''s description of the question, verbatim from the relay: "asked whether the QUAL-U07 option A or the governance option A was meant"'
+  question_description_verbatim: asked whether the QUAL-U07 option A or the governance option A was meant
+  question_description_sha256: 36934c1628366c8fac21da33b284e2eb19db33e99be7ccaaf48e32095883c3e2
+  answers_verbatim:
+  - 'Ya pegué los textos al executor, y de la opción, vamos por: opción A'
+  - 'Ambas: A y A'
+  answers_sha256:
+  - ce86df8d73e267cc1123ebad778f29d19463ad220133e3325f81c39e0cf1faab
+  - b8c7714740ba727fc9eac7bacd132b1cb03fe5b7866bba010ab0d1a55980f2f9
+  meaning_as_relayed: 'qualification/unresolved.md QUAL-U07 is resolved by option A of the decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml (transformed extracted files + deterministic sanitized archive): the transformed appium-server.log and a deterministically re-packed iOS archive whose appium-server.log member is transformed identically are exported, the Android archive is exported unchanged, and the canonical files and archives stay byte-identical (publication-only); the second answer also chose the governance option A, recorded with the same texts in manifests/agent-governance-v3-amendment-proposal-v1.yaml (human_decisions, D3)'
+  sha256_convention: computed by the ORCHESTRATOR over the UTF-8 text exactly as quoted in the relaying text, without the surrounding quotation marks and without a trailing line feed
+  terminology_note: '"executor" in the first answer denotes the working context in which the ORCHESTRATOR carries out operations; it is not the role EXECUTOR-E03-RESETABILITY, which is defined and has never been launched'
+  decides: the publication handling of QUAL-U07 (option A); the two transformations, the validation-step bridge, and the QUAL-U07 resolution are this operation's implementation of that decision, each under the authority listed in authority_for_each_change
+  does_not_authorize:
+  - a public export, push, or publication (the next export needs its own authorization)
+  - any change to a canonical evidence byte, import record, attribution record, QUALIFIER result, mirror, or runner status
+  - any change to the compatibility-smoke workflow, G-7, the harness, a lock, or an authorization record
+  - a dispatch, re-run, or E03 START
+decided_option:
+  source: manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml, qual_u07_publication_hygiene_proposal.options[0]
+  option_verbatim: A. transformed extracted files + deterministic sanitized archive
+  description_verbatim: export the transformed appium-server.log and a deterministically re-packed iOS archive whose appium-server.log member is transformed identically; the Android archive exported UNCHANGED
+  reproducibility_impact_verbatim: the public iOS archive digest differs from the GitHub digest; the members stay byte-identical to canonical except the transformed log; verification of the original archive and GitHub digest possible only canonically
+  canonical_immutability_verbatim: canonical files and archives unchanged (publication-only)
+  public_validation_changes_verbatim: 'QUAL-U05 step must bridge: for a transformed file compare its canonical_sha256 (manifest) with IMPORT-RECORD and the canonical archive member, and its exported bytes with the transform of that member; for the re-packed archive compare with the deterministic re-pack instead of the GitHub digest'
+  core_wording_quoted_in_the_instruction: log de iOS redactado + zip iOS re-empaquetado y saneado de forma determinista
+  not_selected:
+  - B. transformed extracted files, raw iOS archive excluded
+  - C. exclude the complete AUTH-02 formal namespace
+  the_quoted_post_run_recording_line: 'the package''s every_option_also_needs is met by the transform, not by a scan exemption: the one matching line of manifests/appium3-compat-smoke-auth-02-postrun-recording-v1.yaml is transformed in the public copy, and its verbatim_sha256 keeps citing canonical bytes (hash_citation_rule)'
+authority_for_each_change:
+  PUBLIC-EXPORT-MANIFEST.yaml and this record: ORCHESTRATOR (manifests/), on the relayed human decision
+  .github/workflows/e03-validate.yml: ORCHESTRATOR under E03-CI-WRITE-AUTH-01 (the ORCHESTRATOR maintains .github/workflows/** for authorized E03-resetability GitHub Actions infrastructure, configuration validation included)
+  qualification/unresolved.md, QUAL-U07: QUALIFIER-MOBILE-01 (qualification/ workspace), in its own commit
+  live status: ORCHESTRATOR; the agent-instructions file's sentence that calls QUAL-U07 OPEN changes only under the human research lead's standing written delegation of 2026-10-02 (representation-only live-status edits for operations he adopts), that is, once he has adopted this operation; otherwise it is left for a later status operation
+  relay_model: approvals are given by the human research lead to the study's independent orchestration reviewer and relayed verbatim; the ORCHESTRATOR acts on those relays and records them as relayed approvals (direct confirmation recorded in manifests/mobile-runner-policy-v3-amendment-v1.yaml, adoption_of_the_operation_instruction.direct_confirmations_to_the_orchestrator.relay_model)
+instruction:
+  operation_id: OP-PUB-01
+  title: EUS-2026-001 — OP-PUB-01 — IMPLEMENT THE QUAL-U07 PUBLICATION-HYGIENE DECISION, OPTION A (PUBLICATION-ONLY TRANSFORMATION; NO EXPORT)
+  sha256: 853c295be114a4a501c1ec443c8d0b597d104c2742d351eca7f72ebf7987bdd0
+  bytes: 6735
+  note: reproduced byte for byte in instruction_verbatim (YAML literal block, clip)
+transformations:
+  QUALIFICATION_HOST_PATH_REDACTION: 'normative rule: PUBLIC-EXPORT-MANIFEST.yaml, export_procedure.qualification_host_path_redaction (prefixes, markers, residual regex, scope with expected changed lines, postconditions)'
+  DETERMINISTIC_SANITIZED_ARCHIVE: 'normative rule: PUBLIC-EXPORT-MANIFEST.yaml, export_procedure.deterministic_sanitized_archive (scope, recipe: member order and names, per-member timestamps, method STORED, create_system 3, external attributes 0o100644, no extra field, no comment)'
+  implementation: 'the export builder run by the ORCHESTRATOR outside the repository (PUBLIC-EXPORT-MANIFEST.yaml, how_the_export_is_built) implements both rules with fail-closed postconditions: the scope and changed-line counts, idempotence, no residual host path in any exported text file or textual archive member, member-wise equality of the re-pack, the exported log equal to the re-pack''s member, and the canonical and exported sha256 of each in-scope file equal to expected_hashes below'
+  method_choice: 'STORED, not DEFLATED: a deflated re-pack (level 9, 31475 bytes, sha256 31457f7185343e1f7b57eb21b9c8c23b379dd5c19c9b76794b6716a12113be0d with zlib 1.2.12) depends on the deflate implementation of the verifier; STORED does not, and it lets the publication-hygiene scan read the members'
+expected_hashes:
+- path: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/SUT-02-ios/appium-server.log
+  class: QUALIFICATION_HOST_PATH_REDACTION
+  canonical_sha256: 7d09fc74fb2075bd87a2157f560b73303effa664573585c6c9405944f777b535
+  canonical_bytes: 615866
+  exported_sha256: 13a53afb6522a8203593f9aec402753185c387a911cb6579a62c03ca859fa3fa
+  exported_bytes: 613326
+  changed_lines: 56 (2191-2277)
+  replacements: 102 prefix occurrences by <host-path>; 0 by <home>
+- path: manifests/appium3-compat-smoke-auth-02-postrun-recording-v1.yaml
+  class: QUALIFICATION_HOST_PATH_REDACTION
+  canonical_sha256: a7bec417ab30a19fa05b591c27fac5ca659012d7fc3438e7a9beb13b76e6ab94
+  canonical_bytes: 24928
+  exported_sha256: 70400531c7c6ffff68efdad2093ac9a63cb0d9ae1ace28f94d48a0e579d8a3fe
+  exported_bytes: 24926
+  changed_lines: 1 (599)
+  replacements: 1 prefix occurrence by <host-path>; 0 by <home>
+- path: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/github-artifact/E03-COMPATIBILITY_SMOKE-SUT-02-ios-run36539790536-a1.zip
+  class: DETERMINISTIC_SANITIZED_ARCHIVE
+  canonical_sha256: 677e5c8f66fadfb7fce2c25def02c97e3394f3b9bde11c737d391acd06e91b28
+  canonical_digest: sha256:677e5c8f66fadfb7fce2c25def02c97e3394f3b9bde11c737d391acd06e91b28
+  canonical_bytes: 33032
+  exported_sha256: 3eef13159353e17aaee00b96f1d823dba83747e4051ee2eb5c7c636c3c541ec3
+  exported_bytes: 620088
+  members:
+  - name: environment/build-verification.json
+    date_time: '2026-09-29 08:02:26'
+    canonical_size: 547
+    byte_identical_to_canonical: true
+  - name: environment/npm-ci.log
+    date_time: '2026-09-29 08:02:42'
+    canonical_size: 27
+    byte_identical_to_canonical: true
+  - name: environment/device.json
+    date_time: '2026-09-29 08:02:26'
+    canonical_size: 372
+    byte_identical_to_canonical: true
+  - name: appium-server.log
+    date_time: '2026-09-29 08:09:30'
+    canonical_size: 615866
+    byte_identical_to_canonical: false
+  - name: environment/toolchain-install.json
+    date_time: '2026-09-29 08:02:44'
+    canonical_size: 681
+    byte_identical_to_canonical: true
+  - name: harness.log
+    date_time: '2026-09-29 08:09:24'
+    canonical_size: 193
+    byte_identical_to_canonical: true
+  - name: record.json
+    date_time: '2026-09-29 08:09:24'
+    canonical_size: 4082
+    byte_identical_to_canonical: true
+unchanged_in_publication:
+- path: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/github-artifact/E03-COMPATIBILITY_SMOKE-SUT-02-android-run36539790536-a1.zip
+  sha256: 50b9fd29a11737701c7fd5f00f3a41fdd87b314f50d0e21e6a29bf1428b8baed
+  note: equal to its GitHub digest; exported unchanged
+- path: every other file of qualification/compatibility-smoke/formal/
+  note: exported unchanged (AUTH-01 and AUTH-02; no host path)
+determinism:
+  sanitized_archive: 'built twice with the builder''s function (CPython 3.14.2) and twice by the same procedure in a separate CPython 3.9.6 interpreter: four byte-identical results, sha256 3eef13159353e17aaee00b96f1d823dba83747e4051ee2eb5c7c636c3c541ec3, 620088 bytes'
+  transformed_files: the transform is a fixed string replacement followed by one regular-expression substitution; applying it twice changes nothing
+validation_bridge:
+  workflow: .github/workflows/e03-validate.yml
+  step: Assert the imported compatibility-smoke evidence is stored byte-exact (QUAL-U05)
+  canonical_checkout: 'no PUBLIC-EXPORT-MANIFEST.yaml: every check byte-exact, unchanged'
+  public_checkout: 'PUBLIC-EXPORT-MANIFEST.yaml at the root: every checked path needs exactly one manifest entry (otherwise the step fails); an entry whose only class is QUALIFICATION_HOST_PATH_REDACTION passes when its canonical_sha256 equals the IMPORT-RECORD sha256 and the on-disk sha256 equals its exported_sha256; an archive entry whose only class is DETERMINISTIC_SANITIZED_ARCHIVE passes when its canonical_digest equals the IMPORT-RECORD github_digest, the on-disk sha256 equals its exported_sha256, and every member equals the exported extracted file byte for byte; every other path stays byte-exact'
+  implemented_as: operation instruction OP-PUB-01, item 3; the decision package's sketch (decided_option, public_validation_changes_verbatim) also compares with the canonical archive member and the deterministic re-pack, which a public checkout cannot do because it does not carry the canonical archive; the canonical side of that comparison is made by the export builder's postconditions before every export
+known_consequences:
+- the public copy of manifests/appium3-compat-smoke-auth-02-postrun-recording-v1.yaml differs from the canonical record in one line of its verbatim instruction; its verbatim_sha256 and every other hash it cites refer to canonical bytes (hash_citation_rule)
+- the public iOS archive's sha256 differs from the GitHub digest; the original archive and its digest remain verifiable canonically (and on GitHub until the artifact expires on 2026-12-28)
+- the compatibility-smoke readiness gate (.github/workflows/e03-compatibility-smoke.yml, lock v3; not changed by this operation) re-verifies the preserved artifacts of each earlier authorization byte-exact without a manifest bridge, so on a public checkout it would report the two transformed AUTH-02 files; it already refuses every dispatch (the fallback is exhausted and every authorization is consumed), and a successor gate that re-verifies them (lock v4, protocol/mobile-runner-policy-v3.md section 9.7) has to check them through PUBLIC-EXPORT-MANIFEST.yaml in the same way, because GitHub Actions evaluates the public checkout
+not_done:
+- no public export, push, or publication; public main stays export v29 (34c0453053a29492a34b6a20676bd8f1f046738b)
+- no canonical evidence byte, import record, attribution record, QUALIFIER result, mirror, toolchain value, or runner status changed
+- the compatibility-smoke workflow, G-7, the harness, the locks, and the authorization records unchanged
+- no dispatch, re-run, or E03 START; no protocol document or CHANGELOG row changed
+- 'the export builder is not added to the repository (scripts_in_repository: none)'
+procedure: 'prepared in Phase A in a separate working tree at commit 1f38cd3b05cfd6b05df8e1eb321262b52825f13a and returned for independent audit; committed in Phase B in three commits: (1) ORCHESTRATOR, the export-log classes and rule blocks, this record, and the validation step; (2) QUALIFIER-MOBILE-01, the QUAL-U07 row; (3) ORCHESTRATOR, the live-status files'
+phase_a_verification:
+  performed: 2026-10-02 and 2026-10-03, on the Phase A working tree (commit 1f38cd3b05cfd6b05df8e1eb321262b52825f13a plus the edits of this operation), on a pristine checkout of that commit, and on a public-like tree built from the working tree by the patched export builder with a fixture manifest (canonical_source naming the uncommitted tree, fixed generated_at); no export, push, or dispatch
+  export_builder_dry_run: 'every postcondition held (scope and changed-line counts, idempotence, no residual host path in any exported text file or textual archive member, member-wise equality of the re-pack, the exported log equal to the re-pack''s member, expected_hashes of this record, and the 141 QUALIFICATION_TOKEN_FRAGMENT_REDACTION hashes); built twice: identical root tree, content tree, and manifest; 1192 exported files, of which the three in scope carry exactly their class and the Android archive is UNCHANGED (exported blob equal to the canonical blob)'
+  publication_hygiene_scan: 'the validation workflow''s tracked-file scan: canonical tree 57 private-path findings (56 in the iOS appium-server.log, 1 in the post-run recording record), identical with and without this operation''s edits; public-like tree clean (1193 tracked files, including PUBLIC-EXPORT-MANIFEST.yaml)'
+  literal_census_public_like_tree: 7 occurrences of a literal home-directory prefix (the word Users or home between two slashes) remain, in 4 files, each a mention of the path pattern followed by a non-letter (the validation workflow's own scan pattern, the artifact-hygiene audit's list of checked prefixes, the QUAL-U07 row, and this record's instruction_verbatim); no home-directory path in any text file, textual archive member, or raw archive byte
+  qual_u05_step: 'canonical tree: 25 imported files byte-exact (as before); public-like tree: 25 files, 2 paths (the log and the archive) checked through PUBLIC-EXPORT-MANIFEST.yaml; a static case matrix of 19 cases (canonical tree unchanged, or carrying a transformed file without a manifest; public-like tree unchanged, or with a removed, duplicated, or altered entry, altered bytes, a second class, an unsanitized file under a bridge entry, an altered member, an altered UNCHANGED file) gave the expected result in 19 of 19, every mutation failing closed'
+  other_validation_steps: every Python step of .github/workflows/e03-validate.yml that needs no GitHub event context passes on the public-like tree; on the canonical tree every step's status equals the pristine checkout's (the tracked-file scan fails there, as before, on the canonical host paths)
+  actionlint: '1.7.7, run locally with its shellcheck and pyflakes integrations disabled: exit 0 on the pristine checkout, the working tree, and the public-like tree; pyflakes 4.0.1, run separately on the adapted step''s Python: no finding (two other steps keep one unused import each, as on the pristine checkout)'
+  compatibility_smoke_gate: 'static run of the readiness gate of .github/workflows/e03-compatibility-smoke.yml for APPIUM3-COMPAT-SMOKE-AUTH-02 (never dispatched): canonical tree identical to the pristine checkout (57 pass, 11 fail); public-like tree 67 pass, 12 fail, differing by the AUTH-02 preserved-artifact check (known_consequences) and by the policy-v2 check, which runs its public-checkout branch there and fails for the same reason as on the canonical tree (the v2 header amended on 2026-10-02 no longer matches lock v3)'
+  measured_execution_gate: 'static run of G-1 to G-10 of .github/workflows/e03-measured-execution.yml for both SUT-02 mobile conditions (never dispatched): identical failure lists on the pristine checkout, the canonical tree, and the public-like tree'
+instruction_verbatim: |
+  EUS-2026-001 — OP-PUB-01 — IMPLEMENT THE QUAL-U07 PUBLICATION-HYGIENE DECISION, OPTION A (PUBLICATION-ONLY TRANSFORMATION; NO EXPORT)
+
+  Roles: ORCHESTRATOR (PUBLIC-EXPORT-MANIFEST.yaml, the export tooling record, .github/workflows/e03-validate.yml under E03-CI-WRITE-AUTH-01, status files) and QUALIFIER-MOBILE-01 (the QUAL-U07 row of qualification/unresolved.md), in separate commits. Classification: publication-only transformation definition and validation adaptation; the human decision on the publication strategy is given below. It authorizes no export, push, dispatch, or change to any canonical evidence byte. Two phases with the reviewer's audit between them; serialize on a clean tracked tree after OP-U16-01 and OP-PREP-02.
+
+  HUMAN DECISION
+  Given by gilbertosanchez, human research lead, to the study's independent orchestration reviewer: at 2026-10-03T00:18:40Z "Ya pegué los textos al executor, y de la opción, vamos por: opción A"; the reviewer asked which option was meant (the QUAL-U07 publication option A — "log de iOS redactado + zip iOS re-empaquetado y saneado de forma determinista" — or the governance option A) and at 2026-10-03T00:19:41Z he answered "Ambas: A y A". Decision relayed: QUAL-U07 is resolved by option A of the decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml ("transformed extracted files + deterministic sanitized archive"): the transformed appium-server.log and a deterministically re-packed iOS archive whose appium-server.log member is transformed identically are exported; the Android archive is exported UNCHANGED; canonical files and archives stay byte-identical (publication-only).
+
+  WHAT TO PREPARE (Phase A, no commit)
+  1. PUBLIC-EXPORT-MANIFEST.yaml (ORCHESTRATOR): define the publication-only transformation class QUALIFICATION_HOST_PATH_REDACTION — deterministic replacement of the GitHub-hosted runner home-path prefix in the 56 lines of qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/SUT-02-ios/appium-server.log and in the one quoted line of manifests/appium3-compat-smoke-auth-02-postrun-recording-v1.yaml by a fixed marker (replay the frozen harness scrub rule as the decision package's dry run did; record the rule, the marker, and the expected canonical and exported sha256 of both files) — and the class DETERMINISTIC_SANITIZED_ARCHIVE for github-artifact/E03-COMPATIBILITY_SMOKE-SUT-02-ios-run36539790536-a1.zip: a re-packed archive with the same member names and order as the canonical archive, the transformed log as its appium-server.log member, every other member byte-identical, fixed timestamps, permissions, compression method and level (state them), re-derivable by a verifier; record the canonical archive digest (GitHub digest) and the exported archive sha256; the Android archive and every other formal file stay UNCHANGED. Record the decision provenance (verbatim texts, timestamps, sha256; given to the independent orchestration reviewer and relayed) in a new record manifests/qual-u07-publication-handling-v1.yaml modeled on the QUAL-U03 handling (manifests/pre-publication-corrections-v1.yaml), and reference it from public-export-v1.yaml.
+  2. The export builder: locate the current builder (the export procedure and its stored script in the orchestration memory of the study, "Public export procedure + scripts"; if it is not in the repository, say where it lives and keep the implementation in the untracked orchestration layer or the scratchpad, never in the tracked tree unless the export procedure already tracks it); add the two classes; prove determinism by building the sanitized archive twice from the canonical archive and comparing sha256; prove that the exported log equals the transform of the canonical log and that the transformed tree contains no `/Users/` or `/home/` string in any file (run the validation hygiene scan over a scratch copy of the would-be public tree).
+  3. .github/workflows/e03-validate.yml (ORCHESTRATOR, E03-CI-WRITE-AUTH-01): adapt the step "Assert the imported compatibility-smoke evidence is stored byte-exact (QUAL-U05)" so that it keeps the full byte-exact checks on a canonical checkout (no PUBLIC-EXPORT-MANIFEST.yaml) and, on a public checkout, bridges through the export manifest: a file listed under QUALIFICATION_HOST_PATH_REDACTION passes when its canonical_sha256 equals the IMPORT-RECORD sha256 and its on-disk sha256 equals the manifest's exported_sha256; an archive listed under DETERMINISTIC_SANITIZED_ARCHIVE passes when the manifest's canonical digest equals the IMPORT-RECORD github_digest, its on-disk sha256 equals the exported sha256, and every member equals the exported extracted file byte for byte; everything else stays byte-exact as today. Keep the step fail-closed on any missing manifest entry. Run actionlint (download it into the scratchpad as before) and the step's Python on (a) the canonical tree and (b) a scratch public-like tree built by the patched builder with a fixture manifest; report both.
+  4. qualification/unresolved.md (QUALIFIER-MOBILE-01, own commit): QUAL-U07 row — append the human decision (option A, 2026-10-03, relayed) and its date; status "RESOLVED as to publication handling (option A; …); canonical bytes unchanged; applied by the next authorized export"; problem text unchanged.
+  5. Status (ORCHESTRATOR): AGENT-INSTRUCTIONS.md "Current phase" text where QUAL-U07 is called OPEN (allowed under the standing clause: mirrors the committed row); README.md; manifests/README.md Files row for the record; study-manifest note; protocol/README.md escalation counts only if they list QUAL rows; experiments/E03-resetability/README.md if it names QUAL-U07. Report, do not fix: anything else stale.
+
+  CHECKS: both YAML parsers; git diff --check; the proofs of items 2 and 3; hygiene scan over every touched file and over the scratch public-like tree; sha256 of every formal artifact under qualification/compatibility-smoke/formal/** unchanged (list them); no canonical evidence byte changed. Phase A return and HOLD: git status, diffs, the recorded hashes (canonical and exported) for the two files and the archive, the determinism proof, the validation-step results on both trees, actionlint, surprises, what you did not verify.
+
+  PHASE B — only after "OP-PUB-01 PHASE A AUDIT: PASSED": commits in this order — ORCHESTRATOR (public-export-v1.yaml, the record, the validate workflow), QUALIFIER (the QUAL-U07 row), ORCHESTRATOR status; explicit paths, existing identity, no trailers, no push.
+
+  NOT AUTHORIZED: export v30 or any export (a separate explicit human authorization), push, dispatch, any change to a canonical evidence byte, any change to the smoke workflow, G-7, the harness, locks or authorizations.

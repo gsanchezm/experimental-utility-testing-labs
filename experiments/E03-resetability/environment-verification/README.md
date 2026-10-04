@@ -24,4 +24,16 @@ SUT-06 has no E03 condition in the current configuration (NOT_COMPARABLE on CS-0
 
 ## GitHub Actions records
 
-The same checks run on GitHub-hosted runners through `.github/workflows/e03-environment-verification.yml` (artifact names `E03-ENVIRONMENT_VERIFICATION-<SUT>-<surface>-run<id>-a<attempt>`). Because measured executions run on GitHub-hosted runners, the measured-execution gate requires a VERIFIED GitHub Actions record per condition, transcribed into `controlled-instance-status.yaml` by the ORCHESTRATOR; a workstation record alone does not satisfy that gate. No GitHub Actions record exists yet: the environment-verification workflow is dispatched only on explicit instruction, and none has been given.
+The same checks run on GitHub-hosted runners through `.github/workflows/e03-environment-verification.yml` (artifact names `E03-ENVIRONMENT_VERIFICATION-<SUT>-<surface>-run<id>-a<attempt>`). Because measured executions run on GitHub-hosted runners, the measured-execution gate requires a VERIFIED GitHub Actions record per condition, transcribed into `controlled-instance-status.yaml` by the ORCHESTRATOR; a workstation record alone does not satisfy that gate. The workflow ran once, on 2026-10-02 (run 37074152972, attempt 1, operation OP-ENV-01), at public main 34c0453 with the workflow revision whose canonical SHA-256 is 1aa32454...; its artifacts are imported byte-exact under `github-actions/run37074152972-a1/` (`IMPORT-RECORD.yaml` lists each archive's GitHub digest and every member's SHA-256) and transcribed into `controlled-instance-status.yaml` (operation OP-ENV-02). The values below are those of that run under that revision; the workflow was corrected afterwards (operation OP-ENV-03, commit 3852edc), and the corrected revision has not run.
+
+| Job | GitHub job conclusion | Record (`verification_result`) | Conditions | Transcribed status |
+|---|---|---|---|---|
+| `sut-01-web-api` | success | `github-actions/run37074152972-a1/sut-01-web-api/environment-verification.json` (VERIFIED) | E03-CS001-SUT01-WEB, -API | VERIFIED |
+| `sut-02-web` | success | `github-actions/run37074152972-a1/sut-02-web/environment-verification.json` (VERIFIED) | E03-CS001-SUT02-WEB | VERIFIED |
+| `sut-03-web` | success | `github-actions/run37074152972-a1/sut-03-web/environment-verification.json` (VERIFIED) | E03-CS001-SUT03-WEB | VERIFIED |
+| `sut-02-android` | failure | `github-actions/run37074152972-a1/sut-02-android/environment-verification.json` (NOT_VERIFIED) | E03-CS001-SUT02-ANDROID | NOT_VERIFIED (workflow defect) |
+| `sut-02-ios` | failure | `github-actions/run37074152972-a1/sut-02-ios/environment-verification.json` (NOT_VERIFIED; empty provenance) | E03-CS001-SUT02-IOS | NOT_VERIFIED (workflow defect) |
+| `sut-04-web-api` | failure | no record (the artifact holds the Compose version and an empty service log) | E03-CS001-SUT04-WEB, -API | NOT_VERIFIED (provisioning defect) |
+| `sut-05-api` | failure | no record, no artifact | E03-CS001-SUT05-API | NOT_VERIFIED (provisioning failure; root cause not established) |
+
+Every GitHub Actions record verifies reachability and presence only: no state is established and no reset is exercised.

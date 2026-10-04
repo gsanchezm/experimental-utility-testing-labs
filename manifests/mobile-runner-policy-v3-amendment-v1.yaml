@@ -1,0 +1,560 @@
+# Post-data protocol amendment record v1 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# protocol/mobile-runner-policy-v2.md -> protocol/mobile-runner-policy-v3.md, resolving protocol/unresolved.md PROTO-U19,
+# under protocol/change-control-v1.md sections 2, 4, 5 (operation OP-GOV-01). ORCHESTRATOR record, prepared in Phase A,
+# independently audited, and committed unchanged in Phase B; never edited afterwards (a correction is a new version file).
+record_class: POST_DATA_PROTOCOL_AMENDMENT_RECORD
+record_id: MOBILE-RUNNER-POLICY-V3-AMENDMENT-01
+study_id: EUS-2026-001
+operation_id: OP-GOV-01
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-10-02'
+human_approval:
+  given_by: gilbertosanchez (human research lead)
+  given_at: '2026-10-02T22:04:07Z'
+  channel: approval given by the human research lead to the study's independent orchestration reviewer and relayed to the ORCHESTRATOR in the operation instruction OP-GOV-01 (reproduced verbatim in instruction_verbatim below); never live input to the ORCHESTRATOR
+  relayed_by: the study's independent orchestration reviewer (an external review function; not a role of protocol/agent-governance-v2.md)
+  decision_item_as_presented_verbatim: 2. **PROTO-U19:** APPROVE / REVISE / REJECT. Con tu clasificación, APPROVE es la única opción ya redactada que puede devolver ejecución móvil antes del 10-20. REVISE cuesta al menos un ciclo y REJECT deja las celdas móviles sin vía. La decisión es tuya.
+  decision_item_sha256: ccb4ebcc3f046e0926d34bd4c303e2feb3ae2658bf0520bbc57423422b75d94f
+  answer_verbatim: 2. Se aprueba
+  answer_sha256: c6757495b105457e850a57133e18c2f134646e9583d67a5a8cdb4afa882ec505
+  meaning_of_approve_as_presented_before_the_decision:
+    presented_at: '2026-10-02T20:59:50Z'
+    text_verbatim: |-
+      - **APPROVE**
+        - Autoriza solo el registro de change-control: header de v3 a FROZEN-PRE-DATA, header de v2 a AMENDED con fila `Superseded by`, dos filas en CHANGELOG y la decisión añadida a la fila PROTO-U19.
+        - `mobile_runner_status` sigue UNRESOLVED_AFTER_FALLBACK_FAILURE y G-7 sigue bloqueando.
+        - No autoriza corregir `wd.mjs`, cambiar G-7, lock v4, nueva AUTH, publicación, dispatch, restauración, PROTO-U16, E03 START, re-ejecutar Android ni un tercer runner.
+        - Aceptas una enmienda post-data y outcome-responsive: habrá dos observaciones de SUT-02 × iOS bajo dos versiones de policy y ambas deben reportarse siempre. Si la remediación da FAIL_RUNNER o NOT_EXECUTED, es terminal bajo v3.
+    sha256: 77027f504b9e10e5f3fbdfe9b69b482ffaae3b6d7e103ff71fb8bd0cec99ba1c
+  sha256_convention: UTF-8 text exactly as quoted in the instruction, without the surrounding quotation marks and without a trailing line feed
+adoption_of_the_operation_instruction:
+  relayed_adoption:
+    given_at: '2026-10-02T22:38:25Z'
+    channel: written by the human research lead to the study's independent orchestration reviewer and relayed verbatim to the ORCHESTRATOR
+    reviewer_request_verbatim: dime aquí si adoptas OP-GOV-01 tal como está escrito, con el registro de enmienda y la sincronización de estado incluidos. Basta 'adopto OP-ENV-01 y OP-GOV-01 tal como están escritos'
+    reviewer_request_sha256: c4ccfc039210584a75513a1a270da95e7e42d95829c444b467c19e88e3dc18ec
+    answer_verbatim: 'Lectura governanza: vamos por tu recomendación, texto de autorización en AGENT-INSTRUCTIONS.md: adelante, y sí adopto OP-GOV-01'
+    answer_sha256: ca9acc168797d82beabdb14134e86b5e026e712e2eff7f9bc93287f766ee90a3
+    note: the first clause answers a separate governance-reading item and the second a separate drafting item; only the third clause adopts OP-GOV-01
+  direct_confirmations_to_the_orchestrator:
+    note: Written by the human research lead directly to the ORCHESTRATOR on 2026-10-02. Their exact texts name a working-session label and untracked file paths, which the publication-hygiene rule keeps out of tracked files (AGENT-INSTRUCTIONS.md, E03-CI-WRITE-AUTH-01); each is recorded as a neutral paraphrase with the sha256 of its exact text (UTF-8, no trailing line feed) and the time the ORCHESTRATOR observed it.
+    relay_model:
+      paraphrase: approvals for EUS-2026-001 gated actions are given by the human research lead to the study's independent orchestration reviewer and relayed by it verbatim; the ORCHESTRATOR acts on those relays and records them as relayed approvals
+      exact_text_sha256: d5600771e6668557fd3eca711f0b780ebf88414fcda59c702a18fd44bd5665f8
+      observed_at: about 2026-10-02T22:32Z
+    adoption_by_name:
+      paraphrase: the human research lead repeats the relay-model confirmation and adopts as his instructions, as written, the operation instructions OP-ENV-01 (sha256 f0c6cc04b7e6c5b55cb0118d86ac8f7164da7655b395ab3829dad9067e31f828) and OP-GOV-01 (sha256 d0e4bce1140084be32089a245ac3c926e92f543bd20528e8978d2391c4bbe03d), including the amendment record, the live-status synchronization and the re-pointing of references they describe
+      exact_text_sha256: 82ab29cad297807d6f54f8847f0893230e8a24d6eaa25488a5447351504208e0
+      observed_at: about 2026-10-02T22:38Z
+instruction:
+  operation_id: OP-GOV-01
+  title: EUS-2026-001 — OP-GOV-01 — REGISTER THE HUMAN APPROVAL OF PROTO-U19 AND FREEZE MOBILE-RUNNER-POLICY-V3 (CHANGE CONTROL ONLY)
+  sha256: d0e4bce1140084be32089a245ac3c926e92f543bd20528e8978d2391c4bbe03d
+  bytes: 14032
+  note: reproduced byte for byte in instruction_verbatim (YAML literal block, clip)
+classification:
+  change_class: SUBSTANTIVE (post-data protocol amendment; protocol/unresolved.md PROTO-U19, classified SUBSTANTIVE_POST_DATA_PROTOCOL_DECISION)
+  nature:
+  - POST-DATA (data_collection_started has been true since 2026-09-17)
+  - OUTCOME-RESPONSIVE (taken after the APPIUM3-COMPAT-SMOKE-AUTH-02 iOS FAIL_RUNNER and the v2 fallback exhaustion were known)
+  - PROSPECTIVE (it reinterprets no observation)
+  procedure: protocol/change-control-v1.md, sections 2, 4, 5 (successor version; rationale; affected campaigns; change-log rows; explicit human approval)
+  precedent: manifests/mobile-runner-policy-v2-amendment-v1.yaml (v1 -> v2, PROTO-U17)
+decision_timing:
+  known_before_the_decision:
+  - 'APPIUM3-COMPAT-SMOKE-AUTH-02 (run 36539790536, 2026-09-29): SUT-02 android PASS; SUT-02 ios FAIL_RUNNER by the conservative tie-break of policy v2, 9.4'
+  - 'the v2 fallback exhaustion (9.5): mobile_runner_status UNRESOLVED_AFTER_FALLBACK_FAILURE since 2026-09-29'
+  - qualification/unresolved.md QUAL-U06 (identified by the post-run review of that failure)
+  draft_prepared: 2026-09-29 (prepared, hardened, and corrected for freeze readiness the same day)
+  decision: '2026-10-02T22:04:07Z'
+  outcome_responsive_risks_from_the_decision_package:
+  - the amendment and its hardening are prepared after the unfavorable outcome is known
+  - the defect (QUAL-U06) was found by the post-run review of the failure it may be relevant to
+  mitigations_from_the_decision_package:
+  - the historical observations and the v2 exhaustion are immutable and never reinterpreted; restoration requires a separate normative lineage record verified by G-7, never table order
+  - one ecosystem x platform, one attempt, one runner, one defect class, terminal outcomes in every direction; after a restoration any FAIL_RUNNER re-blocks
+  - correction restricted to QUAL-U06; pins, build, substrate, capability definition, iOS and Android realizations, and WebDriverAgent limits unchanged
+  - result vocabulary and conservative tie-break unchanged
+  - explicit human approval, successor lock, new authorization, publication, dispatch, and restoration each separately, before any admission
+  - no campaign has collected data
+documents:
+  decision_package:
+    path: manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml
+    sha256: ca52e7e6f4a5db36f9dbe0e32681d8f5bf43d63c51cb58f06f666ca4dc69ef47
+    changed: false
+  predecessor:
+    path: protocol/mobile-runner-policy-v2.md
+    state: FROZEN-PRE-DATA -> AMENDED
+    sha256_before: 5bed242e0096068dc2d34861299b10dc5404957e9d3aafea43f9c93de840d495
+    sha256_after: 4722521767697074e218d03ab77d424f559d3029f1655324fbee88047fcc12dd
+    body_sha256_before_and_after: 8b3f97d991e24b78ad7259641d264e2e7bb27f2fac93852b4425beccf88e2ac0
+    body_definition: from the introductory paragraph ('This policy governs which mobile test runner the study uses') to the end of the file
+    header_change:
+    - 'line 7: ''| Protocol state | FROZEN-PRE-DATA |'' -> ''| Protocol state | AMENDED |'''
+    - 'new line 12 after the Freeze approval row: ''| Superseded by | protocol/mobile-runner-policy-v3.md |'' (placed as in the AMENDED header of v1)'
+  successor:
+    path: protocol/mobile-runner-policy-v3.md
+    state: DRAFT -> FROZEN-PRE-DATA
+    sha256_before: 1739d28abd1d1196c19ddaa507b1c7e8b921416dc5969382b0190ab07be19b95
+    sha256_after: 16dae5884122ff0bfe313bfe78d023a3ebd78e0a1b69036d7cd339c4fb3e2670
+    freeze_date_rendered: '2026-10-02'
+    freeze_date_note: '{{FREEZE_DATE}} is the America/Mexico_City calendar date of the Phase B commit; it is rendered as 2026-10-02, the date of the Phase A preparation and the date expected for Phase B; a later Phase B date would change four rendered lines of v3, the CHANGELOG rows, and the PROTO-U19 status cell and would need a new audit'
+    rendering:
+    - line: 7
+      action: replace
+      before: '| Protocol state | DRAFT |'
+      after: '| Protocol state | FROZEN-PRE-DATA |'
+    - line: 10
+      action: replace
+      before: '| Supersedes | none while DRAFT. Proposed successor of protocol/mobile-runner-policy-v2.md, which is FROZEN-PRE-DATA, unchanged, and in force; v2 would become AMENDED and receive a `Superseded by` row only if and when this draft is explicitly approved and frozen by a later human instruction (protocol/change-control-v1.md, sections 2 and 4) |'
+      after: '| Supersedes | protocol/mobile-runner-policy-v2.md (transitions to AMENDED by this freeze, per protocol/change-control-v1.md, section 2 — `data_collection_started` is already true) |'
+    - line: 11
+      action: replace
+      before: '| Freeze approval | none (DRAFT, not approved). Prepared by the ORCHESTRATOR on the human instruction PREPARE MOBILE-RUNNER-POLICY-V3 AFTER APPIUM FALLBACK EXHAUSTION (gilbertosanchez, 2026-09-29), which authorizes preparation only, and hardened in place (DRAFT -> DRAFT) on the human instruction HARDEN MOBILE-RUNNER-POLICY-V3 DRAFT BEFORE HUMAN APPROVAL (gilbertosanchez, 2026-09-29), which again approves nothing, and corrected in place for freeze readiness (DRAFT -> DRAFT) on the human instruction FINALIZE MOBILE-RUNNER-POLICY-V3 DRAFT FREEZE READINESS (2026-09-29), which approves and freezes nothing; current decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml (the packages manifests/mobile-runner-policy-v3-amendment-proposal-v1.yaml and -v2.yaml are history); protocol-level decision protocol/unresolved.md, PROTO-U19 |'
+      after: '| Freeze approval | gilbertosanchez, 2026-10-02 (explicit human approval of the post-data amendment resolving protocol/unresolved.md PROTO-U19: decision APPROVE on the decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml; this document was prepared by the ORCHESTRATOR as a DRAFT on 2026-09-29 under the preparation-only human instructions PREPARE MOBILE-RUNNER-POLICY-V3 AFTER APPIUM FALLBACK EXHAUSTION, HARDEN MOBILE-RUNNER-POLICY-V3 DRAFT BEFORE HUMAN APPROVAL, and FINALIZE MOBILE-RUNNER-POLICY-V3 DRAFT FREEZE READINESS, and frozen on 2026-10-02 under that approval with every rule unchanged; post-data-collection change under protocol/change-control-v1.md, section 5; approval provenance and record: manifests/mobile-runner-policy-v3-amendment-v1.yaml) |'
+    - line: 15
+      action: replace
+      before: '**DRAFT — PROPOSED POST-DATA SUCCESSOR, NOT IN FORCE.**'
+      after: '**POST-DATA SUCCESSOR OF protocol/mobile-runner-policy-v2.md — IN FORCE FROM ITS FREEZE.**'
+    - line: 17
+      action: replace
+      before: '- It is a proposed successor to protocol/mobile-runner-policy-v2.md; v2 remains the policy in force until this draft is explicitly approved and frozen by a human decision.'
+      after: '- It supersedes protocol/mobile-runner-policy-v2.md, which is AMENDED and retained unchanged apart from its header; v2 was the policy in force until this version was explicitly approved and frozen by a human decision.'
+    - line: 18
+      action: replace
+      before: '- It is being prepared after data collection began (`data_collection_started` has been true since 2026-09-17, manifests/study-manifest.yaml); if approved it is a post-data change under protocol/change-control-v1.md, section 5.'
+      after: '- It was prepared, approved, and frozen after data collection began (`data_collection_started` has been true since 2026-09-17, manifests/study-manifest.yaml); it is a post-data change under protocol/change-control-v1.md, section 5.'
+    - line: 21
+      action: delete
+      before: '- No execution may occur under it while DRAFT (protocol/change-control-v1.md, section 2).'
+      after: (line deleted)
+    - line: 27
+      action: replace opening words
+      before: 'This draft proposes exactly one narrow mechanism, the **post-fallback remediation qualification** (new 9.7): one prospective Appium 3 qualification of SUT-02 × iOS only, after a correction restricted to QUAL-U06, with the result vocabulary and attribution rules of 9.1–9.4 unchanged and single-attempt terminal effects. It does not state that the historical FAIL_RUNNER was wrong, does not state that Appium 3 would pass on iOS, and does not remove the fallback exhaustion from the v2 record: the v2 result remains historically valid, and a remediation observation would be a new prospective record under this version.'
+      after: 'This version introduces exactly one narrow mechanism, the **post-fallback remediation qualification** (new 9.7): one prospective Appium 3 qualification of SUT-02 × iOS only, after a correction restricted to QUAL-U06, with the result vocabulary and attribution rules of 9.1–9.4 unchanged and single-attempt terminal effects. It does not state that the historical FAIL_RUNNER was wrong, does not state that Appium 3 would pass on iOS, and does not remove the fallback exhaustion from the v2 record: the v2 result remains historically valid, and a remediation observation would be a new prospective record under this version.'
+    - line: 213
+      action: replace
+      before: '### 9.7 Post-fallback remediation qualification (new in v3; DRAFT)'
+      after: '### 9.7 Post-fallback remediation qualification (new in v3)'
+    - line: 305
+      action: replace
+      before: 'Snapshot at the preparation of this draft (2026-09-29); not updated in place. Live status: manifests/toolchain-manifest.yaml and manifests/compatibility-smoke-status.yaml.'
+      after: 'Snapshot at the freeze of this version (2026-10-02); not updated in place. Live status: manifests/toolchain-manifest.yaml and manifests/compatibility-smoke-status.yaml.'
+    - line: 309
+      action: replace
+      before: '| This version | DRAFT: not approved, not frozen, not in force; no execution may occur under it |'
+      after: '| This version | FROZEN-PRE-DATA: approved by gilbertosanchez on 2026-10-02 and frozen on 2026-10-02; in force; its freeze authorizes no execution |'
+    - line: 317
+      action: replace
+      before: '| Post-fallback remediation qualification (9.7) | proposed, not authorized; not executable while this version is DRAFT; effective-admissibility rule (9.7.9) defined, not in force; remediation lineage record (9.7.10) defined, not created |'
+      after: '| Post-fallback remediation qualification (9.7) | in force as a rule; not authorized for execution: no corrected implementation, successor implementation lock, authorization, publication, or dispatch exists; effective-admissibility rule (9.7.9) in force; remediation lineage record (9.7.10) defined, not created |'
+    - line: 321
+      action: replace
+      before: This document is protocol version v3 of the mobile runner policy, state DRAFT (prepared 2026-09-29, hardened in place and corrected for freeze readiness the same day; not approved, not frozen, not in force; no data may be collected and no execution may occur under it), and follows the protocol state lifecycle (DRAFT, FROZEN-PRE-DATA, AMENDED, SUPERSEDED) defined in protocol/change-control-v1.md. Only an explicit human approval and freeze, recorded in protocol/CHANGELOG.md with rationale and affected campaigns (protocol/change-control-v1.md, section 5), would make it supersede protocol/mobile-runner-policy-v2.md, which would then become AMENDED and be retained unchanged apart from its header. The introductory paragraph, 9.1–9.4, 9.6, and Section 10 are carried over from v2 verbatim; Sections 1–8 are carried over with status and provenance corrections only (in Sections 1, 2, 3, 4, 6, and 7; no methodological change); 9.5 gains one bounded exception clause; 9.7 is new; Sections 11 and 12 and the header are updated. While DRAFT it may be edited in place; once frozen it is never overwritten, and any modification creates protocol/mobile-runner-policy-v4.md.
+      after: This document is protocol version v3 of the mobile runner policy, state FROZEN-PRE-DATA (prepared as a DRAFT on 2026-09-29, hardened in place and corrected for freeze readiness the same day; frozen 2026-10-02 under the explicit human approval of 2026-10-02 recorded in its header; no data had been collected under this version when it was frozen), and follows the protocol state lifecycle (DRAFT, FROZEN-PRE-DATA, AMENDED, SUPERSEDED) defined in protocol/change-control-v1.md. It supersedes protocol/mobile-runner-policy-v2.md, which is AMENDED and retained unchanged apart from its header; the approval and freeze are recorded in protocol/CHANGELOG.md with rationale and affected campaigns (protocol/change-control-v1.md, section 5). The introductory paragraph, 9.1–9.4, 9.6, and Section 10 are carried over from v2 verbatim; Sections 1–8 are carried over with status and provenance corrections only (in Sections 1, 2, 3, 4, 6, and 7; no methodological change); 9.5 gains one bounded exception clause; 9.7 is new; Sections 11 and 12 and the header are updated. It is never overwritten in place; any modification creates protocol/mobile-runner-policy-v4.md.
+  other_files:
+    AGENT-INSTRUCTIONS.md:
+      sha256_before: b79cc7fb240c6406bccbd7c86c07d41956e94d0ba2831211a5b21b449c04c978
+      sha256_after: e6ee5b2dff2dbb8b1c872ce32767f51694019450df9f2be470c6a7483d35e0bd
+    README.md:
+      sha256_before: d320384feea124192f21cb24459243fd42392a7597ff1ba30e776c4b6aaa51f3
+      sha256_after: 561ed551e96d3fae7df223132b4e78aa5567c65bc235319ff0ac2471a80ab1d6
+    experiments/E03-resetability/README.md:
+      sha256_before: d7174adf112fa056c126019966174f47bedcdb86fdbbc2438b53e23f4672c39a
+      sha256_after: b1b6c4ea746eddc28143fc89e46e8b3a6be29e77d138d32bc7d481d0bf39f0cd
+    experiments/E06-cross-platform-parity/README.md:
+      sha256_before: 6cc39b4410faea792ec7372ded29e4ce039be3d60887b1208a1f716bc969c05c
+      sha256_after: 1defa13763b689b2088403b2fc90a28c2cedfaad8958f20e8bdf8aa56e0028fb
+    experiments/E07-cross-layer-continuity/README.md:
+      sha256_before: 087bfa780d9b87036b79a796727d573929c907932d47ff57f1cf962df34e79d9
+      sha256_after: b64444cf4aeeb380d508f1fbf94862f9f1fc786f97a6933552e2e8fa9fbfd610
+    experiments/E12-localization-i18n/README.md:
+      sha256_before: 3f2a9746d0a476fefa20623bf6099ae2741fb7e04502634a37f9fb14c69b386f
+      sha256_after: 8b37a5ebda1cba44f00f31726a749ec9acd50a7a1f61f17f7d28dc9ca568c9cf
+    experiments/README.md:
+      sha256_before: 18ba19a46d60552cd10b7914cd7d060d07de20bd8ec15a41acc34b010074cff4
+      sha256_after: 53e855834acb03726051ba8a6eb07e5385a9a72f8bcf4e127aa231a80c9d219e
+    manifests/README.md:
+      sha256_before: 84e798ace2b2366a3f3083124a9c006982ece57c13acd307df5f83f841ec816d
+      sha256_after: 01b5549b853d37658591a0fb3c31bd4f8c16542f59961b729b47af5a75d8d8df
+    manifests/study-manifest.yaml:
+      sha256_before: 3329386700d0be2bf0ffdf25efe3e6efcebc90c85d55c79fd04cc2a8d04b2388
+      sha256_after: 8e26d4de0ed956fbfcaabfd6a0b9cb532b0ddc369685761afdc0228923a91de7
+    protocol/CHANGELOG.md:
+      sha256_before: e0ab97767c83bc521138185fde0ffac757e7948eb19563e6328799c7fa3b9f66
+      sha256_after: 12186d66e50b2d8c7a2060659a049e48f279298663bb3ed39a6aaba1cd7e006b
+    protocol/README.md:
+      sha256_before: 63cc965961408a3437bf2f016a6eb22939daeba2a797cd5c75d0cafd842a2d6e
+      sha256_after: d0f501ae4b77067d90135de3653a662b870fec44c395b0c591a059bbd09dc497
+    protocol/unresolved.md:
+      sha256_before: 1515065fbe3d83537313b463e9c4bd7ba1cab498bab7a4e3a0d085a36ff508c7
+      sha256_after: ec9ac98be7010edb76f7a3c18717df192b1c926165b4aa1220d0b7b62cee32c6
+  unchanged_protected:
+    protocol/mobile-runner-policy-v1.md: 5fd5d401e14f9cd82a64b86950f38a476944e890842cd8b53d321f576c682a5d
+    manifests/toolchain-manifest.yaml: 2e270e5795975592aa4a715742c701619aa34b30d444842955035de7e6d7ddd6
+    manifests/compatibility-smoke-status.yaml: 3fffe553185068a646b9cf7cbab97416119d90e019ef3bc8d00ba5bb71e81440
+    manifests/compatibility-smoke-implementation-lock-v3.yaml: 6c4c29ac107119a04c0ec47da97c38f10695a0e3f296809145a469ab1087bef5
+proof_results:
+  v3: 'differs from its HEAD blob in exactly the thirteen enumerated lines (HEAD lines 7, 10, 11, 15, 17, 18, 21, 27, 213, 305, 309, 317, 321: twelve replaced, line 21 deleted); every rendered line equals the issued instruction text with {{FREEZE_DATE}} = 2026-10-02 (checked programmatically); no other sentence of v3 reads as DRAFT-only status (full-text scan)'
+  v2: differs from its HEAD blob only in the header (one row changed, one row added); body sha256 unchanged
+  changelog: 'append-only: the HEAD content is a byte-exact prefix; exactly two rows appended'
+  unresolved: only the PROTO-U19 row differs, and only its last three cells (status, human decision, decision date); its first six cells and every other row are byte-identical
+  changed_tracked_paths: 14 tracked files plus this new record; no path under the A7 exclusion list touched (toolchain manifest, smoke mirror, qualification/, .github/, prompts/, schemas/, derived-data/, raw-data/, audits/, proposals v1-v3, policy v1, dashboard)
+  yaml: manifests/study-manifest.yaml and this record parse with Ruby Psych 3.1.0 and PyYAML 6.0.3
+  whitespace: git diff --check clean
+  static_checks_head_vs_prepared:
+    method: two local clones of HEAD (f738afd), one with the prepared files overlaid; workflow scripts extracted and run statically with PyYAML 6.0.3; nothing dispatched
+    validation_workflow_python_steps: 'identical outcomes: every Python step passes except the tracked-file hygiene scan, which fails on the same 57 pre-existing lines in both trees (56 in qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/SUT-02-ios/appium-server.log and 1 in manifests/appium3-compat-smoke-auth-02-postrun-recording-v1.yaml; qualification/unresolved.md QUAL-U07); the frozen-E01 hash step and the evidence-header step pass in both (the former run with an equivalent hash check because the local sha256sum lacks --check)'
+    compatibility_smoke_readiness_gate_static_AUTH-02: 'HEAD 59 PASS / 9 FAIL; prepared 57 PASS / 11 FAIL; new failing checks: mobile-runner policy v2 present and FROZEN-PRE-DATA; policy v2 SHA-256 equals the lock (expected consequence of v2 AMENDED; reported, not repaired; adaptation is successor-lock (v4) scope)'
+    measured_execution_gate_static:
+      E03-CS001-SUT02-ANDROID: HEAD 21 PASS / 16 FAIL; prepared 21 PASS / 16 FAIL; identical failing checks; fails closed in both (study-level status UNRESOLVED_AFTER_FALLBACK_FAILURE)
+      E03-CS001-SUT02-IOS: HEAD 18 PASS / 19 FAIL; prepared 18 PASS / 19 FAIL; identical failing checks; fails closed in both (study-level status UNRESOLVED_AFTER_FALLBACK_FAILURE)
+    not_run_locally:
+    - schema compilation with Ajv (no schema file changed)
+    - actionlint (not installed; no workflow changed)
+    - the commit-metadata scan (needs a push context)
+rationale: 'Under protocol/mobile-runner-policy-v2.md the Appium 3 fallback was exhausted on 2026-09-29 by the SUT-02 x iOS FAIL_RUNNER of APPIUM3-COMPAT-SMOKE-AUTH-02 (run 36539790536; conservative tie-break of 9.4, attribution uncertain between the study-authored WebDriver transport and the Appium 3 / XCUITest stack), which under 9.5 blocked every campaign requiring Android or iOS execution until a new explicit protocol amendment decided the mobile-runner strategy; the post-run review identified qualification/unresolved.md QUAL-U06, a study-authored WebDriver transport and diagnostic defect whose causal role was not demonstrated sufficiently to change the 9.4 result (protocol/unresolved.md PROTO-U19). The decision package compared three alternatives without selecting one (A: stop mobile experimentation; B: a third runner; C: one Appium 3 remediation qualification, the drafted v3). The human research lead approved the drafted v3 on 2026-10-02 against the decision item and the meaning of APPROVE quoted verbatim above.'
+prior_data_validity:
+- E01 remains FROZEN; its data and evidence remain valid
+- H1 remains unchanged
+- the formal Mobilewright qualification (MOBILE-QUALIFICATION-EXEC-AUTH-03) remains unchanged; the quarantined 2026-09-22 execution remains quarantined
+- AUTH-01 remains unchanged (SUT-02 android NOT_EXECUTED / HARNESS_ORCHESTRATION)
+- AUTH-02 remains unchanged; its Android PASS and its iOS FAIL_RUNNER remain unchanged
+- the v2 fallback exhaustion remains a valid historical state
+- no campaign of E02-E12 has collected campaign data; nothing is re-collected or re-analyzed
+affected_campaigns: E03-resetability, and prospectively the Android or iOS conditions of E02-state-establishment, E04-repeatability, E06-cross-platform-parity, E07-cross-layer-continuity, E12-localization-i18n, E11-security (mobile-build conditions only), E05-determinism and E10-visual (only if mobile is configured); none has collected campaign data; E01-capability-audit unaffected (protocol/mobile-runner-policy-v3.md, 'Affected campaigns'; decision package impact matrix)
+references:
+  re_pointed:
+  - path: AGENT-INSTRUCTIONS.md
+    line: 22
+    label: 'AGENT-INSTRUCTIONS.md rule 14: governing policy'
+    before: (protocol/mobile-runner-policy-v2.md; its predecessor v1, AMENDED 2026-09-26, is the version under which the gate was executed)
+    after: (protocol/mobile-runner-policy-v3.md, FROZEN-PRE-DATA and in force since 2026-10-02; its predecessors are v2, AMENDED 2026-10-02, under which both compatibility smokes were executed, and v1, AMENDED 2026-09-26, under which the gate was executed)
+  - path: AGENT-INSTRUCTIONS.md
+    line: 22
+    label: 'AGENT-INSTRUCTIONS.md rule 14: post-exhaustion effect under v3'
+    before: Appium 3 is not executed again, section 8 is not applied again, no other runner is selected, Appium 2 is never introduced, and every campaign requiring Android or iOS execution is blocked from START and measurement until a new explicit protocol amendment decides the mobile-runner strategy (manifests/mobile-runner-switch-transcription-v1.yaml for the selection lineage).
+    after: 'The new explicit protocol amendment that this required is protocol/mobile-runner-policy-v3.md (PROTO-U19 resolved by explicit human approval on 2026-10-02; FROZEN-PRE-DATA; manifests/mobile-runner-policy-v3-amendment-v1.yaml): Appium 3 is not executed again except in the single post-fallback remediation qualification of its section 9.7 (SUT-02 × iOS only, one attempt, correction restricted to QUAL-U06), which requires, each separately, a corrected implementation, a successor implementation lock (lock v4), static validation, a new authorization id, explicit human issuance, publication of the frozen baseline, and a separate explicit human dispatch (none exists); section 8 is not applied again, no other runner is selected, Appium 2 is never introduced, and every campaign requiring Android or iOS execution stays blocked from START and measurement unless admissibility is restored under v3 sections 9.7.9 and 9.7.10 (manifests/mobile-runner-switch-transcription-v1.yaml for the selection lineage).'
+  - path: AGENT-INSTRUCTIONS.md
+    line: 29
+    label: 'AGENT-INSTRUCTIONS.md Current phase: protocol-state exception list'
+    before: except the DRAFT protocol/mobile-runner-policy-v3.md described below and the AMENDED predecessors
+    after: except the AMENDED predecessors
+  - path: AGENT-INSTRUCTIONS.md
+    line: 29
+    label: 'AGENT-INSTRUCTIONS.md Current phase: v2 freeze narrated as history'
+    before: protocol/mobile-runner-policy-v2.md is FROZEN-PRE-DATA (explicit human approval 2026-09-25
+    after: protocol/mobile-runner-policy-v2.md was frozen on 2026-09-26 (explicit human approval 2026-09-25
+  - path: AGENT-INSTRUCTIONS.md
+    line: 29
+    label: 'AGENT-INSTRUCTIONS.md Current phase: v1 AMENDED narrated as history'
+    before: and protocol/mobile-runner-policy-v1.md is AMENDED (header only; body byte-identical); only section 9
+    after: and protocol/mobile-runner-policy-v1.md became AMENDED (header only; body byte-identical); only section 9
+  - path: AGENT-INSTRUCTIONS.md
+    line: 29
+    label: 'AGENT-INSTRUCTIONS.md Current phase: v3 state'
+    before: '**Draft successor (2026-09-29):** protocol/mobile-runner-policy-v3.md is a **DRAFT** — prepared by the ORCHESTRATOR on the human instruction PREPARE MOBILE-RUNNER-POLICY-V3 AFTER APPIUM FALLBACK EXHAUSTION, which authorizes preparation only; not approved, not frozen, not in force; no execution may occur under it; it proposes one post-fallback remediation qualification (SUT-02 × iOS × Appium 3 only, a single attempt, correction restricted to QUAL-U06) and a bounded 9.5 exception, and reinterprets nothing (protocol/unresolved.md PROTO-U19, OPEN).'
+    after: '**Post-data successor (2026-10-02):** protocol/mobile-runner-policy-v3.md is FROZEN-PRE-DATA and in force (explicit human approval on 2026-10-02 of the post-data amendment resolving protocol/unresolved.md PROTO-U19 — decision APPROVE on the decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml, given to the study''s independent orchestration reviewer and relayed to the ORCHESTRATOR; post-data, outcome-responsive, prospective; record manifests/mobile-runner-policy-v3-amendment-v1.yaml) and protocol/mobile-runner-policy-v2.md is AMENDED (header only; body byte-identical); the freeze authorizes no execution: `mobile_runner_status` stays UNRESOLVED_AFTER_FALLBACK_FAILURE and G-7 still blocks every mobile condition. **Draft history (2026-09-29):** v3 was prepared as a DRAFT by the ORCHESTRATOR on the human instruction PREPARE MOBILE-RUNNER-POLICY-V3 AFTER APPIUM FALLBACK EXHAUSTION, which authorized preparation only; it defines one post-fallback remediation qualification (SUT-02 × iOS × Appium 3 only, a single attempt, correction restricted to QUAL-U06) and a bounded 9.5 exception, and reinterprets nothing.'
+  - path: AGENT-INSTRUCTIONS.md
+    line: 29
+    label: 'AGENT-INSTRUCTIONS.md Current phase: G-7 dependency'
+    before: the G-7 change it would need is a REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19, not made;
+    after: the G-7 change it needs is a REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19, still not made;
+  - path: AGENT-INSTRUCTIONS.md
+    line: 29
+    label: 'AGENT-INSTRUCTIONS.md Current phase: decision package'
+    before: (current decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml; proposals -v1 and -v2 are history)
+    after: (approved decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml; proposals -v1 and -v2 are history)
+  - path: AGENT-INSTRUCTIONS.md
+    line: 29
+    label: 'AGENT-INSTRUCTIONS.md Current phase: CHANGELOG'
+    before: v2 remains FROZEN-PRE-DATA and in force; no CHANGELOG row exists for the draft.
+    after: 'The approval and freeze are recorded in protocol/CHANGELOG.md (two rows of 2026-10-02: v2 FROZEN-PRE-DATA -> AMENDED, v3 DRAFT -> FROZEN-PRE-DATA); the draft itself had no row.'
+  - path: AGENT-INSTRUCTIONS.md
+    line: 32
+    label: 'AGENT-INSTRUCTIONS.md Current phase: remaining human decisions for E03'
+    before: 'Remaining human decisions for E03: independent audit and review of the DRAFT protocol/mobile-runner-policy-v3.md (hardened and corrected for freeze readiness) and its decision package proposal v3 (E01–E12 impact matrix, effective-admissibility rule, G-7 static matrix), then an explicit decision to approve, reject, or revise that post-data amendment (PROTO-U19; required before any mobile condition can start or be measured; approval alone authorizes no execution); the PROTO-U16 post-E01 presence transcription; E03 campaign START; executor prompt freeze and launch.'
+    after: 'PROTO-U19 was resolved on 2026-10-02: the human research lead approved protocol/mobile-runner-policy-v3.md (decision APPROVE), now FROZEN-PRE-DATA and in force, with v2 AMENDED; the approval authorizes no execution. Remaining human decisions for E03: the separately approved steps of the v3 section 9.7 remediation path (QUAL-U06 correction, lock v4, new authorization, publication, dispatch, post-run recording, restoration) before any mobile condition can start or be measured; the PROTO-U16 post-E01 presence transcription; E03 campaign START; executor prompt freeze and launch.'
+  - path: AGENT-INSTRUCTIONS.md
+    line: 70
+    label: 'AGENT-INSTRUCTIONS.md Where the rules live: mobile runner policy row'
+    before: '| protocol/mobile-runner-policy-v2.md (FROZEN-PRE-DATA 2026-09-26; v1 AMENDED — the qualification gate was executed under v1; amendment record manifests/mobile-runner-policy-v2-amendment-v1.yaml); proposed successor protocol/mobile-runner-policy-v3.md (DRAFT 2026-09-29, hardened and corrected for freeze readiness, not in force; decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml; PROTO-U19) |'
+    after: '| protocol/mobile-runner-policy-v3.md (FROZEN-PRE-DATA 2026-10-02, in force; post-fallback remediation qualification in section 9.7; amendment record manifests/mobile-runner-policy-v3-amendment-v1.yaml; approved decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml; PROTO-U19 resolved); predecessors protocol/mobile-runner-policy-v2.md (AMENDED 2026-10-02 — both compatibility smokes were executed under v2; amendment record manifests/mobile-runner-policy-v2-amendment-v1.yaml) and protocol/mobile-runner-policy-v1.md (AMENDED 2026-09-26 — the qualification gate was executed under v1) |'
+  - path: README.md
+    line: 82
+    label: README.md mobile qualification paragraph
+    before: and every campaign requiring Android or iOS execution is blocked until a new explicit protocol amendment decides the mobile-runner strategy.
+    after: 'and every campaign requiring Android or iOS execution was blocked until a new explicit protocol amendment decided the mobile-runner strategy. That amendment, protocol/mobile-runner-policy-v3.md, was approved by the human research lead and frozen on 2026-10-02 (PROTO-U19): it allows one post-fallback remediation qualification (SUT-02 × iOS × Appium 3 only, one attempt, correction restricted to QUAL-U06), which is not yet authorized; the status stays UNRESOLVED_AFTER_FALLBACK_FAILURE and the block stays until admissibility is restored under its section 9.7.'
+  - path: README.md
+    line: 101
+    label: 'README.md runner paragraph: smokes'
+    before: executed only in one compatibility smoke on 2026-09-27, SUT-02 android NOT_EXECUTED; the 2026-09-22 gate remains quarantined, PROTO-U10)
+    after: 'executed only in two compatibility smokes: 2026-09-27, SUT-02 android NOT_EXECUTED; 2026-09-29, SUT-02 android PASS and SUT-02 ios FAIL_RUNNER, which exhausted the fallback; the 2026-09-22 gate remains quarantined, PROTO-U10)'
+  - path: README.md
+    line: 101
+    label: 'README.md runner paragraph: policy reference'
+    before: 'Policy: protocol/mobile-runner-policy-v2.md (v1 AMENDED 2026-09-26; the qualification gate was executed under v1).'
+    after: 'Policy: protocol/mobile-runner-policy-v3.md (FROZEN-PRE-DATA 2026-10-02; v2 AMENDED 2026-10-02, under which both compatibility smokes were executed; v1 AMENDED 2026-09-26, under which the qualification gate was executed).'
+  - path: README.md
+    line: 108
+    label: 'README.md next steps: PROTO-U19'
+    before: the post-data amendment protocol/mobile-runner-policy-v3.md is prepared as a DRAFT, hardened, and corrected for freeze readiness in place (2026-09-29; not approved, not in force; PROTO-U19; decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml, proposals -v1 and -v2 are history); independent audit and human review of that draft and its E01–E12 impact matrix, then an explicit decision to approve, reject, or revise it (every mobile condition is blocked until an approved amendment and, under v3, a remediation PASS);
+    after: ~~the post-data amendment protocol/mobile-runner-policy-v3.md (prepared as a DRAFT, hardened, and corrected for freeze readiness on 2026-09-29), its independent audit, human review, and an explicit decision~~ — done 2026-10-02 (decision APPROVE; v3 FROZEN-PRE-DATA and in force, v2 AMENDED; PROTO-U19 resolved; manifests/mobile-runner-policy-v3-amendment-v1.yaml; decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml); every mobile condition stays blocked until a remediation PASS under v3 section 9.7 restores admissibility (the QUAL-U06 correction, lock v4, a new authorization, publication, and a dispatch each need their own explicit human approval);
+  - path: protocol/README.md
+    line: 3
+    label: 'protocol/README.md opening: document successors'
+    before: (protocol/setup-effort-v2.md, protocol/agent-governance-v2.md, protocol/mobile-runner-policy-v2.md) carry their own document versions and did not change it (manifests/study-manifest.yaml, `notes`, 2026-09-26)
+    after: (protocol/setup-effort-v2.md, protocol/agent-governance-v2.md, protocol/mobile-runner-policy-v2.md, protocol/mobile-runner-policy-v3.md) carry their own document versions and did not change it (manifests/study-manifest.yaml, `notes`, 2026-09-26 and 2026-10-02)
+  - path: protocol/README.md
+    line: 5
+    label: protocol/README.md document states
+    before: 'every versioned document listed below is FROZEN-PRE-DATA except the three AMENDED predecessors — protocol/setup-effort-v1.md, protocol/mobile-runner-policy-v1.md, and protocol/agent-governance-v1.md — and protocol/mobile-runner-policy-v3.md, which since 2026-09-29 is a **DRAFT** proposed post-data successor: not approved, not frozen, not in force; no execution may occur under it (protocol/unresolved.md, PROTO-U19).'
+    after: every versioned document listed below is FROZEN-PRE-DATA except the four AMENDED predecessors — protocol/setup-effort-v1.md, protocol/mobile-runner-policy-v1.md, protocol/mobile-runner-policy-v2.md, and protocol/agent-governance-v1.md.
+  - path: protocol/README.md
+    line: 5
+    label: protocol/README.md freeze history
+    before: protocol/agent-governance-v2.md (2026-09-22), and protocol/mobile-runner-policy-v2.md (2026-09-26) were frozen after data collection had begun
+    after: protocol/agent-governance-v2.md (2026-09-22), protocol/mobile-runner-policy-v2.md (2026-09-26), and protocol/mobile-runner-policy-v3.md (2026-10-02) were frozen after data collection had begun
+  - path: protocol/README.md
+    line: 28
+    label: 'protocol/README.md Documents table: v2 state'
+    before: '| v2 | FROZEN-PRE-DATA (2026-09-26; human approval 2026-09-25; record manifests/mobile-runner-policy-v2-amendment-v1.yaml) |'
+    after: '| v2 | AMENDED (2026-10-02; superseded by protocol/mobile-runner-policy-v3.md; frozen 2026-09-26 on human approval of 2026-09-25, record manifests/mobile-runner-policy-v2-amendment-v1.yaml; the two compatibility smokes executed under it remain valid under v2) |'
+  - path: protocol/README.md
+    line: 29
+    label: 'protocol/README.md Documents table: v3 purpose'
+    before: '| protocol/mobile-runner-policy-v3.md | Proposed successor of v2:'
+    after: '| protocol/mobile-runner-policy-v3.md | Successor of v2:'
+  - path: protocol/README.md
+    line: 29
+    label: 'protocol/README.md Documents table: v3 state'
+    before: header, DRAFT notice, change note, and Sections 11 and 12 updated | v3 | DRAFT (prepared 2026-09-29 on an instruction authorizing preparation only and hardened in place the same day — effective-admissibility rule, remediation lineage record, Android PASS basis — and corrected for freeze readiness (fixed record path and restoration-basis field; status narration of Sections 1–8); not approved, not frozen, not in force; decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml, proposals -v1 and -v2 are history; PROTO-U19 OPEN). v2 stays FROZEN-PRE-DATA and in force |
+    after: header, frozen-state notice, change note, and Sections 11 and 12 updated | v3 | FROZEN-PRE-DATA (2026-10-02; explicit human approval of 2026-10-02 resolving PROTO-U19, decision APPROVE on manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml; record manifests/mobile-runner-policy-v3-amendment-v1.yaml; prepared as a DRAFT on 2026-09-29, hardened in place and corrected for freeze readiness the same day; proposals -v1 and -v2 are history). In force; its freeze authorizes no execution |
+  - path: protocol/README.md
+    line: 48
+    label: 'protocol/README.md Versioning rule: CHANGELOG'
+    before: and it has no row for the DRAFT protocol/mobile-runner-policy-v3.md
+    after: and its two rows of 2026-10-02 record the freeze of protocol/mobile-runner-policy-v3.md and the AMENDED state of v2
+  - path: protocol/README.md
+    line: 48
+    label: 'protocol/README.md Versioning rule: escalation log counts'
+    before: 'As of 2026-09-29 it carries 19 rows (PROTO-U01…PROTO-U19): three are OPEN — PROTO-U02 (OPEN — deferred), PROTO-U16 (OPEN; stale `presence` representation in manifests/sut-manifest.yaml awaiting the post-E01 transcription; must be resolved before E03 campaign START), and PROTO-U19 (OPEN, pending an explicit human decision to approve, reject, or revise the DRAFT protocol/mobile-runner-policy-v3.md) — and the other sixteen are RESOLVED, some with a qualification written in their status cell (PROTO-U13, PROTO-U17, PROTO-U18).'
+    after: 'As of 2026-10-02 it carries 19 rows (PROTO-U01…PROTO-U19): two are OPEN — PROTO-U02 (OPEN — deferred) and PROTO-U16 (OPEN; stale `presence` representation in manifests/sut-manifest.yaml awaiting the post-E01 transcription; must be resolved before E03 campaign START) — and the other seventeen are RESOLVED, some with a qualification written in their status cell (PROTO-U13, PROTO-U17, PROTO-U18, PROTO-U19).'
+  - path: protocol/README.md
+    line: 71
+    label: protocol/README.md Live status heading
+    before: '### Live status (as of 2026-09-29)'
+    after: '### Live status (as of 2026-10-02)'
+  - path: protocol/README.md
+    line: 75
+    label: 'protocol/README.md Live status: study'
+    before: with the three AMENDED predecessors and the DRAFT protocol/mobile-runner-policy-v3.md named at the top of this file.
+    after: with the four AMENDED predecessors named at the top of this file.
+  - path: protocol/README.md
+    line: 79
+    label: 'protocol/README.md Live status: mobile runner policy'
+    before: '- **Mobile runner** (protocol/mobile-runner-policy-v2.md, FROZEN-PRE-DATA and in force):'
+    after: '- **Mobile runner** (protocol/mobile-runner-policy-v3.md, FROZEN-PRE-DATA and in force since 2026-10-02; the observations below were made under v1 and v2):'
+  - path: protocol/README.md
+    line: 83
+    label: 'protocol/README.md Live status: runner status'
+    before: '(policy v2, section 9.5): every campaign requiring Android or iOS execution is blocked from START and measurement until a new explicit protocol amendment decides the mobile-runner strategy.'
+    after: '(policy v2, section 9.5; unchanged by v3): every campaign requiring Android or iOS execution stays blocked from START and measurement; under v3 the only path back is the single post-fallback remediation qualification of section 9.7 followed by a restoration under 9.7.9 and 9.7.10.'
+  - path: protocol/README.md
+    line: 84
+    label: 'protocol/README.md Live status: v3'
+    before: '  - protocol/mobile-runner-policy-v3.md remains a DRAFT — not approved, not frozen, not in force; policy v2 remains in force; PROTO-U19 remains OPEN.'
+    after: '  - protocol/mobile-runner-policy-v3.md was approved by the human research lead on 2026-10-02 (PROTO-U19 RESOLVED, decision APPROVE) and frozen; v2 is AMENDED. The freeze authorizes no execution: the QUAL-U06 correction, a successor lock (v4), a new authorization, publication, a dispatch, and any restoration each need their own explicit human approval.'
+  - path: protocol/README.md
+    line: 86
+    label: 'protocol/README.md Live status: escalations'
+    before: protocol/unresolved.md carries 19 rows, three OPEN (PROTO-U02, PROTO-U16, PROTO-U19; see "Versioning rule").
+    after: protocol/unresolved.md carries 19 rows, two OPEN (PROTO-U02, PROTO-U16; see "Versioning rule").
+  - path: manifests/README.md
+    line: 5
+    label: 'manifests/README.md phase line: protocol state'
+    before: Protocol v1/v2 is FROZEN-PRE-DATA (v1 frozen 2026-09-16
+    after: Every protocol document is FROZEN-PRE-DATA except its AMENDED predecessors (protocol/README.md; v1 frozen 2026-09-16
+  - path: manifests/README.md
+    line: 5
+    label: 'manifests/README.md phase line: v3 freeze'
+    before: setup-effort-v2.md frozen 2026-09-21 resolving issue (xviii), manifests/issue-xviii-ruling-v1.yaml).
+    after: setup-effort-v2.md frozen 2026-09-21 resolving issue (xviii), manifests/issue-xviii-ruling-v1.yaml; mobile-runner-policy-v3.md frozen 2026-10-02 resolving PROTO-U19, manifests/mobile-runner-policy-v3-amendment-v1.yaml).
+  - path: manifests/README.md
+    line: 60
+    label: 'manifests/README.md Files table: proposal v3'
+    before: '| `mobile-runner-policy-v3-amendment-proposal-v3.yaml` | Current decision package (revision 3) of the PROPOSED post-data amendment `protocol/mobile-runner-policy-v3.md`, for the DRAFT corrected'
+    after: '| `mobile-runner-policy-v3-amendment-proposal-v3.yaml` | Decision package (revision 3), approved on 2026-10-02 (PROTO-U19, decision APPROVE), of the post-data amendment `protocol/mobile-runner-policy-v3.md` (FROZEN-PRE-DATA since 2026-10-02; record `mobile-runner-policy-v3-amendment-v1.yaml`), prepared for the DRAFT corrected'
+  - path: manifests/README.md
+    line: 60
+    label: 'manifests/README.md Files table: proposal v3 CHANGELOG rows'
+    before: and candidate CHANGELOG rows NOT IN FORCE. |
+    after: and candidate CHANGELOG rows (not in force in the package; entered with their placeholders filled in protocol/CHANGELOG.md at the freeze). |
+  - path: manifests/README.md
+    line: 61
+    label: 'manifests/README.md Files table: new amendment-record row'
+    before: '| `appium3-toolchain-version-transcription-v1.yaml` | Provenance record of the factual transcription `tools.mobile_fallback.version` null → 3.7.0 (2026-09-29, same instruction, section 7): supporting semantics, the three formal toolchain-install.json observations (AUTH-01 android; AUTH-02 android and ios), install_date and platform left null (two ephemeral hosts), the consumers checked, what did not change (status, pin, results). Not a reselection. | Written once |'
+    after: |-
+      | `appium3-toolchain-version-transcription-v1.yaml` | Provenance record of the factual transcription `tools.mobile_fallback.version` null → 3.7.0 (2026-09-29, same instruction, section 7): supporting semantics, the three formal toolchain-install.json observations (AUTH-01 android; AUTH-02 android and ios), install_date and platform left null (two ephemeral hosts), the consumers checked, what did not change (status, pin, results). Not a reselection. | Written once |
+      | `mobile-runner-policy-v3-amendment-v1.yaml` | Post-data amendment record (2026-10-02, operation OP-GOV-01): the human approval of PROTO-U19 (decision APPROVE, given to the study's independent orchestration reviewer and relayed; item, answer, and meaning verbatim with SHA-256), the adoption of the operation instruction as written (relayed and direct written confirmations), the instruction verbatim, classification and decision timing (post-data, outcome-responsive, prospective), documents with SHA-256 before and after, the thirteen-line rendering of v3 and the header change of v2, proof results, rationale, prior-data validity, affected campaigns, re-pointed references, consequences, what is not authorized, the PROTO-U19 resolution, and the two-phase procedure (prepared, independently audited, then committed). | Written once, at that freeze; corrected only by a new version file |
+  - path: manifests/README.md
+    line: 103
+    label: 'manifests/README.md Data-collection gate: policy reference'
+    before: in protocol/mobile-runner-policy-v2.md (v1 AMENDED 2026-09-26; sections 1-8 unchanged)
+    after: in protocol/mobile-runner-policy-v3.md (in force since 2026-10-02; v2 AMENDED 2026-10-02, v1 AMENDED 2026-09-26; the gate of sections 1-8 unchanged in substance)
+  - path: experiments/E03-resetability/README.md
+    line: 29
+    label: 'E03 README Mobile qualification row: policy in force'
+    before: '| `protocol/mobile-runner-policy-v2.md` (v1 AMENDED 2026-09-26; the gate ran under v1); `qualification/mobilewright/README.md`'
+    after: '| `protocol/mobile-runner-policy-v3.md` (in force since 2026-10-02; v2 AMENDED 2026-10-02, under which the smokes ran; v1 AMENDED 2026-09-26, under which the gate ran); `qualification/mobilewright/README.md`'
+  - path: experiments/E03-resetability/README.md
+    line: 32
+    label: 'E03 README E03 START row: remaining decisions'
+    before: 'Remaining human decisions: review of the AUTH-02 post-run record, then an explicit protocol amendment deciding the mobile-runner strategy (required before any mobile condition can start or be measured); the PROTO-U16 presence transcription'
+    after: 'The explicit protocol amendment deciding the mobile-runner strategy was made: protocol/mobile-runner-policy-v3.md, approved and frozen on 2026-10-02 (PROTO-U19 resolved; v2 AMENDED), allows one post-fallback remediation qualification (SUT-02 × iOS only) and authorizes no execution by itself. Remaining human decisions: the separately approved steps of that remediation path (QUAL-U06 correction, lock v4, new authorization, publication, dispatch, post-run recording, restoration), required before any mobile condition can start or be measured; the PROTO-U16 presence transcription'
+  - path: experiments/README.md
+    line: 50
+    label: 'experiments/README.md: v1 -> v3'
+    before: 'Mobile execution follows protocol/mobile-runner-policy-v1.md:'
+    after: 'Mobile execution follows protocol/mobile-runner-policy-v3.md:'
+  - path: experiments/E06-cross-platform-parity/README.md
+    line: 5
+    label: 'E06 README purpose: v1 -> v3'
+    before: Mobile executions use the runner selected under protocol/mobile-runner-policy-v1.md,
+    after: Mobile executions use the runner selected under protocol/mobile-runner-policy-v3.md,
+  - path: experiments/E06-cross-platform-parity/README.md
+    line: 30
+    label: 'E06 README rules: v1 -> v3'
+    before: '- Mobile executions comply with protocol/mobile-runner-policy-v1.md, including the qualification gate status'
+    after: '- Mobile executions comply with protocol/mobile-runner-policy-v3.md, including the qualification gate status'
+  - path: experiments/E07-cross-layer-continuity/README.md
+    line: 5
+    label: 'E07 README purpose: v1 -> v3'
+    before: (protocol/mobile-runner-policy-v1.md, section 9)
+    after: (protocol/mobile-runner-policy-v3.md, section 9)
+  - path: experiments/E07-cross-layer-continuity/README.md
+    line: 32
+    label: 'E07 README rules: v1 -> v3'
+    before: '- Mobile executions comply with protocol/mobile-runner-policy-v1.md.'
+    after: '- Mobile executions comply with protocol/mobile-runner-policy-v3.md.'
+  - path: experiments/E12-localization-i18n/README.md
+    line: 32
+    label: 'E12 README rules: v1 -> v3'
+    before: '- Mobile executions comply with protocol/mobile-runner-policy-v1.md, including the per-SUT compatibility smoke.'
+    after: '- Mobile executions comply with protocol/mobile-runner-policy-v3.md, including the per-SUT compatibility smoke.'
+  - path: manifests/study-manifest.yaml
+    line: 407
+    label: study-manifest dated note (appended)
+    before: ''
+    after: |-
+      2026-10-02 (REGISTER THE HUMAN APPROVAL OF PROTO-U19 AND FREEZE MOBILE-RUNNER-POLICY-V3, operation OP-GOV-01;
+      explicit human approval of 2026-10-02, decision APPROVE on manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml,
+      given to the study's independent orchestration reviewer and relayed to the ORCHESTRATOR; item, answer, and meaning
+      verbatim with sha256 in manifests/mobile-runner-policy-v3-amendment-v1.yaml): protocol/mobile-runner-policy-v3.md
+      DRAFT -> FROZEN-PRE-DATA on 2026-10-02 (every rule of the corrected draft unchanged; post-data, outcome-responsive,
+      prospective) and protocol/mobile-runner-policy-v2.md FROZEN-PRE-DATA -> AMENDED (header only); two protocol/CHANGELOG.md
+      rows; PROTO-U19 RESOLVED. protocol_state, protocol_frozen, and the study-level protocol_version (v1) unchanged (document
+      successor, as for setup-effort-v2, agent-governance-v2, and mobile-runner-policy-v2). The freeze authorizes no execution:
+      mobile_runner_status stays UNRESOLVED_AFTER_FALLBACK_FAILURE, G-7 still blocks every mobile condition, and each step of
+      the v3 section 9.7 remediation path (QUAL-U06 correction, lock v4, new authorization, publication, dispatch, post-run
+      recording, restoration) needs its own explicit human approval. PROTO-U16, QUAL-U06, QUAL-U07 OPEN; E03 NOT_STARTED.
+  not_re_pointed: frozen protocol documents (resolved by v2's Superseded-by row); manifests/toolchain-manifest.yaml and manifests/compatibility-smoke-status.yaml (their governing-policy references keep naming v2, under which their values were recorded); qualification records, workflows, prompts, schemas, evidence, and historical operation records; the decision packages; the dashboard
+consequences:
+- mobile_runner_status stays UNRESOLVED_AFTER_FALLBACK_FAILURE and fallback_exhausted stays true (manifests/toolchain-manifest.yaml unchanged)
+- gate G-7 of .github/workflows/e03-measured-execution.yml is unchanged and still fails closed for both SUT-02 mobile conditions; the G-7 change of REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19 is not made
+- the compatibility-smoke readiness gate now also fails its two policy-v2 checks; it refused every dispatch before (AUTH-02 consumed; fallback exhausted) and is adapted only with a successor implementation lock (v4)
+- no execution is authorized by this freeze
+not_authorized:
+- any change to qualification/compatibility-smoke/harness/** (including wd.mjs), to any workflow or gate (G-7 included), to any lock, authorization record, frozen prompt, formal evidence, QUALIFIER record, mirror entry, runner status, pin, or toolchain value
+- lock v4
+- a new authorization
+- the remediation lineage record or the restoration_basis field
+- any dispatch or re-run
+- any export, push, or publication
+- QUAL-U06 or QUAL-U07 resolution
+- the PROTO-U16 transcription
+- E03 START
+- an Android re-execution
+- any other runner
+- the dashboard
+proto_u19_resolution: 'protocol/unresolved.md PROTO-U19: status RESOLVED (resolved by protocol/mobile-runner-policy-v3.md, FROZEN-PRE-DATA 2026-10-02; post-data, outcome-responsive, prospective), human decision APPROVE recorded with this record''s path, decision date 2026-10-02; the problem statement and the first six cells are unchanged'
+unchanged_open_items:
+  PROTO-U16: OPEN
+  QUAL-U06: OPEN
+  QUAL-U07: OPEN
+changelog_rows: 2
+changelog_rows_text:
+- '| 2026-10-02 | protocol/mobile-runner-policy-v2.md | v2 | v2 | FROZEN-PRE-DATA -> AMENDED | Superseded by protocol/mobile-runner-policy-v3.md (post-data-collection change, protocol/change-control-v1.md section 5 -- `data_collection_started` was already true). File body unchanged apart from the header (Protocol state, Superseded by row): SHA-256 5bed242e0096068dc2d34861299b10dc5404957e9d3aafea43f9c93de840d495 -> 4722521767697074e218d03ab77d424f559d3029f1655324fbee88047fcc12dd. The observations made under v2 (APPIUM3-COMPAT-SMOKE-AUTH-01; APPIUM3-COMPAT-SMOKE-AUTH-02 SUT-02 android PASS and SUT-02 ios FAIL_RUNNER) and the v2 fallback exhaustion remain valid under v2 and are not reinterpreted. | E03-resetability, and prospectively the Android or iOS conditions of E02-state-establishment, E04-repeatability, E06-cross-platform-parity, E07-cross-layer-continuity, E12-localization-i18n, E11-security (mobile-build conditions only), E05-determinism and E10-visual (only if mobile is configured); none has collected campaign data; E01-capability-audit unaffected | gilbertosanchez (approval 2026-10-02) |'
+- '| 2026-10-02 | protocol/mobile-runner-policy-v3.md | none | v3 | DRAFT -> FROZEN-PRE-DATA | Explicit human approval of the post-data amendment resolving protocol/unresolved.md PROTO-U19 (SUBSTANTIVE_POST_DATA_PROTOCOL_DECISION): the explicit human approval of 2026-10-02 (decision APPROVE on PROTO-U19; verbatim in manifests/mobile-runner-policy-v3-amendment-v1.yaml) (SHA-256 16dae5884122ff0bfe313bfe78d023a3ebd78e0a1b69036d7cd339c4fb3e2670). Changes: 9.5 gains one bounded exception clause; new 9.7 post-fallback remediation qualification -- one attempt, SUT-02 x iOS x Appium 3 only, correction restricted to qualification/unresolved.md QUAL-U06, results and attribution of 9.1-9.4 unchanged, single-attempt terminal effects, effective-admissibility rule (historical observation vs prospective admissibility; 12 conditions; history integrity; fail closed), the remediation lineage record manifests/mobile-runner-remediation-v1.yaml and the restoration-basis field tools.mobile_runner_selection.restoration_basis (both created only after a remediation PASS on an explicit human restoration instruction), post-restoration rule, SUT-02 android PASS reuse basis. Introductory paragraph, 9.1-9.4, 9.6, and 10 carried from v2 byte for byte; sections 1-8 carried with status and provenance corrections only (sections 1, 2, 3, 4, 6, 7; no methodological change); sections 11 and 12 updated. Prior data: E01, H1, the Mobilewright qualification, AUTH-01, AUTH-02, and the v2 fallback exhaustion unaffected and not reinterpreted; nothing re-collected or re-analyzed. References re-pointed to v3 by this recorded change: the agent-instructions file (rule 14; the current-phase protocol state and E03 decisions; where-the-rules-live), README.md, protocol/README.md, manifests/README.md, manifests/study-manifest.yaml (dated note), experiments/E03-resetability/README.md, and the references to protocol/mobile-runner-policy-v1.md in experiments/README.md and the E06, E07, and E12 campaign READMEs (re-pointed to v3); the full path, line, before, and after list is in manifests/mobile-runner-policy-v3-amendment-v1.yaml; not re-pointed: frozen protocol documents (resolved by v2''s Superseded-by row), the toolchain manifest and the compatibility-smoke mirror, qualification, workflow, prompt, schema, evidence, and historical operation records, the decision packages, and the dashboard. The G-7 implementation dependency (REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19) is not made by this row. | E03-resetability, and prospectively the Android or iOS conditions of E02-state-establishment, E04-repeatability, E06-cross-platform-parity, E07-cross-layer-continuity, E12-localization-i18n, E11-security (mobile-build conditions only), E05-determinism and E10-visual (only if mobile is configured); none has collected campaign data; E01-capability-audit unaffected | gilbertosanchez (approval 2026-10-02) |'
+two_phase_procedure:
+  phase_a: prepared in the working tree on 2026-10-02 without staging, returned for an independent audit, and held
+  audit: by the study's independent orchestration reviewer before any commit
+  phase_b: 'after the reviewer''s message ''OP-GOV-01 PHASE A AUDIT: PASSED'': re-verification of the audited hashes, then a change-control commit (the two policy files, CHANGELOG, unresolved.md, this record) and a status commit (the reference and live-status files); no push or export'
+instruction_verbatim: |
+  EUS-2026-001 — OP-GOV-01 — REGISTER THE HUMAN APPROVAL OF PROTO-U19 AND FREEZE MOBILE-RUNNER-POLICY-V3 (CHANGE CONTROL ONLY)
+
+  Role for this operation: ORCHESTRATOR (protocol/agent-governance-v2.md).
+  Classification: protocol / change-control; gated; two phases with an independent audit between them. It must not interleave with OP-ENV-01: start Phase A only when the tracked tree is clean.
+
+  HUMAN APPROVAL
+  Given by gilbertosanchez, human research lead, on 2026-10-02T22:04:07Z, to the study's independent orchestration reviewer, and relayed by that reviewer in this instruction.
+  Decision item as presented to him (verbatim):
+  "2. **PROTO-U19:** APPROVE / REVISE / REJECT. Con tu clasificación, APPROVE es la única opción ya redactada que puede devolver ejecución móvil antes del 10-20. REVISE cuesta al menos un ciclo y REJECT deja las celdas móviles sin vía. La decisión es tuya."
+  His answer (verbatim):
+  "2. Se aprueba"
+  What APPROVE means, as presented to him before he decided (verbatim, 2026-10-02T20:59:50Z):
+  "- **APPROVE**
+    - Autoriza solo el registro de change-control: header de v3 a FROZEN-PRE-DATA, header de v2 a AMENDED con fila `Superseded by`, dos filas en CHANGELOG y la decisión añadida a la fila PROTO-U19.
+    - `mobile_runner_status` sigue UNRESOLVED_AFTER_FALLBACK_FAILURE y G-7 sigue bloqueando.
+    - No autoriza corregir `wd.mjs`, cambiar G-7, lock v4, nueva AUTH, publicación, dispatch, restauración, PROTO-U16, E03 START, re-ejecutar Android ni un tercer runner.
+    - Aceptas una enmienda post-data y outcome-responsive: habrá dos observaciones de SUT-02 × iOS bajo dos versiones de policy y ambas deben reportarse siempre. Si la remediación da FAIL_RUNNER o NOT_EXECUTED, es terminal bajo v3."
+  Decision object: protocol/mobile-runner-policy-v3.md at sha256 1739d28abd1d1196c19ddaa507b1c7e8b921416dc5969382b0190ab07be19b95, with the decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml at sha256 ca52e7e6f4a5db36f9dbe0e32681d8f5bf43d63c51cb58f06f666ca4dc69ef47.
+  Nature of the decision, to be recorded in these terms: POST-DATA; OUTCOME-RESPONSIVE (taken after the APPIUM3-COMPAT-SMOKE-AUTH-02 iOS FAIL_RUNNER and the v2 fallback exhaustion were known); PROSPECTIVE; it reinterprets no observation.
+
+  THIS OPERATION DOES NOT AUTHORIZE
+  Any change to qualification/compatibility-smoke/harness/** (including wd.mjs), to any workflow or gate (G-7 included), to any lock, authorization record, frozen prompt, formal evidence, QUALIFIER record, mirror entry, runner status, pin, or toolchain value; lock v4; a new authorization; the remediation lineage record or the restoration_basis field; any dispatch or re-run; any export, push, or publication; QUAL-U06 or QUAL-U07 resolution; the PROTO-U16 transcription; E03 START; an Android re-execution; any other runner; the dashboard.
+
+  PHASE A — PREPARE IN THE WORKING TREE; DO NOT STAGE OR COMMIT
+
+  A1. Baseline (STOP on mismatch): tracked tree clean; HEAD is 041b907d8c4bc70c3ac7280ffcc69614db471b15 or its descendant that adds only the two OP-ENV-01 records; sha256 of protocol/mobile-runner-policy-v1.md 5fd5d401e14f9cd82a64b86950f38a476944e890842cd8b53d321f576c682a5d, -v2.md 5bed242e0096068dc2d34861299b10dc5404957e9d3aafea43f9c93de840d495, -v3.md 1739d28abd1d1196c19ddaa507b1c7e8b921416dc5969382b0190ab07be19b95, proposal v3 ca52e7e6f4a5db36f9dbe0e32681d8f5bf43d63c51cb58f06f666ca4dc69ef47, protocol/CHANGELOG.md e0ab97767c83bc521138185fde0ffac757e7948eb19563e6328799c7fa3b9f66, protocol/unresolved.md 1515065fbe3d83537313b463e9c4bd7ba1cab498bab7a4e3a0d085a36ff508c7, manifests/toolchain-manifest.yaml 2e270e5795975592aa4a715742c701619aa34b30d444842955035de7e6d7ddd6, manifests/compatibility-smoke-status.yaml 3fffe553185068a646b9cf7cbab97416119d90e019ef3bc8d00ba5bb71e81440, manifests/compatibility-smoke-implementation-lock-v3.yaml 6c4c29ac107119a04c0ec47da97c38f10695a0e3f296809145a469ab1087bef5; PROTO-U19 OPEN with decision cell "null / TBD"; public main 34c0453053a29492a34b6a20676bd8f1f046738b.
+
+  A2. protocol/mobile-runner-policy-v3.md — DRAFT -> FROZEN-PRE-DATA. Exactly the thirteen lines below change (line numbers at sha256 1739d28abd1d1196c19ddaa507b1c7e8b921416dc5969382b0190ab07be19b95); every other byte stays identical. {{FREEZE_DATE}} is the calendar date (America/Mexico_City) on which the Phase B commit is created.
+  - line 7: "| Protocol state | FROZEN-PRE-DATA |"
+  - line 10: "| Supersedes | protocol/mobile-runner-policy-v2.md (transitions to AMENDED by this freeze, per protocol/change-control-v1.md, section 2 — `data_collection_started` is already true) |"
+  - line 11: "| Freeze approval | gilbertosanchez, 2026-10-02 (explicit human approval of the post-data amendment resolving protocol/unresolved.md PROTO-U19: decision APPROVE on the decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml; this document was prepared by the ORCHESTRATOR as a DRAFT on 2026-09-29 under the preparation-only human instructions PREPARE MOBILE-RUNNER-POLICY-V3 AFTER APPIUM FALLBACK EXHAUSTION, HARDEN MOBILE-RUNNER-POLICY-V3 DRAFT BEFORE HUMAN APPROVAL, and FINALIZE MOBILE-RUNNER-POLICY-V3 DRAFT FREEZE READINESS, and frozen on {{FREEZE_DATE}} under that approval with every rule unchanged; post-data-collection change under protocol/change-control-v1.md, section 5; approval provenance and record: manifests/mobile-runner-policy-v3-amendment-v1.yaml) |"
+  - line 15: "**POST-DATA SUCCESSOR OF protocol/mobile-runner-policy-v2.md — IN FORCE FROM ITS FREEZE.**"
+  - line 17: "- It supersedes protocol/mobile-runner-policy-v2.md, which is AMENDED and retained unchanged apart from its header; v2 was the policy in force until this version was explicitly approved and frozen by a human decision."
+  - line 18: "- It was prepared, approved, and frozen after data collection began (`data_collection_started` has been true since 2026-09-17, manifests/study-manifest.yaml); it is a post-data change under protocol/change-control-v1.md, section 5."
+  - line 21: delete the line (it is true only of a DRAFT). Lines 19 and 20 stay unchanged.
+  - line 27: replace only the opening words "This draft proposes exactly one narrow mechanism" with "This version introduces exactly one narrow mechanism"; the rest of the line is unchanged.
+  - line 213: "### 9.7 Post-fallback remediation qualification (new in v3)"
+  - line 305: "Snapshot at the freeze of this version ({{FREEZE_DATE}}); not updated in place. Live status: manifests/toolchain-manifest.yaml and manifests/compatibility-smoke-status.yaml."
+  - line 309: "| This version | FROZEN-PRE-DATA: approved by gilbertosanchez on 2026-10-02 and frozen on {{FREEZE_DATE}}; in force; its freeze authorizes no execution |"
+  - line 317: "| Post-fallback remediation qualification (9.7) | in force as a rule; not authorized for execution: no corrected implementation, successor implementation lock, authorization, publication, or dispatch exists; effective-admissibility rule (9.7.9) in force; remediation lineage record (9.7.10) defined, not created |"
+  - line 321: "This document is protocol version v3 of the mobile runner policy, state FROZEN-PRE-DATA (prepared as a DRAFT on 2026-09-29, hardened in place and corrected for freeze readiness the same day; frozen {{FREEZE_DATE}} under the explicit human approval of 2026-10-02 recorded in its header; no data had been collected under this version when it was frozen), and follows the protocol state lifecycle (DRAFT, FROZEN-PRE-DATA, AMENDED, SUPERSEDED) defined in protocol/change-control-v1.md. It supersedes protocol/mobile-runner-policy-v2.md, which is AMENDED and retained unchanged apart from its header; the approval and freeze are recorded in protocol/CHANGELOG.md with rationale and affected campaigns (protocol/change-control-v1.md, section 5). The introductory paragraph, 9.1–9.4, 9.6, and Section 10 are carried over from v2 verbatim; Sections 1–8 are carried over with status and provenance corrections only (in Sections 1, 2, 3, 4, 6, and 7; no methodological change); 9.5 gains one bounded exception clause; 9.7 is new; Sections 11 and 12 and the header are updated. It is never overwritten in place; any modification creates protocol/mobile-runner-policy-v4.md."
+  If any anchor does not match, or if you find another sentence that is false in a frozen document, STOP and report it; do not improvise wording. No rule, condition, criterion, or permission may be added, removed, or reworded.
+
+  A3. protocol/mobile-runner-policy-v2.md — header only: `Protocol state` FROZEN-PRE-DATA -> AMENDED; one added row "| Superseded by | protocol/mobile-runner-policy-v3.md |" placed as in the AMENDED header of v1. From the introductory paragraph to the end the text stays byte-identical; record that body sha256 before and after.
+
+  A4. protocol/CHANGELOG.md — append exactly two rows, built from candidate_changelog_rows of the decision package with every placeholder filled: date {{FREEZE_DATE}}; the v2 sha256 after the header change; the v3 sha256 at freeze; the approving decision described as the explicit human approval of 2026-10-02 (decision APPROVE on PROTO-U19; verbatim in manifests/mobile-runner-policy-v3-amendment-v1.yaml); the list of references re-pointed by this change (A7); approved by "gilbertosanchez (approval 2026-10-02)". The existing content must remain a byte-exact prefix.
+
+  A5. protocol/unresolved.md — PROTO-U19 row only, following the PROTO-U17 precedent: status "RESOLVED (was: OPEN — …; resolved by protocol/mobile-runner-policy-v3.md, FROZEN-PRE-DATA {{FREEZE_DATE}}; …)"; the human decision cell (APPROVE, what it authorizes and what it does not, the record path); decision date 2026-10-02. The first six cells of the row and every other row stay byte-identical.
+
+  A6. manifests/mobile-runner-policy-v3-amendment-v1.yaml — new record on the model of manifests/mobile-runner-policy-v2-amendment-v1.yaml (record_class POST_DATA_PROTOCOL_AMENDMENT_RECORD; record_id MOBILE-RUNNER-POLICY-V3-AMENDMENT-01): the human approval (item and answer verbatim, timestamp, sha256); how it arrived (given to the study's independent orchestration reviewer, an external review function that is not a role of protocol/agent-governance-v2.md, and relayed to the ORCHESTRATOR by this instruction, reproduced verbatim with its sha256; never described as live input to the ORCHESTRATOR session); classification and decision timing (POST-DATA, OUTCOME-RESPONSIVE, PROSPECTIVE); documents with sha256 before and after; the thirteen-line rendering with before and after text; the proof results of A8; rationale; prior-data validity; affected campaigns; references re-pointed; consequences and the full list of what is not authorized; PROTO-U19 resolution; PROTO-U16, QUAL-U06, QUAL-U07 unchanged; changelog_rows: 2; the two-phase procedure (prepared, independently audited, then committed).
+
+  A7. References and live status (representation only; no value, status field, or rule changes): AGENT-INSTRUCTIONS.md (rule 14, the "Current phase" protocol-state text, the mobile-runner row of "Where the rules live"); README.md; protocol/README.md; manifests/README.md; one appended dated note in manifests/study-manifest.yaml; experiments/E03-resetability/README.md where it states the policy in force; and the stale references to protocol/mobile-runner-policy-v1.md in experiments/README.md (line 50) and in the E06, E07, and E12 READMEs, re-pointed to protocol/mobile-runner-policy-v3.md. List every re-pointed reference (path, line, before, after) for the CHANGELOG row. Do NOT edit: manifests/toolchain-manifest.yaml, manifests/compatibility-smoke-status.yaml, anything under qualification/**, .github/**, prompts/**, schemas/**, derived-data/**, raw-data/**, audits/**, the proposals v1–v3, protocol/mobile-runner-policy-v1.md, research-status.html. Stale statements found there are reported, not corrected.
+
+  A8. Checks: every touched YAML parses; git diff --check; v3 differs from its HEAD blob only in the thirteen enumerated lines (show the diff); v2 differs only in the header (show the diff and the body sha256); CHANGELOG is append-only; unresolved.md differs only in the last three cells of the PROTO-U19 row; sha256 of every protected file named in A1 and in A7's exclusion list is unchanged; run the local copy of the validation steps and the two static gates (the compatibility-smoke gate and G-7 for both SUT-02 mobile conditions) on the prepared tree and report each result against its result at HEAD — a gate or validation step that changes outcome because v2 is AMENDED or v3 is FROZEN-PRE-DATA is reported, never repaired here.
+
+  A9. Phase A return, then HOLD without staging: git status; diff statistics; the diffs of A8; the new sha256 values; the two CHANGELOG rows; the PROTO-U19 row before and after; the record's path and sha256; the list of re-pointed references; check results; stale statements found in excluded files; anything you could not verify. If you judge that the relay channel itself needs an escalation row or a governance note, say so here; do not decide it alone.
+
+  PHASE B — ONLY AFTER THE REVIEWER'S MESSAGE "OP-GOV-01 PHASE A AUDIT: PASSED"
+
+  B1. Re-verify that the working tree still equals the audited Phase A state (hashes).
+  B2. Commit with explicit paths, the existing git identity, and no trailers: first the change-control commit (the two policy files, CHANGELOG, unresolved.md, the amendment record), then the status commit (the A7 files). Do not push or export.
+  B3. Return: commit SHAs with parents and paths; final sha256 of v2, v3, CHANGELOG, unresolved.md, and the record; git status; confirmation that mobile_runner_status is still UNRESOLVED_AFTER_FALLBACK_FAILURE and that no workflow, harness, lock, authorization, evidence, mirror, or toolchain byte changed.
+
+  HARD STOP after Phase B. Everything listed under "does not authorize" needs its own approval.
+
+  PUBLICATION HYGIENE
+  Tracked text carries no session names, no vendor or assistant names, no conversation identifiers, and no host paths; the relay is described only in the neutral terms of A6.

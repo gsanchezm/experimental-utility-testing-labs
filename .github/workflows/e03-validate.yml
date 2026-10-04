@@ -147,25 +147,57 @@ jobs:
           # QUAL-U05 (2026-09-27): a host with core.autocrlf=input once stored a CRLF text artifact end-of-line normalized.
           # Every imported compatibility-smoke artifact must equal its import record, its archive digest, and its archive
           # members byte for byte, and the formal tree must keep the byte-exact attribute (no end-of-line conversion).
+          # QUAL-U07 (2026-10-02, human decision option A; manifests/qual-u07-publication-handling-v1.yaml): a public snapshot
+          # (PUBLIC-EXPORT-MANIFEST.yaml at its root) may carry two publication-only transformations. There every checked path
+          # needs exactly one manifest entry; an entry whose only class is QUALIFICATION_HOST_PATH_REDACTION (file) or
+          # DETERMINISTIC_SANITIZED_ARCHIVE (archive) is checked through the entry (its canonical hash equals the import record,
+          # the on-disk hash equals its exported hash); every other path stays byte-exact. A canonical checkout has no such
+          # manifest and keeps every check byte-exact.
           sha = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
           ga = 'qualification/compatibility-smoke/formal/.gitattributes'
           bad = []
           if not (os.path.isfile(ga) and '* -text' in open(ga).read().splitlines()):
               bad.append(ga + ': byte-exact attribute missing')
-          n = 0
+          pem = None
+          if os.path.isfile('PUBLIC-EXPORT-MANIFEST.yaml'):
+              pem = {}
+              for e in (yaml.safe_load(open('PUBLIC-EXPORT-MANIFEST.yaml')) or {}).get('files') or []:
+                  pem.setdefault(e.get('path'), []).append(e)
+          def kind(p, cls):
+              # 'exact' (canonical checkout, or an entry with any other class), 'bridge' (the entry's only class is cls), 'missing' (fails)
+              if pem is None:
+                  return 'exact', {}
+              es = pem.get(p) or []
+              if len(es) != 1:
+                  bad.append(p + ': no unique PUBLIC-EXPORT-MANIFEST.yaml entry (' + str(len(es)) + ' found)')
+                  return 'missing', {}
+              return ('bridge' if es[0].get('transformations') == [cls] else 'exact'), es[0]
+          n = nb = 0
           for rec in sorted(glob.glob('qualification/compatibility-smoke/formal/*/IMPORT-RECORD.yaml')):
               base = os.path.dirname(rec) + '/'
               r = yaml.safe_load(open(rec)) or {}
               for f in r.get('files') or []:
                   p = base + str(f.get('path')); n += 1
-                  if not (os.path.isfile(p) and sha(p) == f.get('sha256')):
+                  k, e = kind(p, 'QUALIFICATION_HOST_PATH_REDACTION')
+                  if k == 'bridge':
+                      nb += 1
+                      if not (os.path.isfile(p) and e.get('canonical_sha256') == f.get('sha256') and sha(p) == e.get('exported_sha256')):
+                          bad.append(p + ': differs from its PUBLIC-EXPORT-MANIFEST.yaml entry or from the import record')
+                  elif k == 'exact' and not (os.path.isfile(p) and sha(p) == f.get('sha256')):
                       bad.append(p + ': sha256 differs from the import record')
                   attr = subprocess.run(['git', 'check-attr', 'text', '--', p], capture_output=True, text=True).stdout.strip()
                   if not attr.endswith(': text: unset'):
                       bad.append(p + ': end-of-line conversion not disabled (' + attr + ')')
               for a in r.get('artifacts') or []:
                   zp = base + str(a.get('downloaded_archive'))
-                  if not (os.path.isfile(zp) and sha(zp) == a.get('downloaded_archive_sha256') and 'sha256:' + sha(zp) == a.get('github_digest')):
+                  k, e = kind(zp, 'DETERMINISTIC_SANITIZED_ARCHIVE')
+                  if k == 'missing':
+                      continue
+                  if k == 'bridge':
+                      nb += 1
+                      if not (os.path.isfile(zp) and e.get('canonical_digest') == a.get('github_digest') and sha(zp) == e.get('exported_sha256')):
+                          bad.append(zp + ': differs from its PUBLIC-EXPORT-MANIFEST.yaml entry or from the import record'); continue
+                  elif not (os.path.isfile(zp) and sha(zp) == a.get('downloaded_archive_sha256') and 'sha256:' + sha(zp) == a.get('github_digest')):
                       bad.append(zp + ': archive digest differs from the import record'); continue
                   with zipfile.ZipFile(zp) as z:
                       for m in z.namelist():
@@ -176,7 +208,8 @@ jobs:
                               bad.append(fp + ': differs from its archive member')
           if bad:
               print('\n'.join(bad)); sys.exit(1)
-          print('imported compatibility-smoke evidence byte-exact:', n, 'file(s)')
+          print('imported compatibility-smoke evidence byte-exact:', n, 'file(s)' + ('' if pem is None else
+                '; public checkout: ' + str(nb) + ' path(s) checked through PUBLIC-EXPORT-MANIFEST.yaml'))
           PY
 
   publication-hygiene:

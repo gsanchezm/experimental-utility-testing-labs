@@ -4,11 +4,12 @@
 |---|---|
 | Document | protocol/agent-governance-v2.md |
 | Protocol version | v2 |
-| Protocol state | FROZEN-PRE-DATA |
+| Protocol state | AMENDED |
 | Study | Experimental Utility of Software-Testing Laboratory Ecosystems (EUS-2026-001) |
 | Created | 2026-09-21 |
 | Supersedes | protocol/agent-governance-v1.md (remains FROZEN-PRE-DATA and unedited until this document is itself frozen, per protocol/change-control-v1.md, section 4 — "Rules for the old file after a successor is frozen"; freezing this document is a separate, future, explicitly human-approved action, not performed by this operation) |
 | Freeze approval | gilbertosanchez, 2026-09-22 (explicit human approval of this document at content SHA-256 660de9c21ac3e9cb2e7970811248658a81c7f75f7cdd26dd360535a1b7ae9ccf, authorization id AGENT-GOVERNANCE-V2-FREEZE-AUTH-01; post-data-collection change under protocol/change-control-v1.md, section 5; only this header row and the Protocol state row changed at freeze — body text, including its pre-freeze DRAFT narration in section 7, is retained verbatim as a historical snapshot, per the study-design-v1.md section 14 precedent; freeze record manifests/agent-governance-v2-freeze-v1.yaml) |
+| Superseded by | protocol/agent-governance-v3.md |
 
 ## What changed relative to v1, and why
 

@@ -1,0 +1,754 @@
+# manifests/appium3-compat-smoke-auth-02-dispatch-v1.yaml
+# Dispatch-instruction record of APPIUM3-COMPAT-SMOKE-AUTH-02: the separate explicit human dispatch instruction required
+# by the issued authorization record (manifests/compatibility-smoke-execution-auth-v2-prepared.yaml, dispatch_requires),
+# recorded by the ORCHESTRATOR BEFORE the single dispatch and committed locally (not pushed). The observed run identity
+# is recorded separately in manifests/appium3-compat-smoke-auth-02-run-v1.yaml, as the instruction requires. This record
+# does not modify the AUTH-02 record (which the readiness gate reads and which stays byte-identical to the verified
+# public copy; its lifecycle closure waits for a separately authorized post-run recording), is not qualification
+# evidence, records no smoke result, and authorizes nothing beyond the one dispatch.
+record_id: APPIUM3-COMPAT-SMOKE-AUTH-02-DISPATCH-01  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: AUTHORIZATION_DISPATCH_INSTRUCTION_RECORD
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-09-29T07:56:24Z"  # UTC, before the dispatch
+qualification_evidence: false
+measured_experiment: false
+status: PRE_DISPATCH_RECORDED
+
+authorization:
+  authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-02
+  record: manifests/compatibility-smoke-execution-auth-v2-prepared.yaml  # COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION, ISSUED, VALID, authorizes_execution true, dispatch_eligibility ELIGIBLE, dispatch_performed false, issued_by gilbertosanchez, issued_at 2026-09-28; unchanged by this record (lifecycle closure only on a later, separately authorized post-run recording)
+  frozen_launch_prompt: prompts/frozen/qualifier-mobile-01-appium3-compat-smoke-v2.md  # sha256 c9eceacabf1fb45d3b800a769088318982813e9fd0501d016576dbcd314224ff (canonical = public, UNCHANGED)
+  prompt_version_id: qualifier-mobile-01-appium3-compat-smoke-v2
+  implementation_lock: manifests/compatibility-smoke-implementation-lock-v3.yaml  # sha256 6c4c29ac107119a04c0ec47da97c38f10695a0e3f296809145a469ab1087bef5
+  concrete_realization_sha256: 5988a4e87c9872bda643238498decb85595a8e4499bf0e3e99b9ab809db94af1
+  harness_realization_sha256: 89ad823f215d9287e8411e3c22161e75c0243f9ce94df787b5c62b9c0fe716db
+  governing_policy: protocol/mobile-runner-policy-v2.md  # section 9; FROZEN-PRE-DATA
+  predecessor_not_reused: "APPIUM3-COMPAT-SMOKE-AUTH-01 (VALID / ISSUED / CONSUMED_AFTER_DISPATCH; run 36340774530, attempt 1; SUT-02 android NOT_EXECUTED / HARNESS_ORCHESTRATION, SUT-02 ios NOT_STARTED) is not reused and not reinterpreted by this dispatch"
+
+dispatch_instruction:
+  given_by: gilbertosanchez  # human research lead
+  given_on: "2026-09-29"
+  title: EUS-2026-001 -- EXPLICIT FORMAL DISPATCH OF APPIUM3-COMPAT-SMOKE-AUTH-02
+  how_the_instruction_arrived: "live session input to the ORCHESTRATOR session as a pasted first-person text ('I, gilbertosanchez, human research lead for EUS-2026-001, explicitly authorize exactly ONE formal dispatch of: APPIUM3-COMPAT-SMOKE-AUTH-02'), after the ORCHESTRATOR's report that AUTH-02 was issued, published in public export v29, and statically ready (77 of 77), and that the next required human action was a separate dispatch authorization"
+  adoption_confirmation: "because the text arrived as a paste and authorizes a gated execution, the ORCHESTRATOR completed only the read-only pre-dispatch checks and asked the human research lead in the session to confirm adoption before recording or dispatching (PROTO-U10 practice); the human answered with the first option; question and answer verbatim below"
+  adoption_confirmation_question: Do you, gilbertosanchez, adopt the pasted "EXPLICIT FORMAL DISPATCH OF APPIUM3-COMPAT-SMOKE-AUTH-02" as your live instruction, authorizing exactly one workflow_dispatch of e03-compatibility-smoke.yml (instruction_id APPIUM3-COMPAT-SMOKE-AUTH-02, confirm EXECUTE-COMPATIBILITY-SMOKE) against public main 34c0453?
+  adoption_confirmation_answer: Yes, I issue it — dispatch
+  verbatim_sha256: e26191a08ed3f577709bb53801c4c627abd9748256ba3d3f659aa42a470285d6  # sha256 of instruction_verbatim below as a file with one trailing line feed (the text as received in the session)
+  dispatch_count_authorized: 1
+  workflow: .github/workflows/e03-compatibility-smoke.yml  # E03 Compatibility Smoke; topology gate -> SUT-02 android -> SUT-02 ios only after an Android proposed PASS (frozen, not steered)
+  one_dispatch_only: "exactly one workflow_dispatch action; no double submission; no other workflow dispatched"
+  no_rerun: "no GitHub re-run, no re-run of failed jobs or of a single job, no attempt 2, no second workflow_dispatch, no automatically created new authorization, whatever the workflow conclusion or harness proposal; the single run is preserved as it is"
+  no_intervention: "no change to code, the XPath or any locator strategy, timeouts, Appium or driver versions, builds, or attribution; no manual Appium, emulator, or simulator restart; no SUT repair or build substitution; no step retry; iOS is never started manually or dispatched separately"
+  e03: "not authorized: no E03 START, no environment-verification or measured-execution dispatch, no E03 campaign-status change, no PROTO-U16 resolution; E03 remains NOT_STARTED regardless of the smoke observation"
+  post_run_recording: "not authorized by this instruction: no import into qualification/compatibility-smoke/formal/, no smoke or attribution table rows, no QUALIFIER result, no mirror transcription, no mobile_runner_status or toolchain change, no AUTH-02 lifecycle closure (dispatch_performed and dispatch_eligibility await the post-run recording), no CHANGELOG or dashboard update, no export; the only post-dispatch canonical write is the mechanical run-identity record"
+
+dispatch_inputs:  # exact workflow_dispatch inputs; no additional inputs
+  repository: gsanchezm/experimental-utility-testing-labs  # PUBLIC; GitHub Actions runs only there
+  ref: main
+  instruction_id: APPIUM3-COMPAT-SMOKE-AUTH-02
+  confirm: EXECUTE-COMPATIBILITY-SMOKE
+
+expected_public_snapshot:  # public export v29; the dispatch runs only on this snapshot
+  public_head: 34c0453053a29492a34b6a20676bd8f1f046738b
+  public_tree: 9f3fd811fbace7243fc3daacf0db56eacfccc671
+  export_manifest_sha256: ab2ff02698f613b07e3170730791023a10302a03bad80aa29af73f5089e56f00
+  export_version: 29
+  canonical_source: 5a9139952e1d9a34c5a4ccd2744e2b56eed79fa0
+
+pre_dispatch_verification:  # performed by the ORCHESTRATOR on a fresh clone of public main and on the canonical tree immediately before this record
+  public_snapshot: "public main 34c0453, root tree 9f3fd81, PUBLIC-EXPORT-MANIFEST.yaml sha256 ab2ff026...6f00 (equal to the Export-Manifest-SHA256 trailer), export_version 29; 7 branches, 0 tags; visibility PUBLIC"
+  authorization_state: "exactly one record carries APPIUM3-COMPAT-SMOKE-AUTH-02; COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION, ISSUED, VALID, authorizes_execution true, dispatch_eligibility ELIGIBLE, dispatch_performed false, issued_by gilbertosanchez, issued_at 2026-09-28"
+  predecessor: "AUTH-01 VALID / ISSUED / CONSUMED_AFTER_DISPATCH, run 36340774530 attempt 1; QUALIFIER smoke row SUT-02 android NOT_EXECUTED with attribution HARNESS_ORCHESTRATION, no ios row; its preserved artifacts verify byte-exact (import record, archive digest, archive members) in the shipped gate"
+  frozen_package: "frozen prompt sha256 c9eceaca...24ff with status FROZEN LAUNCH PROMPT OF APPIUM3-COMPAT-SMOKE-AUTH-02 and no launch placeholder (UNCHANGED in the export); lock v3 sha256 6c4c29ac...bef5 (UNCHANGED); 8 of 8 locked artifacts with matching sha256 (workflow 84d7770d...); realization section 5988a4e8...4af1; harness realization 89ad823f...716db recorded in lock v3; the Android navigation locator is the exact productIV XPath of the lock-v3 realization"
+  live_state: "selected runner Appium 3, pin 3.7.0, mobile_runner_status SELECTED, no FAIL_RUNNER (fallback not exhausted); mirror SUT-02 android NOT_EXECUTED (AUTH-01), ios NOT_STARTED; no AUTH-02 smoke or attribution row; output namespace qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/ absent; E03-resetability NOT_STARTED"
+  workflow_runs: "E03 Compatibility Smoke 1 run in total (36340774530, the only one); E03 Measured Execution 0; E03 Environment Verification 0; E03 Mobile Qualification 7 (newest 35938250936); no queued or in-progress run of any workflow"
+  static_readiness: "the shipped readiness gate (gate step of .github/workflows/e03-compatibility-smoke.yml, extracted from the fresh public clone) run statically on that clone with instruction id APPIUM3-COMPAT-SMOKE-AUTH-02 and confirmation EXECUTE-COMPATIBILITY-SMOKE, run attempt 1 (the workflow was not invoked): ready=true, 77 of 77 checks PASS, prompt_version_id qualifier-mobile-01-appium3-compat-smoke-v2; it is run once more immediately before the dispatch"
+
+instruction_verbatim: |
+  # EUS-2026-001 — EXPLICIT FORMAL DISPATCH OF APPIUM3-COMPAT-SMOKE-AUTH-02
+
+  I, gilbertosanchez, human research lead for EUS-2026-001, explicitly authorize exactly ONE formal dispatch of:
+
+  `APPIUM3-COMPAT-SMOKE-AUTH-02`
+
+  using the already-issued, publicly published, frozen and statically verified successor compatibility-smoke package in public export v29.
+
+  This instruction is the separate dispatch authorization required by AUTH-02.
+
+  It authorizes exactly one GitHub Actions `workflow_dispatch` of:
+
+  `.github/workflows/e03-compatibility-smoke.yml`
+
+  using:
+
+  `instruction_id = APPIUM3-COMPAT-SMOKE-AUTH-02`
+
+  `confirm = EXECUTE-COMPATIBILITY-SMOKE`
+
+  It authorizes no GitHub rerun, no second dispatch, no repair-and-continue, no implementation change, and no E03 execution.
+
+  ## 1. REQUIRED PUBLIC SNAPSHOT
+
+  Immediately before dispatch verify public `main` is exactly:
+
+  HEAD:
+
+  `34c0453053a29492a34b6a20676bd8f1f046738b`
+
+  Tree:
+
+  `9f3fd811fbace7243fc3daacf0db56eacfccc671`
+
+  Export-manifest SHA-256:
+
+  `ab2ff02698f613b07e3170730791023a10302a03bad80aa29af73f5089e56f00`
+
+  Export version:
+
+  `29`
+
+  If public main differs:
+
+  STOP.
+
+  Do not dispatch against another snapshot.
+
+  ## 2. AUTH-02 MUST BE UNUSED
+
+  Verify exactly one authorization record carries:
+
+  `APPIUM3-COMPAT-SMOKE-AUTH-02`
+
+  and that it is:
+
+  `record_class = COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION`
+
+  `status = ISSUED`
+
+  `record_validity = VALID`
+
+  `authorizes_execution = true`
+
+  `dispatch_eligibility = ELIGIBLE`
+
+  `dispatch_performed = false`
+
+  `issued_by = gilbertosanchez`
+
+  `issued_at = 2026-09-28`
+
+  If any field differs:
+
+  STOP.
+
+  ## 3. PRESERVED PREDECESSOR ATTEMPT
+
+  Verify AUTH-01 remains:
+
+  `VALID / ISSUED / CONSUMED_AFTER_DISPATCH`
+
+  Formal predecessor:
+
+  `36340774530`
+
+  Attempt:
+
+  `1`
+
+  Official Android result:
+
+  `NOT_EXECUTED / HARNESS_ORCHESTRATION`
+
+  iOS:
+
+  `NOT_STARTED`
+
+  Verify the preserved AUTH-01 artifact ZIP and imported members still pass the byte-exact predecessor checks required by lock v3.
+
+  No reinterpretation of AUTH-01 is authorized.
+
+  ## 4. FROZEN AUTH-02 EXECUTION PACKAGE
+
+  Verify frozen prompt:
+
+  `prompts/frozen/qualifier-mobile-01-appium3-compat-smoke-v2.md`
+
+  Expected SHA-256:
+
+  `c9eceacabf1fb45d3b800a769088318982813e9fd0501d016576dbcd314224ff`
+
+  Verify status:
+
+  `FROZEN LAUNCH PROMPT OF APPIUM3-COMPAT-SMOKE-AUTH-02`
+
+  Verify no launch placeholder remains.
+
+  Verify implementation lock:
+
+  `manifests/compatibility-smoke-implementation-lock-v3.yaml`
+
+  Expected SHA-256:
+
+  `6c4c29ac107119a04c0ec47da97c38f10695a0e3f296809145a469ab1087bef5`
+
+  Verify corrected realization-section hash:
+
+  `5988a4e87c9872bda643238498decb85595a8e4499bf0e3e99b9ab809db94af1`
+
+  Verify harness realization hash:
+
+  `89ad823f215d9287e8411e3c22161e75c0243f9ce94df787b5c62b9c0fe716db`
+
+  Every locked artifact must match.
+
+  Any mismatch:
+
+  STOP.
+
+  ## 5. CORRECTED ANDROID REALIZATION MUST REMAIN EXACT
+
+  The Android navigation locator must still be exactly:
+
+  `//*[@resource-id="com.saucelabs.mydemoapp.android:id/productIV" and ../*[@resource-id="com.saucelabs.mydemoapp.android:id/titleTV" and @text="Sauce Labs Backpack"]]`
+
+  Do not modify it before or during execution.
+
+  Do not substitute another locator if it fails.
+
+  Do not change timeout values.
+
+  Do not repair the harness during the run.
+
+  ## 6. REQUIRED LIVE STATE
+
+  Verify:
+
+  - selected runner = Appium 3;
+  - selected version pin = 3.7.0;
+  - `mobile_runner_status = SELECTED`;
+  - fallback exhausted = NO;
+  - Android mirror = NOT_EXECUTED from AUTH-01;
+  - iOS mirror = NOT_STARTED;
+  - AUTH-02 output namespace absent/empty;
+  - no AUTH-02 smoke/attribution record exists;
+  - E03 = NOT_STARTED.
+
+  Verify compatibility-smoke total historical run count is:
+
+  `1`
+
+  and that the only existing run is:
+
+  `36340774530`
+
+  If not:
+
+  STOP.
+
+  ## 7. RECORD THIS DISPATCH INSTRUCTION BEFORE DISPATCH
+
+  Before calling GitHub Actions, record this explicit human dispatch instruction canonically.
+
+  Use a purpose-specific record consistent with repository conventions, preferably:
+
+  `manifests/appium3-compat-smoke-auth-02-dispatch-v1.yaml`
+
+  Record:
+
+  - study id;
+  - authorization id;
+  - explicit human source;
+  - date `2026-09-29`;
+  - this instruction verbatim or exact SHA-256;
+  - workflow path;
+  - exact workflow inputs;
+  - expected public HEAD;
+  - expected public tree;
+  - expected export-manifest SHA-256;
+  - one-dispatch-only rule;
+  - no-rerun rule;
+  - predecessor AUTH-01 explicitly not reused;
+  - E03 explicitly not authorized.
+
+  Commit locally BEFORE dispatch.
+
+  Do not push.
+
+  Do not mutate AUTH-02 lifecycle before the run.
+
+  ## 8. FINAL STATIC READINESS
+
+  Run the public readiness gate statically one final time.
+
+  Expected baseline from v29:
+
+  `77/77 PASS`
+
+  The exact count is secondary to every individual check passing.
+
+  Any readiness failure:
+
+  STOP.
+
+  Do not bypass or manually override the gate.
+
+  ## 9. EXACTLY ONE FORMAL DISPATCH
+
+  Perform exactly one dispatch of:
+
+  `.github/workflows/e03-compatibility-smoke.yml`
+
+  on:
+
+  `ref = main`
+
+  with exactly:
+
+  `instruction_id = APPIUM3-COMPAT-SMOKE-AUTH-02`
+
+  `confirm = EXECUTE-COMPATIBILITY-SMOKE`
+
+  Do not submit twice.
+
+  Do not use GitHub rerun.
+
+  Do not dispatch another workflow.
+
+  ## 10. CAPTURE RUN IDENTITY
+
+  Immediately identify the resulting run.
+
+  Verify:
+
+  - workflow = E03 Compatibility Smoke;
+  - event = workflow_dispatch;
+  - run_attempt = 1;
+  - head_sha = `34c0453053a29492a34b6a20676bd8f1f046738b`;
+  - it is exactly the second compatibility-smoke run historically;
+  - no duplicate AUTH-02 run exists.
+
+  Capture:
+
+  - run id;
+  - run number;
+  - attempt;
+  - created_at;
+  - run_started_at;
+  - workflow ref;
+  - head SHA;
+  - submitted inputs if available.
+
+  If the head SHA differs:
+
+  STOP.
+
+  Do not rerun.
+
+  ## 11. RECORD MECHANICAL RUN IDENTITY ONLY
+
+  After the run id exists, create a narrow canonical record such as:
+
+  `manifests/appium3-compat-smoke-auth-02-run-v1.yaml`
+
+  Record only mechanical provenance:
+
+  - authorization id;
+  - run id;
+  - run number;
+  - attempt;
+  - event;
+  - public head;
+  - workflow;
+  - timestamps;
+  - dispatch-instruction record.
+
+  Commit locally.
+
+  Do not push.
+
+  Do not place scientific outcome interpretation in this manifest.
+
+  ## 12. EXECUTION TOPOLOGY
+
+  Do not intervene.
+
+  The locked topology is:
+
+  `gate → Android → iOS`
+
+  iOS starts only if Android finishes with the workflow's predeclared proposed:
+
+  `PASS`
+
+  If Android proposes:
+
+  `PASS`
+
+  allow the locked workflow to continue automatically to iOS.
+
+  If Android proposes:
+
+  `FAIL_RUNNER`
+
+  `NOT_EXECUTED`
+
+  or produces no valid result:
+
+  iOS must not be manually started.
+
+  Report:
+
+  `IOS_NOT_STARTED_BY_FROZEN_TOPOLOGY`
+
+  when applicable.
+
+  ## 13. NO MANUAL INTERVENTION
+
+  After dispatch do not:
+
+  - modify code;
+  - modify the XPath;
+  - modify locator strategies;
+  - change Appium versions;
+  - change driver versions;
+  - change timeouts;
+  - restart Appium manually;
+  - restart emulator/simulator outside the workflow;
+  - repair the SUT;
+  - substitute a build;
+  - retry any step;
+  - start iOS separately;
+  - modify result attribution.
+
+  A failure is evidence.
+
+  It is not permission to repair.
+
+  ## 14. ABSOLUTE NO-RERUN RULE
+
+  Regardless of outcome:
+
+  do NOT:
+
+  - click Re-run;
+  - rerun failed jobs;
+  - rerun a single job;
+  - invoke attempt 2;
+  - make another workflow_dispatch;
+  - create AUTH-03 automatically.
+
+  Preserve the single run.
+
+  Any further attempt, if policy allows one, requires separate human review and authorization.
+
+  ## 15. OBSERVE TO TERMINAL STATE
+
+  Observe the one run until GitHub reaches a terminal state.
+
+  Separate:
+
+  ### GitHub workflow state
+
+  - status;
+  - conclusion;
+  - job conclusions.
+
+  from:
+
+  ### Harness proposal
+
+  - PASS;
+  - FAIL_RUNNER;
+  - NOT_EXECUTED.
+
+  and from:
+
+  ### Final QUALIFIER result
+
+  which is NOT authorized to be written under this dispatch operation.
+
+  Do not equate workflow `success` with scientific/tool-qualification PASS.
+
+  ## 16. JOB METADATA
+
+  Return metadata for:
+
+  ### Gate
+  - job id;
+  - status;
+  - conclusion;
+  - start/end.
+
+  ### Android
+  - job id;
+  - status;
+  - conclusion;
+  - start/end.
+
+  ### iOS
+  If executed:
+  - job id;
+  - status;
+  - conclusion;
+  - start/end.
+
+  If skipped:
+
+  `IOS_NOT_STARTED_BY_FROZEN_TOPOLOGY`
+
+  ## 17. PRESERVE ALL RUN ARTIFACTS
+
+  List every GitHub artifact produced.
+
+  For each provide:
+
+  - artifact id;
+  - exact name;
+  - size;
+  - GitHub digest;
+  - created_at;
+  - expires_at.
+
+  Download artifacts without modification.
+
+  Verify download SHA-256 against GitHub digest.
+
+  Do not import them canonically yet.
+
+  Do not normalize line endings.
+
+  Do not redact or rewrite anything.
+
+  ## 18. READ RESULT RECORDS LITERALLY
+
+  For each executed platform report the literal locked `record.json` values:
+
+  - outcome;
+  - proposed_result;
+  - proposed_category;
+  - basis;
+  - failed_phase;
+  - failed_capabilities;
+  - capabilities_exercised;
+  - observed Appium core version;
+  - observed platform driver version;
+  - artifact pointers.
+
+  If outcome = SUCCESS, report all six required capabilities actually completed.
+
+  Do not strengthen causal claims beyond the record and artifacts.
+
+  ## 19. IMPORTANT — HARNESS PROPOSAL IS NOT FINAL ADJUDICATION
+
+  AUTH-01 demonstrated why this distinction matters.
+
+  Do not automatically transcribe a harness proposal into the official QUALIFIER result during this operation.
+
+  If a platform proposes:
+
+  `PASS`
+
+  report it as:
+
+  `HARNESS_PROPOSAL_PASS_PENDING_POSTRUN_REVIEW`
+
+  If it proposes:
+
+  `FAIL_RUNNER`
+
+  report it as:
+
+  `HARNESS_PROPOSAL_FAIL_RUNNER_PENDING_POSTRUN_REVIEW`
+
+  If it proposes:
+
+  `NOT_EXECUTED`
+
+  report its proposed outside-runner cause and evidence pointers.
+
+  No official mirror change is authorized yet.
+
+  ## 20. SPECIAL REVIEW IF ANDROID NOW PASSES
+
+  If corrected Android reaches PASS and iOS executes, preserve both sets of artifacts independently.
+
+  Do not conclude that lock-v3 correction "proved" AUTH-01 would have passed.
+
+  AUTH-01 remains permanently:
+
+  `NOT_EXECUTED / HARNESS_ORCHESTRATION`
+
+  The new observation stands on its own.
+
+  ## 21. SPECIAL REVIEW IF FAILURE RECURS
+
+  If Android still fails:
+
+  do not assume the new failure has the same cause as AUTH-01.
+
+  Preserve and report the new evidence independently.
+
+  Do not change the realization.
+
+  Do not rerun.
+
+  If iOS executes and fails:
+
+  preserve it independently.
+
+  Do not infer Android's status from iOS or vice versa.
+
+  ## 22. NO POST-RUN IMPORT OR TRANSCRIPTION
+
+  After completion do NOT:
+
+  - import AUTH-02 artifacts into canonical formal evidence;
+  - update QUALIFIER smoke tables;
+  - update attribution tables;
+  - update mirror values;
+  - change `mobile_runner_status`;
+  - close AUTH-02 to consumed;
+  - update toolchain install facts;
+  - update CHANGELOG;
+  - update dashboard;
+  - publish a new export.
+
+  Those are separate post-run recording actions requiring human review.
+
+  The only permitted post-dispatch canonical write is the mechanical run-identity record.
+
+  ## 23. AUTH-02 LIFECYCLE REMAINS OPEN PENDING REVIEW
+
+  Do not close AUTH-02 during this operation.
+
+  Even though it has physically dispatched once, leave canonical lifecycle closure for the authorized post-run recording step.
+
+  Return explicitly that:
+
+  `dispatch_performed`
+
+  and:
+
+  `dispatch_eligibility`
+
+  are still awaiting post-run transcription.
+
+  Do not reuse AUTH-02 meanwhile.
+
+  ## 24. E03 REMAINS FORBIDDEN
+
+  Do not:
+
+  - resolve PROTO-U16;
+  - start E03;
+  - dispatch Environment Verification;
+  - dispatch Measured Execution;
+  - change E03 campaign state.
+
+  E03 remains NOT_STARTED regardless of the smoke observation.
+
+  ## 25. RETURN PACKAGE
+
+  Return:
+
+  1. dispatch-instruction record commit SHA;
+  2. run-identity record commit SHA;
+  3. GitHub run id;
+  4. run number;
+  5. run attempt;
+  6. event;
+  7. exact run head SHA;
+  8. workflow status/conclusion;
+  9. gate job metadata;
+  10. Android job metadata;
+  11. iOS job metadata or IOS_NOT_STARTED_BY_FROZEN_TOPOLOGY;
+  12. literal Android harness proposal;
+  13. literal iOS harness proposal if executed;
+  14. capability completion/failure details;
+  15. attribution fields from each record;
+  16. every artifact id/name/size/digest;
+  17. downloaded archive SHA-256 verification;
+  18. confirmation no rerun;
+  19. confirmation exactly one AUTH-02 dispatch;
+  20. confirmation no manual intervention;
+  21. confirmation no post-run import/transcription;
+  22. confirmation AUTH-02 not reused;
+  23. confirmation E03 remains NOT_STARTED.
+
+  ## 26. HARD STOP
+
+  After returning the raw execution evidence:
+
+  STOP.
+
+  Do not adjudicate the final result.
+
+  Do not import artifacts canonically.
+
+  Do not update mirrors.
+
+  Do not close AUTH-02.
+
+  Do not rerun.
+
+  Do not repair.
+
+  Do not publish.
+
+  Do not start E03.
+
+  ## 27. REQUIRED FINAL STATE
+
+  End with:
+
+  AUTH_01:
+  ISSUED_VALID_CONSUMED
+
+  AUTH_01_ANDROID_RESULT:
+  NOT_EXECUTED_HARNESS_ORCHESTRATION
+
+  APPIUM3_COMPAT_SMOKE_AUTH_02:
+  ISSUED_VALID_DISPATCHED_ONCE_PENDING_POSTRUN_RECORDING
+
+  FORMAL_AUTH_02_DISPATCH_COUNT:
+  1
+
+  FORMAL_AUTH_02_RUN:
+  <run_id>_ATTEMPT_1
+
+  FORMAL_AUTH_02_HEAD:
+  34c0453053a29492a34b6a20676bd8f1f046738b
+
+  RERUN:
+  NOT_PERFORMED
+
+  MANUAL_INTERVENTION:
+  NONE
+
+  ANDROID_AUTH_02_OBSERVED:
+  <literal harness proposal or NO_VALID_RESULT>
+
+  IOS_AUTH_02_OBSERVED:
+  <literal harness proposal / IOS_NOT_STARTED_BY_FROZEN_TOPOLOGY>
+
+  POSTRUN_CANONICAL_IMPORT:
+  NOT_AUTHORIZED
+
+  COMPATIBILITY_SMOKE_MIRROR_TRANSCRIPTION:
+  NOT_AUTHORIZED
+
+  AUTH_02_LIFECYCLE_CLOSURE:
+  PENDING_POSTRUN_REVIEW
+
+  PROTO_U16:
+  OPEN
+
+  E03_START:
+  NOT_AUTHORIZED
+
+  E03_EXECUTION:
+  NOT_STARTED
+
+  NEXT_REQUIRED_HUMAN_ACTION:
+  REVIEW_AUTH_02_FORMAL_RUN_AND_AUTHORIZE_POSTRUN_RECORDING

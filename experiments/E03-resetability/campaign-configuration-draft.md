@@ -36,7 +36,7 @@ CS-002 (`experiments/scenario-mappings/CS-002.yaml`) is **not** a mapping record
 
 ## 2. Pinned SUT versions
 
-Per `manifests/sut-manifest.yaml` (pinned 2026-09-16 by ORCHESTRATOR, unchanged). `evaluated_version_frozen: false` for all six — unchanged; flipping it is a campaign-start-adjacent action outside this operation's scope.
+Per `manifests/sut-manifest.yaml` (pinned 2026-09-16 by ORCHESTRATOR; no pinned value changed; on 2026-10-02 the E01 presence values were transcribed and the never-pinned SUT-03 api provenance was filled from its web artifact, `manifests/sut-presence-transcription-v1.yaml`). `evaluated_version_frozen: false` for all six — unchanged; flipping it is a campaign-start-adjacent action outside this operation's scope.
 
 ## 3. Toolchain versions
 

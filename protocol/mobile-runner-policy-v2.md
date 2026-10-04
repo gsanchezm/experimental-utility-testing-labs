@@ -4,11 +4,12 @@
 |---|---|
 | Document | protocol/mobile-runner-policy-v2.md |
 | Protocol version | v2 |
-| Protocol state | FROZEN-PRE-DATA |
+| Protocol state | AMENDED |
 | Study | Experimental Utility of Software-Testing Laboratory Ecosystems (EUS-2026-001) |
 | Created | 2026-09-26 |
 | Supersedes | protocol/mobile-runner-policy-v1.md (transitions to AMENDED by this freeze, per protocol/change-control-v1.md, section 2 — `data_collection_started` is already true) |
 | Freeze approval | gilbertosanchez, 2026-09-25 (explicit human approval of the post-data amendment decision resolving protocol/unresolved.md PROTO-U17, instruction "RESOLVE PROTO-U17 THROUGH MOBILE-RUNNER-POLICY-V2 AND RE-LOCK THE APPIUM 3 COMPATIBILITY SMOKE", which authorized creating and freezing this document; text written by the ORCHESTRATOR from the approved rules and frozen on 2026-09-26 under that instruction; post-data-collection change under protocol/change-control-v1.md, section 5; record manifests/mobile-runner-policy-v2-amendment-v1.yaml) |
+| Superseded by | protocol/mobile-runner-policy-v3.md |
 
 This policy governs which mobile test runner the study uses for the Android Native and iOS Native modalities and the conditions under which it may be used. It applies to every evaluated ecosystem (system under test, SUT) identically.
 

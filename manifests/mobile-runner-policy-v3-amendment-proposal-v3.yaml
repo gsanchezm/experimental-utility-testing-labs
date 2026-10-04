@@ -1,0 +1,685 @@
+# manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml
+# Decision package, REVISION 3, of the PROPOSED post-data amendment protocol/mobile-runner-policy-v3.md (state DRAFT), for the
+# draft corrected for freeze readiness on the human instruction EUS-2026-001 -- FINALIZE MOBILE-RUNNER-POLICY-V3 DRAFT FREEZE
+# READINESS (gilbertosanchez, 2026-09-29; verbatim below), a DRAFT-only preparation operation that approves and freezes
+# nothing. It supersedes proposal v2 (manifests/mobile-runner-policy-v3-amendment-proposal-v2.yaml), which stays unchanged as
+# prior history together with proposal v1. The correction removes freeze-checklist ambiguity (protocol/change-control-v1.md,
+# section 6, step 3) and status narration contradicted by the formal records, without changing the proposed methodology.
+# Nothing here authorizes an approval, a freeze, an execution, a harness or workflow change, a lock, an authorization, a
+# restoration, a dispatch, or a publication. Alternatives are compared by consequences only; none is selected (PROTO-U19).
+record_id: MOBILE-RUNNER-POLICY-V3-AMENDMENT-PROPOSAL-03
+record_class: POST_DATA_PROTOCOL_AMENDMENT_DECISION_PACKAGE
+status: DRAFT_PENDING_HUMAN_REVIEW  # approves nothing
+supersedes_package: manifests/mobile-runner-policy-v3-amendment-proposal-v2.yaml  # prior history (hardened draft eb057d41...); unchanged
+earlier_history: [manifests/mobile-runner-policy-v3-amendment-proposal-v1.yaml]  # first-draft package (draft 4966bd83...); unchanged
+study_id: EUS-2026-001
+prepared_by: ORCHESTRATOR
+prepared_at: "2026-09-29"
+protocol_decision: {id: PROTO-U19, register: protocol/unresolved.md, status: OPEN, classification: SUBSTANTIVE_POST_DATA_PROTOCOL_DECISION}
+instruction:
+  title: "EUS-2026-001 -- FINALIZE MOBILE-RUNNER-POLICY-V3 DRAFT FREEZE READINESS"
+  given_by: gilbertosanchez  # human research lead
+  given_on: "2026-09-29"
+  how_the_instruction_arrived: "live session input to the ORCHESTRATOR session ('This is one DRAFT-only preparation operation. It approves and freezes nothing.'); adopted as given"
+  verbatim_sha256: 08c1e0c111f92770ce2851aaa4e6f6e96daf081f949657dcfe740fabbd5f1a62  # sha256 of instruction_verbatim below as a file with one trailing line feed, as displayed in the session
+
+verification_before_correction:
+  canonical_head_before: 3414c4485e7fc7aa3dceaee96e0c45e6e7016651  # canonical local main; ancestry through 0b85d4f and 1882113 verified
+  tracked_worktree_and_index: "clean (no tracked change)"
+  untracked_non_repository_content: "AGENTS.md, agent-bootstrap-eus-2026-001/, agent-bootstrap-eus-2026-001-v2/, agent-bootstrap-eus-2026-001-v2.zip at the working-tree root: untracked, not repository content, not read, added, modified, or deleted by this operation; every commit of this operation stages explicit paths only"
+  policy_v2_sha256: 5bed242e0096068dc2d34861299b10dc5404957e9d3aafea43f9c93de840d495  # FROZEN-PRE-DATA, in force, unchanged
+  results: "AUTH-02 SUT-02 android PASS; AUTH-02 SUT-02 ios FAIL_RUNNER (CONSERVATIVE_TIE_BREAK_ATTRIBUTION_UNCERTAIN)"
+  runner_state: "mobile_runner_status UNRESOLVED_AFTER_FALLBACK_FAILURE; fallback_exhausted true"
+  github_actions: "38 workflow runs in total, the newest the AUTH-02 compatibility-smoke run 36539790536 (2026-09-29T07:58:02Z); e03-compatibility-smoke.yml 2, e03-measured-execution.yml 0, e03-environment-verification.yml 0, e03-mobile-qualification.yml 7, e03-validate.yml 29"
+  public_repository: "main at 34c0453053a29492a34b6a20676bd8f1f046738b (public export v29)"
+
+public_state:  # instruction section 6
+  public_v29: "public main 34c0453053a29492a34b6a20676bd8f1f046738b (export v29) remains a pre-dispatch APPIUM3-COMPAT-SMOKE-AUTH-02 snapshot (AUTH-02 ISSUED, not dispatched); every canonical commit since, including the AUTH-02 dispatch, post-run recording, and the v3 drafts, is unexported"
+  formal_compatibility_smoke_runs: "exactly two: 36340774530 (APPIUM3-COMPAT-SMOKE-AUTH-01, attempt 1) and 36539790536 (APPIUM3-COMPAT-SMOKE-AUTH-02, attempt 1)"
+  public_update_authorized: false  # no export, push, or publication is authorized by this instruction
+
+proposed_policy:
+  path: protocol/mobile-runner-policy-v3.md
+  state: DRAFT  # corrected in place (DRAFT -> DRAFT, protocol/change-control-v1.md section 2); not approved, not frozen, not in force
+  sha256_before: eb057d4150b17c6ef3cc822522fc9fa3838ec0357c7253ad7df3c3fd0b0b2303  # the draft described by proposal v2
+  sha256_after: 1739d28abd1d1196c19ddaa507b1c7e8b921416dc5969382b0190ab07be19b95
+  predecessor: {path: protocol/mobile-runner-policy-v2.md, sha256: 5bed242e0096068dc2d34861299b10dc5404957e9d3aafea43f9c93de840d495, state: FROZEN-PRE-DATA, note: "unchanged and in force; not marked AMENDED, no successor pointer"}
+  changelog: "no protocol/CHANGELOG.md row is added: a DRAFT needs no approval, a row with an empty 'approved by' cell is invalid (section 5), and the instructions forbid it; candidate rows below, NOT IN FORCE"
+
+freeze_readiness_corrections:  # every candidate / TBD / status inconsistency found by a full scan of the operative draft, and its exact resolution
+  principle: "the correction removes freeze-checklist ambiguity (protocol/change-control-v1.md, section 6, step 3: every 'candidate -- not frozen' or 'TBD' item resolved or explicitly deferred before freeze) and status narration contradicted by the formal records; it changes no criterion, N, capability, attribution rule, result rule, historical outcome, or 9.7 rule (eligibility, one attempt, effective admissibility, history integrity, fail closed, post-restoration, Android PASS); 9.7.1-9.7.6, 9.7.8-9.7.9, and 9.7.11-9.7.13 are byte-identical to the proposal-v2 draft"
+  items:
+    - {id: FR-1, location: "9.7.7 effects table, PASS row", kind: "candidate -- not frozen (freeze checklist)", before: "(the field that carries this basis is candidate -- not frozen)", after: "(recorded in tools.mobile_runner_selection.restoration_basis of manifests/toolchain-manifest.yaml, a field created only after a remediation PASS and only on an explicit human restoration instruction)", basis: "instruction, permitted change 2"}
+    - {id: FR-2, location: "9.7.10", kind: "candidate -- not frozen (freeze checklist)", before: "writes one remediation lineage record (candidate name manifests/mobile-runner-remediation-v1.yaml -- candidate, not frozen)", after: "writes one remediation lineage record, manifests/mobile-runner-remediation-v1.yaml, and records the restoration basis of 9.7.7 in tools.mobile_runner_selection.restoration_basis ...; neither the record nor the field exists before then ('explicit human instruction' made precise as 'explicit human restoration instruction', the instruction 9.7.10 already required)", basis: "instruction, permitted change 2"}
+    - {id: FR-3, location: "Section 1", kind: "status narration", before: "Mobilewright is a candidate, not a selected runner. It becomes the study's mobile runner only after passing the qualification gate in Sections 2-7.", after: "Mobilewright was the primary candidate, not a selected runner: it could become the study's mobile runner only after passing the qualification gate in Sections 2-7. It did not pass: the protocol-valid gate, executed under v1 (MOBILE-QUALIFICATION-EXEC-AUTH-03, run 35938250936, 2026-09-24), FAILED, and the frozen switch rule of Section 8 selected Appium 3, pinned 3.7.0, on 2026-09-24", evidence: "qualification/mobilewright/README.md (AUTH-03 formal gate, Decision record); manifests/toolchain-manifest.yaml mobile_runner_selection; the rule itself (only after passing) is kept"}
+    - {id: FR-4, location: "Section 2, last bullet", kind: "status narration", before: "Not executed at this time. No qualification run has occurred (Section 11).", after: "Status: executed under v1 -- the protocol-valid gate ran once under MOBILE-QUALIFICATION-EXEC-AUTH-03 (run 35938250936, attempt 1, 2026-09-24; 6 warm-ups and 60 measured executions) and FAILED; the 2026-09-22 execution without a valid human authorization is preserved and quarantined (PROTO-U10); neither is reinterpreted (Section 11)", evidence: "qualification/mobilewright/README.md; protocol/unresolved.md PROTO-U10"}
+    - {id: FR-5, location: "Section 3, qualification build bullet", kind: "null / TBD narration", before: "These provenance fields are null / TBD until pinned.", after: "These provenance fields were pinned by the ORCHESTRATOR on 2026-09-22, before the formal gate (manifests/toolchain-manifest.yaml, qualification_build: OmniPizza release v1.1.8, Android and iOS build identities with their SHA-256).", evidence: "manifests/toolchain-manifest.yaml qualification_build (pinned_at 2026-09-22; commit 06c89fd)"}
+    - {id: FR-6, location: "Section 4", kind: "null / TBD narration", before: "... are recorded by QUALIFIER-MOBILE-01 in qualification/mobilewright/README.md before the first run; they are null / TBD now.", after: "... were recorded by QUALIFIER-MOBILE-01 in qualification/mobilewright/README.md (section 'Scenario realization') before the first gate run and stayed identical for every execution (section SHA-256 f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018, locked by lock v1 and, unchanged, lock v2).", evidence: "manifests/mobile-qualification-implementation-lock-v1.yaml and -v2.yaml (scenario_realization_section, expected f79acf63...9018, changed false)"}
+    - {id: FR-7, location: "Section 6", kind: "null / TBD narration", before: "Emulator and simulator identities (...) are null / TBD; the ORCHESTRATOR records them in manifests/toolchain-manifest.yaml and QUALIFIER-MOBILE-01 copies them into qualification/mobilewright/README.md before runs.", after: "... were recorded by the ORCHESTRATOR on 2026-09-22 in manifests/toolchain-manifest.yaml (environments: Android emulator system-images;android-35;google_apis;x86_64, pixel_7, ubuntu-24.04; iOS Simulator iPhone 16, iOS 18.5 runtime of Xcode 16.4, macos-15) and copied by QUALIFIER-MOBILE-01 into qualification/mobilewright/README.md before the formal gate.", evidence: "manifests/toolchain-manifest.yaml environments (commit 06c89fd, 2026-09-22); qualification/mobilewright/README.md Environment record; 'The same identities are used for every execution of the gate' kept"}
+    - {id: FR-8, location: "Section 7 introduction", kind: "status narration", before: "They were fixed while this document was DRAFT and are now frozen with the protocol (state FROZEN-PRE-DATA); they are not adjusted after any run.", after: "They were fixed while protocol/mobile-runner-policy-v1.md was DRAFT, frozen with it on 2026-09-16 (FROZEN-PRE-DATA), applied unchanged to the formal gate of 2026-09-24, and are carried forward unchanged in v2 and in this version; they are not adjusted after any run.", evidence: "protocol/mobile-runner-policy-v1.md header (Freeze approval 2026-09-16); every criterion of 7.1-7.4 unchanged"}
+  consequential_updates: "header Freeze approval cell (records this correction; current package proposal v3), 'What changed relative to v2' (Sections 1-8 carried with status and provenance corrections only in Sections 1, 2, 3, 4, 6, 7; intro, 9.1-9.4, 9.6, 10 verbatim), the impact-matrix pointer, and Section 12 (same statement)"
+  remaining_scan_matches: "all descriptive, none unresolved: the 'What changed' sentence quoting the corrected phrases; the category label MOBILE_DECLARED_OR_CANDIDATE; the Section 1 role label 'Primary candidate' (a role, with its outcome now stated); the past-tense 'was the primary candidate'; and 'not frozen' in the descriptions of this DRAFT's own state (Section 11 'This version' row, Section 12)"
+  sections_1_8_versus_v2: "exactly six lines differ (the FR-3 to FR-8 sentences); Sections 5 and 8 and every table, criterion, and capability definition are byte-identical"
+
+restoration_provenance_fixed:
+  remediation_record_path: manifests/mobile-runner-remediation-v1.yaml
+  restoration_basis_field: tools.mobile_runner_selection.restoration_basis  # in manifests/toolchain-manifest.yaml
+  created_when: "only after a remediation PASS and only on an explicit human restoration instruction"
+  created_now: false  # neither exists; this operation creates neither
+
+corrected_draft_diff_from_proposal_v2_draft:
+  unified_diff: |
+    --- protocol/mobile-runner-policy-v3.md (proposal-v2 draft, sha256 eb057d41...)
+    +++ protocol/mobile-runner-policy-v3.md (corrected draft)
+    @@ -11 +11 @@
+    -| Freeze approval | none (DRAFT, not approved). Prepared by the ORCHESTRATOR on the human instruction PREPARE MOBILE-RUNNER-POLICY-V3 AFTER APPIUM FALLBACK EXHAUSTION (gilbertosanchez, 2026-09-29), which authorizes preparation only, and hardened in place (DRAFT -> DRAFT) on the human instruction HARDEN MOBILE-RUNNER-POLICY-V3 DRAFT BEFORE HUMAN APPROVAL (gilbertosanchez, 2026-09-29), which again approves nothing; current decision package manifests/mobile-runner-policy-v3-amendment-proposal-v2.yaml (the first-draft package manifests/mobile-runner-policy-v3-amendment-proposal-v1.yaml is history); protocol-level decision protocol/unresolved.md, PROTO-U19 |
+    +| Freeze approval | none (DRAFT, not approved). Prepared by the ORCHESTRATOR on the human instruction PREPARE MOBILE-RUNNER-POLICY-V3 AFTER APPIUM FALLBACK EXHAUSTION (gilbertosanchez, 2026-09-29), which authorizes preparation only, and hardened in place (DRAFT -> DRAFT) on the human instruction HARDEN MOBILE-RUNNER-POLICY-V3 DRAFT BEFORE HUMAN APPROVAL (gilbertosanchez, 2026-09-29), which again approves nothing, and corrected in place for freeze readiness (DRAFT -> DRAFT) on the human instruction FINALIZE MOBILE-RUNNER-POLICY-V3 DRAFT FREEZE READINESS (2026-09-29), which approves and freezes nothing; current decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml (the packages manifests/mobile-runner-policy-v3-amendment-proposal-v1.yaml and -v2.yaml are history); protocol-level decision protocol/unresolved.md, PROTO-U19 |
+    @@ -29 +29 @@
+    -**Substantive changes:** 9.5 gains one bounded exception clause pointing to 9.7 (the exhaustion itself, the FAIL_RUNNER, and every other element of 9.5 are unchanged); 9.7 is new. Within 9.7, admission is governed by an explicit effective-admissibility rule (9.7.9) that separates the immutable historical observation from the current prospective admissibility state, by a normative remediation lineage record (9.7.10), and by a post-restoration rule (9.7.11); no rule selects the latest table row for a SUT × platform, and 9.7.12 records why the SUT-02 × Android PASS stays valid after a correction of the shared WebDriver client. Sections 11 and 12 and the header are updated. The introductory paragraph, Sections 1–8, 9.1–9.4, 9.6, and Section 10 are carried over from v2 verbatim; the v1 -> v2 changes are recorded in protocol/mobile-runner-policy-v2.md and are carried into this version unchanged.
+    +**Substantive changes:** 9.5 gains one bounded exception clause pointing to 9.7 (the exhaustion itself, the FAIL_RUNNER, and every other element of 9.5 are unchanged); 9.7 is new. Within 9.7, admission is governed by an explicit effective-admissibility rule (9.7.9) that separates the immutable historical observation from the current prospective admissibility state, by a normative remediation lineage record (9.7.10), and by a post-restoration rule (9.7.11); no rule selects the latest table row for a SUT × platform, and 9.7.12 records why the SUT-02 × Android PASS stays valid after a correction of the shared WebDriver client. Sections 11 and 12 and the header are updated. The introductory paragraph, 9.1–9.4, 9.6, and Section 10 are carried over from v2 verbatim. Sections 1–8 are carried over with non-substantive status and provenance corrections only, in Sections 1, 2, 3, 4, 6, and 7: their narration of what had not yet happened when v1 was written (Mobilewright as a not-yet-qualified candidate, no qualification run, qualification provenance, scenario realization, and platform identities null / TBD, pass criteria "now frozen") is brought in line with the completed history; no criterion, N, capability, attribution rule, result rule, or historical outcome changes. The v1 -> v2 changes are recorded in protocol/mobile-runner-policy-v2.md and are carried into this version unchanged.
+    @@ -33 +33 @@
+    -**Affected campaigns (prospectively; none has collected campaign data):** MOBILE_REQUIRED_CONFIGURED: E03-resetability (its configured conditions E03-CS001-SUT02-ANDROID and E03-CS001-SUT02-IOS). MOBILE_DECLARED_OR_CANDIDATE, only for their Android or iOS conditions: E02-state-establishment, E04-repeatability, E06-cross-platform-parity, E07-cross-layer-continuity, E12-localization-i18n. MOBILE_CONDITIONAL, only if a verification method drives a mobile build through the study runner: E11-security. UNDETERMINED, only if their configurations later include Android or iOS: E05-determinism, E10-visual. NO_MOBILE, not affected: E01-capability-audit (FROZEN; no runner-dependent execution), E08-performance (no mobile execution declared), E09-accessibility (Web only by the frozen modality list). The per-campaign impact matrix is in manifests/mobile-runner-policy-v3-amendment-proposal-v2.yaml.
+    +**Affected campaigns (prospectively; none has collected campaign data):** MOBILE_REQUIRED_CONFIGURED: E03-resetability (its configured conditions E03-CS001-SUT02-ANDROID and E03-CS001-SUT02-IOS). MOBILE_DECLARED_OR_CANDIDATE, only for their Android or iOS conditions: E02-state-establishment, E04-repeatability, E06-cross-platform-parity, E07-cross-layer-continuity, E12-localization-i18n. MOBILE_CONDITIONAL, only if a verification method drives a mobile build through the study runner: E11-security. UNDETERMINED, only if their configurations later include Android or iOS: E05-determinism, E10-visual. NO_MOBILE, not affected: E01-capability-audit (FROZEN; no runner-dependent execution), E08-performance (no mobile execution declared), E09-accessibility (Web only by the frozen modality list). The per-campaign impact matrix is in manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml.
+    @@ -44 +44 @@
+    -Mobilewright is a candidate, not a selected runner. It becomes the study's mobile runner only after passing the qualification gate in Sections 2–7. The study uses one mobile runner for all ecosystems in all mobile campaigns; runners are never mixed across ecosystems within a campaign.
+    +Mobilewright was the primary candidate, not a selected runner: it could become the study's mobile runner only after passing the qualification gate in Sections 2–7. It did not pass: the protocol-valid gate, executed under v1 (MOBILE-QUALIFICATION-EXEC-AUTH-03, GitHub Actions run 35938250936, 2026-09-24), FAILED, and the frozen switch rule of Section 8 selected Appium 3, pinned 3.7.0, on 2026-09-24 (qualification/mobilewright/README.md; manifests/toolchain-manifest.yaml, mobile_runner_selection). The study uses one mobile runner for all ecosystems in all mobile campaigns; runners are never mixed across ecosystems within a campaign.
+    @@ -54 +54 @@
+    -- Not executed at this time. No qualification run has occurred (Section 11).
+    +- Status: executed under v1. The protocol-valid gate ran once under MOBILE-QUALIFICATION-EXEC-AUTH-03 (GitHub Actions run 35938250936, attempt 1, 2026-09-24; 6 warm-ups and 60 measured executions) and FAILED (qualification/mobilewright/README.md, "AUTH-03 formal gate"); an earlier execution of 2026-09-22 without a valid human authorization is preserved and quarantined (protocol/unresolved.md, PROTO-U10). Neither is reinterpreted (Section 11).
+    @@ -64 +64 @@
+    -- The concrete OmniPizza build used for qualification is pinned by the ORCHESTRATOR (repository, commit SHA or release, Android and iOS build identities, pinned_by, pinned_at) under `qualification_build` in manifests/toolchain-manifest.yaml before the first run and is identical for every gate execution. QUALIFIER-MOBILE-01 copies the pinned record verbatim into qualification/mobilewright/README.md, records any discrepancy between the record and the build it obtains in qualification/unresolved.md (created on first use; protocol/agent-governance-v1.md, section 6), and never selects or changes the build. The ORCHESTRATOR never writes under qualification/ (protocol/agent-governance-v1.md, section 4). These provenance fields are null / TBD until pinned.
+    +- The concrete OmniPizza build used for qualification is pinned by the ORCHESTRATOR (repository, commit SHA or release, Android and iOS build identities, pinned_by, pinned_at) under `qualification_build` in manifests/toolchain-manifest.yaml before the first run and is identical for every gate execution. QUALIFIER-MOBILE-01 copies the pinned record verbatim into qualification/mobilewright/README.md, records any discrepancy between the record and the build it obtains in qualification/unresolved.md (created on first use; protocol/agent-governance-v1.md, section 6), and never selects or changes the build. The ORCHESTRATOR never writes under qualification/ (protocol/agent-governance-v1.md, section 4). These provenance fields were pinned by the ORCHESTRATOR on 2026-09-22, before the formal gate (manifests/toolchain-manifest.yaml, `qualification_build`: OmniPizza release v1.1.8, Android and iOS build identities with their SHA-256).
+    @@ -75 +75 @@
+    -The scenario names are generic flows. The concrete screens, identifiers, seed request, deep link, and terminal UI state used to realize each scenario on the qualification SUT are recorded by QUALIFIER-MOBILE-01 in qualification/mobilewright/README.md before the first run; they are null / TBD now. Each scenario has a pre-declared terminal UI state that the runner must verify (MC-08); a scenario execution is successful only when that state is verified.
+    +The scenario names are generic flows. The concrete screens, identifiers, seed request, deep link, and terminal UI state used to realize each scenario on the qualification SUT were recorded by QUALIFIER-MOBILE-01 in qualification/mobilewright/README.md (section "Scenario realization") before the first gate run and stayed identical for every execution (section SHA-256 f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018, locked by manifests/mobile-qualification-implementation-lock-v1.yaml and, unchanged, by manifests/mobile-qualification-implementation-lock-v2.yaml). Each scenario has a pre-declared terminal UI state that the runner must verify (MC-08); a scenario execution is successful only when that state is verified.
+    @@ -109 +109 @@
+    -Each of MQ1–MQ3 is exercised on each platform: six scenario × platform combinations. Emulator and simulator identities (device profile, OS image or runtime, host platform) are null / TBD; the ORCHESTRATOR records them in manifests/toolchain-manifest.yaml and QUALIFIER-MOBILE-01 copies them into qualification/mobilewright/README.md before runs. The same identities are used for every execution of the gate.
+    +Each of MQ1–MQ3 is exercised on each platform: six scenario × platform combinations. Emulator and simulator identities (device profile, OS image or runtime, host platform) were recorded by the ORCHESTRATOR on 2026-09-22 in manifests/toolchain-manifest.yaml (`environments`: Android emulator system-images;android-35;google_apis;x86_64, profile pixel_7, on GitHub-hosted ubuntu-24.04; iOS Simulator iPhone 16 with the iOS 18.5 runtime of Xcode 16.4, on GitHub-hosted macos-15) and copied by QUALIFIER-MOBILE-01 into qualification/mobilewright/README.md before the formal gate. The same identities are used for every execution of the gate.
+    @@ -113 +113 @@
+    -The following criteria are the pass criteria of the gate. They were fixed while this document was DRAFT and are now frozen with the protocol (state FROZEN-PRE-DATA); they are not adjusted after any run.
+    +The following criteria are the pass criteria of the gate. They were fixed while protocol/mobile-runner-policy-v1.md was DRAFT, frozen with it on 2026-09-16 (FROZEN-PRE-DATA), applied unchanged to the formal gate of 2026-09-24, and are carried forward unchanged in v2 and in this version; they are not adjusted after any run.
+    @@ -253 +253 @@
+    -| PASS | the APPIUM3-COMPAT-SMOKE-AUTH-02 iOS FAIL_RUNNER and the v2 exhaustion stay preserved and valid under v2 | PASS, recorded as a new observation under this version | SELECTED, recorded prospectively by the ORCHESTRATOR only through the effective-admissibility rule (9.7.9) and the remediation lineage record (9.7.10), with the basis "restored under mobile-runner-policy-v3 after one successful post-fallback remediation qualification" (the field that carries this basis is candidate — not frozen) | admissible prospectively for campaigns governed by this version, subject to every other gate; the existing SUT-02 × Android PASS may satisfy its platform-specific requirement provided all provenance and G-7 checks remain valid |
+    +| PASS | the APPIUM3-COMPAT-SMOKE-AUTH-02 iOS FAIL_RUNNER and the v2 exhaustion stay preserved and valid under v2 | PASS, recorded as a new observation under this version | SELECTED, recorded prospectively by the ORCHESTRATOR only through the effective-admissibility rule (9.7.9) and the remediation lineage record (9.7.10), with the basis "restored under mobile-runner-policy-v3 after one successful post-fallback remediation qualification" (recorded in tools.mobile_runner_selection.restoration_basis of manifests/toolchain-manifest.yaml, a field created only after a remediation PASS and only on an explicit human restoration instruction) | admissible prospectively for campaigns governed by this version, subject to every other gate; the existing SUT-02 × Android PASS may satisfy its platform-specific requirement provided all provenance and G-7 checks remain valid |
+    @@ -285 +285 @@
+    -**9.7.10 Remediation lineage record.** After a remediation PASS, and only on an explicit human instruction, the ORCHESTRATOR writes one remediation lineage record (candidate name manifests/mobile-runner-remediation-v1.yaml — candidate, not frozen). It is the normative provenance of the restoration for G-7 of the measured-execution workflow; admission never relies on table ordering alone. It carries at least: the prior policy (v2) and the new policy (v3); the historical failing authorization (APPIUM3-COMPAT-SMOKE-AUTH-02), run (36539790536), ecosystem × platform (SUT-02 × iOS), and result (FAIL_RUNNER), with historical_result_immutable true; the remediation authorization id; the remediation run id and run attempt; the remediation implementation lock id and SHA-256; the remediation official result and its QUALIFIER-MOBILE-01 source record; the restoration eligibility (each requirement of 9.7.9 with its evidence); the restored runner status; and the human approval provenance (the approval of this version and the instruction authorizing the restoration). It is written once and never edited; it never covers a second remediation.
+    +**9.7.10 Remediation lineage record.** After a remediation PASS, and only on an explicit human restoration instruction, the ORCHESTRATOR writes one remediation lineage record, manifests/mobile-runner-remediation-v1.yaml, and records the restoration basis of 9.7.7 in tools.mobile_runner_selection.restoration_basis of manifests/toolchain-manifest.yaml; neither the record nor the field exists before then. It is the normative provenance of the restoration for G-7 of the measured-execution workflow; admission never relies on table ordering alone. It carries at least: the prior policy (v2) and the new policy (v3); the historical failing authorization (APPIUM3-COMPAT-SMOKE-AUTH-02), run (36539790536), ecosystem × platform (SUT-02 × iOS), and result (FAIL_RUNNER), with historical_result_immutable true; the remediation authorization id; the remediation run id and run attempt; the remediation implementation lock id and SHA-256; the remediation official result and its QUALIFIER-MOBILE-01 source record; the restoration eligibility (each requirement of 9.7.9 with its evidence); the restored runner status; and the human approval provenance (the approval of this version and the instruction authorizing the restoration). It is written once and never edited; it never covers a second remediation.
+    @@ -321 +321 @@
+    -This document is protocol version v3 of the mobile runner policy, state DRAFT (prepared 2026-09-29 and hardened in place the same day; not approved, not frozen, not in force; no data may be collected and no execution may occur under it), and follows the protocol state lifecycle (DRAFT, FROZEN-PRE-DATA, AMENDED, SUPERSEDED) defined in protocol/change-control-v1.md. Only an explicit human approval and freeze, recorded in protocol/CHANGELOG.md with rationale and affected campaigns (protocol/change-control-v1.md, section 5), would make it supersede protocol/mobile-runner-policy-v2.md, which would then become AMENDED and be retained unchanged apart from its header. The introductory paragraph, Sections 1–8, 9.1–9.4, 9.6, and Section 10 are carried over from v2 verbatim; 9.5 gains one bounded exception clause; 9.7 is new; Sections 11 and 12 and the header are updated. While DRAFT it may be edited in place; once frozen it is never overwritten, and any modification creates protocol/mobile-runner-policy-v4.md.
+    +This document is protocol version v3 of the mobile runner policy, state DRAFT (prepared 2026-09-29, hardened in place and corrected for freeze readiness the same day; not approved, not frozen, not in force; no data may be collected and no execution may occur under it), and follows the protocol state lifecycle (DRAFT, FROZEN-PRE-DATA, AMENDED, SUPERSEDED) defined in protocol/change-control-v1.md. Only an explicit human approval and freeze, recorded in protocol/CHANGELOG.md with rationale and affected campaigns (protocol/change-control-v1.md, section 5), would make it supersede protocol/mobile-runner-policy-v2.md, which would then become AMENDED and be retained unchanged apart from its header. The introductory paragraph, 9.1–9.4, 9.6, and Section 10 are carried over from v2 verbatim; Sections 1–8 are carried over with status and provenance corrections only (in Sections 1, 2, 3, 4, 6, and 7; no methodological change); 9.5 gains one bounded exception clause; 9.7 is new; Sections 11 and 12 and the header are updated. While DRAFT it may be edited in place; once frozen it is never overwritten, and any modification creates protocol/mobile-runner-policy-v4.md.
+
+substantive_diff_from_policy_v2:
+  carried_verbatim_from_v2: "the introductory paragraph, the Section 9 introduction and 9.1-9.4, 9.6, and Section 10"
+  carried_with_status_corrections: "Sections 1-8 (six sentences in Sections 1, 2, 3, 4, 6, 7; no methodological change)"
+  changed_substantively: "9.5 (one exception clause and one closing sentence); new 9.7 (9.7.1-9.7.13)"
+  updated: "header, DRAFT notice and 'What changed relative to v2', Sections 11 and 12"
+  section_numbers_preserved: "no v2 section is renumbered"
+  unified_diff: |
+    --- protocol/mobile-runner-policy-v2.md
+    +++ protocol/mobile-runner-policy-v3.md
+    @@ -5,3 +5,3 @@
+    -| Document | protocol/mobile-runner-policy-v2.md |
+    -| Protocol version | v2 |
+    -| Protocol state | FROZEN-PRE-DATA |
+    +| Document | protocol/mobile-runner-policy-v3.md |
+    +| Protocol version | v3 |
+    +| Protocol state | DRAFT |
+    @@ -9,3 +9,3 @@
+    -| Created | 2026-09-26 |
+    -| Supersedes | protocol/mobile-runner-policy-v1.md (transitions to AMENDED by this freeze, per protocol/change-control-v1.md, section 2 — `data_collection_started` is already true) |
+    -| Freeze approval | gilbertosanchez, 2026-09-25 (explicit human approval of the post-data amendment decision resolving protocol/unresolved.md PROTO-U17, instruction "RESOLVE PROTO-U17 THROUGH MOBILE-RUNNER-POLICY-V2 AND RE-LOCK THE APPIUM 3 COMPATIBILITY SMOKE", which authorized creating and freezing this document; text written by the ORCHESTRATOR from the approved rules and frozen on 2026-09-26 under that instruction; post-data-collection change under protocol/change-control-v1.md, section 5; record manifests/mobile-runner-policy-v2-amendment-v1.yaml) |
+    +| Created | 2026-09-29 |
+    +| Supersedes | none while DRAFT. Proposed successor of protocol/mobile-runner-policy-v2.md, which is FROZEN-PRE-DATA, unchanged, and in force; v2 would become AMENDED and receive a `Superseded by` row only if and when this draft is explicitly approved and frozen by a later human instruction (protocol/change-control-v1.md, sections 2 and 4) |
+    +| Freeze approval | none (DRAFT, not approved). Prepared by the ORCHESTRATOR on the human instruction PREPARE MOBILE-RUNNER-POLICY-V3 AFTER APPIUM FALLBACK EXHAUSTION (gilbertosanchez, 2026-09-29), which authorizes preparation only, and hardened in place (DRAFT -> DRAFT) on the human instruction HARDEN MOBILE-RUNNER-POLICY-V3 DRAFT BEFORE HUMAN APPROVAL (gilbertosanchez, 2026-09-29), which again approves nothing, and corrected in place for freeze readiness (DRAFT -> DRAFT) on the human instruction FINALIZE MOBILE-RUNNER-POLICY-V3 DRAFT FREEZE READINESS (2026-09-29), which approves and freezes nothing; current decision package manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml (the packages manifests/mobile-runner-policy-v3-amendment-proposal-v1.yaml and -v2.yaml are history); protocol-level decision protocol/unresolved.md, PROTO-U19 |
+    @@ -15,9 +15,19 @@
+    -## What changed relative to v1, and why
+    -
+    -protocol/unresolved.md, PROTO-U17 (raised 2026-09-24 while the Appium 3 compatibility smoke for SUT-02 was being prepared, before any smoke outcome existed) showed that v1's Section 9 left the terminal and failure behavior of the compatibility smoke undefined once Appium 3 itself is the selected runner: v1 knew only NOT_EXECUTED for a build that cannot be obtained or installed, gave no result for an execution prevented by infrastructure or by a defect of the study-authored harness, and on a runner-caused failure required the smoke to be "repeated with the fallback runner", although after the Section 8 switch no further fallback exists. On 2026-09-25 the human research lead approved the amendment decision recorded here.
+    -
+    -**Only Section 9 changes in substance.** Its result vocabulary is unchanged (PASS, FAIL_RUNNER, NOT_EXECUTED) and PASS keeps its v1 criterion. New: the explicit definition of the selected runner's execution stack and of FAIL_RUNNER (9.2); NOT_EXECUTED extended from the build cause to three positively demonstrated causes outside the runner — SUT_BUILD, INFRASTRUCTURE, HARNESS_ORCHESTRATION — with a mandatory record (9.3); the conservative tie-break, uncertain attribution → FAIL_RUNNER (9.4); the effects of each result, including no automatic replacement attempt and the exhausted-fallback rule with the study-level mobile-runner status UNRESOLVED_AFTER_FALLBACK_FAILURE (9.5); per-platform independence (9.6). Section 11 (status) and Section 12 (versioning) are updated. The introductory paragraph, Sections 1–8, and Section 10 are carried over from v1 byte for byte, so the Mobilewright primary-candidate role, the Appium 3 fallback, the prohibition of Appium 2, the qualification SUT, MQ1–MQ3, MC-01 … MC-10, N, the Section 7 exclusion and attribution rules, the pass gate, and the Section 8 switch are unchanged; their status phrases ("Not executed at this time", "null / TBD now", "null / TBD until pinned") describe the state at v1's freeze of 2026-09-16 and are historical (current status: Section 11).
+    -
+    -**Prior data validity (protocol/change-control-v1.md, section 5, item 3).** E01-capability-audit: unaffected; all collected data and results remain valid. The H1 analysis: unaffected. The Mobilewright formal qualification (MOBILE-QUALIFICATION-EXEC-AUTH-03, 2026-09-24) is a tool-qualification record, not a campaign: unaffected, and valid under the v1 criteria used for that execution; it is not reinterpreted through this version, and the Section 8 selection of Appium 3 made under v1 stands. No compatibility-smoke data existed under v1. No experimental data requires re-collection or re-analysis.
+    -
+    -**Affected campaigns (prospectively; none has collected data):** E03-resetability (its SUT-02 Android and iOS conditions depend on the compatibility smoke); E06-cross-platform-parity and E07-cross-layer-continuity (Android and iOS surfaces); E12-localization-i18n for any mobile execution; and any future campaign exercising Android Native or iOS Native.
+    +**DRAFT — PROPOSED POST-DATA SUCCESSOR, NOT IN FORCE.**
+    +
+    +- It is a proposed successor to protocol/mobile-runner-policy-v2.md; v2 remains the policy in force until this draft is explicitly approved and frozen by a human decision.
+    +- It is being prepared after data collection began (`data_collection_started` has been true since 2026-09-17, manifests/study-manifest.yaml); if approved it is a post-data change under protocol/change-control-v1.md, section 5.
+    +- It does not reinterpret any observation collected under v1 or v2.
+    +- It exists to define prospective behavior after the fallback exhaustion already recorded under v2 on 2026-09-29.
+    +- No execution may occur under it while DRAFT (protocol/change-control-v1.md, section 2).
+    +
+    +## What changed relative to v2, and why
+    +
+    +Under v2 the selected runner Appium 3 (chosen by the Section 8 switch after the formal Mobilewright gate FAILED under MOBILE-QUALIFICATION-EXEC-AUTH-03) received its per-SUT compatibility smoke for SUT-02. Under APPIUM3-COMPAT-SMOKE-AUTH-01 SUT-02 × Android was recorded NOT_EXECUTED / HARNESS_ORCHESTRATION. Under APPIUM3-COMPAT-SMOKE-AUTH-02 (GitHub Actions run 36539790536, attempt 1) SUT-02 × Android was recorded PASS and SUT-02 × iOS FAIL_RUNNER by the conservative tie-break of 9.4 (basis CONSERVATIVE_TIE_BREAK_ATTRIBUTION_UNCERTAIN: attribution remained uncertain between the study-authored WebDriver transport and the selected Appium 3 / XCUITest execution stack). Under 9.5 that FAIL_RUNNER exhausted the fallback: the study-level mobile-runner status is UNRESOLVED_AFTER_FALLBACK_FAILURE and every campaign requiring mobile execution is blocked until a new explicit protocol amendment decides the mobile-runner strategy. The post-run review also identified a concrete study-authored WebDriver transport and diagnostic defect (qualification/unresolved.md, QUAL-U06: the transport does not explicitly align its underlying HTTP timeouts with the declared 1200 s iOS session-start budget and discards the underlying error cause), whose causal role in that run was not demonstrated sufficiently to change the 9.4 result. These records are unchanged and are not reinterpreted here.
+    +
+    +This draft proposes exactly one narrow mechanism, the **post-fallback remediation qualification** (new 9.7): one prospective Appium 3 qualification of SUT-02 × iOS only, after a correction restricted to QUAL-U06, with the result vocabulary and attribution rules of 9.1–9.4 unchanged and single-attempt terminal effects. It does not state that the historical FAIL_RUNNER was wrong, does not state that Appium 3 would pass on iOS, and does not remove the fallback exhaustion from the v2 record: the v2 result remains historically valid, and a remediation observation would be a new prospective record under this version.
+    +
+    +**Substantive changes:** 9.5 gains one bounded exception clause pointing to 9.7 (the exhaustion itself, the FAIL_RUNNER, and every other element of 9.5 are unchanged); 9.7 is new. Within 9.7, admission is governed by an explicit effective-admissibility rule (9.7.9) that separates the immutable historical observation from the current prospective admissibility state, by a normative remediation lineage record (9.7.10), and by a post-restoration rule (9.7.11); no rule selects the latest table row for a SUT × platform, and 9.7.12 records why the SUT-02 × Android PASS stays valid after a correction of the shared WebDriver client. Sections 11 and 12 and the header are updated. The introductory paragraph, 9.1–9.4, 9.6, and Section 10 are carried over from v2 verbatim. Sections 1–8 are carried over with non-substantive status and provenance corrections only, in Sections 1, 2, 3, 4, 6, and 7: their narration of what had not yet happened when v1 was written (Mobilewright as a not-yet-qualified candidate, no qualification run, qualification provenance, scenario realization, and platform identities null / TBD, pass criteria "now frozen") is brought in line with the completed history; no criterion, N, capability, attribution rule, result rule, or historical outcome changes. The v1 -> v2 changes are recorded in protocol/mobile-runner-policy-v2.md and are carried into this version unchanged.
+    +
+    +**Prior data validity (protocol/change-control-v1.md, section 5, item 3).** This version invalidates, re-collects, and reinterprets nothing. E01-capability-audit (FROZEN; collected under protocol v1) and the H1 analysis: unaffected and valid under the versions that governed them. The formal Mobilewright qualification (MOBILE-QUALIFICATION-EXEC-AUTH-03) and the Section 8 selection of Appium 3: unaffected, valid under v1. APPIUM3-COMPAT-SMOKE-AUTH-01 (SUT-02 × Android NOT_EXECUTED / HARNESS_ORCHESTRATION) and APPIUM3-COMPAT-SMOKE-AUTH-02 (SUT-02 × Android PASS; SUT-02 × iOS FAIL_RUNNER, 9.4 tie-break): unaffected, preserved, valid under v2; the AUTH-02 Android PASS remains an immutable valid compatibility observation, and the AUTH-02 iOS FAIL_RUNNER remains permanently present as a valid v2 observation. The v2 fallback exhaustion (UNRESOLVED_AFTER_FALLBACK_FAILURE, 2026-09-29) remains a valid historical state. This version introduces a prospective state transition only. Qualification and compatibility-smoke records are tool-qualification records, not campaign data. No campaign of E02–E12 has collected raw data, so nothing requires re-collection or re-analysis. A remediation observation, if later authorized, is a separate prospective record under this version.
+    +
+    +**Affected campaigns (prospectively; none has collected campaign data):** MOBILE_REQUIRED_CONFIGURED: E03-resetability (its configured conditions E03-CS001-SUT02-ANDROID and E03-CS001-SUT02-IOS). MOBILE_DECLARED_OR_CANDIDATE, only for their Android or iOS conditions: E02-state-establishment, E04-repeatability, E06-cross-platform-parity, E07-cross-layer-continuity, E12-localization-i18n. MOBILE_CONDITIONAL, only if a verification method drives a mobile build through the study runner: E11-security. UNDETERMINED, only if their configurations later include Android or iOS: E05-determinism, E10-visual. NO_MOBILE, not affected: E01-capability-audit (FROZEN; no runner-dependent execution), E08-performance (no mobile execution declared), E09-accessibility (Web only by the frozen modality list). The per-campaign impact matrix is in manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml.
+    @@ -34 +44 @@
+    -Mobilewright is a candidate, not a selected runner. It becomes the study's mobile runner only after passing the qualification gate in Sections 2–7. The study uses one mobile runner for all ecosystems in all mobile campaigns; runners are never mixed across ecosystems within a campaign.
+    +Mobilewright was the primary candidate, not a selected runner: it could become the study's mobile runner only after passing the qualification gate in Sections 2–7. It did not pass: the protocol-valid gate, executed under v1 (MOBILE-QUALIFICATION-EXEC-AUTH-03, GitHub Actions run 35938250936, 2026-09-24), FAILED, and the frozen switch rule of Section 8 selected Appium 3, pinned 3.7.0, on 2026-09-24 (qualification/mobilewright/README.md; manifests/toolchain-manifest.yaml, mobile_runner_selection). The study uses one mobile runner for all ecosystems in all mobile campaigns; runners are never mixed across ecosystems within a campaign.
+    @@ -44 +54 @@
+    -- Not executed at this time. No qualification run has occurred (Section 11).
+    +- Status: executed under v1. The protocol-valid gate ran once under MOBILE-QUALIFICATION-EXEC-AUTH-03 (GitHub Actions run 35938250936, attempt 1, 2026-09-24; 6 warm-ups and 60 measured executions) and FAILED (qualification/mobilewright/README.md, "AUTH-03 formal gate"); an earlier execution of 2026-09-22 without a valid human authorization is preserved and quarantined (protocol/unresolved.md, PROTO-U10). Neither is reinterpreted (Section 11).
+    @@ -54 +64 @@
+    -- The concrete OmniPizza build used for qualification is pinned by the ORCHESTRATOR (repository, commit SHA or release, Android and iOS build identities, pinned_by, pinned_at) under `qualification_build` in manifests/toolchain-manifest.yaml before the first run and is identical for every gate execution. QUALIFIER-MOBILE-01 copies the pinned record verbatim into qualification/mobilewright/README.md, records any discrepancy between the record and the build it obtains in qualification/unresolved.md (created on first use; protocol/agent-governance-v1.md, section 6), and never selects or changes the build. The ORCHESTRATOR never writes under qualification/ (protocol/agent-governance-v1.md, section 4). These provenance fields are null / TBD until pinned.
+    +- The concrete OmniPizza build used for qualification is pinned by the ORCHESTRATOR (repository, commit SHA or release, Android and iOS build identities, pinned_by, pinned_at) under `qualification_build` in manifests/toolchain-manifest.yaml before the first run and is identical for every gate execution. QUALIFIER-MOBILE-01 copies the pinned record verbatim into qualification/mobilewright/README.md, records any discrepancy between the record and the build it obtains in qualification/unresolved.md (created on first use; protocol/agent-governance-v1.md, section 6), and never selects or changes the build. The ORCHESTRATOR never writes under qualification/ (protocol/agent-governance-v1.md, section 4). These provenance fields were pinned by the ORCHESTRATOR on 2026-09-22, before the formal gate (manifests/toolchain-manifest.yaml, `qualification_build`: OmniPizza release v1.1.8, Android and iOS build identities with their SHA-256).
+    @@ -65 +75 @@
+    -The scenario names are generic flows. The concrete screens, identifiers, seed request, deep link, and terminal UI state used to realize each scenario on the qualification SUT are recorded by QUALIFIER-MOBILE-01 in qualification/mobilewright/README.md before the first run; they are null / TBD now. Each scenario has a pre-declared terminal UI state that the runner must verify (MC-08); a scenario execution is successful only when that state is verified.
+    +The scenario names are generic flows. The concrete screens, identifiers, seed request, deep link, and terminal UI state used to realize each scenario on the qualification SUT were recorded by QUALIFIER-MOBILE-01 in qualification/mobilewright/README.md (section "Scenario realization") before the first gate run and stayed identical for every execution (section SHA-256 f79acf6380cb82acabd1971e90a5fcfc339bee54146a239501d6b53b57239018, locked by manifests/mobile-qualification-implementation-lock-v1.yaml and, unchanged, by manifests/mobile-qualification-implementation-lock-v2.yaml). Each scenario has a pre-declared terminal UI state that the runner must verify (MC-08); a scenario execution is successful only when that state is verified.
+    @@ -99 +109 @@
+    -Each of MQ1–MQ3 is exercised on each platform: six scenario × platform combinations. Emulator and simulator identities (device profile, OS image or runtime, host platform) are null / TBD; the ORCHESTRATOR records them in manifests/toolchain-manifest.yaml and QUALIFIER-MOBILE-01 copies them into qualification/mobilewright/README.md before runs. The same identities are used for every execution of the gate.
+    +Each of MQ1–MQ3 is exercised on each platform: six scenario × platform combinations. Emulator and simulator identities (device profile, OS image or runtime, host platform) were recorded by the ORCHESTRATOR on 2026-09-22 in manifests/toolchain-manifest.yaml (`environments`: Android emulator system-images;android-35;google_apis;x86_64, profile pixel_7, on GitHub-hosted ubuntu-24.04; iOS Simulator iPhone 16 with the iOS 18.5 runtime of Xcode 16.4, on GitHub-hosted macos-15) and copied by QUALIFIER-MOBILE-01 into qualification/mobilewright/README.md before the formal gate. The same identities are used for every execution of the gate.
+    @@ -103 +113 @@
+    -The following criteria are the pass criteria of the gate. They were fixed while this document was DRAFT and are now frozen with the protocol (state FROZEN-PRE-DATA); they are not adjusted after any run.
+    +The following criteria are the pass criteria of the gate. They were fixed while protocol/mobile-runner-policy-v1.md was DRAFT, frozen with it on 2026-09-16 (FROZEN-PRE-DATA), applied unchanged to the formal gate of 2026-09-24, and are carried forward unchanged in v2 and in this version; they are not adjusted after any run.
+    @@ -195 +205 @@
+    -- **FAIL_RUNNER while Appium 3 is the selected runner** (selected under Section 8): the fallback is exhausted. Section 8 is not applied recursively to Appium 3; Appium 3 is not executed again to seek another result; Appium 2 is never introduced (Section 1); no other runner is selected, silently or otherwise. The affected ecosystem × platform result remains FAIL_RUNNER, and the ORCHESTRATOR records the study-level mobile-runner status UNRESOLVED_AFTER_FALLBACK_FAILURE in manifests/toolchain-manifest.yaml and in the change log (while the selected runner remains usable, that status is SELECTED). From that moment every experimental campaign that requires mobile execution is blocked from START and from measurement until a new explicit protocol amendment decides the mobile-runner strategy. The failure alters no E01 evidence or capability score and is not evidence about any SUT.
+    +- **FAIL_RUNNER while Appium 3 is the selected runner** (selected under Section 8): the fallback is exhausted. Section 8 is not applied recursively to Appium 3; Appium 3 is not executed again to seek another result, except in the single post-fallback remediation qualification of 9.7 when all of its eligibility conditions hold; Appium 2 is never introduced (Section 1); no other runner is selected, silently or otherwise. The affected ecosystem × platform result remains FAIL_RUNNER, and the ORCHESTRATOR records the study-level mobile-runner status UNRESOLVED_AFTER_FALLBACK_FAILURE in manifests/toolchain-manifest.yaml and in the change log (while the selected runner remains usable, that status is SELECTED). From that moment every experimental campaign that requires mobile execution is blocked from START and from measurement until a new explicit protocol amendment decides the mobile-runner strategy. The failure alters no E01 evidence or capability score and is not evidence about any SUT. Section 9.7 is the only exception this version makes to this effect; it neither removes the exhaustion nor changes the FAIL_RUNNER.
+    @@ -202,0 +213,86 @@
+    +### 9.7 Post-fallback remediation qualification (new in v3; DRAFT)
+    +
+    +**9.7.1 Principle.** The historical FAIL_RUNNER of SUT-02 × iOS under APPIUM3-COMPAT-SMOKE-AUTH-02 was produced by the mandatory conservative tie-break of 9.4, while the post-run review also identified a concrete study-authored implementation and observability defect (qualification/unresolved.md, QUAL-U06). This section allows one prospective observation of that exact requirement after a correction restricted to that defect. It does not state that the historical FAIL_RUNNER was wrong, does not state that Appium 3 would pass on iOS, and does not remove the fallback exhaustion from the v2 record. The historical result stays valid under v2; a remediation observation is a new record under this version.
+    +
+    +**9.7.2 Eligibility.** The mechanism may be used only when all of the following hold:
+    +
+    +1. the selected fallback runner produced FAIL_RUNNER under the previous policy version;
+    +2. that FAIL_RUNNER remains immutable;
+    +3. its attribution was resolved through the previous version's conservative tie-break (9.4);
+    +4. preserved post-run evidence identified a concrete study-authored implementation or observability defect relevant to fair runner exercise;
+    +5. that defect was insufficiently demonstrated as the historical run's cause, so the historical result was not reclassified;
+    +6. the affected campaigns have not yet collected experimental measurements requiring the repaired execution path;
+    +7. explicit human approval of this post-data amendment occurred before any new qualification execution.
+    +
+    +The only requirement that can meet these conditions under this version is SUT-02 × iOS × Appium 3 (APPIUM3-COMPAT-SMOKE-AUTH-02, run 36539790536: FAIL_RUNNER, basis CONSERVATIVE_TIE_BREAK_ATTRIBUTION_UNCERTAIN; defect QUAL-U06). No other FAIL_RUNNER, ecosystem, platform, or runner is eligible. The mechanism is not a generic retry rule.
+    +
+    +**9.7.3 Scope.** One remediation qualification of SUT-02 × iOS × Appium 3 only. SUT-02 × Android is not executed again: its official PASS under APPIUM3-COMPAT-SMOKE-AUTH-02 remains an immutable valid compatibility observation, per-platform independence (9.6) remains binding, and a successful iOS remediation may combine prospectively with that already-recorded Android PASS for per-platform compatibility admission (9.7.9, 9.7.12); this does not reinterpret AUTH-02. The remediation qualification is not a re-run or continuation of APPIUM3-COMPAT-SMOKE-AUTH-02, not a repeat of Android, not a Mobilewright comparison, and not a new research question. The smoke scope of Section 9 (MC-01, MC-02, MC-06, MC-04, MC-08, MC-10) and the PASS definition of 9.1 are unchanged.
+    +
+    +**9.7.4 Permitted correction.** Any implementation correction for the remediation qualification is restricted to QUAL-U06. The corrected study-authored WebDriver transport:
+    +
+    +1. coordinates the effective HTTP transport timeout with the predeclared iOS session-start budget;
+    +2. cannot silently impose a shorter timeout than the explicit session timeout;
+    +3. preserves the underlying transport error cause in formal evidence, including where available the error name, error code, and error message and the cause name, cause code, and cause message;
+    +4. leaves the Appium 3 and XCUITest driver pins unchanged;
+    +5. leaves the SUT build unchanged;
+    +6. leaves the iOS Simulator and Xcode substrate unchanged;
+    +7. leaves the smoke capability definition unchanged;
+    +8. leaves the semantic iOS realization unchanged;
+    +9. leaves the WebDriverAgent launch and connection limits unchanged, unless an independent pre-execution compatibility reason requires otherwise and is separately approved.
+    +
+    +No other execution-critical change is authorized merely because this version exists.
+    +
+    +**9.7.5 Exactly one attempt.** At most one formal remediation qualification attempt exists under this version. It requires, each separately: the corrected implementation; a successor implementation lock (lock v4); static validation; a new authorization id; explicit human issuance; public publication of the frozen baseline; and a separate explicit human dispatch. No GitHub re-run, no automatic retry, and no second remediation attempt under this version: a run attempt greater than 1, a second dispatch, or a second remediation execution is never an attempt under 9.7 and invalidates the remediation lineage (9.7.9, condition 3).
+    +
+    +**9.7.6 Results and attribution.** The result vocabulary and attribution rules of 9.1–9.4 apply unchanged: PASS, FAIL_RUNNER, or NOT_EXECUTED; NOT_EXECUTED only on a positively demonstrated cause outside the runner (9.3); uncertain attribution is FAIL_RUNNER (9.4). No new result category exists.
+    +
+    +**9.7.7 Effects (single-attempt, terminal).**
+    +
+    +| Remediation result | Historical records | SUT-02 × iOS | Study-level mobile-runner status | Mobile execution |
+    +|---|---|---|---|---|
+    +| PASS | the APPIUM3-COMPAT-SMOKE-AUTH-02 iOS FAIL_RUNNER and the v2 exhaustion stay preserved and valid under v2 | PASS, recorded as a new observation under this version | SELECTED, recorded prospectively by the ORCHESTRATOR only through the effective-admissibility rule (9.7.9) and the remediation lineage record (9.7.10), with the basis "restored under mobile-runner-policy-v3 after one successful post-fallback remediation qualification" (recorded in tools.mobile_runner_selection.restoration_basis of manifests/toolchain-manifest.yaml, a field created only after a remediation PASS and only on an explicit human restoration instruction) | admissible prospectively for campaigns governed by this version, subject to every other gate; the existing SUT-02 × Android PASS may satisfy its platform-specific requirement provided all provenance and G-7 checks remain valid |
+    +| FAIL_RUNNER | unchanged | FAIL_RUNNER | UNRESOLVED_AFTER_FALLBACK_FAILURE (unchanged) | blocked; no second remediation qualification under this version |
+    +| NOT_EXECUTED | unchanged | NOT_EXECUTED | UNRESOLVED_AFTER_FALLBACK_FAILURE (unchanged) | blocked; no automatic retry; a further attempt requires another explicit post-data protocol amendment |
+    +
+    +The restoration applies only prospectively to campaigns governed by this version and alters no record made under v1 or v2.
+    +
+    +**9.7.8 Records.** QUALIFIER-MOBILE-01 records the remediation attempt as new rows (a smoke-record row and, where 9.3 or the attribution rule requires it, an attribution row) in qualification/compatibility-smoke/README.md, and imports its artifacts byte-exact under its own authorization namespace. The historical rows and imported artifacts are never edited, moved, removed, downgraded, or reclassified. The ORCHESTRATOR transcribes the new result into the SUT-02 × iOS entry of manifests/compatibility-smoke-status.yaml, keeping the previous value in its comments. Table position never decides admissibility: admission is governed only by 9.7.9 and 9.7.10.
+    +
+    +**9.7.9 Historical observation and prospective admissibility.** This version distinguishes:
+    +
+    +- **Historical observation:** the immutable result produced under the protocol version that governed its execution. It is never deleted, overwritten, downgraded, or reclassified. The APPIUM3-COMPAT-SMOKE-AUTH-02 iOS FAIL_RUNNER remains permanently present as a valid v2 observation.
+    +- **Current prospective admissibility state:** the state allowed to govern future campaign admission, including admission after a protocol-authorized remediation.
+    +
+    +The effective compatibility observation of an ecosystem × platform for admission is determined as follows: a PASS is an effective PASS; a NOT_EXECUTED is a non-result (it neither passes nor fails, 9.5) and is superseded by the result of any later authorized attempt of the same ecosystem × platform, as under v2; a FAIL_RUNNER is never superseded by a later row or by table order, and ceases to block only as follows.
+    +
+    +A historical FAIL_RUNNER may cease to block future mobile execution only when every requirement below holds:
+    +
+    +1. it is the exact FAIL_RUNNER named as the trigger of the approved v3 remediation (APPIUM3-COMPAT-SMOKE-AUTH-02, run 36539790536, SUT-02 × iOS);
+    +2. this version, approved and frozen, explicitly authorizes remediation of that exact observation (9.7.2);
+    +3. exactly one remediation execution exists (one authorization, one dispatch, run attempt 1);
+    +4. the remediation uses a new authorization id;
+    +5. the remediation uses the approved successor implementation lock;
+    +6. the remediation targets only the affected ecosystem × platform;
+    +7. its official QUALIFIER-MOBILE-01 result is PASS;
+    +8. its artifact provenance is complete and valid (imported byte-exact, digests equal to the recorded digests);
+    +9. its mirror transcription is PASS;
+    +10. the study-level restoration record, the remediation lineage record of 9.7.10, references the historical FAIL_RUNNER, the remediation authorization, the remediation run id, protocol v3, the implementation lock, and the PASS source record; its verification includes that the named historical FAIL_RUNNER still exists unchanged (its smoke-record row with the recorded authorization, run, and result, and its imported artifacts byte-exact against their import record);
+    +11. mobile_runner_status is explicitly restored to SELECTED under this version;
+    +12. no other unresolved FAIL_RUNNER exists for the selected runner on any ecosystem × platform.
+    +
+    +If any requirement is absent or cannot be verified, the state fails closed: every mobile condition stays blocked. When all hold, the named historical FAIL_RUNNER is retained but no longer counted as an unresolved current blocker; every other FAIL_RUNNER keeps blocking; admission then evaluates each ecosystem × platform's effective compatibility observation.
+    +
+    +**9.7.10 Remediation lineage record.** After a remediation PASS, and only on an explicit human restoration instruction, the ORCHESTRATOR writes one remediation lineage record, manifests/mobile-runner-remediation-v1.yaml, and records the restoration basis of 9.7.7 in tools.mobile_runner_selection.restoration_basis of manifests/toolchain-manifest.yaml; neither the record nor the field exists before then. It is the normative provenance of the restoration for G-7 of the measured-execution workflow; admission never relies on table ordering alone. It carries at least: the prior policy (v2) and the new policy (v3); the historical failing authorization (APPIUM3-COMPAT-SMOKE-AUTH-02), run (36539790536), ecosystem × platform (SUT-02 × iOS), and result (FAIL_RUNNER), with historical_result_immutable true; the remediation authorization id; the remediation run id and run attempt; the remediation implementation lock id and SHA-256; the remediation official result and its QUALIFIER-MOBILE-01 source record; the restoration eligibility (each requirement of 9.7.9 with its evidence); the restored runner status; and the human approval provenance (the approval of this version and the instruction authorizing the restoration). It is written once and never edited; it never covers a second remediation.
+    +
+    +**9.7.11 After restoration.** A restoration under 9.7.9 is not a new selection and is not permanent immunity. Any FAIL_RUNNER of the selected runner recorded after the restoration, on any ecosystem × platform, applies 9.5 again: the study-level status returns to UNRESOLVED_AFTER_FALLBACK_FAILURE and every campaign requiring mobile execution is blocked. No second remediation exists under this version, and the lineage record of 9.7.10 never extends to another observation. A FAIL_RUNNER that arises only after a valid restoration does not invalidate the lineage record of the restored observation; that later FAIL_RUNNER is itself unresolved and blocks under 9.5. A FAIL_RUNNER that already existed when the status was to be restored makes the restoration invalid (9.7.9, condition 12).
+    +
+    +**9.7.12 SUT-02 × Android PASS and the shared WebDriver client.** The correction permitted by 9.7.4 may change the study-authored WebDriver client (qualification/compatibility-smoke/harness/wd.mjs), which the Android smoke also uses, although Android is not executed again. The AUTH-02 Android PASS remains valid for the following reasons, which are its methodological basis:
+    +
+    +1. The object of the compatibility smoke is the selected runner's execution stack (9.2): Appium 3.7.0 with its pinned platform driver and the WebDriver-protocol behavior they implement. The study-authored workflow, scripts, WebDriver client, and harness are not the runner (9.3).
+    +2. The Android PASS consists of the runner's answers to W3C WebDriver commands whose endpoints, payloads, locators, realization, and oracle (expected product detail, quantity 1 then 2) the QUAL-U06 correction does not change. The correction only lets the client wait up to the declared budget instead of a shorter implicit transport limit, and records the underlying cause of transport failures.
+    +3. The recorded Android session request completed in 24.9 s and every recorded Android command received a normal response, so no transport limit bore on any recorded Android exchange; a longer permitted wait and a richer failure record cannot change the classification of an exchange that completed normally.
+    +4. The Android PASS is therefore evidence that Appium 3.7.0 with appium-uiautomator2-driver 8.7.0 exercises MC-01, MC-02, MC-06, MC-04, MC-08, and MC-10 on the pinned SUT-02 Android build; the remediation exists to exercise iOS session establishment fairly, not to change the Android capability definition.
+    +5. Conditions: the successor lock must show that the Android realization (REALIZATION.android of qualification/compatibility-smoke/harness/smoke.mjs) and the Android command sequence are byte-unchanged; if any Android-relevant realization byte changed, the Android PASS could no longer be combined under 9.7.9 and this basis would not hold. The compatibility smoke qualifies the runner for an ecosystem × platform; it does not qualify a campaign executor, which is governed by its own campaign gates.
+    +
+    +**9.7.13 No other runner.** The runner of the remediation qualification is Appium 3, pinned 3.7.0, with its pinned XCUITest driver. This version introduces no other runner: Appium 2 is never introduced (Section 1); Mobilewright is not re-qualified; no other third-party runner (for example Maestro or Detox) is introduced. Choosing another runner would require its own separate protocol decision.
+    +
+    @@ -209 +305 @@
+    -Snapshot at the freeze of this version (2026-09-26); not updated in place. Live status: manifests/toolchain-manifest.yaml and manifests/compatibility-smoke-status.yaml.
+    +Snapshot at the preparation of this draft (2026-09-29); not updated in place. Live status: manifests/toolchain-manifest.yaml and manifests/compatibility-smoke-status.yaml.
+    @@ -212,0 +309 @@
+    +| This version | DRAFT: not approved, not frozen, not in force; no execution may occur under it |
+    @@ -214,2 +311,2 @@
+    -| Compatibility smokes executed | none |
+    -| Mobile runner installed | none |
+    +| Compatibility smokes executed | Under v2: APPIUM3-COMPAT-SMOKE-AUTH-01 (run 36340774530, 2026-09-27): SUT-02 × Android NOT_EXECUTED / HARNESS_ORCHESTRATION, SUT-02 × iOS not attempted; APPIUM3-COMPAT-SMOKE-AUTH-02 (run 36539790536, 2026-09-29): SUT-02 × Android PASS, SUT-02 × iOS FAIL_RUNNER (9.4 tie-break). Neither is reinterpreted under this version. |
+    +| Mobile runner installed | none for study use; Appium 3.7.0 installed only on the GitHub-hosted runners of the two compatibility smokes |
+    @@ -217 +314 @@
+    -| Appium 3 version | 3.7.0 pinned (manifests/toolchain-manifest.yaml); not installed |
+    +| Appium 3 version | 3.7.0 pinned; 3.7.0 formally observed in both compatibility smokes and recorded as tools.mobile_fallback.version on 2026-09-29 (manifests/toolchain-manifest.yaml; manifests/appium3-toolchain-version-transcription-v1.yaml) |
+    @@ -219 +316,2 @@
+    -| Runner decision | Appium 3, pinned 3.7.0, selected by the Section 8 switch under v1 on 2026-09-24; study-level mobile-runner status SELECTED |
+    +| Runner decision | Appium 3, pinned 3.7.0, selected by the Section 8 switch under v1 on 2026-09-24; study-level mobile-runner status UNRESOLVED_AFTER_FALLBACK_FAILURE since 2026-09-29 (v2, 9.5) |
+    +| Post-fallback remediation qualification (9.7) | proposed, not authorized; not executable while this version is DRAFT; effective-admissibility rule (9.7.9) defined, not in force; remediation lineage record (9.7.10) defined, not created |
+    @@ -223 +321 @@
+    -This document is protocol version v2 of the mobile runner policy, state FROZEN-PRE-DATA (frozen 2026-09-26 under the explicit human approval of 2026-09-25 recorded in its header; no data had been collected under this version when it was frozen), and follows the protocol state lifecycle (DRAFT, FROZEN-PRE-DATA, AMENDED, SUPERSEDED) defined in protocol/change-control-v1.md. It supersedes protocol/mobile-runner-policy-v1.md, which is AMENDED and retained unchanged apart from its header. The introductory paragraph, Sections 1–8, and Section 10 are carried over from v1 verbatim; only Section 9 changed in substance, and Sections 11 and 12 were updated. It is never overwritten in place; any modification creates protocol/mobile-runner-policy-v3.md.
+    +This document is protocol version v3 of the mobile runner policy, state DRAFT (prepared 2026-09-29, hardened in place and corrected for freeze readiness the same day; not approved, not frozen, not in force; no data may be collected and no execution may occur under it), and follows the protocol state lifecycle (DRAFT, FROZEN-PRE-DATA, AMENDED, SUPERSEDED) defined in protocol/change-control-v1.md. Only an explicit human approval and freeze, recorded in protocol/CHANGELOG.md with rationale and affected campaigns (protocol/change-control-v1.md, section 5), would make it supersede protocol/mobile-runner-policy-v2.md, which would then become AMENDED and be retained unchanged apart from its header. The introductory paragraph, 9.1–9.4, 9.6, and Section 10 are carried over from v2 verbatim; Sections 1–8 are carried over with status and provenance corrections only (in Sections 1, 2, 3, 4, 6, and 7; no methodological change); 9.5 gains one bounded exception clause; 9.7 is new; Sections 11 and 12 and the header are updated. While DRAFT it may be edited in place; once frozen it is never overwritten, and any modification creates protocol/mobile-runner-policy-v4.md.
+
+withdrawn_proposal: "the first-draft package's g7_impact_analysis.minimal_change_if_approved (evaluate each SUT x platform's FAIL_RUNNER on its latest Smoke-records row) is WITHDRAWN: a generic latest-row rule would let table order decide whether an immutable historical FAIL_RUNNER counts. It is replaced by the effective-admissibility rule and the normative lineage record below"
+
+effective_admissibility_rule:  # policy v3 draft 9.7.9; DEFINED, NOT IN FORCE
+  historical_observation: "the immutable result produced under the protocol version that governed its execution; never deleted, overwritten, downgraded, or reclassified (the AUTH-02 iOS FAIL_RUNNER stays permanently present as a valid v2 observation)"
+  current_prospective_admissibility_state: "the state allowed to govern future campaign admission, including after a protocol-authorized remediation"
+  effective_compatibility_observation: "per ecosystem x platform: a PASS is an effective PASS; a NOT_EXECUTED is a non-result superseded by the result of any later authorized attempt of the same ecosystem x platform (already v2 9.5 behaviour: AUTH-01 android NOT_EXECUTED -> AUTH-02 android PASS); a FAIL_RUNNER is never superseded by a later row or by table order and ceases to block only under the conditions below"
+  conditions:  # all required; any absent or unverifiable -> fail closed
+    - "1. it is the exact FAIL_RUNNER named as the trigger of the approved v3 remediation (APPIUM3-COMPAT-SMOKE-AUTH-02, run 36539790536, SUT-02 x iOS)"
+    - "2. policy v3, approved and frozen, explicitly authorizes remediation of that exact observation (9.7.2)"
+    - "3. exactly one remediation execution exists (one authorization, one dispatch, run attempt 1)"
+    - "4. the remediation uses a new authorization id"
+    - "5. the remediation uses the approved successor implementation lock"
+    - "6. the remediation targets only the affected ecosystem x platform"
+    - "7. its official QUALIFIER-MOBILE-01 result is PASS"
+    - "8. its artifact provenance is complete and valid (imported byte-exact, digests equal to the recorded digests)"
+    - "9. its mirror transcription is PASS"
+    - "10. the restoration record (the lineage record) references the historical FAIL_RUNNER, the remediation authorization, the remediation run id, protocol v3, the implementation lock, and the PASS source record; its verification includes that the named historical FAIL_RUNNER still exists unchanged (its smoke-record row with the recorded authorization, run, and result, and its imported artifacts byte-exact against their import record)"
+    - "11. mobile_runner_status is explicitly restored to SELECTED under v3"
+    - "12. no other unresolved FAIL_RUNNER exists for the selected runner on any ecosystem x platform"
+  when_all_hold: "the named historical FAIL_RUNNER is retained but no longer counted as an unresolved current blocker; every other FAIL_RUNNER keeps blocking; admission evaluates each ecosystem x platform's effective compatibility observation"
+  after_restoration: "any later FAIL_RUNNER of the selected runner applies 9.5 again (UNRESOLVED_AFTER_FALLBACK_FAILURE); no second v3 remediation; the lineage record never extends (9.7.11)"
+
+remediation_lineage_record:  # policy v3 draft 9.7.10; DEFINED, NOT CREATED; path and restoration-basis field fixed by the freeze-readiness correction (2026-09-29)
+  path: manifests/mobile-runner-remediation-v1.yaml  # fixed (was "candidate -- not frozen" in proposal v2)
+  restoration_basis_field: tools.mobile_runner_selection.restoration_basis  # in manifests/toolchain-manifest.yaml; fixed (was "candidate -- not frozen" in proposal v2)
+  written_by: "ORCHESTRATOR, once, after a remediation PASS recorded by QUALIFIER-MOBILE-01, and only on an explicit human restoration instruction; the restoration_basis field is written by the same operation; neither the record nor the field exists before then (neither is created by this preparation)"
+  normative_for: "G-7 of .github/workflows/e03-measured-execution.yml (the restoration is never inferred from table ordering alone)"
+  schema:  # field: requirement
+    record_class: "MOBILE_RUNNER_REMEDIATION_LINEAGE (constant)"
+    prior_policy: "protocol/mobile-runner-policy-v2.md, state AMENDED at the time of writing"
+    new_policy: "protocol/mobile-runner-policy-v3.md, state FROZEN-PRE-DATA, with its freeze sha256 and the CHANGELOG row that froze it"
+    historical_failing_authorization: "APPIUM3-COMPAT-SMOKE-AUTH-02"
+    historical_failing_run: "36539790536 (attempt 1)"
+    historical_failing_platform: "SUT-02 x ios"
+    historical_result: "FAIL_RUNNER"
+    historical_attribution_basis: "CONSERVATIVE_TIE_BREAK_ATTRIBUTION_UNCERTAIN"
+    historical_result_immutable: "true (constant)"
+    historical_source_record: "qualification/compatibility-smoke/README.md smoke-record row plus formal/APPIUM3-COMPAT-SMOKE-AUTH-02/IMPORT-RECORD.yaml and ATTRIBUTION-SUT-02-ios.yaml, each with its sha256 at the time of writing"
+    remediation_authorization_id: "a new id (never AUTH-01 or AUTH-02); its record ISSUED, VALID, CONSUMED_AFTER_DISPATCH, naming policy v3 section 9.7"
+    remediation_run_id: "the single run id"
+    remediation_run_attempt: "1 (constant)"
+    remediation_dispatch_count: "1 (constant)"
+    remediation_lock: "successor implementation lock path and sha256 (the approved lock v4)"
+    remediation_target: "SUT-02 x ios only (no other platform recorded under the remediation authorization)"
+    remediation_official_result: "PASS (QUALIFIER-MOBILE-01), with its smoke-record row, import record, and artifact digests"
+    mirror_transcription: "manifests/compatibility-smoke-status.yaml SUT-02 ios entry: result PASS, authorization_id = the remediation authorization"
+    restoration_eligibility: "each of the 12 conditions of 9.7.9 with its evidence pointer; all true"
+    restored_runner_status: "SELECTED, with the basis 'restored under mobile-runner-policy-v3 after one successful post-fallback remediation qualification' recorded in tools.mobile_runner_selection.restoration_basis"
+    human_approval_provenance: "the instruction approving and freezing v3, the issuance and dispatch instructions of the remediation authorization, and the instruction authorizing the restoration (each verbatim with sha256 in its own record)"
+  immutability: "written once, never edited; it never covers a second remediation"
+
+g7_prospective_semantics:  # implementation note only; .github/workflows/e03-measured-execution.yml is NOT modified
+  classification: REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19  # not a new protocol issue
+  current_g7_statement: "the current G-7 correctly enforces policy v2 (9.5): every FAIL_RUNNER of the selected runner blocks every mobile condition; the dependency exists only in relation to the proposed v3 semantics"
+  proposed_algorithm_if_v3_is_approved:
+    - "1. selected runner, pin, and recorded runner version exactly as today (the version check stays unchanged; tools.mobile_fallback.version now holds the formally observed 3.7.0)"
+    - "2. inventory every FAIL_RUNNER of the selected runner from the QUALIFIER-MOBILE-01 Smoke records rows (all rows, historical included); each is verified against its smoke-record row, its import record, and its attribution record; the mirror carries only the current effective observation of each ecosystem x platform and need not show a historical FAIL_RUNNER, but a mirror FAIL_RUNNER must match a verified row"
+    - "3. load remediation lineage records; each is valid only if conditions 1-11 of 9.7.9 verify continuously (including history integrity for condition 10) and condition 12 held when the status was restored; an invalid or partial record is PROVENANCE_INCONSISTENT_FAIL_CLOSED. A FAIL_RUNNER that arises only after a valid restoration leaves the lineage valid and is itself unresolved (9.7.11)"
+    - "4. unresolved FAIL_RUNNERs = the inventory minus the single historical FAIL_RUNNER named by a valid lineage record"
+    - "5. fallback state, in this order: (a) a PASS row or PASS mirror entry exists for an ecosystem x platform whose FAIL_RUNNER is unresolved (no valid lineage) -> PROVENANCE_INCONSISTENT_FAIL_CLOSED whatever the status; (b) no unresolved FAIL_RUNNER and status SELECTED -> ADMISSIBLE (reused value; detail names the lineage record when one applies); (c) every unresolved FAIL_RUNNER verified under step 2 and status UNRESOLVED_AFTER_FALLBACK_FAILURE -> FALLBACK_EXHAUSTED_VERIFIED; (d) anything else -> PROVENANCE_INCONSISTENT_FAIL_CLOSED. Every state other than ADMISSIBLE blocks every mobile condition"
+    - "6. per-platform: the condition's ecosystem x platform must have an effective compatibility observation PASS (9.7.9 effective-observation rule), with the mirror and the QUALIFIER row agreeing and the runner-version pin as today"
+  status_vocabulary: "unchanged: SELECTED and UNRESOLVED_AFTER_FALLBACK_FAILURE; no new status value is introduced"
+  history_integrity: "required property of the v3 implementation (case 10): the current gate admits a fixture in which the historical FAIL_RUNNER row was deleted and the status set to SELECTED; under v2 that deletion is excluded by the immutability of QUALIFIER records, which G-7 was never asked to police, but under v3 the lineage verification must detect it"
+  static_matrix_method: "expected results under the proposed v3 semantics; current-G-7 results observed on 2026-09-29 by running the unchanged gate script of e03-measured-execution.yml (extracted from the file) on throwaway clones of canonical e77feb4 with hypothetical fixtures (cases 1, 3, 4, 5, 6a, 6b, 10, 11, 13, 16); cases 2, 7, 8, 9, 12, 14, 15 give the current gate the same inputs as the case named"
+
+g7_static_matrix:
+  - case: 1
+    scenario: "v2 FAIL_RUNNER, no remediation"
+    fixture: "the canonical state at e77feb4"
+    expected_proposed_v3_g7: "BLOCK -- FALLBACK_EXHAUSTED_VERIFIED; every mobile condition blocked"
+    current_g7_v2_observed: "android: FALLBACK_EXHAUSTED_VERIFIED; mobile G-7 checks failing: study-level mobile-runner status is SELECTED, no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: FALLBACK_EXHAUSTED_VERIFIED; mobile G-7 checks failing: study-level mobile-runner status is SELECTED, no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide, compatibility smoke of SUT-02 x ios with the selected runner, the QUALIFIER-owned smoke record has a PASS row for SUT-02 x"
+  - case: 2
+    scenario: "v2 FAIL_RUNNER + v3 DRAFT"
+    fixture: "the canonical state at e77feb4 (the v3 DRAFT file exists)"
+    expected_proposed_v3_g7: "BLOCK -- FALLBACK_EXHAUSTED_VERIFIED; a DRAFT is not in force, so G-7 applies v2 unchanged"
+    current_g7_v2_observed: "android: FALLBACK_EXHAUSTED_VERIFIED; mobile G-7 checks failing: study-level mobile-runner status is SELECTED, no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: FALLBACK_EXHAUSTED_VERIFIED; mobile G-7 checks failing: study-level mobile-runner status is SELECTED, no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide, compatibility smoke of SUT-02 x ios with the selected runner, the QUALIFIER-owned smoke record has a PASS row for SUT-02 x"
+  - case: 3
+    scenario: "v3 approved and frozen, no remediation"
+    fixture: "v3 header FROZEN-PRE-DATA, v2 header AMENDED; nothing else changed"
+    expected_proposed_v3_g7: "BLOCK -- FALLBACK_EXHAUSTED_VERIFIED (status UNRESOLVED_AFTER_FALLBACK_FAILURE; the historical FAIL_RUNNER is unremediated)"
+    current_g7_v2_observed: "android: FALLBACK_EXHAUSTED_VERIFIED; mobile G-7 checks failing: study-level mobile-runner status is SELECTED, no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: FALLBACK_EXHAUSTED_VERIFIED; mobile G-7 checks failing: study-level mobile-runner status is SELECTED, no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide, compatibility smoke of SUT-02 x ios with the selected runner, the QUALIFIER-owned smoke record has a PASS row for SUT-02 x"
+  - case: 4
+    scenario: "remediation NOT_EXECUTED"
+    fixture: "v3 frozen; a remediation NOT_EXECUTED row appended; mirror SUT-02 ios NOT_EXECUTED; status UNRESOLVED"
+    expected_proposed_v3_g7: "BLOCK -- FALLBACK_EXHAUSTED_VERIFIED (the historical FAIL_RUNNER stays the unremediated blocker, read from the QUALIFIER source rows and their import records, not only from the mirror); terminal under v3, no retry"
+    current_g7_v2_observed: "android: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: study-level mobile-runner status is SELECTED, no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: study-level mobile-runner status is SELECTED, no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide, compatibility smoke of SUT-02 x ios with the selected runner, the QUALIFIER-owned smoke record has a PASS row for SUT-02 x"
+  - case: 5
+    scenario: "remediation FAIL_RUNNER"
+    fixture: "v3 frozen; a remediation FAIL_RUNNER row appended; mirror SUT-02 ios FAIL_RUNNER; status UNRESOLVED"
+    expected_proposed_v3_g7: "BLOCK -- FALLBACK_EXHAUSTED_VERIFIED; terminal under v3"
+    current_g7_v2_observed: "android: FALLBACK_EXHAUSTED_VERIFIED; mobile G-7 checks failing: study-level mobile-runner status is SELECTED, no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: FALLBACK_EXHAUSTED_VERIFIED; mobile G-7 checks failing: study-level mobile-runner status is SELECTED, no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide, compatibility smoke of SUT-02 x ios with the selected runner, the QUALIFIER-owned smoke record has a PASS row for SUT-02 x"
+  - case: 6
+    scenario: "remediation PASS without restoration record"
+    fixture: "v3 frozen; a remediation PASS row; mirror SUT-02 ios PASS; no lineage record; status UNRESOLVED (6a) or SELECTED (6b)"
+    expected_proposed_v3_g7: "BLOCK -- PROVENANCE_INCONSISTENT_FAIL_CLOSED (condition 10 absent)"
+    current_g7_v2_observed: "6a: android: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: study-level mobile-runner status is SELECTED, no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: study-level mobile-runner status is SELECTED, no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide || 6b: android: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide"
+  - case: 7
+    scenario: "remediation PASS with wrong authorization lineage"
+    fixture: "as case 11, but the lineage record names an authorization that is not a new, ISSUED, VALID, consumed v3 remediation authorization (for example AUTH-02 itself)"
+    expected_proposed_v3_g7: "BLOCK -- PROVENANCE_INCONSISTENT_FAIL_CLOSED (conditions 4 and 10)"
+    current_g7_v2_observed: "same G-7 inputs as case 11 (the current gate does not read a lineage record): android: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide"
+  - case: 8
+    scenario: "remediation PASS with wrong lock"
+    fixture: "as case 11, but the lineage lock id or SHA-256 differs from the approved successor lock"
+    expected_proposed_v3_g7: "BLOCK -- PROVENANCE_INCONSISTENT_FAIL_CLOSED (condition 5)"
+    current_g7_v2_observed: "same G-7 inputs as case 11: android: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide"
+  - case: 9
+    scenario: "remediation PASS with wrong protocol version"
+    fixture: "as case 11, but the lineage record names v2, or v3 is not FROZEN-PRE-DATA, or v2 is not AMENDED"
+    expected_proposed_v3_g7: "BLOCK -- PROVENANCE_INCONSISTENT_FAIL_CLOSED (condition 2)"
+    current_g7_v2_observed: "same G-7 inputs as case 11: android: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide"
+  - case: 10
+    scenario: "remediation PASS with historical FAIL_RUNNER removed"
+    fixture: "v3 frozen; the AUTH-02 iOS FAIL_RUNNER row deleted from the Smoke records table; remediation PASS row; mirror PASS; status SELECTED; a lineage record present"
+    expected_proposed_v3_g7: "FAIL CLOSED -- PROVENANCE_INCONSISTENT_FAIL_CLOSED (condition 10 verification: the named historical FAIL_RUNNER no longer exists unchanged)"
+    current_g7_v2_observed: "android: ADMISSIBLE; mobile G-7 checks all PASS | ios: ADMISSIBLE; mobile G-7 checks all PASS -- the current gate ADMITS this fixture: history integrity is a property the v3 implementation must add (under v2 such a deletion is excluded by the immutability of QUALIFIER records, not by G-7)"
+  - case: 11
+    scenario: "remediation PASS + valid complete lineage + status SELECTED"
+    fixture: "v3 frozen; remediation PASS row; mirror PASS; valid lineage record; status SELECTED with the 9.7.7 basis"
+    expected_proposed_v3_g7: "ELIGIBLE -- the named historical FAIL_RUNNER is retained and not counted; fallback state ADMISSIBLE (reused value, detail: restored under the v3 remediation lineage record); then per-platform evaluation"
+    current_g7_v2_observed: "android: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide -- the REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19"
+  - case: 12
+    scenario: "Android historical PASS + valid iOS remediation PASS"
+    fixture: "the case 11 state"
+    expected_proposed_v3_g7: "PASS for both conditions on the mobile-runner and per-platform checks: SUT-02 android effective observation = the AUTH-02 PASS (the AUTH-01 NOT_EXECUTED is a superseded non-result); SUT-02 ios effective observation = the remediation PASS named by the lineage record (every other E03 gate still applies)"
+    current_g7_v2_observed: "android: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide (the per-platform checks pass for both; the fallback checks block)"
+  - case: 13
+    scenario: "valid iOS remediation PASS but another SUT x platform has an unresolved FAIL_RUNNER"
+    fixture: "case 11 plus a FAIL_RUNNER row and mirror entry for SUT-01 android"
+    expected_proposed_v3_g7: "BLOCK STUDY-WIDE -- condition 12 fails, so no restoration is valid: PROVENANCE_INCONSISTENT_FAIL_CLOSED whatever the status (the iOS PASS stands beside an unresolved FAIL_RUNNER, step 5a); a FAIL_RUNNER that arises only after a valid restoration is case 16"
+    current_g7_v2_observed: "android: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide"
+  - case: 14
+    scenario: "more than one remediation execution"
+    fixture: "as case 11, but two remediation executions (two runs or two dispatches) exist for the eligible requirement"
+    expected_proposed_v3_g7: "BLOCK -- PROVENANCE_INCONSISTENT_FAIL_CLOSED (condition 3)"
+    current_g7_v2_observed: "same G-7 inputs as case 11: android: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide"
+  - case: 15
+    scenario: "GitHub re-run, attempt > 1"
+    fixture: "as case 11, but the remediation run identity records run_attempt 2 (or the PASS comes from a re-run)"
+    expected_proposed_v3_g7: "BLOCK -- PROVENANCE_INCONSISTENT_FAIL_CLOSED (condition 3: a re-run is never an attempt under 9.7); separately, the measured workflow already refuses its own run attempts > 1"
+    current_g7_v2_observed: "same G-7 inputs as case 11: android: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide"
+  - case: 16
+    scenario: "any FAIL_RUNNER after restoration (additional case)"
+    fixture: "case 11 restored, then a later FAIL_RUNNER (SUT-01 android) recorded and the status returned to UNRESOLVED_AFTER_FALLBACK_FAILURE"
+    expected_proposed_v3_g7: "BLOCK -- FALLBACK_EXHAUSTED_VERIFIED (9.7.11: 9.5 applies again; no second remediation; PROVENANCE_INCONSISTENT_FAIL_CLOSED if the status were left SELECTED)"
+    current_g7_v2_observed: "android: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: study-level mobile-runner status is SELECTED, no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide | ios: PROVENANCE_INCONSISTENT_FAIL_CLOSED; mobile G-7 checks failing: study-level mobile-runner status is SELECTED, no FAIL_RUNNER of the selected runner recorded for any SUT x, the selected runner remains admissible study-wide"
+
+toolchain_version:
+  disposition: "TRANSCRIBED -- tools.mobile_fallback.version = \"3.7.0\" (commit e77feb4; manifests/appium3-toolchain-version-transcription-v1.yaml). Existing semantics support it: 'stay null until an authorized smoke installs and observes them' (toolchain-manifest.yaml, compatibility_smoke_preparation) and the PROTO-U14 design of the G-7 version check (manifests/pre-publication-corrections-v1.yaml: once the compatibility smoke has legitimately executed, the recorded Appium version must correspond to the pinned 3.7.0 lineage). Consumers: G-7 version check (now PASS), G-7 and smoke-gate 'Appium 2 never selected' (PASS), measured provenance execution_runner_version; no schema describes the file. Not a reselection; mobile_runner_status and the pin unchanged"
+  install_date_platform: "LEFT NULL -- a single value would misrepresent ephemeral installs on two dates (2026-09-27, 2026-09-29) and two host platforms (Linux x86_64 ubuntu-24.04; Darwin arm64 macos-15). Repository convention followed: the Mobilewright formal gate's ephemeral installs are recorded as an observation block (tools.mobile_primary_candidate.formal_gate_observation_auth_03), so the Appium 3 observations are recorded in tools.mobile_fallback.compatibility_smoke_observations (three per-run entries). The top-level installed flag stays false with a comment"
+  g7_version_check: "CAN REMAIN UNCHANGED -- its intended source is tools.mobile_fallback.version, which now holds the formally observed 3.7.0; the check passes on the canonical tree (verified statically after e77feb4) while every blocking check (status, FAIL_RUNNER, admissibility) still fails closed. The check was not removed or weakened to make any simulation pass"
+
+android_pass_reuse_rationale:  # policy v3 draft 9.7.12
+  statement: "the AUTH-02 SUT-02 android PASS remains an immutable valid compatibility observation; an iOS-only remediation does not re-run Android; a successful iOS remediation may combine prospectively with the recorded Android PASS for per-platform admission; AUTH-02 is not reinterpreted"
+  basis:
+    - "the object of the smoke is the runner's execution stack (9.2); the study-authored WebDriver client and harness are not the runner (9.3)"
+    - "the QUAL-U06 correction changes no endpoint, payload, locator, realization, or oracle; it only lets the client wait up to the declared budget instead of a shorter implicit transport limit and records the underlying cause of transport failures"
+    - "the recorded Android exchanges all completed normally: 18 HTTP responses, all 200 (formal/APPIUM3-COMPAT-SMOKE-AUTH-02/SUT-02-android/appium-server.log); POST /session 200 in 24920 ms (line 226); no transport limit bore on any of them, so a longer permitted wait and a richer failure record cannot change their classification"
+    - "the Android PASS is evidence that Appium 3.7.0 + appium-uiautomator2-driver 8.7.0 exercises MC-01, MC-02, MC-06, MC-04, MC-08, MC-10 on the pinned build; the remediation exists to exercise iOS session establishment fairly, not to change the Android capability definition"
+  conditions: "the successor lock must show REALIZATION.android of harness/smoke.mjs and the Android command sequence byte-unchanged (the shared realizationSha256 covers both platforms, so the Android block is compared explicitly); otherwise the Android PASS cannot be combined. The smoke qualifies the runner, not a campaign executor"
+
+single_remediation_rule: "exactly one iOS remediation qualification attempt (SUT-02 x iOS x Appium 3); PASS -> historical v2 FAIL_RUNNER preserved, admissibility restorable only through 9.7.9 + 9.7.10; FAIL_RUNNER -> study stays blocked, terminal under v3; NOT_EXECUTED -> study stays blocked, terminal under v3, no retry under the same version (a further attempt needs another explicit post-data amendment); after any restoration a later FAIL_RUNNER re-applies 9.5"
+
+runner_state_transitions:  # proposed; none in force while v3 is DRAFT
+  - {from: "UNRESOLVED_AFTER_FALLBACK_FAILURE (v2, now)", event: "v3 stays DRAFT, is rejected, or is revised", to: "UNRESOLVED_AFTER_FALLBACK_FAILURE", g7: FALLBACK_EXHAUSTED_VERIFIED}
+  - {from: "UNRESOLVED_AFTER_FALLBACK_FAILURE", event: "v3 approved and frozen (v2 AMENDED); no remediation yet", to: "UNRESOLVED_AFTER_FALLBACK_FAILURE", g7: FALLBACK_EXHAUSTED_VERIFIED}
+  - {from: "UNRESOLVED_AFTER_FALLBACK_FAILURE", event: "remediation FAIL_RUNNER or NOT_EXECUTED", to: "UNRESOLVED_AFTER_FALLBACK_FAILURE (terminal under v3)", g7: FALLBACK_EXHAUSTED_VERIFIED}
+  - {from: "UNRESOLVED_AFTER_FALLBACK_FAILURE", event: "remediation PASS, lineage record absent or invalid", to: "UNRESOLVED_AFTER_FALLBACK_FAILURE (restoration not recorded)", g7: PROVENANCE_INCONSISTENT_FAIL_CLOSED}
+  - {from: "UNRESOLVED_AFTER_FALLBACK_FAILURE", event: "remediation PASS + valid lineage record + explicit restoration", to: "SELECTED (restored under v3)", g7: "ADMISSIBLE, then per-platform evaluation"}
+  - {from: "SELECTED (restored under v3)", event: "any later FAIL_RUNNER of the selected runner", to: "UNRESOLVED_AFTER_FALLBACK_FAILURE (no second remediation)", g7: "FALLBACK_EXHAUSTED_VERIFIED once transcribed; PROVENANCE_INCONSISTENT_FAIL_CLOSED if the status is left SELECTED"}
+
+impact_matrix:  # campaign evidence read from manifests/study-manifest.yaml statuses, protocol/CHANGELOG.md campaign rows (only E01 has START and FREEZE rows), each campaign README, derived-data/, the six audit branches, and E03's PRE-START records -- not from raw-data/ alone
+  - {campaign: E01-capability-audit, category: NO_MOBILE, current_state: FROZEN, collected_evidence: "yes -- 172 evidence rows on the six audit branches (0 EXECUTION_VERIFIED; Android/iOS rows DOCUMENTED or SOURCE_VERIFIED), adjudication, human rulings, the adjudicated matrix, and H1 (derived-data/)", recollection: "none", historical_governing_protocol: "protocol v1 (mobile-runner-policy v1 in force; no runner was used)", prospective_governing_protocol: "none (FROZEN; reopening would follow protocol/change-control-v1.md section 5)", reason: "no runner-dependent execution; E01 scored the mobile modalities from audit evidence; v3 changes nothing it used"}
+  - {campaign: E02-state-establishment, category: MOBILE_DECLARED_OR_CANDIDATE, current_state: NOT_STARTED, collected_evidence: "none (no START row; no configuration)", recollection: "none", historical_governing_protocol: "none", prospective_governing_protocol: "v2 unless v3 is approved and frozen before its START; its Android or iOS conditions only", reason: "candidate variable 'Surface (web / api / android / ios)'; v3 governs only its mobile conditions"}
+  - {campaign: E03-resetability, category: MOBILE_REQUIRED_CONFIGURED, current_state: NOT_STARTED, collected_evidence: "no measured observation; PRE-START provisioning and environment-verification records exist (manifests/provisioning/, experiments/E03-resetability/environment-verification/, controlled-instance-status.yaml), labeled PROVISIONING or ENVIRONMENT_VERIFICATION, never measured data", recollection: "none", historical_governing_protocol: "none for measured data; the PRE-START records were made under protocol v1 with mobile-runner-policy v1 and are not affected", prospective_governing_protocol: "the version selected explicitly at E03 START: v3 only if approved and frozen before that START; otherwise v2 (both mobile conditions blocked)", reason: "two configured mobile conditions (E03-CS001-SUT02-ANDROID, E03-CS001-SUT02-IOS) in experiments/E03-resetability/campaign-configuration-draft.md; the seven other CS-001 conditions are not mobile. If the remediation PASSes and every independent blocker is resolved (PROTO-U16, E03 START, frozen configuration and executor prompt, controlled instances, every other gate), E03 may start prospectively under the explicitly selected version"}
+  - {campaign: E04-repeatability, category: MOBILE_DECLARED_OR_CANDIDATE, current_state: NOT_STARTED, collected_evidence: "none", recollection: "none", historical_governing_protocol: "none", prospective_governing_protocol: "v2 unless v3 is approved and frozen before its START; mobile conditions only", reason: "candidate variable 'Surface (web / api / android / ios)' and an N = 30 rule for mobile conditions"}
+  - {campaign: E05-determinism, category: UNDETERMINED, current_state: NOT_STARTED, collected_evidence: "none", recollection: "none", historical_governing_protocol: "none", prospective_governing_protocol: "v2 unless v3 is approved and frozen before its START, relevant only if a mobile condition is configured", reason: "no surface or platform variable is declared; mobile neither declared nor excluded"}
+  - {campaign: E06-cross-platform-parity, category: MOBILE_DECLARED_OR_CANDIDATE, current_state: NOT_STARTED, collected_evidence: "none", recollection: "none", historical_governing_protocol: "none", prospective_governing_protocol: "v2 unless v3 is approved and frozen before its START; Android and iOS cells", reason: "candidate 'Platform (Web / Android / iOS)'; its README requires mobile-runner compliance and the compatibility smoke of each ecosystem x platform executed; not configured"}
+  - {campaign: E07-cross-layer-continuity, category: MOBILE_DECLARED_OR_CANDIDATE, current_state: NOT_STARTED, collected_evidence: "none", recollection: "none", historical_governing_protocol: "none", prospective_governing_protocol: "v2 unless v3 is approved and frozen before its START; API->Android and API->iOS pairs", reason: "candidate layer pairs API->Android and API->iOS; README requires mobile-runner compliance; not configured"}
+  - {campaign: E08-performance, category: NO_MOBILE, current_state: NOT_STARTED, collected_evidence: "none", recollection: "none", historical_governing_protocol: "none", prospective_governing_protocol: "not governed by the mobile runner policy as declared", reason: "load applied to service components on a controlled instance; no surface or platform variable; mobile is not mentioned as a condition"}
+  - {campaign: E09-accessibility, category: NO_MOBILE, current_state: NOT_STARTED, collected_evidence: "none", recollection: "none", historical_governing_protocol: "none", prospective_governing_protocol: "not governed by the mobile runner policy", reason: "the frozen modality list makes Accessibility Web only; the README excludes native mobile surfaces"}
+  - {campaign: E10-visual, category: UNDETERMINED, current_state: NOT_STARTED, collected_evidence: "none", recollection: "none", historical_governing_protocol: "none", prospective_governing_protocol: "v2 unless v3 is approved and frozen before its START, relevant only if a mobile platform is configured", reason: "'Viewport / platform (viewport set and platform list TBD before freeze)'; the visual tooling candidate is Playwright screenshots"}
+  - {campaign: E11-security, category: MOBILE_CONDITIONAL, current_state: NOT_STARTED, collected_evidence: "none", recollection: "none", historical_governing_protocol: "none", prospective_governing_protocol: "v2 unless v3 is approved and frozen before its START, only for a condition whose verification method drives a mobile build through the study runner", reason: "run manifests may carry EMULATED or SIMULATED for mobile builds; whether a security verification method uses the mobile runner is TBD in its configuration; mentioning mobile builds alone does not make it affected"}
+  - {campaign: E12-localization-i18n, category: MOBILE_DECLARED_OR_CANDIDATE, current_state: NOT_STARTED, collected_evidence: "none", recollection: "none", historical_governing_protocol: "none", prospective_governing_protocol: "v2 unless v3 is approved and frozen before its START; Android and iOS locale cells", reason: "candidate 'Surface (web / api / android / ios)'; README requires mobile-runner compliance including the per-SUT compatibility smoke"}
+
+campaign_statement: "no NOT_STARTED campaign has collected campaign data, so nothing needs recollection; future mobile execution in any mobile-dependent campaign may occur only under v3 if it is approved and its remediation qualification PASSes and restores admissibility under 9.7.9 / 9.7.10; v3 is not broadened to NO_MOBILE campaigns"
+
+prior_data_validity:  # instruction section 14; v3 introduces a prospective state transition only
+  - "E01 remains FROZEN; its data and evidence remain valid"
+  - "H1 remains unchanged"
+  - "the formal Mobilewright qualification (MOBILE-QUALIFICATION-EXEC-AUTH-03) remains unchanged; the quarantined 2026-09-22 execution remains quarantined"
+  - "AUTH-01 remains unchanged (SUT-02 android NOT_EXECUTED / HARNESS_ORCHESTRATION)"
+  - "AUTH-02 remains unchanged; its Android PASS and its iOS FAIL_RUNNER remain unchanged"
+  - "the v2 fallback exhaustion remains a valid historical state"
+
+expected_implementation_changes_if_approved:  # carried from the first-draft package with the restoration-basis and G-7 items updated; none is made by this preparation; each would need its own instruction and lock v4
+  - "qualification/compatibility-smoke/harness/wd.mjs (QUAL-U06 only): an HTTP dispatcher whose headers and body timeouts are at least the declared per-request budget (1200000 ms for the iOS session request), so that the transport cannot impose a shorter timeout than the explicit session timeout; transport errors recorded with error name, code, and message and cause name, code, and message"
+  - "qualification/compatibility-smoke/harness/smoke.mjs: record the preserved transport-error fields in record.json (failed step and attribution evidence); REALIZATION, capabilities, pins, and the iOS realization unchanged (the Concrete realization section hash would be recomputed only if a byte of it changes, which 9.7.4 forbids)"
+  - ".github/workflows/e03-compatibility-smoke.yml readiness gate and topology (ORCHESTRATOR, E03-CI-WRITE-AUTH-01): an iOS-only remediation topology (no Android job); admission of the preserved AUTH-01 and AUTH-02 rows and mirror entries (including the Android PASS and the iOS FAIL_RUNNER) instead of refusing them; acceptance of status UNRESOLVED_AFTER_FALLBACK_FAILURE only for a v3 remediation authorization under a FROZEN v3 (v2 AMENDED); at most one remediation dispatch"
+  - "manifests/compatibility-smoke-implementation-lock-v4.yaml (successor lock) covering every changed execution-critical file; lock v3 stays historical execution provenance"
+  - "a new execution authorization record with a new id, its frozen launch prompt, publication of the frozen baseline, and a separate dispatch instruction (none is prepared now)"
+  - "G-7 of .github/workflows/e03-measured-execution.yml: the proposed algorithm of g7_prospective_semantics (REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19), satisfying the 16-case g7_static_matrix"
+  - "manifests/toolchain-manifest.yaml: the field tools.mobile_runner_selection.restoration_basis carrying the 9.7.7 restoration basis, written only after a remediation PASS and only on an explicit human restoration instruction, together with manifests/mobile-runner-remediation-v1.yaml (9.7.10); tools.mobile_fallback.version already records the formally observed 3.7.0 (transcribed 2026-09-29, commit e77feb4)"
+  - ".github/workflows/e03-validate.yml regression checks adapted to the v3 gate and G-7 changes"
+
+candidate_changelog_rows:  # NOT IN FORCE -- they exist only in this proposal; protocol/CHANGELOG.md is not modified; placeholders in angle brackets are filled only at an approval
+  in_force: false
+  rows:
+    - "| <APPROVAL DATE> | protocol/mobile-runner-policy-v2.md | v2 | v2 | FROZEN-PRE-DATA -> AMENDED | Superseded by protocol/mobile-runner-policy-v3.md (post-data-collection change, protocol/change-control-v1.md section 5 -- `data_collection_started` was already true). File body unchanged apart from the header (Protocol state, Superseded by row): SHA-256 5bed242e0096068dc2d34861299b10dc5404957e9d3aafea43f9c93de840d495 -> <v2 SHA-256 AFTER THE HEADER CHANGE>. The observations made under v2 (APPIUM3-COMPAT-SMOKE-AUTH-01; APPIUM3-COMPAT-SMOKE-AUTH-02 SUT-02 android PASS and SUT-02 ios FAIL_RUNNER) and the v2 fallback exhaustion remain valid under v2 and are not reinterpreted. | E03-resetability, and prospectively the Android or iOS conditions of E02-state-establishment, E04-repeatability, E06-cross-platform-parity, E07-cross-layer-continuity, E12-localization-i18n, E11-security (mobile-build conditions only), E05-determinism and E10-visual (only if mobile is configured); none has collected campaign data; E01-capability-audit unaffected | <APPROVER -- placeholder, not in force> |"
+    - "| <APPROVAL DATE> | protocol/mobile-runner-policy-v3.md | none | v3 | DRAFT -> FROZEN-PRE-DATA | Explicit human approval of the post-data amendment resolving protocol/unresolved.md PROTO-U19 (SUBSTANTIVE_POST_DATA_PROTOCOL_DECISION): <APPROVING INSTRUCTION, verbatim in its record> (SHA-256 <v3 SHA-256 AT FREEZE>). Changes: 9.5 gains one bounded exception clause; new 9.7 post-fallback remediation qualification -- one attempt, SUT-02 x iOS x Appium 3 only, correction restricted to qualification/unresolved.md QUAL-U06, results and attribution of 9.1-9.4 unchanged, single-attempt terminal effects, effective-admissibility rule (historical observation vs prospective admissibility; 12 conditions; history integrity; fail closed), the remediation lineage record manifests/mobile-runner-remediation-v1.yaml and the restoration-basis field tools.mobile_runner_selection.restoration_basis (both created only after a remediation PASS on an explicit human restoration instruction), post-restoration rule, SUT-02 android PASS reuse basis. Introductory paragraph, 9.1-9.4, 9.6, and 10 carried from v2 byte for byte; sections 1-8 carried with status and provenance corrections only (sections 1, 2, 3, 4, 6, 7; no methodological change); sections 11 and 12 updated. Prior data: E01, H1, the Mobilewright qualification, AUTH-01, AUTH-02, and the v2 fallback exhaustion unaffected and not reinterpreted; nothing re-collected or re-analyzed. References re-pointed to v3 by this recorded change: <LIST AT APPROVAL>. The G-7 implementation dependency (REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19) is not made by this row. | E03-resetability, and prospectively the Android or iOS conditions of E02-state-establishment, E04-repeatability, E06-cross-platform-parity, E07-cross-layer-continuity, E12-localization-i18n, E11-security (mobile-build conditions only), E05-determinism and E10-visual (only if mobile is configured); none has collected campaign data; E01-capability-audit unaffected | <APPROVER -- placeholder, not in force> |"
+
+proto_u19_resolution_package:  # PROTO-U19 stays OPEN
+  references:
+    - "remediation lineage semantics (9.7.9, 9.7.10)"
+    - "G-7 prospective dependency (REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19)"
+    - "toolchain-version reconciliation (commit e77feb4)"
+    - "single-remediation rule (9.7.5, 9.7.7, 9.7.11)"
+    - "campaign impact matrix (above)"
+    - "QUAL-U06"
+    - "freeze-readiness corrections (proposal v3): restoration record path and restoration-basis field fixed; status and provenance narration of Sections 1-8 corrected; no methodological change"
+  status: OPEN
+
+qual_u06: {status: OPEN, note: "referenced from the v3 rationale and 9.7.4 / 9.7.12; no implementation byte changed"}
+
+qual_u07_publication_hygiene_proposal:  # PREPARED, NOT APPLIED; QUAL-U07 stays OPEN (publication only); supersedes the first-draft package's QUAL-U07 section
+  objective: "neither the extracted public files nor any exported archive may carry the host-path strings"
+  finding_unchanged: "no existing export transformation class covers host paths (PROVIDER_NEUTRAL_PATH_ALIAS renames the agent-instructions file only); the candidate class QUALIFICATION_HOST_PATH_REDACTION replays the frozen harness scrub rule (dry run: appium-server.log 7d09fc74... -> 13a53afb..., 56 lines; the operation-record line 599, a7bec417... -> 70400531...)"
+  zip_facts: "only the iOS archive (github-artifact/E03-COMPATIBILITY_SMOKE-SUT-02-ios-run36539790536-a1.zip, sha256 677e5c8f...) contains the 56 lines, deflate-compressed; the Android archive is clean; the GitHub artifacts expire 2026-12-28, after which the canonical archives are the only raw copies. Redacting only the extracted log while publishing the unchanged iOS ZIP does NOT meet the objective"
+  public_validation_fact: "the public validate step 'Assert the imported compatibility-smoke evidence is stored byte-exact (QUAL-U05)' compares on-disk files with IMPORT-RECORD sha256, archives with their GitHub digest, and files with archive members, with no bridge through PUBLIC-EXPORT-MANIFEST.yaml"
+  options:  # none selected
+    - option: "A. transformed extracted files + deterministic sanitized archive"
+      description: "export the transformed appium-server.log and a deterministically re-packed iOS archive whose appium-server.log member is transformed identically; the Android archive exported UNCHANGED"
+      reproducibility_impact: "the public iOS archive digest differs from the GitHub digest; the members stay byte-identical to canonical except the transformed log; verification of the original archive and GitHub digest possible only canonically"
+      canonical_immutability: "canonical files and archives unchanged (publication-only)"
+      public_validation_changes: "QUAL-U05 step must bridge: for a transformed file compare its canonical_sha256 (manifest) with IMPORT-RECORD and the canonical archive member, and its exported bytes with the transform of that member; for the re-packed archive compare with the deterministic re-pack instead of the GitHub digest"
+      hash_bridge: "per-file canonical and exported sha256 for the log, the iOS archive, and the operation record in PUBLIC-EXPORT-MANIFEST.yaml; IMPORT-RECORD github_digest cited as canonical under hash_citation_rule"
+      implementation_complexity: "high -- a byte-reproducible archive needs fixed member order, timestamps, permissions, compression method and level, and a pinned zlib behaviour, re-derivable by the verifier"
+    - option: "B. transformed extracted files, raw iOS archive excluded"
+      description: "export the transformed appium-server.log; do not export the iOS github-artifact archive (EXCLUDED, canonical digest recorded); the Android archive may stay UNCHANGED"
+      reproducibility_impact: "the public cannot re-derive the iOS members from the original archive; member hashes are checkable only through the manifest's canonical_sha256; asymmetric Android/iOS publication"
+      canonical_immutability: "unchanged"
+      public_validation_changes: "QUAL-U05 step must skip archive checks for an archive the manifest marks EXCLUDED and bridge the transformed log as in A"
+      hash_bridge: "manifest entries for the transformed log (canonical and exported sha256), the excluded archive (canonical sha256 and GitHub digest), and the operation record"
+      implementation_complexity: "medium"
+    - option: "C. exclude the complete AUTH-02 formal namespace"
+      description: "do not export qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/ (EXCLUDED_INTERNAL_ORCHESTRATION)"
+      reproducibility_impact: "largest loss: the AUTH-02 Android PASS and iOS FAIL_RUNNER are not publicly verifiable; README rows, the mirror, and the attribution record point to absent public files"
+      canonical_immutability: "unchanged"
+      public_validation_changes: "none for QUAL-U05 (no AUTH-02 import record is exported); any public check resolving the formal paths named by records would need an exclusion rule"
+      hash_bridge: "manifest EXCLUDED entries with canonical sha256"
+      implementation_complexity: "low"
+  every_option_also_needs: "the one matching line of manifests/appium3-compat-smoke-auth-02-postrun-recording-v1.yaml (a verbatim human quotation) needs the publication-only transform (canonical and exported sha256 recorded; its verbatim_sha256 cites canonical bytes under hash_citation_rule) or an explicit human decision on a narrowly scoped scan exemption for verbatim quotations"
+  status: PROPOSED_NOT_APPLIED  # no transformation, export, push, or workflow change is made; publication of the AUTH-02 formal artifacts remains NOT AUTHORIZED
+
+risks_internal_validity:
+  - "two SUT-02 x iOS observations under two policy versions (forking path); both must always be reported"
+  - "the correction changes the measurement instrument (the harness transport), so a remediation observation is not a replication of AUTH-02"
+  - "a PASS would restore admissibility study-wide on the basis of one additional execution of one ecosystem x platform"
+  - "combining the AUTH-02 Android PASS with a later iOS PASS pairs observations from two harness revisions; 9.7.12 limits this to an unchanged Android realization and command sequence"
+  - "the version transcription removes an incidental blocker of G-7: in a tampering scenario (case 10) current G-7's fail-closed behaviour now rests on the status and FAIL_RUNNER checks only; the v3 implementation must add the history-integrity verification"
+
+risks_outcome_responsive_methodology:
+  - "the amendment and its hardening are prepared after the unfavorable outcome is known"
+  - "the defect (QUAL-U06) was found by the post-run review of the failure it may be relevant to"
+
+mitigations:
+  - "the historical observations and the v2 exhaustion are immutable and never reinterpreted; restoration requires a separate normative lineage record verified by G-7, never table order"
+  - "one ecosystem x platform, one attempt, one runner, one defect class, terminal outcomes in every direction; after a restoration any FAIL_RUNNER re-blocks"
+  - "correction restricted to QUAL-U06; pins, build, substrate, capability definition, iOS and Android realizations, and WebDriverAgent limits unchanged"
+  - "result vocabulary and conservative tie-break unchanged"
+  - "explicit human approval, successor lock, new authorization, publication, dispatch, and restoration each separately, before any admission"
+  - "no campaign has collected data"
+
+alternatives:  # unchanged from the first-draft package; consequences only; none selected
+  A_stop_mobile_permanently: "keep v2 in force; no Android or iOS campaign data (E03 keeps its seven non-mobile CS-001 conditions; mobile parts of E02, E04, E06, E07, E12 and conditionally E11, E05, E10 are not executed); RQ4 loses its mobile evidence, RQ2/RQ3/RQ5 and E12 lose mobile cells; lowest methodological risk, largest information loss"
+  B_third_runner: "a separate protocol decision selecting a new runner (never Appium 2); new qualification, new smokes for every mobile ecosystem x platform, new harnesses and locks, added runner variability; the Appium 3 Android PASS does not transfer; largest burden"
+  C_single_appium3_remediation: "policy v3 as hardened: history preserved; one iOS attempt after a QUAL-U06-only correction; restoration only through the lineage rule; if FAIL_RUNNER or NOT_EXECUTED the study is back at A with one more preserved record"
+  selection: "none -- the human research lead decides (approve, reject, or revise)"
+
+not_done:
+  - "policy v3 approval or freeze"
+  - "policy v1 or v2 edit; v2 marked AMENDED or given a successor pointer"
+  - "protocol/CHANGELOG.md edit"
+  - "proposal v1 or v2 edit"
+  - "workflow, G-7, wd.mjs, harness, lock v3, authorization record, formal evidence, QUALIFIER result, mirror, runner status, pin, toolchain observation, raw data, or frozen prompt change"
+  - "lock v4, remediation lineage record, restoration_basis field, or new authorization"
+  - "dispatch, re-run, harness repair, publication, export, or push"
+  - "QUAL-U07 option selection or application"
+  - "E03 START"
+  - "any action on the untracked non-repository content at the working-tree root"
+
+instruction_verbatim: |
+  EUS-2026-001 — FINALIZE MOBILE-RUNNER-POLICY-V3 DRAFT FREEZE READINESS
+
+    This is one DRAFT-only preparation operation. It approves and freezes nothing.
+
+    Start from canonical local main at:
+
+    3414c4485e7fc7aa3dceaee96e0c45e6e7016651
+
+    First verify the tracked worktree/index and exact ancestry. Do not treat the untracked agent-bootstrap-eus-2026-001/ directory as repository content and do not add, modify, or delete it.
+
+    AUTHORITATIVE FINDING
+
+    The substantive 9.7 hardening is retained, but protocol/mobile-runner-policy-v3.md is not yet freeze-ready:
+
+    1. Section 9.7.7 leaves the field carrying the restoration basis marked “candidate — not frozen.”
+    2. Section 9.7.10 leaves the normative remediation-record path marked “candidate — not frozen.”
+    3. protocol/change-control-v1.md §6.3 requires every such item to be resolved or explicitly deferred before freeze.
+    4. Sections 1–8 retain present-tense historical narration that now contradicts the formal record and Section 11:
+       - Mobilewright described as merely an unselected candidate;
+       - “No qualification run has occurred”;
+       - pinned qualification provenance, concrete scenarios, and platform identities described as null/TBD;
+       - pass criteria described as “now frozen” while v3 is DRAFT.
+
+    PERMITTED CHANGES
+
+    1. Edit protocol/mobile-runner-policy-v3.md in place while it remains DRAFT.
+
+    2. Resolve the restoration provenance choices exactly:
+       - normative future record path:
+         manifests/mobile-runner-remediation-v1.yaml
+       - future toolchain field carrying the prospective restoration basis:
+         tools.mobile_runner_selection.restoration_basis
+       State that this field and the remediation record are created only after a remediation PASS and only on an explicit human restoration instruction. Do not create either now.
+
+    3. Correct Sections 1–8 so their status narration is factually coherent with the completed history:
+       - Mobilewright’s gate executed under v1 and failed;
+       - Appium 3 was selected by the frozen Section 8 switch;
+       - the qualification build, concrete scenarios, and host/platform identities were pinned and recorded before the formal gate;
+       - the pass criteria were frozen under v1 and are carried forward unchanged.
+       Preserve every methodological criterion, N, capability, attribution rule, result rule, and historical outcome. These are status/provenance corrections only.
+
+    4. Scan the complete operative v3 document for unresolved “candidate — not frozen,” active null/TBD narration, or other present-tense statements contradicted by the formal records. Resolve only the
+    status/provenance inconsistencies. Do not broaden 9.7 or alter its eligibility, one-attempt, effective-admissibility, history-integrity, fail-closed, post-restoration, or Android-PASS rules.
+
+    5. Do not edit manifests/mobile-runner-policy-v3-amendment-proposal-v1.yaml or -v2.yaml. Preserve them as first- and second-draft history.
+
+    6. Create:
+       manifests/mobile-runner-policy-v3-amendment-proposal-v3.yaml
+
+       It must:
+       - reproduce this instruction verbatim with its SHA-256;
+       - identify proposal v2 as prior history;
+       - record the before/after policy hashes;
+       - contain exact proposal-v2-draft → corrected-draft and policy-v2 → corrected-v3 diffs;
+       - explain that the correction removes freeze-checklist ambiguity without changing the proposed methodology;
+       - record the fixed remediation-record path and restoration-basis field;
+       - preserve the 16-case proposed G-7 matrix and its semantics;
+       - retain QUAL-U07’s three options without selecting or applying one;
+       - explicitly record that public v29 remains a pre-dispatch AUTH-02 snapshot, that exactly two formal compatibility-smoke runs currently exist, and that no public update is authorized here;
+       - contain candidate CHANGELOG rows only, clearly NOT IN FORCE.
+
+    7. Update only the repository navigation/live-status files necessary to identify proposal v3 as the current DRAFT package and proposals v1/v2 as history. Update PROTO-U19 in place as an OPEN log row if
+    needed. Do not imply approval or closure.
+
+    PROHIBITED
+
+    - Do not edit policy v1 or v2.
+    - Do not edit protocol/CHANGELOG.md.
+    - Do not mark v2 AMENDED or add a successor pointer.
+    - Do not approve or freeze v3.
+    - Do not modify .github/workflows/**, G-7, wd.mjs, any harness file, lock v3, authorization record, formal evidence, QUALIFIER result, compatibility-smoke mirror, runner status, pin, toolchain
+    observation, raw data, or frozen prompt.
+    - Do not create lock v4, a remediation record, or a new authorization.
+    - Do not dispatch, rerun, repair the harness, publish, export, push, or start E03.
+    - Do not select a QUAL-U07 publication option.
+
+    VERIFY
+
+    - policy v2 SHA-256 remains:
+      5bed242e0096068dc2d34861299b10dc5404957e9d3aafea43f9c93de840d495
+    - AUTH-02 remains Android PASS / iOS FAIL_RUNNER.
+    - mobile_runner_status remains UNRESOLVED_AFTER_FALLBACK_FAILURE.
+    - Every execution-critical and historical-evidence path is byte-unchanged.
+    - No active “candidate — not frozen” or contradicted current-status/TBD statement remains in the operative v3 draft.
+    - v3 remains DRAFT and no v3 CHANGELOG row exists.
+    - YAML parses and git diff --check passes.
+    - No new GitHub Actions run exists; compatibility-smoke run count remains exactly two.
+    - Public main remains v29 at 34c0453053a29492a34b6a20676bd8f1f046738b unless external evidence differs, in which case stop and report.
+
+    Commit the authorized local changes on main. Do not push.
+
+    RETURN
+
+    1. HEAD before and after.
+    2. Commit(s) and changed paths.
+    3. Corrected v3 SHA-256 and proposal-v3 SHA-256.
+    4. Exact resolution of every candidate/TBD/status inconsistency.
+    5. Confirmation that v1, v2, proposal v1, proposal v2, CHANGELOG, execution-critical code, historical evidence, results, mirror, and runner state are unchanged.
+    6. Current public HEAD/export and workflow counts.
+    7. Remaining human decisions and hard-stop state.
+
+    Hard-stop after returning the package. The next step after independent audit is Gilberto’s explicit review and approve/reject/revise decision; do not perform that gate.

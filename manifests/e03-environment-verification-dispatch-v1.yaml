@@ -1,0 +1,138 @@
+# manifests/e03-environment-verification-dispatch-v1.yaml
+# Dispatch record of operation OP-ENV-01: exactly ONE workflow_dispatch of .github/workflows/e03-environment-verification.yml
+# (E03 Environment Verification; NON-MEASURED) on the default branch of the public repository, recorded by the ORCHESTRATOR
+# BEFORE the dispatch and committed locally (not pushed). The observed run identity is recorded separately in
+# manifests/e03-environment-verification-run-v1.yaml. Record class ENVIRONMENT_VERIFICATION only: nothing is measured, nothing
+# enters raw-data/, no mobile test runner is used, no artifact is imported into the repository by this operation, and
+# experiments/E03-resetability/controlled-instance-status.yaml is not edited. This record authorizes nothing beyond the one dispatch.
+record_id: E03-ENVIRONMENT-VERIFICATION-DISPATCH-01  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: ENVIRONMENT_VERIFICATION_DISPATCH_RECORD
+study_id: EUS-2026-001
+operation_id: OP-ENV-01
+role: ORCHESTRATOR  # protocol/agent-governance-v2.md; the workflow is dispatched, not edited (E03-CI-WRITE-AUTH-01)
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-10-02T22:43:39Z"  # UTC, before the dispatch
+measured_experiment: false
+qualification_evidence: false
+status: PRE_DISPATCH_RECORDED
+
+human_approval:
+  given_by: gilbertosanchez  # human research lead
+  given_at: "2026-10-02T22:04:07Z"
+  channel: "approval given by the human research lead to the study's independent orchestration reviewer and relayed to the ORCHESTRATOR in the operation instruction OP-ENV-01 (reproduced verbatim in instruction_verbatim below); it was not live input to the ORCHESTRATOR"
+  relayed_by: "the study's independent orchestration reviewer (an external review function; not a role of protocol/agent-governance-v2.md)"
+  decision_item_as_presented_verbatim: "3. **Verificación de entorno:** un dispatch de `e03-environment-verification.yml` sobre el `main` público. No mide nada, pero clona los SUT (regla 15). Sería el run 39."
+  decision_item_sha256: a7303aed0feccee4a12a6ff14bd6b88f0e6d4556d334106a720c183ed7dd6938  # UTF-8 text above, no trailing line feed
+  answer_verbatim: "3. Vamos por tu recomendación"
+  answer_sha256: 292e95815774e5c40292499b9e8f9c5c348f2b0efdde45c82aa1e6c2eb01f811  # UTF-8 text above, no trailing line feed
+  scope_as_relayed: "exactly ONE workflow_dispatch of .github/workflows/e03-environment-verification.yml on the default branch of the public repository gsanchezm/experimental-utility-testing-labs, with input target=all; nothing else"
+
+direct_confirmations_to_the_orchestrator:
+  note: "Both confirmations were written by the human research lead directly to the ORCHESTRATOR on 2026-10-02. Their exact texts name a working-session label and untracked file paths, which the publication-hygiene rule keeps out of tracked files (AGENT-INSTRUCTIONS.md, E03-CI-WRITE-AUTH-01); each is therefore recorded as a neutral paraphrase with the sha256 of its exact text (UTF-8, no trailing line feed) and the time the ORCHESTRATOR observed it."
+  relay_model:
+    paraphrase: "the human research lead confirms that approvals for EUS-2026-001 gated actions are given by him to the study's independent orchestration reviewer and relayed by it verbatim, and that the ORCHESTRATOR acts on those relays and records them as relayed approvals"
+    exact_text_sha256: d5600771e6668557fd3eca711f0b780ebf88414fcda59c702a18fd44bd5665f8
+    observed_at: "about 2026-10-02T22:32Z (delivered with the result of a command started at 22:32:17Z)"
+  adoption_by_name:
+    paraphrase: "the human research lead repeats the relay-model confirmation and adopts as his instructions, as written, the operation instructions OP-ENV-01 (sha256 f0c6cc04b7e6c5b55cb0118d86ac8f7164da7655b395ab3829dad9067e31f828) and OP-GOV-01 (sha256 d0e4bce1140084be32089a245ac3c926e92f543bd20528e8978d2391c4bbe03d), including the amendment record, the live-status synchronization and the re-pointing of references they describe"
+    exact_text_sha256: 82ab29cad297807d6f54f8847f0893230e8a24d6eaa25488a5447351504208e0
+    observed_at: "about 2026-10-02T22:38Z (delivered between 22:37:07Z and 22:38:12Z)"
+
+instruction:
+  operation_id: OP-ENV-01
+  title: "EUS-2026-001 — OP-ENV-01 — ONE DISPATCH OF THE E03 ENVIRONMENT VERIFICATION ON GITHUB ACTIONS (NON-MEASURED)"
+  sha256: f0c6cc04b7e6c5b55cb0118d86ac8f7164da7655b395ab3829dad9067e31f828  # the issued instruction text, 4,987 bytes; instruction_verbatim below reproduces it byte for byte (YAML literal block, clip)
+
+dispatch_inputs:
+  repository: gsanchezm/experimental-utility-testing-labs  # PUBLIC
+  workflow_file: .github/workflows/e03-environment-verification.yml
+  workflow_id: 364260233
+  workflow_canonical_sha256: 1aa32454ae4abf868e9eefc63135e44e59c18c1e714874908bef981acd8c8160
+  workflow_public_sha256: 603d6ed1b63052170982feb73ea3c4b6890007c7d1f193876702df7e75a3cbf2  # TRANSFORMED on export (PROVIDER_NEUTRAL_PATH_ALIAS); differs from the canonical file only in its line-3 comment (the agent-instructions file name); no executable line differs
+  ref: main
+  expected_head_sha: 34c0453053a29492a34b6a20676bd8f1f046738b  # public export v29
+  expected_head_tree: 9f3fd811fbace7243fc3daacf0db56eacfccc671
+  inputs: {target: all}
+  command: "gh workflow run e03-environment-verification.yml --repo gsanchezm/experimental-utility-testing-labs --ref main -f target=all"
+  dispatch_count_authorized: 1
+  retry_policy: none  # no second dispatch and no re-run of the run or of any job; an uncertain command result is resolved from the Actions API, never by repeating the command
+  jobs_selected_by_target_all:
+    - {job: sut-01-web-api, runner: ubuntu-24.04, environment_type: SELF_HOSTED, conditions_covered: [E03-CS001-SUT01-WEB, E03-CS001-SUT01-API]}
+    - {job: sut-02-web, runner: ubuntu-24.04, environment_type: SELF_HOSTED, conditions_covered: [E03-CS001-SUT02-WEB]}
+    - {job: sut-02-android, runner: ubuntu-24.04, environment_type: EMULATED, conditions_covered: [E03-CS001-SUT02-ANDROID]}
+    - {job: sut-02-ios, runner: macos-15, environment_type: SIMULATED, conditions_covered: [E03-CS001-SUT02-IOS]}
+    - {job: sut-03-web, runner: ubuntu-24.04, environment_type: SELF_HOSTED, conditions_covered: [E03-CS001-SUT03-WEB]}
+    - {job: sut-04-web-api, runner: ubuntu-24.04, environment_type: SELF_HOSTED, conditions_covered: [E03-CS001-SUT04-WEB, E03-CS001-SUT04-API]}
+    - {job: sut-05-api, runner: ubuntu-24.04, environment_type: SELF_HOSTED, conditions_covered: [E03-CS001-SUT05-API]}
+
+not_covered:  # from the instruction; each needs its own approval
+  - a second dispatch, or a re-run of the run or of any job
+  - any other workflow; any measured execution; E03 START
+  - importing the artifacts into the repository or transcribing anything into experiments/E03-resetability/controlled-instance-status.yaml (a separate bounded operation after the independent audit of this run)
+  - any change to a workflow, the SUT manifest, a pin, a gate, or any other tracked file except this record and manifests/e03-environment-verification-run-v1.yaml
+  - any export or push
+
+pre_dispatch_verification:  # performed by the ORCHESTRATOR; result PASS
+  canonical_repository: "main at 041b907d8c4bc70c3ac7280ffcc69614db471b15; tracked tree and index clean"
+  public_repository: "visibility public, default branch main at 34c0453053a29492a34b6a20676bd8f1f046738b, root tree 9f3fd811fbace7243fc3daacf0db56eacfccc671, pushed_at 2026-09-29T02:17:57Z (2026-10-02T22:37:07Z)"
+  github_actions: "38 runs in total (newest 36539790536); 0 runs of e03-environment-verification.yml (workflow id 364260233, active); 0 queued, 0 in progress, 0 waiting, 0 requested, 0 pending (2026-10-02T22:37:07Z)"
+  public_bytes:
+    export_manifest: "PUBLIC-EXPORT-MANIFEST.yaml at public main, sha256 ab2ff02698f613b07e3170730791023a10302a03bad80aa29af73f5089e56f00 (equal to the export v29 value in PUBLIC-EXPORT-MANIFEST.yaml)"
+    workflow: "TRANSFORMED (PROVIDER_NEUTRAL_PATH_ALIAS), bridged: canonical_sha256 1aa32454... equals the canonical file; exported_sha256 603d6ed1... equals the public file fetched from main; the two files differ in line 3 only, a comment"
+    sut_manifest: "TRANSFORMED (PROVIDER_NEUTRAL_PATH_ALIAS), bridged: canonical_sha256 f9d9f4c7290484add75465244af97bf8ebebc141cf4c60538ee0b7b8e4e665bb equals the canonical file; exported_sha256 6582b9020792f97726d42ee6fefc412685dcbab0f54282f54388f907945ade98 equals the public file fetched from main"
+  no_mobile_test_runner: "read in full: the sut-02-android job uses reactivecircus/android-emulator-runner@v2 (emulator boot) and adb only (install, monkey launch, dumpsys, uiautomator dump, screencap, getprop); the sut-02-ios job uses xcodebuild -version and xcrun simctl only (boot, bootstatus, install, launch, get_app_container, io screenshot) plus strings and plutil; no job installs or starts Appium, Mobilewright, WebDriverAgent, XCUITest, or any other test runner"
+  result: PASS
+
+instruction_verbatim: |
+  EUS-2026-001 — OP-ENV-01 — ONE DISPATCH OF THE E03 ENVIRONMENT VERIFICATION ON GITHUB ACTIONS (NON-MEASURED)
+
+  Role for this operation: ORCHESTRATOR (protocol/agent-governance-v2.md).
+  Classification: gated action (a workflow dispatch that clones or downloads the pinned SUT sources). Record class ENVIRONMENT_VERIFICATION only; nothing is measured, nothing enters raw-data/.
+
+  HUMAN APPROVAL
+  Given by gilbertosanchez, human research lead, on 2026-10-02T22:04:07Z, to the study's independent orchestration reviewer, and relayed by that reviewer in this instruction.
+  Decision item as presented to him (verbatim):
+  "3. **Verificación de entorno:** un dispatch de `e03-environment-verification.yml` sobre el `main` público. No mide nada, pero clona los SUT (regla 15). Sería el run 39."
+  His answer (verbatim):
+  "3. Vamos por tu recomendación"
+  Scope of the approval as relayed: exactly ONE workflow_dispatch of .github/workflows/e03-environment-verification.yml on the default branch of the public repository gsanchezm/experimental-utility-testing-labs, with input target=all. Nothing else.
+
+  THIS APPROVAL DOES NOT COVER
+  - a second dispatch, or a re-run of the run or of any job;
+  - any other workflow; any measured execution; E03 START;
+  - importing the artifacts into the repository or transcribing anything into experiments/E03-resetability/controlled-instance-status.yaml (a separate bounded operation after the independent audit of this run);
+  - any change to a workflow, the SUT manifest, a pin, a gate, or any other tracked file except the two records named below;
+  - any export or push.
+
+  1. EXPECTED BASELINE (STOP on any mismatch and change nothing)
+  - canonical main HEAD 041b907d8c4bc70c3ac7280ffcc69614db471b15; tracked tree and index clean.
+  - public repository: default branch main at 34c0453053a29492a34b6a20676bd8f1f046738b, tree 9f3fd811fbace7243fc3daacf0db56eacfccc671.
+  - GitHub Actions: 38 runs in total; 0 runs of e03-environment-verification.yml; nothing queued or in progress.
+  - the public copies of .github/workflows/e03-environment-verification.yml and manifests/sut-manifest.yaml carry the canonical bytes (verify through the PUBLIC-EXPORT-MANIFEST.yaml of public main: UNCHANGED, or bridged by its canonical and exported hashes).
+  - the workflow starts no mobile test runner: confirm by reading the file that the SUT-02 android and ios jobs use only the platform tools. If any job would start Appium, Mobilewright, or another runner, STOP.
+
+  2. RECORD BEFORE DISPATCH
+  Create manifests/e03-environment-verification-dispatch-v1.yaml: record class; the approval above verbatim with its sha256; the statement that it was given to the independent orchestration reviewer and relayed (this instruction verbatim with its sha256); the exact dispatch inputs (repository, workflow file and its sha256, ref main, head commit, target all); retry policy none; the list of what is not covered; the results of the baseline checks. Commit it alone, staged by explicit path, with the existing git identity and no trailers. Do not push.
+
+  3. DISPATCH — exactly once
+  gh workflow run e03-environment-verification.yml --repo gsanchezm/experimental-utility-testing-labs --ref main -f target=all
+  If the command errors or its effect is uncertain, do NOT repeat it: first establish from the Actions API whether a run was created.
+
+  4. RUN IDENTITY
+  Record run id, run number, run attempt (must be 1), event, head SHA, and created_at in manifests/e03-environment-verification-run-v1.yaml; commit it alone under the same rules. The inventory then holds 39 runs.
+
+  5. WAIT — never cancel, never re-run
+  When the run completes: list every job with its conclusion and times; download every artifact into your session scratchpad outside the repository; verify each archive's sha256 against its GitHub digest; read each environment-verification.json.
+
+  6. RETURN PACKAGE, THEN HARD STOP
+  - the two commits (SHA, parent, paths) and git status before and after;
+  - run identity and the attempt-2 lookup result (expected: not found);
+  - one table per job with three separate layers: the GitHub job conclusion; the record's own verification_result; what the record demonstrates and what it does not (the reset itself is not exercised);
+  - artifact names, ids, sizes, digests, expiry dates;
+  - which of the nine E03 conditions each job covers;
+  - anything surprising (for example stale wording written by the published workflow), and what you did not verify;
+  - the run inventory by workflow after the run.
+  Import nothing into the repository and do not edit controlled-instance-status.yaml. If a job fails or reports NOT_VERIFIED, record nothing beyond the run identity and report it: a further dispatch needs a new approval.
+
+  PUBLICATION HYGIENE FOR THE TWO RECORDS
+  Describe the relay neutrally ("approval given by the human research lead to the study's independent orchestration reviewer and relayed to the ORCHESTRATOR"); no session names, no vendor or assistant names, no conversation identifiers, no host paths.

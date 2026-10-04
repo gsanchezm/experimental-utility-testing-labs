@@ -1,0 +1,791 @@
+# manifests/appium3-compat-smoke-auth-02-postrun-recording-v1.yaml
+# Operation record of the POST-RUN RECORDING of APPIUM3-COMPAT-SMOKE-AUTH-02 under the frozen conservative tie-break
+# (explicit human instruction, 2026-09-29; verbatim below). Written by the ORCHESTRATOR. It lists what was verified,
+# recorded, and transcribed, by which role, in which commits, and what was deliberately not done. It is not qualification
+# evidence, records no result of its own (the QUALIFIER-MOBILE-01 record is the source of truth), and authorizes nothing
+# beyond the recording it describes.
+record_id: APPIUM3-COMPAT-SMOKE-AUTH-02-POSTRUN-RECORDING-01
+record_class: POST_RUN_RECORDING_OPERATION_RECORD
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-09-29T16:37:35Z"
+authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-02
+run: {run_id: 36539790536, run_number: 2, run_attempt: 1, event: workflow_dispatch, head_sha: 34c0453053a29492a34b6a20676bd8f1f046738b, conclusion: failure, jobs: "gate 109312210890 success; android 109312275007 success; ios 109313112821 failure"}
+instruction:
+  title: EUS-2026-001 -- POST-RUN RECORDING OF APPIUM3-COMPAT-SMOKE-AUTH-02 UNDER THE FROZEN CONSERVATIVE TIE-BREAK
+  given_by: gilbertosanchez  # human research lead
+  given_on: "2026-09-29"
+  how_the_instruction_arrived: "live session input to the ORCHESTRATOR session, first person ('I, gilbertosanchez, human research lead for EUS-2026-001, have reviewed the formal execution ... I authorize the canonical POST-RUN RECORDING operation below'), after the human's review of the preserved evidence and of a read-only verification the ORCHESTRATOR had returned in the same session; it authorizes recording only (no execution), so it was adopted as given, as for the AUTH-01 post-run recording"
+  verbatim_sha256: 3f8c998239cd5b28f383ca7c2f2385ad092604b5c82aed314b793b54939fc737  # sha256 of instruction_verbatim below as a file with one trailing line feed
+  determination_source: "the human research lead's reviewed determination: SUT-02 android PASS; SUT-02 ios FAIL_RUNNER under protocol/mobile-runner-policy-v2.md 9.4 because, after inspection of the preserved artifacts, attribution remains uncertain between the study-authored WebDriver transport and the selected Appium/XCUITest execution stack; recorded by QUALIFIER-MOBILE-01 after it re-read every cited artifact fact"
+verification_before_recording:
+  run_identity: "run 36539790536, run number 2, attempt 1 (attempts/2 HTTP 404), workflow_dispatch, head 34c0453053a29492a34b6a20676bd8f1f046738b, conclusion failure; jobs gate 109312210890 success, android 109312275007 success, ios 109313112821 failure; identical to the instruction's section 1"
+  run_inventory: "e03-compatibility-smoke.yml runs 2 (36340774530 AUTH-01, 36539790536 AUTH-02; both attempt 1 only); e03-measured-execution.yml 0; e03-environment-verification.yml 0; e03-mobile-qualification.yml 7 (unchanged): no second AUTH-02 dispatch, no E03 execution"
+  manual_intervention: "none: dispatch-only workflow, attempt 1 only; the job logs show only the scripted steps"
+  artifacts: "android 11020535210 (380576 bytes, GitHub digest sha256:50b9fd29a11737701c7fd5f00f3a41fdd87b314f50d0e21e6a29bf1428b8baed) and ios 11021125037 (33032 bytes, GitHub digest sha256:677e5c8f66fadfb7fce2c25def02c97e3394f3b9bde11c737d391acd06e91b28), re-downloaded 2026-09-29 and equal to their digests"
+  frozen_inputs: "lock v3 6c4c29ac107119a04c0ec47da97c38f10695a0e3f296809145a469ab1087bef5 (and its realization section 5988a4e87c9872bda643238498decb85595a8e4499bf0e3e99b9ab809db94af1), policy v2 5bed242e0096068dc2d34861299b10dc5404957e9d3aafea43f9c93de840d495 (unchanged since its freeze, ed2c18d), frozen launch prompt v2 c9eceacabf1fb45d3b800a769088318982813e9fd0501d016576dbcd314224ff (equal to the AUTH-02 record) -- all unchanged; the bytes that ran (public 34c0453) of wd.mjs, smoke.mjs, smoke-common.sh, run-smoke-ios.sh, and package-lock.json equal the canonical files and lock v3"
+commits:
+  - {commit: 4c5fe39, role: QUALIFIER-MOBILE-01, content: "import of both artifacts (android 9 files, ios 7 files, both archives kept, IMPORT-RECORD.yaml); verified 18 of 18 byte-exact as working tree, committed blob, git archive, and fresh clone; source-terminal.xml keeps its 66 CRLF line endings"}
+  - {commit: 9128c97, role: QUALIFIER-MOBILE-01, content: "results: SUT-02 android PASS; SUT-02 ios FAIL_RUNNER / SELECTED_RUNNER_STACK by the 9.4 tie-break (README Smoke and Attribution records, Outcome, Status, successor instruction field recorded post-run), ATTRIBUTION-SUT-02-ios.yaml, QUAL-U06, QUAL-U07, QUAL-U04 resolved as to the android requirement, qualification/README.md"}
+  - {commit: f149786, role: QUALIFIER-MOBILE-01, content: "correction within this recording: the IMPORT-RECORD.yaml publication note and QUAL-U07 described the host-path finding by quoting the path prefix; both now describe it in words (no artifact byte, result, attribution, or hash changed)"}
+  - {commit: this record's commit, role: ORCHESTRATOR, content: "AUTH-02 lifecycle closed (dispatch_performed true, CONSUMED_AFTER_DISPATCH; VALID / ISSUED unchanged); mirror SUT-02 android PASS and SUT-02 ios FAIL_RUNNER (AUTH-02); toolchain mobile_runner_status UNRESOLVED_AFTER_FALLBACK_FAILURE (fallback_exhausted, NON-NORMATIVE), fallback / notes / next_step / preparation status corrected; protocol/CHANGELOG.md rows"}
+results:
+  android: PASS  # AUTH-02; harness proposal PASS (outcome SUCCESS) preserved in record.json
+  ios: FAIL_RUNNER  # AUTH-02; category SELECTED_RUNNER_STACK; basis CONSERVATIVE_TIE_BREAK_ATTRIBUTION_UNCERTAIN (policy v2, 9.4); failed phase install and launch the pinned build (MC-01); observed error "POST /session: transport failure: fetch failed"; harness proposal FAIL_RUNNER (basis NO_RUNNER_ANSWER_ATTRIBUTION_UNCERTAIN, failure_kind transport) preserved in record.json
+  ios_rationale: "the preserved artifacts do not positively demonstrate an allowed cause outside the runner (9.3): the exact lower-level reason for 'fetch failed' was not preserved (the study-authored client keeps only e.message), and the artifacts do not directly demonstrate the event that ended the client-side transport; the evidence therefore cannot distinguish a study-authored transport defect from a failure of the selected Appium/XCUITest stack, and 9.4 resolves the attribution to FAIL_RUNNER. The result does not prove which internal Appium/XCUITest component failed; it is the protocol-prescribed result for unresolved attribution"
+  client_defect: "qualification/unresolved.md QUAL-U06 (IMPLEMENTATION_DEFECT_OBSERVED_POST_RUN): real study-authored observability/transport defect; causal role in AUTH-02 not established for 9.3; does not override the 9.4 result"
+  publication_hygiene: "qualification/unresolved.md QUAL-U07 (PUBLICATION_HYGIENE_ONLY, OPEN): 56 lines (2191-2277) of SUT-02-ios/appium-server.log carry absolute host paths under the home directory of the GitHub macOS runner user; canonical evidence unchanged; publication of the AUTH-02 formal artifacts not authorized"
+  publication_note_on_this_record: "section 19 of the verbatim instruction below quotes the host-path prefix, so the tracked-file private-path pattern of .github/workflows/e03-validate.yml matches that one verbatim line; it is kept unaltered (its sha256 is recorded above) and falls under the same open publication decision as QUAL-U07; no export is authorized"
+state_after:
+  auth_01: "VALID, ISSUED, CONSUMED_AFTER_DISPATCH; SUT-02 android NOT_EXECUTED / HARNESS_ORCHESTRATION (unchanged, never reinterpreted)"
+  auth_02: "VALID, ISSUED, CONSUMED_AFTER_DISPATCH; never reusable"
+  mirror: {SUT-02 android: PASS (AUTH-02), SUT-02 ios: FAIL_RUNNER (AUTH-02)}
+  mobile_runner_status: UNRESOLVED_AFTER_FALLBACK_FAILURE  # manifests/toolchain-manifest.yaml; selection lineage unchanged: Appium 3 selected under Section 8 (2026-09-24)
+  fallback_exhausted: "YES (policy v2, 9.5: one FAIL_RUNNER of the selected Appium 3 on one ecosystem x platform is sufficient)"
+  android_pass_effect: "a valid platform observation (9.6); it does not keep the study mobile runner admissible after the fallback exhaustion"
+  mobile_campaigns: "every experimental campaign requiring Android or iOS execution (E03 mobile conditions and later mobile-requiring campaigns) is blocked from START and measurement until a NEW explicit protocol amendment decides the mobile-runner strategy"
+  g7: "fails closed for every mobile measured condition (study-level status not SELECTED; FAIL_RUNNER recorded; fallback state FALLBACK_EXHAUSTED_VERIFIED), including E03-CS001-SUT02-ANDROID whose own smoke is PASS"
+  implementation_lock_v3: "unchanged (6c4c29ac107119a04c0ec47da97c38f10695a0e3f296809145a469ab1087bef5); historical execution provenance of run 36539790536"
+  unaffected: [E01 and its frozen results, H1, the Mobilewright qualification under MOBILE-QUALIFICATION-EXEC-AUTH-03, the AUTH-01 record]
+  evidence_status: "the Android PASS and the iOS FAIL_RUNNER are tool-qualification observations about runner suitability only, never evidence about SUT-02 or any ecosystem"
+  proto_u16: OPEN
+  e03: NOT_STARTED  # two independent blockers: PROTO-U16 (OPEN) and the study mobile-runner state UNRESOLVED_AFTER_FALLBACK_FAILURE; E03 START not authorized
+  next_required_human_action: REVIEW_POSTRUN_RECORD_THEN_DECIDE_MOBILE_RUNNER_STRATEGY_BY_EXPLICIT_PROTOCOL_AMENDMENT
+not_done: [re-run, second AUTH-02 dispatch, any Appium execution, harness or wd.mjs change, timeout change, lock v4, new smoke authorization, mobile-runner-policy-v3 or any protocol amendment, new runner selection or successor runner, Appium 2, third runner, recursive Section 8, public export, push, dashboard update, PROTO-U16 resolution, E03 START, E03 execution]
+
+instruction_verbatim: |
+  # EUS-2026-001 — POST-RUN RECORDING OF APPIUM3-COMPAT-SMOKE-AUTH-02 UNDER THE FROZEN CONSERVATIVE TIE-BREAK
+
+  I, gilbertosanchez, human research lead for EUS-2026-001, have reviewed the formal execution:
+
+  `APPIUM3-COMPAT-SMOKE-AUTH-02`
+
+  GitHub run:
+
+  `36539790536`
+
+  attempt:
+
+  `1`
+
+  and the preserved Android and iOS evidence.
+
+  I authorize the canonical POST-RUN RECORDING operation below.
+
+  The official results to record are:
+
+  SUT-02 × Android:
+
+  `PASS`
+
+  SUT-02 × iOS:
+
+  `FAIL_RUNNER`
+
+  The iOS result is recorded under the frozen conservative attribution rule of:
+
+  `protocol/mobile-runner-policy-v2.md §9.4`
+
+  because, after inspection of the preserved artifacts, attribution remains uncertain between the study-authored WebDriver transport and the selected Appium/XCUITest execution stack.
+
+  This instruction does NOT authorize:
+
+  - any rerun;
+  - any second AUTH-02 dispatch;
+  - another Appium execution;
+  - a successor runner;
+  - Appium 2;
+  - a third runner;
+  - protocol amendment;
+  - E03 START;
+  - E03 measured execution;
+  - public export of the new formal artifacts.
+
+  ## 1. VERIFY FORMAL RUN IDENTITY
+
+  Verify exactly:
+
+  authorization:
+
+  `APPIUM3-COMPAT-SMOKE-AUTH-02`
+
+  run:
+
+  `36539790536`
+
+  run number:
+
+  `2`
+
+  attempt:
+
+  `1`
+
+  event:
+
+  `workflow_dispatch`
+
+  head SHA:
+
+  `34c0453053a29492a34b6a20676bd8f1f046738b`
+
+  workflow conclusion:
+
+  `failure`
+
+  jobs:
+
+  - gate `109312210890` = success;
+  - Android `109312275007` = success;
+  - iOS `109313112821` = failure.
+
+  Verify:
+
+  - no attempt 2;
+  - no second AUTH-02 dispatch;
+  - no manual intervention;
+  - no E03 execution.
+
+  If anything differs:
+
+  STOP.
+
+  ## 2. IMPORT BOTH AUTH-02 ARTIFACTS BYTE-EXACT
+
+  Import the Android and iOS GitHub artifacts into the canonical formal namespace without modifying any execution byte.
+
+  ### Android
+
+  Artifact id:
+
+  `11020535210`
+
+  Artifact name:
+
+  `E03-COMPATIBILITY_SMOKE-SUT-02-android-run36539790536-a1`
+
+  ZIP SHA-256:
+
+  `50b9fd29a11737701c7fd5f00f3a41fdd87b314f50d0e21e6a29bf1428b8baed`
+
+  ### iOS
+
+  Artifact id:
+
+  `11021125037`
+
+  Artifact name:
+
+  `E03-COMPATIBILITY_SMOKE-SUT-02-ios-run36539790536-a1`
+
+  ZIP SHA-256:
+
+  `677e5c8f66fadfb7fce2c25def02c97e3394f3b9bde11c737d391acd06e91b28`
+
+  Preserve every extracted file byte-exact.
+
+  Use the existing `.gitattributes` protection.
+
+  Verify:
+
+  - working-tree bytes;
+  - Git blobs;
+  - git archive;
+  - fresh-clone reconstruction;
+  - extracted file hashes against the ZIP contents.
+
+  Do not normalize CRLF.
+
+  Do not redact canonical evidence.
+
+  ## 3. PRESERVE BOTH HARNESS PROPOSALS
+
+  Do NOT edit either `record.json`.
+
+  Preserve literally:
+
+  Android:
+
+  `outcome = SUCCESS`
+  `proposed_result = PASS`
+
+  iOS:
+
+  `outcome = FAILURE`
+  `proposed_result = FAIL_RUNNER`
+
+  with:
+
+  `proposed_category = SELECTED_RUNNER_STACK`
+
+  `basis = NO_RUNNER_ANSWER_ATTRIBUTION_UNCERTAIN`
+
+  `failure_kind = transport`
+
+  `error = POST /session: transport failure: fetch failed`
+
+  The official QUALIFIER decision is recorded separately.
+
+  ## 4. ANDROID OFFICIAL RESULT
+
+  Record:
+
+  `SUT-02 × Android = PASS`
+
+  The preserved evidence demonstrates all required Section 9 capabilities:
+
+  - MC-01;
+  - MC-02;
+  - MC-06;
+  - MC-04;
+  - MC-08;
+  - MC-10.
+
+  The corrected navigation reached the intended product detail.
+
+  Quantity was observed:
+
+  before:
+
+  `1`
+
+  after:
+
+  `2`
+
+  The final source/screenshot evidence is consistent with the expected final state.
+
+  No preserved evidence contradicts PASS.
+
+  Therefore the Android compatibility requirement is satisfied.
+
+  Do not reinterpret AUTH-01.
+
+  AUTH-01 Android remains permanently:
+
+  `NOT_EXECUTED / HARNESS_ORCHESTRATION`.
+
+  ## 5. IOS OBSERVED FACTS
+
+  Preserve the following facts without causal overstatement:
+
+  - Appium 3.7.0 was observed;
+  - XCUITest driver 12.13.2 was observed;
+  - POST `/session` reached Appium;
+  - Appium/XCUITest began session setup;
+  - simulator boot completed;
+  - application install completed;
+  - WebDriverAgent build began;
+  - XCUITest continued polling WDA;
+  - the study-authored client ultimately reported:
+    `POST /session: transport failure: fetch failed`;
+  - no normal Appium HTTP response to POST `/session` was preserved;
+  - Appium/XCUITest activity continued after the harness produced its failure record.
+
+  Also preserve:
+
+  the harness-defined:
+
+  `session_timeout_ms = 1200000`
+
+  and the XCUITest capabilities:
+
+  `wdaLaunchTimeout = 600000`
+  `wdaConnectionTimeout = 600000`.
+
+  ## 6. STUDY-AUTHORED CLIENT DEFECT EXISTS
+
+  Record separately as an implementation fact that:
+
+  `qualification/compatibility-smoke/harness/wd.mjs`
+
+  uses Node built-in:
+
+  `globalThis.fetch`
+
+  and its own AbortController-based request timeout.
+
+  The implementation does not explicitly coordinate the underlying HTTP dispatcher timeout with the larger declared session timeout.
+
+  It also records only:
+
+  `e.message`
+
+  for non-AbortError fetch failures and therefore does not preserve the underlying:
+
+  `e.cause`.
+
+  Thus the exact lower-level reason for:
+
+  `fetch failed`
+
+  is unavailable from the formal artifacts.
+
+  This is a real study-authored observability/transport defect.
+
+  ## 7. DO NOT CLAIM THAT DEFECT CAUSED THIS RUN
+
+  Do NOT record that the client timeout defect positively caused the observed iOS failure.
+
+  Reasons:
+
+  - the exact underlying fetch error was not preserved;
+  - `e.cause` is unavailable;
+  - the observed total duration does not directly identify a specific underlying HTTP timeout;
+  - the artifacts do not directly demonstrate the exact event that closed the client-side transport.
+
+  The defect may be relevant, but the causal attribution remains uncertain.
+
+  ## 8. APPLY POLICY V2 §9.3 / §9.4 EXACTLY
+
+  Frozen policy v2 says:
+
+  - NOT_EXECUTED is allowed only when artifacts positively demonstrate an allowed outside-runner cause;
+  - if the evidence cannot distinguish a study-authored harness defect from a selected-runner-stack failure, attribution uncertainty resolves to FAIL_RUNNER;
+  - uncertainty is never used to exclude an unfavorable runner outcome.
+
+  The iOS evidence does not meet the positive-demonstration threshold required for NOT_EXECUTED.
+
+  Therefore record:
+
+  `SUT-02 × iOS = FAIL_RUNNER`
+
+  under:
+
+  `CONSERVATIVE_TIE_BREAK`
+
+  and reference:
+
+  `protocol/mobile-runner-policy-v2.md §9.4`.
+
+  ## 9. IOS ATTRIBUTION RECORD
+
+  Record:
+
+  result:
+
+  `FAIL_RUNNER`
+
+  category:
+
+  `SELECTED_RUNNER_STACK`
+
+  basis:
+
+  `CONSERVATIVE_TIE_BREAK_ATTRIBUTION_UNCERTAIN`
+
+  failed phase:
+
+  `install and launch the pinned build (MC-01)`
+
+  failed capabilities:
+
+  `[MC-01]`
+
+  observed error:
+
+  `POST /session: transport failure: fetch failed`
+
+  Explicitly state:
+
+  the result does NOT prove which internal Appium/XCUITest component failed.
+
+  It is the protocol-prescribed result for unresolved attribution.
+
+  Do not state:
+
+  “Appium definitely caused the socket close.”
+
+  Do not state:
+
+  “Undici definitely caused the failure.”
+
+  Both exceed the evidence.
+
+  ## 10. QUALIFIER SOURCE RECORDS
+
+  Update the QUALIFIER-owned compatibility-smoke source records.
+
+  ### Android
+
+  Record:
+
+  `PASS`
+
+  Authorization:
+
+  `APPIUM3-COMPAT-SMOKE-AUTH-02`
+
+  Runner:
+
+  Appium 3.7.0 + UiAutomator2 8.7.0
+
+  ### iOS
+
+  Record:
+
+  `FAIL_RUNNER`
+
+  Authorization:
+
+  `APPIUM3-COMPAT-SMOKE-AUTH-02`
+
+  Runner:
+
+  Appium 3.7.0 + XCUITest 12.13.2
+
+  Basis:
+
+  `protocol v2 §9.4 conservative tie-break`
+
+  Preserve artifact pointers.
+
+  ## 11. QUALIFICATION ISSUE FOR CLIENT DEFECT
+
+  Use the next free QUAL issue id.
+
+  Record the study-authored WebDriver client problem independently from the official iOS result.
+
+  Suggested topic:
+
+  `WebDriver transport timeout/diagnostic mismatch in compatibility-smoke harness`
+
+  Classification:
+
+  `IMPLEMENTATION_DEFECT_OBSERVED_POST_RUN`
+
+  Record:
+
+  - the session realization declares 1200 s;
+  - the transport implementation does not explicitly align all underlying HTTP timeouts;
+  - `e.cause` is discarded;
+  - this reduces attribution observability;
+  - the defect was discovered after AUTH-02;
+  - its causal role in AUTH-02 is NOT established sufficiently for §9.3;
+  - therefore it does not override the §9.4 FAIL_RUNNER result.
+
+  This issue does NOT authorize another execution.
+
+  ## 12. MIRROR TRANSCRIPTION
+
+  After QUALIFIER source records exist, transcribe:
+
+  ### Android
+
+  `PASS`
+
+  authorization:
+
+  `APPIUM3-COMPAT-SMOKE-AUTH-02`
+
+  ### iOS
+
+  `FAIL_RUNNER`
+
+  authorization:
+
+  `APPIUM3-COMPAT-SMOKE-AUTH-02`
+
+  Do not retain iOS as NOT_STARTED or NOT_EXECUTED.
+
+  ## 13. MOBILE RUNNER STATUS
+
+  Because Appium 3 is already the fallback selected under Section 8 and an official compatibility result is now:
+
+  `FAIL_RUNNER`
+
+  record the study-level status:
+
+  `UNRESOLVED_AFTER_FALLBACK_FAILURE`
+
+  Preserve the historical runner-selection lineage:
+
+  Appium 3 was selected under Section 8.
+
+  Do not select another runner.
+
+  Do not select Appium 2.
+
+  Do not recursively reapply Section 8.
+
+  ## 14. FALLBACK EXHAUSTION
+
+  Record:
+
+  `FALLBACK_EXHAUSTED = YES`
+
+  under policy v2 §9.5.
+
+  One Appium 3 FAIL_RUNNER for one ecosystem × mobile platform is sufficient for study-level runner failure.
+
+  The Android PASS remains a valid platform observation, but it does not keep the study mobile runner admissible after fallback exhaustion.
+
+  ## 15. CONSEQUENCE FOR MOBILE CAMPAIGNS
+
+  From this recording onward:
+
+  every experimental campaign requiring Android or iOS execution is blocked from:
+
+  - START;
+  - measurement.
+
+  This includes E03 mobile conditions and later mobile-requiring campaigns.
+
+  The block persists until a NEW EXPLICIT PROTOCOL AMENDMENT determines a mobile-runner strategy.
+
+  Do not create that amendment under this instruction.
+
+  ## 16. G-7
+
+  Verify after transcription that G-7 fails closed for ALL mobile measured conditions because the study-level runner state is:
+
+  `UNRESOLVED_AFTER_FALLBACK_FAILURE`.
+
+  This includes the Android condition even though its platform-specific compatibility result is PASS.
+
+  Do not erase or downgrade the Android PASS.
+
+  The distinction is:
+
+  Android compatibility observation = PASS
+
+  study-level mobile-runner admissibility = BLOCKED.
+
+  ## 17. AUTH-02 LIFECYCLE CLOSURE
+
+  Close AUTH-02 in place:
+
+  `dispatch_performed: true`
+
+  `dispatch_eligibility: CONSUMED_AFTER_DISPATCH`
+
+  Keep:
+
+  `status: ISSUED`
+
+  `record_validity: VALID`
+
+  Record:
+
+  - run id `36539790536`;
+  - attempt `1`;
+  - public head `34c0453053a29492a34b6a20676bd8f1f046738b`;
+  - Android PASS;
+  - iOS FAIL_RUNNER under §9.4;
+  - no rerun;
+  - no manual intervention.
+
+  AUTH-02 is never reusable.
+
+  ## 18. LOCK V3
+
+  Keep lock v3 unchanged as historical execution provenance.
+
+  Do NOT:
+
+  - modify `wd.mjs`;
+  - change timeout configuration;
+  - create lock v4;
+  - attempt another smoke.
+
+  Any future mobile-runner work now requires a protocol-level decision because the fallback is exhausted.
+
+  ## 19. PUBLICATION HYGIENE ISSUE
+
+  Canonical evidence remains immutable.
+
+  The iOS `appium-server.log` contains GitHub-host absolute paths:
+
+  `<host-path>/...`
+
+  including lines written after the harness failure.
+
+  Record a separate:
+
+  `PUBLICATION_HYGIENE_ONLY`
+
+  issue according to repository governance.
+
+  Use the verified count from the current artifact audit, not an earlier stale count.
+
+  Do not change:
+
+  - iOS result;
+  - attribution;
+  - Android PASS;
+  - fallback exhaustion.
+
+  Do NOT publish the AUTH-02 formal artifact yet.
+
+  Any public-export sanitization must be deterministic and publication-only.
+
+  ## 20. E01 AND PRIOR RESULTS
+
+  Explicitly record:
+
+  - E01 unaffected;
+  - H1 unaffected;
+  - AUTH-03 Mobilewright qualification unaffected;
+  - AUTH-01 unaffected;
+  - Android AUTH-02 PASS is not SUT evidence;
+  - iOS AUTH-02 FAIL_RUNNER is not SUT evidence.
+
+  This operation concerns runner suitability only.
+
+  ## 21. PROTO-U16 / E03
+
+  Keep:
+
+  `PROTO-U16 = OPEN`
+
+  Keep:
+
+  `E03 = NOT_STARTED`
+
+  Additionally record that E03 now has two independent blockers:
+
+  1. PROTO-U16;
+  2. study mobile-runner state `UNRESOLVED_AFTER_FALLBACK_FAILURE`.
+
+  Do not start E03.
+
+  ## 22. NO PROTOCOL AMENDMENT YET
+
+  Do not create:
+
+  - mobile-runner-policy-v3;
+  - a third runner;
+  - new runner selection;
+  - new smoke authorization;
+  - lock v4.
+
+  The next human decision must separately determine whether and how the study proceeds with mobile experimentation.
+
+  ## 23. NO PUBLIC EXPORT
+
+  Do not push or publish under this instruction.
+
+  First complete canonical post-run recording and return it for review.
+
+  ## 24. INTEGRITY CHECKS
+
+  Verify after recording:
+
+  - Android ZIP matches GitHub digest;
+  - iOS ZIP matches GitHub digest;
+  - all imported files match the archive;
+  - CRLF preserved;
+  - lock v3 unchanged;
+  - policy v2 unchanged;
+  - frozen AUTH-02 prompt unchanged;
+  - no attempt 2;
+  - no third compatibility-smoke dispatch;
+  - Android official PASS matches source evidence;
+  - iOS official FAIL_RUNNER is clearly marked as conservative attribution, not proven Appium root cause;
+  - mirror matches QUALIFIER source;
+  - mobile_runner_status = UNRESOLVED_AFTER_FALLBACK_FAILURE;
+  - G-7 blocks all mobile conditions.
+
+  ## 25. RETURN PACKAGE
+
+  Return:
+
+  1. artifact-import commit SHA(s);
+  2. QUALIFIER decision commit;
+  3. lifecycle/mirror/toolchain transcription commit(s);
+  4. exact canonical artifact paths;
+  5. full hash inventories;
+  6. Android official result;
+  7. iOS official result;
+  8. exact iOS conservative-tie-break rationale;
+  9. client-defect QUAL issue id;
+  10. publication-hygiene issue id/status;
+  11. Android mirror;
+  12. iOS mirror;
+  13. mobile_runner_status;
+  14. fallback-exhausted state;
+  15. G-7 post-recording result;
+  16. AUTH-02 lifecycle;
+  17. lock-v3 integrity confirmation;
+  18. no-rerun confirmation;
+  19. PROTO-U16 state;
+  20. E03 state and blockers.
+
+  ## 26. HARD STOP
+
+  After canonical recording:
+
+  STOP.
+
+  Do not repair the client.
+
+  Do not rerun.
+
+  Do not create a new runner.
+
+  Do not amend the protocol.
+
+  Do not publish.
+
+  Do not start E03.
+
+  ## 27. REQUIRED FINAL STATE
+
+  End exactly:
+
+  AUTH_01:
+  ISSUED_VALID_CONSUMED
+
+  AUTH_01_ANDROID_RESULT:
+  NOT_EXECUTED_HARNESS_ORCHESTRATION
+
+  AUTH_02:
+  ISSUED_VALID_CONSUMED
+
+  AUTH_02_ANDROID_RESULT:
+  PASS
+
+  AUTH_02_IOS_HARNESS_PROPOSAL:
+  FAIL_RUNNER
+
+  AUTH_02_IOS_QUALIFIER_RESULT:
+  FAIL_RUNNER
+
+  AUTH_02_IOS_ATTRIBUTION:
+  CONSERVATIVE_TIE_BREAK_ATTRIBUTION_UNCERTAIN
+
+  ANDROID_COMPATIBILITY_OBSERVATION:
+  PASS
+
+  IOS_COMPATIBILITY_OBSERVATION:
+  FAIL_RUNNER
+
+  MOBILE_RUNNER_STATUS:
+  UNRESOLVED_AFTER_FALLBACK_FAILURE
+
+  FALLBACK_EXHAUSTED:
+  YES
+
+  G7_MOBILE_EXECUTION:
+  BLOCKED_STUDY_WIDE
+
+  LOCK_V3:
+  HISTORICAL_EXECUTION_PROVENANCE_UNCHANGED
+
+  AUTH_02_REUSABLE:
+  NO
+
+  RERUN:
+  NOT_PERFORMED
+
+  PROTO_U16:
+  OPEN
+
+  E03_START:
+  NOT_AUTHORIZED
+
+  E03_EXECUTION:
+  NOT_STARTED
+
+  NEXT_REQUIRED_HUMAN_ACTION:
+  REVIEW_POSTRUN_RECORD_THEN_DECIDE_MOBILE_RUNNER_STRATEGY_BY_EXPLICIT_PROTOCOL_AMENDMENT

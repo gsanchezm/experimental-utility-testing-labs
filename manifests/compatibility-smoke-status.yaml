@@ -47,22 +47,22 @@ entries:
   - sut_id: SUT-02
     platform: android
     runner: "Appium 3"
-    runner_version: "3.7.0 appium-uiautomator2-driver 8.7.0"  # observed core first (README Smoke records row: Appium 3.7.0 + appium-uiautomator2-driver 8.7.0)
-    result: NOT_EXECUTED  # HARNESS_ORCHESTRATION, demonstrated (README Attribution records; formal/APPIUM3-COMPAT-SMOKE-AUTH-01/ATTRIBUTION-SUT-02-android.yaml); does not pass the smoke and does not fail the runner (policy v2, 9.5); E03-CS001-SUT02-ANDROID stays blocked
-    qualifier_record: qualification/compatibility-smoke/README.md  # "Smoke records" row SUT-02 android, recorded by QUALIFIER-MOBILE-01 (commit 7288db8)
-    executed_at: "2026-09-27T18:30:49.040Z"  # run 36340774530, attempt 1
-    authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-01
+    runner_version: "3.7.0 appium-uiautomator2-driver 8.7.0"  # observed core first (README Smoke records row of AUTH-02: Appium 3.7.0 + appium-uiautomator2-driver 8.7.0)
+    result: PASS  # transcribed 2026-09-29 from the README Smoke records row of APPIUM3-COMPAT-SMOKE-AUTH-02 (recorded by QUALIFIER-MOBILE-01, commit 9128c97); satisfies the SUT-02 android compatibility requirement only; it does not keep the study mobile runner admissible after the fallback exhaustion (policy v2, 9.5). Previous value: NOT_EXECUTED (HARNESS_ORCHESTRATION) under APPIUM3-COMPAT-SMOKE-AUTH-01, executed_at 2026-09-27T18:30:49.040Z, transcribed 2026-09-27 (commit 1300cfd); that record is preserved unchanged in the README
+    qualifier_record: qualification/compatibility-smoke/README.md  # "Smoke records": the last SUT-02 android row (AUTH-02, PASS), after the preserved AUTH-01 row
+    executed_at: "2026-09-29T08:00:12.927Z"  # run 36539790536, attempt 1
+    authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-02
     transcribed_by: ORCHESTRATOR
-    transcribed_at: "2026-09-27"
-    e03_condition: E03-CS001-SUT02-ANDROID
+    transcribed_at: "2026-09-29"
+    e03_condition: E03-CS001-SUT02-ANDROID  # blocked nevertheless: the study-level mobile-runner status is UNRESOLVED_AFTER_FALLBACK_FAILURE (G-7)
   - sut_id: SUT-02
     platform: ios
     runner: "Appium 3"
-    runner_version: null
-    result: NOT_STARTED
-    qualifier_record: null
-    executed_at: null
-    authorization_id: null
-    transcribed_by: null
-    transcribed_at: null
+    runner_version: "3.7.0 appium-xcuitest-driver 12.13.2"  # observed core first (README Smoke records row of AUTH-02: Appium 3.7.0 + appium-xcuitest-driver 12.13.2)
+    result: FAIL_RUNNER  # transcribed 2026-09-29 from the README Smoke records row of APPIUM3-COMPAT-SMOKE-AUTH-02 (recorded by QUALIFIER-MOBILE-01, commit 9128c97): conservative tie-break of policy v2, 9.4 (attribution uncertain; not a demonstrated runner root cause); a FAIL_RUNNER of the selected Appium 3 exhausts the fallback (9.5): mobile_runner_status UNRESOLVED_AFTER_FALLBACK_FAILURE in manifests/toolchain-manifest.yaml. Previous value: NOT_STARTED
+    qualifier_record: qualification/compatibility-smoke/README.md  # "Smoke records" row SUT-02 ios (AUTH-02); attribution in formal/APPIUM3-COMPAT-SMOKE-AUTH-02/ATTRIBUTION-SUT-02-ios.yaml
+    executed_at: "2026-09-29T08:02:54.548Z"  # run 36539790536, attempt 1
+    authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-02
+    transcribed_by: ORCHESTRATOR
+    transcribed_at: "2026-09-29"
     e03_condition: E03-CS001-SUT02-IOS
