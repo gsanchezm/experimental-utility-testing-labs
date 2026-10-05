@@ -496,3 +496,63 @@ notes: |
   remains); the hosted lint job stays the final oracle. No dispatch, no export: export v31 needs its own human authorization and the second
   environment-verification dispatch (OP-ENV-04) waits for it; AGENT-INSTRUCTIONS.md and README.md live status are refreshed with the v31 status commit;
   E03 NOT_STARTED.
+  2026-10-03 (PUBLIC EXPORT v31, operation OP-PUB-04; human authorization of 2026-10-03 from canonical b1124a8, conditional on the
+  publication scans and the shellcheck-enabled lint of the exported tree passing, sha256
+  92667f328d02c0ca3287577106bb885238b3f12c72713aec657a94b3ec974006, given to the study's independent orchestration reviewer and relayed to
+  the ORCHESTRATOR, received 2026-10-04T05:44:49Z; the operation adopted, including its single push and its live-status edits, relayed
+  2026-10-04T09:35:51Z and given directly 2026-10-04T09:37:51Z, sha256 015775419d215e6164bd4d2109be9f884d3459de625830ab89e8cd6be9e895af):
+  export v31 was pushed on 2026-10-04T09:39:07Z (public main 08ef8c8a4890dc61298ca202c195c226d15f191f, manifest 0c760e7a...); its validation
+  run 37192839855 succeeded in all four jobs, including E03 Workflow Lint, so the v30 lint failure is closed by OP-CI-01; the post-push
+  audit of a fresh clone passed. The same authorization extends the single environment-verification dispatch authorization (6b2b5fbe...) to
+  the workflow published in v31; that dispatch (OP-ENV-04, re-issued for v31) is not executed. E03 NOT_STARTED.
+  2026-10-04 (PRE-DISPATCH RECORD OF THE SECOND ENVIRONMENT-VERIFICATION DISPATCH, operation OP-ENV-04 second issue; non-measured):
+  manifests/e03-environment-verification-dispatch-v2.yaml records, before the dispatch, the human research lead's approval of 2026-10-03 of
+  a single dispatch (sha256 6b2b5fbe...) and its extension of 2026-10-03 to the workflow published in v31 (sha256 92667f32...), both given
+  to the study's independent orchestration reviewer and relayed to the ORCHESTRATOR; the dispatch inputs (workflow id 364260233, ref main at
+  public v31 08ef8c8, target=all; workflow canonical f4a80288... and public 1250376f..., alias-only difference) and the preconditions
+  (validation run 37192839855 green; one earlier run 37074152972; 41 runs, none in progress). Not yet dispatched: the dispatch needs the
+  human's direct adoption; never re-run. No import; controlled-instance-status.yaml unchanged; E03 NOT_STARTED.
+  2026-10-04 (IMPORT AND TRANSCRIPTION OF THE SECOND ENVIRONMENT-VERIFICATION RUN, operation OP-ENV-05; non-measured; the human research
+  lead's adoption of the operation, sha256 15bf04c3..., and his decision on the public handling of the import, sha256 b09f0f82..., both
+  given to the study's independent orchestration reviewer and relayed to the ORCHESTRATOR): the seven ENVIRONMENT_VERIFICATION artifacts
+  of run 37206291883 (attempt 1, public v31 08ef8c8, workflow canonical f4a80288...) are imported byte-exact under
+  experiments/E03-resetability/environment-verification/github-actions/run37206291883-a1/ (37 members; record
+  manifests/e03-environment-verification-import-v2.yaml) and transcribed into controlled-instance-status.yaml, whose latest run now
+  governs gate G-8: VERIFIED for E03-CS001-SUT01-WEB, -SUT01-API, -SUT02-WEB, -SUT02-ANDROID, -SUT03-WEB, -SUT04-WEB, and -SUT04-API;
+  NOT_VERIFIED for -SUT02-IOS (the presence check counted 0 occurrences of the reset label in the app's executable; cause not established,
+  a check-design item) and -SUT05-API (the SUT's own sbom step at the pinned commit failed, missing dist/frontend/stats.json, npm error
+  code 254; attribution not established; the SUT is not patched). Public handling (decision of 2026-10-04): the runner home paths of eight
+  imported files by a publication-only class in the public export (OP-PUB-05), one third-party package name kept as SUT domain evidence
+  through the narrowest hygiene-pattern exemption, and a capture-time path scrub in the workflow (both OP-ENV-06); the canonical import
+  stays byte-exact. No dispatch, export, or push; no condition-level status changed; measured_execution_ready 0; E03 NOT_STARTED.
+  2026-10-04 (PUBLICATION HANDLING OF THE RUN-37206291883 ENVIRONMENT-VERIFICATION IMPORT, operation OP-PUB-05; human decision D1 option a
+  of 2026-10-04, sha256 b09f0f82..., and the human research lead's adoption of the operation, sha256 8efe0c73..., both given to the
+  study's independent orchestration reviewer and relayed to the ORCHESTRATOR): two publication-only transformations are defined in
+  PUBLIC-EXPORT-MANIFEST.yaml and not yet applied: the new class ENVIRONMENT_VERIFICATION_HOST_PATH_REDACTION (eight members of the
+  import, 32 runner home path lines replaced by <host-path>) and the extension of DETERMINISTIC_SANITIZED_ARCHIVE to the sut-02-ios and
+  sut-05-api archives of that import (scope entries 2 and 3, STORED re-packs); expected hashes in
+  manifests/e03-environment-verification-publication-handling-v1.yaml; the export builder (untracked) generalized and proven by a dry run
+  (four byte-identical builds; QUAL-U07 hashes unchanged). D2 (the hygiene-pattern exemption for the one third-party package name) and D3
+  (the capture-time scrub) are pending in OP-ENV-06; no export before OP-ENV-06 and its own human authorization; nothing exported or
+  pushed; canonical evidence unchanged; E03 NOT_STARTED.
+  2026-10-04 (CI CORRECTION OF THE ENVIRONMENT-VERIFICATION AND VALIDATION WORKFLOWS, operation OP-ENV-06, under E03-CI-WRITE-AUTH-01;
+  issued by the study's independent orchestration reviewer on the human research lead's instruction received 2026-10-04T18:18:41Z
+  (transcript stamp; clock read 2026-10-04T18:20:58Z), exact text sha256 6ddf63bbd757c3d8b5fda2600cddd60cca0614c75c7d34613656c6b0b19a91df,
+  and adopted by the human research lead as written, adoption text sha256 3a2b247025bed9ac090ee8c953afda46b4ff1c520d31cec156bf6ddfb1385210 received 2026-10-04T20:10:24Z (transcript stamp; clock read 2026-10-04T20:10:43Z), both given to the
+  study's independent orchestration reviewer and relayed to the ORCHESTRATOR; human decisions D2 and D3 of 2026-10-04, sha256 b09f0f82...):
+  (1) the SUT-02 ios presence check of the reset label reads the raw bytes of every regular file of the installed app bundle (the pinned
+  simulator build carries the label in a compiled Menu storyboard scene and not as contiguous bytes of its executable; run 37206291883
+  counted 0 with strings over the executable alone); (2) SUT-05 api is provisioned by the SUT README's documented Packaged Distributions
+  route of the pinned release v20.2.0 (archive sha256 verified against the GitHub asset digest; release commit related to the pinned
+  commit 1618a611 fail closed: the only difference is screenshots/bundle-analysis.png) because the SUT's own From Sources build at the
+  pinned commit no longer completes (its unpinned Angular build tool stopped writing dist/frontend/stats.json in its 22.2.0 release of
+  2026-09-23, after the SUT05-PROV-0001 build of 2026-09-22; the SUT is never patched); (3) every job replaces runner workspace, temp,
+  and home path prefixes in its kept text artifacts by <host-path> before upload (decision D3; on copies of the run-37206291883 artifacts
+  this reproduces the eight exported hashes of manifests/e03-environment-verification-publication-handling-v1.yaml); (4) the validation
+  workflow's hygiene pattern exempts one vendor token only when immediately followed by -compatible at a word boundary (decision D2,
+  option ii; static matrix 32 of 32; canonical vendor-term lines 11 -> 0; classified SUT_DOMAIN_EVIDENCE in PUBLIC-EXPORT-MANIFEST.yaml).
+  Workflow sha256 f4a80288dd40f052723b5f464115b54ccd88a13a2d1b370c7b0d0fdb6c728c3e -> 5ec3f22b33e4403e08952b56bbf4e27314129e266c0f6a90d17eaa307d619897
+  and 96af679687f2f4f63d9d3b5bd4ce828b349259718078743cb417a31da9617a5f -> 604e8848669530930016a6582bd7789ec60171f77326060e33d2e6e910bba295
+  (canonical bytes). Verified locally with actionlint 1.7.7 and shellcheck 0.10.0 under a hard timeout; the hosted lint job stays the
+  final oracle. No dispatch, no export, no push: export v32 needs its own human authorization and the third environment-verification
+  dispatch its own approval; AGENT-INSTRUCTIONS.md and README.md live status are refreshed with the v32 status commit; E03 NOT_STARTED.

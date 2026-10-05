@@ -1,0 +1,60 @@
+# manifests/e03-environment-verification-run-v2.yaml
+# Mechanical run-identity record of the single dispatch of operation OP-ENV-04, second issue (E03 Environment Verification,
+# NON-MEASURED), written by the ORCHESTRATOR after the run identity was known (dispatch record:
+# manifests/e03-environment-verification-dispatch-v2.yaml). Values are read from the GitHub Actions API only. It records no
+# verification result and no interpretation, imports no artifact, does not edit
+# experiments/E03-resetability/controlled-instance-status.yaml, and is not a measured observation. Local commit; not pushed.
+# Model: manifests/e03-environment-verification-run-v1.yaml (operation OP-ENV-01), which is not edited.
+record_id: E03-ENVIRONMENT-VERIFICATION-RUN-02  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: ENVIRONMENT_VERIFICATION_RUN_IDENTITY_RECORD
+study_id: EUS-2026-001
+operation_id: OP-ENV-04  # second issue
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-10-04T13:38:33Z"  # UTC
+measured_experiment: false
+qualification_evidence: false
+dispatch_record: manifests/e03-environment-verification-dispatch-v2.yaml  # record id E03-ENVIRONMENT-VERIFICATION-DISPATCH-02; committed (10bfabba3f7a60816b051b704fc0aba27a70c4ee) and its direct_adoption filled (e55da483f374426254a9e10c16959e5c1f67bbba) before the dispatch
+direct_adoption: {exact_text_sha256: 9e2f2c5d81ce5f67385283077f202a71bd2fd56a597fed9462717c49e571e0bf, received_at: "2026-10-04T13:35:47Z"}  # by reference; recorded in the dispatch record
+repository: gsanchezm/experimental-utility-testing-labs
+workflow: .github/workflows/e03-environment-verification.yml  # name "E03 Environment Verification", workflow id 364260233
+workflow_ref: main  # head_branch
+event: workflow_dispatch
+inputs: {target: all}
+dispatch_commands_issued: 1  # one "gh workflow run" with ref main and target=all; exit status 0; no other input, no repetition
+dispatch_command_issued_at: "2026-10-04T13:37:40Z"  # UTC clock immediately before the command, after a final re-check (public main 08ef8c8, 41 runs, 1 environment-verification run, nothing queued or in progress)
+run_id: 37206291883
+run_number: 2
+run_attempt: 1  # GET actions/runs/37206291883/attempts/2: HTTP 404 when this record was written
+run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/37206291883
+head_sha: 08ef8c8a4890dc61298ca202c195c226d15f191f  # public export v31, as expected
+head_tree: 705ff034b00b8c570b3c1e88f6ad912b1c28ae39
+created_at: "2026-10-04T13:37:42Z"
+run_started_at: "2026-10-04T13:37:42Z"
+triggering_actor: gsanchezm
+status_when_recorded: in_progress
+environment_verification_runs_after_dispatch: 2  # 37074152972 and this run
+actions_runs_total_after_dispatch: 42
+completion:  # appended after the run completed (operation OP-ENV-04 second issue, Step 3); the fields above are unchanged
+  recorded_at: "2026-10-04T13:50:51Z"  # UTC
+  status: completed
+  conclusion: failure
+  completed_at: "2026-10-04T13:48:31Z"  # run updated_at
+  run_attempt: 1  # GET actions/runs/37206291883/attempts/2: HTTP 404 when this block was written
+  jobs:
+    - {name: "E03 Environment Verification SUT-01 web+api", id: 111448059204, conclusion: success, started_at: "2026-10-04T13:37:47Z", completed_at: "2026-10-04T13:38:40Z"}
+    - {name: "E03 Environment Verification SUT-02 android", id: 111448059212, conclusion: success, started_at: "2026-10-04T13:37:47Z", completed_at: "2026-10-04T13:40:08Z"}
+    - {name: "E03 Environment Verification SUT-02 ios", id: 111448059305, conclusion: failure, started_at: "2026-10-04T13:37:55Z", completed_at: "2026-10-04T13:42:25Z"}
+    - {name: "E03 Environment Verification SUT-02 web", id: 111448059252, conclusion: success, started_at: "2026-10-04T13:37:47Z", completed_at: "2026-10-04T13:38:16Z"}
+    - {name: "E03 Environment Verification SUT-03 web", id: 111448059053, conclusion: success, started_at: "2026-10-04T13:37:47Z", completed_at: "2026-10-04T13:39:51Z"}
+    - {name: "E03 Environment Verification SUT-04 web+api", id: 111448059229, conclusion: success, started_at: "2026-10-04T13:37:46Z", completed_at: "2026-10-04T13:48:30Z"}
+    - {name: "E03 Environment Verification SUT-05 api", id: 111448059198, conclusion: failure, started_at: "2026-10-04T13:37:47Z", completed_at: "2026-10-04T13:39:31Z"}
+  artifacts:  # each archive was downloaded outside the repository and its sha256 checked against the GitHub digest; nothing is imported
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-01-web-api-run37206291883-a1, id: 11304269826, size_in_bytes: 1911, digest: "sha256:b36670c96c6b503bffc1afea0b72e76aeea08b8a851f2cb3c3e5b1ce2f79c83c", expires_at: "2027-01-02T13:37:44Z"}
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-02-android-run37206291883-a1, id: 11304389734, size_in_bytes: 462394, digest: "sha256:1f29e07e653d94bef58e1abcd12bcf9df53cc931f31ee87151ea4b5e8e3eb51f", expires_at: "2027-01-02T13:37:44Z"}
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-02-ios-run37206291883-a1, id: 11305100500, size_in_bytes: 849916, digest: "sha256:69c8ae139b818b7179cc2009a9d48620bd4547260d87f4bcb7b54a7c1e8adf47", expires_at: "2027-01-02T13:37:44Z"}
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-02-web-run37206291883-a1, id: 11304009506, size_in_bytes: 1363, digest: "sha256:99dddde26dccccea445b2bbdb020d0b7372a50071054e1ec7373436d72a62e54", expires_at: "2027-01-02T13:37:44Z"}
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-03-web-run37206291883-a1, id: 11304880780, size_in_bytes: 1274, digest: "sha256:cf26f476d59d7ea9dc5ca4e2377cc1ed60043f3441ea9d7635044a513b51f182", expires_at: "2027-01-02T13:37:44Z"}
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-04-web-api-run37206291883-a1, id: 11304099405, size_in_bytes: 6763, digest: "sha256:6452d52547107925c111ad43e656a6311b2a2e56ebe47b8382def38d6989f9ac", expires_at: "2027-01-02T13:37:44Z"}
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-05-api-run37206291883-a1, id: 11305185629, size_in_bytes: 242625, digest: "sha256:8a4af9228733e2db87089e944ba958ac67b18dfa5a897b0447e6b01b6d361d96", expires_at: "2027-01-02T13:37:44Z"}
+  environment_verification_runs_after_completion: 2
+  actions_runs_total_after_completion: 42

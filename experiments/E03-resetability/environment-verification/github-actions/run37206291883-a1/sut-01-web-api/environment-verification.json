@@ -1,0 +1,50 @@
+{
+  "record_class": "ENVIRONMENT_VERIFICATION",
+  "measured_experiment": false,
+  "study_id": "EUS-2026-001",
+  "campaign_id": "E03-resetability",
+  "sut_id": "SUT-01",
+  "surfaces": [
+    "WEB",
+    "API"
+  ],
+  "conditions_covered": [
+    "E03-CS001-SUT01-WEB",
+    "E03-CS001-SUT01-API"
+  ],
+  "environment_type": "SELF_HOSTED",
+  "sut_provenance": {
+    "repository": "https://github.com/gsanchezm/OmniPizza",
+    "commit_sha": "9ca37674d374e9303912e259641ee86baf3aabe1"
+  },
+  "reset_mechanism_under_verification": "POST /api/session/reset (SUT01-EV-0006); reachability only",
+  "checks": {
+    "api_health_GET": 200,
+    "api_openapi_declares_/api/session/reset": true,
+    "api_openapi_declares_/api/session": true,
+    "api_POST_/api/session/reset_unauthenticated_status": 403,
+    "api_GET_/api/session_unauthenticated_status": 403,
+    "web_GET_/_status": 200
+  },
+  "verification_result": "VERIFIED",
+  "runner": {
+    "os": "Linux",
+    "image": "ubuntu24",
+    "image_version": "20260927.320.1",
+    "arch": "X64"
+  },
+  "tool_versions": {
+    "python": "Python 3.11.16",
+    "node": "v24.21.0",
+    "pnpm": "10.34.6"
+  },
+  "github": {
+    "run_id": "37206291883",
+    "run_attempt": "1",
+    "job": "sut-01-web-api",
+    "repository_sha": "08ef8c8a4890dc61298ca202c195c226d15f191f",
+    "workflow_ref": "gsanchezm/experimental-utility-testing-labs/.github/workflows/e03-environment-verification.yml@refs/heads/main"
+  },
+  "timestamp": "2026-10-04T13:38:35.484405+00:00",
+  "timezone": "UTC"
+}

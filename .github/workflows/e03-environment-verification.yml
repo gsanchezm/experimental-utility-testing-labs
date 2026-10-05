@@ -11,6 +11,11 @@
 # here is a MEASURED_EXPERIMENT (protocol/setup-effort-v2.md, section 2: one-time provisioning is never
 # counted; experiments/E03-resetability/ci-cd-execution-model.md).
 #
+# Publication hygiene at capture (human decision D3 of 2026-10-04): before upload, every kept text artifact of every job has
+# the runner's workspace, temp, and home path prefixes replaced by the marker <host-path> and any residual /Users/<x> or
+# /home/<x> by <home> (the smoke_scrub precedent of qualification/compatibility-smoke/smoke-common.sh), so that an imported
+# artifact needs no publication-only transformation. Nothing else in a kept artifact is changed.
+#
 # environment_type on a GitHub-hosted runner: SELF_HOSTED for web/api instances (an ephemeral cloud
 # host under the study's control for the duration of the job, protocol/study-design-v1.md, section
 # 10.1), EMULATED for the Android emulator, SIMULATED for the iOS Simulator.
@@ -159,6 +164,39 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           PY
+      - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
+        if: always()
+        env:
+          EV_KEPT: environment-verification.json api-stdout.log api-stderr.log web-stdout.log web-stderr.log
+        run: |
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
         uses: actions/upload-artifact@v4
@@ -264,6 +302,39 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           PY
+      - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
+        if: always()
+        env:
+          EV_KEPT: environment-verification.json web-stdout.log web-stderr.log
+        run: |
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
         uses: actions/upload-artifact@v4
@@ -362,6 +433,39 @@ jobs:
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           raise SystemExit(0 if ok else 1)
           PY
+      - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
+        if: always()
+        env:
+          EV_KEPT: environment-verification.json apk.sha256 package.txt resumed.txt ui-dump.xml launch-screenshot.png
+        run: |
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
         uses: actions/upload-artifact@v4
@@ -421,7 +525,28 @@ jobs:
           xcrun simctl get_app_container "$UDID" "$(cat bundle-id.txt)" | tee container.txt
           xcrun simctl io "$UDID" screenshot launch-screenshot.png
           BIN="$(cat app-path.txt)/$(plutil -extract CFBundleExecutable raw "$(cat app-path.txt)/Info.plist")"
-          strings "$BIN" | grep -c 'Reset App State' | tee reset-string-count.txt || echo 0 > reset-string-count.txt
+          (strings "$BIN" | grep -c 'Reset App State' || true) | tee reset-string-count-binary.txt
+          python3 - "$(cat container.txt)" <<'PY'
+          import os, sys
+          # Presence of the reset label in the app bundle installed on the simulator (the container path above), counted on the raw
+          # bytes of every regular file (correction of 2026-10-04): in the pinned build the label occurs in a compiled Menu storyboard
+          # scene (.nib) and not as contiguous bytes of the executable (run 37206291883 counted 0 there with strings over the
+          # executable alone). Output paths are relative to the bundle.
+          app, needle, total, rows = sys.argv[1], b'Reset App State', 0, []
+          for d, _, fs in os.walk(app):
+              for f in fs:
+                  p = os.path.join(d, f)
+                  with open(p, 'rb') as fh:
+                      n = fh.read().count(needle)
+                  if n:
+                      total += n
+                      rows.append(f'{n}\t{os.path.relpath(p, app)}')
+          rows.sort(key=lambda r: r.split('\t', 1)[1])
+          open('reset-string-files.txt', 'w').write(''.join(r + '\n' for r in rows))
+          open('reset-string-count.txt', 'w').write(f'{total}\n')
+          print(f'reset label occurrences in the app bundle: {total}')
+          print('\n'.join(rows))
+          PY
           xcrun simctl list runtimes | grep -i 'iOS' | tee runtimes.txt
       - name: Write the ENVIRONMENT_VERIFICATION record
         if: always()
@@ -439,8 +564,8 @@ jobs:
                  'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}' or unread, 'commit_sha': '${{ steps.pin.outputs.sha }}' or unread, 'release': '${{ steps.pin.outputs.release }}' or unread, 'artifact_sha256': rd('app.sha256')},
                  'step_outcomes': {'pin': '${{ steps.pin.outcome }}', 'download': '${{ steps.download.outcome }}', 'simulator': '${{ steps.simulator.outcome }}'},
                  'simulator': {'booted': rd('booted.txt'), 'xcode': rd('xcode-version.txt'), 'runtimes': rd('runtimes.txt'), 'app_info': rd('app-info.txt')},
-                 'reset_mechanism_under_verification': "'Reset App State' in the Menu screen behind a confirmation (SUT02-EV-0009); presence in the installed binary; install and launch verified; the reset itself is not exercised",
-                 'checks': {'launch': rd('launch.txt'), 'app_container': rd('container.txt'), 'reset_string_occurrences_in_binary': count},
+                 'reset_mechanism_under_verification': "'Reset App State' in the Menu screen behind a confirmation (SUT02-EV-0009); presence in the installed app bundle (raw bytes of every regular file); install and launch verified; the reset itself is not exercised",
+                 'checks': {'launch': rd('launch.txt'), 'app_container': rd('container.txt'), 'reset_string_occurrences_in_bundle': count, 'bundle_files_with_reset_string': [l for l in rd('reset-string-files.txt').splitlines() if l], 'reset_string_occurrences_in_binary': rd('reset-string-count-binary.txt', '0')},
                  'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
                  'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH')},
                  'mobile_runner': 'none (no mobile test runner is used for environment verification)',
@@ -448,6 +573,39 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           raise SystemExit(0 if ok else 1)
+          PY
+      - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
+        if: always()
+        env:
+          EV_KEPT: environment-verification.json app.sha256 app-info.txt launch.txt container.txt reset-string-files.txt launch-screenshot.png
+        run: |
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
           PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
@@ -460,6 +618,7 @@ jobs:
             app-info.txt
             launch.txt
             container.txt
+            reset-string-files.txt
             launch-screenshot.png
           retention-days: 90
           if-no-files-found: error
@@ -557,6 +716,39 @@ jobs:
                  'github': {'run_id': e.get('GITHUB_RUN_ID'), 'run_attempt': e.get('GITHUB_RUN_ATTEMPT'), 'job': e.get('GITHUB_JOB'), 'repository_sha': e.get('GITHUB_SHA'), 'workflow_ref': e.get('GITHUB_WORKFLOW_REF')},
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+      - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
+        if: always()
+        env:
+          EV_KEPT: environment-verification.json web-stdout.log web-stderr.log
+        run: |
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
           PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
@@ -687,6 +879,39 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           PY
+      - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
+        if: always()
+        env:
+          EV_KEPT: environment-verification.json java-version.txt maven-version.txt built-jars.txt compose-version.txt compose-ps.txt compose-logs.txt
+        run: |
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
         uses: actions/upload-artifact@v4
@@ -711,39 +936,82 @@ jobs:
     steps:
       - name: Check out study repository
         uses: actions/checkout@v4
-      - name: Read the pinned SUT-05 provenance
+      - name: Read the pinned SUT-05 provenance (source commit and release)
         id: pin
         run: |
           python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
           python3 - >> "$GITHUB_OUTPUT" <<'PY'
           import yaml
           c = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-05']['components']['api']
-          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
+          for k in ('repository', 'commit_sha', 'release'):
+              assert c.get(k), f'empty pin field: {k}'
+          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}"); print(f"release={c['release']}")
           PY
-      - name: Clone the pinned SUT source
+      - name: Clone the pinned SUT source and relate the release tag to the pinned commit (fail closed)
         id: clone
         run: |
           set -euo pipefail
           git clone --quiet "${{ steps.pin.outputs.repo }}" sut
           git -C sut checkout --quiet "${{ steps.pin.outputs.sha }}"
           test "$(git -C sut rev-parse HEAD)" = "${{ steps.pin.outputs.sha }}"
-      - name: Set up Node.js 24.21.0 (engines 22 - 26 at the pinned commit; the version of SUT05-PROV-0001)
+          # The packaged distribution below is built by the SUT project from the release tag's commit. The pinned source commit
+          # (the default-branch HEAD at pin time) differs from it only by one documented non-application file; any other
+          # difference fails this step, and the record then says nothing about the reset mechanism (correction of 2026-10-04:
+          # the SUT's own source build at the pinned commit no longer completes because an unpinned build-tool dependency of the
+          # SUT changed upstream after 2026-09-22; the SUT is never patched).
+          git -C sut rev-parse "${{ steps.pin.outputs.release }}^{commit}" | tee "$GITHUB_WORKSPACE/release-commit.txt"
+          git -C sut diff --name-only "$(cat "$GITHUB_WORKSPACE/release-commit.txt")" "${{ steps.pin.outputs.sha }}" | tee "$GITHUB_WORKSPACE/release-vs-pin-diff.txt"
+          test "$(cat "$GITHUB_WORKSPACE/release-vs-pin-diff.txt")" = "screenshots/bundle-analysis.png"
+      - name: Set up Node.js 24.21.0 (the Node.js major the packaged distribution is bound to; the version of SUT05-PROV-0001)
         uses: actions/setup-node@v4
         with:
           node-version: "24.21.0"
-      - name: Provision (source build at the pinned commit) and start the api instance
-        id: provision
+      - name: Download, verify, and unpack the packaged distribution of the pinned release (the SUT README's Packaged Distributions route)
+        id: package
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EV_REPO: ${{ steps.pin.outputs.repo }}
+          EV_RELEASE: ${{ steps.pin.outputs.release }}
         run: |
           set -euo pipefail
-          cd sut
-          npm install --no-audit --no-fund > "$GITHUB_WORKSPACE/npm-install.log" 2>&1 || { tail -n 60 "$GITHUB_WORKSPACE/npm-install.log"; exit 1; }
-          tail -n 5 "$GITHUB_WORKSPACE/npm-install.log"
+          ASSET="juice-shop-${EV_RELEASE#v}_node24_linux_x64.tgz"
+          gh release download "$EV_RELEASE" --repo "$EV_REPO" --pattern "$ASSET" --clobber
+          SUM="$(sha256sum "$ASSET" | cut -d' ' -f1)"
+          DIGEST="$(gh release view "$EV_RELEASE" --repo "$EV_REPO" --json assets --jq ".assets[] | select(.name == \"$ASSET\") | .digest")"
+          test -n "$DIGEST"
+          test "sha256:$SUM" = "$DIGEST"
+          mkdir -p pkg
+          tar -xzf "$ASSET" -C pkg
+          set -- pkg/*/
+          test "$#" -eq 1
+          PKG_DIR="${1%/}"
+          test -f "$PKG_DIR/package.json"
+          test -f "$PKG_DIR/build/app.js"
+          echo "dir=$PKG_DIR" >> "$GITHUB_OUTPUT"
+          python3 - "$ASSET" "$SUM" "$DIGEST" "$PKG_DIR" <<'PY'
+          import json, sys
+          asset, digest_sha256, github_digest, pkg_dir = sys.argv[1:5]
+          p = json.load(open(pkg_dir + '/package.json'))
+          rec = {'route': 'PACKAGED_DISTRIBUTION (SUT README, Packaged Distributions: download the release archive, unpack, npm start)',
+                 'asset': asset, 'sha256': digest_sha256, 'github_digest': github_digest, 'unpacked_dir': pkg_dir,
+                 'package_json': {k: p.get(k) for k in ('name', 'version', 'engines', 'os', 'cpu')}, 'start_script': (p.get('scripts') or {}).get('start')}
+          json.dump(rec, open('package-provenance.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+      - name: Start the api instance from the packaged distribution (npm start, the documented route)
+        id: provision
+        env:
+          SUT_DIR: ${{ steps.package.outputs.dir }}
+        run: |
+          set -euo pipefail
+          cd "$SUT_DIR"
           nohup npm start > "$GITHUB_WORKSPACE/api-stdout-1.log" 2> "$GITHUB_WORKSPACE/api-stderr-1.log" &
           echo $! > "$GITHUB_WORKSPACE/pid1.txt"
           for _ in $(seq 1 90); do curl -fsS -o /dev/null http://127.0.0.1:3000/rest/admin/application-version && break; sleep 3; done
           curl -fsS http://127.0.0.1:3000/rest/admin/application-version | tee "$GITHUB_WORKSPACE/version-1.json"
       - name: Verify api reachability and the process-restart reset mechanism (nothing measured)
         id: verify
+        env:
+          SUT_DIR: ${{ steps.package.outputs.dir }}
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -764,16 +1032,20 @@ jobs:
           pid = int(open('pid1.txt').read().strip())
           subprocess.run(['pkill', '-TERM', '-P', str(pid)]); subprocess.run(['kill', '-TERM', str(pid)]); time.sleep(5)
           checks['api_after_stop_status'] = http('GET', 'http://127.0.0.1:3000/rest/admin/application-version')
-          p = subprocess.Popen(['npm', 'start'], cwd='sut', stdout=open('api-stdout-2.log', 'w'), stderr=open('api-stderr-2.log', 'w'))
+          p = subprocess.Popen(['npm', 'start'], cwd=os.environ['SUT_DIR'], stdout=open('api-stdout-2.log', 'w'), stderr=open('api-stderr-2.log', 'w'))
           for _ in range(90):
               if http('GET', 'http://127.0.0.1:3000/rest/admin/application-version') == 200: break
               time.sleep(3)
           checks['api_after_restart_status'] = http('GET', 'http://127.0.0.1:3000/rest/admin/application-version')
           ok = checks['api_GET_/rest/admin/application-version_status'] == 200 and str(checks['api_after_stop_status']).startswith('ERROR') and checks['api_after_restart_status'] == 200 \
                and all(isinstance(checks[k], int) for k in ('api_POST_/rest/user/login_empty_body_status', 'api_GET_/api/BasketItems/_unauthenticated_status'))
+          pkg = json.load(open('package-provenance.json'))
           rec = {'record_class': os.environ['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
                  'sut_id': 'SUT-05', 'surfaces': ['API'], 'conditions_covered': ['E03-CS001-SUT05-API'], 'environment_type': 'SELF_HOSTED',
-                 'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}', 'commit_sha': '${{ steps.pin.outputs.sha }}', 'reported_version': open('version-1.json').read().strip()},
+                 'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}', 'commit_sha': '${{ steps.pin.outputs.sha }}', 'release': '${{ steps.pin.outputs.release }}',
+                                    'release_commit': open('release-commit.txt').read().strip(), 'release_vs_pin_diff': open('release-vs-pin-diff.txt').read().split(),
+                                    'provisioning_route': pkg['route'], 'package': {k: pkg[k] for k in ('asset', 'sha256', 'github_digest', 'package_json', 'start_script')},
+                                    'reported_version': open('version-1.json').read().strip()},
                  'reset_mechanism_under_verification': 'full process restart (sequelize.sync force on start, SUT05-EV-0003); stop/start reachability only, no business state established',
                  'checks': checks, 'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
                  'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH')},
@@ -782,7 +1054,7 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2)); assert ok
           PY
-      - name: Collect the npm logs (diagnosis of a failed source build)
+      - name: Collect the npm logs (diagnosis of a failed start)
         if: always()
         run: |
           mkdir -p npm-logs
@@ -798,7 +1070,8 @@ jobs:
           EV_MECHANISM: "full process restart (sequelize.sync force on start, SUT05-EV-0003); stop/start reachability only, no business state established"
           EV_REPOSITORY: ${{ steps.pin.outputs.repo }}
           EV_COMMIT: ${{ steps.pin.outputs.sha }}
-          EV_STEP_OUTCOMES: pin=${{ steps.pin.outcome }} clone=${{ steps.clone.outcome }} provision=${{ steps.provision.outcome }} verify=${{ steps.verify.outcome }}
+          EV_RELEASE: ${{ steps.pin.outputs.release }}
+          EV_STEP_OUTCOMES: pin=${{ steps.pin.outcome }} clone=${{ steps.clone.outcome }} package=${{ steps.package.outcome }} provision=${{ steps.provision.outcome }} verify=${{ steps.verify.outcome }}
         run: |
           if [ -f environment-verification.json ]; then exit 0; fi
           python3 - <<'PY'
@@ -807,7 +1080,7 @@ jobs:
           unread = 'UNREAD (the pin step did not complete)'
           rec = {'record_class': e['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
                  'sut_id': e['EV_SUT'], 'surfaces': e['EV_SURFACES'].split(), 'conditions_covered': e['EV_CONDITIONS'].split(), 'environment_type': e['EV_ENVIRONMENT_TYPE'],
-                 'sut_provenance': {'repository': e.get('EV_REPOSITORY') or unread, 'commit_sha': e.get('EV_COMMIT') or unread},
+                 'sut_provenance': {'repository': e.get('EV_REPOSITORY') or unread, 'commit_sha': e.get('EV_COMMIT') or unread, 'release': e.get('EV_RELEASE') or unread},
                  'reset_mechanism_under_verification': e['EV_MECHANISM'],
                  'step_outcomes': dict(kv.split('=', 1) for kv in e['EV_STEP_OUTCOMES'].split()),
                  'checks': {}, 'verification_result': 'NOT_VERIFIED',
@@ -817,6 +1090,39 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           PY
+      - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
+        if: always()
+        env:
+          EV_KEPT: environment-verification.json release-commit.txt release-vs-pin-diff.txt package-provenance.json npm-logs version-1.json api-stdout-1.log api-stderr-1.log api-stdout-2.log api-stderr-2.log
+        run: |
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
         uses: actions/upload-artifact@v4
@@ -824,7 +1130,9 @@ jobs:
           name: E03-ENVIRONMENT_VERIFICATION-SUT-05-api-run${{ github.run_id }}-a${{ github.run_attempt }}
           path: |
             environment-verification.json
-            npm-install.log
+            release-commit.txt
+            release-vs-pin-diff.txt
+            package-provenance.json
             npm-logs/
             version-1.json
             api-stdout-1.log

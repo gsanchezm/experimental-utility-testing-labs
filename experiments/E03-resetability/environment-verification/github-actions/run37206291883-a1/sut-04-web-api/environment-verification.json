@@ -1,0 +1,49 @@
+{
+  "record_class": "ENVIRONMENT_VERIFICATION",
+  "measured_experiment": false,
+  "study_id": "EUS-2026-001",
+  "campaign_id": "E03-resetability",
+  "sut_id": "SUT-04",
+  "surfaces": [
+    "WEB",
+    "API"
+  ],
+  "conditions_covered": [
+    "E03-CS001-SUT04-WEB",
+    "E03-CS001-SUT04-API"
+  ],
+  "environment_type": "SELF_HOSTED",
+  "sut_provenance": {
+    "repository": "https://github.com/mwinteringham/restful-booker-platform",
+    "commit_sha": "d36bd3f8647a091d406e53bad463c5e3e5d2ece1"
+  },
+  "reset_mechanism_under_verification": "DELETE /booking/{bookingid} (SUT04-EV-0006); reachability only, against a non-existent id, unauthenticated",
+  "checks": {
+    "web_GET_/_status": 200,
+    "api_POST_/auth/login_empty_body_status": 403,
+    "api_GET_/booking/_status": 403,
+    "api_DELETE_/booking/999999_unauthenticated_status": 403,
+    "api_GET_/booking/999999_status": 403
+  },
+  "verification_result": "VERIFIED",
+  "runner": {
+    "os": "Linux",
+    "image": "ubuntu24",
+    "image_version": "20260927.320.1",
+    "arch": "X64"
+  },
+  "tool_versions": {
+    "docker_compose": "Docker Compose version v2.38.2",
+    "java": "openjdk version \"26.0.2.1\" 2026-08-18\nOpenJDK Runtime Environment Temurin-26.0.2.1+1 (build 26.0.2.1+1)\nOpenJDK 64-Bit Server VM Temurin-26.0.2.1+1 (build 26.0.2.1+1, mixed mode, sharing)",
+    "maven": "Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)\nMaven home: /usr/share/apache-maven-3.9.16\nJava version: 26.0.2.1, vendor: Eclipse Adoptium, runtime: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/26.0.2-101/x64\nDefault locale: en, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.17.0-1022-azure\", arch: \"amd64\", family: \"unix\""
+  },
+  "github": {
+    "run_id": "37206291883",
+    "run_attempt": "1",
+    "job": "sut-04-web-api",
+    "repository_sha": "08ef8c8a4890dc61298ca202c195c226d15f191f",
+    "workflow_ref": "gsanchezm/experimental-utility-testing-labs/.github/workflows/e03-environment-verification.yml@refs/heads/main"
+  },
+  "timestamp": "2026-10-04T13:48:28.129174+00:00",
+  "timezone": "UTC"
+}
