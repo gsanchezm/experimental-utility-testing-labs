@@ -1,0 +1,50 @@
+{
+  "record_class": "ENVIRONMENT_VERIFICATION",
+  "measured_experiment": false,
+  "study_id": "EUS-2026-001",
+  "campaign_id": "E03-resetability",
+  "sut_id": "SUT-03",
+  "surfaces": [
+    "WEB"
+  ],
+  "conditions_covered": [
+    "E03-CS001-SUT03-WEB"
+  ],
+  "environment_type": "SELF_HOSTED",
+  "sut_provenance": {
+    "repository": "https://github.com/browserstack/browserstack-demo-app",
+    "commit_sha": "7ab934d733f2f74d4b912e94e86f59ae0f6b7609"
+  },
+  "reset_mechanism_under_verification": "Sign-Out -> store2.session.clearAll() (SUT03-EV-0030, SUT03-EV-0031); presence at source level and served web surface",
+  "checks": {
+    "web_GET_/_status": 200,
+    "web_GET_/signin_status": 200,
+    "api_GET_/api/products_status": 200,
+    "source_files_with_logOutHandler": [
+      "sut/src/components/Header/index.jsx"
+    ],
+    "source_files_with_session_clearAll": [
+      "sut/src/components/Header/index.jsx"
+    ]
+  },
+  "verification_result": "VERIFIED",
+  "runner": {
+    "os": "Linux",
+    "image": "ubuntu24",
+    "image_version": "20260927.320.1",
+    "arch": "X64"
+  },
+  "tool_versions": {
+    "node": "v14.21.3",
+    "npm": "6.14.18"
+  },
+  "github": {
+    "run_id": "37265782721",
+    "run_attempt": "1",
+    "job": "sut-03-web",
+    "repository_sha": "f0071bfcc07c7038bd1e7fc7554385b838c6f49e",
+    "workflow_ref": "gsanchezm/experimental-utility-testing-labs/.github/workflows/e03-environment-verification.yml@refs/heads/main"
+  },
+  "timestamp": "2026-10-05T05:00:30.923429+00:00",
+  "timezone": "UTC"
+}

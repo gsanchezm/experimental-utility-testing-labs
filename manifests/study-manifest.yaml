@@ -556,3 +556,73 @@ notes: |
   (canonical bytes). Verified locally with actionlint 1.7.7 and shellcheck 0.10.0 under a hard timeout; the hosted lint job stays the
   final oracle. No dispatch, no export, no push: export v32 needs its own human authorization and the third environment-verification
   dispatch its own approval; AGENT-INSTRUCTIONS.md and README.md live status are refreshed with the v32 status commit; E03 NOT_STARTED.
+  2026-10-04 (PUBLIC EXPORT v32, operation OP-PUB-06; human authorization of 2026-10-04 from canonical 72ede8f, conditional on the
+  publication scans and the lint of the exported tree passing, sha256 08db2fccfaaa674bd85a57c00466af46fbbb9df4612813a143ab0eaf6764cc20,
+  given to the study's independent orchestration reviewer (received 2026-10-05T00:58:36Z) and pasted directly in the ORCHESTRATOR's session
+  (2026-10-05T00:58:44Z); the operation adopted, including its single push and its live-status edits, given to the reviewer (received
+  2026-10-05T01:56:46Z) and relayed, recorded before the push, sha256 9fe33ba0a2bf33de44f9de3b92d12db84c1e436eed7ab3d88c4b0f29995c0043):
+  export v32 was pushed on 2026-10-05T02:02:38Z (public main f0071bfcc07c7038bd1e7fc7554385b838c6f49e, manifest ec3eb7f0...); its validation
+  run 37253798172 succeeded in all four jobs (E03 Workflow Lint, E03 Publication Hygiene with the D2 exemption over the redacted
+  run-37206291883 import, E03 Schema Validation, E03 Configuration Integrity); the post-push audit of a fresh clone passed. First
+  application of ENVIRONMENT_VERIFICATION_HOST_PATH_REDACTION (8 files, 32 lines) and of DETERMINISTIC_SANITIZED_ARCHIVE scope entries 2 and
+  3 (2 archives, STORED); PUBLIC-EXPORT-MANIFEST.yaml records the export-log entry and the class flips (APPLIED_SINCE_EXPORT_v32). No
+  dispatch: the third environment-verification dispatch needs its own approval; E03 NOT_STARTED.
+  2026-10-04 (PRE-DISPATCH RECORD OF THE THIRD ENVIRONMENT-VERIFICATION DISPATCH, operation OP-ENV-07; non-measured):
+  manifests/e03-environment-verification-dispatch-v3.yaml records, before the dispatch, the human research lead's approval of 2026-10-04 of
+  a single dispatch of the corrected workflow published in v32, with target=all and never re-run (sha256 6f449628...), given to the study's
+  independent orchestration reviewer (received 2026-10-05T04:38:11Z) and relayed to the ORCHESTRATOR, and the same text pasted directly in
+  the ORCHESTRATOR's session (2026-10-05T04:34:49Z); the instruction verbatim (sha256 902aef5b...); the dispatch inputs (workflow id
+  364260233, ref main at public v32 f0071bf, target=all; workflow canonical 5ec3f22b... and public 7ae1904e..., alias-only difference); and
+  the preconditions (validation run 37253798172 green; two earlier runs, 37074152972 and 37206291883; 43 runs, none in progress). The run
+  will be the first execution of the three OP-ENV-06 corrections. Not yet dispatched: the dispatch follows the reviewer's audit of this
+  record; never re-run. No import; controlled-instance-status.yaml unchanged; E03 NOT_STARTED.
+  2026-10-05 (IMPORT AND TRANSCRIPTION OF THE THIRD ENVIRONMENT-VERIFICATION RUN, operation OP-ENV-08, second issue OP-ENV-08b; non-measured;
+  adopted by the human research lead, adoption recorded in manifests/e03-environment-verification-import-v3.yaml): the seven
+  ENVIRONMENT_VERIFICATION artifacts of run 37265782721 (attempt 1, public v32 f0071bf, workflow canonical 5ec3f22b..., the OP-ENV-06
+  correction) are imported byte-exact under experiments/E03-resetability/environment-verification/github-actions/run37265782721-a1/ (42
+  members; hygiene 0/0/0 after the capture-time scrub, so no publication-only class is needed) and transcribed into
+  controlled-instance-status.yaml, whose latest run governs gate G-8: VERIFIED for E03-CS001-SUT01-WEB, -SUT01-API, -SUT02-WEB,
+  -SUT02-ANDROID, -SUT02-IOS (for the first time: the reset label counted once in the installed app bundle), -SUT03-WEB, -SUT04-WEB, and
+  -SUT04-API; NOT_VERIFIED for -SUT05-API, whose provisioning by the Packaged Distributions route of its pinned release v20.2.0 succeeded
+  but whose process-restart check found the API still answering after the stop signals (cause not established; a verification-step item
+  for the CI correction OP-CI-02). E03-CS001-SUT02-IOS becomes CONTROLLED by its GitHub Actions SIMULATED instance (summary controlled 9,
+  not executable 0, GitHub Actions verified 8; its workstation verification stays NOT_VERIFIED). manifests/sut-manifest.yaml: SUT-02
+  controlled_instance_available null -> true; SUT-05 comment extended with its route; SUT-01 not changed (its E01-confirmed android and ios
+  surfaces were never provisioned; protocol/study-design-v1.md section 10.5: null until verified, never inferred). No dispatch, export, or
+  push; measured_execution_ready 0; E03 NOT_STARTED.
+  2026-10-05 (CI CORRECTION OF THE SUT-05 VERIFICATION STEP OF THE ENVIRONMENT-VERIFICATION WORKFLOW AND OF ONE COMMENT OF THE VALIDATION
+  WORKFLOW, operation OP-CI-02, under E03-CI-WRITE-AUTH-01; issued by the study's independent orchestration reviewer on the human research
+  lead's instruction received 2026-10-05T12:00:12Z (transcript stamp; clock read 2026-10-05T12:00:40Z), exact text sha256
+  5b0883a7c3c0e2714e2fcda73ca06f6c73c68d6152965cab11711250580df330, and adopted by the human research lead as written, adoption text sha256
+  4c635f0829227ba7eae9fd8bb132268eb3a54e03243670545cc60642c762a670 received 2026-10-05T13:12:25Z (transcript stamp; clock read 2026-10-05T13:12:54Z), both given to the study's independent orchestration reviewer and relayed to the ORCHESTRATOR):
+  (1) the SUT-05 api job starts its instance in its own session and process group (setsid via start_new_session; pid and process group
+  recorded), stops it with SIGTERM to the whole group, polls until a fresh connection to port 3000 is refused (60 s window) before it
+  evaluates api_after_stop_status, waits up to 15 s for the group to disappear, restarts in a new session only after the port closed
+  (otherwise NOT_ATTEMPTED and NOT_VERIFIED), and records the process tree before the stop, after it, and after the restart in three kept
+  files (process-tree-before-stop.txt, process-tree-after-stop.txt, process-tree-after-restart.txt: pid, ppid, pgid, sid, state, elapsed
+  seconds, and command line of the recorded group, of every npm or node process, and of the listener on port 3000, with SigIgn and SigCgt),
+  covered by the capture-time scrub; VERIFIED now also requires the port to have closed. Run 37265782721 had signaled only npm and its
+  direct children and found the API still answering; the SUT source at the release commit shows the server exits on a SIGTERM it receives
+  (cause narrowed, not established; the recorded tree of the fourth run will show the arrangement). (2) One comment line of the validation
+  workflow's hygiene scan (file line 237) no longer cites the canonical publication record by a path that the export aliases to the public
+  manifest's name, which lacks the cited section; the pattern and the scan are unchanged. Workflow sha256
+  5ec3f22b33e4403e08952b56bbf4e27314129e266c0f6a90d17eaa307d619897 -> fcd26a91c8c76b64005961e54e1b5d9a52041714e3decd6697e5553a9ca9ff88 and
+  604e8848669530930016a6582bd7789ec60171f77326060e33d2e6e910bba295 -> d2ed05261487595fa161254d76b48e9b6eef70335c8bf67c27a0209fc594da0f
+  (canonical bytes). Verified locally with actionlint 1.7.7 and shellcheck 0.10.0 under a hard timeout and with a local fixture that
+  reproduces the defect under the previous stop sequence and the fix under the group signal; the hosted lint job stays the final oracle.
+  No dispatch, no export, no push: export v33 needs its own human authorization and the fourth environment-verification dispatch its own
+  approval; AGENT-INSTRUCTIONS.md and README.md live status are refreshed with the v33 status commit; E03 NOT_STARTED.
+  2026-10-05 (CI CORRECTION OF THE MEASURED-EXECUTION WORKFLOW: GATE G-6 RE-POINTED TO THE GOVERNANCE DOCUMENT IN FORCE, operation OP-CI-03,
+  under E03-CI-WRITE-AUTH-01; issued by the study's independent orchestration reviewer on the human research lead's decision of 2026-10-05
+  to adopt the reviewer's recommendation, received 2026-10-05T13:16:26Z (transcript stamp; clock read 2026-10-05T13:17:13Z), exact text
+  sha256 6b0bf1aa7f7bb61ee622592ead9ae2c01ccb571e2811e3394f8430d6cd6a9cfe, and adopted by the human research lead as written, adoption
+  text sha256 bf385f018962523ef6d46bcbfc0c63d708f270c342426dcf4db7d49ac293b615 received 2026-10-05T14:44:56Z (transcript stamp; clock read 2026-10-05T14:45:14Z), both given to the study's independent orchestration reviewer and relayed to
+  the ORCHESTRATOR): gate G-6 reads protocol/agent-governance-v3.md (FROZEN-PRE-DATA, in force since 2026-10-03) instead of the AMENDED
+  protocol/agent-governance-v2.md, under the label agent-governance-v3 frozen, with the accepted states unchanged (FROZEN-PRE-DATA or
+  AMENDED, never DRAFT or absent); the provenance output governance_sha256 records that file; the header and G-7 comments cite the
+  in-force documents (protocol/mobile-runner-policy-v3.md; v2 AMENDED, under which both compatibility smokes were executed) and state that
+  the effective-admissibility rule of v3 sections 9.7.9 and 9.7.10 is not implemented by G-7 (REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19,
+  a separate human decision; every mobile condition stays blocked). No gate condition or order changes; the validation workflow's G-7
+  regression strings are unchanged. Workflow sha256 6ca44201ee02bcfb48465806cf1aa0a9ba046b2e8f6c47f97c733ec8ac1da55d ->
+  9566726a0979e5a8d689533cf67b14df506ca1f10eeefa8c044f6f573e796538 (canonical bytes); the execution-model gate-6 text and the
+  controlled-instance-status prerequisites line name v3. Lint clean (actionlint 1.7.7, shellcheck 0.10.0, hard timeout); no dispatch, no export, no push; E03 NOT_STARTED.

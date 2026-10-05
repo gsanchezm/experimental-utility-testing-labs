@@ -997,17 +997,41 @@ jobs:
                  'package_json': {k: p.get(k) for k in ('name', 'version', 'engines', 'os', 'cpu')}, 'start_script': (p.get('scripts') or {}).get('start')}
           json.dump(rec, open('package-provenance.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           PY
-      - name: Start the api instance from the packaged distribution (npm start, the documented route)
+      - name: Start the api instance from the packaged distribution in its own session and process group (npm start, the documented route)
         id: provision
         env:
           SUT_DIR: ${{ steps.package.outputs.dir }}
         run: |
           set -euo pipefail
-          cd "$SUT_DIR"
-          nohup npm start > "$GITHUB_WORKSPACE/api-stdout-1.log" 2> "$GITHUB_WORKSPACE/api-stderr-1.log" &
-          echo $! > "$GITHUB_WORKSPACE/pid1.txt"
-          for _ in $(seq 1 90); do curl -fsS -o /dev/null http://127.0.0.1:3000/rest/admin/application-version && break; sleep 3; done
-          curl -fsS http://127.0.0.1:3000/rest/admin/application-version | tee "$GITHUB_WORKSPACE/version-1.json"
+          python3 - <<'PY'
+          import os, subprocess, sys, time, urllib.request
+          ws = os.environ['GITHUB_WORKSPACE']
+          # The instance starts in a new session (setsid(2), via start_new_session): npm, the shell it spawns, and the node process that
+          # serves port 3000 then share one process group, which the verification step stops as a whole. Run 37265782721 had signaled
+          # only the npm process and its direct children, and the API kept answering (correction of 2026-10-05, operation OP-CI-02).
+          p = subprocess.Popen(['npm', 'start'], cwd=os.environ['SUT_DIR'], stdin=subprocess.DEVNULL,
+                               stdout=open(f'{ws}/api-stdout-1.log', 'w'), stderr=open(f'{ws}/api-stderr-1.log', 'w'), start_new_session=True)
+          pgid = os.getpgid(p.pid)
+          assert pgid == p.pid, (p.pid, pgid)
+          open(f'{ws}/pid1.txt', 'w').write(f'{p.pid}\n')
+          open(f'{ws}/pgid1.txt', 'w').write(f'{pgid}\n')
+          body = None
+          for _ in range(90):
+              if p.poll() is not None:
+                  sys.exit(f'npm start exited early with code {p.returncode} (api-stderr-1.log)')
+              try:
+                  with urllib.request.urlopen('http://127.0.0.1:3000/rest/admin/application-version', timeout=20) as r:
+                      if r.status == 200:
+                          body = r.read()
+                          break
+              except Exception:
+                  pass
+              time.sleep(3)
+          if body is None:
+              sys.exit('the api did not answer GET /rest/admin/application-version with 200 within the readiness window')
+          open(f'{ws}/version-1.json', 'wb').write(body)
+          print(f'started: pid {p.pid}, process group {pgid}; version response {body.decode("utf-8", "replace")}')
+          PY
       - name: Verify api reachability and the process-restart reset mechanism (nothing measured)
         id: verify
         env:
@@ -1015,29 +1039,108 @@ jobs:
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json, os, subprocess, datetime, time, urllib.request, urllib.error
+          import json, os, re, signal, socket, subprocess, datetime, time, urllib.request, urllib.error
           def http(method, url, body=None, headers=None):
               req = urllib.request.Request(url, data=body, method=method, headers=headers or {})
               try:
                   with urllib.request.urlopen(req, timeout=20) as r: return r.status
               except urllib.error.HTTPError as e: return e.code
               except Exception as e: return f'ERROR:{e.__class__.__name__}'
+          def port_open(port=3000):
+              # one fresh TCP connection attempt: True while something accepts connections on the port, False once they are refused
+              try:
+                  with socket.create_connection(('127.0.0.1', port), timeout=2): return True
+              except OSError: return False
+          def run(cmd):
+              try:
+                  r = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+                  return r.stdout if r.returncode == 0 else f'UNAVAILABLE:{cmd[0]} exit {r.returncode}: {r.stderr.strip()}\n'
+              except Exception as e: return f'UNAVAILABLE:{cmd[0]} {e.__class__.__name__}: {e}\n'
+          def snapshot(label, groups):
+              # Process tree restricted to the recorded process group(s), to every npm or node process, and to the listener(s) on port
+              # 3000 (pid, ppid, pgid, sid, state, elapsed seconds, command line), with the runner's process count, the listeners
+              # reported by ss, and the signal masks of those processes (SigIgn, SigCgt of /proc/<pid>/status). Written to a kept
+              # file and summarized in the record; a missing tool is recorded as UNAVAILABLE and never fails the step.
+              ps_out, ss_out = run(['ps', '-eo', 'pid,ppid,pgid,sid,stat,etimes,args']), run(['ss', '-ltnpH'])
+              tool_errors = [x.splitlines()[0] for x in (ps_out, ss_out) if x.startswith('UNAVAILABLE')]
+              rows = []
+              for l in ps_out.splitlines()[1:]:
+                  f = l.split(None, 6)
+                  if len(f) == 7 and all(x.isdigit() for x in f[:4]):
+                      rows.append({'pid': int(f[0]), 'ppid': int(f[1]), 'pgid': int(f[2]), 'sid': int(f[3]), 'stat': f[4], 'etimes': f[5], 'args': f[6]})
+              listeners = [l.strip() for l in ss_out.splitlines() if ':3000 ' in l]
+              lpids = {int(m) for l in listeners for m in re.findall(r'pid=(\d+)', l)}
+              keep = [r for r in rows if r['pgid'] in groups or r['pid'] in lpids or re.search(r'(^|/| )(npm|node)( |$)|build/app', r['args'])]
+              masks = {}
+              for r in keep:
+                  try:
+                      st = dict(l.split(':', 1) for l in open(f"/proc/{r['pid']}/status").read().splitlines() if ':' in l)
+                      masks[str(r['pid'])] = {k: st[k].strip() for k in ('Name', 'State', 'PPid', 'SigIgn', 'SigCgt') if k in st}
+                  except Exception as e:
+                      masks[str(r['pid'])] = f'UNAVAILABLE:{e.__class__.__name__}'
+              with open(f'process-tree-{label}.txt', 'w') as fh:
+                  fh.write(f'# {label} {datetime.datetime.now(datetime.timezone.utc).isoformat()} recorded process group(s) {sorted(groups)}; {len(rows)} processes on the runner; tool errors {tool_errors}\n')
+                  fh.write('# pid ppid pgid sid stat etimes args (the recorded group(s), every npm or node process, the listener(s) on port 3000)\n')
+                  for r in keep:
+                      fh.write(f"{r['pid']} {r['ppid']} {r['pgid']} {r['sid']} {r['stat']} {r['etimes']} {r['args']}\n")
+                  fh.write('# listeners on port 3000 (ss -ltnp)\n' + ''.join(l + '\n' for l in listeners))
+                  fh.write('# /proc/<pid>/status of the rows above\n' + json.dumps(masks, indent=1, sort_keys=True) + '\n')
+              return {'file': f'process-tree-{label}.txt', 'runner_process_count': len(rows), 'tool_errors': tool_errors, 'listeners_on_port_3000': listeners,
+                      'group_members': [[r['pid'], r['ppid'], r['pgid'], r['stat'], r['args']] for r in keep if r['pgid'] in groups]}
+          url = 'http://127.0.0.1:3000/rest/admin/application-version'
           checks = {
               'api_GET_/rest/admin/application-version_status': http('GET', 'http://127.0.0.1:3000/rest/admin/application-version'),
               'api_POST_/rest/user/login_empty_body_status': http('POST', 'http://127.0.0.1:3000/rest/user/login', b'{}', {'Content-Type': 'application/json'}),
               'api_GET_/api/BasketItems/_unauthenticated_status': http('GET', 'http://127.0.0.1:3000/api/BasketItems/'),
               'api_GET_/rest/basket/1_unauthenticated_status': http('GET', 'http://127.0.0.1:3000/rest/basket/1'),
           }
-          # Reset mechanism = ENVIRONMENT_RESTART (SUT05-EV-0003): stop the process and start it again; verify it comes back.
-          pid = int(open('pid1.txt').read().strip())
-          subprocess.run(['pkill', '-TERM', '-P', str(pid)]); subprocess.run(['kill', '-TERM', str(pid)]); time.sleep(5)
-          checks['api_after_stop_status'] = http('GET', 'http://127.0.0.1:3000/rest/admin/application-version')
-          p = subprocess.Popen(['npm', 'start'], cwd=os.environ['SUT_DIR'], stdout=open('api-stdout-2.log', 'w'), stderr=open('api-stderr-2.log', 'w'))
-          for _ in range(90):
-              if http('GET', 'http://127.0.0.1:3000/rest/admin/application-version') == 200: break
-              time.sleep(3)
-          checks['api_after_restart_status'] = http('GET', 'http://127.0.0.1:3000/rest/admin/application-version')
-          ok = checks['api_GET_/rest/admin/application-version_status'] == 200 and str(checks['api_after_stop_status']).startswith('ERROR') and checks['api_after_restart_status'] == 200 \
+          # Reset mechanism = ENVIRONMENT_RESTART (SUT05-EV-0003): stop the instance and start it again; verify that it stops answering and
+          # comes back. Correction of 2026-10-05 (operation OP-CI-02): the stop signal goes to the whole process group that the provision
+          # step started in its own session (npm, the shell it spawns, the node process), the port must refuse connections before the
+          # stop is evaluated (bounded wait), the process tree is captured before and after, and the restart happens only after the port
+          # closed, in a new session of its own. Run 37265782721 signaled only npm and its direct children, waited 5 s, and found the
+          # API still answering; which process kept the port was not recorded.
+          pid1 = int(open('pid1.txt').read().strip()); pgid1 = int(open('pgid1.txt').read().strip())
+          snapshots = {'before_stop': snapshot('before-stop', {pgid1})}
+          STOP_WINDOW, GROUP_WINDOW = 60, 15
+          t0 = time.monotonic()
+          os.killpg(pgid1, signal.SIGTERM)
+          closed_after = None
+          while time.monotonic() - t0 < STOP_WINDOW:
+              if not port_open():
+                  closed_after = round(time.monotonic() - t0, 1); break
+              time.sleep(1)
+          checks['stop_signal'] = f'SIGTERM to process group {pgid1} (its leader is the npm process, pid {pid1})'
+          checks['stop_wait_window_seconds'] = STOP_WINDOW
+          checks['port_3000_closed_after_stop'] = closed_after is not None
+          checks['seconds_until_port_3000_closed'] = closed_after
+          checks['api_after_stop_status'] = http('GET', url)
+          gone_after = None
+          t1 = time.monotonic()
+          while time.monotonic() - t1 < GROUP_WINDOW:
+              try: os.killpg(pgid1, 0)
+              except ProcessLookupError:
+                  gone_after = round(time.monotonic() - t1, 1); break
+              time.sleep(1)
+          checks['seconds_until_process_group_gone'] = gone_after
+          snapshots['after_stop'] = snapshot('after-stop', {pgid1})
+          checks['process_group_members_after_stop'] = snapshots['after_stop']['group_members']
+          if closed_after is not None:
+              p = subprocess.Popen(['npm', 'start'], cwd=os.environ['SUT_DIR'], stdin=subprocess.DEVNULL, stdout=open('api-stdout-2.log', 'w'), stderr=open('api-stderr-2.log', 'w'), start_new_session=True)
+              pgid2 = os.getpgid(p.pid)
+              open('pid2.txt', 'w').write(f'{p.pid}\n'); open('pgid2.txt', 'w').write(f'{pgid2}\n')
+              for _ in range(90):
+                  if http('GET', url) == 200: break
+                  time.sleep(3)
+              checks['api_after_restart_status'] = http('GET', url)
+              checks['restart_process_group'] = pgid2
+              snapshots['after_restart'] = snapshot('after-restart', {pgid1, pgid2})
+          else:
+              checks['api_after_restart_status'] = 'NOT_ATTEMPTED (port 3000 still accepted connections at the end of the stop window)'
+              checks['restart_process_group'] = None
+              snapshots['after_restart'] = snapshot('after-restart', {pgid1})
+          ok = checks['api_GET_/rest/admin/application-version_status'] == 200 and checks['port_3000_closed_after_stop'] is True \
+               and str(checks['api_after_stop_status']).startswith('ERROR') and checks['api_after_restart_status'] == 200 \
                and all(isinstance(checks[k], int) for k in ('api_POST_/rest/user/login_empty_body_status', 'api_GET_/api/BasketItems/_unauthenticated_status'))
           pkg = json.load(open('package-provenance.json'))
           rec = {'record_class': os.environ['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
@@ -1047,7 +1150,8 @@ jobs:
                                     'provisioning_route': pkg['route'], 'package': {k: pkg[k] for k in ('asset', 'sha256', 'github_digest', 'package_json', 'start_script')},
                                     'reported_version': open('version-1.json').read().strip()},
                  'reset_mechanism_under_verification': 'full process restart (sequelize.sync force on start, SUT05-EV-0003); stop/start reachability only, no business state established',
-                 'checks': checks, 'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
+                 'stop_mechanism': 'SIGTERM to the process group started in its own session by the provision step; bounded wait until port 3000 refuses connections; restart in a new session; process tree captured before the stop, after it, and after the restart',
+                 'checks': checks, 'process_snapshots': snapshots, 'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
                  'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH')},
                  'tool_versions': {'node': subprocess.run(['node', '--version'], capture_output=True, text=True).stdout.strip(), 'npm': subprocess.run(['npm', '--version'], capture_output=True, text=True).stdout.strip()},
                  'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'job': '${{ github.job }}', 'repository_sha': '${{ github.sha }}', 'workflow_ref': '${{ github.workflow_ref }}'},
@@ -1093,7 +1197,7 @@ jobs:
       - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
         if: always()
         env:
-          EV_KEPT: environment-verification.json release-commit.txt release-vs-pin-diff.txt package-provenance.json npm-logs version-1.json api-stdout-1.log api-stderr-1.log api-stdout-2.log api-stderr-2.log
+          EV_KEPT: environment-verification.json release-commit.txt release-vs-pin-diff.txt package-provenance.json npm-logs version-1.json api-stdout-1.log api-stderr-1.log api-stdout-2.log api-stderr-2.log process-tree-before-stop.txt process-tree-after-stop.txt process-tree-after-restart.txt
         run: |
           python3 - <<'PY'
           import os, re
@@ -1139,5 +1243,8 @@ jobs:
             api-stderr-1.log
             api-stdout-2.log
             api-stderr-2.log
+            process-tree-before-stop.txt
+            process-tree-after-stop.txt
+            process-tree-after-restart.txt
           retention-days: 90
           if-no-files-found: error
