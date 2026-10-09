@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Prepared by | ORCHESTRATOR |
-| Date | 2026-09-21 (updated after Issue (xviii) human ruling and canonical-scenario catalogue completion); corrected 2026-09-22 (CS-002 excluded from the campaign by human ruling `E03-CS002-EXCLUSION-RULING-01`, `manifests/e03-cs002-exclusion-v1.yaml`; active catalogue = CS-001 only) |
+| Date | 2026-09-21 (updated after Issue (xviii) human ruling and canonical-scenario catalogue completion); corrected 2026-09-22 (CS-002 excluded from the campaign by human ruling `E03-CS002-EXCLUSION-RULING-01`, `manifests/e03-cs002-exclusion-v1.yaml`; active catalogue = CS-001 only); sections 3 and 4 updated 2026-10-06 (operation OP-PREP-E03) |
 | Authorization | Human-selected E03-resetability as next campaign for PRE-START preparation only (2026-09-21); Issue (xviii) human ruling (`ISSUE-XVIII-RULING-01`) and E03 configuration-completion instruction (2026-09-21). Neither authorizes campaign start, execution, mobile qualification execution, or executor launch. |
 | Status of this document | **DRAFT. This is NOT the "Campaign configuration" record of experiments/README.md / protocol/change-control-v1.md, section 7.** That record is written, under that exact heading, in this campaign's own README.md, only at campaign start (NOT_STARTED -> IN_PROGRESS), on its own separate explicit human instruction. This document is a preparatory draft, positioned so a future, separately authorized campaign-start operation can promote it (with the blockers below resolved) with minimal rework. |
 
@@ -40,11 +40,11 @@ Per `manifests/sut-manifest.yaml` (pinned 2026-09-16 by ORCHESTRATOR; no pinned 
 
 ## 3. Toolchain versions
 
-`manifests/toolchain-manifest.yaml`: unchanged. All versions remain `null`; nothing is installed. Mobile runner: Mobilewright remains candidate, qualification NOT_STARTED (Section 7).
+DRAFT, not frozen (operation OP-PREP-E03; `manifests/toolchain-manifest.yaml`, `tools.web_runner` and `tools.api`): web runner Playwright for Python 1.63.0, pinned with sha256 hashes by `experiments/E03-resetability/executor/requirements.txt` together with the runtime dependencies its metadata declares (pyee 13.0.1, greenlet 3.5.6, typing-extensions 4.16.0); Chromium downloaded by `playwright install chromium`, the build named by that version, its version recorded per run; API client the Python 3 standard library (`urllib.request`) of the runner's python3 (3.12 series on ubuntu-24.04), its exact version recorded per run; no third-party HTTP client. The pins are copied into the locked configuration at campaign START. Mobile runner: `tools.mobile_runner_selection` of `manifests/toolchain-manifest.yaml`, unchanged by that operation.
 
 ## 4. Prompt version id(s)
 
-None. No E03 executor prompt exists in `prompts/working/` or `prompts/frozen/`. Prompt authoring and freeze remain explicitly excluded from this operation.
+Candidate, DRAFT, not frozen: `EXECUTOR-E03-RESETABILITY-E03-resetability-v1`, the working prompt `prompts/working/EXECUTOR-E03-RESETABILITY-E03-resetability-v1.md` (operation OP-PREP-E03; human decisions of 2026-10-05, decision D3). Its freeze, a byte-identical copy under `prompts/frozen/`, is a step of the campaign START; no frozen E03 executor prompt exists.
 
 ## 5. Conditions, environment_type, NOT_EXECUTABLE_WITHOUT_CONTROLLED_INSTANCE
 

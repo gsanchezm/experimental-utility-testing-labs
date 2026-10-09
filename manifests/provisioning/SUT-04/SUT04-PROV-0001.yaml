@@ -30,7 +30,7 @@ steps:
     estimated_or_observed_duration: "about 17 min"
     automation_classification: AUTOMATED
     provenance: "Temurin 26.0.2.1+1; Apache Maven 3.9.9"
-    notes: "the SUT's documented build_locally.sh runs mvn clean install with the module unit tests and then the end-to-end tests; both test phases were skipped because provisioning needs only the service jars. The documented docker-compose deployment was not used: the host's Docker daemon was unavailable during this operation (a Docker Desktop privileged-helper prompt awaiting an administrator password)."
+    notes: "the SUT's documented build_locally.sh runs mvn clean install with the module unit tests and then the end-to-end tests; both test phases were skipped because provisioning needs only the service jars. The docker-compose deployment of the pinned commit (which the SUT's README does not document; operation OP-PREP-E03-ADD-01b) was not used: the host's Docker daemon was unavailable during this operation (a Docker Desktop privileged-helper prompt awaiting an administrator password)."
   - sut_id: SUT-04
     component: web/api monorepo
     operating_system: "macOS 26.5.2 (x86_64)"
@@ -49,6 +49,7 @@ notes: >
   Environment verification record: experiments/E03-resetability/environment-verification/SUT-04-web-api.json
   (VERIFIED: web GET / 200 on the assets server; auth, booking, and room services answer with defined HTTP
   statuses unauthenticated, including DELETE /booking/{id} against a non-existent id, SUT04-EV-0006; no
-  booking was created). The GitHub Actions job "E03 Environment Verification SUT-04 web+api" uses the SUT's
-  documented docker-compose deployment on an ubuntu-24.04 runner (SELF_HOSTED) and is the verification route
-  required before measured execution.
+  booking was created). The GitHub Actions job "E03 Environment Verification SUT-04 web+api" (SELF_HOSTED on an
+  ubuntu-24.04 runner) is the verification route required before measured execution; it provisioned SUT-04 with
+  the docker-compose.yml of the pinned commit, which the SUT's README does not document, until operation OP-CI-06
+  (2026-10-08), and since then by the route of the SUT's README (human decision of 2026-10-06).

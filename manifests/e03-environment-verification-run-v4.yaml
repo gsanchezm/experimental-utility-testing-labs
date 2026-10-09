@@ -1,0 +1,56 @@
+# manifests/e03-environment-verification-run-v4.yaml
+# Mechanical run-identity record of the single dispatch of operation OP-ENV-09 (E03 Environment Verification, NON-MEASURED),
+# written by the ORCHESTRATOR after the run identity was known (dispatch record:
+# manifests/e03-environment-verification-dispatch-v4.yaml). Values are read from the GitHub Actions API only. It records no
+# verification result and no interpretation, imports no artifact, does not edit
+# experiments/E03-resetability/controlled-instance-status.yaml, and is not a measured observation. Local commit; not pushed.
+# Model: manifests/e03-environment-verification-run-v3.yaml (operation OP-ENV-07), which is not edited.
+record_id: E03-ENVIRONMENT-VERIFICATION-RUN-04  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: ENVIRONMENT_VERIFICATION_RUN_IDENTITY_RECORD
+study_id: EUS-2026-001
+operation_id: OP-ENV-09
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-10-05T18:16:25Z"  # UTC
+measured_experiment: false
+qualification_evidence: false
+dispatch_record: manifests/e03-environment-verification-dispatch-v4.yaml  # record id E03-ENVIRONMENT-VERIFICATION-DISPATCH-04; committed (51a15cf92ef84d929a965e1bbbdb28fe4515b69a) and audited by the study's independent orchestration reviewer, and its direct_paste filled (65d69515b2da30379ccd75c1550ffe8495512cad), before the dispatch
+human_approval: {text_sha256: 2839880302d173a596b88de29addc889873f9066398d37db765130d3954483bf, received_by_the_reviewer_at: "2026-10-05T16:59:11Z"}  # by reference; recorded in the dispatch record
+direct_paste: {text_sha256: 2839880302d173a596b88de29addc889873f9066398d37db765130d3954483bf, received_at: "2026-10-05T18:11:23Z"}  # by reference; recorded in the dispatch record (transcript enqueue stamp 2026-10-05T18:11:23.407Z; user entry 2026-10-05T18:11:24.310Z; clock read at recording 2026-10-05T18:11:46Z)
+repository: gsanchezm/experimental-utility-testing-labs
+workflow: .github/workflows/e03-environment-verification.yml  # name "E03 Environment Verification", workflow id 364260233
+workflow_ref: main  # head_branch
+event: workflow_dispatch
+inputs: {target: SUT-05}
+dispatch_commands_issued: 1  # one "gh workflow run" with ref main and target=SUT-05; exit status 0; it printed the run URL; no other input, no repetition
+dispatch_command_issued_at: "2026-10-05T18:14:30Z"  # UTC clock immediately before the command, after a final re-check (public main 4261d15, tree 5c8a8c6f..., workflow blob 30d73eb3..., 45 runs, 3 environment-verification runs, nothing queued or in progress, canonical HEAD 65d6951 clean)
+run_id: 37354458611
+run_number: 4
+run_attempt: 1  # GET actions/runs/37354458611/attempts/2: HTTP 404 when this record was written
+run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/37354458611
+head_sha: 4261d1597335e760409949194e35d9ff09715872  # public export v33, as expected
+head_tree: 5c8a8c6f7c1cf84e0634993b19c85097ed65bd29
+created_at: "2026-10-05T18:14:33Z"
+run_started_at: "2026-10-05T18:14:33Z"
+triggering_actor: gsanchezm
+status_when_recorded: completed
+jobs_when_recorded: 7  # jobs listed by the API for this run when this record was written
+environment_verification_runs_after_dispatch: 4  # 37074152972, 37206291883, 37265782721, and this run
+actions_runs_total_after_dispatch: 46
+completion:  # appended after the run completed (operation OP-ENV-09, Step 3); the fields above are unchanged
+  recorded_at: "2026-10-05T18:21:47Z"  # UTC
+  status: completed
+  conclusion: success
+  completed_at: "2026-10-05T18:15:09Z"  # run updated_at
+  run_attempt: 1  # GET actions/runs/37354458611/attempts/2: HTTP 404 when this block was written
+  jobs:  # as listed by the API; the six jobs skipped by target=SUT-05 never started, and their timestamps are the values the API returns
+    - {name: "E03 Environment Verification SUT-01 web+api", id: 111913276796, conclusion: skipped, started_at: "2026-10-05T18:14:41Z", completed_at: "2026-10-05T18:14:34Z"}
+    - {name: "E03 Environment Verification SUT-02 android", id: 111913231113, conclusion: skipped, started_at: "2026-10-05T18:14:35Z", completed_at: "2026-10-05T18:14:34Z"}
+    - {name: "E03 Environment Verification SUT-02 ios", id: 111913230619, conclusion: skipped, started_at: "2026-10-05T18:14:35Z", completed_at: "2026-10-05T18:14:34Z"}
+    - {name: "E03 Environment Verification SUT-02 web", id: 111913296781, conclusion: skipped, started_at: "2026-10-05T18:14:44Z", completed_at: "2026-10-05T18:14:34Z"}
+    - {name: "E03 Environment Verification SUT-03 web", id: 111913231494, conclusion: skipped, started_at: "2026-10-05T18:14:35Z", completed_at: "2026-10-05T18:14:34Z"}
+    - {name: "E03 Environment Verification SUT-04 web+api", id: 111913231410, conclusion: skipped, started_at: "2026-10-05T18:14:35Z", completed_at: "2026-10-05T18:14:34Z"}
+    - {name: "E03 Environment Verification SUT-05 api", id: 111913229062, conclusion: success, started_at: "2026-10-05T18:14:37Z", completed_at: "2026-10-05T18:15:09Z"}
+  artifacts:  # the archive was downloaded outside the repository and its sha256 checked against the GitHub digest; nothing is imported
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-05-api-run37354458611-a1, id: 11363693103, size_in_bytes: 7309, digest: "sha256:dbdc0b4aeea2fb40b46ab3d5653fe90cd15d205ae517867a6e43b92559e65f51", expires_at: "2027-01-03T18:14:34Z"}
+  environment_verification_runs_after_completion: 4
+  actions_runs_total_after_completion: 46

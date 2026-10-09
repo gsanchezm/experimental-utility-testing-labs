@@ -8,14 +8,18 @@
 # (protocol/study-design-v1.md, section 10.3). A verified workstation instance makes a condition
 # CONTROLLED; measured execution additionally requires a VERIFIED GitHub Actions record for the
 # condition (the measured run executes on a GitHub-hosted runner) and every other campaign gate.
+# reverification_required (per condition, optional; operation OP-CI-06, 2026-10-08): set when a correction of the
+# environment-verification workflow replaces the provisioning route that the condition's governing verification ran on;
+# gate G-8 refuses the condition while the entry exists; the import that transcribes the condition's next verification run
+# removes it. It changes no status: the verification of record stays as transcribed.
 # Nothing here is a measurement, a score, or an execution authorization. Unknown values are null.
 study_id: EUS-2026-001
 campaign_id: E03-resetability
 scenario: CS-001
-updated: "2026-10-05"
+updated: "2026-10-08"
 campaign_status: NOT_STARTED
 measured_execution_prerequisites_common: [campaign START, locked campaign configuration, agent-governance-v3 frozen and in force (v2 AMENDED; gate G-6 re-pointed 2026-10-05; operation OP-CI-03), frozen executor prompt and implementation, GitHub Actions environment verification VERIFIED per condition]
-github_actions_runs:  # environment-verification runs transcribed below, oldest first. Multi-run semantics (defined 2026-10-04, operation OP-ENV-05): an entry is never removed or rewritten, and its comments speak as of its transcription date; the latest run governs gate G-8, so each condition's github_actions_verification carries the values of the latest run that ran a job for it (since 2026-10-05: run 37265782721 for all nine); an earlier run's values stay in its import directory and its import record
+github_actions_runs:  # environment-verification runs transcribed below, oldest first. Multi-run semantics (defined 2026-10-04, operation OP-ENV-05): an entry is never removed or rewritten, and its comments speak as of its transcription date; the latest run governs gate G-8, so each condition's github_actions_verification carries the values of the latest run that ran a job for it (since 2026-10-05: run 37265782721 for eight conditions and run 37354458611, target SUT-05, for E03-CS001-SUT05-API); an earlier run's values stay in its import directory and its import record
   - run_id: 37074152972
     run_attempt: 1  # GET actions/runs/37074152972/attempts/2 returns HTTP 404
     date: "2026-10-02"
@@ -40,6 +44,15 @@ github_actions_runs:  # environment-verification runs transcribed below, oldest 
     workflow_canonical_sha256: 5ec3f22b33e4403e08952b56bbf4e27314129e266c0f6a90d17eaa307d619897  # the revision this run executed: the OP-ENV-06 correction (commit 516cd17): the iOS presence check reads the raw bytes of the installed app bundle; SUT-05 is provisioned by the Packaged Distributions route of its pinned release; every job scrubs runner host paths from its kept artifacts at capture
     import_record: experiments/E03-resetability/environment-verification/github-actions/run37265782721-a1/IMPORT-RECORD.yaml
     transcribed: "2026-10-05"  # operation OP-ENV-08, ORCHESTRATOR; reachability and presence only: no state is established and no reset under evaluation is performed
+  - run_id: 37354458611
+    run_attempt: 1  # GET actions/runs/37354458611/attempts/2 returns HTTP 404
+    date: "2026-10-05"
+    operation: OP-ENV-09  # dispatch record manifests/e03-environment-verification-dispatch-v4.yaml; run identity manifests/e03-environment-verification-run-v4.yaml
+    target: SUT-05  # only the job sut-05-api ran; the six other jobs were skipped by the target; the eight other conditions keep run 37265782721
+    public_head: 4261d1597335e760409949194e35d9ff09715872  # public export v33
+    workflow_canonical_sha256: fcd26a91c8c76b64005961e54e1b5d9a52041714e3decd6697e5553a9ca9ff88  # the revision this run executed: the OP-CI-02 correction (commit 3490db2): the SUT-05 verification step starts the instance in its own session and process group, sends SIGTERM to the whole group, waits (bounded) until port 3000 refuses connections, captures the process tree, and fails closed
+    import_record: experiments/E03-resetability/environment-verification/github-actions/run37354458611-a1/IMPORT-RECORD.yaml
+    transcribed: "2026-10-05"  # operation OP-ENV-10, ORCHESTRATOR; reachability and presence only: no state is established and no reset under evaluation is performed
 conditions:
   E03-CS001-SUT01-WEB:
     sut_id: SUT-01
@@ -120,7 +133,7 @@ conditions:
       record: experiments/E03-resetability/environment-verification/github-actions/run37265782721-a1/sut-02-android/environment-verification.json
       demonstrates: "the pinned release artifact mda-2.2.0-25.apk was downloaded (apk.sha256 318ef64b..., equal to SUT02-PROV-0002), installed, and launched on the API 35 emulator (google_apis, x86_64, Android 15): the record names the package com.saucelabs.mydemoapp.android and its resumed MainActivity; the 'Reset App State' string occurs once in the installed artifact's resources table (resources.arsc); a UI dump and a launch screenshot were captured; reachability and presence only: no state was established and the reset (SUT02-EV-0008) was never exercised"
     mobile_qualification_applicable: true
-    mobile_qualification_status: NOT_STARTED  # representation only, read by no gate (G-7 reads manifests/toolchain-manifest.yaml and manifests/compatibility-smoke-status.yaml): Appium 3 3.7.0 was selected by the section 8 switch after the Mobilewright FAIL (MOBILE-QUALIFICATION-EXEC-AUTH-03, 2026-09-24); under APPIUM3-COMPAT-SMOKE-AUTH-02 (2026-09-29) the SUT-02 Android smoke was PASS and the SUT-02 iOS smoke FAIL_RUNNER (9.4 tie-break), so the study-level mobile_runner_status is UNRESOLVED_AFTER_FALLBACK_FAILURE and every mobile condition stays blocked; protocol/mobile-runner-policy-v3.md is in force since 2026-10-02 (one remediation path, section 9.7); the value NOT_STARTED predates these smokes
+    mobile_qualification_status: BLOCKED_FALLBACK_EXHAUSTED  # representation only, read by no gate (G-7 reads manifests/toolchain-manifest.yaml and manifests/compatibility-smoke-status.yaml and computes the study-wide state FALLBACK_EXHAUSTED_VERIFIED): Appium 3 3.7.0 was selected by the section 8 switch after the Mobilewright FAIL (MOBILE-QUALIFICATION-EXEC-AUTH-03, 2026-09-24); under APPIUM3-COMPAT-SMOKE-AUTH-02 (2026-09-29) the SUT-02 Android smoke was PASS and the SUT-02 iOS smoke FAIL_RUNNER (9.4 tie-break), so the study-level mobile_runner_status is UNRESOLVED_AFTER_FALLBACK_FAILURE and every mobile condition stays blocked; protocol/mobile-runner-policy-v3.md is in force since 2026-10-02 (one remediation path, section 9.7); value corrected 2026-10-05 (operation OP-STAT-01; it previously read NOT_STARTED, a value that predated the gate and both smokes)
     measured_execution_readiness: NOT_READY
   E03-CS001-SUT02-IOS:
     sut_id: SUT-02
@@ -141,7 +154,7 @@ conditions:
       record: experiments/E03-resetability/environment-verification/github-actions/run37265782721-a1/sut-02-ios/environment-verification.json
       demonstrates: "the pinned release artifact SauceLabs-Demo-App.Simulator.zip (release 2.2.2; app.sha256 96b08d5a..., equal to SUT02-PROV-0003) was downloaded, the iPhone 16 Pro simulator (iOS 18.5, Xcode 16.4) booted, and the app was installed and launched (process id in launch.txt; app container located, container.txt, written as <host-path>/... by the capture-time scrub); the reset label 'Reset App State' was counted once in the raw bytes of the installed app bundle (reset_string_occurrences_in_bundle 1; bundle_files_with_reset_string: the compiled Menu storyboard scene listed in reset-string-files.txt; reset_string_occurrences_in_binary 0, the run-2 criterion, kept for continuity); reachability and presence only: no state was established and the reset (SUT02-EV-0009) was never exercised"
     mobile_qualification_applicable: true
-    mobile_qualification_status: NOT_STARTED  # representation only, read by no gate (G-7 reads manifests/toolchain-manifest.yaml and manifests/compatibility-smoke-status.yaml): Appium 3 3.7.0 was selected by the section 8 switch after the Mobilewright FAIL (MOBILE-QUALIFICATION-EXEC-AUTH-03, 2026-09-24); under APPIUM3-COMPAT-SMOKE-AUTH-02 (2026-09-29) the SUT-02 Android smoke was PASS and the SUT-02 iOS smoke FAIL_RUNNER (9.4 tie-break), so the study-level mobile_runner_status is UNRESOLVED_AFTER_FALLBACK_FAILURE and every mobile condition stays blocked; protocol/mobile-runner-policy-v3.md is in force since 2026-10-02 (one remediation path, section 9.7); the value NOT_STARTED predates these smokes
+    mobile_qualification_status: BLOCKED_FALLBACK_EXHAUSTED  # representation only, read by no gate (G-7 reads manifests/toolchain-manifest.yaml and manifests/compatibility-smoke-status.yaml and computes the study-wide state FALLBACK_EXHAUSTED_VERIFIED): Appium 3 3.7.0 was selected by the section 8 switch after the Mobilewright FAIL (MOBILE-QUALIFICATION-EXEC-AUTH-03, 2026-09-24); under APPIUM3-COMPAT-SMOKE-AUTH-02 (2026-09-29) the SUT-02 Android smoke was PASS and the SUT-02 iOS smoke FAIL_RUNNER (9.4 tie-break), so the study-level mobile_runner_status is UNRESOLVED_AFTER_FALLBACK_FAILURE and every mobile condition stays blocked; protocol/mobile-runner-policy-v3.md is in force since 2026-10-02 (one remediation path, section 9.7); value corrected 2026-10-05 (operation OP-STAT-01; it previously read NOT_STARTED, a value that predated the gate and both smokes)
     measured_execution_readiness: NOT_READY
   E03-CS001-SUT03-WEB:
     sut_id: SUT-03
@@ -180,7 +193,12 @@ conditions:
       github_job_conclusion: success
       record_verification_result: VERIFIED
       record: experiments/E03-resetability/environment-verification/github-actions/run37265782721-a1/sut-04-web-api/environment-verification.json
-      demonstrates: "the pinned commit d36bd3f was built on an ubuntu-24.04 runner with Temurin JDK 26.0.2.1 and Maven 3.9.16 (the six service exec jars listed in built-jars.txt, the OP-CI-01 listing form) before the documented Docker Compose deployment (Compose v2.38.2; seven services up in compose-ps.txt); the record's checks: web GET / 200; POST /auth/login with an empty body 403; GET /booking/ 403; DELETE /booking/999999 unauthenticated 403; GET /booking/999999 403 (SUT04-EV-0006 reachable, against a non-existent id); reachability and presence only: no state was established and the reset was never exercised"
+      demonstrates: "the pinned commit d36bd3f was built on an ubuntu-24.04 runner with Temurin JDK 26.0.2.1 and Maven 3.9.16 (the six service exec jars listed in built-jars.txt, the OP-CI-01 listing form) before the Docker Compose deployment (Compose v2.38.2; seven services up in compose-ps.txt) of the pinned commit's docker-compose.yml, which the SUT's README does not document (operation OP-PREP-E03-ADD-01b); the record's checks: web GET / 200; POST /auth/login with an empty body 403; GET /booking/ 403; DELETE /booking/999999 unauthenticated 403; GET /booking/999999 403 (SUT04-EV-0006 reachable, against a non-existent id); reachability and presence only: no state was established and the reset was never exercised"
+    reverification_required:  # operation OP-CI-06 (2026-10-08); gate G-8 refuses this condition while this entry exists
+      reason: "the governing verification (run 37265782721) provisioned SUT-04 with the docker-compose.yml of the pinned commit, a route that the SUT's README does not document; since OP-CI-06 both E03 workflows provision SUT-04 by the route of the SUT's README (the six service jars and the web app on the host, next start -p 3003; human decision of 2026-10-06), on which no GitHub Actions verification has run"
+      verified_route: "the docker-compose.yml of the pinned commit (job sut-04-web-api at workflow revision 5ec3f22b33e4403e08952b56bbf4e27314129e266c0f6a90d17eaa307d619897)"
+      current_route: "the route of the SUT's README (job sut-04-web-api at workflow revision a18c56f106ab12cdbcfb9d17f22dd2ef322f9b59059b99de464e086c9db84a09)"
+      removed_by: "the import that transcribes the next environment-verification run that runs job sut-04-web-api"
     mobile_qualification_applicable: false
     measured_execution_readiness: NOT_READY
   E03-CS001-SUT04-API:
@@ -200,7 +218,12 @@ conditions:
       github_job_conclusion: success
       record_verification_result: VERIFIED
       record: experiments/E03-resetability/environment-verification/github-actions/run37265782721-a1/sut-04-web-api/environment-verification.json
-      demonstrates: "the pinned commit d36bd3f was built on an ubuntu-24.04 runner with Temurin JDK 26.0.2.1 and Maven 3.9.16 (the six service exec jars listed in built-jars.txt, the OP-CI-01 listing form) before the documented Docker Compose deployment (Compose v2.38.2; seven services up in compose-ps.txt); the record's checks: web GET / 200; POST /auth/login with an empty body 403; GET /booking/ 403; DELETE /booking/999999 unauthenticated 403; GET /booking/999999 403 (SUT04-EV-0006 reachable, against a non-existent id); reachability and presence only: no state was established and the reset was never exercised"
+      demonstrates: "the pinned commit d36bd3f was built on an ubuntu-24.04 runner with Temurin JDK 26.0.2.1 and Maven 3.9.16 (the six service exec jars listed in built-jars.txt, the OP-CI-01 listing form) before the Docker Compose deployment (Compose v2.38.2; seven services up in compose-ps.txt) of the pinned commit's docker-compose.yml, which the SUT's README does not document (operation OP-PREP-E03-ADD-01b); the record's checks: web GET / 200; POST /auth/login with an empty body 403; GET /booking/ 403; DELETE /booking/999999 unauthenticated 403; GET /booking/999999 403 (SUT04-EV-0006 reachable, against a non-existent id); reachability and presence only: no state was established and the reset was never exercised"
+    reverification_required:  # operation OP-CI-06 (2026-10-08); gate G-8 refuses this condition while this entry exists
+      reason: "the governing verification (run 37265782721) provisioned SUT-04 with the docker-compose.yml of the pinned commit, a route that the SUT's README does not document; since OP-CI-06 both E03 workflows provision SUT-04 by the route of the SUT's README (the six service jars and the web app on the host, next start -p 3003; human decision of 2026-10-06), on which no GitHub Actions verification has run"
+      verified_route: "the docker-compose.yml of the pinned commit (job sut-04-web-api at workflow revision 5ec3f22b33e4403e08952b56bbf4e27314129e266c0f6a90d17eaa307d619897)"
+      current_route: "the route of the SUT's README (job sut-04-web-api at workflow revision a18c56f106ab12cdbcfb9d17f22dd2ef322f9b59059b99de464e086c9db84a09)"
+      removed_by: "the import that transcribes the next environment-verification run that runs job sut-04-web-api"
     mobile_qualification_applicable: false
     measured_execution_readiness: NOT_READY
   E03-CS001-SUT05-API:
@@ -209,14 +232,15 @@ conditions:
     status: CONTROLLED
     workstation_verification: {status: VERIFIED, environment_type: LOCAL, record: experiments/E03-resetability/environment-verification/SUT-05-api.json, provisioning_id: SUT05-PROV-0001, date: "2026-09-22"}
     github_actions_verification:
-      status: NOT_VERIFIED
+      status: VERIFIED  # since 2026-10-05 (operation OP-ENV-10), under run 37354458611; the NOT_VERIFIED of run 37265782721 stays in that run's import directory and import record
       environment_type: SELF_HOSTED
       workflow: .github/workflows/e03-environment-verification.yml
       job: sut-05-api
-      job_id: 111622204078
-      run_id: 37265782721
+      job_id: 111913229062
+      run_id: 37354458611
       run_attempt: 1
-      workflow_canonical_sha256: 5ec3f22b33e4403e08952b56bbf4e27314129e266c0f6a90d17eaa307d619897  # the revision of run 37265782721 (the OP-ENV-06 correction), published in export v32
+      run_target: SUT-05  # the six other jobs were skipped; the eight other conditions keep run 37265782721
+      workflow_canonical_sha256: fcd26a91c8c76b64005961e54e1b5d9a52041714e3decd6697e5553a9ca9ff88  # the revision of run 37354458611 (the OP-CI-02 correction, commit 3490db2), published in export v33
       provisioning_route:  # how run 37265782721 provisioned the controlled instance; implemented by OP-ENV-06 (canonical commit 516cd17)
         route: PACKAGED_DISTRIBUTION  # the SUT README's Packaged Distributions route: download the release archive, unpack, npm start
         release: v20.2.0  # PINNED_RELEASE; release commit 5658473cf8814459bf89000ce373b20ed0b4eb37
@@ -229,17 +253,18 @@ conditions:
           route_choice_text_sha256: df3957aff97cc609a2580d6f6b57f64f2f43bf9186a7cf85a11306da1fa68e4d  # 230 bytes UTF-8, no trailing line feed; received by the reviewer 2026-10-04T19:15:29Z (transcript stamp)
           second_issue_adoption_text: "Adopto como mis instrucciones, tal como está escrita, la segunda emisión OP-ENV-06b (sha256 53a2f0628d70fbda8e44b41d0b0f397385910162ce577638a21e1489cf2acb51) de la operación OP-ENV-06, con la ruta R para SUT-05. Fecha 2026-10-04 (America/Mexico_City)."
           second_issue_adoption_text_sha256: 3a2b247025bed9ac090ee8c953afda46b4ff1c520d31cec156bf6ddfb1385210  # 254 bytes UTF-8, no trailing line feed; received by the reviewer 2026-10-04T20:10:24Z (transcript stamp)
-      github_job_conclusion: failure  # the first failing step is the verification step (step 8), whose final assertion fails on NOT_VERIFIED (fail closed)
-      record_verification_result: NOT_VERIFIED
-      record: experiments/E03-resetability/environment-verification/github-actions/run37265782721-a1/sut-05-api/environment-verification.json
-      demonstrates: "the provisioning by the SUT README's Packaged Distributions route of the pinned release v20.2.0 succeeded (release commit 5658473, from which the pinned commit 1618a61 differs only by one repository screenshot; the archive's sha256 equal to the GitHub digest; npm start, start_script node build/app): GET /rest/admin/application-version 200 reporting version 20.2.0; POST /rest/user/login with an empty body, GET /api/BasketItems/, and GET /rest/basket/1 answer 401 unauthenticated; the stop-and-start reachability check of the process-restart mechanism (SUT05-EV-0003) did not pass: the API still answered 200 after the stop signals and the 5 s wait (api_after_stop_status 200; api_after_restart_status 200); no business state was established and no reset under evaluation was performed"
-      cause: "not established. Observed (the record and the job log): the verification step sent `pkill -TERM -P <npm pid>` and `kill -TERM <npm pid>`, waited 5 s, and the API still answered 200 before any second start was issued, so the record's criterion (an ERROR after the stop) failed; which process answered after the stop signals, and whether the signals reached the node process, is not recorded by this revision (no process tree in the artifacts; the second start's logs hold only the npm banner); the stop sequence of the verification step dates from the OP-ENV-03 revision and executed on GitHub Actions for the first time in this run; not a SUT finding and not a finding about the provisioning route; a verification-step design item for a CI correction (OP-CI-02)"
+      github_job_conclusion: success
+      record_verification_result: VERIFIED
+      record: experiments/E03-resetability/environment-verification/github-actions/run37354458611-a1/sut-05-api/environment-verification.json
+      demonstrates: "the provisioning by the SUT README's Packaged Distributions route of the pinned release v20.2.0 succeeded again (release commit 5658473, from which the pinned commit 1618a61 differs only by one repository screenshot; archive sha256 equal to the GitHub digest; npm start, start_script node build/app, started in its own session and process group 2152): GET /rest/admin/application-version 200 reporting version 20.2.0; POST /rest/user/login with an empty body, GET /api/BasketItems/, and GET /rest/basket/1 answer 401 unauthenticated; the stop-and-start reachability check of the process-restart mechanism (SUT05-EV-0003) passed: SIGTERM to the whole process group 2152 (npm start 2152, sh -c node build/app 2163, node build/app 2164, the listener on port 3000) closed port 3000 in 1.0 s (api_after_stop_status ERROR, the process group gone), and the restart in a new session (process group 2190: 2190, 2201, 2202 listening) answered 200 (api_after_restart_status); the process tree was recorded before the stop, after it, and after the restart (process-tree-before-stop.txt, process-tree-after-stop.txt, process-tree-after-restart.txt); no business state was established and no reset under evaluation was performed"
+      run_3_not_verified_explained: "run 37265782721 (revision 5ec3f22b...) found the API still answering 200 after `pkill -TERM -P <npm pid>` and `kill -TERM <npm pid>` and recorded no process tree; run 37354458611 records, under the same provisioning route and package, the tree npm start (process-group leader) → sh -c node build/app (its child) → node build/app (the child of the shell, the listener on port 3000), and the shell's signal mask (/proc status SigCgt 0000000000010002: no SIGTERM handler) while npm and node catch SIGTERM: a SIGTERM to npm's direct children reaches the shell, not the node grandchild. Run 3's own tree was never recorded, so this explains the run-3 result by the observed arrangement of run 4 without re-interpreting run 3's record, which stays NOT_VERIFIED in its import; a verification-step design item corrected by OP-CI-02 (commit 3490db2), not a SUT finding and not a finding about the provisioning route"
     mobile_qualification_applicable: false
     measured_execution_readiness: NOT_READY
 summary:
   conditions: 9
   controlled: 9
   not_executable_without_controlled_instance: 0
-  github_actions_verified: 8  # run 37265782721 (the latest run governs): E03-CS001-SUT01-WEB, -SUT01-API, -SUT02-WEB, -SUT02-ANDROID, -SUT02-IOS, -SUT03-WEB, -SUT04-WEB, -SUT04-API; -SUT05-API NOT_VERIFIED
+  github_actions_verified: 9  # the latest run that ran a job for a condition governs: run 37265782721 for E03-CS001-SUT01-WEB, -SUT01-API, -SUT02-WEB, -SUT02-ANDROID, -SUT02-IOS, -SUT03-WEB, -SUT04-WEB, -SUT04-API; run 37354458611 (target SUT-05) for -SUT05-API
+  reverification_required: [E03-CS001-SUT04-WEB, E03-CS001-SUT04-API]  # since 2026-10-08 (operation OP-CI-06); gate G-8 refuses both until their next verification run is imported
   measured_execution_ready: 0
   sut06_note: "SUT-06 remains in the six-SUT population; NOT_COMPARABLE on CS-001; no condition, so no instance was provisioned"

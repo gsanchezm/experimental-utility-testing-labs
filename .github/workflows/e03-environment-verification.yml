@@ -10,6 +10,8 @@
 # resets business state as an experiment, counts Required Actions, or writes under raw-data/. Nothing
 # here is a MEASURED_EXPERIMENT (protocol/setup-effort-v2.md, section 2: one-time provisioning is never
 # counted; experiments/E03-resetability/ci-cd-execution-model.md).
+# A dry_run execution (input dry_run, operation OP-CI-05) records Required Actions in a DRY_RUN bundle
+# that is never imported into raw-data/ and never measured.
 #
 # Publication hygiene at capture (human decision D3 of 2026-10-04): before upload, every kept text artifact of every job has
 # the runner's workspace, temp, and home path prefixes replaced by the marker <host-path> and any residual /Users/<x> or
@@ -30,6 +32,11 @@ on:
         default: all
         type: choice
         options: [all, SUT-01, SUT-02-web, SUT-02-android, SUT-02-ios, SUT-03, SUT-04, SUT-05]
+      dry_run:
+        description: "Also run the DRAFT executor implementation once per condition against the just-verified instance as a DRY_RUN (never imported; never measured)"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -135,6 +142,281 @@ jobs:
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           assert ok, 'environment verification failed'
           PY
+      - name: Run the DRAFT executor implementation once per condition against the just-verified instance (DRY_RUN; never imported; never measured)
+        if: ${{ inputs.dry_run == true && steps.verify.outcome == 'success' }}
+        env:
+          RECORD_CLASS: DRY_RUN
+          ASSIGNED_SUT: SUT-01
+          EXECUTION_ID: DR0001
+          ATTEMPT: "1"
+          EXECUTOR_PROMPT_VERSION: EXECUTOR-E03-RESETABILITY-E03-resetability-v1
+          PROVENANCE_JSON: provenance/ci-provenance.json
+          RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
+          INSTANCE_JSON: instance.json
+          E03_INSTANCE_REPOSITORY: ${{ steps.pin.outputs.repo }}
+          E03_INSTANCE_COMMIT: ${{ steps.pin.outputs.sha }}
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -m venv "$RUNNER_TEMP/e03-executor-venv"
+          "$RUNNER_TEMP/e03-executor-venv/bin/python" -m pip install --require-hashes --only-binary :all: -r experiments/E03-resetability/executor/requirements.txt
+          "$RUNNER_TEMP/e03-executor-venv/bin/python" -m playwright install --with-deps chromium
+          echo "$RUNNER_TEMP/e03-executor-venv/bin" >> "$GITHUB_PATH"
+          export PATH="$RUNNER_TEMP/e03-executor-venv/bin:$PATH"
+          command -v python3
+          python3 --version
+          python3 -m playwright --version
+          python3 -m playwright install --dry-run chromium
+          python3 - <<'PY'
+          import json, os, sys
+          e = os.environ
+          ws = e['GITHUB_WORKSPACE']
+          inst = {
+              'interface_version': 1,
+              'sut_id': 'SUT-01',
+              'record_class': e['RECORD_CLASS'],
+              'surfaces': {'web': {'base_url': 'http://127.0.0.1:3000'}, 'api': {'base_url': 'http://127.0.0.1:8000'}, 'auth': None},
+              'provisioning': {'route': 'GitHub-hosted runner instance provisioned in this job by the steps of job sut-01-web-api of .github/workflows/e03-environment-verification.yml: clone of the pinned commit; api: Python 3.11 (setup-python), pip install -r requirements.txt in backend/, uvicorn main:app on 127.0.0.1:8000; web: Node.js 24 (setup-node), pnpm 10, pnpm install --frozen-lockfile, build with VITE_API_URL=http://127.0.0.1:8000, vite preview on 127.0.0.1:3000',
+                               'repository': e['E03_INSTANCE_REPOSITORY'], 'commit_sha': e['E03_INSTANCE_COMMIT'], 'release': None,
+                               'asset': {'name': None, 'sha256': None},
+                               'commands': ['cd sut/backend', 'python -m pip install --quiet -r requirements.txt', 'nohup python -m uvicorn main:app --host 127.0.0.1 --port 8000 > "$GITHUB_WORKSPACE/api-stdout.log" 2> "$GITHUB_WORKSPACE/api-stderr.log" &', 'for _ in $(seq 1 60); do curl -fsS http://127.0.0.1:8000/health >/dev/null 2>&1 && break; sleep 2; done', 'curl -fsS http://127.0.0.1:8000/health', 'npm install -g pnpm@10 --no-audit --no-fund', 'cd sut/frontend', 'pnpm install --frozen-lockfile', 'VITE_API_URL=http://127.0.0.1:8000 pnpm build', 'nohup pnpm exec vite preview --host 127.0.0.1 --port 3000 --strictPort > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &', 'for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done'],
+                               'provisioning_record': None},
+              'process': None,
+              'logs': [ws + '/' + f for f in ['api-stdout.log', 'api-stderr.log', 'web-stdout.log', 'web-stderr.log']],
+          }
+          need = [('repository', inst['provisioning']['repository']), ('commit_sha', inst['provisioning']['commit_sha'])]
+          assert all(v for _, v in need), f'empty provisioning field(s): {[k for k, v in need if not v]}'
+          text = json.dumps(inst, indent=2) + '\n'
+          assert json.loads(text) == inst and json.loads(text)['interface_version'] == 1
+          with open('instance.json', 'w', encoding='utf-8') as f:
+              f.write(text)
+          print(text)
+          PY
+          # DRY_RUN executions of this job (operation OP-CI-05): run-condition.sh is checked against the sha256 of its committed blob;
+          # every condition runs; each validation exit status is recorded; the step fails at its end if any validation failed.
+          E03_RUN_CONDITION_SHA256="$(git show HEAD:experiments/E03-resetability/executor/run-condition.sh | sha256sum | cut -c1-64)"
+          test -n "$E03_RUN_CONDITION_SHA256"
+          /usr/bin/python3 -c "import yaml" 2>/dev/null || /usr/bin/python3 -m pip install --quiet pyyaml
+          E03_VALIDATION_FAILURES=""
+          # E03-CS001-SUT01-API: execution DR0001, attempt 1
+          export CONDITION_ID=E03-CS001-SUT01-API
+          export OUTPUT_DIR="$GITHUB_WORKSPACE/dry-run/${CONDITION_ID}__${EXECUTION_ID}__A${ATTEMPT}"
+          /usr/bin/python3 - <<'PY'
+          import datetime, hashlib, json, os, yaml
+          e = os.environ
+          cond, sut = e['CONDITION_ID'], e['ASSIGNED_SUT']
+          surface = cond.split('-')[3]
+          sm = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts'][sut]['components'][surface.lower()]
+          wf = '.github/workflows/e03-environment-verification.yml'
+          rec = {
+              'record_class': e['RECORD_CLASS'], 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability', 'scenario': 'CS-001',
+              'condition_id': cond, 'sut_id': sut, 'surface': surface, 'execution_id': e['EXECUTION_ID'], 'attempt': int(e['ATTEMPT']),
+              'run_id': os.path.basename(e['OUTPUT_DIR']),
+              'repository': {'sha': e['GITHUB_SHA'], 'ref': e['GITHUB_REF']},
+              'workflow': {'ref': e['GITHUB_WORKFLOW_REF'], 'file_sha256': hashlib.sha256(open(wf, 'rb').read()).hexdigest()},
+              'sut_version': {'repository': sm.get('repository'), 'commit_sha': sm.get('commit_sha'), 'release': sm.get('release')},
+              'environment_type': 'SELF_HOSTED',
+              'github': {'run_id': e['GITHUB_RUN_ID'], 'run_attempt': e['GITHUB_RUN_ATTEMPT'], 'run_number': e['GITHUB_RUN_NUMBER'], 'job': e['GITHUB_JOB']},
+              'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'note': 'DRY_RUN provenance stub of the environment-verification workflow (operation OP-CI-05): no gate ran, nothing is measured, never imported',
+          }
+          os.makedirs('provenance', exist_ok=True)
+          json.dump(rec, open('provenance/ci-provenance.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+          python3 - <<'PY'
+          import json, os, platform, subprocess, datetime
+          def v(cmd):
+              try: return subprocess.run(cmd, capture_output=True, text=True, timeout=30).stdout.strip()
+              except Exception as e: return f'unavailable: {e.__class__.__name__}'
+          rec = {'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'platform': platform.platform()},
+                 'runtime_versions': {'python': v(['python3', '--version']), 'node': v(['node', '--version']), 'npm': v(['npm', '--version']), 'java': v(['java', '-version']) or v(['bash', '-c', 'java -version 2>&1']), 'docker': v(['docker', '--version']), 'git': v(['git', '--version'])},
+                 'browser_version': {'chrome': v(['bash', '-c', 'google-chrome --version 2>/dev/null || chromium --version 2>/dev/null || echo unavailable'])},
+                 'timezone': os.environ.get('TZ'), 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          json.dump(rec, open('runtime-environment.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+          set -euo pipefail
+          test "$(sha256sum experiments/E03-resetability/executor/run-condition.sh | cut -c1-64)" = "$E03_RUN_CONDITION_SHA256"
+          mkdir -p "$OUTPUT_DIR"
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/started-at.txt"
+          set +e
+          bash experiments/E03-resetability/executor/run-condition.sh > "$OUTPUT_DIR/stdout.log" 2> "$OUTPUT_DIR/stderr.log"
+          echo $? > "$OUTPUT_DIR/exit-status.txt"
+          set -e
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/finished-at.txt"
+          cp provenance/ci-provenance.json runtime-environment.json "$OUTPUT_DIR/"
+          echo "executor exit status: $(cat "$OUTPUT_DIR/exit-status.txt")"
+          set +e
+          (
+          set -euo pipefail
+          test -f "$OUTPUT_DIR/run-manifest.json" || { echo "run-manifest.json missing: the attempt is recorded as ERROR-without-manifest and is not attributable"; exit 1; }
+          npx --yes -p ajv-cli@5 -p ajv-formats@3 ajv validate -s schemas/run-manifest.schema.v2.json --spec=draft2020 --allow-union-types -c ajv-formats -d "$OUTPUT_DIR/run-manifest.json"
+          python3 - "$OUTPUT_DIR" <<'PY'
+          import json, sys, os
+          d = sys.argv[1]; m = json.load(open(os.path.join(d, 'run-manifest.json')))
+          assert m['campaign_id'] == 'E03-resetability' and m['sut_id'] == os.environ['ASSIGNED_SUT']
+          assert m['run_id'] == os.path.basename(d), (m['run_id'], d)
+          assert m['condition'] == os.environ['CONDITION_ID'] and m['scenario'] == 'CS-001'
+          assert int(m['attempt']) == int(os.environ['ATTEMPT'])
+          assert m.get('reset_mechanisms'), 'reset_mechanisms mandatory and non-empty for E03'
+          acts = m.get('actions') or []
+          assert acts, 'actions mandatory for E03 runs'
+          assert all('outcome' in a for a in acts), 'E03 campaign convention: every action record carries outcome'
+          assert m.get('prompt_version') == os.environ['EXECUTOR_PROMPT_VERSION']
+          print('run manifest ok:', m['run_id'], 'actions:', len(acts), 'outcomes:', [a['outcome'] for a in acts])
+          PY
+          )
+          E03_VALIDATION_STATUS=$?
+          set -e
+          echo "run-manifest validation exit status of $CONDITION_ID: $E03_VALIDATION_STATUS"
+          if [ "$E03_VALIDATION_STATUS" -ne 0 ]; then E03_VALIDATION_FAILURES="$E03_VALIDATION_FAILURES $CONDITION_ID"; fi
+          export EV_KEPT="$OUTPUT_DIR/stdout.log $OUTPUT_DIR/stderr.log"
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          PY
+          # E03-CS001-SUT01-WEB: execution DR0001, attempt 1
+          export CONDITION_ID=E03-CS001-SUT01-WEB
+          export OUTPUT_DIR="$GITHUB_WORKSPACE/dry-run/${CONDITION_ID}__${EXECUTION_ID}__A${ATTEMPT}"
+          /usr/bin/python3 - <<'PY'
+          import datetime, hashlib, json, os, yaml
+          e = os.environ
+          cond, sut = e['CONDITION_ID'], e['ASSIGNED_SUT']
+          surface = cond.split('-')[3]
+          sm = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts'][sut]['components'][surface.lower()]
+          wf = '.github/workflows/e03-environment-verification.yml'
+          rec = {
+              'record_class': e['RECORD_CLASS'], 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability', 'scenario': 'CS-001',
+              'condition_id': cond, 'sut_id': sut, 'surface': surface, 'execution_id': e['EXECUTION_ID'], 'attempt': int(e['ATTEMPT']),
+              'run_id': os.path.basename(e['OUTPUT_DIR']),
+              'repository': {'sha': e['GITHUB_SHA'], 'ref': e['GITHUB_REF']},
+              'workflow': {'ref': e['GITHUB_WORKFLOW_REF'], 'file_sha256': hashlib.sha256(open(wf, 'rb').read()).hexdigest()},
+              'sut_version': {'repository': sm.get('repository'), 'commit_sha': sm.get('commit_sha'), 'release': sm.get('release')},
+              'environment_type': 'SELF_HOSTED',
+              'github': {'run_id': e['GITHUB_RUN_ID'], 'run_attempt': e['GITHUB_RUN_ATTEMPT'], 'run_number': e['GITHUB_RUN_NUMBER'], 'job': e['GITHUB_JOB']},
+              'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'note': 'DRY_RUN provenance stub of the environment-verification workflow (operation OP-CI-05): no gate ran, nothing is measured, never imported',
+          }
+          os.makedirs('provenance', exist_ok=True)
+          json.dump(rec, open('provenance/ci-provenance.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+          python3 - <<'PY'
+          import json, os, platform, subprocess, datetime
+          def v(cmd):
+              try: return subprocess.run(cmd, capture_output=True, text=True, timeout=30).stdout.strip()
+              except Exception as e: return f'unavailable: {e.__class__.__name__}'
+          rec = {'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'platform': platform.platform()},
+                 'runtime_versions': {'python': v(['python3', '--version']), 'node': v(['node', '--version']), 'npm': v(['npm', '--version']), 'java': v(['java', '-version']) or v(['bash', '-c', 'java -version 2>&1']), 'docker': v(['docker', '--version']), 'git': v(['git', '--version'])},
+                 'browser_version': {'chrome': v(['bash', '-c', 'google-chrome --version 2>/dev/null || chromium --version 2>/dev/null || echo unavailable'])},
+                 'timezone': os.environ.get('TZ'), 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          json.dump(rec, open('runtime-environment.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+          set -euo pipefail
+          test "$(sha256sum experiments/E03-resetability/executor/run-condition.sh | cut -c1-64)" = "$E03_RUN_CONDITION_SHA256"
+          mkdir -p "$OUTPUT_DIR"
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/started-at.txt"
+          set +e
+          bash experiments/E03-resetability/executor/run-condition.sh > "$OUTPUT_DIR/stdout.log" 2> "$OUTPUT_DIR/stderr.log"
+          echo $? > "$OUTPUT_DIR/exit-status.txt"
+          set -e
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/finished-at.txt"
+          cp provenance/ci-provenance.json runtime-environment.json "$OUTPUT_DIR/"
+          echo "executor exit status: $(cat "$OUTPUT_DIR/exit-status.txt")"
+          set +e
+          (
+          set -euo pipefail
+          test -f "$OUTPUT_DIR/run-manifest.json" || { echo "run-manifest.json missing: the attempt is recorded as ERROR-without-manifest and is not attributable"; exit 1; }
+          npx --yes -p ajv-cli@5 -p ajv-formats@3 ajv validate -s schemas/run-manifest.schema.v2.json --spec=draft2020 --allow-union-types -c ajv-formats -d "$OUTPUT_DIR/run-manifest.json"
+          python3 - "$OUTPUT_DIR" <<'PY'
+          import json, sys, os
+          d = sys.argv[1]; m = json.load(open(os.path.join(d, 'run-manifest.json')))
+          assert m['campaign_id'] == 'E03-resetability' and m['sut_id'] == os.environ['ASSIGNED_SUT']
+          assert m['run_id'] == os.path.basename(d), (m['run_id'], d)
+          assert m['condition'] == os.environ['CONDITION_ID'] and m['scenario'] == 'CS-001'
+          assert int(m['attempt']) == int(os.environ['ATTEMPT'])
+          assert m.get('reset_mechanisms'), 'reset_mechanisms mandatory and non-empty for E03'
+          acts = m.get('actions') or []
+          assert acts, 'actions mandatory for E03 runs'
+          assert all('outcome' in a for a in acts), 'E03 campaign convention: every action record carries outcome'
+          assert m.get('prompt_version') == os.environ['EXECUTOR_PROMPT_VERSION']
+          print('run manifest ok:', m['run_id'], 'actions:', len(acts), 'outcomes:', [a['outcome'] for a in acts])
+          PY
+          )
+          E03_VALIDATION_STATUS=$?
+          set -e
+          echo "run-manifest validation exit status of $CONDITION_ID: $E03_VALIDATION_STATUS"
+          if [ "$E03_VALIDATION_STATUS" -ne 0 ]; then E03_VALIDATION_FAILURES="$E03_VALIDATION_FAILURES $CONDITION_ID"; fi
+          export EV_KEPT="$OUTPUT_DIR/stdout.log $OUTPUT_DIR/stderr.log"
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          PY
+          if [ -n "$E03_VALIDATION_FAILURES" ]; then echo "DRY_RUN run-manifest validation failed for:$E03_VALIDATION_FAILURES"; exit 1; fi
+          echo "DRY_RUN run-manifest validation passed for every condition of this job"
+      - name: Upload the DRY_RUN bundle of E03-CS001-SUT01-API (never imported into raw-data/; never measured)
+        if: ${{ always() && inputs.dry_run == true && steps.verify.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-DRY_RUN-E03-CS001-SUT01-API-DR0001-A1
+          path: dry-run/E03-CS001-SUT01-API__DR0001__A1
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: error
+      - name: Upload the DRY_RUN bundle of E03-CS001-SUT01-WEB (never imported into raw-data/; never measured)
+        if: ${{ always() && inputs.dry_run == true && steps.verify.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-DRY_RUN-E03-CS001-SUT01-WEB-DR0001-A1
+          path: dry-run/E03-CS001-SUT01-WEB__DR0001__A1
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: error
       - name: Write a NOT_VERIFIED record when the verification step did not write one
         if: always()
         env:
@@ -273,6 +555,172 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2)); assert ok
           PY
+      - name: Run the DRAFT executor implementation once per condition against the just-verified instance (DRY_RUN; never imported; never measured)
+        if: ${{ inputs.dry_run == true && steps.verify.outcome == 'success' }}
+        env:
+          RECORD_CLASS: DRY_RUN
+          ASSIGNED_SUT: SUT-02
+          EXECUTION_ID: DR0001
+          ATTEMPT: "1"
+          EXECUTOR_PROMPT_VERSION: EXECUTOR-E03-RESETABILITY-E03-resetability-v1
+          PROVENANCE_JSON: provenance/ci-provenance.json
+          RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
+          INSTANCE_JSON: instance.json
+          E03_INSTANCE_REPOSITORY: ${{ steps.pin.outputs.repo }}
+          E03_INSTANCE_COMMIT: ${{ steps.pin.outputs.sha }}
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -m venv "$RUNNER_TEMP/e03-executor-venv"
+          "$RUNNER_TEMP/e03-executor-venv/bin/python" -m pip install --require-hashes --only-binary :all: -r experiments/E03-resetability/executor/requirements.txt
+          "$RUNNER_TEMP/e03-executor-venv/bin/python" -m playwright install --with-deps chromium
+          echo "$RUNNER_TEMP/e03-executor-venv/bin" >> "$GITHUB_PATH"
+          export PATH="$RUNNER_TEMP/e03-executor-venv/bin:$PATH"
+          command -v python3
+          python3 --version
+          python3 -m playwright --version
+          python3 -m playwright install --dry-run chromium
+          python3 - <<'PY'
+          import json, os, sys
+          e = os.environ
+          ws = e['GITHUB_WORKSPACE']
+          inst = {
+              'interface_version': 1,
+              'sut_id': 'SUT-02',
+              'record_class': e['RECORD_CLASS'],
+              'surfaces': {'web': {'base_url': 'http://127.0.0.1:3000'}, 'api': None, 'auth': None},
+              'provisioning': {'route': 'GitHub-hosted runner instance provisioned in this job by the steps of job sut-02-web of .github/workflows/e03-environment-verification.yml: clone of the pinned commit; Node.js 24 (setup-node); npm ci; npm run build; vite preview on 127.0.0.1:3000',
+                               'repository': e['E03_INSTANCE_REPOSITORY'], 'commit_sha': e['E03_INSTANCE_COMMIT'], 'release': None,
+                               'asset': {'name': None, 'sha256': None},
+                               'commands': ['cd sut', 'npm ci --no-audit --no-fund', 'npm run build', 'nohup npx vite preview --host 127.0.0.1 --port 3000 --strictPort > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &', 'for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done'],
+                               'provisioning_record': None},
+              'process': None,
+              'logs': [ws + '/' + f for f in ['web-stdout.log', 'web-stderr.log']],
+          }
+          need = [('repository', inst['provisioning']['repository']), ('commit_sha', inst['provisioning']['commit_sha'])]
+          assert all(v for _, v in need), f'empty provisioning field(s): {[k for k, v in need if not v]}'
+          text = json.dumps(inst, indent=2) + '\n'
+          assert json.loads(text) == inst and json.loads(text)['interface_version'] == 1
+          with open('instance.json', 'w', encoding='utf-8') as f:
+              f.write(text)
+          print(text)
+          PY
+          # DRY_RUN executions of this job (operation OP-CI-05): run-condition.sh is checked against the sha256 of its committed blob;
+          # every condition runs; each validation exit status is recorded; the step fails at its end if any validation failed.
+          E03_RUN_CONDITION_SHA256="$(git show HEAD:experiments/E03-resetability/executor/run-condition.sh | sha256sum | cut -c1-64)"
+          test -n "$E03_RUN_CONDITION_SHA256"
+          /usr/bin/python3 -c "import yaml" 2>/dev/null || /usr/bin/python3 -m pip install --quiet pyyaml
+          E03_VALIDATION_FAILURES=""
+          # E03-CS001-SUT02-WEB: execution DR0001, attempt 1
+          export CONDITION_ID=E03-CS001-SUT02-WEB
+          export OUTPUT_DIR="$GITHUB_WORKSPACE/dry-run/${CONDITION_ID}__${EXECUTION_ID}__A${ATTEMPT}"
+          /usr/bin/python3 - <<'PY'
+          import datetime, hashlib, json, os, yaml
+          e = os.environ
+          cond, sut = e['CONDITION_ID'], e['ASSIGNED_SUT']
+          surface = cond.split('-')[3]
+          sm = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts'][sut]['components'][surface.lower()]
+          wf = '.github/workflows/e03-environment-verification.yml'
+          rec = {
+              'record_class': e['RECORD_CLASS'], 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability', 'scenario': 'CS-001',
+              'condition_id': cond, 'sut_id': sut, 'surface': surface, 'execution_id': e['EXECUTION_ID'], 'attempt': int(e['ATTEMPT']),
+              'run_id': os.path.basename(e['OUTPUT_DIR']),
+              'repository': {'sha': e['GITHUB_SHA'], 'ref': e['GITHUB_REF']},
+              'workflow': {'ref': e['GITHUB_WORKFLOW_REF'], 'file_sha256': hashlib.sha256(open(wf, 'rb').read()).hexdigest()},
+              'sut_version': {'repository': sm.get('repository'), 'commit_sha': sm.get('commit_sha'), 'release': sm.get('release')},
+              'environment_type': 'SELF_HOSTED',
+              'github': {'run_id': e['GITHUB_RUN_ID'], 'run_attempt': e['GITHUB_RUN_ATTEMPT'], 'run_number': e['GITHUB_RUN_NUMBER'], 'job': e['GITHUB_JOB']},
+              'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'note': 'DRY_RUN provenance stub of the environment-verification workflow (operation OP-CI-05): no gate ran, nothing is measured, never imported',
+          }
+          os.makedirs('provenance', exist_ok=True)
+          json.dump(rec, open('provenance/ci-provenance.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+          python3 - <<'PY'
+          import json, os, platform, subprocess, datetime
+          def v(cmd):
+              try: return subprocess.run(cmd, capture_output=True, text=True, timeout=30).stdout.strip()
+              except Exception as e: return f'unavailable: {e.__class__.__name__}'
+          rec = {'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'platform': platform.platform()},
+                 'runtime_versions': {'python': v(['python3', '--version']), 'node': v(['node', '--version']), 'npm': v(['npm', '--version']), 'java': v(['java', '-version']) or v(['bash', '-c', 'java -version 2>&1']), 'docker': v(['docker', '--version']), 'git': v(['git', '--version'])},
+                 'browser_version': {'chrome': v(['bash', '-c', 'google-chrome --version 2>/dev/null || chromium --version 2>/dev/null || echo unavailable'])},
+                 'timezone': os.environ.get('TZ'), 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          json.dump(rec, open('runtime-environment.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+          set -euo pipefail
+          test "$(sha256sum experiments/E03-resetability/executor/run-condition.sh | cut -c1-64)" = "$E03_RUN_CONDITION_SHA256"
+          mkdir -p "$OUTPUT_DIR"
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/started-at.txt"
+          set +e
+          bash experiments/E03-resetability/executor/run-condition.sh > "$OUTPUT_DIR/stdout.log" 2> "$OUTPUT_DIR/stderr.log"
+          echo $? > "$OUTPUT_DIR/exit-status.txt"
+          set -e
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/finished-at.txt"
+          cp provenance/ci-provenance.json runtime-environment.json "$OUTPUT_DIR/"
+          echo "executor exit status: $(cat "$OUTPUT_DIR/exit-status.txt")"
+          set +e
+          (
+          set -euo pipefail
+          test -f "$OUTPUT_DIR/run-manifest.json" || { echo "run-manifest.json missing: the attempt is recorded as ERROR-without-manifest and is not attributable"; exit 1; }
+          npx --yes -p ajv-cli@5 -p ajv-formats@3 ajv validate -s schemas/run-manifest.schema.v2.json --spec=draft2020 --allow-union-types -c ajv-formats -d "$OUTPUT_DIR/run-manifest.json"
+          python3 - "$OUTPUT_DIR" <<'PY'
+          import json, sys, os
+          d = sys.argv[1]; m = json.load(open(os.path.join(d, 'run-manifest.json')))
+          assert m['campaign_id'] == 'E03-resetability' and m['sut_id'] == os.environ['ASSIGNED_SUT']
+          assert m['run_id'] == os.path.basename(d), (m['run_id'], d)
+          assert m['condition'] == os.environ['CONDITION_ID'] and m['scenario'] == 'CS-001'
+          assert int(m['attempt']) == int(os.environ['ATTEMPT'])
+          assert m.get('reset_mechanisms'), 'reset_mechanisms mandatory and non-empty for E03'
+          acts = m.get('actions') or []
+          assert acts, 'actions mandatory for E03 runs'
+          assert all('outcome' in a for a in acts), 'E03 campaign convention: every action record carries outcome'
+          assert m.get('prompt_version') == os.environ['EXECUTOR_PROMPT_VERSION']
+          print('run manifest ok:', m['run_id'], 'actions:', len(acts), 'outcomes:', [a['outcome'] for a in acts])
+          PY
+          )
+          E03_VALIDATION_STATUS=$?
+          set -e
+          echo "run-manifest validation exit status of $CONDITION_ID: $E03_VALIDATION_STATUS"
+          if [ "$E03_VALIDATION_STATUS" -ne 0 ]; then E03_VALIDATION_FAILURES="$E03_VALIDATION_FAILURES $CONDITION_ID"; fi
+          export EV_KEPT="$OUTPUT_DIR/stdout.log $OUTPUT_DIR/stderr.log"
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          PY
+          if [ -n "$E03_VALIDATION_FAILURES" ]; then echo "DRY_RUN run-manifest validation failed for:$E03_VALIDATION_FAILURES"; exit 1; fi
+          echo "DRY_RUN run-manifest validation passed for every condition of this job"
+      - name: Upload the DRY_RUN bundle of E03-CS001-SUT02-WEB (never imported into raw-data/; never measured)
+        if: ${{ always() && inputs.dry_run == true && steps.verify.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-DRY_RUN-E03-CS001-SUT02-WEB-DR0001-A1
+          path: dry-run/E03-CS001-SUT02-WEB__DR0001__A1
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: error
       - name: Write a NOT_VERIFIED record when the verification step did not write one
         if: always()
         env:
@@ -688,6 +1136,177 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2)); assert ok
           PY
+      - name: Put Node.js 24 first on PATH again for the run-manifest validation (the SUT-03 instance keeps its own Node.js 14 process)
+        if: ${{ inputs.dry_run == true && steps.verify.outcome == 'success' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Run the DRAFT executor implementation once per condition against the just-verified instance (DRY_RUN; never imported; never measured)
+        if: ${{ inputs.dry_run == true && steps.verify.outcome == 'success' }}
+        env:
+          RECORD_CLASS: DRY_RUN
+          ASSIGNED_SUT: SUT-03
+          EXECUTION_ID: DR0001
+          ATTEMPT: "1"
+          EXECUTOR_PROMPT_VERSION: EXECUTOR-E03-RESETABILITY-E03-resetability-v1
+          PROVENANCE_JSON: provenance/ci-provenance.json
+          RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
+          INSTANCE_JSON: instance.json
+          E03_INSTANCE_REPOSITORY: ${{ steps.pin.outputs.repo }}
+          E03_INSTANCE_COMMIT: ${{ steps.pin.outputs.sha }}
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -m venv "$RUNNER_TEMP/e03-executor-venv"
+          "$RUNNER_TEMP/e03-executor-venv/bin/python" -m pip install --require-hashes --only-binary :all: -r experiments/E03-resetability/executor/requirements.txt
+          "$RUNNER_TEMP/e03-executor-venv/bin/python" -m playwright install --with-deps chromium
+          echo "$RUNNER_TEMP/e03-executor-venv/bin" >> "$GITHUB_PATH"
+          export PATH="$RUNNER_TEMP/e03-executor-venv/bin:$PATH"
+          command -v python3
+          python3 --version
+          python3 -m playwright --version
+          python3 -m playwright install --dry-run chromium
+          python3 - <<'PY'
+          import json, os, sys
+          e = os.environ
+          ws = e['GITHUB_WORKSPACE']
+          inst = {
+              'interface_version': 1,
+              'sut_id': 'SUT-03',
+              'record_class': e['RECORD_CLASS'],
+              'surfaces': {'web': {'base_url': 'http://127.0.0.1:3000'}, 'api': None, 'auth': None},
+              'provisioning': {'route': 'GitHub-hosted runner instance provisioned in this job by the steps of job sut-03-web of .github/workflows/e03-environment-verification.yml: clone of the pinned commit; Node.js 14 (setup-node); npm install --legacy-peer-deps; npm install --no-save formdata-node@4; npm run build; next start on port 3000',
+                               'repository': e['E03_INSTANCE_REPOSITORY'], 'commit_sha': e['E03_INSTANCE_COMMIT'], 'release': None,
+                               'asset': {'name': None, 'sha256': None},
+                               'commands': ['cd sut', 'npm install --legacy-peer-deps --no-audit --no-fund', 'npm install --no-save formdata-node@4 --no-audit --no-fund', 'npm run build', 'nohup npx next start -p 3000 > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &', 'for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done'],
+                               'provisioning_record': None},
+              'process': None,
+              'logs': [ws + '/' + f for f in ['web-stdout.log', 'web-stderr.log']],
+          }
+          need = [('repository', inst['provisioning']['repository']), ('commit_sha', inst['provisioning']['commit_sha'])]
+          assert all(v for _, v in need), f'empty provisioning field(s): {[k for k, v in need if not v]}'
+          text = json.dumps(inst, indent=2) + '\n'
+          assert json.loads(text) == inst and json.loads(text)['interface_version'] == 1
+          with open('instance.json', 'w', encoding='utf-8') as f:
+              f.write(text)
+          print(text)
+          PY
+          # DRY_RUN executions of this job (operation OP-CI-05): run-condition.sh is checked against the sha256 of its committed blob;
+          # every condition runs; each validation exit status is recorded; the step fails at its end if any validation failed.
+          E03_RUN_CONDITION_SHA256="$(git show HEAD:experiments/E03-resetability/executor/run-condition.sh | sha256sum | cut -c1-64)"
+          test -n "$E03_RUN_CONDITION_SHA256"
+          /usr/bin/python3 -c "import yaml" 2>/dev/null || /usr/bin/python3 -m pip install --quiet pyyaml
+          E03_VALIDATION_FAILURES=""
+          # E03-CS001-SUT03-WEB: execution DR0001, attempt 1
+          export CONDITION_ID=E03-CS001-SUT03-WEB
+          export OUTPUT_DIR="$GITHUB_WORKSPACE/dry-run/${CONDITION_ID}__${EXECUTION_ID}__A${ATTEMPT}"
+          /usr/bin/python3 - <<'PY'
+          import datetime, hashlib, json, os, yaml
+          e = os.environ
+          cond, sut = e['CONDITION_ID'], e['ASSIGNED_SUT']
+          surface = cond.split('-')[3]
+          sm = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts'][sut]['components'][surface.lower()]
+          wf = '.github/workflows/e03-environment-verification.yml'
+          rec = {
+              'record_class': e['RECORD_CLASS'], 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability', 'scenario': 'CS-001',
+              'condition_id': cond, 'sut_id': sut, 'surface': surface, 'execution_id': e['EXECUTION_ID'], 'attempt': int(e['ATTEMPT']),
+              'run_id': os.path.basename(e['OUTPUT_DIR']),
+              'repository': {'sha': e['GITHUB_SHA'], 'ref': e['GITHUB_REF']},
+              'workflow': {'ref': e['GITHUB_WORKFLOW_REF'], 'file_sha256': hashlib.sha256(open(wf, 'rb').read()).hexdigest()},
+              'sut_version': {'repository': sm.get('repository'), 'commit_sha': sm.get('commit_sha'), 'release': sm.get('release')},
+              'environment_type': 'SELF_HOSTED',
+              'github': {'run_id': e['GITHUB_RUN_ID'], 'run_attempt': e['GITHUB_RUN_ATTEMPT'], 'run_number': e['GITHUB_RUN_NUMBER'], 'job': e['GITHUB_JOB']},
+              'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'note': 'DRY_RUN provenance stub of the environment-verification workflow (operation OP-CI-05): no gate ran, nothing is measured, never imported',
+          }
+          os.makedirs('provenance', exist_ok=True)
+          json.dump(rec, open('provenance/ci-provenance.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+          python3 - <<'PY'
+          import json, os, platform, subprocess, datetime
+          def v(cmd):
+              try: return subprocess.run(cmd, capture_output=True, text=True, timeout=30).stdout.strip()
+              except Exception as e: return f'unavailable: {e.__class__.__name__}'
+          rec = {'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'platform': platform.platform()},
+                 'runtime_versions': {'python': v(['python3', '--version']), 'node': v(['node', '--version']), 'npm': v(['npm', '--version']), 'java': v(['java', '-version']) or v(['bash', '-c', 'java -version 2>&1']), 'docker': v(['docker', '--version']), 'git': v(['git', '--version'])},
+                 'browser_version': {'chrome': v(['bash', '-c', 'google-chrome --version 2>/dev/null || chromium --version 2>/dev/null || echo unavailable'])},
+                 'timezone': os.environ.get('TZ'), 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          json.dump(rec, open('runtime-environment.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+          set -euo pipefail
+          test "$(sha256sum experiments/E03-resetability/executor/run-condition.sh | cut -c1-64)" = "$E03_RUN_CONDITION_SHA256"
+          mkdir -p "$OUTPUT_DIR"
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/started-at.txt"
+          set +e
+          bash experiments/E03-resetability/executor/run-condition.sh > "$OUTPUT_DIR/stdout.log" 2> "$OUTPUT_DIR/stderr.log"
+          echo $? > "$OUTPUT_DIR/exit-status.txt"
+          set -e
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/finished-at.txt"
+          cp provenance/ci-provenance.json runtime-environment.json "$OUTPUT_DIR/"
+          echo "executor exit status: $(cat "$OUTPUT_DIR/exit-status.txt")"
+          set +e
+          (
+          set -euo pipefail
+          test -f "$OUTPUT_DIR/run-manifest.json" || { echo "run-manifest.json missing: the attempt is recorded as ERROR-without-manifest and is not attributable"; exit 1; }
+          npx --yes -p ajv-cli@5 -p ajv-formats@3 ajv validate -s schemas/run-manifest.schema.v2.json --spec=draft2020 --allow-union-types -c ajv-formats -d "$OUTPUT_DIR/run-manifest.json"
+          python3 - "$OUTPUT_DIR" <<'PY'
+          import json, sys, os
+          d = sys.argv[1]; m = json.load(open(os.path.join(d, 'run-manifest.json')))
+          assert m['campaign_id'] == 'E03-resetability' and m['sut_id'] == os.environ['ASSIGNED_SUT']
+          assert m['run_id'] == os.path.basename(d), (m['run_id'], d)
+          assert m['condition'] == os.environ['CONDITION_ID'] and m['scenario'] == 'CS-001'
+          assert int(m['attempt']) == int(os.environ['ATTEMPT'])
+          assert m.get('reset_mechanisms'), 'reset_mechanisms mandatory and non-empty for E03'
+          acts = m.get('actions') or []
+          assert acts, 'actions mandatory for E03 runs'
+          assert all('outcome' in a for a in acts), 'E03 campaign convention: every action record carries outcome'
+          assert m.get('prompt_version') == os.environ['EXECUTOR_PROMPT_VERSION']
+          print('run manifest ok:', m['run_id'], 'actions:', len(acts), 'outcomes:', [a['outcome'] for a in acts])
+          PY
+          )
+          E03_VALIDATION_STATUS=$?
+          set -e
+          echo "run-manifest validation exit status of $CONDITION_ID: $E03_VALIDATION_STATUS"
+          if [ "$E03_VALIDATION_STATUS" -ne 0 ]; then E03_VALIDATION_FAILURES="$E03_VALIDATION_FAILURES $CONDITION_ID"; fi
+          export EV_KEPT="$OUTPUT_DIR/stdout.log $OUTPUT_DIR/stderr.log"
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          PY
+          if [ -n "$E03_VALIDATION_FAILURES" ]; then echo "DRY_RUN run-manifest validation failed for:$E03_VALIDATION_FAILURES"; exit 1; fi
+          echo "DRY_RUN run-manifest validation passed for every condition of this job"
+      - name: Upload the DRY_RUN bundle of E03-CS001-SUT03-WEB (never imported into raw-data/; never measured)
+        if: ${{ always() && inputs.dry_run == true && steps.verify.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-DRY_RUN-E03-CS001-SUT03-WEB-DR0001-A1
+          path: dry-run/E03-CS001-SUT03-WEB__DR0001__A1
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: error
       - name: Write a NOT_VERIFIED record when the verification step did not write one
         if: always()
         env:
@@ -791,12 +1410,18 @@ jobs:
         with:
           distribution: temurin
           java-version: "26"
+      - name: Set up Node.js 24.21.0 (the assets module's npm install and next build run inside the Maven build; the version of SUT04-PROV-0001)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.21.0"
       - name: Build the service jars with Maven (the documented build, tests skipped as in SUT04-PROV-0001)
         id: build
         run: |
           set -euo pipefail
           java -version 2>&1 | tee "$GITHUB_WORKSPACE/java-version.txt"
           mvn -v | tee "$GITHUB_WORKSPACE/maven-version.txt"
+          node --version | tee "$GITHUB_WORKSPACE/node-version.txt"
+          npm --version | tee "$GITHUB_WORKSPACE/npm-version.txt"
           cd sut
           mvn -B -q clean install -DskipTests
           shopt -s nullglob
@@ -804,15 +1429,65 @@ jobs:
           shopt -u nullglob
           [ "${#jars[@]}" -gt 0 ] || { echo "no service exec jar was built under */target/" >&2; exit 1; }
           printf '%s\n' "${jars[@]}" | tee "$GITHUB_WORKSPACE/built-jars.txt"
-      - name: Provision and start the platform with its documented docker-compose deployment
+          test -f assets/.next/BUILD_ID
+      - name: Start the six services and the web app on the host by the route of the SUT's README (each in its own session and process group; fail closed)
         id: provision
         run: |
           set -euo pipefail
-          cd sut
-          docker compose version | tee "$GITHUB_WORKSPACE/compose-version.txt"
-          docker compose up --build -d 2>&1 | tail -20
-          for _ in $(seq 1 90); do curl -fsS -o /dev/null http://127.0.0.1:3004/auth/validate -X POST -H 'Content-Type: application/json' -d '{"token":"x"}' 2>/dev/null && break; sleep 5; done
-          docker compose ps | tee "$GITHUB_WORKSPACE/compose-ps.txt"
+          python3 - <<'PY'
+          import glob, json, os, subprocess, sys, time, urllib.request
+          ws = os.environ['GITHUB_WORKSPACE']
+          root = os.path.join(ws, 'sut')
+          # The route of the SUT's README, decided by the human research lead on 2026-10-06 with the web app's production server
+          # (operation OP-PREP-E03-ADD-02): its run_locally.sh at the pinned commit, with npm start (next start -p 3003) in place
+          # of npm run dev and each service's -exec jar named in place of the script's jar glob; the six Spring services run with
+          # the dev profile from the clone's root, and the web app on the .next directory of the Maven build. The
+          # docker-compose.yml of the pinned commit is not used: its image fixes the web app's rewrite destinations at build to
+          # the container's own loopback (operation OP-PREP-E03-ADD-01). The rewrite destinations of this build are the local
+          # defaults, so no *_API, *Domain, dbRefresh, or dbServer variable may be set.
+          bad = sorted(k for k in os.environ if k.endswith('_API') or k.endswith('Domain') or k in ('dbRefresh', 'dbServer'))
+          if bad:
+              sys.exit(f'SUT configuration variable(s) present in the environment: {bad}')
+          services = [('auth', 3004), ('booking', 3000), ('room', 3001), ('report', 3005), ('branding', 3002), ('message', 3006)]
+          started, procs = [], []
+          def start(name, argv, cwd, port, ready_url):
+              log = f'sut04-{name}.log'
+              p = subprocess.Popen(argv, cwd=cwd, stdin=subprocess.DEVNULL, stdout=open(f'{ws}/{log}', 'w'), stderr=subprocess.STDOUT, start_new_session=True)
+              if os.getpgid(p.pid) != p.pid:
+                  sys.exit(f'{name}: process group {os.getpgid(p.pid)} is not the new session leader {p.pid}')
+              procs.append((name, p))
+              started.append({'name': name, 'argv': argv, 'cwd': os.path.relpath(cwd, ws), 'pid': p.pid, 'pgid': p.pid, 'log': log, 'port': port, 'ready_url': ready_url})
+          for name, port in services:
+              jars = sorted(glob.glob(os.path.join(root, name, 'target', f'restful-booker-platform-{name}-*-exec.jar')))
+              if len(jars) != 1:
+                  sys.exit(f'{name}: expected exactly one -exec jar under {name}/target, found {len(jars)}')
+              start(name, ['java', '-jar', '-Dspring.profiles.active=dev', os.path.relpath(jars[0], root)], root, port, f'http://127.0.0.1:{port}/{name}/actuator/health')
+          start('web', ['npm', 'start'], os.path.join(root, 'assets'), 3003, 'http://127.0.0.1:3003/')
+          # Readiness: every service's actuator health and the web root answer 200 within one bound (workstation route: 46-155 s,
+          # operation OP-PREP-E03-ADD-02); a process that exits, or the bound, fails this step and the record is NOT_VERIFIED.
+          bound_s, t0, ready = 300, time.monotonic(), {}
+          pending = {s['name']: s['ready_url'] for s in started}
+          while pending:
+              for name, p in procs:
+                  if p.poll() is not None:
+                      sys.exit(f'{name} exited early with code {p.returncode} (sut04-{name}.log)')
+              for name, url in list(pending.items()):
+                  try:
+                      with urllib.request.urlopen(url, timeout=5) as r:
+                          if r.status == 200:
+                              ready[name] = round(time.monotonic() - t0, 1)
+                              del pending[name]
+                  except Exception:
+                      pass
+              if pending:
+                  if time.monotonic() - t0 >= bound_s:
+                      sys.exit(f'not ready within {bound_s} s: {sorted(pending)} (ready: {ready})')
+                  time.sleep(3)
+          rec = {'route': "the route of the SUT's README (run_locally.sh at the pinned commit, with npm start in place of npm run dev and each service's -exec jar in place of the script's jar glob; human decision of 2026-10-06)",
+                 'processes': started, 'readiness_s': ready, 'readiness_bound_s': bound_s}
+          json.dump(rec, open(f'{ws}/sut04-start.json', 'w'), indent=2)
+          print(json.dumps(rec, indent=2))
+          PY
       - name: Verify surface and reset-mechanism reachability (nothing measured)
         id: verify
         run: |
@@ -825,31 +1500,321 @@ jobs:
                   with urllib.request.urlopen(req, timeout=20) as r: return r.status
               except urllib.error.HTTPError as e: return e.code
               except Exception as e: return f'ERROR:{e.__class__.__name__}'
-          checks = {
-              'web_GET_/_status': http('GET', 'http://127.0.0.1/'),
+          services = [('auth', 3004), ('booking', 3000), ('room', 3001), ('report', 3005), ('branding', 3002), ('message', 3006)]
+          health = {f'api_GET_/{n}/actuator/health_status': http('GET', f'http://127.0.0.1:{p}/{n}/actuator/health') for n, p in services}
+          web = {
+              'web_GET_/_status': http('GET', 'http://127.0.0.1:3003/'),
+              'web_GET_/api/room/1_status': http('GET', 'http://127.0.0.1:3003/api/room/1'),
+              'web_GET_/api/branding_status': http('GET', 'http://127.0.0.1:3003/api/branding'),
+          }
+          web_delete = {'web_DELETE_/api/booking/999999_unauthenticated_status': http('DELETE', 'http://127.0.0.1:3003/api/booking/999999')}
+          api = {
               'api_POST_/auth/login_empty_body_status': http('POST', 'http://127.0.0.1:3004/auth/login', b'{}', {'Content-Type': 'application/json'}),
               'api_GET_/booking/_status': http('GET', 'http://127.0.0.1:3000/booking/'),
               'api_DELETE_/booking/999999_unauthenticated_status': http('DELETE', 'http://127.0.0.1:3000/booking/999999'),
               'api_GET_/booking/999999_status': http('GET', 'http://127.0.0.1:3000/booking/999999'),
           }
+          checks = {**health, **web, **web_delete, **api}
           defined = lambda v: isinstance(v, int)
-          ok = defined(checks['web_GET_/_status']) and all(defined(v) for v in checks.values())
+          # VERIFIED requires every service's actuator health and the three web reads at 200 (GET /api/room/1 passes through the
+          # web app's rewrite to the room service, the mechanism of the web condition's reset control; GET /api/branding is served
+          # by the web app's own route handler, which calls the branding service), the unauthenticated DELETE through the web app
+          # answered below 500 by the proxied booking service, and a defined status on every api check.
+          ok = all(v == 200 for v in {**health, **web}.values()) and all(defined(v) and v < 500 for v in web_delete.values()) and all(defined(v) for v in api.values())
+          start = json.load(open('sut04-start.json'))
+          def version_of(path, key=None):
+              try:
+                  return json.load(open(path))[key] if key else open(path).read().strip()
+              except Exception as e:
+                  return f'UNAVAILABLE:{e.__class__.__name__}'
           rec = {'record_class': os.environ['RECORD_CLASS'], 'measured_experiment': False, 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability',
                  'sut_id': 'SUT-04', 'surfaces': ['WEB', 'API'], 'conditions_covered': ['E03-CS001-SUT04-WEB', 'E03-CS001-SUT04-API'], 'environment_type': 'SELF_HOSTED',
                  'sut_provenance': {'repository': '${{ steps.pin.outputs.repo }}', 'commit_sha': '${{ steps.pin.outputs.sha }}'},
-                 'reset_mechanism_under_verification': 'DELETE /booking/{bookingid} (SUT04-EV-0006); reachability only, against a non-existent id, unauthenticated',
+                 'provisioning_route': start['route'], 'readiness_s': start['readiness_s'], 'readiness_bound_s': start['readiness_bound_s'],
+                 'reset_mechanism_under_verification': "DELETE /booking/{bookingid} (SUT04-EV-0006), on the booking service and through the web app's rewrite (DELETE /api/booking/{bookingid}); reachability only, against a non-existent id, unauthenticated",
                  'checks': checks, 'verification_result': 'VERIFIED' if ok else 'NOT_VERIFIED',
                  'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH')},
-                 'tool_versions': {'docker_compose': open('compose-version.txt').read().strip(), 'java': open('java-version.txt').read().strip(), 'maven': open('maven-version.txt').read().strip()},
+                 'tool_versions': {'java': version_of('java-version.txt'), 'maven': version_of('maven-version.txt'), 'node': version_of('node-version.txt'),
+                                   'npm': version_of('npm-version.txt'), 'next': version_of('sut/assets/node_modules/next/package.json', 'version')},
                  'github': {'run_id': '${{ github.run_id }}', 'run_attempt': '${{ github.run_attempt }}', 'job': '${{ github.job }}', 'repository_sha': '${{ github.sha }}', 'workflow_ref': '${{ github.workflow_ref }}'},
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2)); assert ok
           PY
-      - name: Collect service logs
-        if: always()
+      - name: Run the DRAFT executor implementation once per condition against the just-verified instance (DRY_RUN; never imported; never measured)
+        if: ${{ inputs.dry_run == true && steps.verify.outcome == 'success' }}
+        env:
+          RECORD_CLASS: DRY_RUN
+          ASSIGNED_SUT: SUT-04
+          EXECUTION_ID: DR0001
+          ATTEMPT: "1"
+          EXECUTOR_PROMPT_VERSION: EXECUTOR-E03-RESETABILITY-E03-resetability-v1
+          PROVENANCE_JSON: provenance/ci-provenance.json
+          RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
+          INSTANCE_JSON: instance.json
+          E03_INSTANCE_REPOSITORY: ${{ steps.pin.outputs.repo }}
+          E03_INSTANCE_COMMIT: ${{ steps.pin.outputs.sha }}
         run: |
-          cd sut || exit 0
-          docker compose logs --no-color > "$GITHUB_WORKSPACE/compose-logs.txt" 2>&1 || true
+          set -euo pipefail
+          /usr/bin/python3 -m venv "$RUNNER_TEMP/e03-executor-venv"
+          "$RUNNER_TEMP/e03-executor-venv/bin/python" -m pip install --require-hashes --only-binary :all: -r experiments/E03-resetability/executor/requirements.txt
+          "$RUNNER_TEMP/e03-executor-venv/bin/python" -m playwright install --with-deps chromium
+          echo "$RUNNER_TEMP/e03-executor-venv/bin" >> "$GITHUB_PATH"
+          export PATH="$RUNNER_TEMP/e03-executor-venv/bin:$PATH"
+          command -v python3
+          python3 --version
+          python3 -m playwright --version
+          python3 -m playwright install --dry-run chromium
+          python3 - <<'PY'
+          import json, os, sys
+          e = os.environ
+          ws = e['GITHUB_WORKSPACE']
+          inst = {
+              'interface_version': 1,
+              'sut_id': 'SUT-04',
+              'record_class': e['RECORD_CLASS'],
+              'surfaces': {'web': {'base_url': 'http://127.0.0.1:3003/'}, 'api': {'base_url': 'http://127.0.0.1:3000'}, 'auth': {'base_url': 'http://127.0.0.1:3004'}},
+              'provisioning': {'route': "GitHub-hosted runner instance provisioned in this job by the steps of job sut-04-web-api of .github/workflows/e03-environment-verification.yml: clone of the pinned commit; JDK 26 (setup-java, temurin); Node.js 24.21.0 (setup-node); mvn -B -q clean install -DskipTests; the route of the SUT's README (run_locally.sh, with npm start in place of npm run dev and each service's -exec jar in place of the script's jar glob): the six service -exec jars with -Dspring.profiles.active=dev (auth on port 3004, booking 3000, room 3001, report 3005, branding 3002, message 3006) and the web app by npm start (next start -p 3003), each in its own session and process group",
+                               'repository': e['E03_INSTANCE_REPOSITORY'], 'commit_sha': e['E03_INSTANCE_COMMIT'], 'release': None,
+                               'asset': {'name': None, 'sha256': None},
+                               'commands': ['java -version 2>&1 | tee "$GITHUB_WORKSPACE/java-version.txt"', 'mvn -v | tee "$GITHUB_WORKSPACE/maven-version.txt"', 'node --version | tee "$GITHUB_WORKSPACE/node-version.txt"', 'npm --version | tee "$GITHUB_WORKSPACE/npm-version.txt"', 'cd sut', 'mvn -B -q clean install -DskipTests', 'shopt -s nullglob', 'jars=(./*/target/*-exec.jar)', 'shopt -u nullglob', '[ "${#jars[@]}" -gt 0 ] || { echo "no service exec jar was built under */target/" >&2; exit 1; }', 'printf \'%s\\n\' "${jars[@]}" | tee "$GITHUB_WORKSPACE/built-jars.txt"', 'test -f assets/.next/BUILD_ID', 'java -jar -Dspring.profiles.active=dev <service>/target/restful-booker-platform-<service>-*-exec.jar from the clone root, for auth, booking, room, report, branding, message, each in its own session and process group', 'npm start in sut/assets (next start -p 3003), in its own session and process group', 'readiness: GET /<service>/actuator/health on each service port and GET / on port 3003 answer 200 within 300 s, or the step fails'],
+                               'provisioning_record': None},
+              'process': None,
+              'logs': [ws + '/' + f for f in ['java-version.txt', 'maven-version.txt', 'node-version.txt', 'npm-version.txt', 'built-jars.txt', 'sut04-start.json', 'sut04-auth.log', 'sut04-booking.log', 'sut04-room.log', 'sut04-report.log', 'sut04-branding.log', 'sut04-message.log', 'sut04-web.log']],
+          }
+          need = [('repository', inst['provisioning']['repository']), ('commit_sha', inst['provisioning']['commit_sha'])]
+          assert all(v for _, v in need), f'empty provisioning field(s): {[k for k, v in need if not v]}'
+          text = json.dumps(inst, indent=2) + '\n'
+          assert json.loads(text) == inst and json.loads(text)['interface_version'] == 1
+          with open('instance.json', 'w', encoding='utf-8') as f:
+              f.write(text)
+          print(text)
+          PY
+          # DRY_RUN executions of this job (operation OP-CI-05): run-condition.sh is checked against the sha256 of its committed blob;
+          # every condition runs; each validation exit status is recorded; the step fails at its end if any validation failed.
+          E03_RUN_CONDITION_SHA256="$(git show HEAD:experiments/E03-resetability/executor/run-condition.sh | sha256sum | cut -c1-64)"
+          test -n "$E03_RUN_CONDITION_SHA256"
+          /usr/bin/python3 -c "import yaml" 2>/dev/null || /usr/bin/python3 -m pip install --quiet pyyaml
+          E03_VALIDATION_FAILURES=""
+          # E03-CS001-SUT04-API: execution DR0001, attempt 1
+          export CONDITION_ID=E03-CS001-SUT04-API
+          export OUTPUT_DIR="$GITHUB_WORKSPACE/dry-run/${CONDITION_ID}__${EXECUTION_ID}__A${ATTEMPT}"
+          /usr/bin/python3 - <<'PY'
+          import datetime, hashlib, json, os, yaml
+          e = os.environ
+          cond, sut = e['CONDITION_ID'], e['ASSIGNED_SUT']
+          surface = cond.split('-')[3]
+          sm = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts'][sut]['components'][surface.lower()]
+          wf = '.github/workflows/e03-environment-verification.yml'
+          rec = {
+              'record_class': e['RECORD_CLASS'], 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability', 'scenario': 'CS-001',
+              'condition_id': cond, 'sut_id': sut, 'surface': surface, 'execution_id': e['EXECUTION_ID'], 'attempt': int(e['ATTEMPT']),
+              'run_id': os.path.basename(e['OUTPUT_DIR']),
+              'repository': {'sha': e['GITHUB_SHA'], 'ref': e['GITHUB_REF']},
+              'workflow': {'ref': e['GITHUB_WORKFLOW_REF'], 'file_sha256': hashlib.sha256(open(wf, 'rb').read()).hexdigest()},
+              'sut_version': {'repository': sm.get('repository'), 'commit_sha': sm.get('commit_sha'), 'release': sm.get('release')},
+              'environment_type': 'SELF_HOSTED',
+              'github': {'run_id': e['GITHUB_RUN_ID'], 'run_attempt': e['GITHUB_RUN_ATTEMPT'], 'run_number': e['GITHUB_RUN_NUMBER'], 'job': e['GITHUB_JOB']},
+              'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'note': 'DRY_RUN provenance stub of the environment-verification workflow (operation OP-CI-05): no gate ran, nothing is measured, never imported',
+          }
+          os.makedirs('provenance', exist_ok=True)
+          json.dump(rec, open('provenance/ci-provenance.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+          python3 - <<'PY'
+          import json, os, platform, subprocess, datetime
+          def v(cmd):
+              try: return subprocess.run(cmd, capture_output=True, text=True, timeout=30).stdout.strip()
+              except Exception as e: return f'unavailable: {e.__class__.__name__}'
+          rec = {'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'platform': platform.platform()},
+                 'runtime_versions': {'python': v(['python3', '--version']), 'node': v(['node', '--version']), 'npm': v(['npm', '--version']), 'java': v(['java', '-version']) or v(['bash', '-c', 'java -version 2>&1']), 'docker': v(['docker', '--version']), 'git': v(['git', '--version'])},
+                 'browser_version': {'chrome': v(['bash', '-c', 'google-chrome --version 2>/dev/null || chromium --version 2>/dev/null || echo unavailable'])},
+                 'timezone': os.environ.get('TZ'), 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          json.dump(rec, open('runtime-environment.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+          set -euo pipefail
+          test "$(sha256sum experiments/E03-resetability/executor/run-condition.sh | cut -c1-64)" = "$E03_RUN_CONDITION_SHA256"
+          mkdir -p "$OUTPUT_DIR"
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/started-at.txt"
+          set +e
+          bash experiments/E03-resetability/executor/run-condition.sh > "$OUTPUT_DIR/stdout.log" 2> "$OUTPUT_DIR/stderr.log"
+          echo $? > "$OUTPUT_DIR/exit-status.txt"
+          set -e
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/finished-at.txt"
+          cp provenance/ci-provenance.json runtime-environment.json "$OUTPUT_DIR/"
+          echo "executor exit status: $(cat "$OUTPUT_DIR/exit-status.txt")"
+          set +e
+          (
+          set -euo pipefail
+          test -f "$OUTPUT_DIR/run-manifest.json" || { echo "run-manifest.json missing: the attempt is recorded as ERROR-without-manifest and is not attributable"; exit 1; }
+          npx --yes -p ajv-cli@5 -p ajv-formats@3 ajv validate -s schemas/run-manifest.schema.v2.json --spec=draft2020 --allow-union-types -c ajv-formats -d "$OUTPUT_DIR/run-manifest.json"
+          python3 - "$OUTPUT_DIR" <<'PY'
+          import json, sys, os
+          d = sys.argv[1]; m = json.load(open(os.path.join(d, 'run-manifest.json')))
+          assert m['campaign_id'] == 'E03-resetability' and m['sut_id'] == os.environ['ASSIGNED_SUT']
+          assert m['run_id'] == os.path.basename(d), (m['run_id'], d)
+          assert m['condition'] == os.environ['CONDITION_ID'] and m['scenario'] == 'CS-001'
+          assert int(m['attempt']) == int(os.environ['ATTEMPT'])
+          assert m.get('reset_mechanisms'), 'reset_mechanisms mandatory and non-empty for E03'
+          acts = m.get('actions') or []
+          assert acts, 'actions mandatory for E03 runs'
+          assert all('outcome' in a for a in acts), 'E03 campaign convention: every action record carries outcome'
+          assert m.get('prompt_version') == os.environ['EXECUTOR_PROMPT_VERSION']
+          print('run manifest ok:', m['run_id'], 'actions:', len(acts), 'outcomes:', [a['outcome'] for a in acts])
+          PY
+          )
+          E03_VALIDATION_STATUS=$?
+          set -e
+          echo "run-manifest validation exit status of $CONDITION_ID: $E03_VALIDATION_STATUS"
+          if [ "$E03_VALIDATION_STATUS" -ne 0 ]; then E03_VALIDATION_FAILURES="$E03_VALIDATION_FAILURES $CONDITION_ID"; fi
+          export EV_KEPT="$OUTPUT_DIR/stdout.log $OUTPUT_DIR/stderr.log"
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          PY
+          # E03-CS001-SUT04-WEB: execution DR0001, attempt 1
+          export CONDITION_ID=E03-CS001-SUT04-WEB
+          export OUTPUT_DIR="$GITHUB_WORKSPACE/dry-run/${CONDITION_ID}__${EXECUTION_ID}__A${ATTEMPT}"
+          /usr/bin/python3 - <<'PY'
+          import datetime, hashlib, json, os, yaml
+          e = os.environ
+          cond, sut = e['CONDITION_ID'], e['ASSIGNED_SUT']
+          surface = cond.split('-')[3]
+          sm = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts'][sut]['components'][surface.lower()]
+          wf = '.github/workflows/e03-environment-verification.yml'
+          rec = {
+              'record_class': e['RECORD_CLASS'], 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability', 'scenario': 'CS-001',
+              'condition_id': cond, 'sut_id': sut, 'surface': surface, 'execution_id': e['EXECUTION_ID'], 'attempt': int(e['ATTEMPT']),
+              'run_id': os.path.basename(e['OUTPUT_DIR']),
+              'repository': {'sha': e['GITHUB_SHA'], 'ref': e['GITHUB_REF']},
+              'workflow': {'ref': e['GITHUB_WORKFLOW_REF'], 'file_sha256': hashlib.sha256(open(wf, 'rb').read()).hexdigest()},
+              'sut_version': {'repository': sm.get('repository'), 'commit_sha': sm.get('commit_sha'), 'release': sm.get('release')},
+              'environment_type': 'SELF_HOSTED',
+              'github': {'run_id': e['GITHUB_RUN_ID'], 'run_attempt': e['GITHUB_RUN_ATTEMPT'], 'run_number': e['GITHUB_RUN_NUMBER'], 'job': e['GITHUB_JOB']},
+              'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'note': 'DRY_RUN provenance stub of the environment-verification workflow (operation OP-CI-05): no gate ran, nothing is measured, never imported',
+          }
+          os.makedirs('provenance', exist_ok=True)
+          json.dump(rec, open('provenance/ci-provenance.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+          python3 - <<'PY'
+          import json, os, platform, subprocess, datetime
+          def v(cmd):
+              try: return subprocess.run(cmd, capture_output=True, text=True, timeout=30).stdout.strip()
+              except Exception as e: return f'unavailable: {e.__class__.__name__}'
+          rec = {'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'platform': platform.platform()},
+                 'runtime_versions': {'python': v(['python3', '--version']), 'node': v(['node', '--version']), 'npm': v(['npm', '--version']), 'java': v(['java', '-version']) or v(['bash', '-c', 'java -version 2>&1']), 'docker': v(['docker', '--version']), 'git': v(['git', '--version'])},
+                 'browser_version': {'chrome': v(['bash', '-c', 'google-chrome --version 2>/dev/null || chromium --version 2>/dev/null || echo unavailable'])},
+                 'timezone': os.environ.get('TZ'), 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          json.dump(rec, open('runtime-environment.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+          set -euo pipefail
+          test "$(sha256sum experiments/E03-resetability/executor/run-condition.sh | cut -c1-64)" = "$E03_RUN_CONDITION_SHA256"
+          mkdir -p "$OUTPUT_DIR"
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/started-at.txt"
+          set +e
+          bash experiments/E03-resetability/executor/run-condition.sh > "$OUTPUT_DIR/stdout.log" 2> "$OUTPUT_DIR/stderr.log"
+          echo $? > "$OUTPUT_DIR/exit-status.txt"
+          set -e
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/finished-at.txt"
+          cp provenance/ci-provenance.json runtime-environment.json "$OUTPUT_DIR/"
+          echo "executor exit status: $(cat "$OUTPUT_DIR/exit-status.txt")"
+          set +e
+          (
+          set -euo pipefail
+          test -f "$OUTPUT_DIR/run-manifest.json" || { echo "run-manifest.json missing: the attempt is recorded as ERROR-without-manifest and is not attributable"; exit 1; }
+          npx --yes -p ajv-cli@5 -p ajv-formats@3 ajv validate -s schemas/run-manifest.schema.v2.json --spec=draft2020 --allow-union-types -c ajv-formats -d "$OUTPUT_DIR/run-manifest.json"
+          python3 - "$OUTPUT_DIR" <<'PY'
+          import json, sys, os
+          d = sys.argv[1]; m = json.load(open(os.path.join(d, 'run-manifest.json')))
+          assert m['campaign_id'] == 'E03-resetability' and m['sut_id'] == os.environ['ASSIGNED_SUT']
+          assert m['run_id'] == os.path.basename(d), (m['run_id'], d)
+          assert m['condition'] == os.environ['CONDITION_ID'] and m['scenario'] == 'CS-001'
+          assert int(m['attempt']) == int(os.environ['ATTEMPT'])
+          assert m.get('reset_mechanisms'), 'reset_mechanisms mandatory and non-empty for E03'
+          acts = m.get('actions') or []
+          assert acts, 'actions mandatory for E03 runs'
+          assert all('outcome' in a for a in acts), 'E03 campaign convention: every action record carries outcome'
+          assert m.get('prompt_version') == os.environ['EXECUTOR_PROMPT_VERSION']
+          print('run manifest ok:', m['run_id'], 'actions:', len(acts), 'outcomes:', [a['outcome'] for a in acts])
+          PY
+          )
+          E03_VALIDATION_STATUS=$?
+          set -e
+          echo "run-manifest validation exit status of $CONDITION_ID: $E03_VALIDATION_STATUS"
+          if [ "$E03_VALIDATION_STATUS" -ne 0 ]; then E03_VALIDATION_FAILURES="$E03_VALIDATION_FAILURES $CONDITION_ID"; fi
+          export EV_KEPT="$OUTPUT_DIR/stdout.log $OUTPUT_DIR/stderr.log"
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          PY
+          if [ -n "$E03_VALIDATION_FAILURES" ]; then echo "DRY_RUN run-manifest validation failed for:$E03_VALIDATION_FAILURES"; exit 1; fi
+          echo "DRY_RUN run-manifest validation passed for every condition of this job"
+      - name: Upload the DRY_RUN bundle of E03-CS001-SUT04-API (never imported into raw-data/; never measured)
+        if: ${{ always() && inputs.dry_run == true && steps.verify.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-DRY_RUN-E03-CS001-SUT04-API-DR0001-A1
+          path: dry-run/E03-CS001-SUT04-API__DR0001__A1
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: error
+      - name: Upload the DRY_RUN bundle of E03-CS001-SUT04-WEB (never imported into raw-data/; never measured)
+        if: ${{ always() && inputs.dry_run == true && steps.verify.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-DRY_RUN-E03-CS001-SUT04-WEB-DR0001-A1
+          path: dry-run/E03-CS001-SUT04-WEB__DR0001__A1
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: error
       - name: Write a NOT_VERIFIED record when the verification step did not write one
         if: always()
         env:
@@ -857,7 +1822,7 @@ jobs:
           EV_SURFACES: WEB API
           EV_CONDITIONS: E03-CS001-SUT04-WEB E03-CS001-SUT04-API
           EV_ENVIRONMENT_TYPE: SELF_HOSTED
-          EV_MECHANISM: "DELETE /booking/{bookingid} (SUT04-EV-0006); reachability only, against a non-existent id, unauthenticated"
+          EV_MECHANISM: "DELETE /booking/{bookingid} (SUT04-EV-0006), on the booking service and through the web app's rewrite (DELETE /api/booking/{bookingid}); reachability only, against a non-existent id, unauthenticated"
           EV_REPOSITORY: ${{ steps.pin.outputs.repo }}
           EV_COMMIT: ${{ steps.pin.outputs.sha }}
           EV_STEP_OUTCOMES: pin=${{ steps.pin.outcome }} clone=${{ steps.clone.outcome }} build=${{ steps.build.outcome }} provision=${{ steps.provision.outcome }} verify=${{ steps.verify.outcome }}
@@ -882,7 +1847,7 @@ jobs:
       - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
         if: always()
         env:
-          EV_KEPT: environment-verification.json java-version.txt maven-version.txt built-jars.txt compose-version.txt compose-ps.txt compose-logs.txt
+          EV_KEPT: environment-verification.json java-version.txt maven-version.txt node-version.txt npm-version.txt built-jars.txt sut04-start.json sut04-auth.log sut04-booking.log sut04-room.log sut04-report.log sut04-branding.log sut04-message.log sut04-web.log
         run: |
           python3 - <<'PY'
           import os, re
@@ -921,10 +1886,17 @@ jobs:
             environment-verification.json
             java-version.txt
             maven-version.txt
+            node-version.txt
+            npm-version.txt
             built-jars.txt
-            compose-version.txt
-            compose-ps.txt
-            compose-logs.txt
+            sut04-start.json
+            sut04-auth.log
+            sut04-booking.log
+            sut04-room.log
+            sut04-report.log
+            sut04-branding.log
+            sut04-message.log
+            sut04-web.log
           retention-days: 90
           if-no-files-found: error
 
@@ -1158,6 +2130,187 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2)); assert ok
           PY
+      - name: Run the DRAFT executor implementation once per condition against the just-verified instance (DRY_RUN; never imported; never measured)
+        if: ${{ inputs.dry_run == true && steps.verify.outcome == 'success' }}
+        env:
+          RECORD_CLASS: DRY_RUN
+          ASSIGNED_SUT: SUT-05
+          EXECUTION_ID: DR0001
+          ATTEMPT: "1"
+          EXECUTOR_PROMPT_VERSION: EXECUTOR-E03-RESETABILITY-E03-resetability-v1
+          PROVENANCE_JSON: provenance/ci-provenance.json
+          RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
+          INSTANCE_JSON: instance.json
+          E03_INSTANCE_REPOSITORY: ${{ steps.pin.outputs.repo }}
+          E03_INSTANCE_COMMIT: ${{ steps.pin.outputs.sha }}
+          E03_INSTANCE_RELEASE: ${{ steps.pin.outputs.release }}
+          E03_INSTANCE_PACKAGE_DIR: ${{ steps.package.outputs.dir }}
+          E03_INSTANCE_START: "2"
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -m venv "$RUNNER_TEMP/e03-executor-venv"
+          "$RUNNER_TEMP/e03-executor-venv/bin/python" -m pip install --require-hashes --only-binary :all: -r experiments/E03-resetability/executor/requirements.txt
+          "$RUNNER_TEMP/e03-executor-venv/bin/python" -m playwright install --with-deps chromium
+          echo "$RUNNER_TEMP/e03-executor-venv/bin" >> "$GITHUB_PATH"
+          export PATH="$RUNNER_TEMP/e03-executor-venv/bin:$PATH"
+          command -v python3
+          python3 --version
+          python3 -m playwright --version
+          python3 -m playwright install --dry-run chromium
+          python3 - <<'PY'
+          import json, os, sys
+          e = os.environ
+          ws = e['GITHUB_WORKSPACE']
+          n = e['E03_INSTANCE_START']
+          assert n in ('1', '2'), f'E03_INSTANCE_START {n!r} (expected 1 or 2)'
+          pid_f, pgid_f = f'{ws}/pid{n}.txt', f'{ws}/pgid{n}.txt'
+          missing = [os.path.basename(p) for p in (pid_f, pgid_f) if not os.path.isfile(p)]
+          if missing:
+              sys.exit(f'SUT-05 instance start {n}: {", ".join(missing)} absent; instance.json is not written and the executor is not called')
+          pid, pgid = int(open(pid_f).read().strip()), int(open(pgid_f).read().strip())
+          pkg = json.load(open(f'{ws}/package-provenance.json'))
+          pkg_dir = e['E03_INSTANCE_PACKAGE_DIR']
+          out_log, err_log = f'{ws}/api-stdout-{n}.log', f'{ws}/api-stderr-{n}.log'
+          inst = {
+              'interface_version': 1,
+              'sut_id': 'SUT-05',
+              'record_class': e['RECORD_CLASS'],
+              'surfaces': {'web': None, 'api': {'base_url': 'http://127.0.0.1:3000'}, 'auth': None},
+              'provisioning': {'route': 'GitHub-hosted runner instance provisioned in this job by the steps of job sut-05-api of .github/workflows/e03-environment-verification.yml: clone of the pinned commit related to the release tag; Node.js 24.21.0 (setup-node); release archive verified against its GitHub digest and unpacked; npm start in its own session and process group; route recorded by the package step: ' + pkg['route'],
+                               'repository': e['E03_INSTANCE_REPOSITORY'], 'commit_sha': e['E03_INSTANCE_COMMIT'], 'release': e['E03_INSTANCE_RELEASE'],
+                               'asset': {'name': pkg['asset'], 'sha256': pkg['sha256']},
+                               'commands': ['ASSET="juice-shop-${EV_RELEASE#v}_node24_linux_x64.tgz"', 'gh release download "$EV_RELEASE" --repo "$EV_REPO" --pattern "$ASSET" --clobber', 'SUM="$(sha256sum "$ASSET" | cut -d\' \' -f1)"', 'DIGEST="$(gh release view "$EV_RELEASE" --repo "$EV_REPO" --json assets --jq ".assets[] | select(.name == \\"$ASSET\\") | .digest")"', 'test -n "$DIGEST"', 'test "sha256:$SUM" = "$DIGEST"', 'mkdir -p pkg', 'tar -xzf "$ASSET" -C pkg', 'set -- pkg/*/', 'test "$#" -eq 1', 'PKG_DIR="${1%/}"', 'test -f "$PKG_DIR/package.json"', 'test -f "$PKG_DIR/build/app.js"', 'echo "dir=$PKG_DIR" >> "$GITHUB_OUTPUT"', 'python3 - "$ASSET" "$SUM" "$DIGEST" "$PKG_DIR" <<\'PY\'', 'npm start'],
+                               'provisioning_record': None},
+              'process': {'pgid': pgid, 'pid': pid, 'start_command': ['npm', 'start'], 'cwd': os.path.abspath(pkg_dir), 'env': {'SUT_DIR': pkg_dir},
+                          'stdout_log': out_log, 'stderr_log': err_log, 'port': 3000, 'readiness_url': '/rest/admin/application-version',
+                          'readiness_timeout_s': 180, 'stop_timeout_s': 30},
+              'logs': [out_log, err_log],
+          }
+          need = [('repository', inst['provisioning']['repository']), ('commit_sha', inst['provisioning']['commit_sha']), ('release', inst['provisioning']['release']), ('asset.sha256', pkg['sha256'])]
+          assert all(v for _, v in need), f'empty provisioning field(s): {[k for k, v in need if not v]}'
+          text = json.dumps(inst, indent=2) + '\n'
+          assert json.loads(text) == inst and json.loads(text)['interface_version'] == 1
+          with open('instance.json', 'w', encoding='utf-8') as f:
+              f.write(text)
+          print(text)
+          PY
+          # DRY_RUN executions of this job (operation OP-CI-05): run-condition.sh is checked against the sha256 of its committed blob;
+          # every condition runs; each validation exit status is recorded; the step fails at its end if any validation failed.
+          E03_RUN_CONDITION_SHA256="$(git show HEAD:experiments/E03-resetability/executor/run-condition.sh | sha256sum | cut -c1-64)"
+          test -n "$E03_RUN_CONDITION_SHA256"
+          /usr/bin/python3 -c "import yaml" 2>/dev/null || /usr/bin/python3 -m pip install --quiet pyyaml
+          E03_VALIDATION_FAILURES=""
+          # E03-CS001-SUT05-API: execution DR0001, attempt 1
+          export CONDITION_ID=E03-CS001-SUT05-API
+          export OUTPUT_DIR="$GITHUB_WORKSPACE/dry-run/${CONDITION_ID}__${EXECUTION_ID}__A${ATTEMPT}"
+          /usr/bin/python3 - <<'PY'
+          import datetime, hashlib, json, os, yaml
+          e = os.environ
+          cond, sut = e['CONDITION_ID'], e['ASSIGNED_SUT']
+          surface = cond.split('-')[3]
+          sm = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts'][sut]['components'][surface.lower()]
+          wf = '.github/workflows/e03-environment-verification.yml'
+          rec = {
+              'record_class': e['RECORD_CLASS'], 'study_id': 'EUS-2026-001', 'campaign_id': 'E03-resetability', 'scenario': 'CS-001',
+              'condition_id': cond, 'sut_id': sut, 'surface': surface, 'execution_id': e['EXECUTION_ID'], 'attempt': int(e['ATTEMPT']),
+              'run_id': os.path.basename(e['OUTPUT_DIR']),
+              'repository': {'sha': e['GITHUB_SHA'], 'ref': e['GITHUB_REF']},
+              'workflow': {'ref': e['GITHUB_WORKFLOW_REF'], 'file_sha256': hashlib.sha256(open(wf, 'rb').read()).hexdigest()},
+              'sut_version': {'repository': sm.get('repository'), 'commit_sha': sm.get('commit_sha'), 'release': sm.get('release')},
+              'environment_type': 'SELF_HOSTED',
+              'github': {'run_id': e['GITHUB_RUN_ID'], 'run_attempt': e['GITHUB_RUN_ATTEMPT'], 'run_number': e['GITHUB_RUN_NUMBER'], 'job': e['GITHUB_JOB']},
+              'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'note': 'DRY_RUN provenance stub of the environment-verification workflow (operation OP-CI-05): no gate ran, nothing is measured, never imported',
+          }
+          os.makedirs('provenance', exist_ok=True)
+          json.dump(rec, open('provenance/ci-provenance.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+          python3 - <<'PY'
+          import json, os, platform, subprocess, datetime
+          def v(cmd):
+              try: return subprocess.run(cmd, capture_output=True, text=True, timeout=30).stdout.strip()
+              except Exception as e: return f'unavailable: {e.__class__.__name__}'
+          rec = {'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'platform': platform.platform()},
+                 'runtime_versions': {'python': v(['python3', '--version']), 'node': v(['node', '--version']), 'npm': v(['npm', '--version']), 'java': v(['java', '-version']) or v(['bash', '-c', 'java -version 2>&1']), 'docker': v(['docker', '--version']), 'git': v(['git', '--version'])},
+                 'browser_version': {'chrome': v(['bash', '-c', 'google-chrome --version 2>/dev/null || chromium --version 2>/dev/null || echo unavailable'])},
+                 'timezone': os.environ.get('TZ'), 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          json.dump(rec, open('runtime-environment.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+          set -euo pipefail
+          test "$(sha256sum experiments/E03-resetability/executor/run-condition.sh | cut -c1-64)" = "$E03_RUN_CONDITION_SHA256"
+          mkdir -p "$OUTPUT_DIR"
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/started-at.txt"
+          set +e
+          bash experiments/E03-resetability/executor/run-condition.sh > "$OUTPUT_DIR/stdout.log" 2> "$OUTPUT_DIR/stderr.log"
+          echo $? > "$OUTPUT_DIR/exit-status.txt"
+          set -e
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/finished-at.txt"
+          cp provenance/ci-provenance.json runtime-environment.json "$OUTPUT_DIR/"
+          echo "executor exit status: $(cat "$OUTPUT_DIR/exit-status.txt")"
+          set +e
+          (
+          set -euo pipefail
+          test -f "$OUTPUT_DIR/run-manifest.json" || { echo "run-manifest.json missing: the attempt is recorded as ERROR-without-manifest and is not attributable"; exit 1; }
+          npx --yes -p ajv-cli@5 -p ajv-formats@3 ajv validate -s schemas/run-manifest.schema.v2.json --spec=draft2020 --allow-union-types -c ajv-formats -d "$OUTPUT_DIR/run-manifest.json"
+          python3 - "$OUTPUT_DIR" <<'PY'
+          import json, sys, os
+          d = sys.argv[1]; m = json.load(open(os.path.join(d, 'run-manifest.json')))
+          assert m['campaign_id'] == 'E03-resetability' and m['sut_id'] == os.environ['ASSIGNED_SUT']
+          assert m['run_id'] == os.path.basename(d), (m['run_id'], d)
+          assert m['condition'] == os.environ['CONDITION_ID'] and m['scenario'] == 'CS-001'
+          assert int(m['attempt']) == int(os.environ['ATTEMPT'])
+          assert m.get('reset_mechanisms'), 'reset_mechanisms mandatory and non-empty for E03'
+          acts = m.get('actions') or []
+          assert acts, 'actions mandatory for E03 runs'
+          assert all('outcome' in a for a in acts), 'E03 campaign convention: every action record carries outcome'
+          assert m.get('prompt_version') == os.environ['EXECUTOR_PROMPT_VERSION']
+          print('run manifest ok:', m['run_id'], 'actions:', len(acts), 'outcomes:', [a['outcome'] for a in acts])
+          PY
+          )
+          E03_VALIDATION_STATUS=$?
+          set -e
+          echo "run-manifest validation exit status of $CONDITION_ID: $E03_VALIDATION_STATUS"
+          if [ "$E03_VALIDATION_STATUS" -ne 0 ]; then E03_VALIDATION_FAILURES="$E03_VALIDATION_FAILURES $CONDITION_ID"; fi
+          export EV_KEPT="$OUTPUT_DIR/stdout.log $OUTPUT_DIR/stderr.log"
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          PY
+          if [ -n "$E03_VALIDATION_FAILURES" ]; then echo "DRY_RUN run-manifest validation failed for:$E03_VALIDATION_FAILURES"; exit 1; fi
+          echo "DRY_RUN run-manifest validation passed for every condition of this job"
+      - name: Upload the DRY_RUN bundle of E03-CS001-SUT05-API (never imported into raw-data/; never measured)
+        if: ${{ always() && inputs.dry_run == true && steps.verify.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: E03-DRY_RUN-E03-CS001-SUT05-API-DR0001-A1
+          path: dry-run/E03-CS001-SUT05-API__DR0001__A1
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: error
       - name: Collect the npm logs (diagnosis of a failed start)
         if: always()
         run: |

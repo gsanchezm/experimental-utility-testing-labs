@@ -1,0 +1,152 @@
+{
+  "record_class": "ENVIRONMENT_VERIFICATION",
+  "measured_experiment": false,
+  "study_id": "EUS-2026-001",
+  "campaign_id": "E03-resetability",
+  "sut_id": "SUT-05",
+  "surfaces": [
+    "API"
+  ],
+  "conditions_covered": [
+    "E03-CS001-SUT05-API"
+  ],
+  "environment_type": "SELF_HOSTED",
+  "sut_provenance": {
+    "repository": "https://github.com/juice-shop/juice-shop",
+    "commit_sha": "1618a611b173b4bf114028e6e02549950606e29d",
+    "release": "v20.2.0",
+    "release_commit": "5658473cf8814459bf89000ce373b20ed0b4eb37",
+    "release_vs_pin_diff": [
+      "screenshots/bundle-analysis.png"
+    ],
+    "provisioning_route": "PACKAGED_DISTRIBUTION (SUT README, Packaged Distributions: download the release archive, unpack, npm start)",
+    "package": {
+      "asset": "juice-shop-20.2.0_node24_linux_x64.tgz",
+      "sha256": "dbb457f74e908e28c41d7787e36d30d121d5b9f6178524720567b4aeb41f2968",
+      "github_digest": "sha256:dbb457f74e908e28c41d7787e36d30d121d5b9f6178524720567b4aeb41f2968",
+      "package_json": {
+        "name": "juice-shop",
+        "version": "20.2.0",
+        "engines": {
+          "node": "24"
+        },
+        "os": [
+          "linux"
+        ],
+        "cpu": [
+          "x64"
+        ]
+      },
+      "start_script": "node build/app"
+    },
+    "reported_version": "{\"version\":\"20.2.0\"}"
+  },
+  "reset_mechanism_under_verification": "full process restart (sequelize.sync force on start, SUT05-EV-0003); stop/start reachability only, no business state established",
+  "stop_mechanism": "SIGTERM to the process group started in its own session by the provision step; bounded wait until port 3000 refuses connections; restart in a new session; process tree captured before the stop, after it, and after the restart",
+  "checks": {
+    "api_GET_/rest/admin/application-version_status": 200,
+    "api_POST_/rest/user/login_empty_body_status": 401,
+    "api_GET_/api/BasketItems/_unauthenticated_status": 401,
+    "api_GET_/rest/basket/1_unauthenticated_status": 401,
+    "stop_signal": "SIGTERM to process group 2152 (its leader is the npm process, pid 2152)",
+    "stop_wait_window_seconds": 60,
+    "port_3000_closed_after_stop": true,
+    "seconds_until_port_3000_closed": 1.0,
+    "api_after_stop_status": "ERROR:URLError",
+    "seconds_until_process_group_gone": 0.0,
+    "process_group_members_after_stop": [],
+    "api_after_restart_status": 200,
+    "restart_process_group": 2190
+  },
+  "process_snapshots": {
+    "before_stop": {
+      "file": "process-tree-before-stop.txt",
+      "runner_process_count": 159,
+      "tool_errors": [],
+      "listeners_on_port_3000": [
+        "LISTEN 0      511                *:3000       *:* users:((\"MainThread\",pid=2164,fd=25))"
+      ],
+      "group_members": [
+        [
+          2152,
+          1,
+          2152,
+          "Ssl",
+          "npm start"
+        ],
+        [
+          2163,
+          2152,
+          2152,
+          "S",
+          "sh -c node build/app"
+        ],
+        [
+          2164,
+          2163,
+          2152,
+          "Sl",
+          "node build/app"
+        ]
+      ]
+    },
+    "after_stop": {
+      "file": "process-tree-after-stop.txt",
+      "runner_process_count": 158,
+      "tool_errors": [],
+      "listeners_on_port_3000": [],
+      "group_members": []
+    },
+    "after_restart": {
+      "file": "process-tree-after-restart.txt",
+      "runner_process_count": 159,
+      "tool_errors": [],
+      "listeners_on_port_3000": [
+        "LISTEN 0      511                *:3000       *:* users:((\"MainThread\",pid=2202,fd=25))"
+      ],
+      "group_members": [
+        [
+          2190,
+          2181,
+          2190,
+          "Ssl",
+          "npm start"
+        ],
+        [
+          2201,
+          2190,
+          2190,
+          "S",
+          "sh -c node build/app"
+        ],
+        [
+          2202,
+          2201,
+          2190,
+          "Rl",
+          "node build/app"
+        ]
+      ]
+    }
+  },
+  "verification_result": "VERIFIED",
+  "runner": {
+    "os": "Linux",
+    "image": "ubuntu24",
+    "image_version": "20260927.320.1",
+    "arch": "X64"
+  },
+  "tool_versions": {
+    "node": "v24.21.0",
+    "npm": "11.19.0"
+  },
+  "github": {
+    "run_id": "37354458611",
+    "run_attempt": "1",
+    "job": "sut-05-api",
+    "repository_sha": "4261d1597335e760409949194e35d9ff09715872",
+    "workflow_ref": "gsanchezm/experimental-utility-testing-labs/.github/workflows/e03-environment-verification.yml@refs/heads/main"
+  },
+  "timestamp": "2026-10-05T18:15:05.692337+00:00",
+  "timezone": "UTC"
+}
