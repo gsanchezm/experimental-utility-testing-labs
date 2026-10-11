@@ -1,0 +1,31 @@
+# after-restart 2026-10-10T02:57:05.811105+00:00 recorded process group(s) [2388, 2423]; 165 processes on the runner; tool errors []
+# pid ppid pgid sid stat etimes args (the recorded group(s), every npm or node process, the listener(s) on port 3000)
+2423 2413 2423 2423 Ssl 3 npm start
+2434 2423 2423 2423 S 2 sh -c node build/app
+2435 2434 2423 2423 Sl 2 node build/app
+# listeners on port 3000 (ss -ltnp)
+LISTEN 0      511                *:3000       *:* users:(("MainThread",pid=2435,fd=25))
+# /proc/<pid>/status of the rows above
+{
+ "2423": {
+  "Name": "npm start",
+  "PPid": "2413",
+  "SigCgt": "0000000100014602",
+  "SigIgn": "0000000001001000",
+  "State": "S (sleeping)"
+ },
+ "2434": {
+  "Name": "sh",
+  "PPid": "2423",
+  "SigCgt": "0000000000010002",
+  "SigIgn": "0000000000000000",
+  "State": "S (sleeping)"
+ },
+ "2435": {
+  "Name": "MainThread",
+  "PPid": "2434",
+  "SigCgt": "0000000100004602",
+  "SigIgn": "0000000001001000",
+  "State": "S (sleeping)"
+ }
+}

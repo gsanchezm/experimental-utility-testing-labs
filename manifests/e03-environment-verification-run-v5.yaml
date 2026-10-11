@@ -1,0 +1,68 @@
+# manifests/e03-environment-verification-run-v5.yaml
+# Mechanical run-identity record of the single dispatch of operation OP-ENV-11 (E03 Environment Verification with the DRY_RUN
+# option, NON-MEASURED), written by the ORCHESTRATOR after the run identity was known (dispatch record:
+# manifests/e03-environment-verification-dispatch-v5.yaml). Values are read from the GitHub Actions API only. It records no
+# verification result and no interpretation, imports no artifact and no DRY_RUN bundle, does not edit
+# experiments/E03-resetability/controlled-instance-status.yaml, and is not a measured observation. Local commit; not pushed.
+# Model: manifests/e03-environment-verification-run-v4.yaml (operation OP-ENV-09), which is not edited.
+record_id: E03-ENVIRONMENT-VERIFICATION-RUN-05  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: ENVIRONMENT_VERIFICATION_RUN_IDENTITY_RECORD
+study_id: EUS-2026-001
+operation_id: OP-ENV-11
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-10-10T02:58:36Z"  # UTC
+measured_experiment: false
+qualification_evidence: false
+dispatch_record: manifests/e03-environment-verification-dispatch-v5.yaml  # record id E03-ENVIRONMENT-VERIFICATION-DISPATCH-05; committed (4edb56f5a663ff9da38713f4f3ed52786f895933) and audited by the study's independent orchestration reviewer (OP-ENV-11 STEP 1 AUDIT: PASSED, 2026-10-09T23:55:30Z), and its direct_paste filled (3a8dbe59aee320ad90bd61baa671466f8bb031a1), before the dispatch
+human_approval: {text_sha256: 5ee756f2d7e1751107e3e9095fbc7ae6f33b0d0ee93360d8250c4f30399a811d, received_by_the_reviewer_at: "2026-10-09T23:34:17Z"}  # by reference; recorded in the dispatch record
+direct_paste: {text_sha256: 5ee756f2d7e1751107e3e9095fbc7ae6f33b0d0ee93360d8250c4f30399a811d, received_at: "2026-10-10T02:53:31Z"}  # by reference; recorded in the dispatch record (transcript enqueue stamp 2026-10-10T02:53:31.544Z; user entry 2026-10-10T02:53:31.621Z; clock read at recording 2026-10-10T02:54:29Z; 2026-10-09 America/Mexico_City)
+repository: gsanchezm/experimental-utility-testing-labs
+workflow: .github/workflows/e03-environment-verification.yml  # name "E03 Environment Verification", workflow id 364260233
+workflow_ref: main  # head_branch
+event: workflow_dispatch
+inputs: {target: all, dry_run: true}  # taken from the command as issued; the runs API does not return dispatch inputs
+dispatch_commands_issued: 1  # one "gh workflow run" with ref main, target=all, and dry_run=true; exit status 0; it printed the run URL; no other input, no repetition
+dispatch_command_issued_at: "2026-10-10T02:56:26Z"  # UTC clock immediately before the command, after a final re-check at 2026-10-10T02:56:04Z (public main 0f617b4, tree 955117db..., workflow blob 23eb043c..., 47 runs, 4 environment-verification runs, nothing queued or in progress, 0 tags, canonical HEAD 3a8dbe5 clean); the command returned at 2026-10-10T02:56:28Z
+run_id: 38018788066
+run_number: 5
+run_attempt: 1  # GET actions/runs/38018788066/attempts/2: HTTP 404 when this record was written
+run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/38018788066
+head_sha: 0f617b4891549340186c5f12c4b79c38fe6197b2  # public export v34, as expected
+head_tree: 955117dbbd191587ce1b48834a6563966e95f9d9
+created_at: "2026-10-10T02:56:28Z"
+run_started_at: "2026-10-10T02:56:28Z"
+triggering_actor: gsanchezm
+status_when_recorded: in_progress
+jobs_when_recorded: 7  # jobs listed by the API for this run when this record was written
+environment_verification_runs_after_dispatch: 5  # 37074152972, 37206291883, 37265782721, 37354458611, and this run
+actions_runs_total_after_dispatch: 48
+
+completion:  # appended after the run completed (operation OP-ENV-11, Step 3); the fields above are unchanged
+  recorded_at: "2026-10-10T03:04:57Z"  # UTC
+  status: completed
+  conclusion: failure
+  completed_at: "2026-10-10T03:01:31Z"  # run updated_at
+  run_attempt: 1  # GET actions/runs/38018788066/attempts/2: HTTP 404 when this block was written
+  jobs:  # as listed by the API, in the workflow's job order
+    - {name: "E03 Environment Verification SUT-01 web+api", id: 114114949766, conclusion: success, started_at: "2026-10-10T02:56:33Z", completed_at: "2026-10-10T02:58:22Z"}
+    - {name: "E03 Environment Verification SUT-02 web", id: 114114949622, conclusion: success, started_at: "2026-10-10T02:56:33Z", completed_at: "2026-10-10T02:57:53Z"}
+    - {name: "E03 Environment Verification SUT-02 android", id: 114114949953, conclusion: success, started_at: "2026-10-10T02:56:33Z", completed_at: "2026-10-10T02:58:42Z"}
+    - {name: "E03 Environment Verification SUT-02 ios", id: 114114949787, conclusion: success, started_at: "2026-10-10T02:56:38Z", completed_at: "2026-10-10T03:01:30Z"}
+    - {name: "E03 Environment Verification SUT-03 web", id: 114114949794, conclusion: success, started_at: "2026-10-10T02:56:34Z", completed_at: "2026-10-10T02:59:04Z"}
+    - {name: "E03 Environment Verification SUT-04 web+api", id: 114114949691, conclusion: failure, started_at: "2026-10-10T02:56:33Z", completed_at: "2026-10-10T02:57:00Z", first_failed_step: "7: Build the service jars with Maven (the documented build, tests skipped as in SUT04-PROV-0001)"}
+    - {name: "E03 Environment Verification SUT-05 api", id: 114114949779, conclusion: success, started_at: "2026-10-10T02:56:33Z", completed_at: "2026-10-10T02:57:53Z"}
+  artifacts:  # each archive downloaded outside the repository into its own new directory and its sha256 checked against the GitHub digest (12 of 12 equal); nothing is imported; the DRY_RUN bundles are never imported; the two SUT-04 DRY_RUN bundles do not exist (their upload steps were skipped: the job's verify step did not succeed)
+    - {name: E03-DRY_RUN-E03-CS001-SUT01-API-DR0001-A1, id: 11657637033, size_in_bytes: 13220, digest: "sha256:5ef4d56ed2fd2e1e75f3a4e6fa5f7d71ab1edfe85aa12ffda7bd05224d7ccd2c", expires_at: "2027-01-08T02:56:30Z"}
+    - {name: E03-DRY_RUN-E03-CS001-SUT01-WEB-DR0001-A1, id: 11657352192, size_in_bytes: 256165, digest: "sha256:a2fa8ed48ca47a256ee167debb93c8699c14d1440d7ed0b1fef5d7275e8df9ee", expires_at: "2027-01-08T02:56:30Z"}
+    - {name: E03-DRY_RUN-E03-CS001-SUT02-WEB-DR0001-A1, id: 11657582009, size_in_bytes: 524193, digest: "sha256:31ba3b7fb98e171b9744f7dde7e199d5135e8e455533cfedbd2374b04e848e74", expires_at: "2027-01-08T02:56:30Z"}
+    - {name: E03-DRY_RUN-E03-CS001-SUT03-WEB-DR0001-A1, id: 11657547100, size_in_bytes: 1339557, digest: "sha256:a0002ceadb3db4ad1a2cbbcf1d795a3ce63f7ea5ba2e80068d5a3856d5b614ec", expires_at: "2027-01-08T02:56:30Z"}
+    - {name: E03-DRY_RUN-E03-CS001-SUT05-API-DR0001-A1, id: 11657352142, size_in_bytes: 23962, digest: "sha256:1ac25408856ef04427fb67b9e08fe4e4aa2ded551c5ac541281f1ec880786559", expires_at: "2027-01-08T02:56:30Z"}
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-01-web-api-run38018788066-a1, id: 11657711897, size_in_bytes: 2042, digest: "sha256:fa00fbbd3566e87a2d33f5547b901276986632eba1d17c0cf07cbe8c238599cd", expires_at: "2027-01-08T02:56:30Z"}
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-02-android-run38018788066-a1, id: 11656899450, size_in_bytes: 462392, digest: "sha256:b6292696831de7ea0e7411a70a3b8e3c8d14e01e160e4850a95e7f3cca54513e", expires_at: "2027-01-08T02:56:30Z"}
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-02-ios-run38018788066-a1, id: 11656784860, size_in_bytes: 852304, digest: "sha256:9cd12cfed2088026a3f6c3f73508a071005c987476d9e16b4d3551e1e90231ec", expires_at: "2027-01-08T02:56:30Z"}
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-02-web-run38018788066-a1, id: 11657542026, size_in_bytes: 1365, digest: "sha256:2e879cc7a197c00f6dafef7c320d8d7bfc86192362d24c7a9c5128a30cd6acc6", expires_at: "2027-01-08T02:56:30Z"}
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-03-web-run38018788066-a1, id: 11657542165, size_in_bytes: 1275, digest: "sha256:3a340dd4839f7dc86d12f1e2cc7588c7b347525004e86d344aac23bd9cb27fc0", expires_at: "2027-01-08T02:56:30Z"}
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-04-web-api-run38018788066-a1, id: 11657227102, size_in_bytes: 1942, digest: "sha256:534cf93e5d2f9be19ab47d4e92bb8bcf49c6299b8e56b204469438798505f90d", expires_at: "2027-01-08T02:56:30Z"}
+    - {name: E03-ENVIRONMENT_VERIFICATION-SUT-05-api-run38018788066-a1, id: 11657751854, size_in_bytes: 12518, digest: "sha256:6fee1826fc0198e41c2d09f815863c3bdc6aa8d164ce5f90670bcb345de74eca", expires_at: "2027-01-08T02:56:30Z"}
+  environment_verification_runs_after_completion: 5
+  actions_runs_total_after_completion: 48
