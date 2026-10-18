@@ -16,10 +16,10 @@
 study_id: EUS-2026-001
 campaign_id: E03-resetability
 scenario: CS-001
-updated: "2026-10-10"
+updated: "2026-10-13"
 campaign_status: NOT_STARTED
 measured_execution_prerequisites_common: [campaign START, locked campaign configuration, agent-governance-v3 frozen and in force (v2 AMENDED; gate G-6 re-pointed 2026-10-05; operation OP-CI-03), frozen executor prompt and implementation, GitHub Actions environment verification VERIFIED per condition]
-github_actions_runs:  # environment-verification runs transcribed below, oldest first. Multi-run semantics (defined 2026-10-04, operation OP-ENV-05): an entry is never removed or rewritten, and its comments speak as of its transcription date; the latest run governs gate G-8, so each condition's github_actions_verification carries the values of the latest run that ran a job for it (since 2026-10-10: run 38018788066, target all, for all nine conditions); an earlier run's values stay in its import directory and its import record
+github_actions_runs:  # environment-verification runs transcribed below, oldest first. Multi-run semantics (defined 2026-10-04, operation OP-ENV-05): an entry is never removed or rewritten, and its comments speak as of its transcription date; the latest run governs gate G-8, so each condition's github_actions_verification carries the values of the latest run that ran a job for it (since 2026-10-12: run 38018788066, target all, for seven conditions and run 38270815417, target SUT-04, for E03-CS001-SUT04-WEB and -SUT04-API); an earlier run's values stay in its import directory and its import record
   - run_id: 37074152972
     run_attempt: 1  # GET actions/runs/37074152972/attempts/2 returns HTTP 404
     date: "2026-10-02"
@@ -62,6 +62,15 @@ github_actions_runs:  # environment-verification runs transcribed below, oldest 
     workflow_canonical_sha256: a18c56f106ab12cdbcfb9d17f22dd2ef322f9b59059b99de464e086c9db84a09  # the revision this run executed: the OP-CI-05 DRY_RUN option (commit d1aee93) and the SUT-04 route of the SUT's README (OP-CI-06 / OP-CI-06b, commit 2f5ceb5)
     import_record: experiments/E03-resetability/environment-verification/github-actions/run38018788066-a1/IMPORT-RECORD.yaml
     transcribed: "2026-10-10"  # operation OP-ENV-12, ORCHESTRATOR; reachability and presence only: no verification step establishes state or performs a reset under evaluation
+  - run_id: 38270815417
+    run_attempt: 1  # GET actions/runs/38270815417/attempts/2 returns HTTP 404
+    date: "2026-10-12"
+    operation: OP-ENV-13  # dispatch record manifests/e03-environment-verification-dispatch-v6.yaml; run identity manifests/e03-environment-verification-run-v6.yaml
+    target: SUT-04  # dry_run true: only the job sut-04-web-api ran, and its DRY_RUN step ran after the successful verification; the six other jobs were skipped by the target; the two DRY_RUN bundles are never imported (rule R4); the seven other conditions keep run 38018788066
+    public_head: dfe125126b640fd1388137d7e1eaa02a6629b9ad  # public export v35
+    workflow_canonical_sha256: f2d756b8c943dad8a9f94d427fb2b87d8854a3e8f87d7d61b98a9c3e5dcc05dd  # the revision this run executed: the OP-CI-07 pin of Apache Maven 3.9.14 for the SUT-04 build (commit ae0f326), the only change since the revision of run 38018788066
+    import_record: experiments/E03-resetability/environment-verification/github-actions/run38270815417-a1/IMPORT-RECORD.yaml
+    transcribed: "2026-10-13"  # operation OP-ENV-14, ORCHESTRATOR; reachability and presence only: no verification step establishes state or performs a reset under evaluation
 conditions:
   E03-CS001-SUT01-WEB:
     sut_id: SUT-01
@@ -191,19 +200,19 @@ conditions:
     status: CONTROLLED
     workstation_verification: {status: VERIFIED, environment_type: LOCAL, record: experiments/E03-resetability/environment-verification/SUT-04-web-api.json, provisioning_id: SUT04-PROV-0001, date: "2026-09-22"}
     github_actions_verification:
-      status: NOT_VERIFIED
+      status: VERIFIED  # since 2026-10-12 (operation OP-ENV-14), under run 38270815417 (target SUT-04): the first GitHub Actions verification of the route of the SUT's README; NOT_VERIFIED under run 38018788066 (operation OP-ENV-12; the job stopped at its Maven build); VERIFIED under runs 37206291883 and 37265782721 (operations OP-ENV-05 and OP-ENV-08; the docker-compose route that OP-CI-06 replaced); those values stay in their runs' import directories and import records
       environment_type: SELF_HOSTED
       workflow: .github/workflows/e03-environment-verification.yml
       job: sut-04-web-api
-      job_id: 114114949691
-      run_id: 38018788066
+      job_id: 114884338615
+      run_id: 38270815417
       run_attempt: 1
-      workflow_canonical_sha256: a18c56f106ab12cdbcfb9d17f22dd2ef322f9b59059b99de464e086c9db84a09  # the revision of run 38018788066 (OP-CI-05 and OP-CI-06 / OP-CI-06b), published in export v34
-      github_job_conclusion: failure
-      record_verification_result: NOT_VERIFIED
-      record: experiments/E03-resetability/environment-verification/github-actions/run38018788066-a1/sut-04-web-api/environment-verification.json
-      demonstrates: "nothing about the instance: the job stopped at its Maven build (step 7) before the route of the SUT's README ran; no service started and none of the thirteen checks ran"
-      cause: "provisioning step 7 (the Maven build) failed: the runner image ubuntu24 20261004.327.1 provides Apache Maven 3.10.0 (maven-version.txt of the imported artifact), and the job log of job 114114949691 shows Maven refusing the pinned POM version: 'version' uses an unsupported snapshot version format, should be '*-SNAPSHOT' instead. @ com.automationintesting:restful-booker-platform:2.2.${revision}; run 37265782721 built the same pinned POM with Apache Maven 3.9.16 on image 20260927.320.1, SUT04-PROV-0001 with Apache Maven 3.9.9, and the SUT's README at the pinned commit lists Maven 3.9.14; the workflow takes Maven from the runner image; a toolchain item of the workflow, not a SUT finding and not a finding about the route of the SUT's README, which never ran"
+      run_target: SUT-04  # only the job sut-04-web-api ran (dry_run true; the two DRY_RUN bundles never imported); the six other jobs were skipped by the target; the seven other conditions keep run 38018788066
+      workflow_canonical_sha256: f2d756b8c943dad8a9f94d427fb2b87d8854a3e8f87d7d61b98a9c3e5dcc05dd  # the revision of run 38270815417 (the OP-CI-07 pin of Apache Maven 3.9.14 for the SUT-04 build, commit ae0f326), published in export v35
+      github_job_conclusion: success
+      record_verification_result: VERIFIED
+      record: experiments/E03-resetability/environment-verification/github-actions/run38270815417-a1/sut-04-web-api/environment-verification.json
+      demonstrates: "the pinned commit d36bd3f was built and provisioned on an ubuntu-24.04 runner (image ubuntu24 20261004.327.1) by the route of the SUT's README (run_locally.sh at the pinned commit, with npm start in place of npm run dev and each service's -exec jar in place of the script's jar glob; human decision of 2026-10-06), with Apache Maven 3.9.14, Temurin 26.0.2.1+1, Node.js v24.21.0, and npm 11.19.0 (next 16.2.9): the six services and the web app were ready within the 300 s bound (readiness_s web 4.3, report 26.4, auth 30.2, branding 34.0, message 34.6, booking 37.9, room 38.1); the fourteen checks: GET /<service>/actuator/health 200 for auth, booking, room, report, branding, and message; web GET /, GET /api/room/1, and GET /api/branding 200; the unauthenticated web DELETE /api/booking/999999 403; api POST /auth/login with an empty body 403, GET /booking/ 403, the unauthenticated DELETE /booking/999999 403, and GET /booking/999999 403 (the reset mechanism under verification, SUT04-EV-0006, on the booking service and through the web app's rewrite: reachability only, against a non-existent id, unauthenticated); reachability and presence only: the verification step established no state and never exercised the reset (the DRY_RUN step that ran afterwards in the same job is reviewed in manifests/e03-environment-verification-import-v6.yaml and never imported)"
     mobile_qualification_applicable: false
     measured_execution_readiness: NOT_READY
   E03-CS001-SUT04-API:
@@ -212,19 +221,19 @@ conditions:
     status: CONTROLLED
     workstation_verification: {status: VERIFIED, environment_type: LOCAL, record: experiments/E03-resetability/environment-verification/SUT-04-web-api.json, provisioning_id: SUT04-PROV-0001, date: "2026-09-22"}
     github_actions_verification:
-      status: NOT_VERIFIED
+      status: VERIFIED  # since 2026-10-12 (operation OP-ENV-14), under run 38270815417 (target SUT-04): the first GitHub Actions verification of the route of the SUT's README; NOT_VERIFIED under run 38018788066 (operation OP-ENV-12; the job stopped at its Maven build); VERIFIED under runs 37206291883 and 37265782721 (operations OP-ENV-05 and OP-ENV-08; the docker-compose route that OP-CI-06 replaced); those values stay in their runs' import directories and import records
       environment_type: SELF_HOSTED
       workflow: .github/workflows/e03-environment-verification.yml
       job: sut-04-web-api
-      job_id: 114114949691
-      run_id: 38018788066
+      job_id: 114884338615
+      run_id: 38270815417
       run_attempt: 1
-      workflow_canonical_sha256: a18c56f106ab12cdbcfb9d17f22dd2ef322f9b59059b99de464e086c9db84a09  # the revision of run 38018788066 (OP-CI-05 and OP-CI-06 / OP-CI-06b), published in export v34
-      github_job_conclusion: failure
-      record_verification_result: NOT_VERIFIED
-      record: experiments/E03-resetability/environment-verification/github-actions/run38018788066-a1/sut-04-web-api/environment-verification.json
-      demonstrates: "nothing about the instance: the job stopped at its Maven build (step 7) before the route of the SUT's README ran; no service started and none of the thirteen checks ran"
-      cause: "provisioning step 7 (the Maven build) failed: the runner image ubuntu24 20261004.327.1 provides Apache Maven 3.10.0 (maven-version.txt of the imported artifact), and the job log of job 114114949691 shows Maven refusing the pinned POM version: 'version' uses an unsupported snapshot version format, should be '*-SNAPSHOT' instead. @ com.automationintesting:restful-booker-platform:2.2.${revision}; run 37265782721 built the same pinned POM with Apache Maven 3.9.16 on image 20260927.320.1, SUT04-PROV-0001 with Apache Maven 3.9.9, and the SUT's README at the pinned commit lists Maven 3.9.14; the workflow takes Maven from the runner image; a toolchain item of the workflow, not a SUT finding and not a finding about the route of the SUT's README, which never ran"
+      run_target: SUT-04  # only the job sut-04-web-api ran (dry_run true; the two DRY_RUN bundles never imported); the six other jobs were skipped by the target; the seven other conditions keep run 38018788066
+      workflow_canonical_sha256: f2d756b8c943dad8a9f94d427fb2b87d8854a3e8f87d7d61b98a9c3e5dcc05dd  # the revision of run 38270815417 (the OP-CI-07 pin of Apache Maven 3.9.14 for the SUT-04 build, commit ae0f326), published in export v35
+      github_job_conclusion: success
+      record_verification_result: VERIFIED
+      record: experiments/E03-resetability/environment-verification/github-actions/run38270815417-a1/sut-04-web-api/environment-verification.json
+      demonstrates: "the pinned commit d36bd3f was built and provisioned on an ubuntu-24.04 runner (image ubuntu24 20261004.327.1) by the route of the SUT's README (run_locally.sh at the pinned commit, with npm start in place of npm run dev and each service's -exec jar in place of the script's jar glob; human decision of 2026-10-06), with Apache Maven 3.9.14, Temurin 26.0.2.1+1, Node.js v24.21.0, and npm 11.19.0 (next 16.2.9): the six services and the web app were ready within the 300 s bound (readiness_s web 4.3, report 26.4, auth 30.2, branding 34.0, message 34.6, booking 37.9, room 38.1); the fourteen checks: GET /<service>/actuator/health 200 for auth, booking, room, report, branding, and message; web GET /, GET /api/room/1, and GET /api/branding 200; the unauthenticated web DELETE /api/booking/999999 403; api POST /auth/login with an empty body 403, GET /booking/ 403, the unauthenticated DELETE /booking/999999 403, and GET /booking/999999 403 (the reset mechanism under verification, SUT04-EV-0006, on the booking service and through the web app's rewrite: reachability only, against a non-existent id, unauthenticated); reachability and presence only: the verification step established no state and never exercised the reset (the DRY_RUN step that ran afterwards in the same job is reviewed in manifests/e03-environment-verification-import-v6.yaml and never imported)"
     mobile_qualification_applicable: false
     measured_execution_readiness: NOT_READY
   E03-CS001-SUT05-API:
@@ -265,7 +274,7 @@ summary:
   conditions: 9
   controlled: 9
   not_executable_without_controlled_instance: 0
-  github_actions_verified: 7  # the latest run that ran a job for a condition governs: run 38018788066 (target all) for all nine; E03-CS001-SUT04-WEB and -SUT04-API NOT_VERIFIED (the Maven build failed under the runner image's Maven 3.10.0)
-  reverification_required: []  # since 2026-10-10 (operation OP-ENV-12): removed from E03-CS001-SUT04-WEB and -SUT04-API by the import of run 38018788066, as the header rule states; both are NOT_VERIFIED under that run
+  github_actions_verified: 9  # the latest run that ran a job for a condition governs: run 38018788066 (target all) for E03-CS001-SUT01-WEB, -SUT01-API, -SUT02-WEB, -SUT02-ANDROID, -SUT02-IOS, -SUT03-WEB, and -SUT05-API; run 38270815417 (target SUT-04) for -SUT04-WEB and -SUT04-API
+  reverification_required: []  # since 2026-10-10 (operation OP-ENV-12): removed from E03-CS001-SUT04-WEB and -SUT04-API by the import of run 38018788066, as the header rule states; both are VERIFIED since 2026-10-12 under run 38270815417, whose import (operation OP-ENV-14) added none
   measured_execution_ready: 0
   sut06_note: "SUT-06 remains in the six-SUT population; NOT_COMPARABLE on CS-001; no condition, so no instance was provisioned"

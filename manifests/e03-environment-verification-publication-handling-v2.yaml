@@ -1,0 +1,177 @@
+# Environment-verification publication-handling record v2 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# The human research lead's decision B on the publication handling of the hosted runner's private network address in one line of the
+# run-38270815417 environment-verification import, the publication-only transformation it requires and the extension of the archive
+# class (normative rules in PUBLIC-EXPORT-MANIFEST.yaml), and their expected hashes (operation OP-PUB-10). ORCHESTRATOR record,
+# prepared in Phase A, independently audited, and committed in Phase B; never edited afterwards (a correction is a new version file).
+# Exports, publishes, and executes nothing. No tracked file written by this operation spells the address.
+record_class: PUBLICATION_HANDLING_DECISION_RECORD
+record_id: E03-ENVIRONMENT-VERIFICATION-PUBLICATION-HANDLING-02
+study_id: EUS-2026-001
+operation_id: OP-PUB-10
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-10-17'  # the date that the human research lead's adoption line of the operation states (America/Mexico_City)
+qualification_evidence: false
+measured_experiment: false
+executes_anything: false
+nature: "publication hygiene only: one new publication-only transformation class of the public export (ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION) and the extension of one existing class (DETERMINISTIC_SANITIZED_ARCHIVE, scope entry 4), with their expected hashes; no canonical evidence byte, result, attribution, record, gate, workflow, or protocol document changes; not a protocol change"
+precedent: "the handling of the run-37206291883 import (manifests/e03-environment-verification-publication-handling-v1.yaml; classes ENVIRONMENT_VERIFICATION_HOST_PATH_REDACTION and DETERMINISTIC_SANITIZED_ARCHIVE; operation OP-PUB-05), itself modeled on the QUAL-U07 handling (manifests/qual-u07-publication-handling-v1.yaml)"
+human_decision:
+  given_by: gilbertosanchez (human research lead)
+  decision_date: '2026-10-12'  # America/Mexico_City
+  received_by_the_reviewer_at: 2026-10-13T05:28:31Z (2026-10-12 23:28 America/Mexico_City)  # transcript stamp 2026-10-13T05:28:31.718Z
+  relayed_to_the_orchestrator_at: "2026-10-13T18:38:19Z"  # with the instruction of operation OP-ENV-14
+  channel: "given by the human research lead to the study's independent orchestration reviewer in the orchestrator session and relayed verbatim to the ORCHESTRATOR (protocol/agent-governance-v3.md, Section 2.1)"
+  exact_text: "Y la opción B"
+  exact_text_sha256: c1d88e89bbf1a6b770f2b1b4b7d9a68ac7360fe99deb95e8d7bcc3216d382928
+  exact_text_note: "14 bytes UTF-8, 13 characters, no surrounding quotes; already recorded verbatim, with the decision item as presented to the human research lead (sha256 6a241c26a9a458b40ad82c15533e09e64317979214efc1845f9fc1ca87c8fc77) and the observations for the class, in manifests/e03-environment-verification-import-v6.yaml, publication_handling; B resolves against that item"
+  selected: "option B: the runner's private network address is replaced by a marker in the public copy only, by a new publication class of PUBLIC-EXPORT-MANIFEST.yaml applied at export time (as the runner host paths were); the canonical import stays byte-exact; no capture-time scrub"
+  not_selected:
+  - "option A: publish the line as it is"
+  - "option C: option B plus a later correction of the workflow, before the lock and with its own adoption, so that future runs, measured runs included, no longer capture the address"
+  decides: "the class ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION and scope entry 4 of DETERMINISTIC_SANITIZED_ARCHIVE, defined by this operation and first applied by the next export that the human research lead authorizes"
+  does_not_authorize:
+  - "a public export, push, or publication (the next export needs its own human authorization, and the human research lead runs its push himself in the execution agent's session)"
+  - "a dispatch, re-run, CI or workflow change, capture-time scrub, or E03 START"
+  - "any transformation of a canonical evidence byte or archive"
+adoption_of_the_operation_instruction:
+  status: RECEIVED
+  given_by: gilbertosanchez (human research lead)
+  received_by_the_reviewer_at: "2026-10-17T08:19:39Z"  # the reviewer's clock read at receipt (UTC)
+  human_entry_timestamp_in_the_reviewer_session: "2026-10-17T08:18:57.279Z"
+  date_written_in_the_text: 2026-10-17 (America/Mexico_City)
+  channel: "given by the human research lead to the study's independent orchestration reviewer and relayed verbatim to the ORCHESTRATOR (protocol/agent-governance-v3.md, Section 2.1)"
+  exact_text: "Adopto como mis instrucciones, tal como está escrita, la operación OP-PUB-10 (sha256 dac5b6b11d99b23ddf37b000c65fa7ef692e49ed3cf958f4a18bb6fe2ab75868). Fecha 2026-10-17 (America/Mexico_City)."
+  exact_text_sha256: 6fa8ed261c66b86e6a9ec4b6e8ff2c8f53ce2dae94bf38daf37ff0f15e956f98
+  exact_text_note: "193 bytes UTF-8, no surrounding quotes, no trailing line feed; it names the instruction of this operation only by its sha256, equal to instruction.sha256 below, and no untracked path, address, or vendor stem, so it is recorded verbatim"
+  effect: "the human research lead adopts the operation instruction as written; the adoption authorizes no export, push, dispatch, or workflow edit, and none is in this operation; Phase B also waited for the reviewer's audit verdict on Phase A"
+decided_option:
+  option: B
+  description: "the one text member of the run-38270815417 import that carries the address, sut-04-web-api/sut04-web.log (line 7: the Network line of the start-up banner of the SUT-04 web application, address and port), is exported transformed by ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION, and the archive kept beside the members is exported as a deterministic STORED re-pack whose one transformed member carries the same transform (DETERMINISTIC_SANITIZED_ARCHIVE, scope entry 4); the other 13 members and the import record are exported unchanged"
+  reproducibility_impact: "the public sha256 of the re-packed archive differs from its GitHub digest; its members are verifiable member-wise through the manifest entry and canonically; the original archive and its digest remain verifiable canonically and on GitHub until 2027-01-10T15:31:07Z; the public copy of sut04-web.log differs from the canonical one only in the address, replaced by the marker (the port and every other byte unchanged)"
+  canonical_immutability: canonical files and archives unchanged (publication-only)
+  public_validation_changes: "none needed: no byte-exact validation step covers environment-verification imports"
+  ci_coverage: "the hygiene patterns of the validation workflow have no rule for private network addresses (their private-path class is a home path), so the push-triggered validation is not a check of this class; the builder's fail-closed postconditions and the export's own scans are"
+consequence_for_later_imports: "a later environment-verification or measured SUT-04 artifact carries the same banner line (manifests/e03-environment-verification-import-v6.yaml, publication_handling.facts_for_the_publication_class, item b); the scope of this class is exact (one path), and the builder's tree-wide postcondition (no private network address in any exported text file or textual archive member) stops any export whose tree carries another one until a human decision extends the scope or changes the capture (option C); nothing beyond the run-38270815417 import is decided here"
+authority_for_each_change:
+  PUBLIC-EXPORT-MANIFEST.yaml and this record: ORCHESTRATOR (manifests/), on the relayed human decision and the relayed adoption
+  manifests/README.md and manifests/study-manifest.yaml: ORCHESTRATOR (manifests/), representation only
+  export_builder: "the untracked export tooling run by the ORCHESTRATOR outside the repository (PUBLIC-EXPORT-MANIFEST.yaml, how_the_export_is_built); never committed, never exported; its sha256 before and after are recorded under builder"
+  relay_model: "approvals are given by the human research lead to the study's independent orchestration reviewer and relayed verbatim; the ORCHESTRATOR acts on those relays and records them as relayed approvals (protocol/agent-governance-v3.md, Section 2.1)"
+instruction:
+  operation_id: OP-PUB-10
+  title: "EUS-2026-001 — OP-PUB-10 — DEFINE THE PUBLICATION HANDLING OF THE RUNNER'S PRIVATE NETWORK ADDRESS IN THE RUN-38270815417 ENVIRONMENT-VERIFICATION IMPORT, HUMAN DECISION B (ONE PUBLICATION-ONLY CLASS; ONE ARCHIVE SCOPE ENTRY; BUILDER EXTENSION; NO EXPORT)"
+  sha256: dac5b6b11d99b23ddf37b000c65fa7ef692e49ed3cf958f4a18bb6fe2ab75868
+  bytes: 18845
+  embedded_verbatim: false
+  description: "implement decision B: the five edits of PUBLIC-EXPORT-MANIFEST.yaml (the new class, the archive-class clause, the new rule block, archive scope entry 4 with its rule texts, a dated annotation of the hygiene audit), this record, the builder extension outside the repository with a dry-run proof, and two status entries; no export, push, dispatch, or workflow edit"
+  embedding_note: "the text names paths of the untracked export tooling, which the publication-hygiene rule keeps out of tracked files; the instruction is therefore recorded by its sha256, size, title, and this description"
+transformations:
+  ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION: "normative rule: PUBLIC-EXPORT-MANIFEST.yaml, export_procedure.environment_verification_private_address_redaction (pattern, marker, scope with expected changed lines, postconditions)"
+  DETERMINISTIC_SANITIZED_ARCHIVE: "normative rule: PUBLIC-EXPORT-MANIFEST.yaml, export_procedure.deterministic_sanitized_archive (scope entry 4 added by this operation; recipe, method STORED, and postconditions as for entries 1 to 3)"
+  implementation: "the export builder run by the ORCHESTRATOR outside the repository implements both: the class constant, its one-path scope with one expected changed line, the pattern (an IPv4 literal of the three private ranges of RFC 1918, matched as a whole word), the marker, and the transform, applied with the assertions of the host-path classes (changed-line count, equal line count, idempotence); scope entry 4 of the archive class with its transformed member, its extracted directory, its record, and its transform class; fail-closed postconditions: applied scope equal to the defined scope, canonical and exported sha256 equal to expected_hashes of this record, the class of each entry of this import its only class, member-wise equality of the re-pack with the transform of its entry, the transformed member equal to its exported extracted file, and no private network address in any exported text file or textual archive member; the classes and postconditions of the earlier publication classes are unchanged"
+  method_choice: "STORED, with the reasons of QUAL-U07 (manifests/qual-u07-publication-handling-v1.yaml, transformations.method_choice): the bytes do not depend on any deflate implementation, and the publication-hygiene scan can read the members"
+expected_hashes:  # computed from the canonical bytes at the base commit c9e975f70107909194525c402f593caeed7398a9; each exported file and archive of the dry-run build equals these values
+- path: experiments/E03-resetability/environment-verification/github-actions/run38270815417-a1/sut-04-web-api/sut04-web.log
+  class: ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION
+  canonical_sha256: 3c6b63876fe5075913e9fa175f0048c092f0150c1567635f9172eb5ee965a1fb
+  canonical_bytes: 301
+  exported_sha256: 44cbf6c6163a64740d67af632d64fc279b0bd322ae67686f975fabd323ffc612
+  exported_bytes: 309
+  changed_lines: "1 (7)"
+  replacements: "1 private network address replaced by <private-address>"
+- path: experiments/E03-resetability/environment-verification/github-actions/run38270815417-a1/sut-04-web-api/E03-ENVIRONMENT_VERIFICATION-SUT-04-web-api-run38270815417-a1.zip
+  class: DETERMINISTIC_SANITIZED_ARCHIVE
+  canonical_sha256: 4018b50d55645b397b7caa3f22546e1c4327bcd850519921b576ae0d7b80a9c5
+  canonical_digest: sha256:4018b50d55645b397b7caa3f22546e1c4327bcd850519921b576ae0d7b80a9c5
+  canonical_bytes: 14201
+  exported_sha256: 71bff8335f3106c7cc6a988e9c70d39782c3d1ea4b22f78a304c440cd13091c7
+  exported_bytes: 36857
+  method: STORED
+  transform_class: ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION
+  transformed_members: ["sut04-web.log"]
+  member_count: 14
+  members:  # in archive order; every canonical member is DEFLATED and equal to its extracted file
+  - name: "environment-verification.json"
+    date_time: '2026-10-12 15:35:10'
+    canonical_size: 3054
+    byte_identical_to_canonical: true
+  - name: "java-version.txt"
+    date_time: '2026-10-12 15:32:08'
+    canonical_size: 188
+    byte_identical_to_canonical: true
+  - name: "maven-version.txt"
+    date_time: '2026-10-12 15:35:10'
+    canonical_size: 350
+    byte_identical_to_canonical: true
+  - name: "node-version.txt"
+    date_time: '2026-10-12 15:32:08'
+    canonical_size: 9
+    byte_identical_to_canonical: true
+  - name: "npm-version.txt"
+    date_time: '2026-10-12 15:32:08'
+    canonical_size: 8
+    byte_identical_to_canonical: true
+  - name: "built-jars.txt"
+    date_time: '2026-10-12 15:33:34'
+    canonical_size: 414
+    byte_identical_to_canonical: true
+  - name: "sut04-start.json"
+    date_time: '2026-10-12 15:34:12'
+    canonical_size: 3009
+    byte_identical_to_canonical: true
+  - name: "sut04-auth.log"
+    date_time: '2026-10-12 15:35:10'
+    canonical_size: 3013
+    byte_identical_to_canonical: true
+  - name: "sut04-booking.log"
+    date_time: '2026-10-12 15:35:10'
+    canonical_size: 5560
+    byte_identical_to_canonical: true
+  - name: "sut04-room.log"
+    date_time: '2026-10-12 15:35:10'
+    canonical_size: 5545
+    byte_identical_to_canonical: true
+  - name: "sut04-report.log"
+    date_time: '2026-10-12 15:35:10'
+    canonical_size: 2723
+    byte_identical_to_canonical: true
+  - name: "sut04-branding.log"
+    date_time: '2026-10-12 15:35:10'
+    canonical_size: 5565
+    byte_identical_to_canonical: true
+  - name: "sut04-message.log"
+    date_time: '2026-10-12 15:35:10'
+    canonical_size: 5560
+    byte_identical_to_canonical: true
+  - name: "sut04-web.log"
+    date_time: '2026-10-12 15:33:36'
+    canonical_size: 301
+    byte_identical_to_canonical: false
+unchanged_in_publication:
+- path: "the other 13 members of the run-38270815417 import and its IMPORT-RECORD.yaml"
+  note: "exported unchanged (no private network address; the import record names the line by member and line number and never spells the address)"
+determinism:
+  sanitized_archive: "the full dry-run build of the public-like tree (the tooling's dry-run script with the patched builder, from a scratch copy of canonical c9e975f plus this operation's edits), run twice with each of CPython 3.14.2, 3.13.1, and 3.9.6 (zlib 1.2.12), gave six byte-identical trees, each with the re-pack 71bff8335f3106c7cc6a988e9c70d39782c3d1ea4b22f78a304c440cd13091c7 (36857 bytes); a separate implementation of the recorded recipe, outside the builder, gives the same bytes under the three interpreters"
+  transformed_file: "the transform is one regular-expression substitution; applying it twice changes nothing"
+builder:
+  sha256_before: 3061c997041125b13c70fb075e9451849e33cb009a92128ed6f02540502d3d96
+  sha256_after: e72d6a8cb0c5a94508e788ff49c629091273732be1331d90038da6252b2c288a
+  tooling_record: "the tooling's SHA256SUMS lists the new export_build.py (SHA256SUMS sha256 9d9584a83b0588cc7fa87b93b9a212f9567f0f4d0d0735eea24eb80578a553b9, 509 bytes) and its README gains an OP-PUB-10 paragraph (README sha256 a53a8b87e56ec30052eaa2431f49f91a328bdb51d1c4e2b4295e14510516aabc); the other five tooling scripts are unchanged; prepared by the study's independent orchestration reviewer, reviewed by the ORCHESTRATOR in Phase A, and installed in the tooling directory in Phase B"
+  tooling_state: untracked (never committed, never exported); the tooling directory receives the audited builder only in Phase B
+reviewer_precomputation_note: "the study's independent orchestration reviewer computed every expected value from the canonical bytes before issuing the instruction, with a separate implementation of the recorded rule and recipe outside the builder, under CPython 3.14.2, 3.13.1, and 3.9.6 (identical results): sut04-web.log 3c6b6387... (301 bytes) -> 44cbf6c6... (309 bytes), 1 changed line (7), 1 replacement; the re-pack 71bff833... (36857 bytes, 14 members, STORED, the canonical member order and date_time); the pattern matches nothing else at c9e975f (1,251 text files and 185 textual members of 32 archives); the ORCHESTRATOR recomputed them in Phase A with its own separate implementation of the recorded rule and recipe and found no mismatch"
+phase_a_verification:
+  performed: "on a scratch copy of the canonical tree at c9e975f70107909194525c402f593caeed7398a9 (no worktree added) plus this operation's edits, with the patched builder in the ORCHESTRATOR's working area outside the repository; nothing exported, pushed, or committed"
+  export_builder_dry_run: "the patched builder completed with every postcondition holding (applied scope equal to the defined scope for the three host-path and address classes and for the archive class; hashes equal to expected_hashes of this record, of manifests/e03-environment-verification-publication-handling-v1.yaml, and of the QUAL-U07 record; the class of each entry of the two environment-verification imports its only class; member-wise equality of the four re-packs; every transformed member equal to its exported extracted file; no host path, private network address, builder-known vendor stem, or token remnant in any exported text file or textual archive member): 1431 exported files (1183 unchanged, 248 transformed, 1 excluded); class occurrences ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION 1, DETERMINISTIC_SANITIZED_ARCHIVE 4, ENVIRONMENT_VERIFICATION_HOST_PATH_REDACTION 8, QUALIFICATION_HOST_PATH_REDACTION 2, QUALIFICATION_TOKEN_FRAGMENT_REDACTION 141, PROVIDER_NEUTRAL_PATH_ALIAS 73, PROVIDER_NEUTRAL_METADATA_REWRITE 37, OPTIONAL_INTERNAL_TOOLING_DISCLOSURE_OMITTED 1 (267 occurrences; 18 files carry more than one class); the log and the archive equal expected_hashes; the re-pack is STORED, with the member names, order, and date_time of its canonical archive; every file whose canonical bytes are unchanged since public export v35 is exported with the same bytes and classes as in v35"
+  earlier_classes: "unchanged: the exported hashes of QUALIFICATION_HOST_PATH_REDACTION (13a53afb..., 70400531...), of the first archive entry (3eef1315...), of the eight ENVIRONMENT_VERIFICATION_HOST_PATH_REDACTION files, and of archive entries 2 and 3 (94b8dd20..., 513ccbda...) equal their recorded values; of the manifest's class texts only the new class is added and the DETERMINISTIC_SANITIZED_ARCHIVE text gains its appended clause"
+  publication_hygiene_scan: "on the public-like tree the validation workflow's tracked-file scan finds 0 lines; on the scratch copy, the files this operation writes or edits contribute 0 findings and the whole tree carries the known 89 private-path lines of the two host-path scopes (57 QUAL-U07, 32 run-37206291883), all transformed in the public tree"
+  address_scan: "the pattern matches 0 lines in the public-like tree (exported text files and textual archive members); on the scratch copy it matches exactly line 7 of the extracted sut04-web.log and the same line inside the canonical archive member, and 0 lines in every file this operation writes or edits"
+known_consequences:
+- "the public sha256 of the sut-04-web-api archive will differ from its GitHub digest; the canonical archive and digest stay verifiable canonically and on GitHub until 2027-01-10T15:31:07Z"
+- "the public copy of sut04-web.log differs from the canonical one only in the address; IMPORT-RECORD.yaml keeps citing canonical sha256 values (hash_citation_rule)"
+- "a later import that carries a private network address stops the export by the tree-wide postcondition until a human decision extends this class or changes the capture (consequence_for_later_imports)"
+not_done:
+- "no public export, push, or publication; public main stays export v35 (dfe125126b640fd1388137d7e1eaa02a6629b9ad)"
+- "no canonical evidence byte or archive, import record, or earlier publication-handling scope or hash changed"
+- "no workflow edit, no capture-time scrub, no dispatch or re-run, no E03 START"
+- "the export builder is not added to the repository (scripts_in_repository: none)"
+procedure: "prepared in Phase A on a scratch copy of the canonical tree at commit c9e975f70107909194525c402f593caeed7398a9 (builder review and the dry-run build in the ORCHESTRATOR's working area outside the repository) and returned for independent audit; committed in Phase B, after the reviewer's audit verdict and with the human research lead's adoption recorded above, in two commits (definition: PUBLIC-EXPORT-MANIFEST.yaml and this record; status: manifests/README.md and manifests/study-manifest.yaml)"
