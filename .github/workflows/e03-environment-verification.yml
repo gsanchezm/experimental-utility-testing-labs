@@ -11,12 +11,14 @@
 # here is a MEASURED_EXPERIMENT (protocol/setup-effort-v2.md, section 2: one-time provisioning is never
 # counted; experiments/E03-resetability/ci-cd-execution-model.md).
 # A dry_run execution (input dry_run, operation OP-CI-05) records Required Actions in a DRY_RUN bundle
-# that is never imported into raw-data/ and never measured.
+# that is never imported into raw-data/ and never measured; its bundles are numbered by the run (execution id DR plus the
+# four-digit run number, attempt = the run attempt; operation OP-CI-09).
 #
-# Publication hygiene at capture (human decision D3 of 2026-10-04): before upload, every kept text artifact of every job has
-# the runner's workspace, temp, and home path prefixes replaced by the marker <host-path> and any residual /Users/<x> or
-# /home/<x> by <home> (the smoke_scrub precedent of qualification/compatibility-smoke/smoke-common.sh), so that an imported
-# artifact needs no publication-only transformation. Nothing else in a kept artifact is changed.
+# Publication hygiene at capture (human decision D3 of 2026-10-04, extended by option C, decision of 2026-10-21, operation OP-CI-09):
+# before upload, every kept text artifact of every job has the runner's workspace, temp, and home path prefixes replaced by the
+# marker <host-path>, any residual /Users/<x> or /home/<x> by <home> (the smoke_scrub precedent of
+# qualification/compatibility-smoke/smoke-common.sh), and every IPv4 literal of the three private ranges of RFC 1918 by
+# <private-address>, so that an imported artifact needs no publication-only transformation. Nothing else in a kept artifact is changed.
 #
 # environment_type on a GitHub-hosted runner: SELF_HOSTED for web/api instances (an ephemeral cloud
 # host under the study's control for the duration of the job, protocol/study-design-v1.md, section
@@ -59,6 +61,15 @@ jobs:
     steps:
       - name: Check out study repository
         uses: actions/checkout@v4
+      - name: Number the DRY_RUN bundles by this run (operation OP-CI-09)
+        id: dryrun
+        if: ${{ inputs.dry_run == true }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_RUN_NUMBER" -ge 1
+          test "$GITHUB_RUN_NUMBER" -le 9999
+          test "$GITHUB_RUN_ATTEMPT" -ge 1
+          printf 'execution_id=DR%04d\nattempt=%s\n' "$GITHUB_RUN_NUMBER" "$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
       - name: Read the pinned SUT-01 provenance
         id: pin
         run: |
@@ -147,8 +158,8 @@ jobs:
         env:
           RECORD_CLASS: DRY_RUN
           ASSIGNED_SUT: SUT-01
-          EXECUTION_ID: DR0001
-          ATTEMPT: "1"
+          EXECUTION_ID: ${{ steps.dryrun.outputs.execution_id }}
+          ATTEMPT: ${{ steps.dryrun.outputs.attempt }}
           EXECUTOR_PROMPT_VERSION: EXECUTOR-E03-RESETABILITY-E03-resetability-v1
           PROVENANCE_JSON: provenance/ci-provenance.json
           RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
@@ -197,7 +208,7 @@ jobs:
           test -n "$E03_RUN_CONDITION_SHA256"
           /usr/bin/python3 -c "import yaml" 2>/dev/null || /usr/bin/python3 -m pip install --quiet pyyaml
           E03_VALIDATION_FAILURES=""
-          # E03-CS001-SUT01-API: execution DR0001, attempt 1
+          # E03-CS001-SUT01-API: execution DR<run number>, attempt <run attempt>
           export CONDITION_ID=E03-CS001-SUT01-API
           export OUTPUT_DIR="$GITHUB_WORKSPACE/dry-run/${CONDITION_ID}__${EXECUTION_ID}__A${ATTEMPT}"
           /usr/bin/python3 - <<'PY'
@@ -273,6 +284,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -292,12 +304,13 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
-          # E03-CS001-SUT01-WEB: execution DR0001, attempt 1
+          # E03-CS001-SUT01-WEB: execution DR<run number>, attempt <run attempt>
           export CONDITION_ID=E03-CS001-SUT01-WEB
           export OUTPUT_DIR="$GITHUB_WORKSPACE/dry-run/${CONDITION_ID}__${EXECUTION_ID}__A${ATTEMPT}"
           /usr/bin/python3 - <<'PY'
@@ -373,6 +386,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -392,10 +406,11 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
           if [ -n "$E03_VALIDATION_FAILURES" ]; then echo "DRY_RUN run-manifest validation failed for:$E03_VALIDATION_FAILURES"; exit 1; fi
           echo "DRY_RUN run-manifest validation passed for every condition of this job"
@@ -403,8 +418,8 @@ jobs:
         if: ${{ always() && inputs.dry_run == true && steps.verify.outcome == 'success' }}
         uses: actions/upload-artifact@v4
         with:
-          name: E03-DRY_RUN-E03-CS001-SUT01-API-DR0001-A1
-          path: dry-run/E03-CS001-SUT01-API__DR0001__A1
+          name: E03-DRY_RUN-E03-CS001-SUT01-API-${{ steps.dryrun.outputs.execution_id }}-A${{ steps.dryrun.outputs.attempt }}
+          path: dry-run/E03-CS001-SUT01-API__${{ steps.dryrun.outputs.execution_id }}__A${{ steps.dryrun.outputs.attempt }}
           retention-days: 90
           overwrite: false
           if-no-files-found: error
@@ -412,8 +427,8 @@ jobs:
         if: ${{ always() && inputs.dry_run == true && steps.verify.outcome == 'success' }}
         uses: actions/upload-artifact@v4
         with:
-          name: E03-DRY_RUN-E03-CS001-SUT01-WEB-DR0001-A1
-          path: dry-run/E03-CS001-SUT01-WEB__DR0001__A1
+          name: E03-DRY_RUN-E03-CS001-SUT01-WEB-${{ steps.dryrun.outputs.execution_id }}-A${{ steps.dryrun.outputs.attempt }}
+          path: dry-run/E03-CS001-SUT01-WEB__${{ steps.dryrun.outputs.execution_id }}__A${{ steps.dryrun.outputs.attempt }}
           retention-days: 90
           overwrite: false
           if-no-files-found: error
@@ -446,7 +461,7 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           PY
-      - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
+      - name: Replace runner host paths and private network addresses in the kept files by neutral markers (publication hygiene at capture; smoke_scrub precedent)
         if: always()
         env:
           EV_KEPT: environment-verification.json api-stdout.log api-stderr.log web-stdout.log web-stderr.log
@@ -455,6 +470,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -474,10 +490,11 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
@@ -501,6 +518,15 @@ jobs:
     steps:
       - name: Check out study repository
         uses: actions/checkout@v4
+      - name: Number the DRY_RUN bundles by this run (operation OP-CI-09)
+        id: dryrun
+        if: ${{ inputs.dry_run == true }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_RUN_NUMBER" -ge 1
+          test "$GITHUB_RUN_NUMBER" -le 9999
+          test "$GITHUB_RUN_ATTEMPT" -ge 1
+          printf 'execution_id=DR%04d\nattempt=%s\n' "$GITHUB_RUN_NUMBER" "$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
       - name: Read the pinned SUT-02 web provenance
         id: pin
         run: |
@@ -560,8 +586,8 @@ jobs:
         env:
           RECORD_CLASS: DRY_RUN
           ASSIGNED_SUT: SUT-02
-          EXECUTION_ID: DR0001
-          ATTEMPT: "1"
+          EXECUTION_ID: ${{ steps.dryrun.outputs.execution_id }}
+          ATTEMPT: ${{ steps.dryrun.outputs.attempt }}
           EXECUTOR_PROMPT_VERSION: EXECUTOR-E03-RESETABILITY-E03-resetability-v1
           PROVENANCE_JSON: provenance/ci-provenance.json
           RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
@@ -610,7 +636,7 @@ jobs:
           test -n "$E03_RUN_CONDITION_SHA256"
           /usr/bin/python3 -c "import yaml" 2>/dev/null || /usr/bin/python3 -m pip install --quiet pyyaml
           E03_VALIDATION_FAILURES=""
-          # E03-CS001-SUT02-WEB: execution DR0001, attempt 1
+          # E03-CS001-SUT02-WEB: execution DR<run number>, attempt <run attempt>
           export CONDITION_ID=E03-CS001-SUT02-WEB
           export OUTPUT_DIR="$GITHUB_WORKSPACE/dry-run/${CONDITION_ID}__${EXECUTION_ID}__A${ATTEMPT}"
           /usr/bin/python3 - <<'PY'
@@ -686,6 +712,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -705,10 +732,11 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
           if [ -n "$E03_VALIDATION_FAILURES" ]; then echo "DRY_RUN run-manifest validation failed for:$E03_VALIDATION_FAILURES"; exit 1; fi
           echo "DRY_RUN run-manifest validation passed for every condition of this job"
@@ -716,8 +744,8 @@ jobs:
         if: ${{ always() && inputs.dry_run == true && steps.verify.outcome == 'success' }}
         uses: actions/upload-artifact@v4
         with:
-          name: E03-DRY_RUN-E03-CS001-SUT02-WEB-DR0001-A1
-          path: dry-run/E03-CS001-SUT02-WEB__DR0001__A1
+          name: E03-DRY_RUN-E03-CS001-SUT02-WEB-${{ steps.dryrun.outputs.execution_id }}-A${{ steps.dryrun.outputs.attempt }}
+          path: dry-run/E03-CS001-SUT02-WEB__${{ steps.dryrun.outputs.execution_id }}__A${{ steps.dryrun.outputs.attempt }}
           retention-days: 90
           overwrite: false
           if-no-files-found: error
@@ -750,7 +778,7 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           PY
-      - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
+      - name: Replace runner host paths and private network addresses in the kept files by neutral markers (publication hygiene at capture; smoke_scrub precedent)
         if: always()
         env:
           EV_KEPT: environment-verification.json web-stdout.log web-stderr.log
@@ -759,6 +787,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -778,10 +807,11 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
@@ -881,7 +911,7 @@ jobs:
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           raise SystemExit(0 if ok else 1)
           PY
-      - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
+      - name: Replace runner host paths and private network addresses in the kept files by neutral markers (publication hygiene at capture; smoke_scrub precedent)
         if: always()
         env:
           EV_KEPT: environment-verification.json apk.sha256 package.txt resumed.txt ui-dump.xml launch-screenshot.png
@@ -890,6 +920,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -909,10 +940,11 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
@@ -1022,7 +1054,7 @@ jobs:
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           raise SystemExit(0 if ok else 1)
           PY
-      - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
+      - name: Replace runner host paths and private network addresses in the kept files by neutral markers (publication hygiene at capture; smoke_scrub precedent)
         if: always()
         env:
           EV_KEPT: environment-verification.json app.sha256 app-info.txt launch.txt container.txt reset-string-files.txt launch-screenshot.png
@@ -1031,6 +1063,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -1050,10 +1083,11 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
@@ -1079,6 +1113,15 @@ jobs:
     steps:
       - name: Check out study repository
         uses: actions/checkout@v4
+      - name: Number the DRY_RUN bundles by this run (operation OP-CI-09)
+        id: dryrun
+        if: ${{ inputs.dry_run == true }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_RUN_NUMBER" -ge 1
+          test "$GITHUB_RUN_NUMBER" -le 9999
+          test "$GITHUB_RUN_ATTEMPT" -ge 1
+          printf 'execution_id=DR%04d\nattempt=%s\n' "$GITHUB_RUN_NUMBER" "$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
       - name: Read the pinned SUT-03 provenance
         id: pin
         run: |
@@ -1146,8 +1189,8 @@ jobs:
         env:
           RECORD_CLASS: DRY_RUN
           ASSIGNED_SUT: SUT-03
-          EXECUTION_ID: DR0001
-          ATTEMPT: "1"
+          EXECUTION_ID: ${{ steps.dryrun.outputs.execution_id }}
+          ATTEMPT: ${{ steps.dryrun.outputs.attempt }}
           EXECUTOR_PROMPT_VERSION: EXECUTOR-E03-RESETABILITY-E03-resetability-v1
           PROVENANCE_JSON: provenance/ci-provenance.json
           RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
@@ -1196,7 +1239,7 @@ jobs:
           test -n "$E03_RUN_CONDITION_SHA256"
           /usr/bin/python3 -c "import yaml" 2>/dev/null || /usr/bin/python3 -m pip install --quiet pyyaml
           E03_VALIDATION_FAILURES=""
-          # E03-CS001-SUT03-WEB: execution DR0001, attempt 1
+          # E03-CS001-SUT03-WEB: execution DR<run number>, attempt <run attempt>
           export CONDITION_ID=E03-CS001-SUT03-WEB
           export OUTPUT_DIR="$GITHUB_WORKSPACE/dry-run/${CONDITION_ID}__${EXECUTION_ID}__A${ATTEMPT}"
           /usr/bin/python3 - <<'PY'
@@ -1272,6 +1315,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -1291,10 +1335,11 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
           if [ -n "$E03_VALIDATION_FAILURES" ]; then echo "DRY_RUN run-manifest validation failed for:$E03_VALIDATION_FAILURES"; exit 1; fi
           echo "DRY_RUN run-manifest validation passed for every condition of this job"
@@ -1302,8 +1347,8 @@ jobs:
         if: ${{ always() && inputs.dry_run == true && steps.verify.outcome == 'success' }}
         uses: actions/upload-artifact@v4
         with:
-          name: E03-DRY_RUN-E03-CS001-SUT03-WEB-DR0001-A1
-          path: dry-run/E03-CS001-SUT03-WEB__DR0001__A1
+          name: E03-DRY_RUN-E03-CS001-SUT03-WEB-${{ steps.dryrun.outputs.execution_id }}-A${{ steps.dryrun.outputs.attempt }}
+          path: dry-run/E03-CS001-SUT03-WEB__${{ steps.dryrun.outputs.execution_id }}__A${{ steps.dryrun.outputs.attempt }}
           retention-days: 90
           overwrite: false
           if-no-files-found: error
@@ -1336,7 +1381,7 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           PY
-      - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
+      - name: Replace runner host paths and private network addresses in the kept files by neutral markers (publication hygiene at capture; smoke_scrub precedent)
         if: always()
         env:
           EV_KEPT: environment-verification.json web-stdout.log web-stderr.log
@@ -1345,6 +1390,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -1364,10 +1410,11 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
@@ -1389,6 +1436,15 @@ jobs:
     steps:
       - name: Check out study repository
         uses: actions/checkout@v4
+      - name: Number the DRY_RUN bundles by this run (operation OP-CI-09)
+        id: dryrun
+        if: ${{ inputs.dry_run == true }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_RUN_NUMBER" -ge 1
+          test "$GITHUB_RUN_NUMBER" -le 9999
+          test "$GITHUB_RUN_ATTEMPT" -ge 1
+          printf 'execution_id=DR%04d\nattempt=%s\n' "$GITHUB_RUN_NUMBER" "$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
       - name: Read the pinned SUT-04 provenance
         id: pin
         run: |
@@ -1559,8 +1615,8 @@ jobs:
         env:
           RECORD_CLASS: DRY_RUN
           ASSIGNED_SUT: SUT-04
-          EXECUTION_ID: DR0001
-          ATTEMPT: "1"
+          EXECUTION_ID: ${{ steps.dryrun.outputs.execution_id }}
+          ATTEMPT: ${{ steps.dryrun.outputs.attempt }}
           EXECUTOR_PROMPT_VERSION: EXECUTOR-E03-RESETABILITY-E03-resetability-v1
           PROVENANCE_JSON: provenance/ci-provenance.json
           RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
@@ -1609,7 +1665,7 @@ jobs:
           test -n "$E03_RUN_CONDITION_SHA256"
           /usr/bin/python3 -c "import yaml" 2>/dev/null || /usr/bin/python3 -m pip install --quiet pyyaml
           E03_VALIDATION_FAILURES=""
-          # E03-CS001-SUT04-API: execution DR0001, attempt 1
+          # E03-CS001-SUT04-API: execution DR<run number>, attempt <run attempt>
           export CONDITION_ID=E03-CS001-SUT04-API
           export OUTPUT_DIR="$GITHUB_WORKSPACE/dry-run/${CONDITION_ID}__${EXECUTION_ID}__A${ATTEMPT}"
           /usr/bin/python3 - <<'PY'
@@ -1685,6 +1741,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -1704,12 +1761,13 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
-          # E03-CS001-SUT04-WEB: execution DR0001, attempt 1
+          # E03-CS001-SUT04-WEB: execution DR<run number>, attempt <run attempt>
           export CONDITION_ID=E03-CS001-SUT04-WEB
           export OUTPUT_DIR="$GITHUB_WORKSPACE/dry-run/${CONDITION_ID}__${EXECUTION_ID}__A${ATTEMPT}"
           /usr/bin/python3 - <<'PY'
@@ -1785,6 +1843,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -1804,10 +1863,11 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
           if [ -n "$E03_VALIDATION_FAILURES" ]; then echo "DRY_RUN run-manifest validation failed for:$E03_VALIDATION_FAILURES"; exit 1; fi
           echo "DRY_RUN run-manifest validation passed for every condition of this job"
@@ -1815,8 +1875,8 @@ jobs:
         if: ${{ always() && inputs.dry_run == true && steps.verify.outcome == 'success' }}
         uses: actions/upload-artifact@v4
         with:
-          name: E03-DRY_RUN-E03-CS001-SUT04-API-DR0001-A1
-          path: dry-run/E03-CS001-SUT04-API__DR0001__A1
+          name: E03-DRY_RUN-E03-CS001-SUT04-API-${{ steps.dryrun.outputs.execution_id }}-A${{ steps.dryrun.outputs.attempt }}
+          path: dry-run/E03-CS001-SUT04-API__${{ steps.dryrun.outputs.execution_id }}__A${{ steps.dryrun.outputs.attempt }}
           retention-days: 90
           overwrite: false
           if-no-files-found: error
@@ -1824,8 +1884,8 @@ jobs:
         if: ${{ always() && inputs.dry_run == true && steps.verify.outcome == 'success' }}
         uses: actions/upload-artifact@v4
         with:
-          name: E03-DRY_RUN-E03-CS001-SUT04-WEB-DR0001-A1
-          path: dry-run/E03-CS001-SUT04-WEB__DR0001__A1
+          name: E03-DRY_RUN-E03-CS001-SUT04-WEB-${{ steps.dryrun.outputs.execution_id }}-A${{ steps.dryrun.outputs.attempt }}
+          path: dry-run/E03-CS001-SUT04-WEB__${{ steps.dryrun.outputs.execution_id }}__A${{ steps.dryrun.outputs.attempt }}
           retention-days: 90
           overwrite: false
           if-no-files-found: error
@@ -1858,7 +1918,7 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           PY
-      - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
+      - name: Replace runner host paths and private network addresses in the kept files by neutral markers (publication hygiene at capture; smoke_scrub precedent)
         if: always()
         env:
           EV_KEPT: environment-verification.json java-version.txt maven-version.txt node-version.txt npm-version.txt built-jars.txt sut04-start.json sut04-auth.log sut04-booking.log sut04-room.log sut04-report.log sut04-branding.log sut04-message.log sut04-web.log
@@ -1867,6 +1927,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -1886,10 +1947,11 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()
@@ -1922,6 +1984,15 @@ jobs:
     steps:
       - name: Check out study repository
         uses: actions/checkout@v4
+      - name: Number the DRY_RUN bundles by this run (operation OP-CI-09)
+        id: dryrun
+        if: ${{ inputs.dry_run == true }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_RUN_NUMBER" -ge 1
+          test "$GITHUB_RUN_NUMBER" -le 9999
+          test "$GITHUB_RUN_ATTEMPT" -ge 1
+          printf 'execution_id=DR%04d\nattempt=%s\n' "$GITHUB_RUN_NUMBER" "$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
       - name: Read the pinned SUT-05 provenance (source commit and release)
         id: pin
         run: |
@@ -2149,8 +2220,8 @@ jobs:
         env:
           RECORD_CLASS: DRY_RUN
           ASSIGNED_SUT: SUT-05
-          EXECUTION_ID: DR0001
-          ATTEMPT: "1"
+          EXECUTION_ID: ${{ steps.dryrun.outputs.execution_id }}
+          ATTEMPT: ${{ steps.dryrun.outputs.attempt }}
           EXECUTOR_PROMPT_VERSION: EXECUTOR-E03-RESETABILITY-E03-resetability-v1
           PROVENANCE_JSON: provenance/ci-provenance.json
           RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
@@ -2214,7 +2285,7 @@ jobs:
           test -n "$E03_RUN_CONDITION_SHA256"
           /usr/bin/python3 -c "import yaml" 2>/dev/null || /usr/bin/python3 -m pip install --quiet pyyaml
           E03_VALIDATION_FAILURES=""
-          # E03-CS001-SUT05-API: execution DR0001, attempt 1
+          # E03-CS001-SUT05-API: execution DR<run number>, attempt <run attempt>
           export CONDITION_ID=E03-CS001-SUT05-API
           export OUTPUT_DIR="$GITHUB_WORKSPACE/dry-run/${CONDITION_ID}__${EXECUTION_ID}__A${ATTEMPT}"
           /usr/bin/python3 - <<'PY'
@@ -2290,6 +2361,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -2309,10 +2381,11 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
           if [ -n "$E03_VALIDATION_FAILURES" ]; then echo "DRY_RUN run-manifest validation failed for:$E03_VALIDATION_FAILURES"; exit 1; fi
           echo "DRY_RUN run-manifest validation passed for every condition of this job"
@@ -2320,8 +2393,8 @@ jobs:
         if: ${{ always() && inputs.dry_run == true && steps.verify.outcome == 'success' }}
         uses: actions/upload-artifact@v4
         with:
-          name: E03-DRY_RUN-E03-CS001-SUT05-API-DR0001-A1
-          path: dry-run/E03-CS001-SUT05-API__DR0001__A1
+          name: E03-DRY_RUN-E03-CS001-SUT05-API-${{ steps.dryrun.outputs.execution_id }}-A${{ steps.dryrun.outputs.attempt }}
+          path: dry-run/E03-CS001-SUT05-API__${{ steps.dryrun.outputs.execution_id }}__A${{ steps.dryrun.outputs.attempt }}
           retention-days: 90
           overwrite: false
           if-no-files-found: error
@@ -2361,7 +2434,7 @@ jobs:
                  'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'timezone': 'UTC'}
           json.dump(rec, open('environment-verification.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
           PY
-      - name: Replace runner host paths in the kept files by a neutral marker (publication hygiene at capture; smoke_scrub precedent)
+      - name: Replace runner host paths and private network addresses in the kept files by neutral markers (publication hygiene at capture; smoke_scrub precedent)
         if: always()
         env:
           EV_KEPT: environment-verification.json release-commit.txt release-vs-pin-diff.txt package-provenance.json npm-logs version-1.json api-stdout-1.log api-stderr-1.log api-stdout-2.log api-stderr-2.log process-tree-before-stop.txt process-tree-after-stop.txt process-tree-after-restart.txt
@@ -2370,6 +2443,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -2389,10 +2463,11 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
       - name: Upload the ENVIRONMENT_VERIFICATION record
         if: always()

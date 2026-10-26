@@ -73,10 +73,12 @@ class Env:
 
 
 class Scrubber:
-    """Applied to every text the executor writes: session secrets and host paths never enter a kept file."""
+    """Applied to every text the executor writes: session secrets, host paths, and private network addresses never enter a kept file."""
 
     JWT = re.compile(r'eyJ[A-Za-z0-9_-]{4,}\.[A-Za-z0-9_-]{4,}\.[A-Za-z0-9_-]*')
     HOME = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+    # An IPv4 literal of the three private ranges of RFC 1918: the same pattern as the private-address redaction rule of the publication record (class ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION).
+    PRIVATE_ADDRESS = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
 
     def __init__(self, env):
         self.secrets = []
@@ -100,7 +102,8 @@ class Scrubber:
         text = self.JWT.sub(lambda m: self.marker(m.group(0)), text)
         for p, m in self.paths:
             text = text.replace(p, m)
-        return self.HOME.sub('<home>', text)
+        text = self.HOME.sub('<home>', text)
+        return self.PRIVATE_ADDRESS.sub('<private-address>', text)
 
 
 class _NoRedirect(urllib.request.HTTPRedirectHandler):

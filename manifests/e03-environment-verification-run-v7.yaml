@@ -1,0 +1,101 @@
+# manifests/e03-environment-verification-run-v7.yaml
+# Mechanical run-identity record of the single dispatch of operation OP-ENV-15 (E03 Environment Verification, target all,
+# with the DRY_RUN option, NON-MEASURED), written after the run identity was known (dispatch record:
+# manifests/e03-environment-verification-dispatch-v7.yaml). Values are read from the GitHub Actions API, except
+# human_dispatch, which records the local terminal entry and the human research lead's answer about the prompt. It records no
+# verification result and no interpretation, imports no artifact and no DRY_RUN bundle, does not edit
+# experiments/E03-resetability/controlled-instance-status.yaml, and is not a measured observation. Local commit; not pushed.
+# Model: manifests/e03-environment-verification-run-v6.yaml (operation OP-ENV-13), which is not edited.
+record_id: E03-ENVIRONMENT-VERIFICATION-RUN-07  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: ENVIRONMENT_VERIFICATION_RUN_IDENTITY_RECORD
+study_id: EUS-2026-001
+operation_id: OP-ENV-15
+recorded_by: ORCHESTRATOR (operation OP-ENV-15, Step 2 item 5, carried out by the execution session)
+recorded_at: "2026-10-20T00:55:12Z"  # UTC; America/Mexico_City 2026-10-19 18:55:12
+measured_experiment: false
+qualification_evidence: false
+dispatch_record: manifests/e03-environment-verification-dispatch-v7.yaml  # record id E03-ENVIRONMENT-VERIFICATION-DISPATCH-07
+dispatch_commits_before_the_dispatch:
+  - d72067b73e5c41474f6f4ccbf4f9149a2ec1381e  # the dispatch record
+  - 8d0c9072e97406ca7a872bf76bb624a409a54031  # its correction; HEAD at the dispatch
+pre_dispatch_clock: "2026-10-19T19:00:17Z"  # the PRE-DISPATCH record (untracked), written after P1-P5 were re-verified
+reviewer_audits:
+  step1: "OP-ENV-15 STEP 1 AUDIT: PASSED (after the correction of d72067b in 8d0c907)"
+  continue: "OP-ENV-15 DISPATCH OBSERVED (run 39316211051, run number 7, head 8b7acf1): CONTINUE (reviewer clock 2026-10-19T20:16:10Z)"
+repository: gsanchezm/experimental-utility-testing-labs
+workflow: .github/workflows/e03-environment-verification.yml  # name "E03 Environment Verification", workflow id 364260233, state active
+workflow_ref: main  # head_branch
+event: workflow_dispatch
+inputs: {target: all, dry_run: true}  # from the command as issued (the line of the dispatch record); the runs API does not return dispatch inputs
+dispatch_commands_issued: 1  # one command, the 136-byte line of the dispatch record (sha256 2176cf8cfb56556bce6aeb50d7742294f042db70b3a8ae2ebf01cd7f2f754639), run once by the human research lead
+run_id: 39316211051
+run_number: 7
+run_attempt: 1  # GET actions/runs/39316211051/attempts/1: HTTP 200; attempts/2: HTTP 404
+run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/39316211051
+head_sha: 8b7acf1d652f6531adb175e13f60feb0f0bf0f2c  # public export v36
+head_tree: 20ee5c9f5950e51896273d0855e5c43f01f28039
+created_at: "2026-10-19T20:04:14Z"
+run_started_at: "2026-10-19T20:04:14Z"
+triggering_actor: gsanchezm
+actor: gsanchezm
+status_when_recorded: completed  # API read at 2026-10-19T20:17Z: status completed, conclusion success, updated_at 2026-10-19T20:08:45Z
+conclusion_when_recorded: success
+jobs_when_recorded: 7  # all completed with conclusion success, each attempt 1; detail below
+environment_verification_runs_after_dispatch: 7  # 37074152972, 37206291883, 37265782721, 37354458611, 38018788066, 38270815417, and this run
+actions_runs_total_after_dispatch: 52  # validate 36, environment verification 7, compatibility smoke 2, mobile qualification 7, measured execution 0
+jobs:  # GitHub job id, name, runner image label, conclusion, started and completed (UTC)
+  - {id: 118278260034, name: "E03 Environment Verification SUT-04 web+api", label: ubuntu-24.04, conclusion: success, started_at: "2026-10-19T20:04:19Z", completed_at: "2026-10-19T20:07:41Z"}
+  - {id: 118278260341, name: "E03 Environment Verification SUT-05 api", label: ubuntu-24.04, conclusion: success, started_at: "2026-10-19T20:04:19Z", completed_at: "2026-10-19T20:05:36Z"}
+  - {id: 118278260448, name: "E03 Environment Verification SUT-02 web", label: ubuntu-24.04, conclusion: success, started_at: "2026-10-19T20:04:19Z", completed_at: "2026-10-19T20:05:20Z"}
+  - {id: 118278260471, name: "E03 Environment Verification SUT-01 web+api", label: ubuntu-24.04, conclusion: success, started_at: "2026-10-19T20:04:19Z", completed_at: "2026-10-19T20:05:30Z"}
+  - {id: 118278260487, name: "E03 Environment Verification SUT-03 web", label: ubuntu-24.04, conclusion: success, started_at: "2026-10-19T20:04:19Z", completed_at: "2026-10-19T20:06:44Z"}
+  - {id: 118278260679, name: "E03 Environment Verification SUT-02 ios", label: macos-15, conclusion: success, started_at: "2026-10-19T20:04:24Z", completed_at: "2026-10-19T20:08:44Z"}
+  - {id: 118278260704, name: "E03 Environment Verification SUT-02 android", label: ubuntu-24.04, conclusion: success, started_at: "2026-10-19T20:04:19Z", completed_at: "2026-10-19T20:06:24Z"}
+human_dispatch:  # the forward rule for gated commands: the human research lead runs the line in person with ! in the local terminal of the execution session
+  forward_rule: "the human research lead's decision of 2026-10-12 (manifests/e03-environment-verification-run-v6.yaml, command_approval_at_dispatch.human_decision): the execution agent prepares every gated command and records it before and after; the human research lead runs it in person in the execution agent's session"
+  line_sha256: 2176cf8cfb56556bce6aeb50d7742294f042db70b3a8ae2ebf01cd7f2f754639  # 136 bytes, UTF-8, no line feed
+  entry_type: "user entry of type bash-input in the session log (the local terminal line, not plain text)"
+  entry_stamp: "2026-10-19T20:04:12.466Z"  # UTC, from the session log
+  entry_text: "one space followed by the 136-byte line: 137 bytes, sha256 7e2b594c7f6482678c57ef75d59a32a3d508d43ea150648b7d157522c0cb2711"
+  entry_text_note: "the untracked record written before this one (Step 2 item 4) gives the command text without the leading space and calls it equal to the line file; the line itself is equal (checked locally); the leading space is recorded here, not corrected there"
+  output_stamp: "2026-10-19T20:04:14.769Z"  # UTC, from the session log
+  output_verbatim: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/39316211051"  # stderr empty
+  plain_text_bang_lines_before_or_with_this_entry: 0  # scan of the whole session log (local): no user entry starting with ! as plain text
+  rewrite_check_before_the_dispatch: "run at 2026-10-19T19:00:17Z (Step 2 item 2): exit 1, empty output, on the 136 bytes"
+  permission_prompt:
+    observed: "none reported by the human research lead"
+    human_answer_verbatim: "No vi ningún prompt"  # answer to the direct question of Step 2 item 5, asked in the execution session
+    human_answer_sha256: 0127a443146aa967e0ba0fc75d72993f0998ddc041dcac3b2223ec46f5e86370  # UTF-8 bytes of the answer, no line feed
+    answer_recorded_at: "2026-10-20T00:55:12Z"  # UTC, the clock when this record was written
+    hook_entries_in_interval: "none in the session log between 2026-10-19T20:03:50Z and 2026-10-19T20:04:20Z"
+    permission_mode_in_log: "no permission-mode value is recorded on the entry"
+    allow_rules_for_the_gh_subcommand: none  # user settings allow only the git status subcommand; project settings allow date, python3, one python3 form with a PUSH_CONFIRM prefix, the command-rewrite version and rewrite subcommands, and two Read rules
+  decision: "the dispatch stands; never re-run; the human research lead's line is the record of the prompt question"
+  human_confirmation_of_the_prompt: "No vi ningún prompt"  # NO_PROMPT reported in his own words; not a deviation by itself, because the line was run directly with ! (no tool call of the execution session)
+
+completion:  # Step 3 of operation OP-ENV-15, appended after the run completed; the fields recorded at dispatch above are not changed
+  recorded_at: "2026-10-20T01:09:07Z"  # UTC; America/Mexico_City 2026-10-19
+  status: completed  # API read at 2026-10-20T01:09:07Z
+  conclusion: success
+  completed_at: "2026-10-19T20:08:45Z"  # the run's updated_at, the convention of -v6 (the run object has no completed_at field); the last job completed at 2026-10-19T20:08:44Z
+  failed_jobs: none  # all seven jobs conclusion success; no failed step
+  environment_verification_runs_after_completion: 7
+  actions_runs_total_after_completion: 52
+  artifacts:  # id, name, size_in_bytes, digest (GitHub), expires_at; each archive downloaded outside the repository and verified against its digest (14 of 14 matched); none imported
+    - {id: 12217812362, name: "E03-DRY_RUN-E03-CS001-SUT01-API-DR0001-A1", size_in_bytes: 13216, digest: "sha256:afdc6aa50e68c4b9a2825399053f27161570684995f697a46f57d2a6aa137c0b", expires_at: "2027-01-17T20:04:16Z"}
+    - {id: 12217732650, name: "E03-DRY_RUN-E03-CS001-SUT01-WEB-DR0001-A1", size_in_bytes: 256559, digest: "sha256:d211f103890be8c731efe8829495c58fc0d9b95c941bc9e88ec6db82c648c6a3", expires_at: "2027-01-17T20:04:16Z"}
+    - {id: 12217931140, name: "E03-DRY_RUN-E03-CS001-SUT02-WEB-DR0001-A1", size_in_bytes: 524176, digest: "sha256:55822630c0882f85418bb40a2bb3ae05c55f7e3402035455fc9cb583da491247", expires_at: "2027-01-17T20:04:16Z"}
+    - {id: 12218666092, name: "E03-DRY_RUN-E03-CS001-SUT03-WEB-DR0001-A1", size_in_bytes: 1340072, digest: "sha256:8f2608d7ffb700b8c0183f09eb3f7b39db8a71e8837d90b4648e8d73e528b132", expires_at: "2027-01-17T20:04:16Z"}
+    - {id: 12219055235, name: "E03-DRY_RUN-E03-CS001-SUT04-API-DR0001-A1", size_in_bytes: 25910, digest: "sha256:06368018cb4a6f1085b0b1611eda0e31eb59a98e368b154379d6f6630c78097f", expires_at: "2027-01-17T20:04:16Z"}
+    - {id: 12219045322, name: "E03-DRY_RUN-E03-CS001-SUT04-WEB-DR0001-A1", size_in_bytes: 1147432, digest: "sha256:9d7ded3223a3358982369dca513324f539100aa3e35ff61f71c745ed2bd38b41", expires_at: "2027-01-17T20:04:16Z"}
+    - {id: 12218486289, name: "E03-DRY_RUN-E03-CS001-SUT05-API-DR0001-A1", size_in_bytes: 23875, digest: "sha256:2401cf1c83339a66ead934c0d9bf78b0f84e297e00324723fed85ace2c06aabf", expires_at: "2027-01-17T20:04:16Z"}
+    - {id: 12217797417, name: "E03-ENVIRONMENT_VERIFICATION-SUT-01-web-api-run39316211051-a1", size_in_bytes: 2044, digest: "sha256:6f40c97404bb2ecf7f3047f1323d8e6f27275434e6b0f09a6ee2df4bf956144c", expires_at: "2027-01-17T20:04:16Z"}
+    - {id: 12218406723, name: "E03-ENVIRONMENT_VERIFICATION-SUT-02-android-run39316211051-a1", size_in_bytes: 462391, digest: "sha256:d24558fe229745657d9c4a96a8d9260348511c1a5c888a3552e7715bf70858ab", expires_at: "2027-01-17T20:04:16Z"}
+    - {id: 12218900552, name: "E03-ENVIRONMENT_VERIFICATION-SUT-02-ios-run39316211051-a1", size_in_bytes: 852451, digest: "sha256:3f0e8fc3b6d11d1afc803c6cb73c4cbb6203da86258f5370efeec0f320bfcfa5", expires_at: "2027-01-17T20:04:16Z"}
+    - {id: 12218320844, name: "E03-ENVIRONMENT_VERIFICATION-SUT-02-web-run39316211051-a1", size_in_bytes: 1363, digest: "sha256:2c87cd251232c090920cd275091880877853a4a51a835068d20dee3cf73a537b", expires_at: "2027-01-17T20:04:16Z"}
+    - {id: 12218656100, name: "E03-ENVIRONMENT_VERIFICATION-SUT-03-web-run39316211051-a1", size_in_bytes: 1273, digest: "sha256:b4c75d806368dcdc284c23c7095bb943810cd8ccacf787a582d73cd4d9ae961c", expires_at: "2027-01-17T20:04:16Z"}
+    - {id: 12218505857, name: "E03-ENVIRONMENT_VERIFICATION-SUT-04-web-api-run39316211051-a1", size_in_bytes: 14145, digest: "sha256:8a7df1fb75f45e87a9e94a121baaa89e4d27977bbfcb2bae6ba3792b0b63bfde", expires_at: "2027-01-17T20:04:16Z"}
+    - {id: 12218306677, name: "E03-ENVIRONMENT_VERIFICATION-SUT-05-api-run39316211051-a1", size_in_bytes: 12512, digest: "sha256:d94600b2d5a653c8d447b70ba3eb3cf54402cac98ae7f5c542f984c42631a3b2", expires_at: "2027-01-17T20:04:16Z"}
+corrections:  # appended after the reviewer's Step 3 audit (operation OP-ENV-15); the fields recorded at dispatch are not rewritten
+  completion_completed_at: "the completion block's completed_at replaces its completed_at_api line in the same correction commit: the run object has no completed_at field (absent, not null); the value is the run's updated_at, the convention of -v6"
+  human_dispatch_permission_prompt: "Step 2 item 5 asks no question of the human research lead, and a line run with ! is not a tool call of the session (human_confirmation_of_the_prompt above); the question recorded under permission_prompt was the execution session's own, asked at 2026-10-19T20:18:41Z and answered at 2026-10-20T00:54:34Z; the answer is the first of the two option labels that the execution session wrote, selected by the human research lead, not the human research lead's own words; allow_rules_for_the_gh_subcommand omits the user-level local settings file, which has no rule for the dispatch subcommand either"

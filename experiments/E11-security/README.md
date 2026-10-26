@@ -33,6 +33,8 @@ Determine whether each evaluated ecosystem (each a system under test, SUT) provi
 
 NOT STARTED
 
+Deferred beyond the DATA FREEZE of the planned manuscript (2026-12-15), not omitted, by the human research lead's scope decision of 2026-10-19 (scope A: E01 and the seven web/api conditions of E03; the manuscript presents the full design): the status above is unchanged, no preparation is scheduled, and resuming this campaign needs an explicit human instruction (manifests/campaign-disposition-v1.yaml).
+
 ## Warning
 
 Protocol must be finalized (FROZEN-PRE-DATA) before execution. Do not execute without explicit instruction.

@@ -1001,7 +1001,7 @@ jobs:
           assert m.get('prompt_version') == '${{ inputs.executor_prompt_version }}'
           print('run manifest ok:', m['run_id'], 'actions:', len(acts), 'outcomes:', [a['outcome'] for a in acts])
           PY
-      - name: Replace runner host paths in the bundle's stdout.log and stderr.log by a neutral marker (publication hygiene at capture)
+      - name: Replace runner host paths and private network addresses in the bundle's stdout.log and stderr.log by neutral markers (publication hygiene at capture)
         if: always()
         env:
           EV_KEPT: raw-data/E03-resetability/${{ inputs.assigned_sut }}/${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}/stdout.log raw-data/E03-resetability/${{ inputs.assigned_sut }}/${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}/stderr.log
@@ -1010,6 +1010,7 @@ jobs:
           import os, re
           prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
           homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
           paths = []
           for k in os.environ['EV_KEPT'].split():
               if os.path.isdir(k):
@@ -1029,10 +1030,11 @@ jobs:
               for pre in prefixes:
                   n = n.replace(pre, '<host-path>')
               n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
               if n != t:
                   open(p, 'w', encoding='utf-8', newline='').write(n)
                   changed += 1
-          print(f'host paths replaced in {changed} of {len(paths)} kept file(s)')
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
           PY
       - name: Upload the immutable attempt bundle
         if: always()

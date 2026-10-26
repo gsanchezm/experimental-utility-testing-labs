@@ -1,0 +1,71 @@
+{
+  "record_class": "ENVIRONMENT_VERIFICATION",
+  "measured_experiment": false,
+  "study_id": "EUS-2026-001",
+  "campaign_id": "E03-resetability",
+  "sut_id": "SUT-04",
+  "surfaces": [
+    "WEB",
+    "API"
+  ],
+  "conditions_covered": [
+    "E03-CS001-SUT04-WEB",
+    "E03-CS001-SUT04-API"
+  ],
+  "environment_type": "SELF_HOSTED",
+  "sut_provenance": {
+    "repository": "https://github.com/mwinteringham/restful-booker-platform",
+    "commit_sha": "d36bd3f8647a091d406e53bad463c5e3e5d2ece1"
+  },
+  "provisioning_route": "the route of the SUT's README (run_locally.sh at the pinned commit, with npm start in place of npm run dev and each service's -exec jar in place of the script's jar glob; human decision of 2026-10-06)",
+  "readiness_s": {
+    "web": 4.0,
+    "auth": 23.0,
+    "report": 24.0,
+    "message": 30.8,
+    "booking": 34.0,
+    "room": 34.2,
+    "branding": 34.5
+  },
+  "readiness_bound_s": 300,
+  "reset_mechanism_under_verification": "DELETE /booking/{bookingid} (SUT04-EV-0006), on the booking service and through the web app's rewrite (DELETE /api/booking/{bookingid}); reachability only, against a non-existent id, unauthenticated",
+  "checks": {
+    "api_GET_/auth/actuator/health_status": 200,
+    "api_GET_/booking/actuator/health_status": 200,
+    "api_GET_/room/actuator/health_status": 200,
+    "api_GET_/report/actuator/health_status": 200,
+    "api_GET_/branding/actuator/health_status": 200,
+    "api_GET_/message/actuator/health_status": 200,
+    "web_GET_/_status": 200,
+    "web_GET_/api/room/1_status": 200,
+    "web_GET_/api/branding_status": 200,
+    "web_DELETE_/api/booking/999999_unauthenticated_status": 403,
+    "api_POST_/auth/login_empty_body_status": 403,
+    "api_GET_/booking/_status": 403,
+    "api_DELETE_/booking/999999_unauthenticated_status": 403,
+    "api_GET_/booking/999999_status": 403
+  },
+  "verification_result": "VERIFIED",
+  "runner": {
+    "os": "Linux",
+    "image": "ubuntu24",
+    "image_version": "20261012.334.1",
+    "arch": "X64"
+  },
+  "tool_versions": {
+    "java": "openjdk version \"26.0.2.1\" 2026-08-18\nOpenJDK Runtime Environment Temurin-26.0.2.1+1 (build 26.0.2.1+1)\nOpenJDK 64-Bit Server VM Temurin-26.0.2.1+1 (build 26.0.2.1+1, mixed mode, sharing)",
+    "maven": "Apache Maven 3.9.14 (996c630dbc656c76214ce58821dcc58be960875b)\nMaven home: <host-path>/apache-maven-3.9.14\nJava version: 26.0.2.1, vendor: Eclipse Adoptium, runtime: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/26.0.2-101/x64\nDefault locale: en, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.17.0-1022-azure\", arch: \"amd64\", family: \"unix\"",
+    "node": "v24.21.0",
+    "npm": "11.19.0",
+    "next": "16.2.9"
+  },
+  "github": {
+    "run_id": "39316211051",
+    "run_attempt": "1",
+    "job": "sut-04-web-api",
+    "repository_sha": "8b7acf1d652f6531adb175e13f60feb0f0bf0f2c",
+    "workflow_ref": "gsanchezm/experimental-utility-testing-labs/.github/workflows/e03-environment-verification.yml@refs/heads/main"
+  },
+  "timestamp": "2026-10-19T20:06:58.081748+00:00",
+  "timezone": "UTC"
+}
