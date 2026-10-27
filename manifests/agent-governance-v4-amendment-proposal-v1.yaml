@@ -1,0 +1,226 @@
+# manifests/agent-governance-v4-amendment-proposal-v1.yaml -- decision package for the DRAFT protocol/agent-governance-v4.md, version 1, PREPARED.
+# ORCHESTRATOR record of operation OP-EXEC-01 (2026-10-26): the successor that the human research lead's answer yes to OPEN-1 of manifests/e03-campaign-start-package-v1.yaml requires, the text of the
+# answer and of the question it answered, the one open design item, the freeze rendering, the exact delta of the agent-instructions file, and the order of the steps that follow, with the steps that stay with the human.
+# It approves, freezes, authorizes, executes, dispatches, exports, and publishes nothing. Immutable once committed; a correction is a new version file.
+record_class: AGENT_GOVERNANCE_AMENDMENT_PROPOSAL
+record_id: AGENT-GOVERNANCE-V4-PROPOSAL-01
+study_id: EUS-2026-001
+campaign_id: E03-resetability
+operation_id: OP-EXEC-01
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-10-26'
+recorded_on_timezone: America/Mexico_City (the UTC date at the time of writing was 2026-10-27)
+status: PREPARED
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+authorizes: 'nothing: not the freeze of protocol/agent-governance-v4.md, not an edit of the agent-instructions file, not an export, not a dispatch, not the START, not the freeze of the dispatch procedure prompt'
+nature: the decision package of a DRAFT protocol successor; the DRAFT itself is protocol/agent-governance-v4.md (state DRAFT, not in force), created by this operation; protocol/agent-governance-v3.md stays FROZEN-PRE-DATA and in force until a freeze that the human research lead approves
+human_decision:
+  item: OPEN-1 of manifests/e03-campaign-start-package-v1.yaml
+  question_in_the_package: 'Does the decision of 2026-10-24 and 2026-10-25 (no other executor agent; the ORCHESTRATOR does everything) also replace the launch of EXECUTOR-E03-RESETABILITY sessions at the E03 START (decision D5)? Yes or no.'
+  question_as_delivered_to_the_human: |
+    La pregunta principal es **OPEN-1** (sí o no): ¿la decisión del 24 de octubre de trabajar sin otro agente ejecutor reemplaza también el lanzamiento de sesiones EXECUTOR-E03-RESETABILITY cuando se haga el START de E03 (D5)?
+    - **No:** nada cambia, salvo corregir la línea de estado del prompt de trabajo.
+    - **Sí:** reescribo el prompt, cambio la línea `agent_role` del executor (hash nuevo, nuevo export y DRY_RUN antes del START), añado un sucesor de gobernanza (sección 3.5) y hago el paquete v2.
+  question_as_delivered_note: the delivered reply (2026-10-27T03:50:13Z) put the two branches in these words and did not mention that the default of Section 3.6 makes every exact dispatch a separate approval of the human research lead (the package states it under if_yes); that consequence is design item DESIGN-1 below, put to the human beside the freeze request
+  answer: 'yes'
+  given_on: '2026-10-26 22:08 America/Mexico_City (2026-10-27T04:08:50Z)'
+  given_to: the ORCHESTRATOR, directly (no relay)
+  text_excerpt: 'Y para OPEN-1, es sí'
+  message_bytes: 287
+  message_sha256: dd01aa968d3161b566b2e12a3999edfa44cb69b9e55fcd7353627655134b163b
+  message_note: the complete message is the resume line of the previous session followed by a line feed and the excerpt above; the complete text is kept outside the tracked files (publication hygiene; protocol/agent-governance-v3.md, Section 2.1 allows a paraphrase with the SHA-256 of the exact text) and is recorded in the ORCHESTRATOR records with the transcript stamp
+  not_decided_by_the_answer: [the dispatch scheme (DESIGN-1), the freeze of protocol/agent-governance-v4.md, any edit of the agent-instructions file, OPEN-2 to OPEN-5, the ninth environment-verification dispatch, the START, any authorization, any dispatch]
+reading_of_the_answer: |
+  The operating decisions of 2026-10-24 and 2026-10-25 (one agent, the ORCHESTRATOR, does all the work; no second executor session) also replace the launch of EXECUTOR-E03-RESETABILITY sessions at the E03 campaign START (decision D5 of 2026-10-05). The package states the consequences of yes: the working prompt is rewritten for dispatch by the ORCHESTRATOR; agent_role in executor/common.py changes, so the implementation hash is re-derived and the new revision is exported and run once as a hosted DRY_RUN before the START; Section 3.5 of protocol/agent-governance-v3.md needs a governance successor (a protocol version change with its own approval); the package is re-issued as version 2. A recorded waiver of the isolation of Section 3.5 without a successor is not an option. The reply of 2026-10-27T03:50:13Z listed the rewrite of the prompt under yes and also asked, separately and under every answer, for a one-line approval to correct the status line of the working prompt (the proposal P-1); no separate answer to that request came. This operation reads the rewrite that yes entails as subsuming that correction (prompts/working/ is not frozen and no rule requires an approval for it) and states that reading to the human research lead in its report.
+draft_files:
+  governance_draft:
+    path: protocol/agent-governance-v4.md
+    state: DRAFT
+    variant: A
+    sha256: 77708b2a0c3a20660ee080cb0b5551f6e0ed3991389997fa375a6c578438b605
+    bytes: 37456
+    construction: protocol/agent-governance-v3.md (HEAD blob) with the replacements listed in its own section "What changed relative to v3, and why"; every other line carried byte for byte
+  dispatch_procedure_prompt:
+    path: prompts/working/ORCHESTRATOR-E03-resetability-v1.md
+    version_id: ORCHESTRATOR-E03-resetability-v1
+    variant: A
+    sha256: 5db3d6a9c9d1608eddfcdd4acd8bab7d18047d404e82cb335b16cfcdd3b75ac9
+    bytes: 17079
+    note: the nine governance paragraphs it quotes are verbatim from the draft above (checked in this operation); the working copy and its frozen copy are byte-identical (its own status line is accurate in both places, the proposal P-1); the status line cites the DRAFT governance successor and takes effect with its freeze
+  superseded_working_draft:
+    path: prompts/working/EXECUTOR-E03-RESETABILITY-E03-resetability-v1.md
+    sha256: b6888b0daa790a414e85365b184e125768c01f7b287574387452ac6394559ae3
+    note: retained unchanged as superseded preparation provenance; the role it addressed is retired by the draft
+  executor_implementation:
+    agent_role_line: "AGENT_ROLE = 'ORCHESTRATOR'"
+    note: executor/common.py line 24 only; the run manifest records agent_role ORCHESTRATOR (the schema allows any string or null); the new digests are in the executor README, section 12, item 11, and in package version 2
+design_items:
+- id: DESIGN-1
+  title: authorization of the dispatches of the 350 planned executions (7 executable conditions x N = 50)
+  default_in_the_draft: 'variant A, the model of Section 3.6 ("Dispatch"): the explicit approval of the human research lead of each exact dispatch (condition, execution id, attempt), a one-line approval each'
+  alternative: 'variant B, decision D5 of 2026-10-05 carried over: one dispatch authorization per SUT issued by the human research lead, naming that SUT''s executable conditions and N, within which the ORCHESTRATOR dispatches each execution in the order fixed by the locked configuration, recording each dispatch before it is made and each run identity after, one dispatch per execution, never a re-run; revocable at any time; a further attempt keeps its own explicit approval'
+  why_a_choice: both keep the frozen discipline (record before, one dispatch, run identity after, no re-run, first attempt only); they differ in how many approvals the human research lead gives and in the granularity of the human control over each run
+  authorization_ids: under variant B the ids proposed under OPEN-5 for the launch authorizations (E03-LAUNCH-SUT01-AUTH-01 to E03-LAUNCH-SUT05-AUTH-01) would name the dispatch authorizations; under variant A none exists and OPEN-5 reduces to E03-START-AUTH-01
+  variant_b:
+    governance_dispatch_paragraph_replacement: |
+      **Dispatch (Section 3.6, "Dispatch", as modified by this paragraph):** the ORCHESTRATOR dispatches `.github/workflows/e03-measured-execution.yml` only within a dispatch authorization that the human research lead issued, one per assigned SUT, naming that SUT's executable conditions and the number N of executions per condition; a dispatch authorization is not issued by this document, by a prepared record, or by a START, and the human may revoke it at any time. Within it the ORCHESTRATOR dispatches each execution in the order fixed by the locked campaign configuration without a further approval of each exact dispatch: it records the dispatch before it is made (condition id, execution id, attempt, inputs, UTC clock reading) and the run identity after the run starts (run id, run number, run attempt, head sha, creation time), makes exactly one dispatch per execution, never cancels, re-runs, or repeats a run, and never dispatches a second run of a condition while one is in progress. A further attempt is a new dispatch under its own explicit approval naming the condition and the execution, and a new run manifest with `attempt` incremented. The START of the campaign and the lock of its "Campaign configuration" record (protocol/change-control-v1.md, section 7, moment 1) are separately approved; no instruction launches an agent session for E03-resetability.
+    prompt_changes: the quotation of the Dispatch paragraph (each line prefixed "> ") is replaced by the paragraph above, and section 2 of the prompt (Dispatch inputs) is replaced by the following text
+    prompt_section_2_replacement: |
+      You dispatch only within a dispatch authorization that the human research lead issued for the assigned SUT (protocol/agent-governance-v4.md, Section 3.5, "Dispatch"). The authorization, together with the locked campaign configuration, gives:
+
+      - the assigned SUT (`SUT-0N`) and the condition ids of that SUT that the locked campaign configuration lists as executable;
+      - N, the number of executions per condition (`EX0001` up to `EX0050`), and the order of conditions and executions;
+      - the campaign START authorization id and the dispatch authorization id of this SUT;
+      - the frozen prompt version (this procedure's version id, `ORCHESTRATOR-E03-resetability-v1`);
+      - the locked implementation hash (sha256 of `experiments/E03-resetability/executor/run-condition.sh`);
+      - the public repository and the workflow revision of `.github/workflows/e03-measured-execution.yml` to dispatch.
+    resulting_governance_sha256: 037ddcfe9ea8e704a66086184b53ab6406b3a10204adcc7fd03b4f43f92ecdd2
+    resulting_governance_bytes: 37862
+    resulting_prompt_sha256: 4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1
+    resulting_prompt_bytes: 17618
+    check: the replacements above applied to the files of variant A give exactly the files of these hashes (checked in this operation); no other line differs
+- id: DESIGN-2
+  title: version id of the dispatch procedure prompt
+  decided_by: the ORCHESTRATOR, disclosed; reversible until the frozen copy exists
+  decision: 'the working copy is a new file with the version id ORCHESTRATOR-E03-resetability-v1 (the naming convention of prompts/README.md, rule 3: role, campaign id, version number) and the EXECUTOR-named draft is retained unchanged'
+  reason: every run manifest of the 350 planned executions records agent_role and prompt_version permanently (raw data is immutable); an agent_role ORCHESTRATOR with a prompt_version that names a retired role would make every manifest read as inconsistent
+  cost: the five EXECUTOR_PROMPT_VERSION literals of .github/workflows/e03-environment-verification.yml (lines 163, 591, 1194, 1620, 2225 at HEAD) change in the CI operation after the freeze; the inputs keep their names (executor_prompt_version, executor_implementation_sha256), which are a pinned interface; the E03 README, the configuration draft, prompts/README.md, and package version 2 name the new id; the dispatch records of the earlier DRY_RUN runs keep the old id as history
+freeze_request:
+  needs: the explicit approval of the human research lead, in one line, of protocol/agent-governance-v4.md at its content SHA-256 with a named variant (A or B), and separately the approval of the agent-instructions delta below (or its refusal)
+  freeze_rendering: 'the replacements that turn the approved DRAFT into the frozen text; every other byte is the approved content (the precedent of v3: approval at the DRAFT content hash, frozen text hash recorded after the rendering)'
+  placeholders: [FREEZE_DATE, DRAFT_SHA256]
+  approval_covers_the_disclosed_difference: 'the approval of the freeze covers the paragraph "Disclosed difference from v3" of Section 3.5: under v3 an executor session could not read the measured outputs of other SUTs during the campaign, and under v4 the ORCHESTRATOR, one agent, can read them at import; the paragraph lists what mitigates it and requires every analysis or publication of E03 results to state the limitation; the question delivered with OPEN-1 did not mention this consequence'
+  rendering_pairs:
+  - id: FR-1
+    before: |
+      | Protocol state | DRAFT |
+    after: |
+      | Protocol state | FROZEN-PRE-DATA |
+  - id: FR-2
+    before: |
+      | Supersedes | protocol/agent-governance-v3.md (becomes AMENDED at the freeze of this document; header only, body byte-identical) |
+    after: |
+      | Supersedes | protocol/agent-governance-v3.md (AMENDED at this freeze; header only, body byte-identical) |
+  - id: FR-3
+    before: |
+      | Freeze approval | pending: none yet. The freeze needs the explicit approval of the human research lead of this document at its content SHA-256 (protocol/change-control-v1.md, sections 5 and 6); this draft implies none, and protocol/agent-governance-v3.md stays FROZEN-PRE-DATA and in force until then. |
+    after: |
+      | Freeze approval | gilbertosanchez, {FREEZE_DATE} (explicit human approval of this document at DRAFT content SHA-256 {DRAFT_SHA256}, given directly to the ORCHESTRATOR; frozen {FREEZE_DATE}; post-data-collection change under protocol/change-control-v1.md, section 5; record manifests/agent-governance-v4-amendment-v1.yaml) |
+  - id: FR-4
+    before: |
+      **POST-DATA SUCCESSOR — DRAFT, NOT IN FORCE.**
+    after: |
+      **POST-DATA SUCCESSOR — FROZEN-PRE-DATA AND IN FORCE SINCE {FREEZE_DATE}.**
+  - id: FR-5
+    before: |
+      - It succeeds protocol/agent-governance-v3.md, which becomes AMENDED at the freeze of this document and stays in force until then.
+    after: |
+      - It succeeds protocol/agent-governance-v3.md, which is AMENDED since {FREEZE_DATE}.
+  - id: FR-6
+    before: |
+      - It was prepared on the human decision of 2026-10-26 (OPEN-1 of the E03 campaign START package answered yes; manifests/agent-governance-v4-amendment-proposal-v1.yaml). DRAFT preparation approves, freezes, authorizes, executes, dispatches, and publishes nothing (Section 2.1).
+    after: |
+      - It was prepared on the human decision of 2026-10-26 (OPEN-1 of the E03 campaign START package answered yes; manifests/agent-governance-v4-amendment-proposal-v1.yaml). Its freeze authorizes no execution.
+  - id: FR-7
+    before: |
+      ## 7. Versioning
+
+      This is protocol/agent-governance-v4.md, version v4, state DRAFT, created 2026-10-26 as the post-data successor of protocol/agent-governance-v3.md (FROZEN-PRE-DATA and in force until this document is frozen); the post-data-collection procedure of protocol/change-control-v1.md, section 5, will be recorded in manifests/agent-governance-v4-amendment-v1.yaml and protocol/CHANGELOG.md at the freeze.
+
+      **Prior data validity and affected campaigns (protocol/change-control-v1.md, section 5, item 3):** nothing collected under v1, v2, or v3 is invalidated, re-collected, or reinterpreted. E01-capability-audit: FROZEN; its audits, adjudicated matrix, and H1 analysis remain valid and are unaffected. E03-resetability: NOT_STARTED, no measured data; its PRE-START, provisioning, and environment-verification records remain valid; it is affected prospectively: its execution model changes from the launch of one executor session per assigned SUT to ORCHESTRATOR coordination (Section 3.5), so the E03 campaign START package is re-issued (manifests/e03-campaign-start-package-v2.yaml) before the START. E02-state-establishment and E04-repeatability through E12-localization-i18n: NOT_STARTED, no data collected; unaffected (Section 3.6 is carried unchanged). The qualification and compatibility-smoke records are tool records, not evidence about any SUT, and are unaffected.
+
+      **Freeze record:** none yet; this document is a DRAFT. Its freeze needs the explicit approval of the human research lead of this document at its content SHA-256, and records the approval, the amendment record manifests/agent-governance-v4-amendment-v1.yaml, and one row of protocol/CHANGELOG.md.
+    after: |
+      ## 7. Versioning
+
+      This is protocol/agent-governance-v4.md, version v4, state FROZEN-PRE-DATA since {FREEZE_DATE}, created 2026-10-26 as the post-data successor of protocol/agent-governance-v3.md (AMENDED since {FREEZE_DATE}); the post-data-collection procedure of protocol/change-control-v1.md, section 5, is recorded in manifests/agent-governance-v4-amendment-v1.yaml and protocol/CHANGELOG.md.
+
+      **Prior data validity and affected campaigns (protocol/change-control-v1.md, section 5, item 3):** nothing collected under v1, v2, or v3 is invalidated, re-collected, or reinterpreted. E01-capability-audit: FROZEN; its audits, adjudicated matrix, and H1 analysis remain valid and are unaffected. E03-resetability: NOT_STARTED, no measured data; its PRE-START, provisioning, and environment-verification records remain valid; it is affected prospectively: its execution model changes from the launch of one executor session per assigned SUT to ORCHESTRATOR coordination (Section 3.5), so the E03 campaign START package is re-issued (manifests/e03-campaign-start-package-v2.yaml) before the START. E02-state-establishment and E04-repeatability through E12-localization-i18n: NOT_STARTED, no data collected; unaffected (Section 3.6 is carried unchanged). The qualification and compatibility-smoke records are tool records, not evidence about any SUT, and are unaffected.
+
+      **Freeze record:** approved by gilbertosanchez on {FREEZE_DATE} at DRAFT content SHA-256 {DRAFT_SHA256} and frozen on {FREEZE_DATE} (manifests/agent-governance-v4-amendment-v1.yaml). The freeze did not author any workflow, select, configure, or start any campaign, dispatch anything, or launch any role.
+agent_instructions_delta:
+  status: PROPOSED, not applied; an edit of the agent-instructions file needs its own explicit approval of the human research lead (the live-status edit of the agent-instructions file that an earlier session proposed is a different edit and stays unanswered)
+  note: each before string occurs exactly once in the live file at HEAD (checked in this operation); {FREEZE_DATE} is the date of the freeze
+  pairs:
+  - id: AI-1
+    before: |
+      Write boundaries per role are defined in protocol/agent-governance-v3.md (FROZEN-PRE-DATA 2026-10-03; v2 AMENDED, superseded by v3; v1 AMENDED, superseded by v2).
+    after: |
+      Write boundaries per role are defined in protocol/agent-governance-v4.md (FROZEN-PRE-DATA {FREEZE_DATE}; v3 AMENDED, superseded by v4; v2 and v1 AMENDED).
+  - id: AI-2
+    before: |
+      CAMPAIGN-CI-WRITE-AUTH-01 is in force; the freeze authored no workflow and started no campaign.
+    after: |
+      CAMPAIGN-CI-WRITE-AUTH-01 is in force; the freeze authored no workflow and started no campaign. **Post-data successor ({FREEZE_DATE}):** protocol/agent-governance-v4.md is FROZEN-PRE-DATA and in force (explicit human approval {FREEZE_DATE}; record manifests/agent-governance-v4-amendment-v1.yaml) and protocol/agent-governance-v3.md is AMENDED (header only; body byte-identical); it retires the role EXECUTOR-E03-RESETABILITY, never launched, and executes E03-resetability under ORCHESTRATOR coordination (OPEN-1 of the E03 lock package answered yes on 2026-10-26); the freeze authored no workflow and started no campaign.
+  - id: AI-3
+    before: |
+      E03 campaign START; executor prompt freeze and launch.
+    after: |
+      E03 campaign START; freeze of the ORCHESTRATOR's E03 dispatch procedure prompt (no executor session is launched; protocol/agent-governance-v4.md, Section 3.5).
+  - id: AI-4
+    before: |
+      the write-boundary matrix of protocol/agent-governance-v3.md (FROZEN-PRE-DATA 2026-10-03; v2 and v1 AMENDED) is otherwise unchanged, and the grant is incorporated in that document's Sections 3.1, 3.5, and 4. EXECUTOR-E03-RESETABILITY may only trigger and read an already-authorized, version-pinned workflow, consume its explicitly assigned frozen inputs, and produce its authorized raw-data/artifacts; it never authors or modifies a workflow, changes GitHub repository settings, runner images, retry, concurrency, timeout, pinned runtime versions, or artifact-retention policy, merges pull requests, or approves its own changes.
+    after: |
+      the write-boundary matrix of protocol/agent-governance-v4.md (FROZEN-PRE-DATA {FREEZE_DATE}; v3, v2 and v1 AMENDED) is otherwise unchanged, and the grant is incorporated in that document's Sections 3.1, 3.5, and 4. The ORCHESTRATOR dispatches and imports the E03 measured runs under that document's Section 3.5 (the role EXECUTOR-E03-RESETABILITY is retired and was never launched); while the campaign is IN_PROGRESS it does not edit a workflow, change GitHub repository settings, runner images, retry, concurrency, timeout, pinned runtime versions, or artifact-retention policy, or approve its own changes, except as a CI correction under this authorization with its own change-log row.
+  - id: AI-5
+    before: |
+      | Agent roles and write boundaries | protocol/agent-governance-v3.md (FROZEN-PRE-DATA 2026-10-03, in force; v2 and v1 AMENDED); amendment record manifests/agent-governance-v3-amendment-v1.yaml; v2 freeze record manifests/agent-governance-v2-freeze-v1.yaml |
+    after: |
+      | Agent roles and write boundaries | protocol/agent-governance-v4.md (FROZEN-PRE-DATA {FREEZE_DATE}, in force; v3, v2 and v1 AMENDED); amendment records manifests/agent-governance-v4-amendment-v1.yaml and manifests/agent-governance-v3-amendment-v1.yaml; v2 freeze record manifests/agent-governance-v2-freeze-v1.yaml |
+  - id: AI-6
+    before: |
+      QUALIFIER-MOBILE-01; EXECUTOR-E03-RESETABILITY (defined, not launched; E03-resetability only).
+    after: |
+      QUALIFIER-MOBILE-01 (EXECUTOR-E03-RESETABILITY, defined by v2 and v3 and never launched, is retired by protocol/agent-governance-v4.md; E03-resetability executes under ORCHESTRATOR coordination).
+  - id: AI-7
+    before: |
+      Authoritative definitions: protocol/agent-governance-v3.md (FROZEN-PRE-DATA 2026-10-03, in force; protocol/agent-governance-v2.md and v1 AMENDED). The frozen role definition of EXECUTOR-E03-RESETABILITY authorizes no execution: launching it still requires E03 campaign START, a frozen executor prompt, and every other gate.
+    after: |
+      Authoritative definitions: protocol/agent-governance-v4.md (FROZEN-PRE-DATA {FREEZE_DATE}, in force; protocol/agent-governance-v3.md, v2 and v1 AMENDED). Dispatching an E03 measured run still requires E03 campaign START, the frozen dispatch procedure prompt, the dispatch approval or authorization that Section 3.5 requires, and every other gate.
+candidate_change_log_rows:
+- |
+  | {FREEZE_DATE} | protocol/agent-governance-v4.md | none | v4 | DRAFT -> FROZEN-PRE-DATA | Explicit human approval of the post-data successor that retires the role EXECUTOR-E03-RESETABILITY (never launched) and executes E03-resetability under ORCHESTRATOR coordination (OPEN-1 of manifests/e03-campaign-start-package-v1.yaml answered yes on 2026-10-26; decision package manifests/agent-governance-v4-amendment-proposal-v1.yaml; record manifests/agent-governance-v4-amendment-v1.yaml) at DRAFT content SHA-256 {DRAFT_SHA256}. Changes: Section 3.5 (the executor role is retired; E03 is executed under the model of Section 3.6 with the isolation of measured jobs, the write boundary as a verified import, execution without cross-SUT adaptation, and a disclosed difference from v3), Sections 1, 3.1, 4, 5, 6, 7, the introduction and rule 6 of Section 2; every other line carried from v3 byte for byte. Prior data: nothing collected under v1, v2, or v3 is invalidated, re-collected, or reinterpreted. | E03-resetability | gilbertosanchez |
+- |
+  | {FREEZE_DATE} | protocol/agent-governance-v3.md | v3 | v4 | FROZEN-PRE-DATA -> AMENDED | Superseded by protocol/agent-governance-v4.md under protocol/change-control-v1.md, section 5 (header only; body byte-identical; a Superseded by row is added). | E03-resetability | gilbertosanchez |
+steps_after_the_human_answers:
+- id: 'S1'
+  who: 'autonomous, local'
+  what: 'this operation: the DRAFT successor, the dispatch procedure prompt, the AGENT_ROLE change with the re-derived digests, this package, and the status notes; two or three local commits; nothing exported'
+- id: 'HARD STOP 1'
+  who: 'the human research lead'
+  what: 'one-line approval of the freeze of protocol/agent-governance-v4.md at its content SHA-256 with variant A or B; separately, approval or refusal of the agent-instructions delta'
+- id: 'S2'
+  who: 'autonomous, local'
+  what: 'freeze rendering and the header of v3 (AMENDED); manifests/agent-governance-v4-amendment-v1.yaml; the two change-log rows; the study-manifest note; the agent-instructions delta only if approved; references re-pointed by this recorded change'
+- id: 'S3'
+  who: 'autonomous'
+  what: 'the CI operation under E03-CI-WRITE-AUTH-01: gate G-6 and the governance_sha256 output of the measured workflow re-pointed to v4, the EXECUTOR_PROMPT_VERSION literals of the environment-verification workflow, comments citing v3; shellcheck-enabled actionlint; a rerun of the gate rehearsal'
+- id: 'S4'
+  who: 'autonomous, inside the operation'
+  what: 'export v38 (the code and workflow revision, not the START state): builder dry run, literal vendor and tool scan, local validation jobs, push, validation run'
+- id: 'HARD STOP 2'
+  who: 'the human research lead'
+  what: 'one-line approval of the exact hosted DRY_RUN dispatch of the new revision (record before, one dispatch, no re-run)'
+- id: 'S5'
+  who: 'autonomous'
+  what: 'review of the DRY_RUN bundles and import under the pre-fixed rules; package version 2 (new file; the 38-check implementation verification and the gate rehearsal recomputed on the committed tree, no number carried from version 1)'
+- id: 'HARD STOP 3'
+  who: 'the human research lead'
+  what: 'the E03 campaign START (a separate explicit approval of that exact action), with OPEN-2 to OPEN-5 and the confirmations; then export v39 (the START state)'
+items_for_package_version_2:
+- 'name the location and the granularity of the append-only dispatch record that the dispatch procedure refers to (a record under manifests/, one per SUT or one per run; raw-data/ is excluded by the Write boundary of Section 3.5; nothing is invented here)'
+- 'refresh experiments/E03-resetability/campaign-configuration-draft.md (it still names the executor role and the EXECUTOR-named prompt id) and the candidate Execution paragraph and implementation hash'
+- 'recompute the implementation verification and the gate rehearsal on the committed tree; carry no number from package version 1'
+- 'OPEN-2 to OPEN-5 with OPEN-5 asked in its yes-form (the launch ids E03-LAUNCH-SUTnn-AUTH-01 apply only under variant B)'
+- 'the E03 README START row and the root README sentence on the launch authorization per SUT (updated with a pointer in this operation; rewritten at the START)'
+affected_campaigns_and_prior_data:
+  E01-capability-audit: FROZEN; unaffected
+  E03-resetability: NOT_STARTED, no measured data; PRE-START, provisioning, and environment-verification records remain valid; affected prospectively (the execution model; the START package is re-issued)
+  E02-state-establishment_and_E04_to_E12: NOT_STARTED; unaffected (Section 3.6 is carried unchanged)
+verification_done_in_this_operation:
+  - the draft is built from the HEAD blob of v3; its lines that are not byte-identical to v3 are the header, the notice, the change section, the Section 1 role count, the introduction and rule 6 of Section 2, the opening of Section 3.1, Section 3.5, the Section 4 table and introduction, Section 5, Section 6, and Section 7
+  - no gendered pronoun in the draft, the prompt, or this record; no attribution or vendor term; the draft names no path that the publication transformations rewrite in a way that changes a digest (the executor files carry no new path)
+not_done:
+  - no freeze, approval, authorization, dispatch, export, push, workflow edit, or edit of the agent-instructions file; protocol/agent-governance-v3.md is unchanged and in force; prompts/frozen/ is untouched; E03 is NOT_STARTED

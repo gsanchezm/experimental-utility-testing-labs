@@ -1,0 +1,92 @@
+# manifests/e03-environment-verification-run-v8.yaml
+# Mechanical run-identity record of the single dispatch of operation OP-ENV-17 (E03 Environment Verification, target all,
+# with the DRY_RUN option, NON-MEASURED), written after the run completed (dispatch record:
+# manifests/e03-environment-verification-dispatch-v8.yaml, committed before the dispatch). Values are read from the GitHub Actions API by
+# the scripts of the operation, except the dispatch process fields, which are the process's own output. It records no verification result
+# and no interpretation, imports no artifact and no DRY_RUN bundle, does not edit experiments/E03-resetability/controlled-instance-status.yaml,
+# and is not a measured observation. Local commit; not pushed.
+# Model: manifests/e03-environment-verification-run-v7.yaml (operation OP-ENV-15), which is not edited.
+record_id: E03-ENVIRONMENT-VERIFICATION-RUN-08  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: ENVIRONMENT_VERIFICATION_RUN_IDENTITY_RECORD
+study_id: EUS-2026-001
+operation_id: OP-ENV-17
+recorded_by: ORCHESTRATOR (operation OP-ENV-17, carried out by the single orchestrating agent)
+recorded_at: "2026-10-26T17:01:44Z"  # UTC; after the run completed; the identity fields below were observed at the dispatch
+measured_experiment: false
+qualification_evidence: false
+dispatch_record: manifests/e03-environment-verification-dispatch-v8.yaml  # record id E03-ENVIRONMENT-VERIFICATION-DISPATCH-08
+dispatch_commit_before_the_dispatch: ece18a5d6dfa36a48758ec7db771be217ad0d1c5  # the dispatch record, committed locally before the dispatch (HEAD at the dispatch)
+repository: gsanchezm/experimental-utility-testing-labs
+workflow: .github/workflows/e03-environment-verification.yml  # name "E03 Environment Verification", workflow id 364260233, state active
+workflow_ref: main  # head_branch
+event: workflow_dispatch
+inputs: {target: all, dry_run: true}  # from the command as issued (the line of the dispatch record); the runs API does not return dispatch inputs
+dispatch_commands_issued: 1  # one command, the 136-byte line of the dispatch record (sha256 2176cf8cfb56556bce6aeb50d7742294f042db70b3a8ae2ebf01cd7f2f754639), run once by the ORCHESTRATOR
+run_id: 40361964609
+run_number: 8
+run_attempt: 1  # GET actions/runs/40361964609/attempts/1: the run object; attempts/2: HTTP 404
+run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40361964609
+head_sha: d3e45862a10802fd4409efe7e34741bd7cd87622  # public export v37
+head_tree: c263c38146c20a4b1b4b523413889a40998494a1
+created_at: "2026-10-26T16:44:15Z"
+run_started_at: "2026-10-26T16:44:15Z"
+triggering_actor: gsanchezm
+actor: gsanchezm
+dispatch_process:  # the ORCHESTRATOR's single process (gates, rewrite check, dispatch, identification of the run); no retry exists in it
+  clock_before_the_dispatch: "2026-10-26T16:44:12.948250Z"
+  clock_after_the_dispatch: "2026-10-26T16:44:15.391412Z"
+  gh_exit_status: 0
+  gh_output_verbatim: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40361964609"  # stderr empty
+  rewrite_check_before_the_dispatch: "rtk rewrite on the exact 136 bytes in the same process: exit 1, empty stdout and stderr (the line is not rewritten)"
+  gates_before_the_dispatch: "seven gates PASS in the same process: the commit of the record at HEAD equals the working file and the tracked tree is clean; the repository is public; public main is d3e45862; 53 runs none queued or in progress, newest 40345722828; the workflow has 7 runs, highest number 7; 0 tags; the rewrite check"
+  permission_prompt: "none: the Bash call ran in permission mode auto without a prompt and without a classifier denial"
+  new_runs_after_the_dispatch: 1  # the only new workflow_dispatch run of workflow 364260233 after the pre-dispatch clock; runs total 54
+expectations_of_the_dispatch_record_checked:
+  run_number_is_8: true
+  head_sha_is_the_public_export_v37_main: true
+  environment_verification_runs_after_dispatch: 8  # 37074152972, 37206291883, 37265782721, 37354458611, 38018788066, 38270815417, 39316211051, and this run
+  actions_runs_total_after_dispatch: 54  # validate 37, environment verification 8, compatibility smoke 2, mobile qualification 7, measured execution 0
+jobs:  # GitHub job id, name, runner image label, conclusion, started and completed (UTC), step count, steps whose conclusion is neither success nor skipped
+  - {job: sut-01-web-api, id: 121709515361, name: "E03 Environment Verification SUT-01 web+api", label: ubuntu-24.04, conclusion: success, started_at: "2026-10-26T16:44:19Z", completed_at: "2026-10-26T16:45:51Z", steps: 20, steps_not_success: []}
+  - {job: sut-02-android, id: 121709516089, name: "E03 Environment Verification SUT-02 android", label: ubuntu-24.04, conclusion: success, started_at: "2026-10-26T16:44:20Z", completed_at: "2026-10-26T16:46:34Z", steps: 12, steps_not_success: []}
+  - {job: sut-02-ios, id: 121709515982, name: "E03 Environment Verification SUT-02 ios", label: macos-15, conclusion: cancelled, started_at: "2026-10-26T16:44:17Z", completed_at: "2026-10-26T16:59:19Z", steps: 0, steps_not_success: []}
+  - {job: sut-02-web, id: 121709516095, name: "E03 Environment Verification SUT-02 web", label: ubuntu-24.04, conclusion: success, started_at: "2026-10-26T16:44:21Z", completed_at: "2026-10-26T16:54:51Z", steps: 16, steps_not_success: []}
+  - {job: sut-03-web, id: 121709515905, name: "E03 Environment Verification SUT-03 web", label: ubuntu-24.04, conclusion: success, started_at: "2026-10-26T16:44:20Z", completed_at: "2026-10-26T16:47:10Z", steps: 18, steps_not_success: []}
+  - {job: sut-04-web-api, id: 121709515993, name: "E03 Environment Verification SUT-04 web+api", label: ubuntu-24.04, conclusion: success, started_at: "2026-10-26T16:44:19Z", completed_at: "2026-10-26T16:47:30Z", steps: 21, steps_not_success: []}
+  - {job: sut-05-api, id: 121709515936, name: "E03 Environment Verification SUT-05 api", label: ubuntu-24.04, conclusion: success, started_at: "2026-10-26T16:44:20Z", completed_at: "2026-10-26T16:55:01Z", steps: 18, steps_not_success: []}
+completion:
+  status: completed  # API read at 2026-10-26T16:59:37Z
+  conclusion: failure
+  completed_at: "2026-10-26T16:59:20Z"  # the run's updated_at, the convention of -v6 and -v7 (the run object has no completed_at field); the last job completed at 2026-10-26T16:59:19Z
+  failed_jobs: ["sut-02-ios"]
+  steps_skipped_by_job: {}
+  environment_verification_runs_after_completion: 8
+  actions_runs_total_after_completion: 54
+  not_completed_runs_after_completion: []
+  artifacts:  # id, name, size_in_bytes, digest (GitHub), expires_at; verified and read by the import operation, none imported by this record
+    - {id: 12668732157, name: "E03-DRY_RUN-E03-CS001-SUT01-API-DR0008-A1", size_in_bytes: 13229, digest: "sha256:f6609d9d5c952169a99f194666cc8e836b7dea4d4fdd34f3c5bdfca970e3d266", expires_at: "2027-01-24T16:44:16Z"}
+    - {id: 12669610165, name: "E03-DRY_RUN-E03-CS001-SUT01-WEB-DR0008-A1", size_in_bytes: 256082, digest: "sha256:76cb09a50af431f5a61bd3a6d69c5a2bbb1e327ed3dd5599a0636d5adee25510", expires_at: "2027-01-24T16:44:16Z"}
+    - {id: 12669940987, name: "E03-DRY_RUN-E03-CS001-SUT02-WEB-DR0008-A1", size_in_bytes: 524089, digest: "sha256:ef4045b9b2b1cbc9e7f5c2f8e2e92d09b978c5ec182837e8acb02b03012c3196", expires_at: "2027-01-24T16:44:16Z"}
+    - {id: 12668986766, name: "E03-DRY_RUN-E03-CS001-SUT03-WEB-DR0008-A1", size_in_bytes: 1340121, digest: "sha256:4ab6dac32ca729a82c54d669f1d1219e79a72162f4524144c45aa3d5c5787a80", expires_at: "2027-01-24T16:44:16Z"}
+    - {id: 12668327273, name: "E03-DRY_RUN-E03-CS001-SUT04-API-DR0008-A1", size_in_bytes: 25903, digest: "sha256:297450ee2bfcf36d314ac080b6fef985a9167ba0439fbd6bb1e3ae84609085da", expires_at: "2027-01-24T16:44:16Z"}
+    - {id: 12669860149, name: "E03-DRY_RUN-E03-CS001-SUT04-WEB-DR0008-A1", size_in_bytes: 1147986, digest: "sha256:1a4a9e9f1b4e17bda9afd0dc3b09d1d2be2736126b95d6539af482877657db55", expires_at: "2027-01-24T16:44:16Z"}
+    - {id: 12668763136, name: "E03-DRY_RUN-E03-CS001-SUT05-API-DR0008-A1", size_in_bytes: 23800, digest: "sha256:afdfb9843b003383973744e03d325d648e800b1b5ebb4103e0d821acc6dea363", expires_at: "2027-01-24T16:44:16Z"}
+    - {id: 12668382082, name: "E03-ENVIRONMENT_VERIFICATION-SUT-01-web-api-run40361964609-a1", size_in_bytes: 2045, digest: "sha256:71bad982feed627e43904d72025e4fc65a6a317681106628afd3a7de1416c5d3", expires_at: "2027-01-24T16:44:16Z"}
+    - {id: 12668203347, name: "E03-ENVIRONMENT_VERIFICATION-SUT-02-android-run40361964609-a1", size_in_bytes: 462388, digest: "sha256:9395ee69fe47131bf759b9514f6f7336eb3fa4dd1a297f4f0bff9c4a0b78e159", expires_at: "2027-01-24T16:44:16Z"}
+    - {id: 12668923377, name: "E03-ENVIRONMENT_VERIFICATION-SUT-02-web-run40361964609-a1", size_in_bytes: 1364, digest: "sha256:8bc96c6d9dcc05d882b833eba08408a92bbc43632fe59e06b5c19d1c6b03bc93", expires_at: "2027-01-24T16:44:16Z"}
+    - {id: 12669171514, name: "E03-ENVIRONMENT_VERIFICATION-SUT-03-web-run40361964609-a1", size_in_bytes: 1272, digest: "sha256:8e56a21ac99b702b7f84098d3a25c6d890cd29a017aff4415a2e4854a86292f1", expires_at: "2027-01-24T16:44:16Z"}
+    - {id: 12668951791, name: "E03-ENVIRONMENT_VERIFICATION-SUT-04-web-api-run40361964609-a1", size_in_bytes: 14154, digest: "sha256:f28bb1eeff096ca1f7db9986ebe9ddabe5f9574c207adcaf70910a6f1fa275b1", expires_at: "2027-01-24T16:44:16Z"}
+    - {id: 12669816432, name: "E03-ENVIRONMENT_VERIFICATION-SUT-05-api-run40361964609-a1", size_in_bytes: 12322, digest: "sha256:9db85bc0fafd7c168a221ab777abe6246fb2b481bac057e7e9faa369cd191f82", expires_at: "2027-01-24T16:44:16Z"}
+  artifact_names_check: {expected: 14, found: 13, environment_verification: 6, dry_run_bundles: 7, dry_run_names_as_expected: true, environment_verification_names_as_expected_except_the_missing_job: true, missing: ["E03-ENVIRONMENT_VERIFICATION-SUT-02-ios-run40361964609-a1"]}
+  cancelled_job:  # the one job that did not succeed; read from the jobs API and the check-run annotations after the run completed
+    job: sut-02-ios
+    id: 121709515982
+    name: "E03 Environment Verification SUT-02 ios"
+    conclusion: cancelled
+    label: macos-15
+    created_at: "2026-10-26T16:44:17Z"
+    completed_at: "2026-10-26T16:59:19Z"
+    steps_executed: 0
+    runner_assigned: "none (runner_id 0, empty runner name, empty runner group)"
+    annotations_verbatim: ["The job was not acquired by Runner of type hosted even after multiple attempts", "Due to capacity constraints, jobs targeting macOS arm64 runners may experience longer queue times. (three notices)"]
+    reading: "the hosted macOS (arm64) runner was never acquired during the 15 minutes between the creation of the job and its cancellation by GitHub; the job executed no step, so it wrote no ENVIRONMENT_VERIFICATION record and uploaded no artifact; GitHub's own annotation names the cause (runner capacity). It is an infrastructure outcome of the hosted service, not a verification result of the SUT-02 iOS condition and not a finding about any system under test. No re-run, no cancellation, and no second dispatch was made (the dispatch record fixes retry_policy none); the import rules R1 and R2 of the dispatch record apply to it at the import"
