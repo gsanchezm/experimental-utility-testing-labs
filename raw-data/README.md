@@ -53,5 +53,5 @@ Storage location of correction records: TBD before freeze (candidate: derived-da
 
 ## Current status
 
-- No raw data exists yet. No execution campaign has started: E01-capability-audit is FROZEN (an audit; its records live under audits/ and derived-data/, not here); E02–E12 are NOT_STARTED, including E03-resetability, which is in human-authorized PRE-START preparation (non-measured provisioning and environment verification completed 2026-09-22 for the CS-001 conditions; recorded outside this directory). No run manifest has been written.
+- No raw data exists yet. No measured execution has occurred: E01-capability-audit is FROZEN (an audit; its records live under audits/ and derived-data/, not here); E02 and E04–E12 are NOT_STARTED; E03-resetability is IN_PROGRESS since its campaign START of 2026-10-28 (E03-START-AUTH-01) and none of its runs has been dispatched; its human-authorized PRE-START preparation (non-measured provisioning and environment verification completed 2026-09-22 for the CS-001 conditions; recorded outside this directory). No run manifest has been written.
 - This directory is tracked by git and never ignored: .gitignore re-includes raw-data/** after its noise patterns, so tool output copied here with provenance is committed.

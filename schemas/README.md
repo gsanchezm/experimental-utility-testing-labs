@@ -4,7 +4,7 @@
 |---|---|
 | Study | Experimental Utility of Software-Testing Laboratory Ecosystems (EUS-2026-001) |
 | Protocol version | v1 |
-| Repository phase | SETUP (literal manifests/study-manifest.yaml value; E01 is FROZEN and E03-resetability is in PRE-START preparation, NOT_STARTED) — no run-manifest instance data exists yet |
+| Repository phase | SETUP (literal manifests/study-manifest.yaml value; E01 is FROZEN and E03-resetability is IN_PROGRESS since its campaign START of 2026-10-28, with no measured execution) — no run-manifest instance data exists yet |
 | Created | 2026-09-15 |
 
 This directory holds the JSON Schemas (draft 2020-12) that describe the machine-readable records the study will produce. They exist so that evidence records, run manifests, and audit summaries can be validated automatically once data collection starts. No run manifest has been written for any system under test (SUT); the E01 evidence records, adjudication outputs, and the adjudicated matrix exist and were validated against their schemas (protocol/CHANGELOG.md, PROTO-U05/U06 rows).

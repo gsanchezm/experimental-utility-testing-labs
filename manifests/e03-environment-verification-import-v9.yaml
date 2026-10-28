@@ -1,0 +1,322 @@
+# manifests/e03-environment-verification-import-v9.yaml
+# Operation record of OP-ENV-20: the byte-exact import of the seven ENVIRONMENT_VERIFICATION artifacts of GitHub Actions run 40628631086 (run number 9, attempt 1, target all, dry_run true, at public
+# main 7d80b81, export v38) and the representation-only transcription of its GitHub Actions verification state into experiments/E03-resetability/controlled-instance-status.yaml, under the rules
+# R1-R6 fixed before the run (manifests/e03-environment-verification-dispatch-v9.yaml). The run concluded success: the seven jobs succeeded, so all nine conditions are VERIFIED under it, E03-CS001-SUT02-IOS
+# among them (its job ran on a hosted macOS runner this time). Non-measured. The seven DRY_RUN bundles were reviewed read-only and never imported. The model is manifests/e03-environment-verification-import-v8.yaml
+# (OP-ENV-18), which is not edited, without its reviewer apparatus: the operation is carried out by the single orchestrating agent under the human research lead's operating decisions of 2026-10-24 and
+# 2026-10-25 (no executor, no reviewer relay, no adoption step). This record authorizes nothing.
+record_id: E03-ENVIRONMENT-VERIFICATION-IMPORT-09  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: ENVIRONMENT_VERIFICATION_IMPORT_OPERATION_RECORD
+study_id: EUS-2026-001
+operation_id: OP-ENV-20
+recorded_by_role: ORCHESTRATOR  # protocol/agent-governance-v4.md; carried out by the single orchestrating agent
+recorded_on: "2026-10-27"  # the America/Mexico_City date of the commits (the UTC date is 2026-10-28 while the local time is before 00:00; the dates written inside the edited files are the UTC date 2026-10-28)
+measured_experiment: false
+qualification_evidence: false
+executes_anything: false
+classification: "import of non-measured verification evidence (class ENVIRONMENT_VERIFICATION, never raw-data/) and representation-only status transcription; not a human gate"
+
+basis:
+  dispatch_record: manifests/e03-environment-verification-dispatch-v9.yaml  # record id E03-ENVIRONMENT-VERIFICATION-DISPATCH-09; prepared in commit 122aefbf, promoted and committed as 5937ff4d before the dispatch
+  run_identity_record: manifests/e03-environment-verification-run-v9.yaml  # commit e6c2f96a
+  live_status_commit_of_the_dispatch: "none: operation OP-ENV-19 closed in git with the promoted dispatch record (5937ff4d) and the run record (e6c2f96a) and no live-status commit; the live-status edits of the dispatch and of the import are carried together by the second commit of this operation"
+  run: "40628631086 (run number 9, attempt 1, inputs target all and dry_run true, at public main 7d80b81060ff7e45e1fde98ab47b13ab42c37730 of export v38), completed 2026-10-28T03:51:19Z (the run's updated_at), conclusion success: the seven jobs success"
+  workflow_revision: 078760c551fbc8df44cb208bcac22cc65f6fa8ee4e7c2559172e74d7760c28bd  # canonical sha256 of .github/workflows/e03-environment-verification.yml, the revision this run executed (OP-CI-11, commit 1df7f81); its public copy at 7d80b81 has sha256 8014ca8e7f9477d245efb92e21cb9b95d48547a109cec08e21c075801b7cbde4
+  import_authority: "the one-line approval of the human research lead covers the dispatch only (the dispatch record lists any import as not covered); this import is a separate operation of the ORCHESTRATOR, ordered by the resume text that the human research lead instructed to follow to the letter (its step 4 orders step S5 as in the resume text of the preceding working period, 21,005 bytes, sha256 016ac2c570d0a48c330e3e5e739127b94bcb71dd1abfc18822fe4baafccb307d, whose step S5 imports and reviews the DRY_RUN under the rules fixed before the run), and it rests on the rules R1-R6 that the dispatch record fixed before the run; it needs no new one-line approval, and the START remains a separate approval"
+  human_decisions_in_force:  # cited by date and sha256; the texts are held in the untracked records and are not embedded
+    - "the one-line approval of the dispatch (answer received 2026-10-28T03:24:59.056Z, 74 bytes, sha256 8e0fdbce97ba5233bb48c99e844977696012925682de938e468019a331f84733; verbatim in the dispatch record): it covers the dispatch, not this import"
+    - "the operating decisions of 2026-10-24 and 2026-10-25 (texts received 2026-10-24T23:50:52.549Z, 296 bytes, sha256 4d551c37187c14e3fd9ae9f0525f057a8c3915ae132c2aa466007d8bb34a617d, and 2026-10-25T00:03:33.996Z, 147 bytes, sha256 23686be0209b440a829b67105e9deaded020d75d683af5a0a18a331a8039a03e): one agent, no executor, as much autonomy as possible; no reviewer relay and no adoption step"
+    - "the human research lead's message that opened the present working period (received 2026-10-28T00:10:09.390Z, origin human, queued, 265 bytes, sha256 6184a003210b29b76e3583e21f35c66a3cf54815d1e52b7c3bfb6157f2f4cf43): it instructs to read a resume text (7,106 bytes, sha256 47144a695a7defa0b2abc1f3eb4c97f8f6e7bedccf16fbb9beb58c0143140998) and to follow it to the letter; its step 4 orders, after the dispatch, step S5 as in the resume text of the preceding working period (21,005 bytes, sha256 016ac2c570d0a48c330e3e5e739127b94bcb71dd1abfc18822fe4baafccb307d), whose step S5 imports and reviews the DRY_RUN under the rules fixed before the run"
+    - "the standing rule of the human research lead of 2026-10-12 that keeps experiments/E03-resetability/README.md current inside every operation that changes the E03 state it states"
+
+rules_applied:  # verbatim in manifests/e03-environment-verification-dispatch-v9.yaml (import_rules_fixed_before_the_run)
+  R1: "each condition's github_actions_verification.status is the verification_result of its job's ENVIRONMENT_VERIFICATION record: VERIFIED for all nine conditions of the seven jobs, each of which wrote a VERIFIED record; github_job_conclusion is transcribed as observed (success for the seven jobs)"
+  R2: "run 40628631086 ran a job for all nine conditions, so it governs all nine whatever its result; the status file's github_actions_runs gets entry 9 appended (entries 1-8 unchanged) and the comments that name run 40361964609 are updated; the earlier values stay in their import directories and import records; E03-CS001-SUT02-IOS, NOT_VERIFIED under run 40361964609, is VERIFIED again at this import"
+  R3: "no reverification_required entry is added or removed; the summary stays []"
+  R4: "only the ENVIRONMENT_VERIFICATION artifacts are imported, byte-exact, under experiments/E03-resetability/environment-verification/github-actions/run40628631086-a1/<job>/: the seven jobs (sut-01-web-api, sut-02-web, sut-02-android, sut-02-ios, sut-03-web, sut-04-web-api, sut-05-api); the seven DRY_RUN bundles are never imported anywhere; only values read from them and their digests enter tracked records"
+  R5: "every archive was verified against its GitHub digest first (step S0, and again in step S1); no private network address, private path, vendor term, or secret-like token was found in any member of any ENVIRONMENT_VERIFICATION artifact or DRY_RUN bundle (the 54 members of the 7 ENVIRONMENT_VERIFICATION archives and the 188 members of the 7 DRY_RUN archives were scanned in memory before the first write: 0 vendor-term, 0 secret, 0 private-path, 0 RFC 1918 lines in the members and 0 matches in the raw bytes of the 14 archives; the capture-time scrub of OP-CI-09 had replaced the runner's address in line 7 of sut04-web.log): no STOP"
+  R6: "no DRY_RUN finding in the sense of R6 (no non-zero executor exit status, no failed validation, no outcome or action count other than that of the condition's earlier hosted DRY_RUN, no settle that reached its bound, no missing file); observations that are not R6 findings are listed under dry_run_review.observations_not_findings; this operation changes no realization, action class, count, oracle, or executor byte"
+
+publication_handling:  # by reference; no new decision
+  decision: "decision B of 2026-10-12 on the runner's private network address, as extended on 2026-10-18 (manifests/e03-environment-verification-publication-handling-v2.yaml) and option C of 2026-10-21 (the capture-time scrub, applied by operation OP-CI-09)"
+  rfc1918_lines_of_this_import: "none: the scan of the 54 members and the 7 archives finds no IPv4 literal of the three RFC 1918 ranges; line 7 of sut-04-web-api/sut04-web.log, the Network line of the Next.js start-up banner, carries the marker <private-address> (it carried the runner's address in runs 38270815417 and 39316211051): the second hosted effect of the capture-time scrub, after run 40361964609"
+  same_line_in_the_dry_run_bundles: "the SUT-04 evidence copies of the bundles E03-DRY_RUN-E03-CS001-SUT04-API-DR0009-A1 and E03-DRY_RUN-E03-CS001-SUT04-WEB-DR0009-A1 (never imported) carry no RFC 1918 literal (the in-memory scan of all 188 members found none)"
+  new_decision: none
+  effect_on_this_operation: "none: the imported bytes are as archived, and no export or publication transformation is needed for this import"
+
+dry_run_review:  # NON-MEASURED; each bundle downloaded outside the repository, verified against its digest, read, and never imported (R4); values read from the bundles and the job logs of run 40628631086
+  bundles:
+    - name: E03-DRY_RUN-E03-CS001-SUT01-API-DR0009-A1
+      id: 12790925072
+      size_in_bytes: 13202
+      github_digest: sha256:51c34fb9c75707fa9a5904259e20ca2ded3ec4be6a130921f385812924ead971
+      members: 23
+      condition: E03-CS001-SUT01-API
+      executor_exit_status: 0  # exit-status.txt; the job log line 1008 reads "executor exit status: 0"
+      run_manifest_validation_exit_status: 0  # the job log line 1013 (run-manifest validation exit status of E03-CS001-SUT01-API: 0); job log sut-01-web-api, 115734 bytes, sha256 08ac735ac7ceeb5a032447deff450c5c540e481377cbe600a9e2855151ce8953
+      outcome_status: SUCCESS
+      expected_and_observed: "SUCCESS (cart_items []; country_code MX (starting value MX)); 2 actions (reset, API); API_RESET, SESSION_RESET; 03:48:07Z to 03:48:07Z"
+      precondition: "4 steps, outcomes SUCCESS"
+      actions: 2
+      predeclared_actions: 2  # executor README section 4
+      action_outcomes: ["SUCCESS", "SUCCESS"]
+      started_at: "2026-10-28T03:48:07Z"
+      finished_at: "2026-10-28T03:48:07Z"
+      reset_mechanisms: ["API_RESET", "SESSION_RESET"]
+      attempt: 1
+      agent_role: ORCHESTRATOR  # run-manifest.json; the first hosted run of the executor that records it (operation OP-EXEC-01)
+      prompt_version: ORCHESTRATOR-E03-resetability-v1  # run-manifest.json and the EXECUTOR_PROMPT_VERSION literal of the DRY_RUN step (operation OP-CI-11)
+      run_id: E03-CS001-SUT01-API__DR0009__A1
+      provenance_stub: "execution_id DR0009, attempt 1, github run_id 40628631086, run_attempt 1, run_number 9, job sut-01-web-api"
+      repeats_run_40361964609: true  # outcome, action count and outcomes, reset mechanisms, precondition steps, and member count equal those of the same condition in manifests/e03-environment-verification-import-v8.yaml (dry_run_review)
+      implementation_digests_in_bundle: none  # executor README section 9: run-condition.sh embeds and verifies the sha256 of every other implementation file before anything else; the job checks run-condition.sh against its committed blob
+    - name: E03-DRY_RUN-E03-CS001-SUT01-WEB-DR0009-A1
+      id: 12790800422
+      size_in_bytes: 256299
+      github_digest: sha256:5f18f64d53dd0d46e2d6561b3ed2d3ac9b464c689d98e5d3a5aa30f1d3664260
+      members: 29
+      condition: E03-CS001-SUT01-WEB
+      executor_exit_status: 0  # exit-status.txt; the job log line 1071 reads "executor exit status: 0"
+      run_manifest_validation_exit_status: 0  # the job log line 1074 (run-manifest validation exit status of E03-CS001-SUT01-WEB: 0); job log sut-01-web-api, 115734 bytes, sha256 08ac735ac7ceeb5a032447deff450c5c540e481377cbe600a9e2855151ce8953
+      outcome_status: FAILURE
+      expected_and_observed: "FAILURE (empty-cart view shown: False; order lines: ['order-item-p02']); 3 actions (reset, navigation, UI); API_RESET, SESSION_RESET; 03:48:11Z to 03:48:13Z"
+      precondition: "6 steps, outcomes SUCCESS"
+      actions: 3
+      predeclared_actions: 2  # executor README section 4
+      action_outcomes: ["SUCCESS", "SUCCESS", "SUCCESS"]
+      started_at: "2026-10-28T03:48:11Z"
+      finished_at: "2026-10-28T03:48:13Z"
+      reset_mechanisms: ["API_RESET", "SESSION_RESET"]
+      attempt: 1
+      agent_role: ORCHESTRATOR  # run-manifest.json; the first hosted run of the executor that records it (operation OP-EXEC-01)
+      prompt_version: ORCHESTRATOR-E03-resetability-v1  # run-manifest.json and the EXECUTOR_PROMPT_VERSION literal of the DRY_RUN step (operation OP-CI-11)
+      run_id: E03-CS001-SUT01-WEB__DR0009__A1
+      provenance_stub: "execution_id DR0009, attempt 1, github run_id 40628631086, run_attempt 1, run_number 9, job sut-01-web-api"
+      repeats_run_40361964609: true  # outcome, action count and outcomes, reset mechanisms, precondition steps, and member count equal those of the same condition in manifests/e03-environment-verification-import-v8.yaml (dry_run_review)
+      implementation_digests_in_bundle: none  # executor README section 9: run-condition.sh embeds and verifies the sha256 of every other implementation file before anything else; the job checks run-condition.sh against its committed blob
+    - name: E03-DRY_RUN-E03-CS001-SUT02-WEB-DR0009-A1
+      id: 12789639770
+      size_in_bytes: 524173
+      github_digest: sha256:7e3e7948f66cd842fc49cccb05291c0dfd6cbf65010eaf8d521ebb2dd6c6a1ad
+      members: 23
+      condition: E03-CS001-SUT02-WEB
+      executor_exit_status: 0  # exit-status.txt; the job log line 853 reads "executor exit status: 0"
+      run_manifest_validation_exit_status: 0  # the job log line 858 (run-manifest validation exit status of E03-CS001-SUT02-WEB: 0); job log sut-02-web, 93213 bytes, sha256 962a09917e979cbc81a57fb35380e1232b5318624c5b9ca8331efcd8a793874a
+      outcome_status: SUCCESS
+      expected_and_observed: "SUCCESS (badge elements 0; aria-label 'Cart, empty'); 3 actions (navigation, reset, UI); APP_DATA_CLEAR; 03:48:00Z to 03:48:03Z"
+      precondition: "4 steps, outcomes SUCCESS"
+      actions: 3
+      predeclared_actions: 2  # executor README section 4
+      action_outcomes: ["SUCCESS", "SUCCESS", "SUCCESS"]
+      started_at: "2026-10-28T03:48:00Z"
+      finished_at: "2026-10-28T03:48:03Z"
+      reset_mechanisms: ["APP_DATA_CLEAR"]
+      attempt: 1
+      agent_role: ORCHESTRATOR  # run-manifest.json; the first hosted run of the executor that records it (operation OP-EXEC-01)
+      prompt_version: ORCHESTRATOR-E03-resetability-v1  # run-manifest.json and the EXECUTOR_PROMPT_VERSION literal of the DRY_RUN step (operation OP-CI-11)
+      run_id: E03-CS001-SUT02-WEB__DR0009__A1
+      provenance_stub: "execution_id DR0009, attempt 1, github run_id 40628631086, run_attempt 1, run_number 9, job sut-02-web"
+      repeats_run_40361964609: true  # outcome, action count and outcomes, reset mechanisms, precondition steps, and member count equal those of the same condition in manifests/e03-environment-verification-import-v8.yaml (dry_run_review)
+      implementation_digests_in_bundle: none  # executor README section 9: run-condition.sh embeds and verifies the sha256 of every other implementation file before anything else; the job checks run-condition.sh against its committed blob
+    - name: E03-DRY_RUN-E03-CS001-SUT03-WEB-DR0009-A1
+      id: 12790413338
+      size_in_bytes: 1340091
+      github_digest: sha256:9369b2856551e4ca27157c7c0c120a8969b94c7e0d5b605471060f41b0fd6634
+      members: 22
+      condition: E03-CS001-SUT03-WEB
+      executor_exit_status: 0  # exit-status.txt; the job log line 1158 reads "executor exit status: 0"
+      run_manifest_validation_exit_status: 0  # the job log line 1163 (run-manifest validation exit status of E03-CS001-SUT03-WEB: 0); job log sut-03-web, 134533 bytes, sha256 2da6a1f24b1b289ad1dc3991dd7177548d69b355943b2b2767d3505024ce2e19
+      outcome_status: FAILURE
+      expected_and_observed: "FAILURE (closed-cart bag quantity '1'); 2 actions (reset, UI); SESSION_RESET; 03:49:28Z to 03:49:31Z"
+      precondition: "4 steps, outcomes SUCCESS"
+      actions: 2
+      predeclared_actions: 2  # executor README section 4
+      action_outcomes: ["SUCCESS", "SUCCESS"]
+      started_at: "2026-10-28T03:49:28Z"
+      finished_at: "2026-10-28T03:49:31Z"
+      reset_mechanisms: ["SESSION_RESET"]
+      attempt: 1
+      agent_role: ORCHESTRATOR  # run-manifest.json; the first hosted run of the executor that records it (operation OP-EXEC-01)
+      prompt_version: ORCHESTRATOR-E03-resetability-v1  # run-manifest.json and the EXECUTOR_PROMPT_VERSION literal of the DRY_RUN step (operation OP-CI-11)
+      run_id: E03-CS001-SUT03-WEB__DR0009__A1
+      provenance_stub: "execution_id DR0009, attempt 1, github run_id 40628631086, run_attempt 1, run_number 9, job sut-03-web"
+      repeats_run_40361964609: true  # outcome, action count and outcomes, reset mechanisms, precondition steps, and member count equal those of the same condition in manifests/e03-environment-verification-import-v8.yaml (dry_run_review)
+      implementation_digests_in_bundle: none  # executor README section 9: run-condition.sh embeds and verifies the sha256 of every other implementation file before anything else; the job checks run-condition.sh against its committed blob
+    - name: E03-DRY_RUN-E03-CS001-SUT04-API-DR0009-A1
+      id: 12790143217
+      size_in_bytes: 25916
+      github_digest: sha256:ad301d65565159733d46a7e513e11c94e50b8180ff3a4c69a11b9b06af0bf0f4
+      members: 32
+      condition: E03-CS001-SUT04-API
+      executor_exit_status: 0  # exit-status.txt; the job log line 1496 reads "executor exit status: 0"
+      run_manifest_validation_exit_status: 0  # the job log line 1501 (run-manifest validation exit status of E03-CS001-SUT04-API: 0); job log sut-04-web-api, 158400 bytes, sha256 b5e9a68de53026dc728bb4670ba21c1af791178b7e84a9f1b0eacb06af47fe17
+      outcome_status: SUCCESS
+      expected_and_observed: "SUCCESS (GET /booking/4 answered 404); 2 actions (reset, API); API_RESET; 03:50:09Z to 03:50:09Z"
+      precondition: "4 steps, outcomes SUCCESS"
+      actions: 2
+      predeclared_actions: 2  # executor README section 4
+      action_outcomes: ["SUCCESS", "SUCCESS"]
+      started_at: "2026-10-28T03:50:09Z"
+      finished_at: "2026-10-28T03:50:09Z"
+      reset_mechanisms: ["API_RESET"]
+      attempt: 1
+      agent_role: ORCHESTRATOR  # run-manifest.json; the first hosted run of the executor that records it (operation OP-EXEC-01)
+      prompt_version: ORCHESTRATOR-E03-resetability-v1  # run-manifest.json and the EXECUTOR_PROMPT_VERSION literal of the DRY_RUN step (operation OP-CI-11)
+      run_id: E03-CS001-SUT04-API__DR0009__A1
+      provenance_stub: "execution_id DR0009, attempt 1, github run_id 40628631086, run_attempt 1, run_number 9, job sut-04-web-api"
+      repeats_run_40361964609: true  # outcome, action count and outcomes, reset mechanisms, precondition steps, and member count equal those of the same condition in manifests/e03-environment-verification-import-v8.yaml (dry_run_review)
+      implementation_digests_in_bundle: none  # executor README section 9: run-condition.sh embeds and verifies the sha256 of every other implementation file before anything else; the job checks run-condition.sh against its committed blob
+    - name: E03-DRY_RUN-E03-CS001-SUT04-WEB-DR0009-A1
+      id: 12789684748
+      size_in_bytes: 1147343
+      github_digest: sha256:3f11dd0c083aa4b717176dc64892edc697b793c16d5171bb05cc8d0c504798e6
+      members: 34
+      condition: E03-CS001-SUT04-WEB
+      executor_exit_status: 0  # exit-status.txt; the job log line 1559 reads "executor exit status: 0"
+      run_manifest_validation_exit_status: 0  # the job log line 1562 (run-manifest validation exit status of E03-CS001-SUT04-WEB: 0); job log sut-04-web-api, 158400 bytes, sha256 b5e9a68de53026dc728bb4670ba21c1af791178b7e84a9f1b0eacb06af47fe17
+      outcome_status: SUCCESS
+      expected_and_observed: "SUCCESS (rows with the run's names and dates after the reset: 0); 2 actions (reset, UI); API_RESET; 03:50:12Z to 03:50:17Z"
+      precondition: "4 steps, outcomes SUCCESS"
+      actions: 2
+      predeclared_actions: 2  # executor README section 4
+      action_outcomes: ["SUCCESS", "SUCCESS"]
+      started_at: "2026-10-28T03:50:12Z"
+      finished_at: "2026-10-28T03:50:17Z"
+      reset_mechanisms: ["API_RESET"]
+      attempt: 1
+      agent_role: ORCHESTRATOR  # run-manifest.json; the first hosted run of the executor that records it (operation OP-EXEC-01)
+      prompt_version: ORCHESTRATOR-E03-resetability-v1  # run-manifest.json and the EXECUTOR_PROMPT_VERSION literal of the DRY_RUN step (operation OP-CI-11)
+      run_id: E03-CS001-SUT04-WEB__DR0009__A1
+      provenance_stub: "execution_id DR0009, attempt 1, github run_id 40628631086, run_attempt 1, run_number 9, job sut-04-web-api"
+      repeats_run_40361964609: true  # outcome, action count and outcomes, reset mechanisms, precondition steps, and member count equal those of the same condition in manifests/e03-environment-verification-import-v8.yaml (dry_run_review)
+      implementation_digests_in_bundle: none  # executor README section 9: run-condition.sh embeds and verifies the sha256 of every other implementation file before anything else; the job checks run-condition.sh against its committed blob
+    - name: E03-DRY_RUN-E03-CS001-SUT05-API-DR0009-A1
+      id: 12790044046
+      size_in_bytes: 24317
+      github_digest: sha256:b4c4c808a70768ab3836eaf8678a0ced2194dfd9fcd85c99428c10c9282dd01a
+      members: 25
+      condition: E03-CS001-SUT05-API
+      executor_exit_status: 0  # exit-status.txt; the job log line 1131 reads "executor exit status: 0"
+      run_manifest_validation_exit_status: 0  # the job log line 1136 (run-manifest validation exit status of E03-CS001-SUT05-API: 0); job log sut-05-api, 117533 bytes, sha256 35655b2797ec50115812bc0285342cdcefc8dd8585d501adb8b27d6f0761899b
+      outcome_status: SUCCESS
+      expected_and_observed: "SUCCESS (data null (absent)); 2 actions (reset, API); ENVIRONMENT_RESTART; 03:48:04Z to 03:48:07Z"
+      precondition: "4 steps, outcomes SUCCESS"
+      actions: 2
+      predeclared_actions: 2  # executor README section 4
+      action_outcomes: ["SUCCESS", "SUCCESS"]
+      started_at: "2026-10-28T03:48:04Z"
+      finished_at: "2026-10-28T03:48:07Z"
+      reset_mechanisms: ["ENVIRONMENT_RESTART"]
+      attempt: 1
+      agent_role: ORCHESTRATOR  # run-manifest.json; the first hosted run of the executor that records it (operation OP-EXEC-01)
+      prompt_version: ORCHESTRATOR-E03-resetability-v1  # run-manifest.json and the EXECUTOR_PROMPT_VERSION literal of the DRY_RUN step (operation OP-CI-11)
+      run_id: E03-CS001-SUT05-API__DR0009__A1
+      provenance_stub: "execution_id DR0009, attempt 1, github run_id 40628631086, run_attempt 1, run_number 9, job sut-05-api"
+      repeats_run_40361964609: true  # outcome, action count and outcomes, reset mechanisms, precondition steps, and member count equal those of the same condition in manifests/e03-environment-verification-import-v8.yaml (dry_run_review)
+      implementation_digests_in_bundle: none  # executor README section 9: run-condition.sh embeds and verifies the sha256 of every other implementation file before anything else; the job checks run-condition.sh against its committed blob
+  earlier_hosted_comparison: "all seven DRY_RUN executions repeat the outcomes, action counts, action outcomes, reset mechanisms, precondition step counts, and member counts of run 40361964609 (manifests/e03-environment-verification-import-v8.yaml, dry_run_review), which repeated those of run 39316211051: SUT01-API SUCCESS, SUT01-WEB FAILURE, SUT02-WEB SUCCESS, SUT03-WEB FAILURE, SUT04-API SUCCESS, SUT04-WEB SUCCESS, SUT05-API SUCCESS; they are repetitions, not new findings; this is the second hosted exercise of the numbering of the DRY_RUN bundles by the run (execution id DR0009, attempt 1: every run manifest carries run_id E03-CS001-<condition>__DR0009__A1, as expected), the second of the repair of operation OP-CI-10 (no bundle stops at 'digest mismatch': none of the five job logs and none of the bundle logs contains that string), and the first hosted exercise of agent_role ORCHESTRATOR (operation OP-EXEC-01) and of the prompt-version literal ORCHESTRATOR-E03-resetability-v1 (operation OP-CI-11): every run manifest records both, and the schema validation of each manifest passed (validation exit status 0 in each job log)"
+  settle_results_verbatim:  # the settle object of each web read in actions.json, as JSON text
+    SUT01-WEB: '{"network_quiet": true, "quiet_ms": 500, "elapsed_s": 0.564}'
+    SUT02-WEB: '{"network_quiet": true, "quiet_ms": 500, "elapsed_s": 0.51}'
+    SUT03-WEB: '{"network_quiet": true, "quiet_ms": 500, "elapsed_s": 0.511}'
+    SUT04-WEB: '{"network_quiet": true, "quiet_ms": 500, "elapsed_s": 0.512}'
+  sut04_web_read_observation:  # the other fields of the SUT04-WEB read in actions.json
+    refetch_chain: [308, 200]
+    refetch_final_status: 200
+    quiet_wait: '{"quiet_500ms": true, "elapsed_s": 0.507}'
+    rows: 1
+    rows_with_the_run_names: 0
+    delete_observation: "{\"delete_request\": \"DELETE http://127.0.0.1:3003/api/booking/5\", \"delete_status\": 202, \"booking_id\": 5}"
+  in_flight_entries:  # the network logs of the four web executions (evidence/*-network-log.json of each bundle)
+    SUT01-WEB: "in_flight_at_navigation 3: 1 font request to third-party hosts, 2 image requests to third-party hosts, all navigated_to the /checkout page"
+    SUT02-WEB: "in_flight_at_navigation none"
+    SUT03-WEB: "in_flight_at_navigation none"
+    SUT04-WEB: "in_flight_at_navigation 6: 5 fetch requests to the local host, 1 script request to the local host, all navigated_to the /reservation/1 page"
+  observations_not_findings:  # observations of this run; none is an R6 finding; nothing is changed in response
+    - "the settle of SUT02-WEB took 0.51 s (13.917 s in run 40361964609 and 0.513 s in run 39316211051), with network_quiet true; the settles of the four web reads are SUT01-WEB 0.564 s, SUT02-WEB 0.51 s, SUT03-WEB 0.511 s, SUT04-WEB 0.512 s"
+    - "SUT01-WEB: 3 requests in flight at the navigation to /checkout (a font and two images of third-party hosts), as in run 40361964609; SUT04-WEB: 6 requests in flight at the navigation to /reservation/1 (5 fetch and 1 script request to the local host), and one request, DELETE /api/booking/5, aborted by the navigation (net::ERR_ABORTED at 2026-10-28T03:50:16.346Z), so the response body of the SUT04-WEB reset action (delete_body) is again not captured, as in runs 38270815417, 39316211051, and 40361964609"
+    - "the jobs ran between 68 s (sut-02-web) and 255 s (sut-02-ios, on macos-15) against about 10.5 minutes for sut-02-web and sut-05-api in run 40361964609: the operating-system packages for the browser were fetched from the package mirror in 2 s in sut-02-web (job log line 602, \"Fetched 25.9 MB in 2s (11.9 MB/s)\") and 3 s in sut-05-api (job log line 852, \"Fetched 25.9 MB in 3s (9645 kB/s)\"), against 9 min 8 s and 9 min 24 s in run 40361964609; an infrastructure outcome of the hosted service"
+    - "runner images: ubuntu24 version 20261023.334.3 for sut-02-web, sut-02-android, sut-03-web, sut-04-web-api, and sut-05-api (as in run 40361964609) and 20261026.354.1 for sut-01-web-api (it was 20261023.334.3 in run 40361964609); macos15 version 20260907.0337.1 for sut-02-ios; the SUT-01 job's Node.js version is v24.22.1 (v24.21.0 in run 40361964609), pnpm 10.34.9"
+    - "the SUT-04 readiness times are longer than in run 40361964609 (web 3.3 s, auth 28.4 s, report 29.5 s, booking 38.8 s, room 39.0 s, branding 39.2 s, message 39.5 s, against 3.2, 15.6, 16.1, 22.2, 22.3, 22.5, and 22.6), all within the 300 s bound"
+    - "the job sut-02-ios was cancelled by GitHub without a runner in run 40361964609 and ran to the end here (10 steps, success, 255 s) on the hosted macOS runner; the same iPhone 16 Pro simulator (iOS 18.5, Xcode 16.4) and release 2.2.2 as in run 39316211051"
+  notes_as_observations_only: "nothing is changed in response to an outcome; the FAILURE outcomes of SUT01-WEB and SUT03-WEB and the two three-action counts (SUT01-WEB 3 and SUT02-WEB 3 against 2 predeclared) are the same repetitions as in runs 39316211051 and 40361964609 and remain review items of the DRAFT executor before the lock, never SUT findings"
+
+lock_items_inputs:  # for the corrections before the lock, not applied here (each with its own approval)
+  - "the two FAILURE outcomes and the two three-action counts, as repetitions of runs 39316211051 and 40361964609"
+  - "the SUT04-WEB delete_body capture (the response is aborted by the navigation)"
+  - "the SUT-04 jobs' Node.js 24.21.0 against the SUT README's Node 24.14.1 and NPM 11.11.0"
+  - "the settle and in-flight values above (the 13.917 s settle of SUT02-WEB in run 40361964609 did not recur)"
+  - "resolved by this run: the first hosted exercise of agent_role ORCHESTRATOR and of the prompt-version literal ORCHESTRATOR-E03-resetability-v1 (every run manifest validates), and the SUT-02-ios verification that the previous run lacked"
+
+baseline_checks:  # performed in step S1 and before the first write of the transcription (values read; STOP on any mismatch: none)
+  head: "e6c2f96af921a30d149e2f43a8a9ef751a6b1b9f (main), tree ca34feb28eb8d9ac88a76a87d3654e91773dfc2d; tracked tree clean; nothing staged"
+  public_main: 7d80b81060ff7e45e1fde98ab47b13ab42c37730
+  run: {id: 40628631086, run_number: 9, run_attempt: 1, status: completed, conclusion: success, attempts_2: "HTTP 404"}
+  jobs: "seven (read from the jobs API in step S1): all success"
+  artifacts: "fourteen (read from the artifacts API in the process that wrote the import record): seven ENVIRONMENT_VERIFICATION and seven DRY_RUN; ids, sizes, digests, and expires_at equal to the completion block of manifests/e03-environment-verification-run-v9.yaml; none expired (2027-01-26T03:47:00Z)"
+  archives: "the fourteen archives were downloaded into their own directories outside the repository in step S0, each equal to its GitHub digest and size at download; the seven ENVIRONMENT_VERIFICATION archives and the seven DRY_RUN archives were re-hashed again in step S1, in the same process as the artifacts API read"
+  files_edited_at_e6c2f96a: "README.md 31186 bytes sha256 abb4d7d34668a5052454f6e204f7c1ba00ac50bb4c54206a0455d6df82720096; experiments/E03-resetability/README.md 35339 bytes sha256 36f20285ad8b543c20d46dadf74c74a9e0102cef17f01e7828fc2c0762f0c3d1; experiments/E03-resetability/ci-cd-execution-model.md 31790 bytes sha256 4b220c70d5ccbd44abde39600f7bbb2821f0ddc6fa218896a9fec613413f9289; experiments/E03-resetability/controlled-instance-determination.md 12277 bytes sha256 ddf8e5d8ca083b048d8ce09fac8f65d828da956be98ba04e650eb29c84686195; experiments/E03-resetability/controlled-instance-status.yaml 40743 bytes sha256 cc956f857040c70b68f5eaf16cce07068797568acc206e434263a3423e3d10d4; experiments/E03-resetability/environment-verification/README.md 20068 bytes sha256 e8bd024c3da63ea604f189d6641bed100268c243e63c232f504061b19a01b06a; manifests/README.md 77500 bytes sha256 10ac593804a02e181ff1d2bbbe40208b69c938631491d6432e60d01ec3559949; manifests/study-manifest.yaml 155188 bytes sha256 7d9bdb6782540b0785ddd73e30369951ed5d8e346a7c8f1c7685999bfdb6c6a1"
+  experiments/E03-resetability/environment-verification/github-actions/.gitattributes: "* -text"
+  workflow: "canonical sha256 078760c551fbc8df44cb208bcac22cc65f6fa8ee4e7c2559172e74d7760c28bd (172078 bytes; equal at HEAD and at the export source 7ea92cbe); public sha256 8014ca8e7f9477d245efb92e21cb9b95d48547a109cec08e21c075801b7cbde4 (172090 bytes, public blob 040049f40267c1452569a83f2ae90110c2e4acf7), read from the contents API at 7d80b81"
+
+import:
+  import_record: experiments/E03-resetability/environment-verification/github-actions/run40628631086-a1/IMPORT-RECORD.yaml
+  import_record_sha256: 3d8ebe9ef0bc2719758b2ec822ac35402553deba13bb04e56a93fa19ff94fd7e
+  import_record_bytes: 25517
+  archives: 7  # each kept as <artifact name>.zip beside its members, equal to its GitHub digest
+  members: 54  # sut-01-web-api 5, sut-02-web 3, sut-02-android 6, sut-02-ios 7, sut-03-web 3, sut-04-web-api 14, sut-05-api 16
+  byte_exact: "each member equals its archive member byte for byte (proved in step S1: working-tree bytes equal the archive member; git hash-object with and without --no-filters gives the same blob as the bytes, for the 54 members and the 7 archives; the gitattributes rule * -text); the empty members (sut-02-web/web-stderr.log, sut-03-web/web-stderr.log, sut-05-api/api-stderr-2.log) and the two PNG members (sut-02-android/launch-screenshot.png, sut-02-ios/launch-screenshot.png) are imported as archived; no text member has CRLF"
+  hygiene_scan_at_import: "0 private-path, 0 vendor-term, 0 secret-like lines in the 54 members and in the 7 archive bytes of the ENVIRONMENT_VERIFICATION artifacts, and in the 188 members and the 7 archive bytes of the DRY_RUN bundles (the validation workflow's patterns), scanned in memory before the first write"
+  host_path_markers: "<host-path> 35 times in 14 members (sut-02-ios 2 in 2; sut-04-web-api 14 in 8; sut-05-api 19 in 4)"
+  private_address_marker: "<private-address> once, in sut-04-web-api/sut04-web.log line 7 (the Network line of the start-up banner: \"- Network:       http://<private-address>:3003\")"
+  rfc1918_scan: "0 lines in the 54 members and 0 matches in the raw bytes of the 7 archives (and 0 in the DRY_RUN bundles); over the tracked tree of a scratch checkout of HEAD plus this operation's files the scan finds exactly the two old hits, line 7 of sut-04-web-api/sut04-web.log under run38270815417-a1/ and under run39316211051-a1/ (the pattern of PUBLIC-EXPORT-MANIFEST.yaml, environment_verification_private_address_redaction.pattern)"
+  uuid_shaped_member_lines: "imported bytes, not written by this operation: sut-02-ios/container.txt lines 1; sut-02-ios/environment-verification.json lines 26, 34; sut-04-web-api/sut04-booking.log lines 20, 26, 30; sut-04-web-api/sut04-branding.log lines 20, 26, 30; sut-04-web-api/sut04-message.log lines 20, 26, 30; sut-04-web-api/sut04-room.log lines 20, 26, 30 (the in-memory database name of the SUT-04 services, and the identifiers of the simulator device and of the app container in the iOS record and container.txt)"
+  scans_of_the_prepared_tree: "on a scratch checkout of HEAD plus this operation's new and edited files (built with git archive of HEAD and an overlay of the working-tree files; the import record of the operation, which contains no new hit, was checked again in the final verification of the complete tree): (1) the validation workflow's hygiene step (extracted from .github/workflows/e03-validate.yml, not retyped): 89 private-path lines in 10 files, identical to the 89 lines of the scratch checkout of HEAD alone, 0 vendor-term, 0 secret, and none in the new import or the edited files; (2) the validation workflow's YAML parse step: return code 0, 119 yaml files at HEAD and 120 with the import record of the run and the edited files; (3) the RFC 1918 literal scan: exactly the 2 old line-7 hits, identical to the scratch checkout of HEAD"
+
+transcription:
+  file: experiments/E03-resetability/controlled-instance-status.yaml
+  commit: "the second commit of this operation carries the transcription below; its bytes were prepared and checked before the first commit"
+  multi_run_semantics: "defined 2026-10-04 (operation OP-ENV-05): an entry is never removed or rewritten; the latest run that ran a job for a condition governs gate G-8; run 40628631086 governs all nine conditions"
+  summary_github_actions_verified: 9
+  dates_used: "updated and entry 9's transcribed: 2026-10-28 (the UTC date of the commits); entry 9's date and every since written by this operation: 2026-10-28, the governing run's date (the UTC date of its created_at, 2026-10-27 in America/Mexico_City)"
+  table:  # condition, job, job id, github_job_conclusion, record_verification_result, run_id, status (all nine are VERIFIED; the iOS value is the only status that changes)
+    - {condition: E03-CS001-SUT01-WEB, job: sut-01-web-api, job_id: 122619512382, github_job_conclusion: success, record_verification_result: VERIFIED, run_id: 40628631086, status: VERIFIED}
+    - {condition: E03-CS001-SUT01-API, job: sut-01-web-api, job_id: 122619512382, github_job_conclusion: success, record_verification_result: VERIFIED, run_id: 40628631086, status: VERIFIED}
+    - {condition: E03-CS001-SUT02-WEB, job: sut-02-web, job_id: 122619512372, github_job_conclusion: success, record_verification_result: VERIFIED, run_id: 40628631086, status: VERIFIED}
+    - {condition: E03-CS001-SUT02-ANDROID, job: sut-02-android, job_id: 122619512234, github_job_conclusion: success, record_verification_result: VERIFIED, run_id: 40628631086, status: VERIFIED}
+    - {condition: E03-CS001-SUT02-IOS, job: sut-02-ios, job_id: 122619512487, github_job_conclusion: success, record_verification_result: VERIFIED, run_id: 40628631086, status: VERIFIED}
+    - {condition: E03-CS001-SUT03-WEB, job: sut-03-web, job_id: 122619512241, github_job_conclusion: success, record_verification_result: VERIFIED, run_id: 40628631086, status: VERIFIED}
+    - {condition: E03-CS001-SUT04-WEB, job: sut-04-web-api, job_id: 122619512084, github_job_conclusion: success, record_verification_result: VERIFIED, run_id: 40628631086, status: VERIFIED}
+    - {condition: E03-CS001-SUT04-API, job: sut-04-web-api, job_id: 122619512084, github_job_conclusion: success, record_verification_result: VERIFIED, run_id: 40628631086, status: VERIFIED}
+    - {condition: E03-CS001-SUT05-API, job: sut-05-api, job_id: 122619512492, github_job_conclusion: success, record_verification_result: VERIFIED, run_id: 40628631086, status: VERIFIED}
+  live_status_edits_in_the_status_file: "nine github_actions_verification mappings replaced (the eight VERIFIED blocks with the values of the run's job records, and E03-CS001-SUT02-IOS restored to VERIFIED with its record path, its job record values, and the history of its NOT_VERIFIED under run 40361964609; its cause key is dropped); updated; the github_actions_runs comment; entry 9 appended after entry 8; summary github_actions_verified 9 and the reverification_required comment; entries 1-8 unchanged (parsed and compared); status, workstation_verification, mobile_qualification_applicable, mobile_qualification_status, and measured_execution_readiness unchanged for every condition; in E03-CS001-SUT05-API the provisioning_route and run_3_not_verified_explained keys unchanged"
+  check_of_each_value_against_its_job_record: "performed before writing: workflow, job_id, run_id, run_attempt, run_target, workflow_canonical_sha256, github_job_conclusion, record_verification_result, and record paths of each mapping against the API read of step S1 and the imported records; the SUT-04 readiness times and the SUT-05 process-group numbers were read from the imported environment-verification.json of each job"
+  status_file_sha256_after: 81ed671a4a758962d12ce2e00791bb441c0e4b73b2be8b90b972407125b3c685  # 41220 bytes; the bytes of the second commit
+  gate_g8_static_check: "the G-8 block of .github/workflows/e03-measured-execution.yml, extracted and run with gate() stubbed over the transcribed status file of the scratch checkout: admitted for all nine conditions (E03-CS001-SUT01-WEB, -SUT01-API, -SUT02-WEB, -SUT02-ANDROID, -SUT02-IOS, -SUT03-WEB, -SUT04-WEB, -SUT04-API, and -SUT05-API); gate G-7 refuses the two mobile conditions regardless; measured_execution_ready stays 0"
+
+live_status_edits:
+  files:  # representation only; before and after bytes and sha256 of each edited file (the second commit)
+    - {path: README.md, before_bytes: 31186, after_bytes: 31105, after_sha256: d0fc3d1ac9f84427b9f16ae4b8e34c6dd1efd92b1546518970841978d2e350e4}
+    - {path: experiments/E03-resetability/README.md, before_bytes: 35339, after_bytes: 36956, after_sha256: 4ae42fd00dfe1c2b7850648613f8f462050cd169e981ff6620d86032ca96e79a}
+    - {path: experiments/E03-resetability/ci-cd-execution-model.md, before_bytes: 31790, after_bytes: 32659, after_sha256: 62a5da8ac389344dc9c19c46ab172f5c1b54f8fb8cbeb6334f1ed1a96048972d}
+    - {path: experiments/E03-resetability/controlled-instance-determination.md, before_bytes: 12277, after_bytes: 12599, after_sha256: 4d42c6f96b78651cb37088892021572e409c8a755d8ffa391e68753b0967a407}
+    - {path: experiments/E03-resetability/controlled-instance-status.yaml, before_bytes: 40743, after_bytes: 41220, after_sha256: 81ed671a4a758962d12ce2e00791bb441c0e4b73b2be8b90b972407125b3c685}
+    - {path: experiments/E03-resetability/environment-verification/README.md, before_bytes: 20068, after_bytes: 22860, after_sha256: 7925f80572e4ff7b03e5451ca301175b791512a71e5f705905968f6f5ef05675}
+    - {path: manifests/README.md, before_bytes: 77500, after_bytes: 80826, after_sha256: 08c935fc687038054c057787c63c852803bf0cc81489479dae81a3cbfef40ad7}
+    - {path: manifests/study-manifest.yaml, before_bytes: 155188, after_bytes: 158553, after_sha256: 4deb53b8ca163b8652a84f3f32c2a44d549ef9491beca563e9f7c4998c1b82fd}
+    - "this record itself is not in the list: its own sha256 is not recorded in it (that would be circular); manifests/README.md lists it in its import-v9 row"
+  not_edited: "the agent-instructions file (its live-status text names export v36 as the last export and run 39316211051 as the governing run; an edit needs its own explicit approval and is proposed in the closing report of this operation), research-status.html (refreshed after this operation under its standing rule), manifests/sut-manifest.yaml (its dated status sentences stay true), any workflow, the executor, its README, PUBLIC-EXPORT-MANIFEST.yaml, the export tooling, and raw-data/"
+
+reported_not_fixed:  # REPORTED, NOT FIXED
+  - "the live-status text of the agent-instructions file (export v36 as the last export; run 39316211051 as the governing run): a one-line edit proposal goes to the human research lead at the close of this operation"
+  - "research-status.html: it describes the state at commit 122aefbf (the dispatch record prepared and not approved, the DRY_RUN not dispatched); it is refreshed after this operation, in one batch, under its standing rule, not here"
+  - "manifests/e03-campaign-start-package-v1.yaml names export v38 for the START state and carries verification counts of its own date; package version 2 is a separate step and recomputes them"
+  - "the observations under dry_run_review.observations_not_findings, and the lock items above"
+  - "the downloadability of every artifact of the run until 2027-01-26T03:47:00Z"
+  - "the representation-only mobile_qualification_status values, unchanged"
+  - "the basis of the run record's permission_prompt field: the Bash call of the dispatch returned exit status 0 after about 22 s with no prompt observed; the transcript tool result carries no permission-decision field, so the statement rests on that and on the permission mode of the human turns"
+
+not_done:
+  - "no dispatch, re-run, or cancellation (the retry policy of the dispatch record is none); no import of any DRY_RUN bundle; no edit of any workflow, the executor, its README, manifests/sut-manifest.yaml, PUBLIC-EXPORT-MANIFEST.yaml, the export tooling, raw-data/, research-status.html, or the agent-instructions file; no export, push, worktree change, or E03 START; no measured execution; no authorization"
+  - "the ENVIRONMENT_VERIFICATION records were not re-derived from the executor; their values were read from the imported records"
+procedure: "the first commit carries the import directory, its IMPORT-RECORD.yaml, and this record; the second commit carries the status transcription and the live-status edits; explicit paths, the existing git identity, no trailers, no push"

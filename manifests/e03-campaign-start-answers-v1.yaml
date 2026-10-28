@@ -1,0 +1,126 @@
+# manifests/e03-campaign-start-answers-v1.yaml -- the human research lead's answers of 2026-10-28 to the open items and the confirmations of the E03 campaign START package version 2.
+# ORCHESTRATOR record of operation OP-LOCK-03 (2026-10-28). It records answers and opens one append-only escalation row; it starts, authorizes, dispatches, freezes, exports, and pushes nothing.
+# The package it answers (manifests/e03-campaign-start-package-v2.yaml) stays unchanged: this record carries the consequences. Immutable once committed; a correction is a new version file.
+record_class: E03_CAMPAIGN_START_PACKAGE_ANSWERS
+record_id: E03-START-PACKAGE-02-ANSWERS-01
+study_id: EUS-2026-001
+campaign_id: E03-resetability
+operation_id: OP-LOCK-03
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-10-28'
+recorded_on_timezone: America/Mexico_City
+status: RECORDED
+measured_experiment: false
+executes_anything: false
+protocol_change: false  # the row PROTO-U21 is appended to protocol/unresolved.md, an append-only log exempt from the protocol lifecycle (its own header); no file whose state is FROZEN-PRE-DATA or AMENDED is edited
+authorizes: "nothing: not the START, not a dispatch authorization, not a dispatch, not the freeze of the dispatch procedure prompt, not the lock of the implementation hash, not an export or a push"
+answers_package:
+  record_id: E03-START-PACKAGE-02
+  path: manifests/e03-campaign-start-package-v2.yaml
+  sha256: cbc1f0eb71371c36998ffd1b77054b26ff820f0d9324ff7f7f15e59e5b8e4b94
+  status: PREPARED  # unchanged by this record
+  canonical_head_when_recorded: 381cbd9ede2e591d120ef0b381b01197535b9f90
+human_answer:
+  text_verbatim: " sí a todo con tus recomendaciones"  # the leading space is part of the 35 bytes
+  bytes: 35
+  sha256: 7e09d02a2f70a4844760775cf22da42d216fcf3d517be0c36ee4b78f4eaff0db
+  received_utc: "2026-10-28T19:21:00.259Z"  # stamp of the stored conversation entry
+  received_local: "2026-10-28T13:21:00.259-06:00 (America/Mexico_City)"
+  entry_kind: a text entry typed by the human research lead in the ORCHESTRATOR conversation
+  answers: the report below, which listed each open item and each confirmation with a recommendation
+report_answered:
+  delivered_utc: "2026-10-28T18:59:25.682Z"
+  delivered_local: "2026-10-28T12:59:25.682-06:00 (America/Mexico_City)"
+  bytes: 4105
+  sha256: 5e340ca1232390443b7dfbb4bc5c0965c982a300142e9f88c77c94513dcf4f83
+  content: the HARD STOP 3 report; OPEN-2 to OPEN-6, KI-1/KI-2, the live-status edit and the six confirmations, each with its recommendation; it asked for no START approval
+meaning_of_the_answer: "\"sí a todo con tus recomendaciones\" accepts the recommendation stated in the report for every item listed under decisions; it is not an answer to any item that the report did not list and it is not an approval of the START"
+decisions:
+- id: OPEN-2
+  question: "SUT-05 reset action count (executor README, section 11, Q1): the restart as ONE reset action, or TWO"
+  answer: yes, with the recommendation stated in the report
+  decision: "the restart of E03-CS001-SUT05-API counts as ONE reset action (the wording of the frozen mapping); the predeclared count of the condition stays 2, including the API read"
+  effect: "no document is edited; the wording FLAGGED in Q1 of the executor README is history that this record resolves"
+  applied: "at execution, by the executor realization as already written"
+- id: OPEN-3
+  question: "open a non-blocking escalation row on the scope of the CS-001 SUT-03 reset_realization"
+  answer: yes, with the recommendation stated in the report
+  decision: "open the row; the frozen mapping is not edited"
+  effect: "protocol/unresolved.md gains one row"
+  applied: "row PROTO-U21, appended in the same commit as this record"
+- id: OPEN-4
+  question: "scope of evaluated_version_frozen in manifests/sut-manifest.yaml"
+  answer: yes, with the recommendation stated in the report
+  decision: "set it to true for SUT-01 to SUT-05, the five systems under test with an executable condition, and leave SUT-06 false"
+  effect: "one edit of manifests/sut-manifest.yaml in the START commit; no gate reads the flag"
+  applied: "at the START (item 5 of the START edit set of the package); not applied here"
+- id: OPEN-5
+  question: "authorization ids"
+  answer: yes, with the recommendation stated in the report
+  decision: "E03-START-AUTH-01 for the START; E03-DISPATCH-SUT01-AUTH-01 to E03-DISPATCH-SUT05-AUTH-01 for the five dispatch authorizations, one per SUT; the E03-LAUNCH-SUT0N-AUTH-01 ids proposed in package version 1 and kept in version 2 are not used, because no session is launched under governance v4 (no tracked file other than the two START packages and the governance v4 amendment proposal names them, and no workflow or frozen file does)"
+  effect: "the START id appears in the change-log row and is an input of every dispatch; the dispatch authorization ids appear in the dispatch records; the candidate section text does not name them, so it does not change for this item"
+  applied: "at the START and at each dispatch authorization; not applied here"
+- id: OPEN-6
+  question: "order of dispatches and dispatch record (new in package version 2)"
+  answer: yes, with the recommendation stated in the report
+  decision: "the order is confirmed as proposed (within a dispatch authorization, the conditions of the assigned SUT in the order of the Conditions table, each condition completed, EX0001 to EX0050 ascending, each after the run before it concluded, before the next condition of the same SUT starts; no order across SUTs); the format of the dispatch record is one YAML file per condition, manifests/e03-measured-dispatch/<condition id>.yaml, whose last key events grows only by entries appended at its end, instead of the JSONL file of the package"
+  effect: "the subsection \"Order of dispatches and dispatch record\" of the candidate section changes as stated under section_text_delta; the files are created at the first dispatch of each condition; one commit per dispatch under the proposal"
+  applied: "at the START, in the section that the START commit inserts; not applied here"
+- id: KI-1-KI-2
+  question: "the two known imprecisions of the approved text of governance v4"
+  answer: yes, with the recommendation stated in the report
+  decision: "option (a): leave them as documented in manifests/agent-governance-v4-amendment-v1.yaml (the default); the ORCHESTRATOR reads the Dispatch paragraph of section 3.5 as the specific rule for E03"
+  effect: "none on the START"
+  applied: "nothing to apply"
+- id: INSTRUCTIONS-FILE-LIVE-STATUS
+  question: "edit of the live-status bullet of the agent-instructions file (it still names export v36 and run 39316211051 as governing)"
+  answer: yes, with the recommendation stated in the report
+  decision: "points 1 to 4 of the renewed proposal are approved (sha256 619cbbfff97178f17853b73ce05517e6b1d04f8f518886a9cc454b10663657a1, 2298 bytes): name export v37 and export v38; run the count to nine and add the eighth and ninth environment-verification runs; run 40628631086 governs all nine conditions; point 4 (optional) is applied in the past tense because the confirmations were given before the edit is made"
+  effect: "one edit of the agent-instructions file; no rule, authorization, or write boundary changes"
+  applied: "in the commit that follows the one that records this file"
+confirmations_given:  # restated at the START by the package (confirmations_requested_at_start); the answer is yes to each, as worded in the executor README, sections 3, 4, 11 and 12
+- id: Q2
+  what: "SUT-05: the account mc.safesearch with no seeded basket, and data null after the restart, count as the declared starting state restored"
+- id: Q6
+  what: "SUT-01 WEB: realization W-A (the reset through POST /api/session/reset because the pinned web surface offers no reset control; the value the first load stored is read and recorded); W-B and W-C stay recorded as excluded alternatives"
+- id: Q9
+  what: "SUT-03 WEB: realization O1 (Logout, then a read of the closed-cart bag; count 2; the outcome recorded as observed); O2 (a counted page load before the read, count 3) is the excluded alternative"
+- id: NAV-RULE
+  what: "the uniform navigation rule: a page load or route change needed to observe the surface after the reset is performed and counted, identically for every SUT"
+- id: SURFACE-CONTROL-RULE
+  what: "on a web condition the reset is triggered through the web surface own control when the pinned surface offers one that performs the mapping reset mechanism; otherwise through the mapping endpoint"
+- id: OBSERVED-FAILURES
+  what: "E03-CS001-SUT01-WEB and E03-CS001-SUT03-WEB record FAILURE as observed under rows 4.2 and 4.4 as ruled; nothing is changed in response to an outcome"
+section_text_delta:  # OPEN-6 only; the candidate section of package version 2 is otherwise unchanged
+  applies_to: candidate_configuration_section of manifests/e03-campaign-start-package-v2.yaml, subsection "Order of dispatches and dispatch record" (its single paragraph)
+  candidate_section_before:
+    sha256: fbdc80f542203d475bf3f6895508bede0f443a67c394f48ffe73c09d5d29bddf  # reconstructed from the package block byte for byte (13,496 bytes, one final line feed) before this record was written
+    status: no longer describes the text that the START inserts
+  replacements:  # counted, each applied exactly once to the paragraph
+  - old: "the append-only record is one file per condition, `manifests/e03-measured-dispatch/<condition id>.jsonl`, one line per event; the line of a dispatch ("
+    new: "the append-only record is one YAML file per condition, `manifests/e03-measured-dispatch/<condition id>.yaml`, whose last key `events` is a list that grows only by entries appended at its end, one entry per event, an entry once committed never being edited or removed; the entry of a dispatch ("
+  - old: "and the line of its run identity ("
+    new: "and the entry of its run identity ("
+  - old: "no later than the dispatch line of the next execution"
+    new: "no later than the dispatch entry of the next execution"
+  paragraph_before_sha256: 0335df52c4b6f6adaca4c75c4288d9138ce27a8aae28e95a10dd88c6472d45bd
+  paragraph_after: "Order (fixed here, before the first dispatch; protocol/agent-governance-v4.md, section 3.5, \"Execution without cross-SUT adaptation\"): within a dispatch authorization, the conditions of the assigned SUT are dispatched in the order of the Conditions table above, a condition being completed (EX0001 to EX0050, in ascending order, each only after the run before it concluded) before the next condition of the same SUT starts; no order across SUTs is fixed by this record, the dispatches under different dispatch authorizations are independent of each other, and no decision whether, when, or how to dispatch an execution depends on a measured output of any SUT. Dispatch record: the append-only record is one YAML file per condition, `manifests/e03-measured-dispatch/<condition id>.yaml`, whose last key `events` is a list that grows only by entries appended at its end, one entry per event, an entry once committed never being edited or removed; the entry of a dispatch (condition id, execution id, attempt, inputs, the UTC clock reading, and the revisions of the public repository and of the workflow file that are dispatched) is committed before the dispatch is made, and the entry of its run identity (run id, run number, run attempt, head sha, creation time) is committed no later than the dispatch entry of the next execution of that condition, or at the close of the condition. The stop conditions are those of the frozen dispatch procedure."
+  paragraph_after_sha256: 46b41d017dce21bf12342dff5fcf2de8962ba489c2151108a8cf40c31b6dae21  # of the paragraph text above, without a final line feed
+  candidate_section_after:
+    sha256: c0b059b495d2f08fd62e3d97a0a880013775f228d6a026fe8d9a09f0cab4f8ba  # the old section with the paragraph replaced, one final line feed
+    bytes: 13641
+  other_tokens: START_DATE, START_AUTH_ID, PROMPT_SHA256 and START_TIMESTAMP stay bound at the START as in the package
+  change_log_row: unchanged; its wording ("append-only dispatch record per condition") holds for the YAML format
+  rehearsal: the gate rehearsal and the validation-workflow invariants are rerun at the START on the committed tree, and the gate step again on the exported tree at the export v39 dry run; neither is claimed by this record
+  validation_basis: the validation workflow (.github/workflows/e03-validate.yml) parses every file matched by manifests/**/*.yaml, recursively, with a plain YAML load and no per-file schema, so a dispatch record in a new subdirectory is parsed on every push and no workflow edit is needed
+not_approved_by_this_answer:
+- "the E03 campaign START, which is a separate explicit approval of that exact action"
+- "any dispatch authorization (E03-DISPATCH-SUT01-AUTH-01 to E03-DISPATCH-SUT05-AUTH-01 are names, not issued authorizations) and any dispatch"
+- "the freeze of the dispatch procedure prompt and the lock of the implementation hash, which land at the START"
+- "any export, push, or workflow edit"
+- "the edits of the START edit set (the Campaign configuration section, the change-log row, the study-manifest status line, the frozen prompt, manifests/sut-manifest.yaml)"
+- "any decision on the mobile path"
+next_steps:
+- "the edit of the live-status bullet of the agent-instructions file, in its own commit"
+- "the START, only when the human research lead approves that exact action (authorization id E03-START-AUTH-01); the START commit then writes the section of section_text_delta, binds the tokens, writes the frozen prompt as a byte-identical copy, applies item 5, and reruns the gate rehearsal on the committed tree"
+- "the export v39 of the START state, then one dispatch authorization per SUT, each a separate approval"

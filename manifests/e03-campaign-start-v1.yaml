@@ -1,0 +1,97 @@
+# manifests/e03-campaign-start-v1.yaml -- provenance record of the E03-resetability campaign START (protocol/change-control-v1.md, section 7, moment 1: NOT_STARTED -> IN_PROGRESS).
+# Modeled on manifests/e01-campaign-start-v1.yaml. A provenance record, not a second campaign-configuration record: the configuration itself is authoritative in
+# experiments/E03-resetability/README.md, section "Campaign configuration"; this file certifies when the START happened, on what basis, and against which inputs.
+# ORCHESTRATOR record of operation OP-START-01 (2026-10-28). Immutable once committed; a correction is a new version file.
+record_class: E03_CAMPAIGN_START
+record_id: E03-START-01
+study_id: EUS-2026-001
+campaign_id: E03-resetability
+operation_id: OP-START-01
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-10-28'
+recorded_on_timezone: America/Mexico_City (the UTC date at the time of writing was also 2026-10-28)
+status: RECORDED
+transition: NOT_STARTED -> IN_PROGRESS
+start_timestamp: '2026-10-28T20:59:33Z'  # one UTC clock reading taken when the edits were written; the commit that carries them follows it
+authorization_id: E03-START-AUTH-01
+start_approved_by: gilbertosanchez  # the human research lead, by the explicit approval below
+started_by: ORCHESTRATOR
+measured_experiment: false
+executes_anything: false
+protocol_change: false  # the START applies the configuration lock that protocol/change-control-v1.md, section 7, already defines; no document under protocol/ other than the append-only change log is edited
+human_approval:
+  text_verbatim: "Apruebo el START de E03 (E03-START-AUTH-01): 7 condiciones web/api, N=50"
+  bytes: 72
+  sha256: 8e48960b2d810543569b38d42a59a5b775bc1e4953ec3401f25fe8fb34d94cc6
+  received_utc: "2026-10-28T20:45:59.091Z"  # stamp of the stored conversation entry
+  received_local: "2026-10-28T14:45:59.091-06:00 (America/Mexico_City)"
+  entry_kind: a text entry typed by the human research lead; the line had been presented on its own, apart from the report that preceded it
+  scope: the START of the E03 campaign with the seven executable web/api conditions and N = 50 per condition, under the authorization id above
+  preceded_by: manifests/e03-campaign-start-answers-v1.yaml (the answers of 2026-10-28 to the open items and the confirmations of the package; they were not an approval of the START and this record does not rely on them for that)
+pre_start_state:
+  canonical_head: ac40ad35d2c100d5e90cb1aac2dbb9213dcaba00
+  public_main: 7d80b81060ff7e45e1fde98ab47b13ab42c37730  # export v38; nothing is pushed by the START
+  e03_status_before: NOT_STARTED
+  latest_environment_verification_run: 40628631086  # all nine conditions VERIFIED on GitHub Actions
+  package: {path: manifests/e03-campaign-start-package-v2.yaml, sha256: cbc1f0eb71371c36998ffd1b77054b26ff820f0d9324ff7f7f15e59e5b8e4b94, status: PREPARED, unchanged}
+  answers: {path: manifests/e03-campaign-start-answers-v1.yaml, sha256: e3f34f633be55caac4f52d810aa0d64b4da24132acc2631ddee0103f1420efe7, bytes: 13880}
+tokens_bound:
+  START_DATE: '2026-10-28'
+  START_AUTH_ID: E03-START-AUTH-01
+  PROMPT_SHA256: 4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1
+  START_TIMESTAMP: '2026-10-28T20:59:33Z'
+configuration_section:
+  path: experiments/E03-resetability/README.md
+  heading: Campaign configuration
+  sha256: dba46253092d8d8c66861f584677655841192d683e1954dbc53e51d10956f3cc  # from the heading line to the end of its last line, one final line feed, tokens bound
+  bytes: 13690
+  derivation: the candidate section of the package (13,496 bytes, sha256 fbdc80f542203d475bf3f6895508bede0f443a67c394f48ffe73c09d5d29bddf) with the three counted replacements of the dispatch-record paragraph recorded in the answers file (OPEN-6; 13,641 bytes, sha256 c0b059b495d2f08fd62e3d97a0a880013775f228d6a026fe8d9a09f0cab4f8ba), then the four tokens above bound; no other text differs
+change_log_row:
+  path: protocol/CHANGELOG.md
+  sha256: 4a17bfbfb7065692ddfa5d8632b922529fb86b176b6908eac00e9ed80e600a2c  # the row line with its final line feed
+  bytes: 1509
+  rows_for_this_transition: 1
+frozen_prompt:
+  version_id: ORCHESTRATOR-E03-resetability-v1
+  path: prompts/frozen/ORCHESTRATOR-E03-resetability-v1.md
+  sha256: 4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1
+  bytes: 17618
+  working_copy: prompts/working/ORCHESTRATOR-E03-resetability-v1.md  # byte-identical, unchanged; the frozen copy is written once (prompts/README.md, rule 2)
+locked_inputs:
+  executor_implementation: {path: experiments/E03-resetability/executor/run-condition.sh, sha256: 9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44, bytes: 3764}
+  run_manifest_schema: {path: schemas/run-manifest.schema.v2.json, sha256: 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757}
+  canonical_scenario: {path: experiments/scenario-mappings/CS-001.yaml, sha256: e251e3825ebbbe3aa1a0f3fee8a30131fa1e0910161ae583a09cb34d9f1cc583, mapping_status: FROZEN}
+  agent_governance: {path: protocol/agent-governance-v4.md, sha256: d01011cf85dfdbed3dda7acef45927a4b1e1155a52bbddc1863a4d051e6a7e83, state: FROZEN-PRE-DATA}
+  workflow: {path: .github/workflows/e03-measured-execution.yml, sha256: ecb0916b1844cb1d04e85cc1e254c23f7650fa42171863a2dc451b0cfbb9af3d, edited: false}
+conditions:
+  executable: [E03-CS001-SUT01-WEB, E03-CS001-SUT01-API, E03-CS001-SUT02-WEB, E03-CS001-SUT03-WEB, E03-CS001-SUT04-WEB, E03-CS001-SUT04-API, E03-CS001-SUT05-API]
+  n_per_condition: 50  # EX0001 to EX0050, attempt 1 each; 350 planned executions
+  blocked: [E03-CS001-SUT02-ANDROID, E03-CS001-SUT02-IOS]  # recorded, not omitted; gate G-7 refuses both (mobile_runner_status UNRESOLVED_AFTER_FALLBACK_FAILURE)
+other_edits_of_the_start_commit:
+  - manifests/study-manifest.yaml: the E03 status line IN_PROGRESS with the transition clock reading, and a note of the operation
+  - manifests/sut-manifest.yaml: evaluated_version_frozen true for SUT-01 to SUT-05 and false for SUT-06 (OPEN-4); no pinned value changes
+  - status lines that the START made out of date, edited with counted replacements: README.md (two), raw-data/README.md (two), experiments/README.md (one), prompts/README.md (one), the E03 README itself (current status, the START row, the executor prompt row, two bullets of the artifact list), and the header of experiments/E03-resetability/executor/README.md (title, status row, implementation hash row; no hashed implementation file changes)
+  - manifests/README.md: the row of this record
+gate_check_before_the_commit:
+  method: the python step of .github/workflows/e03-measured-execution.yml (gates G-1 to G-11) was extracted from the workflow and run once per condition with the real START inputs (the authorization id, the prompt version id, the implementation hash) on a scratch copy of the working tree that holds this commit's edits
+  seven_web_api_conditions: exit 0, 24 of 24 gates pass for each
+  E03-CS001-SUT02-ANDROID: 'refused: only gates of G-7 fail (35 pass, 3 fail); G-8 passes'
+  E03-CS001-SUT02-IOS: 'refused: only gates of G-7 fail (33 pass, 5 fail); G-8 passes'
+  negative_controls: seven on E03-CS001-SUT01-WEB (an authorization id the row does not carry, a wrong implementation hash, the version 1 implementation hash, an unknown prompt version, attempt 0, the frozen prompt file removed, the status NOT_STARTED); each fails the targeted gate(s)
+  other_checks: the campaign-status invariants of the validation workflow hold (E01 FROZEN, E03 IN_PROGRESS, one Campaign configuration heading, every dated change-log row of 8 cells, exactly one row for this transition); every manifests/**/*.yaml parses with a plain YAML load
+  not_claimed_here: the rerun on the committed tree (reported after the commit), and the gate step on the EXPORTED tree, where the gates read transformed bytes of the E03 README, the change log and the study manifest (it is made at the export v39 dry run)
+not_authorized_by_this_record:
+  - any dispatch authorization (E03-DISPATCH-SUT01-AUTH-01 to E03-DISPATCH-SUT05-AUTH-01 are names, not issued; each is a separate human approval, one per assigned SUT)
+  - any dispatch, re-run, or measured execution
+  - the export v39 of the START state, any push, and any change to a workflow, a protocol document other than the change log, or a SUT
+  - any decision on the mobile path, or any mobile condition
+resulting_start_commit: null  # a commit cannot name its own id; the commit that adds this file is the START commit
+next_steps:
+  - the post-commit rerun of the gate check on the committed tree
+  - the export v39 of the START state (builder dry run, literal vendor scan, local validation jobs, the gate step on the EXPORTED tree, then its push and validation run), each push by the human research lead
+  - one dispatch authorization per SUT, each a separate approval, then the dispatches by the frozen dispatch procedure, recorded before and after, never re-run
+notes: |
+  The START applies the lock of protocol/change-control-v1.md, section 7, moment 1, to values that were already frozen or already decided: the scenario mapping, the pinned SUT versions, the toolchain
+  versions, the implementation hash, the schema, the governance document, and the answers of 2026-10-28. It introduces no sample size, exclusion rule, attribution rule, or comparison that was not already
+  in the prepared package. From this moment a change to any item of the configuration section needs its own change-log row with the reason, and results collected before it are analyzed under the earlier
+  configuration. No measured execution exists, no E03 result exists, and H2 is NOT_ANALYZED.
