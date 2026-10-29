@@ -405,6 +405,7 @@ jobs:
       - name: Assert read isolation (no other SUT's measured outputs in the workspace)
         run: |
           set -euo pipefail
+          shopt -s nullglob
           for d in raw-data/E03-resetability/*/; do
             case "$d" in raw-data/E03-resetability/${{ inputs.assigned_sut }}/) ;; *) echo "isolation violated: $d present"; exit 1;; esac
           done

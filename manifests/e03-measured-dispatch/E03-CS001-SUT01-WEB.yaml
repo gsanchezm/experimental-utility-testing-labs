@@ -1,0 +1,81 @@
+# manifests/e03-measured-dispatch/E03-CS001-SUT01-WEB.yaml -- append-only dispatch record of the condition E03-CS001-SUT01-WEB (experiments/E03-resetability/README.md, "Order of dispatches and dispatch record";
+# protocol/agent-governance-v4.md, section 3.5, "Dispatch"; prompts/frozen/ORCHESTRATOR-E03-resetability-v1.md, section 3). ORCHESTRATOR record.
+# The last key, events, grows only by entries appended at its end, one entry per event; an entry once committed is never edited or removed. The entry of a dispatch is committed before the dispatch is made;
+# the entry of its run identity is committed no later than the dispatch entry of the next execution, or at the close of the condition. Nothing above the key events changes.
+record_class: E03_MEASURED_DISPATCH_RECORD
+study_id: EUS-2026-001
+campaign_id: E03-resetability
+condition_id: E03-CS001-SUT01-WEB
+assigned_sut: SUT-01
+authorization_id: E03-DISPATCH-SUT01-AUTH-01
+authorization_record: manifests/e03-dispatch-authorization-sut01-v1.yaml
+campaign_start_authorization_id: E03-START-AUTH-01
+n_per_condition: 50
+execution_ids: EX0001 to EX0050
+attempt: 1
+workflow: .github/workflows/e03-measured-execution.yml
+measured_experiment: true  # the executions recorded here are MEASURED_EXPERIMENT runs; this file only records their dispatch and run identity
+events:
+  - event: DISPATCH_RECORDED  # committed before the dispatch is made
+    execution_id: EX0001
+    attempt: 1
+    recorded_utc: "2026-10-29T01:25:34Z"
+    status: PRE_DISPATCH_RECORDED
+    run_id_expected: E03-CS001-SUT01-WEB__EX0001__A1  # the workflow's RUN_ID: condition id, execution id, attempt
+    public_repository: gsanchezm/experimental-utility-testing-labs
+    ref: main
+    public_main_revision: 28fd576f7e307c848def761434f131393739da01
+    workflow_file: {public_sha256: 1c0357eccdf6f0b45328260e883e544f44cb0a0004c36c763460919825700cd4, public_blob: e0d0dd8186ce79b9355b0be6d85bf3461f0578fb, canonical_sha256: ecb0916b1844cb1d04e85cc1e254c23f7650fa42171863a2dc451b0cfbb9af3d}
+    inputs:
+      condition_id: E03-CS001-SUT01-WEB
+      assigned_sut: SUT-01
+      execution_id: EX0001
+      attempt: "1"
+      campaign_start_authorization_id: E03-START-AUTH-01
+      executor_prompt_version: ORCHESTRATOR-E03-resetability-v1
+      executor_implementation_sha256: 9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44
+    frozen_prompt_sha256: {canonical: 4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1, public: 30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8}  # the workflow output executor_prompt_sha256 records the public value
+    note: the first MEASURED_EXPERIMENT dispatch of E03-resetability; exactly one dispatch is made for this execution, never cancelled, re-run, or repeated
+  - event: RUN_IDENTITY_RECORDED  # after the dispatch of EX0001 attempt 1
+    execution_id: EX0001
+    attempt: 1
+    recorded_utc: "2026-10-29T01:29:33Z"
+    dispatch_clock_readings_utc: ["2026-10-29T01:26:15Z", "2026-10-29T01:26:17Z"]  # taken before and after the single dispatch command (exit status 0)
+    run_id: 40800423112
+    run_number: 1
+    run_attempt: 1
+    head_sha: 28fd576f7e307c848def761434f131393739da01
+    created_at: "2026-10-29T01:26:17Z"
+    trigger: workflow_dispatch
+    url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40800423112
+  - event: RUN_CONCLUDED_AND_STOP_RECORDED  # what the records say, quoted; no interpretation
+    execution_id: EX0001
+    attempt: 1
+    recorded_utc: "2026-10-29T01:29:33Z"
+    run_updated_at: "2026-10-29T01:26:57Z"
+    workflow_conclusion: failure
+    jobs:
+      - {id: 123206935892, name: E03 Measured Execution Gate, conclusion: success}
+      - {id: 123207014033, name: E03 Provenance Capture, conclusion: success}
+      - {id: 123207073862, name: E03 Measured Execution E03-CS001-SUT01-WEB EX0001 A1, conclusion: failure}
+    measured_execution_job_steps_not_success:
+      - {number: 3, name: "Assert read isolation (no other SUT's measured outputs in the workspace)", conclusion: failure}
+      - {number: 42, name: Upload the immutable attempt bundle, conclusion: failure}
+    measured_execution_job_steps_skipped: "steps 4 to 40, among them step 39 (Execute the condition through the frozen executor implementation) and step 40 (Validate the run manifest against schema v2 and the E03 campaign convention)"
+    log_quotes:
+      - "isolation violated: raw-data/E03-resetability/*/ present"
+      - "##[error]No files were found with the provided path: raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0001__A1. No artifacts will be uploaded."
+    artifacts:
+      - {id: 12865164243, name: E03-MEASURED_EXPERIMENT-E03-CS001-SUT01-WEB-EX0001-A1-provenance, size_in_bytes: 1944, github_digest: "sha256:3688b1e7f8f3f8947e6c79178e5394c6682f9391a6e4aac6dcb70e91faeca5e9", digest_verified_on_download: true, members: "1 (ci-provenance.json)"}
+    measured_bundle: none  # no E03-MEASURED_EXPERIMENT-...-A1 bundle artifact exists for this run
+    run_manifest: none
+    imported_into_raw_data: false  # nothing to import; the provenance artifact was downloaded outside the repository, verified, and kept in the untracked records
+    stop_condition: "section 4 of the frozen dispatch procedure: a bundle without run-manifest.json (the measured-execution job also failed)"
+    next_dispatch: none made, and none will be made without the instruction of the human research lead (a further attempt of EX0001 needs an explicit approval that names the condition and the execution)
+  - event: HUMAN_DECISION_RECORDED  # the attempt numbering of EX0001; this entry approves no dispatch
+    execution_id: EX0001
+    recorded_utc: "2026-10-29T01:36:37Z"
+    decision: "attempt 1 of EX0001 stays recorded as dispatched (run 40800423112) and consumed, without a run manifest; the further attempt of EX0001 is attempt 2, to be dispatched only on a separate explicit approval that names the condition E03-CS001-SUT01-WEB and the execution EX0001"
+    human_answer: {text_verbatim: "sí a ambas", bytes: 11, sha256: 6ce6dc2b2ced9298a8194d32620cbb7d945256b6b01811045e519fd9dc92ac2f, received_utc: "2026-10-29T01:33:21.684Z"}
+    answered_proposal: "two recommendations of the report after the stop: treat attempt 1 as consumed and dispatch attempt 2 under an explicit approval; correct the read-isolation step as a CI correction under E03-CI-WRITE-AUTH-01 (operation OP-CI-12, protocol/CHANGELOG.md), export, and validate"
+    does_not_authorize: "the dispatch of attempt 2, or any dispatch at a public revision other than the one recorded in manifests/e03-dispatch-authorization-sut01-v1.yaml"
