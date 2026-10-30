@@ -1,0 +1,52 @@
+# manifests/e03-dispatch-authorization-sut01-v2.yaml -- version file of the dispatch authorization E03-DISPATCH-SUT01-AUTH-01 (protocol/agent-governance-v4.md, section 3.5, "Dispatch").
+# The human research lead's confirmation that the authorization recorded in manifests/e03-dispatch-authorization-sut01-v1.yaml (unchanged, immutable) covers the corrected public revision that followed the
+# CI correction OP-CI-12 (protocol/CHANGELOG.md). ORCHESTRATOR record of operation OP-DISPATCH-02 (2026-10-28). Immutable once committed; a revocation or a further change is a new version file.
+# This record changes no condition, no N, no order, no attempt rule, and no stop condition of version 1; it changes the revision of the public repository that the dispatches read.
+record_id: E03-DISPATCH-AUTHORIZATION-SUT01-02
+record_class: E03_DISPATCH_AUTHORIZATION
+authorization_id: E03-DISPATCH-SUT01-AUTH-01  # unchanged: one authorization per assigned SUT
+version: 2
+extends: manifests/e03-dispatch-authorization-sut01-v1.yaml
+study_id: EUS-2026-001
+campaign_id: E03-resetability
+operation_id: OP-DISPATCH-02
+assigned_sut: SUT-01
+recorded_by_role: ORCHESTRATOR
+recorded_on: "2026-10-28"  # the America/Mexico_City date; the UTC date of the confirmation and of this record is 2026-10-29
+recorded_utc: "2026-10-29T02:00:17Z"
+status: ISSUED
+issued_by: gilbertosanchez  # the human research lead
+revocable_by_the_human_research_lead: true  # at any time; no revocation exists at the time of this record
+measured_experiment: false
+executes_anything: false
+campaign_start_authorization_id: E03-START-AUTH-01
+
+human_confirmation:
+  message_verbatim: "1. CONFIRMO E03-DISPATCH-SUT01-AUTH-01 SOBRE LA REVISIÓN PÚBLICA 71a04923\n2. APRUEBO EL INTENTO 2 DE EX0001 DE E03-CS001-SUT01-WEB"  # one message of two lines; \n is the line feed between them
+  bytes: 132
+  sha256: 39d019be92a6d7f2e5f0a4ea99fe7c933f5a2234eecb341a020175a680335d51
+  received_utc: "2026-10-29T01:58:39.128Z"  # stamp of the stored conversation entry (an entry of origin human)
+  received_local: "2026-10-28T19:58:39.128-06:00 (America/Mexico_City)"
+  line_1: {text: "1. CONFIRMO E03-DISPATCH-SUT01-AUTH-01 SOBRE LA REVISIÓN PÚBLICA 71a04923", bytes: 75, sha256: a36aa44415bf06448c7cb9213645d54a8d6a1dd46f37f48a47493b18e5027d07, role: "this record: the confirmation that the authorization covers the corrected public revision"}
+  line_2: {text: "2. APRUEBO EL INTENTO 2 DE EX0001 DE E03-CS001-SUT01-WEB", bytes: 56, sha256: afef801877bf2ef23ec38ba2c93fb5d1231e60584b7ec5683efecdbd83d92353, role: "the approval of the further attempt of EX0001, recorded as an event of manifests/e03-measured-dispatch/E03-CS001-SUT01-WEB.yaml, not here"}
+  preceded_by: the report that asked for the two lines after the push and the validation of the corrected revision; that report was not an approval and this record does not rely on it for that
+  short_revision_named: 71a04923  # resolves to the full revision below; the pre-push gate and the post-push read of the public main agree
+
+changes_from_version_1:
+  frozen_inputs:
+    public_main_revision: 71a049236c582c4d702d1ed336a760ba0a504cd3  # export v40, pushed 2026-10-29T01:56:33Z-01:56:35Z; version 1 named 28fd576f7e307c848def761434f131393739da01 (export v39)
+    validation_run_of_the_revision: "40803411458 (attempt 1, conclusion success, four jobs success)"
+    workflow_file: {path: .github/workflows/e03-measured-execution.yml, public_sha256: 70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750, public_blob: 25f5c45d6f34953206fb7d4a58feb55220243b5f, canonical_sha256: ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335, previous_canonical_sha256: ecb0916b1844cb1d04e85cc1e254c23f7650fa42171863a2dc451b0cfbb9af3d, bridge: "PUBLIC-EXPORT-MANIFEST.yaml of the revision, transformation PROVIDER_NEUTRAL_PATH_ALIAS", correction: "CI correction OP-CI-12, protocol/CHANGELOG.md, read-isolation step (nullglob)"}
+unchanged_from_version_1:
+  - the assigned SUT, the conditions and their order (E03-CS001-SUT01-WEB then E03-CS001-SUT01-API), N = 50 each (EX0001 to EX0050), one dispatch per execution, 100 executions
+  - executor_prompt_version ORCHESTRATOR-E03-resetability-v1 (public sha256 30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8, canonical sha256 4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1)
+  - executor_implementation_sha256 9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44 (experiments/E03-resetability/executor/run-condition.sh)
+  - the stop conditions (section 4 of the frozen dispatch procedure) and the list of what the authorization does not authorize
+  - the attempt rule: attempt 1 is the first attempt of an execution, and a further attempt is dispatched only on a separate explicit approval that names the condition and the execution (the only one given so far is line 2 above, for EX0001 of E03-CS001-SUT01-WEB, attempt 2)
+
+checks_at_the_corrected_revision:  # section 2 of the frozen dispatch procedure; public bytes read from the public repository at the revision above
+  run_condition_sh: {public_sha256: 9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44, locked_sha256: 9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44, result: EQUAL}
+  frozen_prompt: {public_sha256: 30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8, canonical_sha256: 4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1, result: BRIDGED}
+  workflow_file: {public_sha256: 70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750, canonical_sha256: ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335, result: BRIDGED}
+  run_manifest_schema_v2: {public_sha256: 7f4a1c27deb1b0590f2e8fa2a75e18c0f8753817ed7fb10939a2c09cb8f61826, canonical_sha256: 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757, result: BRIDGED}
+  public_repository_state: "no run in progress or queued at the time of the check; 59 workflow runs; 0 tags"

@@ -1,0 +1,105 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E03-CS001-SUT01-API__EX0032__A1",
+  "condition": "E03-CS001-SUT01-API",
+  "scenario": "CS-001",
+  "declared_starting_state": {
+    "id": "CS-001-STARTING",
+    "definition": "the login session holds {cart_items: [], country_code: <starting value>} (backend/database.py:139-148)",
+    "citations": [
+      "experiments/scenario-mappings/CS-001.yaml (SUT-01 entry)",
+      "SUT01-EV-0001",
+      "SUT01-EV-0004",
+      "SUT01-EV-0006",
+      "backend/database.py:139-148@9ca3767",
+      "backend/test_api.py:193-229@9ca3767"
+    ],
+    "observed_before_establishment": {
+      "status": 200,
+      "cart_items": [],
+      "country_code": "MX"
+    },
+    "holds": true
+  },
+  "steps": [
+    {
+      "phase": "precondition",
+      "description": "POST /api/auth/login (standard_user)",
+      "mechanisms": [
+        "PREDEFINED_ACCOUNT"
+      ],
+      "started_at": "2026-10-29T05:38:55.752Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "username": "standard_user",
+        "behavior": "standard",
+        "token_received": true
+      },
+      "evidence": [
+        "evidence/002-sut01-login.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T05:38:55.757Z"
+    },
+    {
+      "phase": "declared-starting-state",
+      "description": "GET /api/session before the establishment",
+      "mechanisms": [],
+      "started_at": "2026-10-29T05:38:55.757Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "cart_items": [],
+        "country_code": "MX"
+      },
+      "evidence": [
+        "evidence/003-sut01-session-start.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T05:38:55.759Z"
+    },
+    {
+      "phase": "establishment",
+      "description": "POST /api/cart with one p02 line",
+      "mechanisms": [
+        "API_SEED"
+      ],
+      "started_at": "2026-10-29T05:38:55.759Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200
+      },
+      "evidence": [
+        "evidence/004-sut01-seed-cart.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T05:38:55.761Z"
+    },
+    {
+      "phase": "pre-reset-verification",
+      "description": "GET /api/session shows exactly the p02 line",
+      "mechanisms": [],
+      "started_at": "2026-10-29T05:38:55.761Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "cart_items": [
+          {
+            "pizza_id": "p02",
+            "quantity": 1,
+            "size": "small",
+            "toppings": [],
+            "item_id": "ITEM-1EE0741D"
+          }
+        ]
+      },
+      "evidence": [
+        "evidence/005-sut01-session-pre-reset.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T05:38:55.763Z"
+    }
+  ],
+  "note": "precondition, establishment, and pre-reset verification: recorded, never counted as Required Actions - reset"
+}

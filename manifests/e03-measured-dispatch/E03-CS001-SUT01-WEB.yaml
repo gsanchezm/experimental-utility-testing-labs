@@ -79,3 +79,3207 @@ events:
     human_answer: {text_verbatim: "sí a ambas", bytes: 11, sha256: 6ce6dc2b2ced9298a8194d32620cbb7d945256b6b01811045e519fd9dc92ac2f, received_utc: "2026-10-29T01:33:21.684Z"}
     answered_proposal: "two recommendations of the report after the stop: treat attempt 1 as consumed and dispatch attempt 2 under an explicit approval; correct the read-isolation step as a CI correction under E03-CI-WRITE-AUTH-01 (operation OP-CI-12, protocol/CHANGELOG.md), export, and validate"
     does_not_authorize: "the dispatch of attempt 2, or any dispatch at a public revision other than the one recorded in manifests/e03-dispatch-authorization-sut01-v1.yaml"
+  - event: HUMAN_APPROVAL_RECORDED  # the approval of the further attempt named below; it is not itself a dispatch
+    execution_id: EX0001
+    attempt: 2
+    recorded_utc: "2026-10-29T02:00:17Z"
+    approval: {text_verbatim: "2. APRUEBO EL INTENTO 2 DE EX0001 DE E03-CS001-SUT01-WEB", bytes: 56, sha256: afef801877bf2ef23ec38ba2c93fb5d1231e60584b7ec5683efecdbd83d92353, message_sha256: 39d019be92a6d7f2e5f0a4ea99fe7c933f5a2234eecb341a020175a680335d51, received_utc: "2026-10-29T01:58:39.128Z"}
+    names: {condition_id: E03-CS001-SUT01-WEB, execution_id: EX0001, attempt: 2}
+    basis: "the decision recorded in the event HUMAN_DECISION_RECORDED above (attempt 1 consumed, run 40800423112) and the version-2 record of the authorization, manifests/e03-dispatch-authorization-sut01-v2.yaml"
+    covers: "one dispatch of EX0001 attempt 2 and nothing else; any further attempt of any execution needs its own approval that names the condition and the execution"
+  - event: DISPATCH_RECORDED  # committed before the dispatch is made
+    execution_id: EX0001
+    attempt: 2
+    recorded_utc: "2026-10-29T02:00:17Z"
+    status: PRE_DISPATCH_RECORDED
+    run_id_expected: E03-CS001-SUT01-WEB__EX0001__A2  # the workflow's RUN_ID: condition id, execution id, attempt
+    public_repository: gsanchezm/experimental-utility-testing-labs
+    ref: main
+    public_main_revision: 71a049236c582c4d702d1ed336a760ba0a504cd3
+    workflow_file: {public_sha256: 70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750, public_blob: 25f5c45d6f34953206fb7d4a58feb55220243b5f, canonical_sha256: ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335}
+    inputs:
+      condition_id: E03-CS001-SUT01-WEB
+      assigned_sut: SUT-01
+      execution_id: EX0001
+      attempt: "2"
+      campaign_start_authorization_id: E03-START-AUTH-01
+      executor_prompt_version: ORCHESTRATOR-E03-resetability-v1
+      executor_implementation_sha256: 9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44
+    frozen_prompt_sha256: {canonical: 4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1, public: 30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8}
+    note: the further attempt of EX0001 after the run 40800423112 (attempt 1, no run manifest); exactly one dispatch is made for this attempt, never cancelled, re-run, or repeated
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0001"
+    attempt: 2
+    recorded_utc: "2026-10-29T02:10:10Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:00:55Z"
+      - "2026-10-29T02:00:57Z"
+    run_id: 40803824242
+    run_number: 2
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:00:57Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40803824242"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0001"
+    attempt: 2
+    recorded_utc: "2026-10-29T02:10:10Z"
+    run_updated_at: "2026-10-29T02:02:50Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123217908202
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123217993211
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123218051377
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0001 A2"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12866964174
+      size_in_bytes: 257391
+      github_digest: "sha256:cbdf5431c5a335f0077afdd1c727031e109c85ddcd6f03e6c862a9f9f9d553b0"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0001__A2"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0001__A2/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0002"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:10:10Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0002__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0002"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0002"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:13:29Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:11:25Z"
+      - "2026-10-29T02:11:27Z"
+    run_id: 40804874400
+    run_number: 3
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:11:27Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40804874400"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0002"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:13:29Z"
+    run_updated_at: "2026-10-29T02:13:13Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123221307229
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123221368648
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123221413767
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0002 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12867996562
+      size_in_bytes: 257361
+      github_digest: "sha256:e2d713e25116d16a9f4181accff51f82646528ec7891286af2ae307da885f5fd"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0002__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0002__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0003"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:13:29Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0003__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0003"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0003"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:17:14Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:13:39Z"
+      - "2026-10-29T02:13:40Z"
+    run_id: 40805096124
+    run_number: 4
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:13:40Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40805096124"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0003"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:17:14Z"
+    run_updated_at: "2026-10-29T02:15:38Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123222027140
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123222092184
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123222135060
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0003 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12868031826
+      size_in_bytes: 257219
+      github_digest: "sha256:2e2673b67e25590d7c4e0967192cb25690028a3be13d2b224bbbc35ed1736f69"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0003__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0003__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0004"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:17:14Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0004__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0004"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0004"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:19:27Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:17:24Z"
+      - "2026-10-29T02:17:26Z"
+    run_id: 40805466179
+    run_number: 5
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:17:25Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40805466179"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0004"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:19:27Z"
+    run_updated_at: "2026-10-29T02:19:12Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123223239472
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123223303900
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123223358328
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0004 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12868450392
+      size_in_bytes: 257185
+      github_digest: "sha256:a3ede24a3d14c9eec5086e41b25d54458ed796ac5281405a8f63df348e9b3f6b"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0004__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0004__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0005"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:19:27Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0005__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0005"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0005"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:21:25Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:19:36Z"
+      - "2026-10-29T02:19:38Z"
+    run_id: 40805674821
+    run_number: 6
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:19:38Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40805674821"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0005"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:21:25Z"
+    run_updated_at: "2026-10-29T02:21:05Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123223940282
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123224000086
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123224042651
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0005 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12868157276
+      size_in_bytes: 257235
+      github_digest: "sha256:99ff5fae68454cc25ab78091fa81d5dcbd8b507761e04884820ac0c9c8292789"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0005__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0005__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0006"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:21:25Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0006__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0006"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0006"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:29:02Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:23:23Z"
+      - "2026-10-29T02:23:26Z"
+    run_id: 40806053114
+    run_number: 7
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:23:26Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40806053114"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0006"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:29:02Z"
+    run_updated_at: "2026-10-29T02:28:37Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123225160896
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123225239552
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123225298991
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0006 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12868258109
+      size_in_bytes: 257395
+      github_digest: "sha256:35f1c2131baddd856c09bf6a23766a063b499a38e3aa7e4a0dda71f3338f349f"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0006__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0006__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0007"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:29:02Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0007__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0007"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0007"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:31:08Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:29:09Z"
+      - "2026-10-29T02:29:11Z"
+    run_id: 40806622129
+    run_number: 18
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:29:10Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40806622129"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0007"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:31:08Z"
+    run_updated_at: "2026-10-29T02:30:47Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123227023434
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123227087564
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123227144856
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0007 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12868761322
+      size_in_bytes: 257352
+      github_digest: "sha256:83e5af788c255932dad00a09c0b3035b5274070e91927ca44f6923fa7fc45dbf"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0007__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0007__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0008"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:31:08Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0008__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0008"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0008"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:33:32Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:31:13Z"
+      - "2026-10-29T02:31:15Z"
+    run_id: 40806837878
+    run_number: 22
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:31:15Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40806837878"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0008"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:33:32Z"
+    run_updated_at: "2026-10-29T02:33:06Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123227707397
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123227780515
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123227824707
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0008 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12868632348
+      size_in_bytes: 257228
+      github_digest: "sha256:eeec9c02313d687ed059fa3c7d92c677ae19c7710cbca319a0467dfab2451793"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0008__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0008__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0009"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:33:32Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0009__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0009"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0009"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:35:40Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:33:39Z"
+      - "2026-10-29T02:33:41Z"
+    run_id: 40807078601
+    run_number: 26
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:33:41Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40807078601"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0009"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:35:40Z"
+    run_updated_at: "2026-10-29T02:35:19Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123228482490
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123228557137
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123228607412
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0009 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12868164841
+      size_in_bytes: 257671
+      github_digest: "sha256:8227ba20612f33a12a40bb80476df8375ca453c03b101cf8f173333a0f8f35ec"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0009__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0009__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0010"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:35:40Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0010__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0010"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0010"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:38:21Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:35:50Z"
+      - "2026-10-29T02:35:52Z"
+    run_id: 40807298192
+    run_number: 30
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:35:52Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40807298192"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0010"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:38:21Z"
+    run_updated_at: "2026-10-29T02:38:02Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123229186923
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123229258207
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123229299078
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0010 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12868662153
+      size_in_bytes: 257396
+      github_digest: "sha256:68e3eb66cd64c6a6b2c89166c4f9607e921b6f1e6ae6732ddff0f2f1e15d51f6"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0010__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0010__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0011"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:38:25Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0011__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0011"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0011"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:41:16Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:38:32Z"
+      - "2026-10-29T02:38:35Z"
+    run_id: 40807562760
+    run_number: 35
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:38:35Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40807562760"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0011"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:41:16Z"
+    run_updated_at: "2026-10-29T02:40:53Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123230037535
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123230100685
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123230141689
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0011 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12869081523
+      size_in_bytes: 257386
+      github_digest: "sha256:2ac7616d0150fd83ba057eb3b3e44e8376b99c24b942ece11cee478941df5e92"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0011__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0011__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0012"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:41:16Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0012__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0012"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0012"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:48:11Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:46:21Z"
+      - "2026-10-29T02:46:24Z"
+    run_id: 40808331014
+    run_number: 39
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:46:24Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40808331014"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0012"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:48:11Z"
+    run_updated_at: "2026-10-29T02:47:50Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123232482498
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123232541118
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123232581790
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0012 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12869231667
+      size_in_bytes: 257197
+      github_digest: "sha256:a5bb3a85866ee42c9f6bc1c77296327b34c210bcf6631178a78eee88f8af782a"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0012__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0012__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0013"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:48:11Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0013__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0013"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0013"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:50:34Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:48:20Z"
+      - "2026-10-29T02:48:22Z"
+    run_id: 40808520851
+    run_number: 44
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:48:22Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40808520851"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0013"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:50:34Z"
+    run_updated_at: "2026-10-29T02:50:15Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123233088005
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123233175407
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123233216128
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0013 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12868953577
+      size_in_bytes: 257402
+      github_digest: "sha256:2ff916306079faeae298a65621199f268a05ccbaf37e21950a44e01b7be3e2c1"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0013__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0013__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0014"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:50:54Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0014__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0014"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0014"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:52:59Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:51:02Z"
+      - "2026-10-29T02:51:05Z"
+    run_id: 40808781617
+    run_number: 48
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:51:05Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40808781617"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0014"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:52:59Z"
+    run_updated_at: "2026-10-29T02:52:38Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123233919487
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123233977460
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123234026555
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0014 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12869088684
+      size_in_bytes: 257401
+      github_digest: "sha256:55f16271772e30ecf374fc2361e4a4f2cf839c18ac4b6022f822d4befb341659"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0014__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0014__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0015"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:52:59Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0015__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0015"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0015"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:55:19Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:53:06Z"
+      - "2026-10-29T02:53:08Z"
+    run_id: 40808973810
+    run_number: 53
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:53:08Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40808973810"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0015"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:55:19Z"
+    run_updated_at: "2026-10-29T02:55:02Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123234528385
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123234598240
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123234658249
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0015 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12869870618
+      size_in_bytes: 257887
+      github_digest: "sha256:be15ac792678c64abc10bd520cec925cf42a7043bf04ac00d5cbae2f6d92c604"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0015__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0015__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0016"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:55:34Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0016__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0016"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0016"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:58:00Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:55:41Z"
+      - "2026-10-29T02:55:43Z"
+    run_id: 40809221371
+    run_number: 56
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:55:43Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40809221371"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0016"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:58:00Z"
+    run_updated_at: "2026-10-29T02:57:40Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123235304873
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123235363393
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123235400969
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0016 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12868964832
+      size_in_bytes: 257231
+      github_digest: "sha256:3affe9c17809a428daf8a687dfac33fcc36b4b87fae669bb4b3022db61a2b2c3"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0016__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0016__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0017"
+    attempt: 1
+    recorded_utc: "2026-10-29T02:58:08Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0017__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0017"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0017"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:00:39Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T02:58:15Z"
+      - "2026-10-29T02:58:18Z"
+    run_id: 40809456129
+    run_number: 60
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T02:58:18Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40809456129"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0017"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:00:39Z"
+    run_updated_at: "2026-10-29T03:00:06Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123236064034
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123236134389
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123236171850
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0017 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12870041241
+      size_in_bytes: 257679
+      github_digest: "sha256:86170bfa0d77969ec5d3a87d0d0d27d282f3ebd2802990e8b1e4dd273fa439f5"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0017__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0017__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0018"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:00:39Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0018__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0018"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0018"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:02:49Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:00:46Z"
+      - "2026-10-29T03:00:48Z"
+    run_id: 40809691254
+    run_number: 65
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:00:48Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40809691254"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0018"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:02:49Z"
+    run_updated_at: "2026-10-29T03:02:34Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123236815464
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123236877001
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123236935213
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0018 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12869403117
+      size_in_bytes: 257950
+      github_digest: "sha256:bbe2245865f445d96b5972b4b5cdbbdefabe3a0179ea2de2f75822828db2e3c5"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0018__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0018__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0019"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:02:58Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0019__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0019"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0019"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:05:36Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:03:05Z"
+      - "2026-10-29T03:03:07Z"
+    run_id: 40809916242
+    run_number: 69
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:03:07Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40809916242"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0019"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:05:36Z"
+    run_updated_at: "2026-10-29T03:05:08Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123237532542
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123237599630
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123237653843
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0019 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12869039499
+      size_in_bytes: 257890
+      github_digest: "sha256:ecdb8c458f09ddf7aeae5781a8f4ca205f63552185e2c031be191066ef31e3ed"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0019__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0019__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0020"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:05:51Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0020__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0020"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0020"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:08:11Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:05:58Z"
+      - "2026-10-29T03:06:00Z"
+    run_id: 40810194958
+    run_number: 74
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:06:00Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40810194958"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0020"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:08:11Z"
+    run_updated_at: "2026-10-29T03:07:45Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123238431343
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123238508612
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123238551299
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0020 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12869533328
+      size_in_bytes: 257366
+      github_digest: "sha256:7d5a5d7c9ff364be824736c9a2d3449b2c4c659cfec78eaee576df4a57e712b9"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0020__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0020__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0021"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:08:11Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0021__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0021"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0021"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:10:40Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:08:19Z"
+      - "2026-10-29T03:08:25Z"
+    run_id: 40810431298
+    run_number: 78
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:08:25Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40810431298"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0021"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:10:40Z"
+    run_updated_at: "2026-10-29T03:10:20Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123239181650
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123239245996
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123239286848
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0021 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12869574606
+      size_in_bytes: 257396
+      github_digest: "sha256:150f298d71fe934fba3a73d11f85e40606772d2b9ab4e5d380dde195f25e8df4"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0021__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0021__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0022"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:10:47Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0022__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0022"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0022"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:13:15Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:10:55Z"
+      - "2026-10-29T03:10:58Z"
+    run_id: 40810677133
+    run_number: 82
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:10:58Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40810677133"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0022"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:13:15Z"
+    run_updated_at: "2026-10-29T03:12:49Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123239976054
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123240053297
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123240103589
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0022 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12870113017
+      size_in_bytes: 262519
+      github_digest: "sha256:1d4631945efc757f2f15d73d1f8a668ac70a2e5e7e68083c16870d25ba1deff3"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0022__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0022__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0023"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:13:22Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0023__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0023"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0023"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:18:32Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:13:31Z"
+      - "2026-10-29T03:13:33Z"
+    run_id: 40810922685
+    run_number: 88
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:13:33Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40810922685"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0023"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:18:32Z"
+    run_updated_at: "2026-10-29T03:18:01Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123240778095
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123240845669
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123240890725
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0023 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12870392496
+      size_in_bytes: 257185
+      github_digest: "sha256:25681c5ae5463e2640887463006fae1a5842650539587ccafbb46e2a4ce00195"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0023__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0023__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0024"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:18:32Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0024__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0024"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0024"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:20:45Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:18:40Z"
+      - "2026-10-29T03:18:41Z"
+    run_id: 40811416001
+    run_number: 93
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:18:41Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40811416001"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0024"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:20:45Z"
+    run_updated_at: "2026-10-29T03:20:21Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123242365613
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123242440763
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123242482588
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0024 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12870452481
+      size_in_bytes: 262661
+      github_digest: "sha256:b3d63baac3e7a954b50f2c828ffe44eaafd9dfa62ced81bb9874782faf462a1a"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0024__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0024__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0025"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:20:45Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0025__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0025"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0025"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:24:45Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:20:58Z"
+      - "2026-10-29T03:21:03Z"
+    run_id: 40811627324
+    run_number: 98
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:21:02Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40811627324"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0025"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:24:45Z"
+    run_updated_at: "2026-10-29T03:24:05Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123243029675
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123243081143
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123243121984
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0025 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12870423218
+      size_in_bytes: 262520
+      github_digest: "sha256:9ffa7391df5884f36a6820a64e64e9709adfb0d06576ed478d53382d3bd4012b"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0025__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0025__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0026"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:24:57Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0026__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0026"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0026"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:27:18Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:25:06Z"
+      - "2026-10-29T03:25:08Z"
+    run_id: 40812020356
+    run_number: 105
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:25:08Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40812020356"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0026"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:27:18Z"
+    run_updated_at: "2026-10-29T03:27:05Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123244302229
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123244370941
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123244419021
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0026 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12871101141
+      size_in_bytes: 257205
+      github_digest: "sha256:7cd4fc834f58c8c2eccecc57b2cd8f5254868735760d1fd23cfba427c5277ae6"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0026__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0026__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0027"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:27:19Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0027__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0027"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0027"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:34:03Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:31:18Z"
+      - "2026-10-29T03:31:20Z"
+    run_id: 40812607549
+    run_number: 106
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:31:20Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40812607549"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0027"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:34:03Z"
+    run_updated_at: "2026-10-29T03:33:25Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123246218063
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123246293167
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123246334480
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0027 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12871435476
+      size_in_bytes: 257374
+      github_digest: "sha256:a559dc3950017c2384db615178561f3ccd5af26405138925e8700cfbe5fbe9e3"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0027__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0027__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0028"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:34:03Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0028__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0028"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0028"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:36:41Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:34:12Z"
+      - "2026-10-29T03:34:15Z"
+    run_id: 40812873311
+    run_number: 112
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:34:15Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40812873311"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0028"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:36:41Z"
+    run_updated_at: "2026-10-29T03:36:02Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123247069615
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123247133283
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123247190413
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0028 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12870867551
+      size_in_bytes: 257410
+      github_digest: "sha256:b0b886a06db26410ba06db0cbb2a44b62517d19cb7ee878bff10c40afd9df095"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0028__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0028__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0029"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:36:41Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0029__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0029"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0029"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:39:35Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:36:51Z"
+      - "2026-10-29T03:36:54Z"
+    run_id: 40813132626
+    run_number: 116
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:36:54Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40813132626"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0029"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:39:35Z"
+    run_updated_at: "2026-10-29T03:39:18Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123247903827
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123247966668
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123248030247
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0029 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12870823989
+      size_in_bytes: 257399
+      github_digest: "sha256:f6f4240c018c5f763f024dcf1894f1ed468710ea915e4e856ac0bda169566ba0"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0029__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0029__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0030"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:39:35Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0030__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0030"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0030"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:42:02Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:39:46Z"
+      - "2026-10-29T03:39:48Z"
+    run_id: 40813393867
+    run_number: 120
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:39:48Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40813393867"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0030"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:42:02Z"
+    run_updated_at: "2026-10-29T03:41:41Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123248747937
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123248812117
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123248853623
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0030 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12871257105
+      size_in_bytes: 257400
+      github_digest: "sha256:7b56f033a5f8c4ac37aa864ae3ed6cb64dd75ceb4ba5e47d48c489455e19d609"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0030__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0030__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0031"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:42:02Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0031__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0031"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0031"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:44:25Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:42:08Z"
+      - "2026-10-29T03:42:11Z"
+    run_id: 40813627906
+    run_number: 124
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:42:11Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40813627906"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0031"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:44:25Z"
+    run_updated_at: "2026-10-29T03:44:03Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123249496437
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123249560885
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123249601365
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0031 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12870959333
+      size_in_bytes: 257212
+      github_digest: "sha256:729a53862707332beb9ff134298093730704dab4ac9e5c185bda7b7016cfbbf6"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0031__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0031__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0032"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:44:27Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0032__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0032"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0032"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:46:49Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:44:39Z"
+      - "2026-10-29T03:44:41Z"
+    run_id: 40813852803
+    run_number: 128
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:44:41Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40813852803"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0032"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:46:49Z"
+    run_updated_at: "2026-10-29T03:46:23Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123250223054
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123250281963
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123250321641
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0032 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12872000102
+      size_in_bytes: 258957
+      github_digest: "sha256:ef133089472e4023aa26b927fb9c7acf2b6a65d0cc4074255090262a609d5763"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0032__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0032__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0033"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:46:50Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0033__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0033"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0033"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:48:58Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:46:58Z"
+      - "2026-10-29T03:47:01Z"
+    run_id: 40814059482
+    run_number: 132
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:47:00Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40814059482"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0033"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:48:58Z"
+    run_updated_at: "2026-10-29T03:48:38Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123250889073
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123250954714
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123250995536
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0033 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12871298727
+      size_in_bytes: 257414
+      github_digest: "sha256:31e93d1c7ff0dc974b3288ec7451d8da186b080a9cfe0c5ea3aa892ee4a0df81"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0033__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0033__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0034"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:49:10Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0034__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0034"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0034"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:51:50Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:49:18Z"
+      - "2026-10-29T03:49:21Z"
+    run_id: 40814280282
+    run_number: 137
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:49:21Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40814280282"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0034"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:51:50Z"
+    run_updated_at: "2026-10-29T03:51:20Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123251600824
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123251662745
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123251713391
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0034 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12871308292
+      size_in_bytes: 257347
+      github_digest: "sha256:1f842d4c70221a391784518ce4d8609af97b71b555b0580948ca6c86879a099a"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0034__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0034__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0035"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:51:50Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0035__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0035"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0035"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:53:54Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:51:59Z"
+      - "2026-10-29T03:52:01Z"
+    run_id: 40814529911
+    run_number: 141
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:52:01Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40814529911"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0035"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:53:54Z"
+    run_updated_at: "2026-10-29T03:53:41Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123252407341
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123252477663
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123252517756
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0035 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12872031178
+      size_in_bytes: 257232
+      github_digest: "sha256:f63e974323a083e96cf7d62833e374c3a17212aca0e3616bc47b454425a470ea"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0035__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0035__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0036"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:53:54Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0036__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0036"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0036"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:56:35Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:53:59Z"
+      - "2026-10-29T03:54:01Z"
+    run_id: 40814712040
+    run_number: 146
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:54:01Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40814712040"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0036"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:56:35Z"
+    run_updated_at: "2026-10-29T03:56:09Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123252986882
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123253044173
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123253085595
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0036 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12871508414
+      size_in_bytes: 262503
+      github_digest: "sha256:388b5d74e86ecd0cbb84c201e90dff26fc5d50d3c5c067a68648f18ffcfba0a5"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0036__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0036__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0037"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:56:35Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0037__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0037"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0037"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:58:43Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:56:40Z"
+      - "2026-10-29T03:56:43Z"
+    run_id: 40814955473
+    run_number: 149
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:56:42Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40814955473"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0037"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:58:43Z"
+    run_updated_at: "2026-10-29T03:58:09Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123253750800
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123253804104
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123253842540
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0037 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12871783446
+      size_in_bytes: 257195
+      github_digest: "sha256:6314067c1467b36792c572df6626b530693a823c002e3e9d997b17bb43deb5f7"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0037__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0037__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0038"
+    attempt: 1
+    recorded_utc: "2026-10-29T03:58:43Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0038__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0038"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0038"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:01:23Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T03:58:50Z"
+      - "2026-10-29T03:58:52Z"
+    run_id: 40815141748
+    run_number: 154
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T03:58:52Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40815141748"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0038"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:01:23Z"
+    run_updated_at: "2026-10-29T04:00:59Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123254345810
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123254409897
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123254456140
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0038 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12872286146
+      size_in_bytes: 262548
+      github_digest: "sha256:e6613ebc14990519bbea64f7557c764437e0cb0eca39342fbcbdf9582496aa7d"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0038__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0038__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0039"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:01:23Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0039__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0039"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0039"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:03:53Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T04:01:32Z"
+      - "2026-10-29T04:01:34Z"
+    run_id: 40815394219
+    run_number: 159
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T04:01:34Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40815394219"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0039"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:03:53Z"
+    run_updated_at: "2026-10-29T04:03:30Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123255131208
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123255205596
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123255253215
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0039 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12871804087
+      size_in_bytes: 257889
+      github_digest: "sha256:f0e1915b2c68d0e0582e2d5b0f8e97357e84bf537080bf7ee0d80f8a054f7c17"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0039__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0039__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0040"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:04:18Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0040__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0040"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0040"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:06:42Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T04:04:24Z"
+      - "2026-10-29T04:04:26Z"
+    run_id: 40815661750
+    run_number: 165
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T04:04:25Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40815661750"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0040"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:06:42Z"
+    run_updated_at: "2026-10-29T04:06:19Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123255993938
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123256053332
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123256097053
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0040 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12872775670
+      size_in_bytes: 262498
+      github_digest: "sha256:372249e94c06062f2653a4505d414d981dc391e18a040a761667d9b1a4db2893"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0040__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0040__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0041"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:06:42Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0041__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0041"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0041"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:09:02Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T04:06:51Z"
+      - "2026-10-29T04:06:52Z"
+    run_id: 40815900059
+    run_number: 169
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T04:06:52Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40815900059"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0041"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:09:02Z"
+    run_updated_at: "2026-10-29T04:08:44Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123256760640
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123256824376
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123256882814
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0041 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12872975320
+      size_in_bytes: 257402
+      github_digest: "sha256:c49244d9251629ceaad97c42dfe974bdd5e298c0be641ee1c27392808860ed19"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0041__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0041__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0042"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:09:03Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0042__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0042"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0042"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:11:36Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T04:09:11Z"
+      - "2026-10-29T04:09:12Z"
+    run_id: 40816128939
+    run_number: 173
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T04:09:12Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40816128939"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0042"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:11:36Z"
+    run_updated_at: "2026-10-29T04:11:24Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123257494614
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123257555389
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123257600027
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0042 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12872816380
+      size_in_bytes: 262491
+      github_digest: "sha256:c53fc9651e07adea29bede6fb3c2bf5b83af1fff17559ebba1e5797cddf0658d"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0042__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0042__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0043"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:11:36Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0043__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0043"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0043"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:13:38Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T04:11:45Z"
+      - "2026-10-29T04:11:47Z"
+    run_id: 40816373760
+    run_number: 177
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T04:11:47Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40816373760"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0043"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:13:38Z"
+    run_updated_at: "2026-10-29T04:13:18Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123258289401
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123258351085
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123258403415
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0043 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12871999515
+      size_in_bytes: 257192
+      github_digest: "sha256:15286de752b4210288c883c02d629c7eb34e0f318cb795290177e21229f87d7a"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0043__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0043__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0044"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:13:38Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0044__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0044"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0044"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:16:04Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T04:13:45Z"
+      - "2026-10-29T04:13:47Z"
+    run_id: 40816563489
+    run_number: 181
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T04:13:47Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40816563489"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0044"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:16:04Z"
+    run_updated_at: "2026-10-29T04:15:31Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123258904254
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123258981100
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123259020548
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0044 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12872304019
+      size_in_bytes: 262615
+      github_digest: "sha256:7741e07f4cf8abdbc7237c8a3ce2c1ecd1ff354fe76558f5dcbbda5ac196e2da"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0044__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0044__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0045"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:16:04Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0045__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0045"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0045"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:18:12Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T04:16:12Z"
+      - "2026-10-29T04:16:14Z"
+    run_id: 40816797144
+    run_number: 186
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T04:16:14Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40816797144"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0045"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:18:12Z"
+    run_updated_at: "2026-10-29T04:17:55Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123259647614
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123259717217
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123259769913
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0045 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12873111385
+      size_in_bytes: 257409
+      github_digest: "sha256:185a4d2e21ed9263e0bc877d1ae674674127a6538178302851a39642ecd75623"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0045__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0045__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0046"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:18:12Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0046__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0046"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0046"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:20:34Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T04:18:18Z"
+      - "2026-10-29T04:18:21Z"
+    run_id: 40816993676
+    run_number: 189
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T04:18:21Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40816993676"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0046"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:20:34Z"
+    run_updated_at: "2026-10-29T04:20:03Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123260291303
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123260354618
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123260402778
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0046 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12872364692
+      size_in_bytes: 257190
+      github_digest: "sha256:46bbcafec27b2db433e6fc5acd948afa2e61e24e6012b9a33f95538b9000b38b"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0046__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0046__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0047"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:20:39Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0047__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0047"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0047"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:22:42Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T04:20:44Z"
+      - "2026-10-29T04:20:46Z"
+    run_id: 40817223404
+    run_number: 195
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T04:20:46Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40817223404"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0047"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:22:42Z"
+    run_updated_at: "2026-10-29T04:22:25Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123261023623
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123261082353
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123261138965
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0047 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12873106515
+      size_in_bytes: 257360
+      github_digest: "sha256:3613ab67a4ef73d08b478a59658a36d3f6f7270b67f8206a7c6a82d3bf4d0e88"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0047__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0047__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0048"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:22:42Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0048__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0048"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0048"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:24:45Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T04:22:51Z"
+      - "2026-10-29T04:22:53Z"
+    run_id: 40817423204
+    run_number: 198
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T04:22:52Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40817423204"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0048"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:24:45Z"
+    run_updated_at: "2026-10-29T04:24:34Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123261675015
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123261745390
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123261805303
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0048 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12873106807
+      size_in_bytes: 257220
+      github_digest: "sha256:3f1ca27409929eb64ba86839718ca637db77c8ed9028c6343d0dcd497d4896af"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0048__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0048__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0049"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:24:45Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0049__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0049"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0049"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:27:16Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T04:24:52Z"
+      - "2026-10-29T04:24:54Z"
+    run_id: 40817612695
+    run_number: 203
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T04:24:54Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40817612695"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0049"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:27:16Z"
+    run_updated_at: "2026-10-29T04:26:57Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123262286066
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123262358805
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123262413997
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0049 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12872604918
+      size_in_bytes: 262501
+      github_digest: "sha256:53b99d4733fee80a496ac4fa7721a70b1fd3675ec333cace8d1c3d3f3f52e244"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0049__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0049__A1/import-record.yaml"
+      imported_byte_exact: true
+  - event: "DISPATCH_RECORDED"
+    execution_id: "EX0050"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:27:28Z"
+    status: "PRE_DISPATCH_RECORDED"
+    run_id_expected: "E03-CS001-SUT01-WEB__EX0050__A1"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    ref: "main"
+    public_main_revision: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    workflow_file:
+      public_sha256: "70f271c68117d9df523586e7c932520dfd5cd2c45b7827258cb33232607a6750"
+      public_blob: "25f5c45d6f34953206fb7d4a58feb55220243b5f"
+      canonical_sha256: "ab84b6624759f4ee1b074afdae79f72fa2b55dae5f399d670bb3f0b6632c3335"
+    inputs:
+      condition_id: "E03-CS001-SUT01-WEB"
+      assigned_sut: "SUT-01"
+      execution_id: "EX0050"
+      attempt: "1"
+      campaign_start_authorization_id: "E03-START-AUTH-01"
+      executor_prompt_version: "ORCHESTRATOR-E03-resetability-v1"
+      executor_implementation_sha256: "9662bd5c0b8cf4a9230f6b51a6abb78c2e167782fa2ff5d2aef51e0fd9a32e44"
+    frozen_prompt_sha256:
+      canonical: "4592ab040ba5c7cb5935268d2fdd6626d808fcb50fe5bac1b8434c66ecbd8cf1"
+      public: "30c7d721057466f7e1f7ec5efea524e6a2f25cedaf2baf799cc30b2d32fd63d8"
+  - event: "RUN_IDENTITY_RECORDED"
+    execution_id: "EX0050"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:29:36Z"
+    dispatch_clock_readings_utc:
+      - "2026-10-29T04:27:33Z"
+      - "2026-10-29T04:27:35Z"
+    run_id: 40817858661
+    run_number: 207
+    run_attempt: 1
+    head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+    created_at: "2026-10-29T04:27:34Z"
+    trigger: "workflow_dispatch"
+    url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/40817858661"
+  - event: "RUN_CONCLUDED_AND_IMPORTED"
+    execution_id: "EX0050"
+    attempt: 1
+    recorded_utc: "2026-10-29T04:29:36Z"
+    run_updated_at: "2026-10-29T04:29:19Z"
+    workflow_conclusion: "success"
+    jobs:
+      - id: 123263091918
+        name: "E03 Measured Execution Gate"
+        conclusion: "success"
+      - id: 123263157539
+        name: "E03 Provenance Capture"
+        conclusion: "success"
+      - id: 123263200881
+        name: "E03 Measured Execution E03-CS001-SUT01-WEB EX0050 A1"
+        conclusion: "success"
+    bundle_artifact:
+      id: 12872698669
+      size_in_bytes: 257328
+      github_digest: "sha256:d782043ce6696d9d03dc50d5730845f46a8f4098eceffef82b8df734f8ce9284"
+      digest_verified_on_download: true
+    import:
+      directory: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0050__A1"
+      files: 29
+      record: "raw-data/E03-resetability/SUT-01/E03-CS001-SUT01-WEB__EX0050__A1/import-record.yaml"
+      imported_byte_exact: true

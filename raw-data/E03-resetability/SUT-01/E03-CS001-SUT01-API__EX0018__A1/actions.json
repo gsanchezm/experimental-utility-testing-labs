@@ -1,0 +1,44 @@
+{
+  "run_id": "E03-CS001-SUT01-API__EX0018__A1",
+  "actions": [
+    {
+      "position": 1,
+      "class": "reset action",
+      "description": "POST /api/session/reset with the session token",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T05:07:54.822Z",
+      "observation": {
+        "status": 200,
+        "error": null
+      },
+      "evidence": [
+        "evidence/006-sut01-reset.json"
+      ],
+      "finished_at": "2026-10-29T05:07:54.824Z"
+    },
+    {
+      "position": 2,
+      "class": "API action",
+      "description": "GET /api/session",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T05:07:54.824Z",
+      "observation": {
+        "status": 200,
+        "cart_items": [],
+        "country_code": "MX"
+      },
+      "evidence": [
+        "evidence/007-sut01-session-after-reset.json"
+      ],
+      "finished_at": "2026-10-29T05:07:54.825Z"
+    }
+  ],
+  "comparison": {
+    "declared_starting_state": "the login session holds {cart_items: [], country_code: <starting value>} (backend/database.py:139-148)",
+    "expected": "after the reset, GET /api/session returns cart_items [] and the starting country_code",
+    "observed": "cart_items []; country_code MX (starting value MX)",
+    "outcome": "SUCCESS"
+  }
+}

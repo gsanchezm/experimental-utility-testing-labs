@@ -1,0 +1,33 @@
+# derived-data/E03-resetability/required-actions-reset-per-attempt.csv.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (CSV cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v4.md).
+dataset: derived-data/E03-resetability/required-actions-reset-per-attempt.csv
+dataset_sha256: b8d01ed4c6c030a7f0156e43d0f7a0d77b65f3f1af0eb45b5661cf5da4928073
+campaign_id: E03-resetability
+sut_ids: [SUT-01, SUT-02, SUT-03, SUT-04, SUT-05]
+conditions: [E03-CS001-SUT01-WEB, E03-CS001-SUT01-API, E03-CS001-SUT02-WEB, E03-CS001-SUT03-WEB, E03-CS001-SUT04-WEB, E03-CS001-SUT04-API, E03-CS001-SUT05-API]
+raw_inputs:
+  tree:
+    path: raw-data/E03-resetability
+    git_tree: e4f09366ad9e9ee58304e8096ff38f783259abef
+    pinned_at_commit: 8640b173bbdb0a2d8eba6be5c54f6ccb26fd978b
+    campaign_state: FROZEN
+  files_read_per_bundle: [run-manifest.json, actions.json]
+  bundles: 350
+  content_addressing: the columns run_manifest_sha256 and actions_json_sha256 of the dataset give the sha256 of the two files read for each bundle
+transformation_script:
+  path: analysis/h2-analysis/compute-h2.js
+  version: git-blob-sha 45683941981a71f972d22ef6929e296a8e6e012f
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only)
+date_generated: "2026-10-29"
+date_note: local date (America/Mexico_City)
+protocol_version: v1
+correction_records_applied: []
+notes: >
+  One row per imported attempt bundle (350 rows, one per execution EX0001 to EX0050 of each of the seven
+  executable conditions). required_actions_reset is the number of entries of actions[] of the bundle
+  (experiments/E03-resetability/executor/README.md, section 3, item 1); run_outcome_status is the run manifest's
+  outcome.status as recorded, copied without interpretation. The script verifies the actions.json sha256 against
+  the one listed in the run manifest and fails on any disagreement. The two dispatched attempts that left no
+  bundle (EX0001 of E03-CS001-SUT01-WEB, attempt 1, run 40800423112; EX0003 of E03-CS001-SUT04-API, attempt 1,
+  run 40827272226) have no row; the rows of those executions are their imported attempt 2.

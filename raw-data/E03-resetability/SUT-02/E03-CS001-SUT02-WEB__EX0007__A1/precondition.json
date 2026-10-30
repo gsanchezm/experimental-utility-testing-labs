@@ -1,0 +1,95 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E03-CS001-SUT02-WEB__EX0007__A1",
+  "condition": "E03-CS001-SUT02-WEB",
+  "scenario": "CS-001",
+  "declared_starting_state": {
+    "id": "CS-001-STARTING",
+    "definition": "localStorage cart-contents absent; the cart link reads \"Cart, empty\" without a badge (src/utils/shopping-cart.js:39-52; src/components/CartButton.jsx:24-42)",
+    "citations": [
+      "experiments/scenario-mappings/CS-001.yaml (SUT-02 entry)",
+      "SUT02-EV-0002",
+      "src/utils/shopping-cart.js:39-52@60fdd63",
+      "src/components/CartButton.jsx:24-42@60fdd63",
+      "src/components/DrawerMenu.jsx:20-23,152-164@60fdd63"
+    ],
+    "observed_before_establishment": {
+      "aria_label": "Cart, empty",
+      "badge_count": 0,
+      "badge_text": null,
+      "cart-contents": null
+    },
+    "holds": true
+  },
+  "steps": [
+    {
+      "phase": "precondition",
+      "description": "login standard_user at {web}/",
+      "mechanisms": [
+        "PREDEFINED_ACCOUNT"
+      ],
+      "started_at": "2026-10-29T02:36:48.794Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "url": "http://127.0.0.1:3000/inventory.html"
+      },
+      "evidence": [],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T02:36:49.068Z"
+    },
+    {
+      "phase": "declared-starting-state",
+      "description": "cart link and cart-contents before the establishment",
+      "mechanisms": [],
+      "started_at": "2026-10-29T02:36:49.068Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "aria_label": "Cart, empty",
+        "badge_count": 0,
+        "badge_text": null,
+        "cart-contents": null
+      },
+      "evidence": [
+        "evidence/002-sut02-storage-start.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T02:36:49.163Z"
+    },
+    {
+      "phase": "establishment",
+      "description": "click [data-test=\"add-to-cart-sauce-labs-backpack\"]",
+      "mechanisms": [
+        "UI_FLOW"
+      ],
+      "started_at": "2026-10-29T02:36:49.163Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "cart-contents": "[4]"
+      },
+      "evidence": [],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T02:36:49.194Z"
+    },
+    {
+      "phase": "pre-reset-verification",
+      "description": "[data-test=\"shopping-cart-badge\"] text 1",
+      "mechanisms": [],
+      "started_at": "2026-10-29T02:36:49.194Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "aria_label": "Cart, 1 items",
+        "badge_count": 1,
+        "badge_text": "1",
+        "cart-contents": "[4]"
+      },
+      "evidence": [
+        "evidence/003-sut02-pre-reset.png",
+        "evidence/004-sut02-storage-pre-reset.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T02:36:49.325Z"
+    }
+  ],
+  "note": "precondition, establishment, and pre-reset verification: recorded, never counted as Required Actions - reset"
+}

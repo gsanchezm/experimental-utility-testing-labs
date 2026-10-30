@@ -1,0 +1,45 @@
+{
+  "interface_version": 1,
+  "sut_id": "SUT-01",
+  "record_class": "MEASURED_EXPERIMENT",
+  "surfaces": {
+    "web": {
+      "base_url": "http://127.0.0.1:3000"
+    },
+    "api": {
+      "base_url": "http://127.0.0.1:8000"
+    },
+    "auth": null
+  },
+  "provisioning": {
+    "route": "GitHub-hosted runner instance provisioned in this job by the steps of job sut-01-web-api of .github/workflows/e03-environment-verification.yml: clone of the pinned commit; api: Python 3.11 (setup-python), pip install -r requirements.txt in backend/, uvicorn main:app on 127.0.0.1:8000; web: Node.js 24 (setup-node), pnpm 10, pnpm install --frozen-lockfile, build with VITE_API_URL=http://127.0.0.1:8000, vite preview on 127.0.0.1:3000",
+    "repository": "https://github.com/gsanchezm/OmniPizza",
+    "commit_sha": "9ca37674d374e9303912e259641ee86baf3aabe1",
+    "release": null,
+    "asset": {
+      "name": null,
+      "sha256": null
+    },
+    "commands": [
+      "cd sut/backend",
+      "python -m pip install --quiet -r requirements.txt",
+      "nohup python -m uvicorn main:app --host 127.0.0.1 --port 8000 > \"$GITHUB_WORKSPACE/api-stdout.log\" 2> \"$GITHUB_WORKSPACE/api-stderr.log\" &",
+      "for _ in $(seq 1 60); do curl -fsS http://127.0.0.1:8000/health >/dev/null 2>&1 && break; sleep 2; done",
+      "curl -fsS http://127.0.0.1:8000/health",
+      "npm install -g pnpm@10 --no-audit --no-fund",
+      "cd sut/frontend",
+      "pnpm install --frozen-lockfile",
+      "VITE_API_URL=http://127.0.0.1:8000 pnpm build",
+      "nohup pnpm exec vite preview --host 127.0.0.1 --port 3000 --strictPort > \"$GITHUB_WORKSPACE/web-stdout.log\" 2> \"$GITHUB_WORKSPACE/web-stderr.log\" &",
+      "for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done"
+    ],
+    "provisioning_record": null
+  },
+  "process": null,
+  "logs": [
+    "<cwd>/api-stdout.log",
+    "<cwd>/api-stderr.log",
+    "<cwd>/web-stdout.log",
+    "<cwd>/web-stderr.log"
+  ]
+}

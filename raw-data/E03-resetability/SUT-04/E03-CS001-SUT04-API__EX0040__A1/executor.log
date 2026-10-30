@@ -1,0 +1,21 @@
+{"t": "2026-10-29T15:18:24.206Z", "event": "run-start", "condition": "E03-CS001-SUT04-API", "run_id": "E03-CS001-SUT04-API__EX0040__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-10-29T15:18:24.208Z", "event": "instance", "sha256": "edad8bbb218882dac4432867a4569c00e88ae2cff31b985d894626365f5a7b71"}
+{"t": "2026-10-29T15:18:24.208Z", "event": "step-start", "phase": "precondition", "description": "POST /auth/login with the seeded admin account"}
+{"t": "2026-10-29T15:18:24.273Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3004/auth/login", "status": 200, "error": null, "elapsed_s": 0.064, "evidence": "evidence/002-sut04-login.json"}
+{"t": "2026-10-29T15:18:24.273Z", "event": "step-end", "phase": "precondition", "outcome": "SUCCESS"}
+{"t": "2026-10-29T15:18:24.273Z", "event": "step-start", "phase": "declared-starting-state", "description": "GET /booking/?roomid=1 before the establishment"}
+{"t": "2026-10-29T15:18:24.465Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/booking/?roomid=1", "status": 200, "error": null, "elapsed_s": 0.191, "evidence": "evidence/003-sut04-bookings-start.json"}
+{"t": "2026-10-29T15:18:24.465Z", "event": "step-end", "phase": "declared-starting-state", "outcome": "SUCCESS"}
+{"t": "2026-10-29T15:18:24.465Z", "event": "step-start", "phase": "establishment", "description": "POST /booking/ for room 1 with the run-unique names and dates, without email and phone"}
+{"t": "2026-10-29T15:18:24.604Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3000/booking/", "status": 201, "error": null, "elapsed_s": 0.139, "evidence": "evidence/004-sut04-create.json"}
+{"t": "2026-10-29T15:18:24.604Z", "event": "step-end", "phase": "establishment", "outcome": "SUCCESS"}
+{"t": "2026-10-29T15:18:24.604Z", "event": "step-start", "phase": "pre-reset-verification", "description": "GET /booking/{id} answers 200"}
+{"t": "2026-10-29T15:18:24.627Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/booking/4", "status": 200, "error": null, "elapsed_s": 0.022, "evidence": "evidence/005-sut04-get-pre-reset.json"}
+{"t": "2026-10-29T15:18:24.627Z", "event": "step-end", "phase": "pre-reset-verification", "outcome": "SUCCESS"}
+{"t": "2026-10-29T15:18:24.627Z", "event": "action-start", "position": 1, "cls": "reset action", "description": "DELETE /booking/{id} with the token"}
+{"t": "2026-10-29T15:18:24.648Z", "event": "http", "method": "DELETE", "url": "http://127.0.0.1:3000/booking/4", "status": 202, "error": null, "elapsed_s": 0.02, "evidence": "evidence/006-sut04-delete.json"}
+{"t": "2026-10-29T15:18:24.648Z", "event": "action-end", "position": 1, "outcome": "SUCCESS", "error": null}
+{"t": "2026-10-29T15:18:24.648Z", "event": "action-start", "position": 2, "cls": "API action", "description": "GET /booking/{id} with the token"}
+{"t": "2026-10-29T15:18:24.663Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/booking/4", "status": 404, "error": null, "elapsed_s": 0.015, "evidence": "evidence/007-sut04-get-after-reset.json"}
+{"t": "2026-10-29T15:18:24.664Z", "event": "action-end", "position": 2, "outcome": "SUCCESS", "error": null}
+{"t": "2026-10-29T15:18:24.666Z", "event": "run-end", "status": "SUCCESS", "actions": 2}

@@ -1,0 +1,118 @@
+{
+  "route": "the route of the SUT's README (run_locally.sh at the pinned commit, with npm start in place of npm run dev and each service's -exec jar in place of the script's jar glob; human decision of 2026-10-06)",
+  "processes": [
+    {
+      "name": "auth",
+      "argv": [
+        "java",
+        "-jar",
+        "-Dspring.profiles.active=dev",
+        "auth/target/restful-booker-platform-auth-2.2.SNAPSHOT-exec.jar"
+      ],
+      "cwd": "sut",
+      "pid": 3052,
+      "pgid": 3052,
+      "log": "sut04-auth.log",
+      "port": 3004,
+      "ready_url": "http://127.0.0.1:3004/auth/actuator/health"
+    },
+    {
+      "name": "booking",
+      "argv": [
+        "java",
+        "-jar",
+        "-Dspring.profiles.active=dev",
+        "booking/target/restful-booker-platform-booking-2.2.SNAPSHOT-exec.jar"
+      ],
+      "cwd": "sut",
+      "pid": 3053,
+      "pgid": 3053,
+      "log": "sut04-booking.log",
+      "port": 3000,
+      "ready_url": "http://127.0.0.1:3000/booking/actuator/health"
+    },
+    {
+      "name": "room",
+      "argv": [
+        "java",
+        "-jar",
+        "-Dspring.profiles.active=dev",
+        "room/target/restful-booker-platform-room-2.2.SNAPSHOT-exec.jar"
+      ],
+      "cwd": "sut",
+      "pid": 3054,
+      "pgid": 3054,
+      "log": "sut04-room.log",
+      "port": 3001,
+      "ready_url": "http://127.0.0.1:3001/room/actuator/health"
+    },
+    {
+      "name": "report",
+      "argv": [
+        "java",
+        "-jar",
+        "-Dspring.profiles.active=dev",
+        "report/target/restful-booker-platform-report-2.2.SNAPSHOT-exec.jar"
+      ],
+      "cwd": "sut",
+      "pid": 3055,
+      "pgid": 3055,
+      "log": "sut04-report.log",
+      "port": 3005,
+      "ready_url": "http://127.0.0.1:3005/report/actuator/health"
+    },
+    {
+      "name": "branding",
+      "argv": [
+        "java",
+        "-jar",
+        "-Dspring.profiles.active=dev",
+        "branding/target/restful-booker-platform-branding-2.2.SNAPSHOT-exec.jar"
+      ],
+      "cwd": "sut",
+      "pid": 3058,
+      "pgid": 3058,
+      "log": "sut04-branding.log",
+      "port": 3002,
+      "ready_url": "http://127.0.0.1:3002/branding/actuator/health"
+    },
+    {
+      "name": "message",
+      "argv": [
+        "java",
+        "-jar",
+        "-Dspring.profiles.active=dev",
+        "message/target/restful-booker-platform-message-2.2.SNAPSHOT-exec.jar"
+      ],
+      "cwd": "sut",
+      "pid": 3060,
+      "pgid": 3060,
+      "log": "sut04-message.log",
+      "port": 3006,
+      "ready_url": "http://127.0.0.1:3006/message/actuator/health"
+    },
+    {
+      "name": "web",
+      "argv": [
+        "npm",
+        "start"
+      ],
+      "cwd": "sut/assets",
+      "pid": 3065,
+      "pgid": 3065,
+      "log": "sut04-web.log",
+      "port": 3003,
+      "ready_url": "http://127.0.0.1:3003/"
+    }
+  ],
+  "readiness_s": {
+    "web": 3.7,
+    "auth": 25.6,
+    "report": 26.5,
+    "booking": 35.7,
+    "room": 35.9,
+    "branding": 36.1,
+    "message": 36.4
+  },
+  "readiness_bound_s": 300
+}

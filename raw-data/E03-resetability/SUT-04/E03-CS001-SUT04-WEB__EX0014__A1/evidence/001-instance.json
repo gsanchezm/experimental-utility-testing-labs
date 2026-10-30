@@ -1,0 +1,69 @@
+{
+  "interface_version": 1,
+  "sut_id": "SUT-04",
+  "record_class": "MEASURED_EXPERIMENT",
+  "surfaces": {
+    "web": {
+      "base_url": "http://127.0.0.1:3003/"
+    },
+    "api": {
+      "base_url": "http://127.0.0.1:3000"
+    },
+    "auth": {
+      "base_url": "http://127.0.0.1:3004"
+    }
+  },
+  "provisioning": {
+    "route": "GitHub-hosted runner instance provisioned in this job by the steps of job sut-04-web-api of .github/workflows/e03-environment-verification.yml: clone of the pinned commit; JDK 26 (setup-java, temurin); Node.js 24.21.0 (setup-node); Apache Maven 3.9.14 from the Apache archive, SHA-512 verified; mvn -B -q clean install -DskipTests; the route of the SUT's README (run_locally.sh, with npm start in place of npm run dev and each service's -exec jar in place of the script's jar glob): the six service -exec jars with -Dspring.profiles.active=dev (auth on port 3004, booking 3000, room 3001, report 3005, branding 3002, message 3006) and the web app by npm start (next start -p 3003), each in its own session and process group",
+    "repository": "https://github.com/mwinteringham/restful-booker-platform",
+    "commit_sha": "d36bd3f8647a091d406e53bad463c5e3e5d2ece1",
+    "release": null,
+    "asset": {
+      "name": null,
+      "sha256": null
+    },
+    "commands": [
+      "curl --fail --location --proto '=https' --retry 3 --output \"$RUNNER_TEMP/apache-maven-3.9.14-bin.tar.gz\" https://archive.apache.org/dist/maven/maven-3/3.9.14/binaries/apache-maven-3.9.14-bin.tar.gz",
+      "expected=d50af8ab5e6005b46a07f0ce9d3719e67cfdf898da988a84871304cd59fb1af0fef2f99dea709e6e66f21f732f905979b5c2dce6b6860406f60a70e84d9cf0b8",
+      "found=\"$(sha512sum \"$RUNNER_TEMP/apache-maven-3.9.14-bin.tar.gz\" | cut -d ' ' -f 1)\"",
+      "[ \"$found\" = \"$expected\" ] || { echo \"SHA-512 mismatch: expected $expected, found $found\" >&2; exit 1; }",
+      "tar -xzf \"$RUNNER_TEMP/apache-maven-3.9.14-bin.tar.gz\" -C \"$RUNNER_TEMP\"",
+      "if [ ! -f \"$RUNNER_TEMP/apache-maven-3.9.14/bin/mvn\" ] || [ ! -x \"$RUNNER_TEMP/apache-maven-3.9.14/bin/mvn\" ]; then echo \"not an executable file: $RUNNER_TEMP/apache-maven-3.9.14/bin/mvn\" >&2; exit 1; fi",
+      "echo \"$RUNNER_TEMP/apache-maven-3.9.14/bin\" >> \"$GITHUB_PATH\"",
+      "java -version 2>&1 | tee \"$GITHUB_WORKSPACE/java-version.txt\"",
+      "mvn -v | tee \"$GITHUB_WORKSPACE/maven-version.txt\"",
+      "[[ \"$(head -n 1 \"$GITHUB_WORKSPACE/maven-version.txt\")\" == \"Apache Maven 3.9.14 \"* ]] || { echo \"maven-version.txt does not start with Apache Maven 3.9.14: $(head -n 1 \"$GITHUB_WORKSPACE/maven-version.txt\")\" >&2; exit 1; }",
+      "[ \"$(command -v mvn)\" = \"$RUNNER_TEMP/apache-maven-3.9.14/bin/mvn\" ] || { echo \"mvn resolves to $(command -v mvn), not $RUNNER_TEMP/apache-maven-3.9.14/bin/mvn\" >&2; exit 1; }",
+      "node --version | tee \"$GITHUB_WORKSPACE/node-version.txt\"",
+      "npm --version | tee \"$GITHUB_WORKSPACE/npm-version.txt\"",
+      "cd sut",
+      "mvn -B -q clean install -DskipTests",
+      "shopt -s nullglob",
+      "jars=(./*/target/*-exec.jar)",
+      "shopt -u nullglob",
+      "[ \"${#jars[@]}\" -gt 0 ] || { echo \"no service exec jar was built under */target/\" >&2; exit 1; }",
+      "printf '%s\\n' \"${jars[@]}\" | tee \"$GITHUB_WORKSPACE/built-jars.txt\"",
+      "test -f assets/.next/BUILD_ID",
+      "java -jar -Dspring.profiles.active=dev <service>/target/restful-booker-platform-<service>-*-exec.jar from the clone root, for auth, booking, room, report, branding, message, each in its own session and process group",
+      "npm start in sut/assets (next start -p 3003), in its own session and process group",
+      "readiness: GET /<service>/actuator/health on each service port and GET / on port 3003 answer 200 within 300 s, or the step fails"
+    ],
+    "provisioning_record": null
+  },
+  "process": null,
+  "logs": [
+    "<instance>/java-version.txt",
+    "<instance>/maven-version.txt",
+    "<instance>/node-version.txt",
+    "<instance>/npm-version.txt",
+    "<instance>/built-jars.txt",
+    "<instance>/sut04-start.json",
+    "<instance>/sut04-auth.log",
+    "<instance>/sut04-booking.log",
+    "<instance>/sut04-room.log",
+    "<instance>/sut04-report.log",
+    "<instance>/sut04-branding.log",
+    "<instance>/sut04-message.log",
+    "<instance>/sut04-web.log"
+  ]
+}

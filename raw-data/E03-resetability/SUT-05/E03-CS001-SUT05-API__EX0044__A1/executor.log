@@ -1,0 +1,20 @@
+{"t": "2026-10-29T04:14:05.113Z", "event": "run-start", "condition": "E03-CS001-SUT05-API", "run_id": "E03-CS001-SUT05-API__EX0044__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-10-29T04:14:05.116Z", "event": "instance", "sha256": "26e5aad35576fd2ce19de2ba8880cfc27c0dfd841be94c6a31f8d1f37eb64bb1"}
+{"t": "2026-10-29T04:14:05.116Z", "event": "step-start", "phase": "precondition", "description": "POST /rest/user/login (documented account mc.safesearch)"}
+{"t": "2026-10-29T04:14:05.161Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3000/rest/user/login", "status": 200, "error": null, "elapsed_s": 0.044, "evidence": "evidence/002-sut05-login.json"}
+{"t": "2026-10-29T04:14:05.161Z", "event": "step-end", "phase": "precondition", "outcome": "SUCCESS"}
+{"t": "2026-10-29T04:14:05.162Z", "event": "step-start", "phase": "declared-starting-state", "description": "GET /rest/basket/{bid} before the establishment"}
+{"t": "2026-10-29T04:14:05.192Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/rest/basket/6", "status": 200, "error": null, "elapsed_s": 0.03, "evidence": "evidence/003-sut05-basket-start.json"}
+{"t": "2026-10-29T04:14:05.192Z", "event": "step-end", "phase": "declared-starting-state", "outcome": "SUCCESS"}
+{"t": "2026-10-29T04:14:05.192Z", "event": "step-start", "phase": "establishment", "description": "POST /api/BasketItems {ProductId 1, BasketId <bid>, quantity 1}"}
+{"t": "2026-10-29T04:14:05.217Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3000/api/BasketItems", "status": 200, "error": null, "elapsed_s": 0.025, "evidence": "evidence/004-sut05-add-item.json"}
+{"t": "2026-10-29T04:14:05.217Z", "event": "step-end", "phase": "establishment", "outcome": "SUCCESS"}
+{"t": "2026-10-29T04:14:05.217Z", "event": "step-start", "phase": "pre-reset-verification", "description": "GET /rest/basket/{bid} shows ProductId 1"}
+{"t": "2026-10-29T04:14:05.255Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/rest/basket/6", "status": 200, "error": null, "elapsed_s": 0.037, "evidence": "evidence/005-sut05-basket-pre-reset.json"}
+{"t": "2026-10-29T04:14:05.255Z", "event": "step-end", "phase": "pre-reset-verification", "outcome": "SUCCESS"}
+{"t": "2026-10-29T04:14:05.255Z", "event": "action-start", "position": 1, "cls": "reset action", "description": "restart the SUT process (SIGTERM to the process group, port refused, start in a new session and group, readiness)"}
+{"t": "2026-10-29T04:14:07.935Z", "event": "action-end", "position": 1, "outcome": "SUCCESS", "error": null}
+{"t": "2026-10-29T04:14:07.935Z", "event": "action-start", "position": 2, "cls": "API action", "description": "GET /rest/basket/{bid} with the pre-reset token"}
+{"t": "2026-10-29T04:14:07.965Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/rest/basket/6", "status": 200, "error": null, "elapsed_s": 0.03, "evidence": "evidence/009-sut05-basket-after-restart.json"}
+{"t": "2026-10-29T04:14:07.965Z", "event": "action-end", "position": 2, "outcome": "SUCCESS", "error": null}
+{"t": "2026-10-29T04:14:07.967Z", "event": "run-end", "status": "SUCCESS", "actions": 2}

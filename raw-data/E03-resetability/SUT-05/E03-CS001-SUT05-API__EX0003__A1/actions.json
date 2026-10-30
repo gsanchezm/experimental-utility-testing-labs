@@ -1,0 +1,55 @@
+{
+  "run_id": "E03-CS001-SUT05-API__EX0003__A1",
+  "actions": [
+    {
+      "position": 1,
+      "class": "reset action",
+      "description": "restart the SUT process (SIGTERM to the process group, port refused, start in a new session and group, readiness)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T02:29:48.976Z",
+      "observation": {
+        "stop_signal": "SIGTERM to process group 2498",
+        "stop_sent_at": "2026-10-29T02:29:49.037Z",
+        "port_refused_at": "2026-10-29T02:29:49.538Z",
+        "port_polls": 2,
+        "start_at": "2026-10-29T02:29:49.555Z",
+        "new_pid": 3292,
+        "new_pgid": 3292,
+        "ready_at": "2026-10-29T02:29:51.631Z",
+        "readiness_polls": 3,
+        "last_readiness_status": 200
+      },
+      "evidence": [
+        "evidence/006-process-tree-before-stop.txt",
+        "evidence/007-process-tree-after-stop.txt",
+        "evidence/008-process-tree-after-restart.txt"
+      ],
+      "finished_at": "2026-10-29T02:29:51.651Z"
+    },
+    {
+      "position": 2,
+      "class": "API action",
+      "description": "GET /rest/basket/{bid} with the pre-reset token",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T02:29:51.651Z",
+      "observation": {
+        "status": 200,
+        "error": null,
+        "data_is_null": true,
+        "product_ids": null
+      },
+      "evidence": [
+        "evidence/009-sut05-basket-after-restart.json"
+      ],
+      "finished_at": "2026-10-29T02:29:51.681Z"
+    }
+  ],
+  "comparison": {
+    "declared_starting_state": "the actor's basket holds no item (the account has no seeded basket; data/datacreator.ts:479-550)",
+    "expected": "after the restart, GET /rest/basket/{bid} answers 200 with data null (absent) or Products []",
+    "observed": "data null (absent)",
+    "outcome": "SUCCESS"
+  }
+}

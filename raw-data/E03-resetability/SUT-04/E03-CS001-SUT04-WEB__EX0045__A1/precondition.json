@@ -1,0 +1,113 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E03-CS001-SUT04-WEB__EX0045__A1",
+  "condition": "E03-CS001-SUT04-WEB",
+  "scenario": "CS-001",
+  "declared_starting_state": {
+    "id": "CS-001-STARTING",
+    "definition": "room 1 holds no booking with this run's guest names and dates",
+    "citations": [
+      "experiments/scenario-mappings/CS-001.yaml (SUT-04 entry)",
+      "SUT04-EV-0003",
+      "SUT04-EV-0006",
+      "SUT04-EV-0008",
+      "booking/src/main/java/com/automationintesting/service/BookingService.java:58-81@d36bd3f"
+    ],
+    "observed_before_establishment": {
+      "status": 200,
+      "bookings_in_room_1": 1,
+      "bookings_with_the_run_names": 0,
+      "run_unique_values": {
+        "firstname": "Efguwizi",
+        "lastname": "Rsyansgsy",
+        "checkin": "2033-06-17",
+        "checkout": "2033-06-18",
+        "email": "e03.fguwizisya@example.com",
+        "phone": "01234567890"
+      }
+    },
+    "holds": true
+  },
+  "steps": [
+    {
+      "phase": "precondition",
+      "description": "admin web login at {web}/admin (the token cookie the web app forwards to the booking service)",
+      "mechanisms": [
+        "PREDEFINED_ACCOUNT"
+      ],
+      "started_at": "2026-10-29T05:39:01.705Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "url": "http://127.0.0.1:3003/admin/rooms",
+        "token_cookie_present": true
+      },
+      "evidence": [],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T05:39:02.693Z"
+    },
+    {
+      "phase": "declared-starting-state",
+      "description": "GET /booking/?roomid=1 before the establishment",
+      "mechanisms": [],
+      "started_at": "2026-10-29T05:39:02.693Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "bookings_in_room_1": 1,
+        "bookings_with_the_run_names": 0,
+        "run_unique_values": {
+          "firstname": "Efguwizi",
+          "lastname": "Rsyansgsy",
+          "checkin": "2033-06-17",
+          "checkout": "2033-06-18",
+          "email": "e03.fguwizisya@example.com",
+          "phone": "01234567890"
+        }
+      },
+      "evidence": [
+        "evidence/002-sut04-bookings-start.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T05:39:02.954Z"
+    },
+    {
+      "phase": "establishment",
+      "description": "web booking form at {web}/reservation/1 with the run-unique names and dates",
+      "mechanisms": [
+        "DIRECT_ROUTE",
+        "UI_FLOW"
+      ],
+      "started_at": "2026-10-29T05:39:02.954Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "booking_id": 4,
+        "matching_bookings": 1
+      },
+      "evidence": [
+        "evidence/003-sut04-web-booking-confirmed.png",
+        "evidence/004-sut04-web-bookings-after-establishment.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T05:39:04.280Z"
+    },
+    {
+      "phase": "pre-reset-verification",
+      "description": "{web}/admin/room/1 lists the run's row",
+      "mechanisms": [],
+      "started_at": "2026-10-29T05:39:04.280Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "rows": 2,
+        "rows_with_the_run_names": 1
+      },
+      "evidence": [
+        "evidence/005-sut04-web-pre-reset.png"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T05:39:04.866Z"
+    }
+  ],
+  "note": "precondition, establishment, and pre-reset verification: recorded, never counted as Required Actions - reset"
+}

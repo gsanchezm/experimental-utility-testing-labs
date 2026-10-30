@@ -1,0 +1,160 @@
+# raw-data/E03-resetability/SUT-02/E03-CS001-SUT02-WEB__EX0007__A1/import-record.yaml -- import record of the MEASURED_EXPERIMENT attempt E03-CS001-SUT02-WEB__EX0007__A1 (ORCHESTRATOR)
+record_class: "MEASURED_EXPERIMENT_IMPORT"
+imported_by: "ORCHESTRATOR"
+imported_at: "2026-10-29T02:37:20Z"
+operation_id: "OP-DISPATCH-03"
+note: "Written by the ORCHESTRATOR at the import; it is not part of the bundle, whose members are imported unchanged beside it (the files list below gives their bytes and sha256). The report fields follow section 5 of the frozen dispatch procedure and quote the run manifest and the logs without interpretation."
+campaign_id: "E03-resetability"
+condition_id: "E03-CS001-SUT02-WEB"
+assigned_sut: "SUT-02"
+execution_id: "EX0007"
+attempt: 1
+run_id: "E03-CS001-SUT02-WEB__EX0007__A1"
+authorization:
+  authorization_id: "E03-DISPATCH-SUT02-AUTH-01"
+  records:
+    - "manifests/e03-dispatch-authorization-sut02-v1.yaml"
+  campaign_start_authorization_id: "E03-START-AUTH-01"
+dispatch_record: "manifests/e03-measured-dispatch/E03-CS001-SUT02-WEB.yaml"
+dispatch_clock_readings_utc:
+  - "2026-10-29T02:35:23Z"
+  - "2026-10-29T02:35:25Z"
+github:
+  repository: "gsanchezm/experimental-utility-testing-labs"
+  workflow: ".github/workflows/e03-measured-execution.yml"
+  run_id: 40807254014
+  run_number: 29
+  run_attempt: 1
+  head_sha: "71a049236c582c4d702d1ed336a760ba0a504cd3"
+  created_at: "2026-10-29T02:35:25Z"
+  updated_at: "2026-10-29T02:36:57Z"
+  conclusion: "success"
+  jobs:
+    - id: 123229048063
+      name: "E03 Measured Execution Gate"
+      conclusion: "success"
+    - id: 123229127632
+      name: "E03 Provenance Capture"
+      conclusion: "success"
+    - id: 123229176701
+      name: "E03 Measured Execution E03-CS001-SUT02-WEB EX0007 A1"
+      conclusion: "success"
+  manifest_validation_step: "success"
+artifacts:
+  bundle:
+    id: 12868941376
+    name: "E03-MEASURED_EXPERIMENT-E03-CS001-SUT02-WEB-EX0007-A1"
+    size_in_bytes: 525395
+    github_digest: "sha256:ebc86dc5b849bffd674902f333aa8f8ade00cbe684110df8b09de7b8adc6f87c"
+    archive_sha256_verified: true
+  provenance:
+    id: 12868936170
+    name: "E03-MEASURED_EXPERIMENT-E03-CS001-SUT02-WEB-EX0007-A1-provenance"
+    size_in_bytes: 1952
+    github_digest: "sha256:c59933ec0ab7adc514986c7b3fb76c1d6e344b69754a39c89b07f489454307ff"
+    archive_sha256_verified: true
+    equals_bundle_member: "ci-provenance.json"
+verification:
+  files_in_bundle: 23
+  manifest_listed_hashes_checked: 18
+  hash_mismatches: 0
+  members_without_listed_sha256:
+    - "exit-status.txt"
+    - "finished-at.txt"
+    - "run-manifest.json"
+    - "stderr.log"
+    - "stdout.log"
+  bundle_members_equal_manifest_list: true
+  ci_provenance_ids_equal_the_run: true
+  imported_bytes_equal_extracted_bytes: true
+report:
+  outcome_status: "SUCCESS"
+  outcome_expected: "after 'Reset App State', the cart link shows no badge and reads \"Cart, empty\""
+  outcome_observed: "badge elements 0; aria-label 'Cart, empty'"
+  actions:
+    - class: "navigation action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "open the side drawer: click #react-burger-menu-btn"
+    - class: "reset action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "click 'Reset App State' (#reset_sidebar_link)"
+    - class: "UI action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "read the cart link"
+  reset_mechanisms:
+    - "APP_DATA_CLEAR"
+  anomalies_quoted_from_the_job_log:
+    - "##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/download-artifact@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation"
+files:
+  - path: "actions.json"
+    bytes: 1954
+    sha256: "f51e6ec32112c65f1aa70e60fee45b2c9f0d72373169e54824b261353456d214"
+  - path: "ci-provenance.json"
+    bytes: 3545
+    sha256: "70f7faef34924f384a049aa8baede719be3005116b811fb0d2ae8910d830d037"
+  - path: "evidence/001-instance.json"
+    bytes: 1201
+    sha256: "2d09ab083fc51dd16aa591753153760f1e03c6d57b7c2d95d3847d46f5ba3d3c"
+  - path: "evidence/002-sut02-storage-start.json"
+    bytes: 405
+    sha256: "8357c39e76e540bd043674396f03be549f9a42cf0f6a20c3661e303592c88e44"
+  - path: "evidence/003-sut02-pre-reset.png"
+    bytes: 283484
+    sha256: "4a807d533b71fe65d14443948357c3db228ad5504cd363393a8d6c278b795bce"
+  - path: "evidence/004-sut02-storage-pre-reset.json"
+    bytes: 433
+    sha256: "446600a08e23b3b1ce69dea8f409bda91d1dd83663cdd18f6155e1aa27a80585"
+  - path: "evidence/005-sut02-storage-after-reset-click.json"
+    bytes: 405
+    sha256: "8357c39e76e540bd043674396f03be549f9a42cf0f6a20c3661e303592c88e44"
+  - path: "evidence/006-sut02-after-reset.png"
+    bytes: 242838
+    sha256: "a4c77d32ba44f2f6b03552b8edb70e8f110249cb7fa52d04e6a7793f7312857d"
+  - path: "evidence/007-sut02-header-text.txt"
+    bytes: 85
+    sha256: "6e916a4f8a8c5fc93d5480d3f7b35076778eed594db92b91004b3ccac1daed90"
+  - path: "evidence/008-network-log.json"
+    bytes: 2933
+    sha256: "34dd3ac9a9956e493adbaf8cb4e669dd7ad62bcefaa8e3e1aab6aac6467a9554"
+  - path: "evidence/009-console-log.json"
+    bytes: 328
+    sha256: "26f88e014538f1875f2f68970e2c7d43c488e8b918f367fa98d48eb42dc66e62"
+  - path: "evidence/010-sut-log-web-stdout.log.log"
+    bytes: 77
+    sha256: "0a3a582274f3f68ba4b20fb2242dad48342ff42a1db4e609f1958859ad100ebe"
+  - path: "evidence/011-sut-log-web-stderr.log.log"
+    bytes: 0
+    sha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  - path: "executor.log"
+    bytes: 2346
+    sha256: "8a1c8fecb45488a7b097c185b4925d54d0b4cd1032018107512d08bb5fc0e546"
+  - path: "exit-status.txt"
+    bytes: 2
+    sha256: "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  - path: "finished-at.txt"
+    bytes: 21
+    sha256: "3b82cbe4e4ef67a4de187283773d2e676071c899c8fa69410481789ef8a00776"
+  - path: "precondition.json"
+    bytes: 3016
+    sha256: "517fc8c39a0e553416f2a58721970c9b3e025cdddcd173239ec6d22b9f9ad304"
+  - path: "run-manifest.json"
+    bytes: 7950
+    sha256: "a22790b872dbd4d5360c895d383394050d1cfb5718278267dbe12dece908b0c3"
+  - path: "runtime-environment.json"
+    bytes: 723
+    sha256: "1fc344cf080dc263a0d133694536b9b16c3d4038dd5ff693ce469748e3ec238e"
+  - path: "started-at.txt"
+    bytes: 21
+    sha256: "d8bca6683dc59d0671909c06a1bc0e48385a03a2eaf84440f6bd8b1b6fd1a0c5"
+  - path: "stderr.log"
+    bytes: 0
+    sha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  - path: "stdout.log"
+    bytes: 140
+    sha256: "b681d6eeca3835a6f843041d5636c17c4ef9c51c3fe37357b619fa52768a4f46"
+  - path: "tool-versions.json"
+    bytes: 407
+    sha256: "b66d6ff3661cc4d5f8a396a195df5855d4a8d2f743dfd34be33652d28f60f2ed"

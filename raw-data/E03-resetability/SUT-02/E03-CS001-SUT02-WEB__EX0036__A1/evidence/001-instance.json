@@ -1,0 +1,35 @@
+{
+  "interface_version": 1,
+  "sut_id": "SUT-02",
+  "record_class": "MEASURED_EXPERIMENT",
+  "surfaces": {
+    "web": {
+      "base_url": "http://127.0.0.1:3000"
+    },
+    "api": null,
+    "auth": null
+  },
+  "provisioning": {
+    "route": "GitHub-hosted runner instance provisioned in this job by the steps of job sut-02-web of .github/workflows/e03-environment-verification.yml: clone of the pinned commit; Node.js 24 (setup-node); npm ci; npm run build; vite preview on 127.0.0.1:3000",
+    "repository": "https://github.com/saucelabs/sample-app-web",
+    "commit_sha": "60fdd634bb111c092282fa07977513a0a7765593",
+    "release": null,
+    "asset": {
+      "name": null,
+      "sha256": null
+    },
+    "commands": [
+      "cd sut",
+      "npm ci --no-audit --no-fund",
+      "npm run build",
+      "nohup npx vite preview --host 127.0.0.1 --port 3000 --strictPort > \"$GITHUB_WORKSPACE/web-stdout.log\" 2> \"$GITHUB_WORKSPACE/web-stderr.log\" &",
+      "for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done"
+    ],
+    "provisioning_record": null
+  },
+  "process": null,
+  "logs": [
+    "<cwd>/web-stdout.log",
+    "<cwd>/web-stderr.log"
+  ]
+}

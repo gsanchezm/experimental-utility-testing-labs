@@ -1,0 +1,322 @@
+{
+  "study_id": "EUS-2026-001",
+  "hypothesis_id": "H2",
+  "part": "reset side (E03 contribution); the establish side has no data",
+  "frozen_hypothesis_text_verbatim": "H2: OmniPizza will require fewer preparation/reset actions to establish equivalent target states than the general-purpose baselines. (protocol/study-design-v1.md, section 6)",
+  "campaign_id": "E03-resetability",
+  "campaign_state_at_analysis": "FROZEN",
+  "raw_data": {
+    "path": "raw-data/E03-resetability",
+    "git_tree": "e4f09366ad9e9ee58304e8096ff38f783259abef",
+    "pinned_at_commit": "8640b173bbdb0a2d8eba6be5c54f6ccb26fd978b",
+    "n_bundles": 350,
+    "n_conditions": 7,
+    "executions_per_condition": 50,
+    "per_run_table": "derived-data/E03-resetability/required-actions-reset-per-attempt.csv",
+    "attempts_without_bundle": [
+      {
+        "condition_id": "E03-CS001-SUT01-WEB",
+        "execution_id": "EX0001",
+        "attempt": 1,
+        "github_run_id": 40800423112,
+        "dispatch_record": "manifests/e03-measured-dispatch/E03-CS001-SUT01-WEB.yaml"
+      },
+      {
+        "condition_id": "E03-CS001-SUT04-API",
+        "execution_id": "EX0003",
+        "attempt": 1,
+        "github_run_id": 40827272226,
+        "dispatch_record": "manifests/e03-measured-dispatch/E03-CS001-SUT04-API.yaml"
+      }
+    ]
+  },
+  "configuration": {
+    "source": "experiments/E03-resetability/README.md, \"Campaign configuration\", subsection \"CONFIRMATORY comparisons\"",
+    "campaign_start_commit": "58f08964b4bd8879d3f8f29005a734f63e5f954f",
+    "section_sha256_at_start": "dba46253092d8d8c66861f584677655841192d683e1954dbc53e51d10956f3cc",
+    "canonical_scenario": "CS-001",
+    "confirmatory_pairs": [
+      "SUT-01 vs SUT-02",
+      "SUT-01 vs SUT-03"
+    ],
+    "exploratory_not_computed": "comparisons involving SUT-04 or SUT-05 stay EXPLORATORY and are not computed here; their conditions appear only in the per-condition descriptives"
+  },
+  "variable_definition": "Required Actions (reset) per execution = number of entries of actions[] of the bundle (experiments/E03-resetability/executor/README.md, section 3, item 1), computed over the attempts that reached the reset action; run outcome.status frequencies are reported beside; the count does not depend on outcome.status.",
+  "method": "Descriptive branch of the plan (statistical-analysis-plan-v1.md, sections 3 and 4.3): per-condition count distribution with median and interquartile range (quantile type 7); paired per-scenario difference in the original unit for each confirmatory pair; no test, no bootstrap, no standardized effect size. The branch is the plan's own fallback for a design with one canonical scenario, fixed in the frozen plan and not chosen after seeing the data.",
+  "per_condition": {
+    "E03-CS001-SUT01-WEB": {
+      "sut_id": "SUT-01",
+      "surface": "WEB",
+      "reset_mechanism": "API_RESET / SESSION_RESET",
+      "predeclared_reset_side_required_actions": 2,
+      "n_bundles": 50,
+      "n_reached_reset_action": 50,
+      "n_without_reset_action": 0,
+      "attempt_frequency": {
+        "1": 49,
+        "2": 1
+      },
+      "run_outcome_status_frequency": {
+        "FAILURE": 50
+      },
+      "required_actions_reset": {
+        "n": 50,
+        "min": 3,
+        "q1": 3,
+        "median": 3,
+        "q3": 3,
+        "max": 3,
+        "frequency": {
+          "3": 50
+        }
+      },
+      "action_class_and_outcome_sequences": {
+        "reset action | navigation action | UI action || SUCCESS | SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E03-CS001-SUT01-API": {
+      "sut_id": "SUT-01",
+      "surface": "API",
+      "reset_mechanism": "API_RESET / SESSION_RESET",
+      "predeclared_reset_side_required_actions": 2,
+      "n_bundles": 50,
+      "n_reached_reset_action": 50,
+      "n_without_reset_action": 0,
+      "attempt_frequency": {
+        "1": 50
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_reset": {
+        "n": 50,
+        "min": 2,
+        "q1": 2,
+        "median": 2,
+        "q3": 2,
+        "max": 2,
+        "frequency": {
+          "2": 50
+        }
+      },
+      "action_class_and_outcome_sequences": {
+        "reset action | API action || SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E03-CS001-SUT02-WEB": {
+      "sut_id": "SUT-02",
+      "surface": "WEB",
+      "reset_mechanism": "APP_DATA_CLEAR",
+      "predeclared_reset_side_required_actions": 2,
+      "n_bundles": 50,
+      "n_reached_reset_action": 50,
+      "n_without_reset_action": 0,
+      "attempt_frequency": {
+        "1": 50
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_reset": {
+        "n": 50,
+        "min": 3,
+        "q1": 3,
+        "median": 3,
+        "q3": 3,
+        "max": 3,
+        "frequency": {
+          "3": 50
+        }
+      },
+      "action_class_and_outcome_sequences": {
+        "navigation action | reset action | UI action || SUCCESS | SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E03-CS001-SUT03-WEB": {
+      "sut_id": "SUT-03",
+      "surface": "WEB",
+      "reset_mechanism": "SESSION_RESET",
+      "predeclared_reset_side_required_actions": 2,
+      "n_bundles": 50,
+      "n_reached_reset_action": 50,
+      "n_without_reset_action": 0,
+      "attempt_frequency": {
+        "1": 50
+      },
+      "run_outcome_status_frequency": {
+        "FAILURE": 50
+      },
+      "required_actions_reset": {
+        "n": 50,
+        "min": 2,
+        "q1": 2,
+        "median": 2,
+        "q3": 2,
+        "max": 2,
+        "frequency": {
+          "2": 50
+        }
+      },
+      "action_class_and_outcome_sequences": {
+        "reset action | UI action || SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E03-CS001-SUT04-WEB": {
+      "sut_id": "SUT-04",
+      "surface": "WEB",
+      "reset_mechanism": "API_RESET",
+      "predeclared_reset_side_required_actions": 2,
+      "n_bundles": 50,
+      "n_reached_reset_action": 50,
+      "n_without_reset_action": 0,
+      "attempt_frequency": {
+        "1": 50
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_reset": {
+        "n": 50,
+        "min": 2,
+        "q1": 2,
+        "median": 2,
+        "q3": 2,
+        "max": 2,
+        "frequency": {
+          "2": 50
+        }
+      },
+      "action_class_and_outcome_sequences": {
+        "reset action | UI action || SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E03-CS001-SUT04-API": {
+      "sut_id": "SUT-04",
+      "surface": "API",
+      "reset_mechanism": "API_RESET",
+      "predeclared_reset_side_required_actions": 2,
+      "n_bundles": 50,
+      "n_reached_reset_action": 50,
+      "n_without_reset_action": 0,
+      "attempt_frequency": {
+        "1": 49,
+        "2": 1
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_reset": {
+        "n": 50,
+        "min": 2,
+        "q1": 2,
+        "median": 2,
+        "q3": 2,
+        "max": 2,
+        "frequency": {
+          "2": 50
+        }
+      },
+      "action_class_and_outcome_sequences": {
+        "reset action | API action || SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E03-CS001-SUT05-API": {
+      "sut_id": "SUT-05",
+      "surface": "API",
+      "reset_mechanism": "ENVIRONMENT_RESTART",
+      "predeclared_reset_side_required_actions": 2,
+      "n_bundles": 50,
+      "n_reached_reset_action": 50,
+      "n_without_reset_action": 0,
+      "attempt_frequency": {
+        "1": 50
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_reset": {
+        "n": 50,
+        "min": 2,
+        "q1": 2,
+        "median": 2,
+        "q3": 2,
+        "max": 2,
+        "frequency": {
+          "2": 50
+        }
+      },
+      "action_class_and_outcome_sequences": {
+        "reset action | API action || SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    }
+  },
+  "comparisons": [
+    {
+      "comparison_id": "H2 reset side (SUT-01 vs SUT-02), CS-001, WEB",
+      "classification": "CONFIRMATORY (H2)",
+      "omnipizza_condition": "E03-CS001-SUT01-WEB",
+      "baseline": "SUT-02",
+      "baseline_condition": "E03-CS001-SUT02-WEB",
+      "pairing_unit": "canonical_scenario_id",
+      "canonical_scenario_id": "CS-001",
+      "n_pairs": 1,
+      "n_executions_per_arm": {
+        "SUT-01": 50,
+        "SUT-02": 50
+      },
+      "per_scenario_count_omnipizza": 3,
+      "per_scenario_count_baseline": 3,
+      "paired_difference_original_unit": 0,
+      "paired_difference_definition": "per-scenario count of SUT-01 minus per-scenario count of the baseline, in Required Actions (reset)",
+      "direction": "EQUAL",
+      "wilcoxon_signed_rank_applied": false,
+      "wilcoxon_reason": "one canonical scenario gives one pair; the plan applies the test only where the number of non-tied pairs is adequate and otherwise reports the comparison descriptively (statistical-analysis-plan-v1.md, sections 3 and 4.3)",
+      "confidence_interval": null,
+      "confidence_interval_reason": "not estimable from one pair; the executions within a condition are repetitions of one scenario, not pairs",
+      "rank_biserial_correlation": null,
+      "rank_biserial_reason": "reported only where the Wilcoxon signed-rank test is applied (statistical-analysis-plan-v1.md, section 3, effect sizes)"
+    },
+    {
+      "comparison_id": "H2 reset side (SUT-01 vs SUT-03), CS-001, WEB",
+      "classification": "CONFIRMATORY (H2)",
+      "omnipizza_condition": "E03-CS001-SUT01-WEB",
+      "baseline": "SUT-03",
+      "baseline_condition": "E03-CS001-SUT03-WEB",
+      "pairing_unit": "canonical_scenario_id",
+      "canonical_scenario_id": "CS-001",
+      "n_pairs": 1,
+      "n_executions_per_arm": {
+        "SUT-01": 50,
+        "SUT-03": 50
+      },
+      "per_scenario_count_omnipizza": 3,
+      "per_scenario_count_baseline": 2,
+      "paired_difference_original_unit": 1,
+      "paired_difference_definition": "per-scenario count of SUT-01 minus per-scenario count of the baseline, in Required Actions (reset)",
+      "direction": "OMNIPIZZA_MORE",
+      "wilcoxon_signed_rank_applied": false,
+      "wilcoxon_reason": "one canonical scenario gives one pair; the plan applies the test only where the number of non-tied pairs is adequate and otherwise reports the comparison descriptively (statistical-analysis-plan-v1.md, sections 3 and 4.3)",
+      "confidence_interval": null,
+      "confidence_interval_reason": "not estimable from one pair; the executions within a condition are repetitions of one scenario, not pairs",
+      "rank_biserial_correlation": null,
+      "rank_biserial_reason": "reported only where the Wilcoxon signed-rank test is applied (statistical-analysis-plan-v1.md, section 3, effect sizes)"
+    }
+  ],
+  "support_determination": null,
+  "support_determination_note": "Not computed: protocol/statistical-analysis-plan-v1.md and protocol/study-design-v1.md define no support/non-support satisfaction criterion for H2 (contrast H3).",
+  "limitations": [
+    "Reset side only: H2 concerns preparation and reset actions to establish equivalent target states (E02 establish, E03 reset); E02 is NOT_STARTED, so the establish side has no data and this output is not an evaluation of H2.",
+    "One canonical scenario (CS-001) gives one pair per comparison: no Wilcoxon signed-rank test, no interval, and no rank-biserial correlation can be computed. Under statistical-analysis-plan-v1.md, section 5, a comparison that lacks an interval is not reported as a result; the two comparison rows are the descriptive observations that the plan's fallback branch yields, with the interval stated as not estimable, and they are not offered as inferential results.",
+    "Within every condition the count of Required Actions (reset) is the same in all executions, so the median and the interquartile range summarize a constant; the repetitions carry no information about the spread of the count.",
+    "The count is of the actions performed by the reset procedure whatever the run outcome.status; the status frequencies are reported beside it. The count is the realized count of the locked implementation: the web conditions of SUT-01 and SUT-02 include a navigation action under the uniform navigation rule and the surface-control rule (executor README, section 3, items 3 and 10; sections 4.2 and 4.3), and the predeclared count of every condition is carried through for reference.",
+    "Counts come from the locked implementation of one canonical scenario on the seven web/api conditions (SUT-02 and SUT-03 on the web surface only); the two mobile conditions are blocked and have no data; SUT-06 is NOT_COMPARABLE on CS-001 and has no condition. The study has six ecosystems, a disclosed small-N design limitation (statistical-analysis-plan-v1.md, section 4.1).",
+    "Dispatched attempts: 352 (350 bundles and the two attempts of attempts_without_bundle, which failed before the executor ran and left no run manifest); the two corresponding executions are represented by their imported attempt 2."
+  ]
+}

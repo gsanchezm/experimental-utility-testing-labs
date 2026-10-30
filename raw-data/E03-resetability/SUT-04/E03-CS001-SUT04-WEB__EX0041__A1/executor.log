@@ -1,0 +1,19 @@
+{"t": "2026-10-29T05:23:03.636Z", "event": "run-start", "condition": "E03-CS001-SUT04-WEB", "run_id": "E03-CS001-SUT04-WEB__EX0041__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-10-29T05:23:03.640Z", "event": "instance", "sha256": "edad8bbb218882dac4432867a4569c00e88ae2cff31b985d894626365f5a7b71"}
+{"t": "2026-10-29T05:23:04.125Z", "event": "browser", "version": "153.0.8010.12", "viewport": {"width": 1280, "height": 800}}
+{"t": "2026-10-29T05:23:04.126Z", "event": "step-start", "phase": "precondition", "description": "admin web login at {web}/admin (the token cookie the web app forwards to the booking service)"}
+{"t": "2026-10-29T05:23:04.672Z", "event": "step-end", "phase": "precondition", "outcome": "SUCCESS"}
+{"t": "2026-10-29T05:23:04.672Z", "event": "step-start", "phase": "declared-starting-state", "description": "GET /booking/?roomid=1 before the establishment"}
+{"t": "2026-10-29T05:23:05.140Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/booking/?roomid=1", "status": 200, "error": null, "elapsed_s": 0.467, "evidence": "evidence/002-sut04-bookings-start.json"}
+{"t": "2026-10-29T05:23:05.140Z", "event": "step-end", "phase": "declared-starting-state", "outcome": "SUCCESS"}
+{"t": "2026-10-29T05:23:05.140Z", "event": "step-start", "phase": "establishment", "description": "web booking form at {web}/reservation/1 with the run-unique names and dates"}
+{"t": "2026-10-29T05:23:06.458Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/booking/?roomid=1", "status": 200, "error": null, "elapsed_s": 0.013, "evidence": "evidence/004-sut04-web-bookings-after-establishment.json"}
+{"t": "2026-10-29T05:23:06.458Z", "event": "step-end", "phase": "establishment", "outcome": "SUCCESS"}
+{"t": "2026-10-29T05:23:06.458Z", "event": "step-start", "phase": "pre-reset-verification", "description": "{web}/admin/room/1 lists the run's row"}
+{"t": "2026-10-29T05:23:07.380Z", "event": "step-end", "phase": "pre-reset-verification", "outcome": "SUCCESS"}
+{"t": "2026-10-29T05:23:07.380Z", "event": "action-start", "position": 1, "cls": "reset action", "description": "click the run's booking row's own delete control (span.fa-trash.bookingDelete)"}
+{"t": "2026-10-29T05:23:07.414Z", "event": "evidence-error", "error": "delete_body: Error: Response.text: Protocol error (Network.getResponseBody): No data found for resource with given identifier\nResponse body is not available for a response that was navigated away from. Read response.body() before triggering any navigation."}
+{"t": "2026-10-29T05:23:07.415Z", "event": "action-end", "position": 1, "outcome": "SUCCESS", "error": null}
+{"t": "2026-10-29T05:23:07.415Z", "event": "action-start", "position": 2, "cls": "UI action", "description": "read the booking rows after the control's own re-fetch has answered"}
+{"t": "2026-10-29T05:23:08.725Z", "event": "action-end", "position": 2, "outcome": "SUCCESS", "error": null}
+{"t": "2026-10-29T05:23:08.769Z", "event": "run-end", "status": "SUCCESS", "actions": 2}

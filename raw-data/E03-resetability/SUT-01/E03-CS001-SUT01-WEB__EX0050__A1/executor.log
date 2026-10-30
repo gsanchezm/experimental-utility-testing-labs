@@ -1,0 +1,26 @@
+{"t": "2026-10-29T04:29:10.093Z", "event": "run-start", "condition": "E03-CS001-SUT01-WEB", "run_id": "E03-CS001-SUT01-WEB__EX0050__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-10-29T04:29:10.097Z", "event": "instance", "sha256": "7b654db24d7f6e74346441decf122c183d98c346b9ecc0d731fb1aa6f94b23eb"}
+{"t": "2026-10-29T04:29:10.097Z", "event": "step-start", "phase": "precondition", "description": "POST /api/auth/login (standard_user)"}
+{"t": "2026-10-29T04:29:10.101Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/auth/login", "status": 200, "error": null, "elapsed_s": 0.004, "evidence": "evidence/002-sut01-login.json"}
+{"t": "2026-10-29T04:29:10.101Z", "event": "step-end", "phase": "precondition", "outcome": "SUCCESS"}
+{"t": "2026-10-29T04:29:10.685Z", "event": "browser", "version": "153.0.8010.12", "viewport": {"width": 1280, "height": 800}}
+{"t": "2026-10-29T04:29:10.685Z", "event": "step-start", "phase": "precondition", "description": "first load of {web}/ and one injection of client state (session, market, empty client cart)"}
+{"t": "2026-10-29T04:29:10.868Z", "event": "step-end", "phase": "precondition", "outcome": "SUCCESS"}
+{"t": "2026-10-29T04:29:10.868Z", "event": "step-start", "phase": "declared-starting-state", "description": "GET /api/session before the establishment"}
+{"t": "2026-10-29T04:29:10.871Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:8000/api/session", "status": 200, "error": null, "elapsed_s": 0.003, "evidence": "evidence/004-sut01-session-start.json"}
+{"t": "2026-10-29T04:29:10.871Z", "event": "step-end", "phase": "declared-starting-state", "outcome": "SUCCESS"}
+{"t": "2026-10-29T04:29:10.872Z", "event": "step-start", "phase": "establishment", "description": "POST /api/cart with one p02 line"}
+{"t": "2026-10-29T04:29:10.874Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/cart", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/005-sut01-seed-cart.json"}
+{"t": "2026-10-29T04:29:10.874Z", "event": "step-end", "phase": "establishment", "outcome": "SUCCESS"}
+{"t": "2026-10-29T04:29:10.874Z", "event": "step-start", "phase": "establishment", "description": "navigation to {web}/checkout (Checkout hydrates from GET /api/cart when the local cart is empty)"}
+{"t": "2026-10-29T04:29:10.902Z", "event": "step-end", "phase": "establishment", "outcome": "SUCCESS"}
+{"t": "2026-10-29T04:29:10.902Z", "event": "step-start", "phase": "pre-reset-verification", "description": "[data-testid=\"order-item-p02\"] visible"}
+{"t": "2026-10-29T04:29:11.125Z", "event": "step-end", "phase": "pre-reset-verification", "outcome": "SUCCESS"}
+{"t": "2026-10-29T04:29:11.125Z", "event": "action-start", "position": 1, "cls": "reset action", "description": "POST /api/session/reset with the session token"}
+{"t": "2026-10-29T04:29:11.127Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/session/reset", "status": 200, "error": null, "elapsed_s": 0.002, "evidence": "evidence/008-sut01-reset.json"}
+{"t": "2026-10-29T04:29:11.127Z", "event": "action-end", "position": 1, "outcome": "SUCCESS", "error": null}
+{"t": "2026-10-29T04:29:11.127Z", "event": "action-start", "position": 2, "cls": "navigation action", "description": "reload {web}/checkout"}
+{"t": "2026-10-29T04:29:11.200Z", "event": "action-end", "position": 2, "outcome": "SUCCESS", "error": null}
+{"t": "2026-10-29T04:29:11.201Z", "event": "action-start", "position": 3, "cls": "UI action", "description": "read the Checkout view"}
+{"t": "2026-10-29T04:29:11.797Z", "event": "action-end", "position": 3, "outcome": "SUCCESS", "error": null}
+{"t": "2026-10-29T04:29:11.836Z", "event": "run-end", "status": "FAILURE", "actions": 3}

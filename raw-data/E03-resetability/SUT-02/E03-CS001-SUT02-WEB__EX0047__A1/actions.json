@@ -1,0 +1,63 @@
+{
+  "run_id": "E03-CS001-SUT02-WEB__EX0047__A1",
+  "actions": [
+    {
+      "position": 1,
+      "class": "navigation action",
+      "description": "open the side drawer: click #react-burger-menu-btn",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T04:20:11.287Z",
+      "observation": {
+        "reset_control_visible": true
+      },
+      "evidence": [],
+      "finished_at": "2026-10-29T04:20:11.327Z"
+    },
+    {
+      "position": 2,
+      "class": "reset action",
+      "description": "click 'Reset App State' (#reset_sidebar_link)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T04:20:11.327Z",
+      "observation": {
+        "cart-contents after the click": null
+      },
+      "evidence": [
+        "evidence/005-sut02-storage-after-reset-click.json"
+      ],
+      "finished_at": "2026-10-29T04:20:12.241Z"
+    },
+    {
+      "position": 3,
+      "class": "UI action",
+      "description": "read the cart link",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T04:20:12.241Z",
+      "observation": {
+        "aria_label": "Cart, empty",
+        "badge_count": 0,
+        "badge_text": null,
+        "cart-contents": null,
+        "settle": {
+          "network_quiet": true,
+          "quiet_ms": 500,
+          "elapsed_s": 0.508
+        }
+      },
+      "evidence": [
+        "evidence/006-sut02-after-reset.png",
+        "evidence/007-sut02-header-text.txt"
+      ],
+      "finished_at": "2026-10-29T04:20:12.860Z"
+    }
+  ],
+  "comparison": {
+    "declared_starting_state": "localStorage cart-contents absent; the cart link reads \"Cart, empty\" without a badge (src/utils/shopping-cart.js:39-52; src/components/CartButton.jsx:24-42)",
+    "expected": "after 'Reset App State', the cart link shows no badge and reads \"Cart, empty\"",
+    "observed": "badge elements 0; aria-label 'Cart, empty'",
+    "outcome": "SUCCESS"
+  }
+}

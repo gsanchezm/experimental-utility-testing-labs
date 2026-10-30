@@ -1,0 +1,44 @@
+{
+  "run_id": "E03-CS001-SUT04-API__EX0002__A1",
+  "actions": [
+    {
+      "position": 1,
+      "class": "reset action",
+      "description": "DELETE /booking/{id} with the token",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T06:06:34.752Z",
+      "observation": {
+        "status": 202,
+        "error": null,
+        "booking_id": 4
+      },
+      "evidence": [
+        "evidence/006-sut04-delete.json"
+      ],
+      "finished_at": "2026-10-29T06:06:34.771Z"
+    },
+    {
+      "position": 2,
+      "class": "API action",
+      "description": "GET /booking/{id} with the token",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T06:06:34.771Z",
+      "observation": {
+        "status": 404,
+        "error": null
+      },
+      "evidence": [
+        "evidence/007-sut04-get-after-reset.json"
+      ],
+      "finished_at": "2026-10-29T06:06:34.790Z"
+    }
+  ],
+  "comparison": {
+    "declared_starting_state": "room 1 holds no booking with this run's guest names and dates",
+    "expected": "after DELETE /booking/{id}, GET /booking/{id} answers 404",
+    "observed": "GET /booking/4 answered 404",
+    "outcome": "SUCCESS"
+  }
+}

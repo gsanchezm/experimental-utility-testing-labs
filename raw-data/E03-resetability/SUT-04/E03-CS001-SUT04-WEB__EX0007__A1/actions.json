@@ -1,0 +1,61 @@
+{
+  "run_id": "E03-CS001-SUT04-WEB__EX0007__A1",
+  "actions": [
+    {
+      "position": 1,
+      "class": "reset action",
+      "description": "click the run's booking row's own delete control (span.fa-trash.bookingDelete)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T02:57:43.551Z",
+      "observation": {
+        "delete_request": "DELETE http://127.0.0.1:3003/api/booking/4",
+        "delete_status": 202,
+        "booking_id": 4
+      },
+      "evidence": [],
+      "evidence_errors": [
+        "delete_body: Error: Response.text: Protocol error (Network.getResponseBody): No data found for resource with given identifier\nResponse body is not available for a response that was navigated away from. Read response.body() before triggering any navigation."
+      ],
+      "finished_at": "2026-10-29T02:57:43.601Z"
+    },
+    {
+      "position": 2,
+      "class": "UI action",
+      "description": "read the booking rows after the control's own re-fetch has answered",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T02:57:43.601Z",
+      "observation": {
+        "refetch_answered": true,
+        "refetch_chain": [
+          308,
+          200
+        ],
+        "refetch_final_status": 200,
+        "quiet_wait": {
+          "quiet_500ms": true,
+          "elapsed_s": 0.505
+        },
+        "rows": 1,
+        "rows_with_the_run_names": 0,
+        "settle": {
+          "network_quiet": true,
+          "quiet_ms": 500,
+          "elapsed_s": 0.508
+        }
+      },
+      "evidence": [
+        "evidence/006-sut04-web-after-reset.png",
+        "evidence/007-sut04-web-room-text.txt"
+      ],
+      "finished_at": "2026-10-29T02:57:44.949Z"
+    }
+  ],
+  "comparison": {
+    "declared_starting_state": "room 1 holds no booking with this run's guest names and dates",
+    "expected": "after the row's delete control, the admin room page shows no row with the run's names and dates",
+    "observed": "rows with the run's names and dates after the reset: 0",
+    "outcome": "SUCCESS"
+  }
+}

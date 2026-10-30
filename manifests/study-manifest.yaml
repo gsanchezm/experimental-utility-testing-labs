@@ -93,7 +93,7 @@ campaigns:
   - id: E02-state-establishment
     status: NOT_STARTED  # deferred beyond the DATA FREEZE of the planned manuscript by the scope decision of 2026-10-19 (manifests/campaign-disposition-v1.yaml); value unchanged
   - id: E03-resetability
-    status: IN_PROGRESS  # transitioned 2026-10-28T20:59:33Z (protocol/change-control-v1.md, section 7; protocol/CHANGELOG.md; manifests/e03-campaign-start-v1.yaml; human authorization E03-START-AUTH-01)
+    status: FROZEN  # transitioned IN_PROGRESS -> FROZEN 2026-10-29T18:38:08Z (protocol/change-control-v1.md, section 7, moment 2; protocol/CHANGELOG.md; manifests/e03-campaign-freeze-v1.yaml; human authorization E03-FREEZE-AUTH-01); IN_PROGRESS from 2026-10-28T20:59:33Z (manifests/e03-campaign-start-v1.yaml; E03-START-AUTH-01)
   - id: E04-repeatability
     status: NOT_STARTED  # deferred beyond the DATA FREEZE of the planned manuscript by the scope decision of 2026-10-19 (manifests/campaign-disposition-v1.yaml); value unchanged
   - id: E05-determinism
@@ -1330,3 +1330,29 @@ notes: |
   manifests/e03-campaign-start-v1.yaml is the provenance record. The seven web/api conditions are the campaign; the two mobile conditions stay recorded and blocked by gate
   G-7. The START issues no dispatch authorization (E03-DISPATCH-SUT01-AUTH-01 to E03-DISPATCH-SUT05-AUTH-01 are names, not issued), dispatches nothing, exports nothing and
   pushes nothing; public main is 7d80b81. Still ahead, each separate: export v39 of the START state, then one dispatch authorization per SUT, each a separate approval.
+  2026-10-29 (E03-RESETABILITY MEASURED EXECUTIONS COMPLETE, operation OP-DISPATCH-04; carried out by the ORCHESTRATOR under the five dispatch authorizations E03-DISPATCH-SUT01-AUTH-01
+  to E03-DISPATCH-SUT05-AUTH-01, issued by the human research lead on 2026-10-28, local date): export v39 (public main 28fd576f) and export v40 (public main 71a04923, after the CI correction
+  OP-CI-12) were pushed by the human research lead; all 350 planned executions (seven web/api conditions, N = 50 each) were dispatched between 2026-10-29T01:26Z and 2026-10-29T16:03Z UTC
+  and each attempt bundle was imported unchanged under raw-data/E03-resetability/<SUT>/<condition>__<execution>__A<attempt>/ with its import record, both archives of every run verified
+  against the digest that GitHub reports; the dispatch records are manifests/e03-measured-dispatch/<condition id>.yaml. Two attempts left no bundle, both before the executor ran, and
+  stay recorded as consumed: EX0001 of E03-CS001-SUT01-WEB attempt 1 (run 40800423112, read-isolation step, corrected by OP-CI-12) and EX0003 of E03-CS001-SUT04-API attempt 1 (run
+  40827272226, the step that downloads Apache Maven); the human research lead approved attempt 2 of each, and both were imported. A read-only audit of the 350 run directories found 9400
+  files equal to their import records in bytes and sha256 and the events of every execution complete (0 defects). The E03 status line above stays IN_PROGRESS: the campaign freeze needs the
+  explicit decision of the human research lead (protocol/change-control-v1.md, section 7, moment 2). No E03 analysis has been made; H2 is NOT_ANALYZED.
+  2026-10-29 (E03-RESETABILITY CAMPAIGN FREEZE, operation OP-FREEZE-01; carried out by the ORCHESTRATOR on the explicit approval of the human research lead): at 2026-10-29T18:34:34.231Z
+  (12:34 in America/Mexico_City) the human research lead approved the freeze in 72 bytes (sha256 ed84dbfae99e3c54094c19b9cb08606dde641e0c238796ad1d9a5875a909f261),
+  "APRUEBO E03-FREEZE-AUTH-01: 350 ejecuciones, 7 condiciones web/api, N=50". The E03 status line above becomes FROZEN (transitioned 2026-10-29T18:38:08Z; protocol/change-control-v1.md, section 7,
+  moment 2). The trigger holds: all 350 planned executions (seven web/api conditions, N = 50 each) are dispatched and imported; the two mobile conditions have no sample size and stay recorded and
+  blocked by gate G-7. From this moment raw-data/E03-resetability/ is append-only and the campaign configuration record is immutable. The freeze commit appends one row to protocol/CHANGELOG.md,
+  writes manifests/e03-campaign-freeze-v1.yaml as the provenance record, and edits the status lines that the freeze made out of date. It edits no protocol document other than the change log, no workflow,
+  prompt, or raw file; it dispatches, exports, and pushes nothing, and it makes no analysis: H2 is NOT_ANALYZED. The measured-execution workflow requires the status IN_PROGRESS, so it refuses every
+  dispatch from the freeze on, as intended.
+  2026-10-29 (E03-RESETABILITY H2 ANALYSIS, RESET SIDE, operation OP-ANA-01; carried out by the ORCHESTRATOR on the explicit instruction of the human research lead): at 2026-10-30T03:14:46.259Z
+  (21:14 in America/Mexico_City on 2026-10-29) the human research lead answered "Si a todo, continua" (19 bytes, sha256 23846b5b0d4089302ed59531ba386a454ee4ef77adb1c90308137e2a5390afb4)
+  to the four decisions listed after the audits of exports v39 and v40: that raw-data/E03-resetability/ is published in the next export, that the agent-instructions file is edited, that the analysis of the
+  confirmatory comparisons starts (and the idea of an OP-CI that removes the single point of failure of the Maven download for future campaigns), and the resumption policy; and to the offer of the dashboard refresh.
+  The H2 analysis, reset side only, was made under protocol/statistical-analysis-plan-v1.md, section 4.3, and the CONFIRMATORY comparisons of the locked E03 configuration: analysis/h2-analysis/compute-h2.js
+  reads the 350 bundles of the frozen raw-data/E03-resetability/ (git tree e4f09366ad9e9ee58304e8096ff38f783259abef) and writes derived-data/E03-resetability/required-actions-reset-per-attempt.csv and
+  derived-data/h2-analysis/H2-reset-result.json, each with a provenance sidecar. With one canonical scenario (CS-001) each CONFIRMATORY (H2) comparison, SUT-01 vs SUT-02 and SUT-01 vs SUT-03 on the WEB surface,
+  is one pair, so the descriptive branch of the plan applies: no Wilcoxon signed-rank test, interval, or standardized effect size is computed, and no support criterion exists for H2. The establish side
+  (E02) has no data; H3 to H5 are not analyzed. The operation edits no protocol document, no workflow, and no raw file, and it dispatches, exports, and pushes nothing.

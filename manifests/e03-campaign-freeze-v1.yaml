@@ -1,0 +1,81 @@
+# manifests/e03-campaign-freeze-v1.yaml -- provenance record of the E03-resetability campaign freeze (protocol/change-control-v1.md, section 7, moment 2: IN_PROGRESS -> FROZEN).
+# Modeled on manifests/e01-campaign-freeze-v1.yaml and manifests/e03-campaign-start-v1.yaml. A provenance record, not a second campaign-configuration record: the configuration itself stays authoritative
+# and locked in experiments/E03-resetability/README.md, section "Campaign configuration" (unchanged by this freeze). ORCHESTRATOR record of operation OP-FREEZE-01 (2026-10-29). Immutable once committed; a correction is a new version file.
+record_class: E03_CAMPAIGN_FREEZE
+record_id: E03-FREEZE-01
+study_id: EUS-2026-001
+campaign_id: E03-resetability
+operation_id: OP-FREEZE-01
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-10-29'
+recorded_on_timezone: America/Mexico_City (the UTC date at the time of writing was also 2026-10-29)
+status: RECORDED
+transition: IN_PROGRESS -> FROZEN
+previous_status: IN_PROGRESS
+new_status: FROZEN
+freeze_timestamp: '2026-10-29T18:38:08Z'  # one UTC clock reading taken when the edits were written; the commit that carries them follows it
+authorization_id: E03-FREEZE-AUTH-01
+freeze_approved_by: gilbertosanchez  # the human research lead, by the explicit approval below
+frozen_by: ORCHESTRATOR
+measured_experiment: false
+executes_anything: false
+protocol_change: false  # the freeze applies the closure that protocol/change-control-v1.md, section 7, already defines; no document under protocol/ other than the append-only change log is edited
+human_approval:
+  text_verbatim: "APRUEBO E03-FREEZE-AUTH-01: 350 ejecuciones, 7 condiciones web/api, N=50"
+  bytes: 72
+  sha256: ed84dbfae99e3c54094c19b9cb08606dde641e0c238796ad1d9a5875a909f261
+  received_utc: "2026-10-29T18:34:34.231Z"  # stamp of the stored conversation entry
+  received_local: "2026-10-29T12:34:34.231-06:00 (America/Mexico_City)"
+  entry_kind: a text entry of the human research lead (origin human in the session record); the line reproduces the line that the ORCHESTRATOR proposed, with its effects, in the report that preceded it
+  scope: the freeze of the E03 campaign with the seven executable web/api conditions, 350 executions, N = 50 per condition, under the authorization id above
+trigger: >
+  protocol/change-control-v1.md, section 7, moment 2: every planned run of the campaign (all ecosystems, all conditions, the recorded N) has been executed. The locked configuration plans seven executable web/api conditions
+  with N = 50 each (EX0001 to EX0050); the two mobile conditions (E03-CS001-SUT02-ANDROID, E03-CS001-SUT02-IOS) have no sample size, are recorded and blocked by gate G-7 (mobile_runner_status
+  UNRESOLVED_AFTER_FALLBACK_FAILURE), and are not planned runs of this campaign version.
+pre_freeze_state:
+  canonical_head: e7c5de6270255bba62c62d0cb7522ab8a8dad936
+  public_main: 71a049236c582c4d702d1ed336a760ba0a504cd3  # export v40; nothing is pushed by the freeze
+  e03_status_before: IN_PROGRESS
+  configuration_section: {path: experiments/E03-resetability/README.md, heading: Campaign configuration, sha256: dba46253092d8d8c66861f584677655841192d683e1954dbc53e51d10956f3cc, bytes: 13690, unchanged_since_the_start: true}
+  start_record: manifests/e03-campaign-start-v1.yaml
+executions:
+  conditions: [E03-CS001-SUT01-WEB, E03-CS001-SUT01-API, E03-CS001-SUT02-WEB, E03-CS001-SUT03-WEB, E03-CS001-SUT04-WEB, E03-CS001-SUT04-API, E03-CS001-SUT05-API]
+  n_per_condition: 50
+  executions_imported: 350
+  first_dispatch_utc: '2026-10-29T01:26:15Z'  # EX0001 attempt 1 of E03-CS001-SUT01-WEB (run 40800423112)
+  last_import_utc: '2026-10-29T16:03:23Z'  # EX0050 of E03-CS001-SUT04-API
+  dispatch_authorizations: [E03-DISPATCH-SUT01-AUTH-01, E03-DISPATCH-SUT02-AUTH-01, E03-DISPATCH-SUT03-AUTH-01, E03-DISPATCH-SUT04-AUTH-01, E03-DISPATCH-SUT05-AUTH-01]
+  dispatch_records: manifests/e03-measured-dispatch/<condition id>.yaml  # one per condition, append-only, complete
+  imports: raw-data/E03-resetability/<SUT>/<condition id>__<execution id>__A<attempt>/  # each with run-manifest.json, the bundle members unchanged, and import-record.yaml
+  consumed_attempts_without_bundle:
+    - {condition_id: E03-CS001-SUT01-WEB, execution_id: EX0001, attempt: 1, run_id: 40800423112, cause: the read-isolation step of the measured-execution job failed before the executor ran (corrected by OP-CI-12), further_attempt: 2 approved and imported}
+    - {condition_id: E03-CS001-SUT04-API, execution_id: EX0003, attempt: 1, run_id: 40827272226, cause: the step that downloads Apache Maven failed with a refused connection before the executor ran, further_attempt: 2 approved and imported}
+  github_measured_execution_runs: {total: 352, success: 350, failure: 2, run_attempt: 1 for all}  # read from the workflow's run list after the last import
+audit_of_the_imports:
+  method: a read-only script (untracked scratch, not part of the repository) over the 350 run directories
+  checks: [the directories of each condition equal the expected set, files on disk equal the import record, bytes and sha256 of every file equal the import record, the verification fields of the import record, the identity fields, one DISPATCH_RECORDED and the run-identity and import events for every execution]
+  result: {run_directories: 350, files_checked: 9400, defects: 0}
+effect: >
+  From this moment raw-data/E03-resetability/ is append-only in the sense of raw-data/README.md: every existing raw file is immutable, and a further run may be appended only with a "run appended after campaign freeze"
+  row in protocol/CHANGELOG.md stating the reason (raw-data/README.md, rule 1). The campaign configuration record is immutable. The measured-execution workflow requires the campaign status IN_PROGRESS, so it refuses every
+  dispatch from the freeze on; a run appended after the freeze would need its own change-log row and a CI correction. Reopening the campaign follows protocol/change-control-v1.md, section 5 in full.
+other_edits_of_the_freeze_commit:
+  - protocol/CHANGELOG.md: one row for this transition
+  - manifests/study-manifest.yaml: the E03 status line FROZEN with the transition clock reading, and a note of the operation
+  - status lines that the freeze made out of date, edited with counted replacements: README.md (three), experiments/README.md (one), raw-data/README.md (one), the E03 README (current status and one sentence)
+  - manifests/README.md: the row of this record
+not_authorized_by_this_record:
+  - any dispatch, re-run, or run appended after the freeze
+  - any export or push, and the publication of raw-data/E03-resetability/ (a separate decision of the human research lead)
+  - any change to a workflow, a protocol document other than the change log, a prompt, a SUT, or a raw file
+  - any decision on the mobile path, or any mobile condition
+  - any analysis: the analysis of H2 and of the other hypotheses is a separate step under protocol/statistical-analysis-plan-v1.md, section 4, and starts only on its own instruction; H2 is NOT_ANALYZED
+resulting_freeze_commit: null  # a commit cannot name its own id; the commit that adds this file is the freeze commit
+next_steps:
+  - the decision on the publication of raw-data/E03-resetability/ before the next export
+  - the provenance entries of the exports v39 and v40 and the post-push audit of v39 in PUBLIC-EXPORT-MANIFEST.yaml
+  - the refresh of the dashboard research-status.html (standing rule)
+  - the analysis of the confirmatory comparisons of E03 under protocol/statistical-analysis-plan-v1.md, on a separate instruction
+notes: |
+  The freeze closes the set of E03 runs of this campaign version. It introduces no sample size, exclusion rule, attribution rule, or comparison that was not already in the locked configuration. No E03 result is
+  analyzed or summarized by this record, and H2 is NOT_ANALYZED.

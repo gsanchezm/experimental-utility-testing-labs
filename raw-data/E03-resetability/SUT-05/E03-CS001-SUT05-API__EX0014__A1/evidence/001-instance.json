@@ -1,0 +1,63 @@
+{
+  "interface_version": 1,
+  "sut_id": "SUT-05",
+  "record_class": "MEASURED_EXPERIMENT",
+  "surfaces": {
+    "web": null,
+    "api": {
+      "base_url": "http://127.0.0.1:3000"
+    },
+    "auth": null
+  },
+  "provisioning": {
+    "route": "GitHub-hosted runner instance provisioned in this job by the steps of job sut-05-api of .github/workflows/e03-environment-verification.yml: clone of the pinned commit related to the release tag; Node.js 24.21.0 (setup-node); release archive verified against its GitHub digest and unpacked; npm start in its own session and process group; route recorded by the package step: PACKAGED_DISTRIBUTION (SUT README, Packaged Distributions: download the release archive, unpack, npm start)",
+    "repository": "https://github.com/juice-shop/juice-shop",
+    "commit_sha": "1618a611b173b4bf114028e6e02549950606e29d",
+    "release": "v20.2.0",
+    "asset": {
+      "name": "juice-shop-20.2.0_node24_linux_x64.tgz",
+      "sha256": "dbb457f74e908e28c41d7787e36d30d121d5b9f6178524720567b4aeb41f2968"
+    },
+    "commands": [
+      "ASSET=\"juice-shop-${EV_RELEASE#v}_node24_linux_x64.tgz\"",
+      "gh release download \"$EV_RELEASE\" --repo \"$EV_REPO\" --pattern \"$ASSET\" --clobber",
+      "SUM=\"$(sha256sum \"$ASSET\" | cut -d' ' -f1)\"",
+      "DIGEST=\"$(gh release view \"$EV_RELEASE\" --repo \"$EV_REPO\" --json assets --jq \".assets[] | select(.name == \\\"$ASSET\\\") | .digest\")\"",
+      "test -n \"$DIGEST\"",
+      "test \"sha256:$SUM\" = \"$DIGEST\"",
+      "mkdir -p pkg",
+      "tar -xzf \"$ASSET\" -C pkg",
+      "set -- pkg/*/",
+      "test \"$#\" -eq 1",
+      "PKG_DIR=\"${1%/}\"",
+      "test -f \"$PKG_DIR/package.json\"",
+      "test -f \"$PKG_DIR/build/app.js\"",
+      "echo \"dir=$PKG_DIR\" >> \"$GITHUB_OUTPUT\"",
+      "python3 - \"$ASSET\" \"$SUM\" \"$DIGEST\" \"$PKG_DIR\" <<'PY'",
+      "npm start"
+    ],
+    "provisioning_record": null
+  },
+  "process": {
+    "pgid": 2281,
+    "pid": 2281,
+    "start_command": [
+      "npm",
+      "start"
+    ],
+    "cwd": "<workspace>/pkg/juice-shop_20.2.0",
+    "env": {
+      "SUT_DIR": "pkg/juice-shop_20.2.0"
+    },
+    "stdout_log": "<workspace>/api-stdout-1.log",
+    "stderr_log": "<workspace>/api-stderr-1.log",
+    "port": 3000,
+    "readiness_url": "/rest/admin/application-version",
+    "readiness_timeout_s": 180,
+    "stop_timeout_s": 30
+  },
+  "logs": [
+    "<workspace>/api-stdout-1.log",
+    "<workspace>/api-stderr-1.log"
+  ]
+}

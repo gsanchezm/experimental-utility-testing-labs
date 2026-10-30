@@ -1,0 +1,100 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E03-CS001-SUT05-API__EX0010__A1",
+  "condition": "E03-CS001-SUT05-API",
+  "scenario": "CS-001",
+  "declared_starting_state": {
+    "id": "CS-001-STARTING",
+    "definition": "the actor's basket holds no item (the account has no seeded basket; data/datacreator.ts:479-550)",
+    "citations": [
+      "experiments/scenario-mappings/CS-001.yaml (SUT-05 entry)",
+      "SUT05-EV-0002",
+      "SUT05-EV-0003",
+      "SUT05-EV-0006",
+      "SUT05-EV-0008",
+      "SUT05-EV-0027",
+      "data/static/users.yml:131-134@1618a61",
+      "routes/basket.ts:15-36@1618a61"
+    ],
+    "observed_before_establishment": {
+      "status": 200,
+      "bid": 6,
+      "product_ids": []
+    },
+    "holds": true
+  },
+  "steps": [
+    {
+      "phase": "precondition",
+      "description": "POST /rest/user/login (documented account mc.safesearch)",
+      "mechanisms": [
+        "PREDEFINED_ACCOUNT"
+      ],
+      "started_at": "2026-10-29T02:50:29.773Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "token_received": true,
+        "bid": 6
+      },
+      "evidence": [
+        "evidence/002-sut05-login.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T02:50:29.820Z"
+    },
+    {
+      "phase": "declared-starting-state",
+      "description": "GET /rest/basket/{bid} before the establishment",
+      "mechanisms": [],
+      "started_at": "2026-10-29T02:50:29.820Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "bid": 6,
+        "product_ids": []
+      },
+      "evidence": [
+        "evidence/003-sut05-basket-start.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T02:50:29.858Z"
+    },
+    {
+      "phase": "establishment",
+      "description": "POST /api/BasketItems {ProductId 1, BasketId <bid>, quantity 1}",
+      "mechanisms": [
+        "API_SEED"
+      ],
+      "started_at": "2026-10-29T02:50:29.858Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200
+      },
+      "evidence": [
+        "evidence/004-sut05-add-item.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T02:50:29.888Z"
+    },
+    {
+      "phase": "pre-reset-verification",
+      "description": "GET /rest/basket/{bid} shows ProductId 1",
+      "mechanisms": [],
+      "started_at": "2026-10-29T02:50:29.888Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "product_ids": [
+          1
+        ]
+      },
+      "evidence": [
+        "evidence/005-sut05-basket-pre-reset.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T02:50:29.913Z"
+    }
+  ],
+  "note": "precondition, establishment, and pre-reset verification: recorded, never counted as Required Actions - reset"
+}

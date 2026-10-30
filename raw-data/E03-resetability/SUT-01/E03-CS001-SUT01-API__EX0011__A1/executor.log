@@ -1,0 +1,21 @@
+{"t": "2026-10-29T04:52:41.616Z", "event": "run-start", "condition": "E03-CS001-SUT01-API", "run_id": "E03-CS001-SUT01-API__EX0011__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-10-29T04:52:41.618Z", "event": "instance", "sha256": "7b654db24d7f6e74346441decf122c183d98c346b9ecc0d731fb1aa6f94b23eb"}
+{"t": "2026-10-29T04:52:41.618Z", "event": "step-start", "phase": "precondition", "description": "POST /api/auth/login (standard_user)"}
+{"t": "2026-10-29T04:52:41.623Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/auth/login", "status": 200, "error": null, "elapsed_s": 0.004, "evidence": "evidence/002-sut01-login.json"}
+{"t": "2026-10-29T04:52:41.623Z", "event": "step-end", "phase": "precondition", "outcome": "SUCCESS"}
+{"t": "2026-10-29T04:52:41.623Z", "event": "step-start", "phase": "declared-starting-state", "description": "GET /api/session before the establishment"}
+{"t": "2026-10-29T04:52:41.625Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:8000/api/session", "status": 200, "error": null, "elapsed_s": 0.002, "evidence": "evidence/003-sut01-session-start.json"}
+{"t": "2026-10-29T04:52:41.625Z", "event": "step-end", "phase": "declared-starting-state", "outcome": "SUCCESS"}
+{"t": "2026-10-29T04:52:41.625Z", "event": "step-start", "phase": "establishment", "description": "POST /api/cart with one p02 line"}
+{"t": "2026-10-29T04:52:41.627Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/cart", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/004-sut01-seed-cart.json"}
+{"t": "2026-10-29T04:52:41.627Z", "event": "step-end", "phase": "establishment", "outcome": "SUCCESS"}
+{"t": "2026-10-29T04:52:41.627Z", "event": "step-start", "phase": "pre-reset-verification", "description": "GET /api/session shows exactly the p02 line"}
+{"t": "2026-10-29T04:52:41.629Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:8000/api/session", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/005-sut01-session-pre-reset.json"}
+{"t": "2026-10-29T04:52:41.629Z", "event": "step-end", "phase": "pre-reset-verification", "outcome": "SUCCESS"}
+{"t": "2026-10-29T04:52:41.629Z", "event": "action-start", "position": 1, "cls": "reset action", "description": "POST /api/session/reset with the session token"}
+{"t": "2026-10-29T04:52:41.630Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/session/reset", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/006-sut01-reset.json"}
+{"t": "2026-10-29T04:52:41.630Z", "event": "action-end", "position": 1, "outcome": "SUCCESS", "error": null}
+{"t": "2026-10-29T04:52:41.630Z", "event": "action-start", "position": 2, "cls": "API action", "description": "GET /api/session"}
+{"t": "2026-10-29T04:52:41.631Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:8000/api/session", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/007-sut01-session-after-reset.json"}
+{"t": "2026-10-29T04:52:41.631Z", "event": "action-end", "position": 2, "outcome": "SUCCESS", "error": null}
+{"t": "2026-10-29T04:52:41.632Z", "event": "run-end", "status": "SUCCESS", "actions": 2}

@@ -1,0 +1,91 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E03-CS001-SUT03-WEB__EX0025__A1",
+  "condition": "E03-CS001-SUT03-WEB",
+  "scenario": "CS-001",
+  "declared_starting_state": {
+    "id": "CS-001-STARTING",
+    "definition": "the closed-cart bag shows 0; sessionStorage state, when present, holds cart.products [] (src/components/FloatChart/index.jsx:128-136; src/services/store.js:6-31)",
+    "citations": [
+      "experiments/scenario-mappings/CS-001.yaml (SUT-03 entry)",
+      "SUT03-EV-0001",
+      "SUT03-EV-0030",
+      "SUT03-EV-0031",
+      "SUT03-EV-0032",
+      "src/components/FloatChart/index.jsx:128-136@7ab934d",
+      "src/services/store.js:6-31@7ab934d"
+    ],
+    "observed_before_establishment": {
+      "bag_quantity": "0",
+      "sessionStorage.state.cart.products": []
+    },
+    "holds": true
+  },
+  "steps": [
+    {
+      "phase": "precondition",
+      "description": "sign in demouser at {web}/signin",
+      "mechanisms": [
+        "PREDEFINED_ACCOUNT"
+      ],
+      "started_at": "2026-10-29T04:14:36.531Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "navigator.connection.effectiveType": "4g",
+        "url": "http://127.0.0.1:3000/?signin=true"
+      },
+      "evidence": [],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T04:14:37.069Z"
+    },
+    {
+      "phase": "declared-starting-state",
+      "description": "closed-cart bag and sessionStorage state before the establishment",
+      "mechanisms": [],
+      "started_at": "2026-10-29T04:14:37.069Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "bag_quantity": "0",
+        "sessionStorage.state.cart.products": []
+      },
+      "evidence": [
+        "evidence/002-sut03-storage-start.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T04:14:37.085Z"
+    },
+    {
+      "phase": "establishment",
+      "description": "buy button of product 1, then close the self-opened float cart",
+      "mechanisms": [
+        "UI_FLOW"
+      ],
+      "started_at": "2026-10-29T04:14:37.085Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "float_cart_closed": true
+      },
+      "evidence": [],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T04:14:37.155Z"
+    },
+    {
+      "phase": "pre-reset-verification",
+      "description": "closed-cart bag shows 1",
+      "mechanisms": [],
+      "started_at": "2026-10-29T04:14:37.155Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "bag_quantity": "1"
+      },
+      "evidence": [
+        "evidence/003-sut03-pre-reset.png",
+        "evidence/004-sut03-storage-pre-reset.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-10-29T04:14:37.414Z"
+    }
+  ],
+  "note": "precondition, establishment, and pre-reset verification: recorded, never counted as Required Actions - reset"
+}

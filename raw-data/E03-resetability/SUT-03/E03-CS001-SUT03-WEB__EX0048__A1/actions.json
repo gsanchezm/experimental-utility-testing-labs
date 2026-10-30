@@ -1,0 +1,46 @@
+{
+  "run_id": "E03-CS001-SUT03-WEB__EX0048__A1",
+  "actions": [
+    {
+      "position": 1,
+      "class": "reset action",
+      "description": "click 'Logout' (span#signin); its own handler clears the session store and routes to /",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T05:36:28.552Z",
+      "observation": {
+        "url": "http://127.0.0.1:3000/"
+      },
+      "evidence": [
+        "evidence/005-sut03-storage-after-logout.json"
+      ],
+      "finished_at": "2026-10-29T05:36:28.575Z"
+    },
+    {
+      "position": 2,
+      "class": "UI action",
+      "description": "read the closed-cart bag quantity",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T05:36:28.575Z",
+      "observation": {
+        "bag_quantity": "1",
+        "settle": {
+          "network_quiet": true,
+          "quiet_ms": 500,
+          "elapsed_s": 0.51
+        }
+      },
+      "evidence": [
+        "evidence/006-sut03-after-reset.png"
+      ],
+      "finished_at": "2026-10-29T05:36:29.359Z"
+    }
+  ],
+  "comparison": {
+    "declared_starting_state": "the closed-cart bag shows 0; sessionStorage state, when present, holds cart.products [] (src/components/FloatChart/index.jsx:128-136; src/services/store.js:6-31)",
+    "expected": "after 'Logout', the closed-cart bag shows 0 (UI_STATE oracle, the mapping's disclosed deviation)",
+    "observed": "closed-cart bag quantity '1'",
+    "outcome": "FAILURE"
+  }
+}

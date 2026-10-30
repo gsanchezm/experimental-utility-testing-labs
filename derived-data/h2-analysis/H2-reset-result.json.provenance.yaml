@@ -1,0 +1,44 @@
+# derived-data/h2-analysis/H2-reset-result.json.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (JSON cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v4.md).
+dataset: derived-data/h2-analysis/H2-reset-result.json
+dataset_sha256: 382912ae3b66b4b901842b866ff1a285db16f8bcc41812fe889c6e859e0b8997
+campaign_id: E03-resetability
+hypothesis_id: H2
+part: reset side (E03 contribution); the establish side (E02, NOT_STARTED) has no data
+sut_ids: [SUT-01, SUT-02, SUT-03, SUT-04, SUT-05]
+sut_ids_in_confirmatory_comparison: [SUT-01, SUT-02, SUT-03]
+sut_ids_excluded_from_comparison: [SUT-04, SUT-05, SUT-06]
+raw_inputs:
+  tree:
+    path: raw-data/E03-resetability
+    git_tree: e4f09366ad9e9ee58304e8096ff38f783259abef
+    pinned_at_commit: 8640b173bbdb0a2d8eba6be5c54f6ccb26fd978b
+    campaign_state: FROZEN
+  per_run_table:
+    path: derived-data/E03-resetability/required-actions-reset-per-attempt.csv
+    sha256: b8d01ed4c6c030a7f0156e43d0f7a0d77b65f3f1af0eb45b5661cf5da4928073
+    note: written by the same script run from the same bundles; the result is not computed from it
+  bundles: 350
+transformation_script:
+  path: analysis/h2-analysis/compute-h2.js
+  version: git-blob-sha 45683941981a71f972d22ef6929e296a8e6e012f
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only)
+date_generated: "2026-10-29"
+date_note: local date (America/Mexico_City)
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: protocol/statistical-analysis-plan-v1.md, sections 3, 4.1, 4.2, 4.3 (H2 row), 5; protocol/study-design-v1.md, section 6 (H2 wording, notes (c), (d)); experiments/E03-resetability/README.md, "Campaign configuration", subsections "CONFIRMATORY comparisons" and "Sample size per condition" (section sha256 dba46253092d8d8c66861f584677655841192d683e1954dbc53e51d10956f3cc, unchanged since the START commit 58f08964b4bd8879d3f8f29005a734f63e5f954f); experiments/E03-resetability/executor/README.md, section 3
+notes: >
+  Deterministic, non-interpretive computation. Implements the descriptive branch of the frozen plan for a design
+  with one canonical scenario (CS-001): per-condition distribution of Required Actions (reset) over the executions
+  that reached the reset action, run outcome.status frequencies beside it, and for each of the two CONFIRMATORY
+  (H2) pairs, SUT-01 vs SUT-02 and SUT-01 vs SUT-03 on the WEB surface, the per-scenario counts and their paired
+  difference in the original unit. The descriptive branch is fixed by the plan (section 3: Wilcoxon signed-rank
+  "only when the design justifies pairing and the number of non-tied pairs is adequate; otherwise the comparison is
+  reported descriptively"), so it was not chosen after seeing the data. No Wilcoxon test, bootstrap interval,
+  rank-biserial correlation, p-value, or support/non-support determination is computed (none is frozen for H2).
+  The result's limitations field states why the interval and the standardized effect size are not estimable and
+  that, under section 5 of the plan, the two comparison rows are descriptive observations and not inferential
+  results. The classification of the two comparisons is written in the script from the campaign configuration and
+  is not derived from the data. Comparisons involving SUT-04 and SUT-05 stay EXPLORATORY and are not computed.

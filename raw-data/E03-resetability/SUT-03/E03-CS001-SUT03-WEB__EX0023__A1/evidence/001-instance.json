@@ -1,0 +1,36 @@
+{
+  "interface_version": 1,
+  "sut_id": "SUT-03",
+  "record_class": "MEASURED_EXPERIMENT",
+  "surfaces": {
+    "web": {
+      "base_url": "http://127.0.0.1:3000"
+    },
+    "api": null,
+    "auth": null
+  },
+  "provisioning": {
+    "route": "GitHub-hosted runner instance provisioned in this job by the steps of job sut-03-web of .github/workflows/e03-environment-verification.yml: clone of the pinned commit; Node.js 14 (setup-node); npm install --legacy-peer-deps; npm install --no-save formdata-node@4; npm run build; next start on port 3000",
+    "repository": "https://github.com/browserstack/browserstack-demo-app",
+    "commit_sha": "7ab934d733f2f74d4b912e94e86f59ae0f6b7609",
+    "release": null,
+    "asset": {
+      "name": null,
+      "sha256": null
+    },
+    "commands": [
+      "cd sut",
+      "npm install --legacy-peer-deps --no-audit --no-fund",
+      "npm install --no-save formdata-node@4 --no-audit --no-fund",
+      "npm run build",
+      "nohup npx next start -p 3000 > \"$GITHUB_WORKSPACE/web-stdout.log\" 2> \"$GITHUB_WORKSPACE/web-stderr.log\" &",
+      "for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done"
+    ],
+    "provisioning_record": null
+  },
+  "process": null,
+  "logs": [
+    "<workspace>/web-stdout.log",
+    "<workspace>/web-stderr.log"
+  ]
+}

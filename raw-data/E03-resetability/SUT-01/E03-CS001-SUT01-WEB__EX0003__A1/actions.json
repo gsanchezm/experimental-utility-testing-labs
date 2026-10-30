@@ -1,0 +1,66 @@
+{
+  "run_id": "E03-CS001-SUT01-WEB__EX0003__A1",
+  "actions": [
+    {
+      "position": 1,
+      "class": "reset action",
+      "description": "POST /api/session/reset with the session token",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T02:15:30.775Z",
+      "observation": {
+        "status": 200,
+        "error": null
+      },
+      "evidence": [
+        "evidence/008-sut01-reset.json"
+      ],
+      "finished_at": "2026-10-29T02:15:30.777Z"
+    },
+    {
+      "position": 2,
+      "class": "navigation action",
+      "description": "reload {web}/checkout",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T02:15:30.777Z",
+      "observation": {
+        "status": 200,
+        "url": "http://127.0.0.1:3000/checkout"
+      },
+      "evidence": [],
+      "finished_at": "2026-10-29T02:15:30.855Z"
+    },
+    {
+      "position": 3,
+      "class": "UI action",
+      "description": "read the Checkout view",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "started_at": "2026-10-29T02:15:30.855Z",
+      "observation": {
+        "empty_cart_view": false,
+        "order_lines": [
+          "order-item-p02"
+        ],
+        "settle": {
+          "network_quiet": true,
+          "quiet_ms": 500,
+          "elapsed_s": 0.558
+        }
+      },
+      "evidence": [
+        "evidence/009-sut01-web-after-reset.png",
+        "evidence/010-sut01-web-checkout-text.txt",
+        "evidence/011-sut01-web-storage-after-reset.json"
+      ],
+      "finished_at": "2026-10-29T02:15:31.529Z"
+    }
+  ],
+  "comparison": {
+    "declared_starting_state": "the server session cart is empty (backend/database.py:139-148) and the client cart omnipizza-cart holds no item (frontend/src/store.js:159-225)",
+    "expected": "after the reset and a reload of /checkout, the Checkout view shows the empty-cart view and no order line",
+    "observed": "empty-cart view shown: False; order lines: ['order-item-p02']",
+    "outcome": "FAILURE"
+  }
+}
