@@ -153,6 +153,9 @@ jobs:
           # DETERMINISTIC_SANITIZED_ARCHIVE (archive) is checked through the entry (its canonical hash equals the import record,
           # the on-disk hash equals its exported hash); every other path stays byte-exact. A canonical checkout has no such
           # manifest and keeps every check byte-exact.
+          # QUAL-U08 (2026-11-02, human decision option A; manifests/qual-u08-publication-handling-v1.yaml; CI correction OP-CI-13): a file
+          # of a formal import is also checked through its entry when its only class is ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION
+          # (the runner's private network address replaced by a marker in the public copy); the archive bridge is unchanged.
           sha = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
           ga = 'qualification/compatibility-smoke/formal/.gitattributes'
           bad = []
@@ -164,21 +167,22 @@ jobs:
               for e in (yaml.safe_load(open('PUBLIC-EXPORT-MANIFEST.yaml')) or {}).get('files') or []:
                   pem.setdefault(e.get('path'), []).append(e)
           def kind(p, cls):
-              # 'exact' (canonical checkout, or an entry with any other class), 'bridge' (the entry's only class is cls), 'missing' (fails)
+              # 'exact' (canonical checkout, or an entry with any other class), 'bridge' (the entry's only class is cls, or one of the classes of a tuple), 'missing' (fails)
               if pem is None:
                   return 'exact', {}
               es = pem.get(p) or []
               if len(es) != 1:
                   bad.append(p + ': no unique PUBLIC-EXPORT-MANIFEST.yaml entry (' + str(len(es)) + ' found)')
                   return 'missing', {}
-              return ('bridge' if es[0].get('transformations') == [cls] else 'exact'), es[0]
+              ok = [[c] for c in (cls if isinstance(cls, tuple) else (cls,))]
+              return ('bridge' if es[0].get('transformations') in ok else 'exact'), es[0]
           n = nb = 0
           for rec in sorted(glob.glob('qualification/compatibility-smoke/formal/*/IMPORT-RECORD.yaml')):
               base = os.path.dirname(rec) + '/'
               r = yaml.safe_load(open(rec)) or {}
               for f in r.get('files') or []:
                   p = base + str(f.get('path')); n += 1
-                  k, e = kind(p, 'QUALIFICATION_HOST_PATH_REDACTION')
+                  k, e = kind(p, ('QUALIFICATION_HOST_PATH_REDACTION', 'ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION'))
                   if k == 'bridge':
                       nb += 1
                       if not (os.path.isfile(p) and e.get('canonical_sha256') == f.get('sha256') and sha(p) == e.get('exported_sha256')):

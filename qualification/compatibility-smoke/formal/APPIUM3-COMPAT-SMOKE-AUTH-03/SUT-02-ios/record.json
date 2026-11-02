@@ -1,0 +1,182 @@
+{
+  "record_class": "COMPATIBILITY_SMOKE",
+  "study_id": "EUS-2026-001",
+  "policy": "protocol/mobile-runner-policy-v3.md, section 9 (9.1-9.4 as carried from v2; remediation qualification 9.7)",
+  "instruction_id": "APPIUM3-COMPAT-SMOKE-AUTH-03",
+  "prompt_version_id": "qualifier-mobile-01-appium3-compat-smoke-v3",
+  "sut_id": "SUT-02",
+  "component": "SUT-02-ios",
+  "platform": "ios",
+  "environment_type": "SIMULATED",
+  "app_identity": "com.saucelabs.mydemo.app.ios (CFBundleShortVersionString 2.2.2, CFBundleVersion 1)",
+  "build": {
+    "asset": "SauceLabs-Demo-App.Simulator.zip",
+    "sha256": "96b08d5ac74dd817d95fbd8332ae9385bb076af38d56d13d8465345cb1797139",
+    "source": "https://github.com/saucelabs/my-demo-app-ios/releases/download/2.2.2/SauceLabs-Demo-App.Simulator.zip"
+  },
+  "runner": {
+    "name": "Appium",
+    "core_pin": "3.7.0",
+    "core_observed": "3.7.0",
+    "driver": "xcuitest",
+    "driver_pin": "12.13.2",
+    "driver_observed": "12.13.2"
+  },
+  "device": {
+    "kind": "iOS Simulator",
+    "environment_type": "SIMULATED",
+    "udid": "141DD5FC-FF1D-429C-B43E-1323E1915FDE",
+    "device": "iPhone 16",
+    "runtime": "iOS 18.5",
+    "xcode": "Xcode 16.4 Build version 16F6",
+    "host_macos": "15.8.2",
+    "pinned_identity": "iPhone 16, iOS 18.5 runtime, Xcode 16.4 build 16F6 (manifests/toolchain-manifest.yaml environments.ios_simulator)"
+  },
+  "realization_sha256": "89ad823f215d9287e8411e3c22161e75c0243f9ce94df787b5c62b9c0fe716db",
+  "capabilities_requested": {
+    "platformName": "iOS",
+    "appium:automationName": "XCUITest",
+    "appium:platformVersion": "18.5",
+    "appium:deviceName": "iPhone 16",
+    "appium:bundleId": "com.saucelabs.mydemo.app.ios",
+    "appium:enforceAppInstall": true,
+    "appium:simulatorStartupTimeout": 600000,
+    "appium:wdaLaunchTimeout": 600000,
+    "appium:wdaConnectionTimeout": 600000,
+    "appium:showXcodeLog": true,
+    "appium:newCommandTimeout": 300,
+    "appium:app": "<host-path>/ios-app/Payload/My Demo App.app",
+    "appium:udid": "141DD5FC-FF1D-429C-B43E-1323E1915FDE"
+  },
+  "transport": {
+    "kind": "node:http",
+    "agent": "one connection per request (agent: false)",
+    "http_layer_timeouts": "none: no socket, header, or body timeout is set; the explicit per-request budget is the only limit"
+  },
+  "steps": [
+    {
+      "name": "install and launch the pinned build (MC-01)",
+      "capabilities": [
+        "MC-01"
+      ],
+      "started_at": "2026-11-02T19:53:14.008Z",
+      "status": "OK",
+      "detail": {
+        "session_capabilities": {
+          "platformName": "iOS"
+        }
+      },
+      "ended_at": "2026-11-02T19:57:40.301Z"
+    },
+    {
+      "name": "locate \"Catalog-screen\" by stable identifier (MC-02, MC-08)",
+      "capabilities": [
+        "MC-02",
+        "MC-08"
+      ],
+      "started_at": "2026-11-02T19:57:40.303Z",
+      "status": "OK",
+      "detail": null,
+      "ended_at": "2026-11-02T19:57:40.680Z"
+    },
+    {
+      "name": "open the product from the catalog (MC-04, MC-06)",
+      "capabilities": [
+        "MC-04",
+        "MC-06"
+      ],
+      "started_at": "2026-11-02T19:57:40.680Z",
+      "status": "OK",
+      "detail": null,
+      "ended_at": "2026-11-02T19:57:41.800Z"
+    },
+    {
+      "name": "product detail screen reached (MC-06, MC-08)",
+      "capabilities": [
+        "MC-06",
+        "MC-08"
+      ],
+      "started_at": "2026-11-02T19:57:41.800Z",
+      "status": "OK",
+      "detail": null,
+      "ended_at": "2026-11-02T19:57:42.558Z"
+    },
+    {
+      "name": "quantity reads \"1\" before the interaction (MC-08)",
+      "capabilities": [
+        "MC-08"
+      ],
+      "started_at": "2026-11-02T19:57:42.558Z",
+      "status": "OK",
+      "detail": {
+        "read": "label",
+        "observed": "1"
+      },
+      "ended_at": "2026-11-02T19:57:43.063Z"
+    },
+    {
+      "name": "tap the native control \"AddPlus Icons\" (MC-04)",
+      "capabilities": [
+        "MC-04"
+      ],
+      "started_at": "2026-11-02T19:57:43.063Z",
+      "status": "OK",
+      "detail": null,
+      "ended_at": "2026-11-02T19:57:43.622Z"
+    },
+    {
+      "name": "quantity reads \"2\" after the interaction (MC-08)",
+      "capabilities": [
+        "MC-08"
+      ],
+      "started_at": "2026-11-02T19:57:43.622Z",
+      "status": "OK",
+      "detail": {
+        "read": "label",
+        "observed": "2"
+      },
+      "ended_at": "2026-11-02T19:57:43.975Z"
+    },
+    {
+      "name": "capture the terminal artifacts (MC-10)",
+      "capabilities": [
+        "MC-10"
+      ],
+      "started_at": "2026-11-02T19:57:43.975Z",
+      "status": "OK",
+      "detail": null,
+      "ended_at": "2026-11-02T19:57:44.713Z"
+    }
+  ],
+  "capabilities_exercised": [
+    "MC-01",
+    "MC-02",
+    "MC-04",
+    "MC-06",
+    "MC-08",
+    "MC-10"
+  ],
+  "expected_final_state": "ProductDetails-screen of \"Sauce Labs Backpack - Black\" with the quantity label reading \"2\"",
+  "outcome": "SUCCESS",
+  "failed_step": null,
+  "proposed_result": "PASS",
+  "attribution": null,
+  "recording_role": "proposal by the harness; the ORCHESTRATOR records the result under protocol/agent-governance-v5.md, Section 3.4 (policy v3, section 9: NOT_EXECUTED only on a positively demonstrated cause outside the runner; uncertain attribution is FAIL_RUNNER)",
+  "automatic_repeat": "none (policy v3, 9.5 and 9.7.5)",
+  "started_at": "2026-11-02T19:53:14.008Z",
+  "ended_at": "2026-11-02T19:57:46.117Z",
+  "duration_ms": 272109,
+  "duration_note": "information only; not a criterion (policy section 9)",
+  "artifacts": [
+    "terminal.png",
+    "source-terminal.xml"
+  ],
+  "github": {
+    "run_id": "41512347186",
+    "run_attempt": "1",
+    "sha": "c7af40e0cd1ebbdfa9318ee102371730b8ec660b",
+    "workflow_ref": "gsanchezm/experimental-utility-testing-labs/.github/workflows/e03-mobile-remediation.yml@refs/heads/main",
+    "image_os": "macos15",
+    "image_version": "20261028.0489.1"
+  }
+}

@@ -1,0 +1,155 @@
+# Qualification publication-handling record v1 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# The human research lead's decision of 2026-11-02 on the publication handling of the hosted runner's private network address in the SUT-02 iOS appium-server.log of the
+# APPIUM3-COMPAT-SMOKE-AUTH-03 formal import (qualification/unresolved.md, QUAL-U08), the extension of two publication-only classes of PUBLIC-EXPORT-MANIFEST.yaml that it
+# requires (normative rules there), the CI correction that the byte-exact step of the validation workflow needs (OP-CI-13), and their expected hashes (operation OP-PUB-20).
+# ORCHESTRATOR record, prepared and committed by the ORCHESTRATOR alone (single-agent working model of 2026-10-24 and 2026-10-25); never edited afterwards (a correction is a new
+# version file). Exports, publishes, and executes nothing. No tracked file written by this operation spells the address.
+record_class: PUBLICATION_HANDLING_DECISION_RECORD
+record_id: QUAL-U08-PUBLICATION-HANDLING-01
+study_id: EUS-2026-001
+issue: QUAL-U08  # qualification/unresolved.md
+operation_id: OP-PUB-20
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-02'  # America/Mexico_City
+qualification_evidence: false
+measured_experiment: false
+executes_anything: false
+nature: "publication hygiene only: the extension of two existing publication-only classes (ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION: a third in-scope path; DETERMINISTIC_SANITIZED_ARCHIVE: scope entry 6) to the SUT-02 iOS appium-server.log of the APPIUM3-COMPAT-SMOKE-AUTH-03 formal import and to the archive beside it, with their expected hashes, and one CI correction that lets the public validation bridge the transformed file; no canonical evidence byte, result, attribution, record, or protocol document changes; not a protocol change"
+precedent: "the handling of the run-39316211051 import (manifests/e03-environment-verification-publication-handling-v3.yaml; operation OP-PUB-12), of the run-38270815417 import (-v2; OP-PUB-10), and of the run-37206291883 import (-v1; OP-PUB-05), and the QUAL-U07 handling of the APPIUM3-COMPAT-SMOKE-AUTH-02 formal import (manifests/qual-u07-publication-handling-v1.yaml)"
+finding:
+  discovered_by: "the builder's tree-wide postcondition (a private network address in an exported text file) at the first local build of public export v44, from canonical 1a861a9 on 2026-11-02; the build stopped before any output, as the builder is designed to do"
+  where: "the extracted SUT-02-ios/appium-server.log of the APPIUM3-COMPAT-SMOKE-AUTH-03 formal import (lines 7190, 7192, and 7210) and the same member of the archive beside it (github-artifact/E03-MOBILE_REMEDIATION-SUT-02-ios-run41512347186-a1.zip)"
+  what: "one private network address of the hosted macOS runner's virtual machine (an address of the private ranges of RFC 1918), three occurrences: the URL of the WebDriverAgent server in an Xcode output line, the log line of the response to its status request, and the ip field of that response; it is not a credential and no secret is involved"
+  canonical_state: "imported byte-exact under QUAL-U05 (commit 28f9876); the import record cites the canonical sha256 of each file; the harness's own host-path scrub of the job replaced the runner's home and workspace paths and does not cover addresses"
+  other_files: "the scan of the canonical tree at the base commit finds no other file with a private network address outside the existing scopes: every other member of this archive and every other file of the import has none"
+human_decision:
+  given_by: gilbertosanchez (human research lead)
+  decision_date: '2026-11-02'  # America/Mexico_City
+  transcript_stamp: "2026-11-02T22:06:25.105Z (2026-11-02 16:06 America/Mexico_City)"
+  channel: "given directly by the human research lead to the ORCHESTRATOR in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25)"
+  exact_text: "A con sí"
+  exact_text_sha256: 9c4f1bddbe010feae7894fb83081835439df3e8259e036e36be4c3572f125180
+  exact_text_note: "9 bytes UTF-8, no surrounding quotes, no trailing line feed; extracted byte-exact from the session transcript (never retyped). It answers the ORCHESTRATOR's report of transcript stamp 2026-11-02T22:03:29.191Z (2086 bytes, sha256 f04891809794dc84994d7fb6be2ab550e5944a9448fd324a6e000c50312af5b2), which spells the address and is therefore not embedded; its closing question asked for an approval of option A with the word sí"
+  recommendation_approved: "the line of the report that applies here, quoted without its Markdown marks: 'Mi recomendación (A): extender la clase ya aprobada, que reemplaza la dirección privada por un marcador <private-address> solo en la copia pública. Aplicaría al log (3 líneas) y a su zip, que se reempaqueta de forma determinista.' The report listed four parts of option A: a publication-handling record with the expected hashes; a patch of the export builder; a CI correction of the QUAL-U05 step of e03-validate.yml, which bridges a modified formal file only for the class of the host-path redaction, with its change-log row; and the rule written in PUBLIC-EXPORT-MANIFEST.yaml. The alternative it offered (B: publish export v44 without the folder of the AUTH-03 artifact, which needs its own builder patch, leaves pointers to absent files, and has to be reverted later) was not chosen"
+  selected: "option A: the approved publication-only treatment of the runner's private network address (decision B of 2026-10-12, extended on 2026-10-18) is extended to the AUTH-03 formal import: the address on the three lines of SUT-02-ios/appium-server.log is replaced by a marker in the public copy only (the class ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION, applied at export time), and the archive beside it is exported as a deterministic re-pack (DETERMINISTIC_SANITIZED_ARCHIVE, scope entry 6)"
+  reading_of_the_orchestrator: "the decision names the log and the archive through the recommendation that it approves ('al log (3 líneas) y a su zip'); the transform of the class is the existing one, unchanged; the CI correction is the third part of the option as listed in the report, so it is within the decision"
+does_not_authorize:
+- "a public export, push, or publication (public export v44 was approved separately on 2026-11-02, built by the ORCHESTRATOR and pushed in person by the human research lead)"
+- "a dispatch, re-run, or E03 START, or any change of a gate of a measured workflow"
+- "any transformation of a canonical evidence byte or archive"
+- "any change to the artifact of run 41512347186 on GitHub"
+operating_decisions:
+  note: "the single-agent working model of 2026-10-24 and 2026-10-25 (recorded in manifests/e03-environment-verification-publication-handling-v3.yaml, operating_decisions): the ORCHESTRATOR defines, carries out, and reports the operation; the own approval that stays is the one that the decisions keep (each dispatch, START, freeze, authorization issuance, edit of the agent-instructions file, and the human act of the push)"
+decided_option:
+  option: "A"
+  description: "the two text members of the AUTH-03 import that carry the address, SUT-02-ios/appium-server.log (lines 7190, 7192, 7210) and the same member of the archive beside it, are exported transformed: the log by ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION, the archive as a deterministic STORED re-pack whose one transformed member, appium-server.log, carries the same class; every other member of the archive, the other eight files of the import, and its IMPORT-RECORD.yaml are exported unchanged"
+  reproducibility_impact: "the public sha256 of the re-packed archive differs from its GitHub digest; its members are verifiable member-wise through the manifest entry and canonically; the original archive and its digest remain verifiable canonically and on GitHub until 2027-01-31T19:41:56Z; the public copy of appium-server.log differs from the canonical one only in the three addresses, replaced by the marker (the line count and every other byte are unchanged)"
+  canonical_immutability: "canonical files and archives unchanged (publication-only)"
+  public_validation_changes: "one, a CI correction (OP-CI-13, protocol/CHANGELOG.md, under E03-CI-WRITE-AUTH-01): the step of .github/workflows/e03-validate.yml that checks the byte-exact storage of the imported compatibility-smoke evidence (QUAL-U05) bridged a modified formal file through PUBLIC-EXPORT-MANIFEST.yaml only for the class QUALIFICATION_HOST_PATH_REDACTION; it now also bridges ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION for a file; the archive bridge (DETERMINISTIC_SANITIZED_ARCHIVE) and every other check are unchanged, and a canonical checkout (no export manifest) keeps every check byte-exact"
+  ci_coverage: "the hygiene patterns of the validation workflow have no rule for private network addresses, so the push-triggered validation is not a check of this class; the builder's fail-closed postconditions and the export's own scans are"
+consequence_for_later_imports: "a later import that carries a private network address stops the export by the tree-wide postcondition until a human decision extends this class, as for the earlier imports; since the capture-time scrub of OP-CI-09 (2026-10-24) covers the environment-verification and measured workflows, and the compatibility-smoke and remediation workflows keep their own host-path scrub only, an artifact of those workflows can carry the address again"
+outside_this_record: "the artifact of run 41512347186 on GitHub (the iOS record artifact) keeps the address in its original bytes until it expires on 2027-01-31T19:41:56Z; the decision covers what is published in git"
+authority_for_each_change:
+  PUBLIC-EXPORT-MANIFEST.yaml, this record, and qualification/unresolved.md (QUAL-U08): ORCHESTRATOR (manifests/; qualification/ under protocol/agent-governance-v5.md, Section 3.4), on the human research lead's decision of 2026-11-02
+  .github/workflows/e03-validate.yml and the change-log row: ORCHESTRATOR (.github/workflows/** and protocol/CHANGELOG.md), as a CI correction under E03-CI-WRITE-AUTH-01
+  manifests/README.md and manifests/study-manifest.yaml: ORCHESTRATOR (manifests/), representation only
+  export_builder: "the untracked export tooling run by the ORCHESTRATOR outside the repository (PUBLIC-EXPORT-MANIFEST.yaml, how_the_export_is_built); never committed, never exported; its sha256 before and after are recorded under builder"
+transformations:
+  ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION: "normative rule: PUBLIC-EXPORT-MANIFEST.yaml, export_procedure.environment_verification_private_address_redaction (pattern, marker, scope with expected changed lines, postconditions); this operation adds the third scope path"
+  DETERMINISTIC_SANITIZED_ARCHIVE: "normative rule: PUBLIC-EXPORT-MANIFEST.yaml, export_procedure.deterministic_sanitized_archive (scope entry 6 added by this operation; recipe, method STORED, and postconditions as for entries 1 to 5)"
+  implementation: "the export builder run by the ORCHESTRATOR outside the repository implements both: the third path of the address scope (three expected changed lines), scope entry 6 of the archive class with its transformed member, its extracted directory, its record, and its transform class; the postconditions are routed per record (EVPAR_RECORD for the logs, DSA_RECORD for the archives) and the builder aborts if this record is missing"
+  method_choice: "STORED, with the reasons of QUAL-U07 (manifests/qual-u07-publication-handling-v1.yaml, transformations.method_choice): the bytes do not depend on any deflate implementation, and the publication-hygiene scan can read the members"
+expected_hashes:  # computed from the canonical bytes at the base commit 1a861a90d2ad31fc9104988d18400c6f0a54bf98; each exported file and archive of the dry-run build equals these values
+- path: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-03/SUT-02-ios/appium-server.log
+  class: ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION
+  canonical_sha256: 1f7e6e23b2a325d77a06ebc3e127efe3e765f28c4b5ecf0dc7224b1990d88775
+  canonical_bytes: 3263437
+  exported_sha256: f8b406b75e3fa0af3af7ce4b063b263f213e4d7efe83074ca6f797a0dfe1d63c
+  exported_bytes: 3263452
+  changed_lines: "3 (7190, 7192, 7210)"
+  replacements: "3 private network addresses replaced by <private-address>"
+- path: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-03/github-artifact/E03-MOBILE_REMEDIATION-SUT-02-ios-run41512347186-a1.zip
+  class: DETERMINISTIC_SANITIZED_ARCHIVE
+  canonical_sha256: 3fcea28308d56d56276764b21defb6f824c183a2a9910b96fcbd1aad05515853
+  canonical_digest: sha256:3fcea28308d56d56276764b21defb6f824c183a2a9910b96fcbd1aad05515853
+  canonical_bytes: 588520
+  exported_sha256: aa2e12ce6ad9589a415ffd8d1d1171aa92ce2a9f9ef8a995f80737f01fd27f72
+  exported_bytes: 3805966
+  method: STORED
+  transform_class: ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION
+  transformed_members: ["appium-server.log"]
+  member_count: 9
+  members:  # in archive order; every canonical member is DEFLATED and equal to its extracted file
+  - name: "appium-server.log"
+    date_time: '2026-11-02 19:57:46'
+    canonical_size: 3263437
+    byte_identical_to_canonical: false
+  - name: "environment/build-verification.json"
+    date_time: '2026-11-02 19:53:02'
+    canonical_size: 547
+    byte_identical_to_canonical: true
+  - name: "environment/device.json"
+    date_time: '2026-11-02 19:53:00'
+    canonical_size: 372
+    byte_identical_to_canonical: true
+  - name: "environment/npm-ci.log"
+    date_time: '2026-11-02 19:53:08'
+    canonical_size: 26
+    byte_identical_to_canonical: true
+  - name: "environment/toolchain-install.json"
+    date_time: '2026-11-02 19:53:10'
+    canonical_size: 681
+    byte_identical_to_canonical: true
+  - name: "harness.log"
+    date_time: '2026-11-02 19:57:46'
+    canonical_size: 740
+    byte_identical_to_canonical: true
+  - name: "record.json"
+    date_time: '2026-11-02 19:57:46'
+    canonical_size: 5914
+    byte_identical_to_canonical: true
+  - name: "source-terminal.xml"
+    date_time: '2026-11-02 19:57:44'
+    canonical_size: 17010
+    byte_identical_to_canonical: true
+  - name: "terminal.png"
+    date_time: '2026-11-02 19:57:44'
+    canonical_size: 516150
+    byte_identical_to_canonical: true
+unchanged_in_publication:
+- path: "the other seven members of the AUTH-03 archive, the other eight imported files, and IMPORT-RECORD.yaml"
+  note: "exported unchanged (no private network address; the import record names no address)"
+computation_note: "computed from the canonical bytes at 1a861a90d2ad31fc9104988d18400c6f0a54bf98 with an implementation separate from the export builder (it follows only the recorded rule and recipe of PUBLIC-EXPORT-MANIFEST.yaml), under CPython 3.14.2, 3.13.1, and 3.9.6: the three outputs are equal; the canonical archive sha256 equals its GitHub digest (sha256:3fcea28308d56d56276764b21defb6f824c183a2a9910b96fcbd1aad05515853) and the downloaded_archive_sha256 of the import record; the canonical log sha256 equals the one of the import record"
+determinism:
+  sanitized_archive: "the full dry-run build of the public-like tree (the tooling's dry-run script with the patched builder, from the working tree of canonical 1a861a9 plus this operation's edits), run once with each of CPython 3.14.2, 3.13.1, and 3.9.6, gave three byte-identical trees (content tree 87e16dbad3964910caaa9daa93c9f3d519a3a457, manifest sha256 7115dd9653f6d027ce5cbcf5c271d492e998b070192e05291a7fa588cbe91391), each with the re-pack aa2e12ce6ad9589a415ffd8d1d1171aa92ce2a9f9ef8a995f80737f01fd27f72 (3805966 bytes); the separate implementation of the recorded recipe (computation_note) gives the same bytes under the same three interpreters"
+  transformed_file: "the transform is one regular-expression substitution; applying it twice changes nothing; the line count is unchanged"
+builder:
+  sha256_before: 2e24e7f9cd4ac739fca1c386222653d46efe62ba266b01b4e74e531268865957
+  sha256_after: 963883c764117578df427e1c2287fefb29dbcef9d3bef1bb9f4eaf1afb1e3778
+  differences: "export_build.py (54,861 bytes after): QUAL_AUTH03, a third path in EVPAR_SCOPE (three expected changed lines), QUAL_U08_RECORD and its routing in EVPAR_RECORD and EVPAR_RECORDS, scope entry 6 of DSA_SCOPE with its extracted directory, its record, and its transform class, the existence check of this record (the builder aborts if it is missing), one assertion message, and the two class texts of the public manifest; 36 changed lines; no postcondition loosened"
+  tooling_record: "the tooling's SHA256SUMS lists the new export_build.py (SHA256SUMS sha256 24b67161b4019a9f257e1baa0f6ff73c151706a2f9f7776ca651181a2e72645a, 509 bytes) and its README gains an OP-PUB-20 paragraph (README sha256 7840be7d2c6170a81de00d273678c94fed08bbb5624f0cffdcb9b5b1628d4b3e, 11933 bytes); the other five tooling scripts are unchanged; the ORCHESTRATOR patched a copy of the tooling, proved it, and only then installed it; the verbatim backups and the diff are in the local orchestration layer"
+  tooling_state: untracked (never committed, never exported)
+  dependency_note: "the record checks import PyYAML: the proof used the pure-Python 6.0.3 copy verified against its MANIFEST rows, on PYTHONPATH"
+ci_correction:
+  operation: OP-CI-13
+  file: .github/workflows/e03-validate.yml
+  change: "in the step 'Assert the imported compatibility-smoke evidence is stored byte-exact (QUAL-U05)', the helper kind() takes a class or a tuple of classes, and the check of the files of a formal import passes the tuple (QUALIFICATION_HOST_PATH_REDACTION, ENVIRONMENT_VERIFICATION_PRIVATE_ADDRESS_REDACTION); a comment records the extension (7 added and 3 removed lines)"
+  authority: "E03-CI-WRITE-AUTH-01 (the validation workflow is one of the E03 workflows; E03 is FROZEN, so the change is a CI correction with its own change-log row of protocol/CHANGELOG.md, not a gate change)"
+  effect: "without it the public validation of the export fails on the transformed log; the archive bridge, the canonical behavior (no export manifest: every check byte-exact), and every other step are unchanged"
+phase_a_verification:
+  performed: "on the working tree of canonical 1a861a9 plus this operation's edits (uncommitted), with the patched builder in a scratch copy of the tooling outside the repository, then installed; nothing exported, pushed, or committed"
+  unpatched_builder: "the builder before the patch (2e24e7f9...) aborts at its tree-wide postcondition on the canonical tree (a private network address in an exported text file: the AUTH-03 appium-server.log); the first local build of export v44 stopped there"
+  export_builder_dry_run: "the patched builder completed with every postcondition holding (applied scope equal to the defined scope for the host-path, address, and archive classes; hashes equal to expected_hashes of this record and of the earlier records; the class of each entry of an import with an address its only class; member-wise equality of the six re-packs; every transformed member equal to its extracted file); 11430 exported files, 11163 unchanged, 267 transformed, 1 excluded"
+  validation_workflow_on_the_exported_tree: "the python steps of .github/workflows/e03-validate.yml run on the exported dry-run tree: with the workflow before the CI correction, 10 PASS and 1 FAIL (the QUAL-U05 step: the AUTH-03 appium-server.log, sha256 differs from the import record); with the correction, 11 PASS and 0 FAIL"
+  canonical_tree: "the same steps on the canonical working tree: 10 PASS and 1 FAIL, the unchanged finding about the host paths in the AUTH-02 iOS log (QUAL-U07; canonical bytes, bridged on the public side)"
+  address_scan: "the pattern matches 0 lines in the dry-run tree (10,774 exported text files and 343 textual archive members); on the tracked canonical tree it matches exactly the four places of the two earlier imports and the three lines of the AUTH-03 log together with the same three in its archive member, and 0 lines in every file this operation writes or edits"
+known_consequences:
+- "the public sha256 of the AUTH-03 archive will differ from its GitHub digest; the canonical archive and digest stay verifiable canonically and on GitHub until 2027-01-31T19:41:56Z"
+- "the public copy of appium-server.log differs from the canonical one only in the three addresses; IMPORT-RECORD.yaml keeps citing canonical sha256 values (hash_citation_rule), and the QUAL-U05 step bridges them through the manifest entry"
+- "a later import that carries a private network address stops the export by the tree-wide postcondition until a human decision extends this class (consequence_for_later_imports)"
+not_done:
+- "no public export, push, or publication; public main stays export v43 (c7af40e0cd1ebbdfa9318ee102371730b8ec660b)"
+- "no canonical evidence byte or archive, import record, or earlier publication-handling scope or hash changed"
+- "no dispatch or re-run, no E03 START, no edit of a gate, no edit of the agent-instructions file"
+- "the export builder is not added to the repository (scripts_in_repository: none)"
+procedure: "prepared and verified by the ORCHESTRATOR on the working tree of canonical 1a861a9 (builder patch, independent computation of the expected values, dry-run builds in its working area outside the repository, validation steps on the exported tree), audited before the commits, and committed in three commits (definition: PUBLIC-EXPORT-MANIFEST.yaml, this record, and qualification/unresolved.md; CI correction: .github/workflows/e03-validate.yml and protocol/CHANGELOG.md; status: manifests/README.md and manifests/study-manifest.yaml)"

@@ -1,0 +1,62 @@
+# Mapping-record freeze record v1 -- CS-003 (EUS-2026-001, Experimental Utility of Software-Testing Laboratory Ecosystems)
+# The human research lead's decision of 2026-11-02 that froze the canonical scenario CS-003 (DRAFT -> FROZEN) after the confirmation of its five design points. ORCHESTRATOR record,
+# written once and never edited afterwards (a correction is a new version file). It starts, configures, dispatches, exports, and executes nothing; it changes no protocol document:
+# the freeze of a mapping record is recorded by one mapping-record row of protocol/CHANGELOG.md (protocol/change-control-v1.md, section 5; protocol/equivalent-scenario-mapping-v1.md, section 6).
+record_class: MAPPING_RECORD_FREEZE
+record_id: CS-003-FREEZE-01
+authorization_id: E02-CS003-FREEZE-AUTH-01  # assigned by the ORCHESTRATOR to the approval below, on the pattern of E03-CS001-FREEZE-AUTH-01; the human texts carry no id
+study_id: EUS-2026-001
+operation_id: OP-FREEZE-02
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-02'  # America/Mexico_City
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+nature: "a mapping-record freeze: experiments/scenario-mappings/CS-003.yaml moves from DRAFT to FROZEN; no campaign status, protocol document, campaign configuration, workflow, result, or raw-data file changes"
+record_frozen:
+  path: experiments/scenario-mappings/CS-003.yaml
+  canonical_scenario_id: CS-003
+  version: 1
+  campaigns_using: [E02-state-establishment]
+  state_change: "mapping DRAFT -> FROZEN"
+  frozen_at: '2026-11-02'
+  approved_by: gilbertosanchez
+  sha256_of_the_draft: 11dc0baf3c041e94455ce30fab8180144cfcde24e1e95f05086a7b30c3b75cc1  # the committed DRAFT at canonical 27879a1
+  sha256_of_the_frozen_record: 83815775737c258c9e44c9946e9d2264015cf398ef796f7e08d61f5e38dae3f3
+  changes_at_freeze: "the header status block, the three status fields (mapping_status, frozen_at, approved_by), the `notes` wording from recommended to decided, and the wording 'this draft' in four places of the mapping entries (now 'this record'); no mapping entry, comparability decision, evidence_id, or step changed"
+  change_log_row: "protocol/CHANGELOG.md, one mapping-record row of 2026-11-02"
+human_decision:
+  given_by: gilbertosanchez (human research lead)
+  decision_date: '2026-11-02'  # America/Mexico_City
+  channel: "given directly by the human research lead to the ORCHESTRATOR in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25)"
+  basis:
+    - id: gate_c
+      text_sha256: 91e1eb395a3d008c228af36c74ddd4640f2f09bb88130e8e7471b04a9af2344d
+      byte_count_utf8: 76
+      verbatim_in: manifests/planning-deadlines-v2.yaml  # message_2
+      clause: "c) sí"
+      gate_as_presented: "the five CS-003 design points DP-1 to DP-5 and its freeze"
+      effect: "approved gate c, which named the freeze, but gave no answer to DP-1 to DP-5; the ORCHESTRATOR therefore kept CS-003 a DRAFT and asked for a one-line confirmation of the five recommendations before any freeze (manifests/planning-deadlines-v2.yaml, item c)"
+    - id: confirmation
+      exact_text: "y sí a las 5 recomendaciones"
+      exact_text_sha256: d22d9d13dfc3275a0cf92a5110910eddf55e9e5417c5ed8655a4f1ae45b90d10
+      byte_count_utf8: 29
+      transcript_stamp: "2026-11-02T18:48:33.865Z"  # 2026-11-02 12:48 America/Mexico_City
+      isolation_note: "extracted byte-exact from the session transcript (never retyped); it is the last sentence of the typed message of that stamp (292 bytes, sha256 00a6ca6c6409728b6453456e26566e3769fcee787fa219736208aa54332f5b17), whose first part is the instruction to resume from a named local text after checking its hash and names untracked local files, so the message is not reproduced here (publication hygiene); sha256 over the text without a trailing line feed"
+      effect: "the five numbered recommendations of the DRAFT (experiments/scenario-mappings/CS-003.yaml, `notes`, DP-1 to DP-5) are the decisions; with gate c above, the freeze is approved"
+design_point_decisions:
+  DP-1: {field: precondition_class, decision: CLEAN_SESSION, alternative_not_chosen: AUTHENTICATED_SESSION}
+  DP-2: {field: reset_requirement, decision: DATA_RESET, alternative_not_chosen: NONE}
+  DP-3: {field: observable_oracle_class, decision: BUSINESS_STATE, deviation_kept: "SUT-03 realized as UI_STATE, the deviation CS-001 froze"}
+  DP-4: {field: surfaces, decision: "only surfaces with E01 evidence of the establishment itself are mapped (SUT-01 web and api, SUT-02 web, SUT-03 web, SUT-04 web and api, SUT-05 api); a surface is added only by a new version with its evidence"}
+  DP-5: {field: actor_state, decision: AUTHENTICATED_STANDARD, alternative_not_chosen: "OTHER ('the identity the ecosystem requires')"}
+pre_freeze_check:
+  by: ORCHESTRATOR
+  evidence_ids: "the 41 distinct evidence_id cited by the record each resolve in the evidence.csv of the audit branch of their own SUT (audit/e01-sut0N-*); 35 are SOURCE_VERIFIED and 6 DOCUMENTED; none is EXECUTION_VERIFIED or INFERRED"
+  sut_06: "NOT_COMPARABLE (NO_EQUIVALENT_INTENT) with the same basis as CS-001; no mapping is inferred from the SUT-06 evidence"
+  nothing_inferred: "no vendor product feature is used as evidence about a demo ecosystem (rule 4 of the agent-instructions file)"
+state_after_this_record:
+  e02: "campaign E02-state-establishment stays NOT_STARTED; the frozen mapping record required before any E02 execution now exists for this scenario; no campaign configuration, START, authorization, workflow, or dispatch exists"
+  other_campaigns: "every campaign keeps its status; E03 stays FROZEN"
+  mobile: "unchanged: mobile_runner_status UNRESOLVED_AFTER_FALLBACK_FAILURE; APPIUM3-COMPAT-SMOKE-AUTH-03 ISSUED / ELIGIBLE, pre-dispatch recorded, not dispatched"
+  nothing_done: "no campaign was started or configured, nothing was dispatched, exported, or pushed; the agent-instructions file and research-status.html were not edited"

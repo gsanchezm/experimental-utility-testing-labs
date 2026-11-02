@@ -1,0 +1,61 @@
+# manifests/appium3-compat-smoke-auth-03-dispatch-v1.yaml
+# Dispatch record of APPIUM3-COMPAT-SMOKE-AUTH-03 (the single post-fallback remediation qualification of protocol/mobile-runner-policy-v3.md, section 9.7: SUT-02 x iOS x Appium 3.7.0),
+# recorded by the ORCHESTRATOR BEFORE the single dispatch and committed locally (not pushed, not exported). The dispatch is made by the human research lead in person with the
+# line of the file DISPATCH-LINE-AUTH03.txt (a local, untracked file in the resume folder of the local orchestration layer; its sha256 is below); the observed run identity is recorded afterwards in a separate record.
+# This record does not modify the AUTH-03 authorization record (which the readiness gate reads and which stays byte-identical to the published copy; its lifecycle closure waits for the
+# post-run recording), is not qualification evidence, records no result, and authorizes nothing beyond the one dispatch.
+record_id: APPIUM3-COMPAT-SMOKE-AUTH-03-DISPATCH-01  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: AUTHORIZATION_DISPATCH_INSTRUCTION_RECORD
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-11-02T18:45:17Z"  # UTC, before the dispatch
+qualification_evidence: false
+measured_experiment: false
+status: PRE_DISPATCH_RECORDED
+
+authorization:
+  authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-03
+  record: manifests/compatibility-smoke-execution-auth-v3-prepared.yaml  # COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION, ISSUED, VALID, authorizes_execution true, dispatch_eligibility ELIGIBLE, dispatch_performed false, issued_by gilbertosanchez, issued_at 2026-11-02; sha256 0e6d2fe71c1f84eecdf993ee9aac43828c76ad2134030dd64824c20918e2cdb1
+  frozen_launch_prompt: prompts/frozen/qualifier-mobile-01-appium3-compat-smoke-v3.md  # sha256 5310ff8a08955bd9d18b618269495a9ad57fb5edb86a2f76f282d0f4bdb74715
+  prompt_version_id: qualifier-mobile-01-appium3-compat-smoke-v3
+  implementation_lock: manifests/compatibility-smoke-implementation-lock-v4.yaml  # sha256 11f2a54fadcd77d2d3f36bf6c8b54a80d8980b895967acce36a3bb84dbda4bbd
+  harness_realization_sha256: 89ad823f215d9287e8411e3c22161e75c0243f9ce94df787b5c62b9c0fe716db
+  governing_policy: protocol/mobile-runner-policy-v3.md  # section 9.7; FROZEN-PRE-DATA; sha256 16dae5884122ff0bfe313bfe78d023a3ebd78e0a1b69036d7cd339c4fb3e2670
+  workflow: .github/workflows/e03-mobile-remediation.yml  # sha256 2fb5c608f77f5bf5018cf8cc6d53594ba7d5654c462e29d2df0858ac3e8a5910; exported UNCHANGED in the aliasing sense checked by the lint (byte-identical to the canonical file)
+  named_trigger: "APPIUM3-COMPAT-SMOKE-AUTH-02, SUT-02 x iOS, FAIL_RUNNER by the conservative tie-break (run 36539790536, attempt 1); not reinterpreted by this dispatch"
+  attempts_allowed: 1  # policy v3, 9.7.5; a FAIL_RUNNER or NOT_EXECUTED of this attempt is terminal (9.7.7)
+
+dispatch_instruction:
+  given_by: gilbertosanchez  # human research lead
+  given_on: "2026-11-02"
+  how_the_instruction_arrived: "direct message to the ORCHESTRATOR in the ORCHESTRATOR's conversation: the answer 'a) sí, b) sí, c) sí, d) recomendado, esperando poder acabar antes, e) sí' to five gates the ORCHESTRATOR had listed in its report after the dashboard refresh D16; its item b) answered the gate 'afterwards, the single dispatch of APPIUM3-COMPAT-SMOKE-AUTH-03', put in the form 'si' after the public export; the text is recorded verbatim in manifests/planning-deadlines-v2.yaml"
+  message_exact_text_sha256: 91e1eb395a3d008c228af36c74ddd4640f2f09bb88130e8e7471b04a9af2344d  # 76 bytes UTF-8; transcript stamp 2026-11-02T17:55:36.613Z; item b)
+  item: "b) sí"
+  effect: "the single dispatch is approved to follow the publication: after the export is pushed and verified, the ORCHESTRATOR records the dispatch before it runs, hands the dispatch line to the human research lead, who runs it in person, and records the run identity afterwards (manifests/planning-deadlines-v2.yaml, item b)"
+  the_act_of_dispatching: "the human research lead runs the line in person; the ORCHESTRATOR does not dispatch; if the line is not run, nothing is dispatched"
+  dispatch_count_authorized: 1
+  one_dispatch_only: "exactly one workflow_dispatch action; no double submission; no other workflow dispatched"
+  no_rerun: "no GitHub re-run, no re-run of failed jobs or of a single job, no second workflow_dispatch, no new authorization for a second attempt, whatever the workflow conclusion or harness proposal; the single run is preserved as it is"
+  no_intervention: "no change to code, locators, timeouts, Appium or driver versions, builds, or attribution; no manual Appium or simulator restart; no SUT repair or build substitution; no step retry"
+  not_authorized: "the post-run recording (import into qualification/compatibility-smoke/formal/, attribution, mirror transcription, lifecycle closure of the authorization record), the restoration of mobile admissibility (9.7.9 and 9.7.10), the lineage record, the correction of gate G-7, any E03 reopening, any START, any measured execution, any export; each needs its own explicit human approval. E03 stays FROZEN and every mobile condition stays blocked whatever the result."
+
+dispatch_inputs:  # exact workflow_dispatch inputs; no additional inputs
+  repository: gsanchezm/experimental-utility-testing-labs  # PUBLIC; GitHub Actions runs only there
+  ref: main
+  instruction_id: APPIUM3-COMPAT-SMOKE-AUTH-03
+  confirm: EXECUTE-REMEDIATION-QUALIFICATION
+  command_file: DISPATCH-LINE-AUTH03.txt  # local, untracked, in the resume folder of the local orchestration layer; 1198 bytes, sha256 87b1043a5ba636b7a2522f559913d61c4305cd3aa0ad28f139f355d498dc2509; the hook (rtk rewrite) leaves the command unchanged (rc 1, empty output)
+
+expected_public_snapshot:  # public export v43; the dispatch runs only on this snapshot
+  public_head: c7af40e0cd1ebbdfa9318ee102371730b8ec660b
+  public_root_tree: a8dfc01aaae3bbb418d0b9c6e218dccdeec2f8a9
+  export_manifest_sha256: 59eda612407e4dfd5bdb14cf0105a471f24ea44a88c1c57b8a66435007bfcf25
+  export_version: 43
+  canonical_source: 0d1e0986ff5066942c0345e1cd76523077456a8d
+
+pre_dispatch_verification:  # performed by the ORCHESTRATOR immediately before this record
+  public_snapshot: "public main c7af40e0 (pushed 2026-11-02T18:34:57Z by the human research lead), validation run 41501943949 succeeded in all four jobs, the post-push audit of a fresh clone passed 27 of 27 checks, repository PUBLIC, 7 branches, 0 tags, 413 runs, no run queued or in progress, the workflow E03 Mobile Remediation Qualification registered and active"
+  readiness: "the readiness-gate code of the exported workflow, extracted and run read-only on a copy of what it reads from the exported tree, reports READY (86 checks, 0 failing); the hosted gate job will re-evaluate it on the runner"
+  authorization_state: "exactly one record carries APPIUM3-COMPAT-SMOKE-AUTH-03: ISSUED, VALID, authorizes_execution true, dispatch_eligibility ELIGIBLE, dispatch_performed false, issued_by gilbertosanchez, issued_at 2026-11-02"
+  study_state: "mobile_runner_status UNRESOLVED_AFTER_FALLBACK_FAILURE; the only FAIL_RUNNER is the named trigger; no restoration record; no campaign IN_PROGRESS (E03 FROZEN, E02 and E04-E12 NOT_STARTED); no measured bundle of a mobile condition"
+  known_limit: "the cause of the AUTH-02 iOS failure stays NOT_ESTABLISHED; the corrected transport (node:http, underlying error and cause kept) may end in PASS, FAIL_RUNNER, or NOT_EXECUTED; the built-in fetch control showed a failure at about 301 s, whereas the AUTH-02 request ended at 389 s"

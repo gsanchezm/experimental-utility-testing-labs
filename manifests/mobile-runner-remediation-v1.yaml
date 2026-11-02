@@ -1,0 +1,72 @@
+# manifests/mobile-runner-remediation-v1.yaml
+# Remediation lineage record of protocol/mobile-runner-policy-v3.md, section 9.7.10: the normative provenance of the restoration of the study-level mobile-runner status after one successful post-fallback remediation qualification.
+# Written once by the ORCHESTRATOR on the explicit human restoration instruction below, and never edited afterwards (a correction is a new record version); it covers exactly one remediation and never extends to a second (9.5, 9.7.5, 9.7.11).
+# It restores nothing beyond the study-level status and the restoration basis: it does not correct gate G-7, reopen or start any campaign, authorize any execution or export, or reinterpret any historical record.
+record_class: REMEDIATION_LINEAGE_RECORD
+record_id: MOBILE-RUNNER-REMEDIATION-01
+study_id: EUS-2026-001
+operation_id: OP-MOB-REM-04
+recorded_by_role: ORCHESTRATOR  # protocol/agent-governance-v5.md, Section 3.4
+recorded_at: "2026-11-02T21:38:26Z"  # UTC
+measured_experiment: false
+executes_anything: false
+prior_policy: protocol/mobile-runner-policy-v2.md  # AMENDED 2026-10-02 (Superseded by v3); the policy under which both compatibility smokes of the historical FAIL_RUNNER were executed
+new_policy: protocol/mobile-runner-policy-v3.md  # FROZEN-PRE-DATA 2026-10-02; sha256 16dae5884122ff0bfe313bfe78d023a3ebd78e0a1b69036d7cd339c4fb3e2670; section 9.7
+historical_failing_observation:
+  authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-02
+  run_id: 36539790536
+  run_attempt: 1
+  ecosystem_platform: SUT-02 x iOS
+  result: FAIL_RUNNER  # conservative tie-break of policy v2, 9.4
+  historical_result_immutable: true
+  smoke_record_row: {file: qualification/compatibility-smoke/README.md, section: Smoke records, row_sha256: 9e2a50bec4bf64120acb90e4dadb2e39114d3d0d33c1a7ee82064e2289bca42e}
+  attribution_record: {path: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/ATTRIBUTION-SUT-02-ios.yaml, sha256: 7c8cda62f3f50220aa4a156425933d7130e4d1e427166f80dd7750f70dbea3f7}
+  import_record: {path: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/IMPORT-RECORD.yaml, sha256: ddf36a6676a5dca9d24a40c7e625e772463e0907dd8ab6ea4d54aa66b6e26ccb}
+  run_identity_record: {path: manifests/appium3-compat-smoke-auth-02-run-v1.yaml, sha256: c32ff5df2abe88cd7241c920e66d503f090776f73c9109e13102252eb76dd52b}
+  cause_of_the_failure: NOT_ESTABLISHED  # qualification/unresolved.md QUAL-U06 (resolved as to the implementation correction only)
+remediation:
+  authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-03
+  authorization_record: {path: manifests/compatibility-smoke-execution-auth-v3-prepared.yaml, sha256: 33b1d4a67e1480b8b2ff6c8746a0de51b6140f82b7eb3986a3cfd7df347ba174, lifecycle: "ISSUED, VALID, CONSUMED_AFTER_DISPATCH, dispatch_performed true"}  # the issuance-time sha256 0e6d2fe71c1f84eecdf993ee9aac43828c76ad2134030dd64824c20918e2cdb1 is in the dispatch record
+  run_id: 41512347186
+  run_attempt: 1
+  head_sha: c7af40e0cd1ebbdfa9318ee102371730b8ec660b  # public export v43
+  implementation_lock: {id: manifests/compatibility-smoke-implementation-lock-v4.yaml, sha256: 11f2a54fadcd77d2d3f36bf6c8b54a80d8980b895967acce36a3bb84dbda4bbd}
+  official_result: PASS  # SUT-02 x iOS, Appium 3.7.0 with appium-xcuitest-driver 12.13.2; a new observation under policy v3
+  official_result_source_record: {path: qualification/compatibility-smoke/README.md, section: Smoke records, row_sha256: caefec4f676c86e0dc2207b8aa96cadb58bdf4cfecddee6eb8db7a76c7854ed9, import_record_sha256: ce313f827d5265304b22d63f5b70b369623f7a1d97469b7f4e3cf2b6fd46df59, recording_record: manifests/appium3-compat-smoke-auth-03-postrun-recording-v1.yaml, recording_record_sha256: c83132df3a77aa5aa9ed35a21ac47a4840ddb6e4c4e1c83b7ed263bdbdf736c4}
+  run_identity_record: {path: manifests/appium3-compat-smoke-auth-03-run-v1.yaml, sha256: aed631a708cb7e4d5fd94a15d9becde144a55f05f594d3cef1e109db05061561}
+  android_observation_reused: "SUT-02 x Android PASS of APPIUM3-COMPAT-SMOKE-AUTH-02 stays a valid platform observation (9.7.3, 9.7.12); the shared WebDriver client changed from the built-in fetch to node:http in lock v4 as disclosed in the authorization record, and that disclosure is carried unchanged"
+restoration_eligibility:  # each requirement of 9.7.9 with its evidence, verified from the repository at the time of this record
+  - {n: 1, requirement: "it is the exact FAIL_RUNNER named as the trigger of the approved v3 remediation (APPIUM3-COMPAT-SMOKE-AUTH-02, run 36539790536, SUT-02 x iOS)", status: SATISFIED, evidence: "the smoke-record row of AUTH-02 for SUT-02 ios reads FAIL_RUNNER and is byte-identical to the row recorded in commit 9128c97 (row sha256 9e2a50bec4bf64120acb90e4dadb2e39114d3d0d33c1a7ee82064e2289bca42e); the remediation workflow gate named this exact trigger and passed"}
+  - {n: 2, requirement: "this version, approved and frozen, explicitly authorizes remediation of that exact observation (9.7.2)", status: SATISFIED, evidence: "protocol/mobile-runner-policy-v3.md is FROZEN-PRE-DATA (sha256 16dae5884122ff0bfe313bfe78d023a3ebd78e0a1b69036d7cd339c4fb3e2670); v2 carries the Superseded by row; approval recorded in manifests/mobile-runner-policy-v3-amendment-v1.yaml"}
+  - {n: 3, requirement: "exactly one remediation execution exists (one authorization, one dispatch, run attempt 1)", status: SATISFIED, evidence: "e03-mobile-remediation.yml has exactly one run (41512347186), event workflow_dispatch, run_attempt 1 (attempts/2 HTTP 404); one authorization APPIUM3-COMPAT-SMOKE-AUTH-03, one dispatch command executed (manifests/appium3-compat-smoke-auth-03-run-v1.yaml)"}
+  - {n: 4, requirement: "the remediation uses a new authorization id", status: SATISFIED, evidence: "APPIUM3-COMPAT-SMOKE-AUTH-03, distinct from AUTH-01 and AUTH-02; record manifests/compatibility-smoke-execution-auth-v3-prepared.yaml, VALID, ISSUED, CONSUMED_AFTER_DISPATCH"}
+  - {n: 5, requirement: "the remediation uses the approved successor implementation lock", status: SATISFIED, evidence: "manifests/compatibility-smoke-implementation-lock-v4.yaml (sha256 11f2a54fadcd77d2d3f36bf6c8b54a80d8980b895967acce36a3bb84dbda4bbd); the gate job of the run recomputed it (86 checks, 0 failed, REMEDIATION READY) and the ORCHESTRATOR re-checked its entries against the bytes of public c7af40e0"}
+  - {n: 6, requirement: "the remediation targets only the affected ecosystem x platform", status: SATISFIED, evidence: "the workflow has only a gate and one iOS job; the run produced only the SUT-02 ios artifact; SUT-02 x Android was not executed again (9.7.3)"}
+  - {n: 7, requirement: "its official QUALIFIER-MOBILE-01 result is PASS", status: SATISFIED, evidence: "README Smoke records row SUT-02 ios AUTH-03 PASS (row sha256 caefec4f676c86e0dc2207b8aa96cadb58bdf4cfecddee6eb8db7a76c7854ed9), recorded by the ORCHESTRATOR under protocol/agent-governance-v5.md, Section 3.4 (its reading rule assigns the tasks that documents name for QUALIFIER-MOBILE-01 to the ORCHESTRATOR); the human research lead's instruction of this record confirms that the ORCHESTRATOR's record stands as the official result"}
+  - {n: 8, requirement: "its artifact provenance is complete and valid (imported byte-exact, digests equal to the recorded digests)", status: SATISFIED, evidence: "IMPORT-RECORD.yaml of AUTH-03 (sha256 ce313f827d5265304b22d63f5b70b369623f7a1d97469b7f4e3cf2b6fd46df59): 9 files and 1 archive verified at restoration against the import record, the archive digest sha256:3fcea283...5853 (equal to the GitHub digest) and the archive members; stored byte-exact (QUAL-U05)"}
+  - {n: 9, requirement: "its mirror transcription is PASS", status: SATISFIED, evidence: "manifests/compatibility-smoke-status.yaml entry SUT-02 ios: result PASS, authorization APPIUM3-COMPAT-SMOKE-AUTH-03, runner_version 3.7.0 appium-xcuitest-driver 12.13.2, executed_at 2026-11-02T19:53:14.008Z"}
+  - {n: 10, requirement: "this lineage record references the historical FAIL_RUNNER, the remediation authorization, the remediation run id, protocol v3, the implementation lock, and the PASS source record; its verification includes that the named historical FAIL_RUNNER still exists unchanged", status: SATISFIED, evidence: "this record carries each reference; the historical row is byte-identical to its recording (row sha256 9e2a50bec4bf64120acb90e4dadb2e39114d3d0d33c1a7ee82064e2289bca42e) and the AUTH-02 imported artifacts were verified at restoration: 16 files and 2 archives equal to IMPORT-RECORD.yaml of AUTH-02 (sha256 ddf36a6676a5dca9d24a40c7e625e772463e0907dd8ab6ea4d54aa66b6e26ccb)"}
+  - {n: 11, requirement: "mobile_runner_status is explicitly restored to SELECTED under this version", status: SATISFIED, evidence: "set to SELECTED in manifests/toolchain-manifest.yaml in the commit of this record, with tools.mobile_runner_selection.restoration_basis; on the explicit human restoration instruction recorded above"}
+  - {n: 12, requirement: "no other unresolved FAIL_RUNNER exists for the selected runner on any ecosystem x platform", status: SATISFIED, evidence: "the README Smoke records table holds exactly one FAIL_RUNNER row (the named SUT-02 ios AUTH-02 row) and the mirror holds none; the only other non-PASS Appium 3 row is the AUTH-01 SUT-02 android NOT_EXECUTED (HARNESS_ORCHESTRATION), a non-result superseded by the AUTH-02 android PASS"}
+restored_runner_status: SELECTED  # tools.mobile_runner_selection.mobile_runner_status of manifests/toolchain-manifest.yaml; was UNRESOLVED_AFTER_FALLBACK_FAILURE from 2026-09-29
+restoration_basis: "restored under mobile-runner-policy-v3 after one successful post-fallback remediation qualification"  # the text of 9.7.7, recorded in tools.mobile_runner_selection.restoration_basis
+effective_admissibility_after_restoration: "SUT-02 android PASS (AUTH-02) and SUT-02 ios PASS (AUTH-03) are the effective compatibility observations; the named historical FAIL_RUNNER is retained and no longer counted as an unresolved current blocker; any other FAIL_RUNNER of the selected runner keeps blocking (none exists); a FAIL_RUNNER of the selected runner recorded after this restoration applies 9.5 again and returns the status to UNRESOLVED_AFTER_FALLBACK_FAILURE (9.7.11); no second remediation exists"
+reporting_obligation: "the human approval of the amendment accepted that both SUT-02 x iOS observations, the AUTH-02 FAIL_RUNNER and the AUTH-03 PASS, are always reported together (manifests/mobile-runner-policy-v3-amendment-v1.yaml, meaning_of_approve_as_presented_before_the_decision)"
+human_approval_provenance:
+  approval_of_this_version:
+    record: manifests/mobile-runner-policy-v3-amendment-v1.yaml  # sha256 b6406d0cf170fe32ed0ace4d9d87c2670d42e495af41160e1e58456d810a495c
+    given_at: "2026-10-02T22:04:07Z"
+    answer_verbatim: "2. Se aprueba"
+    answer_sha256: c6757495b105457e850a57133e18c2f134646e9583d67a5a8cdb4afa882ec505
+  governance_for_the_recording: {record: manifests/agent-governance-v5-amendment-v1.yaml, sha256: 05cd4587ada9ee78cb2f77ccc8d1c51f1cf5ee680ab4d6297feac4292fcb6c15, note: "protocol/agent-governance-v5.md, Section 3.4, reading rule: the ORCHESTRATOR performs the tasks that documents name for QUALIFIER-MOBILE-01"}
+  restoration_instruction:
+    given_by: gilbertosanchez  # human research lead
+    given_on: "2026-11-02"
+    exact_text: "Restaura: el registro del ORCHESTRATOR vale como resultado oficial (v5 §3.4)."
+    exact_text_sha256: 6b2c82af5320d9893b705e3cc97e0cd28d2e57fcd248a1d539ff33f28fa9e8b2
+    byte_count_utf8: 78
+    transcript_stamp: "2026-11-02T21:32:18.677Z"  # extracted byte-exact from the session transcript (never retyped); sha256 over the text without a trailing line feed
+    answers: "the ORCHESTRATOR's report after the result recording and the readiness check of the 12 requirements, which named the one caveat on requirement 7 (the official result recorded by the ORCHESTRATOR under governance v5, Section 3.4) and proposed this restoration and its confirmation"
+    effect: "authorizes the restoration under 9.7.9 and 9.7.10 (this record and the restoration basis) and confirms that the ORCHESTRATOR's record stands as the official result; it authorizes nothing else: no change to gate G-7, no reopening or START of any campaign, no execution, no export"
+not_done: [gate G-7 correction, E03 reopening or START, any measured execution, any mobile dispatch, any second remediation, public export, push, dashboard update, any edit of the agent-instructions file]
+gate_g7_note: "gate G-7 of .github/workflows/e03-measured-execution.yml is not corrected by this record: it still blocks every mobile condition (it reads any FAIL_RUNNER row of the QUALIFIER table, and the historical row stays); the correction that reads this record is a separate CI operation needing its own approval"
