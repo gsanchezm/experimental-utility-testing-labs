@@ -1,0 +1,216 @@
+# experiments/scenario-mappings/CS-003.yaml
+# Canonical experimental intent + per-ecosystem mapping, per protocol/equivalent-scenario-mapping-v1.md, for the campaign E02-state-establishment.
+# Author: ORCHESTRATOR. Prepared 2026-11-02 on the human research lead's approval of the same day (item 2 of the answer "1 y 2 sí cada uno y actualiza el tablero,
+# además de proponer nueva fecha"), after the ORCHESTRATOR's finding that experiments/scenario-mappings/CS-001.yaml is scoped to E03-resetability (campaigns_using),
+# is FROZEN, and cannot be reused or edited by E02 (a frozen record is never edited, protocol/equivalent-scenario-mapping-v1.md, section 6).
+#
+# STATUS: DRAFT. Not frozen, not approved, not an input to any campaign configuration, workflow, or run. It becomes usable by E02 only after an explicit human
+# decision freezes it, recorded by one mapping-record row of protocol/CHANGELOG.md (protocol/change-control-v1.md, section 5), no later than the campaign-start row
+# of E02. The five design points DP-1 to DP-5 in `notes` are decisions of the human research lead and must be answered before the freeze; this draft states the
+# ORCHESTRATOR's recommendation for each and nothing else.
+#
+# Order of writing (section 6): the canonical record below was written first, in ecosystem-neutral terms, by restating the establishing half of the already frozen
+# canonical intent of CS-001 (itself written independently of any ecosystem implementation); it names no ecosystem. The six mapping entries follow. Every entry cites
+# E01 evidence by evidence_id, read from each SUT's own audit branch (audit/e01-sut0N-*; the audits/ directories on main are unmerged templates, PROTO-U07). The
+# micro-steps, selectors, and counts of a realization are fixed by the campaign configuration of E02 when it is locked, not by this record; the counts quoted below
+# are indicative under protocol/setup-effort-v2.md, section 5, rules 1, 3, and 8, and are not predeclared counts.
+
+version: 1
+canonical_scenario_id: CS-003
+description: >
+  Starting from a clean session, an actor obtains the identity that the ecosystem requires and establishes one unit of session-scoped or resource-scoped business
+  state beyond the clean starting state (for example one item placed in a cart or basket, or one booking created), and the attainment of that state is verified by
+  an observation of the declared oracle class. The business object varies by ecosystem (cart, basket, or booking); the semantic intent -- an actor establishes a unit of
+  business state and verifies that it holds -- does not (protocol/equivalent-scenario-mapping-v1.md, section 2). It is the establishing half of the intent that
+  experiments/scenario-mappings/CS-001.yaml (FROZEN, E03-resetability) restores from; the reset is not part of this scenario.
+precondition_class: CLEAN_SESSION
+actor_state: AUTHENTICATED_STANDARD
+business_intent: >
+  An actor holding the standard (non-privileged-by-design) identity that the ecosystem requires adds a purchasable or reservable item to a session- or
+  resource-scoped business object (a cart, basket, or booking) and verifies that the object holds it.
+target_state_or_transition: >
+  Before the actor acts: the clean starting state of the declared controlled instance, with no business state attributable to the actor. After the scenario: the actor's
+  business object holds exactly the item(s) established, and that is verified by an observation of the declared oracle class, independently of the action that
+  established it.
+observable_oracle_class: BUSINESS_STATE
+reset_requirement: DATA_RESET
+applicable_surfaces: [WEB, API, ANDROID, IOS]
+allowed_domain_mapping: >
+  Business object may vary: cart (SUT-01, SUT-02, SUT-03), booking (SUT-04), basket (SUT-05). Vocabulary, endpoint names, selectors, and number of steps may vary.
+  The mechanism class used to establish the state may vary (UI flow, API seed, direct route, predefined account, client-state injection, per the establishment_mechanisms
+  vocabulary of protocol/setup-effort-v1.md, section 10) -- the mechanism itself is part of what E02 measures, not a constraint on equivalence. May NOT vary: the
+  actor must reach the target state through the ecosystem's own documented mechanisms; the established state must be a business object the actor established
+  (not a fixture the study seeds out-of-band as the target); the verification must observe that same business object. Scenario-specific constraint: the established
+  item(s) must be attributable to the specific actor's own action (rule 5, comparability). The reset requirement is met by the campaign harness between runs, outside
+  the measured scenario, with the realization recorded for CS-001 where one exists (it is not counted in the Required Actions of E02).
+campaigns_using: [E02-state-establishment]
+mapping_status: DRAFT
+frozen_at: null
+approved_by: null
+mappings:
+  - sut_id: SUT-01
+    comparability: COMPARABLE
+    surfaces_used: [WEB, API]
+    domain_object: "cart (pizza order items)"
+    precondition_realization: >
+      A clean session of the declared controlled instance; no authenticated session exists before the actor acts. The API login of SUT01-EV-0007 starts the session
+      (a fixed TEST_USERS account, SUT01-EV-0005 for the documented accounts and endpoints).
+    actor_realization: "Standard documented test account authenticated through POST /api/auth/login, which returns a JWT (SUT01-EV-0007); on the web surface the token is carried into the client through the documented 'Web atomic entry' injection (SUT01-EV-0001, SUT01-EV-0002)."
+    entry_and_steps:
+      - "[api surface] [API] POST /api/auth/login with the documented standard account -- returns the token (SUT01-EV-0007). Authentication counts (setup-effort-v2 section 5, rule 3)."
+      - "[api surface] [API] POST /api/cart with one catalog line -- seeds the caller's session cart server-side (SUT01-EV-0004, SUT01-EV-0005)."
+      - "[api surface] [API, verification] GET /api/session (or GET /api/cart) -- confirms the cart holds exactly the line (SUT01-EV-0005; rule 8, A2). Indicative Required Actions -- establish (api): 3."
+      - "[web surface] [API] POST /api/auth/login as above (SUT01-EV-0007)."
+      - "[web surface] [state/configuration] inject the auth token and username into the browser's client storage (the documented 'Web atomic entry', SUT01-EV-0001, SUT01-EV-0002), so the client treats the session as authenticated without replaying the login UI."
+      - "[web surface] [API] POST /api/cart with one catalog line (SUT01-EV-0004)."
+      - "[web surface] [navigation] open the Checkout route -- it hydrates the cart from GET /api/cart on mount (SUT01-EV-0004)."
+      - "[web surface] [UI, verification] read the Checkout view for the established order line (SUT01-EV-0004). Indicative Required Actions -- establish (web): 5 or more; the exact micro-steps (for example a first load that gives the client storage an origin) are fixed by the campaign realization and may add navigation actions."
+    oracle_realization: >
+      GET /api/cart or GET /api/session (the server-side session cart, SUT01-EV-0004, SUT01-EV-0005), or the Checkout view rendering the seeded items on mount (SUT01-EV-0004,
+      'Cart Hydration').
+    reset_realization: >
+      As experiments/scenario-mappings/CS-001.yaml, SUT-01 entry (POST /api/session/reset, SUT01-EV-0006); used only to return to the declared clean starting state between runs;
+      not counted in E02.
+    environment_type: "PENDING -- not a mapping-freeze prerequisite (protocol/study-design-v1.md section 10.3); fixed per condition in the campaign configuration of E02. For reference only: E03 verified controlled instances for this ecosystem (experiments/E03-resetability/controlled-instance-status.yaml); that is E03 evidence, not E02 evidence."
+    not_comparable_reason: null
+    evidence_ids: [SUT01-EV-0001, SUT01-EV-0002, SUT01-EV-0004, SUT01-EV-0005, SUT01-EV-0006, SUT01-EV-0007]
+    justification: >
+      Web and API cart establishment is documented and SOURCE_VERIFIED (token injection, server-side cart seeding, documented session endpoints), and an observation of the
+      server-side cart state exists. The mobile surfaces of this ecosystem (SUT01-EV-0008 to SUT01-EV-0013) are not mapped in this draft: E01 evidences deep links that carry the
+      auth token and market, not the establishment of a cart item on a mobile surface, so no ANDROID or IOS realization is claimed.
+  - sut_id: SUT-02
+    comparability: COMPARABLE
+    surfaces_used: [WEB]
+    domain_object: "cart (shopping cart, client-side ShoppingCart on the web surface)"
+    precondition_realization: >
+      A clean session of the declared controlled instance; the actor logs in with a documented fixed test account (VALID_USERNAMES, shared password; SUT02-EV-0001), which
+      redirects to the inventory.
+    actor_realization: "Standard documented test account (standard_user) through the app's own login form (SUT02-EV-0001)."
+    entry_and_steps:
+      - "[web] [UI] enter the documented username in the login form."
+      - "[web] [UI] enter the documented password in the login form."
+      - "[web] [UI] submit the login form -- lands on the inventory (SUT02-EV-0001). Authentication counts (rule 3)."
+      - "[web] [UI] activate the add-to-cart control of one catalog item (the add/remove-cart paths, SUT02-EV-0003; the fixed, non-randomized catalog, SUT02-EV-0013)."
+      - "[web] [UI, verification] read the cart badge/link to confirm the cart holds the item (SUT02-EV-0002 names the ShoppingCart state that the badge reflects). Indicative Required Actions -- establish (web): 5."
+    oracle_realization: >
+      The cart contents as reflected by the cart badge and link on the web surface (ShoppingCart state, SUT02-EV-0002, SUT02-EV-0003); UI-rendered client state, because this
+      ecosystem has no API surface (SUT02-EV-0004 to SUT02-EV-0006, negative evidence).
+    reset_realization: >
+      As experiments/scenario-mappings/CS-001.yaml, SUT-02 entry (the 'Reset App State' action, SUT02-EV-0002, web); used only between runs; not counted in E02.
+    environment_type: "PENDING -- not a mapping-freeze prerequisite (section 10.3); fixed per condition in the campaign configuration of E02."
+    not_comparable_reason: null
+    evidence_ids: [SUT02-EV-0001, SUT02-EV-0002, SUT02-EV-0003, SUT02-EV-0004, SUT02-EV-0013]
+    justification: >
+      A fixed account, a deterministic catalog, and add-to-cart on the web surface are SOURCE_VERIFIED, and the cart state is observable in the UI. The Android and iOS surfaces are
+      not mapped in this draft: E01 evidences their logins (SUT02-EV-0007, SUT02-EV-0010) and their reset and checkout flows (SUT02-EV-0008, SUT02-EV-0009, SUT02-EV-0018) but no row
+      documents the add-to-cart interaction on either, so the draft claims no mobile realization (a mobile realization would also stay blocked by the study-level mobile-runner status).
+  - sut_id: SUT-03
+    comparability: COMPARABLE
+    surfaces_used: [WEB]
+    domain_object: "cart (client-side only; store/Redux cart state, no server persistence)"
+    precondition_realization: >
+      A clean session of the declared controlled instance; the actor signs in with a documented fixed account (src/constants/users.js, SUT03-EV-0001) through POST /api/signin
+      (SUT03-EV-0003).
+    actor_realization: "Standard documented test account (demouser) through the sign-in form (SUT03-EV-0001, SUT03-EV-0003)."
+    entry_and_steps:
+      - "[web] [navigation] open the sign-in page."
+      - "[web] [UI] select the documented username (SUT03-EV-0001)."
+      - "[web] [UI] enter the documented password."
+      - "[web] [UI] submit the sign-in form (SUT03-EV-0003). Authentication counts (rule 3)."
+      - "[web] [UI] activate the add-to-cart (buy) control of one product -- a pure client-side cart state change, no API call (SUT03-EV-0005, SUT03-EV-0032)."
+      - "[web] [UI, verification] read the cart bag quantity. Indicative Required Actions -- establish (web): 6."
+    oracle_realization: >
+      UI_STATE only: the client-rendered cart bag quantity; the cart is never reflected in any API response (SUT03-EV-0032, negative evidence). The observable_oracle_class realized here
+      is therefore UI_STATE rather than the BUSINESS_STATE of the canonical record -- the same disclosed deviation that CS-001 froze for this ecosystem, by necessity of its architecture.
+    reset_realization: >
+      As experiments/scenario-mappings/CS-001.yaml, SUT-03 entry (Sign-Out, store2.session.clearAll(), SUT03-EV-0030, SUT03-EV-0031); used only between runs; not counted in E02.
+    environment_type: "PENDING -- not a mapping-freeze prerequisite (section 10.3); fixed per condition in the campaign configuration of E02."
+    not_comparable_reason: null
+    evidence_ids: [SUT03-EV-0001, SUT03-EV-0003, SUT03-EV-0005, SUT03-EV-0030, SUT03-EV-0031, SUT03-EV-0032]
+    justification: >
+      A defensible equivalent exists (an authenticated actor adds an item to a client-side cart), with one disclosed deviation of the oracle class (UI-only), which does not block
+      comparability because the rule of section 5 requires an observation of the required class to be available and a UI_STATE observation is.
+  - sut_id: SUT-04
+    comparability: COMPARABLE
+    surfaces_used: [WEB, API]
+    domain_object: "booking (room reservation)"
+    precondition_realization: "A clean session of the declared controlled instance; the seeded admin account (SUT04-EV-0003) authenticates through POST /auth/login, which issues the token cookie (SUT04-EV-0008), or through the web admin login form (SUT04-EV-0002)."
+    actor_realization: "Deterministic seeded account (SUT04-EV-0001, SUT04-EV-0003), cookie-token authorization (SUT04-EV-0008)."
+    entry_and_steps:
+      - "[api surface] [API] POST /auth/login with the documented credentials -- returns the token cookie (SUT04-EV-0003, SUT04-EV-0008). Authentication counts (rule 3)."
+      - "[api surface] [API] POST /booking/ with a valid booking body -- 201 CREATED with a new bookingid (SUT04-EV-0006)."
+      - "[api surface] [API, verification] GET /booking/{bookingid} with the token -- returns the booking (SUT04-EV-0006). Indicative Required Actions -- establish (api): 3."
+      - "[web surface] [UI] enter the documented credentials in the admin login form and submit it (SUT04-EV-0002, SUT04-EV-0001): about 3 UI actions plus the navigation to the admin page; authentication counts."
+      - "[web surface] [navigation] open the reservation page of a room, then [UI] complete and submit the reservation form (SUT04-EV-0018 evidences its inputs); several UI actions."
+      - "[web surface] [UI, verification] read the confirmation or the admin listing of the booking (SUT04-EV-0004 for the room data the pages render). The count of the web surface is fixed by the campaign realization."
+    oracle_realization: >
+      GET /booking/{bookingid} (SUT04-EV-0006); on the web surface the confirmation of the reservation and the admin room page listing the booking record.
+    reset_realization: >
+      As experiments/scenario-mappings/CS-001.yaml, SUT-04 entry (DELETE /booking/{bookingid}, SUT04-EV-0006); used only between runs; not counted in E02.
+    environment_type: "PENDING -- not a mapping-freeze prerequisite (section 10.3); fixed per condition in the campaign configuration of E02."
+    not_comparable_reason: null
+    evidence_ids: [SUT04-EV-0001, SUT04-EV-0002, SUT04-EV-0003, SUT04-EV-0004, SUT04-EV-0006, SUT04-EV-0008, SUT04-EV-0018]
+    justification: >
+      Full CRUD on the booking resource and a reservation flow are SOURCE_VERIFIED. See DP-5 in `notes`: booking creation needs no authentication in this ecosystem, so the authenticated
+      actor of the canonical record adds a login that this ecosystem does not require to create the booking; this is the same choice that CS-001 froze for this ecosystem (its reset
+      requires the token), and it is put to the human research lead as a design point rather than assumed.
+  - sut_id: SUT-05
+    comparability: COMPARABLE
+    surfaces_used: [API]
+    domain_object: "basket"
+    precondition_realization: >
+      A clean session of the declared controlled instance (the application starts from its seeded data on every start, SUT05-EV-0003); the actor authenticates with a documented
+      deterministic account through POST /rest/user/login, which issues a JWT (SUT05-EV-0006, citing the accounts of SUT05-EV-0002).
+    actor_realization: "Deterministic named account (SUT05-EV-0002, SUT05-EV-0006)."
+    entry_and_steps:
+      - "[api] [API] POST /rest/user/login with a documented account -- returns the token and the basket id (SUT05-EV-0006). Authentication counts (rule 3)."
+      - "[api] [API] POST /api/BasketItems with one product -- adds the item to the actor's basket (route and model existence SOURCE_VERIFIED: SUT05-EV-0008, SUT05-EV-0027; not individually execution-verified by E01)."
+      - "[api] [API, verification] GET on the basket resource -- confirms the basket holds the item (SUT05-EV-0008). Indicative Required Actions -- establish (api): 3."
+    oracle_realization: "GET on the basket resource (route existence per SUT05-EV-0008; not individually execution-verified by E01)."
+    reset_realization: >
+      As experiments/scenario-mappings/CS-001.yaml, SUT-05 entry (full process restart, ENVIRONMENT_RESTART, SUT05-EV-0003); used only between runs; not counted in E02.
+    environment_type: "PENDING -- not a mapping-freeze prerequisite (section 10.3); fixed per condition in the campaign configuration of E02."
+    not_comparable_reason: null
+    evidence_ids: [SUT05-EV-0002, SUT05-EV-0003, SUT05-EV-0006, SUT05-EV-0008, SUT05-EV-0027]
+    justification: >
+      A defensible basket-establishment mechanism exists (API routes and models, SOURCE_VERIFIED presence). The web surface of this ecosystem (SUT05-EV-0001, SUT05-EV-0026) is not
+      mapped in this draft: E01 documents the browsable application and stable login selectors but no row documents adding an item to the basket through the UI.
+  - sut_id: SUT-06
+    comparability: NOT_COMPARABLE
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: null
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      NO_EQUIVALENT_INTENT. This ecosystem is a native-UI-element demonstration app with no cart, basket, booking, or other purchasable-item business-object concept: its only confirmed
+      stateful mechanism is the Data Management screen's four independent, generic per-tier key/value storage slots, each with its own Save/Clear test-hook control (SUT06-EV-0007,
+      SUT06-EV-0015). There is no actor placing a purchasable item into a business object; forcing this scenario's business intent onto a generic key/value Save action would substitute a
+      different intent (a state-persistence probe) for this scenario's actual intent, which protocol/equivalent-scenario-mapping-v1.md, section 5, forbids. The same decision and the same
+      reasoning as experiments/scenario-mappings/CS-001.yaml, SUT-06 entry. SUT-06 is the mobile specialist baseline (protocol/study-design-v1.md, section 3); this marking is not a
+      penalty for narrow scope (the agent-instructions file, rule 11) and removes it from E02 on this scenario only.
+    evidence_ids: [SUT06-EV-0007, SUT06-EV-0015]
+    justification: >
+      No defensible semantic equivalent of 'an actor establishes a purchasable-item business state' exists in the evaluated version; the ecosystem's only relevant mechanism tests a materially
+      different intent. Recorded with the same discipline used for every other ecosystem (section 5). A differently-scoped canonical scenario built around the per-tier storage mechanism could
+      be defined separately, from the ecosystem-neutral intent and not from this ecosystem's implementation; this record does not define one.
+notes: >
+  DRAFT of 2026-11-02. Design points for the human research lead, each decided before the freeze (a frozen record is never edited; a change after the freeze is a new version file).
+  DP-1 (precondition_class CLEAN_SESSION, so authentication is inside the measured scenario): rule 3 of protocol/setup-effort-v2.md counts every login, and the declared starting state of
+  rule 6 decides whether the login is counted. Recommended: CLEAN_SESSION, because the effort to obtain the required identity is part of the effort to establish a state and differs by
+  mechanism (a login form, a token request, a client-storage injection); the alternative is AUTHENTICATED_SESSION as in CS-001, with the login in provisioning and not counted, which gives
+  smaller and more similar counts but removes that difference from the measurement.
+  DP-2 (reset_requirement DATA_RESET): the reset is needed only between runs and is not counted; the alternative NONE would hide that each run needs a restored starting state. Recommended: DATA_RESET.
+  DP-3 (observable_oracle_class BUSINESS_STATE, with SUT-03 realized as UI_STATE): the deviation is the one CS-001 froze. Recommended: keep.
+  DP-4 (surfaces): only surfaces with E01 evidence of the establishment itself are mapped (SUT-01 web and api, SUT-02 web, SUT-03 web, SUT-04 web and api, SUT-05 api); the mobile surfaces
+  and the web surface of SUT-05 carry no E01 row for the establishment and are left unmapped rather than inferred. Recommended: keep, and add a surface only by a new version with its evidence.
+  DP-5 (actor_state AUTHENTICATED_STANDARD for every ecosystem): SUT-04 creates a booking without authentication, so its login is an action the ecosystem does not require for the target
+  state, and the seeded account is an administrator; CS-001 froze the same choice for its reset. Alternatives: OTHER with the explanation 'the identity the ecosystem requires', which would
+  let SUT-04 establish a booking as a guest and count fewer actions, at the cost of a less uniform actor. Recommended: AUTHENTICATED_STANDARD, for continuity with CS-001 and comparability with E03.
+  Not decided here: which mechanisms (UI_FLOW, API_SEED, DIRECT_ROUTE, PREDEFINED_ACCOUNT, and the others) E02 compares per ecosystem, the starting-state declaration, the predeclared counts, the
+  controlled-instance determination per condition, and the sample size; those belong to the campaign configuration of E02. The E03 executor (experiments/E03-resetability/executor/README.md, section 4)
+  documents an executed establishment procedure for SUT-01 to SUT-05 as a reference for the realization; it is implementation, not evidence for this record. No claim is made that the mechanisms
+  listed here are the lightest, the most natural, or the ones E02 will measure.

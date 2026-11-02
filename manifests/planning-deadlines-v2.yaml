@@ -1,0 +1,73 @@
+# Planning deadlines record v2 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# The human research lead's decision of 2026-11-02 to move the planning deadlines of the study (option A of the proposal) and the answers to the five
+# gates of the ORCHESTRATOR's report after the dashboard refresh D16 (commit bd73ea2). ORCHESTRATOR record, written once and never edited afterwards (a
+# correction is a new version file). It starts, configures, schedules, dispatches, freezes, and executes nothing; it changes no protocol document: the
+# planning deadlines are planning facts, not protocol, and no protocol artifact carries them.
+record_class: PLANNING_DEADLINES_RECORD
+record_id: PLANNING-DEADLINES-02
+study_id: EUS-2026-001
+operation_id: OP-DISP-04
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-02'  # America/Mexico_City
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+nature: "a written decision on planning deadlines and on five gates: the move of the DATA FREEZE and of the FINAL FREEZE, the approval of the next public export, the approval of the single dispatch of APPIUM3-COMPAT-SMOKE-AUTH-03 to follow the publication, the answer on CS-003, and the approval to edit the live status of the agent-instructions file; no campaign status, protocol document, mapping record, campaign configuration, workflow, result, or raw-data file changes"
+supersedes_in_part:  # the earlier records stay as written (historical)
+  - record: manifests/campaign-disposition-v1.yaml
+    what: "its planning_context statement that the planning deadlines of 2026-10-04 are DATA FREEZE 2026-12-15 and FINAL FREEZE 2027-01-08 (recorded there by sha256 only)"
+  - record: manifests/campaign-resumption-v1.yaml
+    what: "its statement that the planning dates are not changed by that record and are reviewed in about two days"
+planning_deadlines:
+  data_freeze: '2027-01-05'
+  final_freeze: '2027-01-22'
+  laccei_full_paper_submission: '2027-01-29'  # unchanged; the venue date, not a study deadline
+  previous_data_freeze: '2026-12-15'
+  previous_final_freeze: '2027-01-08'
+  days_from_2026_11_02: {data_freeze: 64, final_freeze: 81, laccei_full_paper_submission: 88}
+  windows_days: {execution: 64, analysis_and_writing: 17, slack_to_laccei: 7}
+  nature: "planning facts set by the human research lead; not protocol, not evidence, not a statistical result; campaigns not completed by the DATA FREEZE are reported as no data with the reason (protocol/statistical-analysis-plan-v1.md, section 5)"
+  expectation: "the human research lead hopes to finish before these dates (text: esperando poder acabar antes); the record sets no earlier date and no deadline is advanced by it"
+human_decision:
+  given_by: gilbertosanchez (human research lead)
+  decision_date: '2026-11-02'  # America/Mexico_City
+  channel: "given directly by the human research lead to the ORCHESTRATOR in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25)"
+  texts:
+    - id: message_1
+      exact_text: "esta bien mover el data freeze, continuemos la investigación"
+      exact_text_sha256: 024506c5828c7b8d1d121020fbaa3c2fd6e4da5673706a41b26a82f271388cb3
+      byte_count_utf8: 61
+      transcript_stamp: "2026-11-02T14:24:27.280Z"  # 2026-11-02 08:24 America/Mexico_City
+      note: "extracted byte-exact from the session transcript (never retyped); sha256 over the text without a trailing line feed"
+      effect: "moving the DATA FREEZE is acceptable in principle; no date was given; the ORCHESTRATOR proposed options, and the dashboard refresh D16 showed the move as approved in principle with the new date pending"
+    - id: message_2
+      exact_text: "a) sí, b) sí, c) sí, d) recomendado, esperando poder acabar antes, e) sí"
+      exact_text_sha256: 91e1eb395a3d008c228af36c74ddd4640f2f09bb88130e8e7471b04a9af2344d
+      byte_count_utf8: 76
+      transcript_stamp: "2026-11-02T17:55:36.613Z"  # 2026-11-02 11:55 America/Mexico_City
+      note: "extracted byte-exact from the session transcript (never retyped); sha256 over the text without a trailing line feed; the answer to the five gates a to e of the ORCHESTRATOR's report after commit bd73ea2"
+      options_as_presented_by_the_orchestrator: "Option A (recommended): DATA FREEZE 2027-01-05 and FINAL FREEZE 2027-01-22 (execution window 64 days, analysis and writing 17, slack to LACCEI 7). Option B: DATA FREEZE 2026-12-31 and FINAL FREEZE 2027-01-15 (59 / 15 / 14 days). Option C: keep 2026-12-15 and 2027-01-08 (43 / 24 / 21 days) and accept 'no data' where it does not fit, first for E06 and E07. Checkpoints proposed with A or B: 2026-11-20 first wave started (E02, E04, E05) and the AUTH-03 decision; 2026-12-04 scope lock; 2026-12-18 no new START. (Paraphrase of the report in Spanish; no hash.)"
+      gates_as_presented_by_the_orchestrator:
+        a: "public export of the issued state (publishes the 14 canonical commits and the page; needed before any dispatch)"
+        b: "afterwards, the single dispatch of APPIUM3-COMPAT-SMOKE-AUTH-03"
+        c: "the five CS-003 design points DP-1 to DP-5 and its freeze"
+        d: "the new date"
+        e: "the edit of the live status of the agent-instructions file (the line that says that the page describes the state at 363113c)"
+      items:
+        - item: "a) sí"
+          effect: "the ORCHESTRATOR may build the next public export (v43) from the canonical commits that are then unpublished; the human research lead pushes in person; this approves that publication only"
+        - item: "b) sí"
+          effect: "the single dispatch of APPIUM3-COMPAT-SMOKE-AUTH-03 (protocol/mobile-runner-policy-v3.md, 9.7; one attempt, no re-run) is approved to follow the publication: after the export is pushed and verified, the ORCHESTRATOR records the dispatch before it runs, hands the dispatch line to the human research lead, who runs it in person, and records the run identity afterwards"
+        - item: "c) sí"
+          effect: "no answer to DP-1 to DP-5 was given with the word sí and nothing is frozen by this record; the ORCHESTRATOR asked the human research lead to confirm in one line that the recommendations of the DRAFT are the decisions (experiments/scenario-mappings/CS-003.yaml, notes) before any freeze"
+        - item: "d) recomendado, esperando poder acabar antes"
+          effect: "option A is chosen: DATA FREEZE 2027-01-05, FINAL FREEZE 2027-01-22 (LACCEI 2027-01-29 unchanged); the checkpoints of the proposal are planning aids that were presented with the options and are not separately approved"
+        - item: "e) sí"
+          effect: "the live status of the agent-instructions file may be edited (live status only, no rule changed); done in the commit of this record"
+state_after_this_record:
+  canonical_head_before_the_record: bd73ea24f2194aa65eb9da803af55df10f96e8cb
+  dashboard: "research-status.html (commit bd73ea2) describes the state at 5bc1912 and shows the move as approved in principle with the new date pending; a page update follows this record (DASHBOARD-ROOT-AUTH-01; the page is descriptive only)"
+  campaigns: "every campaign keeps its status; E03 stays FROZEN; E02 and E04-E12 stay NOT_STARTED"
+  mobile: "mobile_runner_status stays UNRESOLVED_AFTER_FALLBACK_FAILURE; APPIUM3-COMPAT-SMOKE-AUTH-03 stays ISSUED / ELIGIBLE, not published, not dispatched"
+  cs_003: "DRAFT, not frozen"
+  nothing_done: "nothing was started, dispatched, frozen, exported, or pushed by this record"

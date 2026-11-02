@@ -1,0 +1,98 @@
+# Campaign resumption record v1 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# The human research lead's decision of 2026-11-02 to finish every experiment of the twelve-campaign design before the manuscript is drafted:
+# E02 and E04-E12 are resumed (they were deferred by the scope decision of 2026-10-19, scope A), and the post-fallback remediation
+# qualification of protocol/mobile-runner-policy-v3.md, section 9.7, is pursued (it was not pursued before the DATA FREEZE by the decision
+# of 2026-10-20). ORCHESTRATOR record, written once and never edited afterwards (a correction is a new version file). It starts, configures,
+# schedules, and executes nothing, and it changes no protocol document: the governance successor that the decision calls for is a separate
+# protocol document with its own approval.
+record_class: CAMPAIGN_RESUMPTION_RECORD
+record_id: CAMPAIGN-RESUMPTION-01
+study_id: EUS-2026-001
+operation_id: OP-DISP-03
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-02'  # America/Mexico_City
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+nature: "a written decision to resume campaigns: the resumption of E02 and E04-E12, the pursuit of the section 9.7 mobile path, the rule that the manuscript is drafted only when the campaigns are finished, and the answers to three questions; no campaign status, protocol document, mapping record, campaign configuration, workflow, result, or raw-data file changes"
+supersedes_in_part:  # the earlier records stay as written (historical); they no longer govern the schedule
+  - record: manifests/campaign-disposition-v1.yaml
+    what: "the deferral of E02 and E04-E12 beyond the DATA FREEZE of the planned manuscript (scope A) and its statement that no preparation is scheduled"
+  - record: manifests/mobile-path-disposition-v1.yaml
+    what: "the decision that the section 9.7 path is not pursued before the DATA FREEZE; decision D1 of 2026-10-05 (the DRAFT preparation of the QUAL-U06 correction and of lock v4, without execution) is no longer unused"
+human_decision:
+  given_by: gilbertosanchez (human research lead)
+  decision_date: '2026-11-02'  # America/Mexico_City
+  channel: "given directly by the human research lead to the ORCHESTRATOR in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25)"
+  texts:
+    - id: message_1
+      exact_text: "hay que terminar toda¡os los experimentos para poder redactar asi que continuemos"
+      exact_text_sha256: 51be99f98e80f48dfa19100c29426c95474e5f57c686a8900db721bf5deccbb1
+      note: "recorded verbatim, its spelling included; the hash is computed over the text as held by the ORCHESTRATOR (no trailing line feed); the transcript stamp and byte count are not embedded"
+      effect: "the manuscript is not drafted until the experiments are finished; the ORCHESTRATOR asked which scope to resume (question_scope)"
+    - id: question_scope
+      presented_by: ORCHESTRATOR
+      question: "Para reanudar los experimentos hay que revocar el alcance A (E02 y E04–E12 quedaron diferidos el 2026-10-19). ¿Qué alcance reanudo y con cuál campaña empiezo?"
+      question_sha256: 5ebd444543043efb44aaf07215ce22d082cffddc05f7ce2f64045114602dcdb9
+      options_as_presented:
+        - "Web/API en orden (Recomendada): empiezo preparando E02 (completa H2, reutiliza lo de E03), luego E04/E05 (H3), E08-E11 y E12. E06/E07 quedan sin celdas moviles porque el runner movil sigue en UNRESOLVED_AFTER_FALLBACK_FAILURE. Preparo solo borradores de configuracion; cada START y cada dispatch siguen pidiendo tu autorizacion."
+        - "Todo E02-E12 con ruta movil 9.7: ademas abre la remediacion de la politica movil v3 (SUT-02 x iOS, un solo intento). Es la unica forma de completar E06 y las celdas moviles de E03. Mayor riesgo de calendario: el DATA FREEZE (2026-12-15) esta a 43 dias y el envio a LACCEI (2027-01-29) a 88."
+        - "Mantener alcance A: el paper se queda en E01 + E03 (siete condiciones web/api) y no se reanudan campanas; se redacta con lo que hay."
+      options_note: "accents omitted here; the option labels and descriptions are those shown to the human research lead"
+      answer: "Todo E02–E12 con ruta móvil 9.7"
+      effect: "scope decided: all of E02-E12, with the section 9.7 mobile path; the order of the campaigns is not decided here (the ORCHESTRATOR proposes E02 first and the mobile DRAFT preparation in parallel)"
+      limit_noted_after_the_answer: "the option text says that the path is the only way to complete the mobile cells of E03; E03 is FROZEN (the measured-execution workflow requires IN_PROGRESS), so measuring its two mobile conditions would need the campaign to be reopened under protocol/change-control-v1.md; this record does not decide that"
+    - id: message_3
+      exact_text: "1. Sí\\n2. Tu recomendación\\n3. Vamos a intentar ejecutarlos, en un par de días más veremos donde estamos parados"
+      exact_text_note: "three lines separated by line feeds (shown as backslash n); sha256 computed over the text as held by the ORCHESTRATOR; the transcript stamp and byte count are not embedded"
+      exact_text_sha256: b4bb1c6963b21afafac41130226f6790015df44d8b4952b6436f7e7b60c5abf4
+      questions_note: "the questions are the ORCHESTRATOR's text as sent, except that the name of the agent-instructions file is replaced by a descriptive phrase (publication hygiene); no hash is given for them"
+      items:
+        - item: "1. Sí"
+          answers: "**Estado vivo del archivo de instrucciones del agente.** ¿Sí o no a editarlo (solo estado, sin cambiar reglas) para decir \"último export v42\" y que E02–E12 se reanudan? Ya dijiste sí a una edición parecida; esta es otra."
+          effect: "the live status of the agent-instructions file may be edited (live status only, no rule changed); done in the commit of this record"
+        - item: "2. Tu recomendación"
+          answers: "**Quién escribe en `qualification/`.** La gobernanza vigente (v4) solo le da ese directorio al rol QUALIFIER-MOBILE-01. Corregir `wd.mjs` (QUAL-U06) y registrar la remediación ahí rompería la regla 16. Mi recomendación es una gobernanza v5 que deje al ORCHESTRATOR ejecutar ese rol, como hizo v4 con el executor de E03. La alternativa es abrir una sesión aparte de QUALIFIER."
+          effect: "the recommendation is chosen: the ORCHESTRATOR drafts a governance successor (protocol/agent-governance-v5.md) under which the ORCHESTRATOR performs the QUALIFIER-MOBILE-01 tasks; its freeze needs a separate explicit approval of the text (protocol/change-control-v1.md, section 6); until then nothing is written under qualification/ by the ORCHESTRATOR (protocol/agent-governance-v4.md, Section 4)"
+        - item: "3. Vamos a intentar ejecutarlos, en un par de días más veremos donde estamos parados"
+          answers: "**Calendario.** Hoy es 2 de noviembre y faltan 43 días para el DATA FREEZE (15 de diciembre), 67 para el FINAL FREEZE (8 de enero) y 88 para el envío (29 de enero). E03 solo tardó unas 5 semanas de preparación (21 sep a 28 oct). Diez campañas más la remediación móvil no caben antes del 15 de diciembre. Estas fechas son de planeación tuya, así que te toca moverlas o decidir qué hacemos con las campañas que no alcancen. El SAP §5 permite reportarlas como \"sin datos\"."
+          effect: "the planning dates (DATA FREEZE 2026-12-15, FINAL FREEZE 2027-01-08, LACCEI full-paper submission 2027-01-29) are not changed by this record; the attempt is made and the position is reviewed in about two days (about 2026-11-04); no campaign is dropped by this record"
+decision:
+  campaigns_resumed: [E02-state-establishment, E04-repeatability, E05-determinism, E06-cross-platform-parity, E07-cross-layer-continuity, E08-performance, E09-accessibility, E10-visual, E11-security, E12-localization-i18n]
+  campaign_status_after: "NOT_STARTED for each of them (manifests/study-manifest.yaml, value unchanged); preparation (configuration drafts, mapping records, workflows under CAMPAIGN-CI-WRITE-AUTH-01, controlled instances) may begin"
+  mobile_path: "the post-fallback remediation qualification of protocol/mobile-runner-policy-v3.md, section 9.7, is pursued step by step; decision D1 of 2026-10-05 is used: the QUAL-U06 correction and lock v4 may be prepared as a DRAFT, without execution; every later step of 9.7.5 (static validation, new authorization id, explicit human issuance, publication of the frozen baseline, separate explicit human dispatch) and the restoration of 9.7.10 each keep their own explicit human approval; exactly one attempt exists"
+  manuscript: "the planned manuscript is drafted only when the campaigns the human research lead wants are FROZEN; its outline and sources lock are not started"
+  e03: "E03-resetability stays FROZEN; the two SUT-02 mobile conditions stay outside its measured data"
+  e01: "E01 stays FROZEN and unaffected"
+change_control_review:
+  protocol_documents_changed: false
+  rationale: "the deferral of scope A and the non-pursuit of section 9.7 were planning dispositions recorded in manifests, never protocol state; resuming them changes no frozen document. The governance successor named in the answer to question 2 is a protocol change and follows protocol/change-control-v1.md on its own (new version file, change-log row, explicit approval)."
+  changelog_row: false
+not_authorized:
+  - "the START, configuration lock, or freeze of any campaign (protocol/change-control-v1.md, section 7)"
+  - "any dispatch of any workflow"
+  - "the issuance of any authorization, including one for the section 9.7 remediation"
+  - "any write by the ORCHESTRATOR under qualification/ before the governance successor is frozen"
+  - "the freeze of protocol/agent-governance-v5.md"
+  - "any change of the planning dates, or the reopening of E03"
+  - "any manuscript text"
+live_status_edits:
+  - "the agent-instructions file at the repository root (live status only, no rule changed)"
+  - README.md
+  - experiments/README.md
+  - experiments/E02-state-establishment/README.md
+  - experiments/E03-resetability/README.md
+  - experiments/E04-repeatability/README.md
+  - experiments/E05-determinism/README.md
+  - experiments/E06-cross-platform-parity/README.md
+  - experiments/E07-cross-layer-continuity/README.md
+  - experiments/E08-performance/README.md
+  - experiments/E09-accessibility/README.md
+  - experiments/E10-visual/README.md
+  - experiments/E11-security/README.md
+  - experiments/E12-localization-i18n/README.md
+  - manifests/README.md
+  - manifests/study-manifest.yaml
+not_edited:
+  - "manifests/campaign-disposition-v1.yaml and manifests/mobile-path-disposition-v1.yaml (records, never edited)"
+  - "research-status.html (descriptive page; refreshed only on request, after the authoritative records)"

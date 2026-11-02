@@ -1,0 +1,26 @@
+# Erratum v1 of manifests/campaign-resumption-v1.yaml -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# Corrects one recorded hash of the resumption record and adds the transcript stamps that it left out. The record itself is not edited (a correction is a new version file).
+# ORCHESTRATOR record; it starts, authorizes, and executes nothing, and it changes no protocol document.
+record_class: RECORD_ERRATUM
+record_id: CAMPAIGN-RESUMPTION-01-ERRATUM-01
+study_id: EUS-2026-001
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-02'  # America/Mexico_City
+corrects: manifests/campaign-resumption-v1.yaml
+defect:
+  field: human_decision.texts[message_3].exact_text and exact_text_sha256
+  what: "the recorded text omits the space that the human research lead typed after 'recomendación' at the end of line 2; the recorded hash b4bb1c6963b21afafac41130226f6790015df44d8b4952b6436f7e7b60c5abf4 is therefore over a different byte string (114 bytes) than the text received"
+  found_by: "the ORCHESTRATOR's byte comparison of the recorded texts with the session transcript, prompted by an independent review of the record before its approval lines were offered"
+  effect: "none on the decision, its items, or its effects; only the byte-level identity of one recorded text"
+corrected_values:
+  message_3:
+    exact_text_utf8_hex_of_line_2: "322e205475207265636f6d656e64616369c3b36e20"
+    exact_text: "1. Sí\n2. Tu recomendación \n3. Vamos a intentar ejecutarlos, en un par de días más veremos donde estamos parados"
+    exact_text_note: "three lines separated by line feeds (shown as backslash n); line 2 ends with one space; no trailing line feed"
+    bytes: 115
+    sha256: 23bc34fa2bbbbad5aa6763a7baf535dd37ecaedea1e1cdae15c1e895d12dca1d
+    transcript_stamp: '2026-11-02T13:47:36.481Z'
+verified_unchanged:
+  message_1: {bytes: 82, sha256: 51be99f98e80f48dfa19100c29426c95474e5f57c686a8900db721bf5deccbb1, transcript_stamp: '2026-11-02T12:50:47.668Z', note: "equals the hash recorded in the record"}
+stamps_added_for_texts_cited_elsewhere:
+  export_authorization_text: {bytes: 92, sha256: 0f430c1af14a65da64a822dbe5d936953d2a7d233909fb50615303b1b6de4048, transcript_stamp: '2026-11-02T12:36:47.262Z', note: "the text cited by the export log entry 42 and the study-manifest note of the export; the hash there equals this one"}

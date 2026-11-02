@@ -1,0 +1,66 @@
+# manifests/agent-governance-v5-amendment-proposal-v1.yaml -- decision package for the DRAFT protocol/agent-governance-v5.md -- EUS-2026-001
+# protocol/agent-governance-v4.md -> protocol/agent-governance-v5.md under protocol/change-control-v1.md, sections 2, 4, 5, 6 (operation OP-EXEC-02).
+# ORCHESTRATOR record; written once with the DRAFT (a correction is a new version file). It approves, freezes, authorizes, executes, dispatches, and publishes nothing.
+record_class: POST_DATA_PROTOCOL_AMENDMENT_PROPOSAL
+record_id: AGENT-GOVERNANCE-V5-AMENDMENT-PROPOSAL-01
+study_id: EUS-2026-001
+operation_id: OP-EXEC-02
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-02'  # America/Mexico_City
+protocol_change: true  # once frozen; the DRAFT itself changes no frozen file
+measured_experiment: false
+executes_anything: false
+authorizes: 'nothing: not the freeze of v5, not a dispatch, not an authorization, not a write under qualification/, not the start of any campaign'
+human_decision:
+  record: manifests/campaign-resumption-v1.yaml
+  text: message_3, item 2 ("2. Tu recomendación")
+  question_answered: "Quién escribe en qualification/ ... Mi recomendación es una gobernanza v5 que deje al ORCHESTRATOR ejecutar ese rol, como hizo v4 con el executor de E03. La alternativa es abrir una sesión aparte de QUALIFIER."
+  meaning: "the recommendation (a governance successor under which the ORCHESTRATOR performs the QUALIFIER-MOBILE-01 tasks) is chosen over a separate QUALIFIER session; it is the decision to DRAFT this successor, not the approval of its text"
+draft:
+  path: protocol/agent-governance-v5.md
+  state: DRAFT
+  bytes: 44644
+  sha256: c391f130592297b355b7e5382fdb5d338090d511a885adccc7eb5010df3e4e6d
+  construction: "derived from protocol/agent-governance-v4.md by asserted substitutions (header, 'What changed', Section 1, the introduction and rule 6 of Section 2, Section 3.1, Section 3.4, the Section 4 table, Section 6, Section 7); Sections 2.1, 3.2, 3.3, 3.5, 3.6, and 5 are carried byte for byte; one sentence on the prompt identity was added to the reading rule of Section 3.4 after the substitutions"
+design:
+  D-1: "retire the role QUALIFIER-MOBILE-01 (last exercised 2026-09-29, no open instruction) and perform its task set under ORCHESTRATOR coordination, by the dispatch, import, and immutability model of v4 Sections 3.5 and 3.6"
+  D-2: "a reading rule: wherever a frozen or amended document assigns a task to the retired role, the ORCHESTRATOR performs it; no policy text, pass criterion, attribution rule, or attempt limit changes; earlier records keep their authorship"
+  D-3: "write boundary: qualification/** only for the qualifier tasks (harness through the lock and authorization rules, records, byte-exact imports, qualification/unresolved.md); the mirror and the manifests stay under the ORCHESTRATOR's own boundary; no other path"
+  D-4: "a disclosed difference from v1-v4: the independent recorder disappears; the mitigations and the one that does not mitigate (author-side defects such as QUAL-U06) are listed; every analysis or publication of mobile qualification or compatibility results states the limitation"
+  D-5: "not created: no workflow, lock, authorization, or prompt; no campaign START; a readiness gate that reads this document is re-pointed by a separate CI operation"
+what_the_freeze_needs:
+  human_approval: "the human research lead's explicit approval of protocol/agent-governance-v5.md at its DRAFT content SHA-256 (the hash above, or the hash of a later DRAFT if it is edited), including the disclosed difference of Section 3.4"
+  agent_instructions_delta: "the human research lead's explicit approval to apply the replacements AI-1 to AI-7 below to the agent-instructions file at the freeze, with FREEZE_DATE replaced by the date of the approval (edits of that file need their own explicit approval)"
+  freeze_operations:
+    - "protocol/agent-governance-v5.md: Protocol state DRAFT -> FROZEN-PRE-DATA, Freeze approval row filled, banner and Section 7 freeze record rewritten (DRAFT edited in place, then frozen)"
+    - "protocol/agent-governance-v4.md: header only -> AMENDED, Superseded by row added; body byte-identical"
+    - "protocol/CHANGELOG.md: two rows (v5 DRAFT -> FROZEN-PRE-DATA; v4 FROZEN-PRE-DATA -> AMENDED)"
+    - "manifests/agent-governance-v5-amendment-v1.yaml: the amendment record (approval verbatim with SHA-256, draft-to-frozen hashes, effects)"
+    - "the agent-instructions file delta AI-1 to AI-7; README.md and manifests/study-manifest.yaml live status; manifests/README.md row"
+    - "a separate CI operation if a workflow or gate reads the governance document"
+agent_instructions_delta:  # exact old and new text; FREEZE_DATE is replaced at the freeze; each old text occurs exactly once in the file now
+  AI-1:
+    old: "Write boundaries per role are defined in protocol/agent-governance-v4.md (FROZEN-PRE-DATA 2026-10-27; v3 AMENDED, superseded by v4; v2 and v1 AMENDED)."
+    new: "Write boundaries per role are defined in protocol/agent-governance-v5.md (FROZEN-PRE-DATA FREEZE_DATE; v4 AMENDED, superseded by v5; v3, v2 and v1 AMENDED)."
+  AI-2:
+    old: "(OPEN-1 of the E03 lock package answered yes on 2026-10-26); the freeze authored no workflow and started no campaign. The Open-Issue Register"
+    new: "(OPEN-1 of the E03 lock package answered yes on 2026-10-26); the freeze authored no workflow and started no campaign. **Post-data successor (FREEZE_DATE):** protocol/agent-governance-v5.md is FROZEN-PRE-DATA and in force (explicit human approval FREEZE_DATE; record manifests/agent-governance-v5-amendment-v1.yaml) and protocol/agent-governance-v4.md is AMENDED (header only; body byte-identical); it retires the role QUALIFIER-MOBILE-01, last exercised on 2026-09-29, and performs the qualifier tasks under ORCHESTRATOR coordination (answer \"Tu recomendación\" of 2026-11-02, manifests/campaign-resumption-v1.yaml); the freeze authored no workflow, lock, or authorization and started no campaign. The Open-Issue Register"
+  AI-3:
+    old: "the write-boundary matrix of protocol/agent-governance-v4.md (FROZEN-PRE-DATA 2026-10-27; v3, v2 and v1 AMENDED) is otherwise unchanged"
+    new: "the write-boundary matrix of protocol/agent-governance-v5.md (FROZEN-PRE-DATA FREEZE_DATE; v4, v3, v2 and v1 AMENDED) is otherwise unchanged"
+  AI-4:
+    old: "| Agent roles and write boundaries | protocol/agent-governance-v4.md (FROZEN-PRE-DATA 2026-10-27, in force; v3, v2 and v1 AMENDED); amendment records manifests/agent-governance-v4-amendment-v1.yaml and manifests/agent-governance-v3-amendment-v1.yaml;"
+    new: "| Agent roles and write boundaries | protocol/agent-governance-v5.md (FROZEN-PRE-DATA FREEZE_DATE, in force; v4, v3, v2 and v1 AMENDED); amendment records manifests/agent-governance-v5-amendment-v1.yaml, manifests/agent-governance-v4-amendment-v1.yaml and manifests/agent-governance-v3-amendment-v1.yaml;"
+  AI-5:
+    old: "ADJUDICATOR-EU-01; QUALIFIER-MOBILE-01 (EXECUTOR-E03-RESETABILITY, defined by v2 and v3 and never launched, is retired by protocol/agent-governance-v4.md; E03-resetability executes under ORCHESTRATOR coordination)."
+    new: "ADJUDICATOR-EU-01 (EXECUTOR-E03-RESETABILITY, defined by v2 and v3 and never launched, was retired by protocol/agent-governance-v4.md, and QUALIFIER-MOBILE-01, defined by v1, is retired by protocol/agent-governance-v5.md; E03-resetability executes, and the qualifier tasks are performed, under ORCHESTRATOR coordination)."
+  AI-6:
+    old: "Authoritative definitions: protocol/agent-governance-v4.md (FROZEN-PRE-DATA 2026-10-27, in force; protocol/agent-governance-v3.md, v2 and v1 AMENDED)."
+    new: "Authoritative definitions: protocol/agent-governance-v5.md (FROZEN-PRE-DATA FREEZE_DATE, in force; protocol/agent-governance-v4.md, v3, v2 and v1 AMENDED)."
+  AI-7:
+    old: "(protocol/agent-governance-v5.md, to be drafted; until it is frozen nothing is written under qualification/ by the ORCHESTRATOR)"
+    new: "(protocol/agent-governance-v5.md, FROZEN-PRE-DATA FREEZE_DATE: the ORCHESTRATOR performs those tasks and writes under qualification/ for them only)"
+not_done:
+  - "no freeze, no approval, no change of v4"
+  - "no write under qualification/, no QUAL-U06 correction, no lock v4, no authorization, no workflow edit"
+  - "no CHANGELOG row (the rows are written at the freeze, as for v4)"

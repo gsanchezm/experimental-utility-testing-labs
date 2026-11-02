@@ -1,7 +1,9 @@
 # qualification/compatibility-smoke/smoke-common.sh
-# Shared library of the Appium 3 per-SUT compatibility smoke (protocol/mobile-runner-policy-v2.md, section 9) for
-# SUT-02 Android and SUT-02 iOS. Sourced by run-smoke-android.sh and run-smoke-ios.sh inside the dispatch-only
-# workflow .github/workflows/e03-compatibility-smoke.yml. Locked by manifests/compatibility-smoke-implementation-lock-v3.yaml.
+# Shared library of the Appium 3 per-SUT compatibility smoke (protocol/mobile-runner-policy-v3.md, section 9; 9.1-9.4 as
+# carried from v2, and the remediation qualification of 9.7) for SUT-02 Android and SUT-02 iOS. Sourced by run-smoke-android.sh
+# and run-smoke-ios.sh inside the dispatch-only workflows .github/workflows/e03-compatibility-smoke.yml (historical; both
+# platforms) and .github/workflows/e03-mobile-remediation.yml (SUT-02 iOS only). Locked by
+# manifests/compatibility-smoke-implementation-lock-v4.yaml.
 # Tool qualification only: nothing recorded is evidence about any system under test; nothing is written to raw-data/.
 set -euo pipefail
 
@@ -25,24 +27,24 @@ smoke_sha256() { if command -v sha256sum >/dev/null 2>&1; then sha256sum "$1" | 
 
 # Writes a record for an execution that stopped before the first runner action, then exits non-zero.
 # $1 outcome (NOT_RUN), $2 proposed result (NOT_EXECUTED or empty for none), $3 reason.
-# Stop before or around the runner with a v2 attribution proposal (protocol/mobile-runner-policy-v2.md, section 9):
+# Stop before or around the runner with a v3 attribution proposal (protocol/mobile-runner-policy-v3.md, section 9):
 #   smoke_stop <proposed result> <category> <basis> <failed phase> <description>
 # NOT_EXECUTED only where the runner stack was provably not yet exercised (SUT_BUILD: the pinned build; INFRASTRUCTURE:
 # substrate or host runtime outside the runner). A failure of the pinned Appium stack's installation, version check, or
 # server start is proposed as FAIL_RUNNER (conservative; in-stack incompatibility is runner/toolchain evidence), with the
-# logs preserved for QUALIFIER-MOBILE-01. The result is recorded by QUALIFIER-MOBILE-01; nothing is repeated.
+# logs preserved for the ORCHESTRATOR. The result is recorded by the ORCHESTRATOR (protocol/agent-governance-v5.md, Section 3.4); nothing is repeated.
 smoke_stop() {
   python3 - "$SMOKE_OUT" "$SMOKE_PLATFORM" "$1" "$2" "$3" "$4" "$5" "${SMOKE_INSTRUCTION_ID:-}" "${SMOKE_PROMPT_VERSION_ID:-}" <<'PY'
 import json, os, sys, datetime
 out, platform, proposed, category, basis, phase, description, instr, pv = sys.argv[1:10]
 evidence = sorted(os.path.relpath(os.path.join(d, f), out) for d, _, fs in os.walk(out) for f in fs) + ['record.json', 'the GitHub Actions job log of this platform job']
-json.dump({"record_class": "COMPATIBILITY_SMOKE", "study_id": "EUS-2026-001", "policy": "protocol/mobile-runner-policy-v2.md, section 9",
+json.dump({"record_class": "COMPATIBILITY_SMOKE", "study_id": "EUS-2026-001", "policy": "protocol/mobile-runner-policy-v3.md, section 9 (9.1-9.4 as carried from v2; remediation qualification 9.7)",
            "instruction_id": instr or None, "prompt_version_id": pv or None, "sut_id": "SUT-02", "platform": platform,
            "outcome": "NOT_RUN", "proposed_result": proposed,
            "attribution": {"proposed_category": category, "basis": basis, "failed_phase": phase, "failed_capabilities": [],
                            "description": description, "runner_action_started": False, "harness_exception": None, "evidence": evidence},
-           "recording_role": "proposal by smoke-common.sh; QUALIFIER-MOBILE-01 records the result (policy v2, section 9: NOT_EXECUTED only on a positively demonstrated cause outside the runner; uncertain attribution is FAIL_RUNNER)",
-           "automatic_repeat": "none (policy v2, 9.5)", "steps": [], "capabilities_exercised": [],
+           "recording_role": "proposal by smoke-common.sh; the ORCHESTRATOR records the result under protocol/agent-governance-v5.md, Section 3.4 (policy v3, section 9: NOT_EXECUTED only on a positively demonstrated cause outside the runner; uncertain attribution is FAIL_RUNNER)",
+           "automatic_repeat": "none (policy v3, 9.5 and 9.7.5)", "steps": [], "capabilities_exercised": [],
            "at": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z")}, open(os.path.join(out, "record.json"), "w"), indent=2)
 PY
   smoke_log "stopped: $1 ($2, $4): $5"
@@ -85,7 +87,7 @@ import json, sys, datetime, os
 out, name, url, expected, observed = sys.argv[1:6]
 json.dump({"record_class": "COMPATIBILITY_SMOKE_ENVIRONMENT", "asset": name, "source": url, "pinned_sha256": expected,
            "observed_sha256": observed, "digest_match": expected == observed,
-           "pin_source": "manifests/compatibility-smoke-implementation-lock-v3.yaml, sut_builds",
+           "pin_source": "manifests/compatibility-smoke-implementation-lock-v4.yaml, sut_builds",
            "at": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z")}, open(out, "w"), indent=2)
 PY
   [[ "$observed" == "$sha" ]] || smoke_stop NOT_EXECUTED SUT_BUILD DEMONSTRATED BUILD_VERIFICATION "digest mismatch for $file (pinned $sha, observed $observed)"

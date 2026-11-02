@@ -1,0 +1,142 @@
+# Compatibility-smoke execution authorization v3 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# STATUS: ISSUED (promoted in place 2026-11-02; see the ISSUANCE note below), NOT DISPATCHED. The "-prepared" filename is HISTORICAL / PROVENANCE-ORIENTED ONLY: it names
+# the file that carried this authorization_id from its PREPARED state through issuance (no second file may ever carry this authorization_id). The lifecycle fields
+# below (record_class, status, record_validity, issued_by, issued_at, authorizes_execution, dispatch_eligibility, dispatch_performed) are authoritative.
+#
+# History preserved (this file was NOT an authorization before the issuance below; git history shows its PREPARED text verbatim): it was prepared by the
+# ORCHESTRATOR on 2026-11-02 (operation OP-MOB-REM-01; manifests/appium3-compat-smoke-lock-v4-preparation-v1.yaml) under decision D1 of 2026-10-05 as reused on
+# 2026-11-02, which authorized preparation only. While PREPARED, record_class was COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT, status
+# PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION, record_validity null, authorizes_execution false, dispatch_eligibility NOT_ELIGIBLE_UNTIL_ISSUED, issued_by and
+# issued_at null, and launch_prompt.frozen_copy null: the readiness gate refused it.
+#
+# ISSUANCE (2026-11-02): the human research lead explicitly approved the issuance as live session input to the ORCHESTRATOR, in answer to the ORCHESTRATOR's report
+# on the preparation (item 1, the issuance of APPIUM3-COMPAT-SMOKE-AUTH-03, with the three points the report put to the human research lead; the text is reproduced
+# verbatim below, issuance_instruction_verbatim, with its sha256). Issuance is not dispatch, not publication, and not restoration: nothing was dispatched or executed
+# at issuance (no workflow run, no Appium, no harness, no simulator, no SUT-02 launch). The issued state must be published (a public export, needing its own
+# explicit human approval) before any dispatch, because GitHub Actions evaluates only the public repository, and the dispatch requires another, separate
+# explicit human instruction. This is the single remediation attempt of protocol/mobile-runner-policy-v3.md, 9.7.5, never a re-run of APPIUM3-COMPAT-SMOKE-AUTH-01
+# or -02 (both consumed).
+authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-03
+authorization_type: COMPATIBILITY_SMOKE_REMEDIATION_EXECUTION
+record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION  # promoted 2026-11-02 at explicit human issuance; was COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT while PREPARED
+status: ISSUED  # was PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION until the explicit human issuance of 2026-11-02
+record_validity: VALID  # null while PREPARED; set at issuance
+authorizes_execution: true  # was false while PREPARED; permits exactly the scope below, once, and only on a separate explicit human dispatch instruction
+dispatch_eligibility: ELIGIBLE  # was NOT_ELIGIBLE_UNTIL_ISSUED while PREPARED; closed to CONSUMED_AFTER_DISPATCH after the single dispatch
+dispatch_performed: false
+issued_by: gilbertosanchez  # explicit human issuance, live session input, 2026-11-02 -- see the ISSUANCE note above
+issued_at: "2026-11-02"
+issued_under_instruction: "the human research lead's answer of 2026-11-02 to the ORCHESTRATOR's report on the section 9.7 preparation (item 1: the issuance of APPIUM3-COMPAT-SMOKE-AUTH-03); verbatim below"
+issuance_basis: "explicit human approval as live instruction, given directly to the ORCHESTRATOR, after the report on the preparation that listed the three points for the issuance (the shared-client change to node:http, the terminal single attempt, and the absence of any automatic restoration)"
+lifecycle_before_issuance: {record_class: COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT, status: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION, record_validity: null, authorizes_execution: false, dispatch_eligibility: NOT_ELIGIBLE_UNTIL_ISSUED, dispatch_performed: false, issued_by: null, issued_at: null, launch_prompt_frozen_copy: null}
+execution_at_issuance: none  # no workflow_dispatch, no GitHub re-run, no Appium, no harness, no simulator, no SUT-02 launch, no result, no mirror change; static checks only
+review_basis_note: "the human research lead reviewed the preparation from the ORCHESTRATOR's report and the committed files, not from a published snapshot (the prepared record's issuance_procedure listed the review in a published snapshot as its first step; no protocol rule requires it for issuance, and the publication of the issued state before any dispatch remains required)"
+publication_before_dispatch: "required: GitHub Actions evaluates only the public repository, so the issued record, the frozen launch prompt, every locked file, the README, the lock, and the preserved AUTH-01 and AUTH-02 artifacts must be present in a published snapshot (a public export; the gate requires every locked file, the README, the lock, and the frozen prompt UNCHANGED, and bridges the two publication-only classes of the AUTH-02 evidence) before any dispatch; that publication needs its own explicit human approval"
+dispatch_requires: "another, separate explicit human dispatch instruction naming this authorization; exactly one dispatch; the dispatch recorded before it is made and the run identity after; this record then closed in place (dispatch_performed true, dispatch_eligibility CONSUMED_AFTER_DISPATCH)"
+presented_to_the_human:
+  report_sha256: 7af3c283a6e9ffb199c1b879ee04ef886be35a6b1a31d5c6adcd979c5b093f21
+  report_bytes: 3999
+  content: "the DRAFT preparation (correction, workflow, lock v4, PREPARED authorization), the control of the former transport and its limit, the two defects found and corrected, and the decisions: item 1 the issuance with its three points, item 2 the mapping draft for E02"
+study_id: EUS-2026-001
+protocol_version: v1
+prepared_by_role: ORCHESTRATOR
+prepared_on: "2026-11-02"
+prepared_under: "decision D1 of 2026-10-05 as reused on 2026-11-02 (manifests/campaign-resumption-v1.yaml); preparation only"
+governing_policy: protocol/mobile-runner-policy-v3.md  # section 9.7 (FROZEN-PRE-DATA 2026-10-02); sections 9.1-9.6 as carried from v2; v2 and v1 AMENDED
+executing_role: ORCHESTRATOR (performing the qualifier tasks under protocol/agent-governance-v5.md, Section 3.4)
+scope:
+  sut_id: SUT-02
+  platforms: [ios]
+  runner: Appium 3
+  runner_version: "3.7.0"
+  executions: 1
+  attempts_allowed: 1
+  e03_conditions_concerned: [E03-CS001-SUT02-IOS]  # the SUT-02 Android PASS of AUTH-02 stays as recorded; E03-CS001-SUT02-ANDROID is not re-qualified
+  result_vocabulary: [PASS, FAIL_RUNNER, NOT_EXECUTED]
+  not_in_scope: SUT-02 x Android (9.7.3); any other SUT, platform, or runner; any Mobilewright execution or comparison; E03 START or any E03 execution; the restoration of the mobile-runner status
+remediation:
+  policy_section: "9.7"
+  trigger_authorization: APPIUM3-COMPAT-SMOKE-AUTH-02
+  trigger_run_id: 36539790536
+  trigger_run_attempt: 1
+  trigger_ecosystem_platform: SUT-02 x iOS
+  trigger_result: FAIL_RUNNER
+  trigger_basis: CONSERVATIVE_TIE_BREAK_ATTRIBUTION_UNCERTAIN
+  historical_result_immutable: true
+  attempts_allowed: 1
+  correction_restricted_to: QUAL-U06
+  eligibility_9_7_2:  # each condition with its evidence; the readiness gate re-verifies 1, 2, 3 (mirror and README rows), 6, and the state of 7 at dispatch
+    1: "the selected fallback runner (Appium 3) produced FAIL_RUNNER under policy v2: AUTH-02, SUT-02 x iOS, run 36539790536 (README Smoke records; manifests/compatibility-smoke-status.yaml)"
+    2: "that FAIL_RUNNER remains immutable: its row, its attribution file, and its imported artifacts are unchanged and verified byte-exact against IMPORT-RECORD.yaml"
+    3: "its attribution was resolved by the conservative tie-break (qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/ATTRIBUTION-SUT-02-ios.yaml: CONSERVATIVE_TIE_BREAK_ATTRIBUTION_UNCERTAIN)"
+    4: "preserved post-run evidence identified a concrete study-authored observability and transport defect: qualification/unresolved.md QUAL-U06"
+    5: "that defect was not demonstrated as the historical cause (QUAL-U06: causal role NOT established), so the historical result was not reclassified"
+    6: "no affected campaign holds a measurement requiring the repaired path: E03-resetability holds no bundle of an Android or iOS condition, and E02 and E04-E12 are NOT_STARTED (verified by the gate)"
+    7: "policy v3 was approved and frozen on 2026-10-02 (manifests/mobile-runner-policy-v3-amendment-v1.yaml), before any new qualification execution"
+  steps_9_7_5:  # each separate
+    corrected_implementation: "done (DRAFT, 2026-11-02): harness/wd.mjs and harness/smoke.mjs, smoke-common.sh labels"
+    successor_implementation_lock: "prepared: manifests/compatibility-smoke-implementation-lock-v4.yaml"
+    static_validation: "recorded in manifests/appium3-compat-smoke-lock-v4-preparation-v1.yaml"
+    new_authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-03 (this record, PREPARED)
+    explicit_human_issuance: done 2026-11-02 (this record; see issuance_instruction_verbatim)
+    public_publication_of_the_frozen_baseline: pending  # GitHub Actions evaluates only the public repository; needs its own human approval
+    separate_explicit_human_dispatch: pending
+launch_prompt:
+  working_copy: prompts/working/qualifier-mobile-01-appium3-compat-smoke-v3.md
+  working_copy_sha256: 3ce711fe5ad1930ef55bf4f2ae69df4f72866798e82568497024591386126a59
+  frozen_copy: prompts/frozen/qualifier-mobile-01-appium3-compat-smoke-v3.md  # frozen 2026-11-02 at issuance: byte-for-byte copy of the working copy (sha256 3ce711fe5ad1930ef55bf4f2ae69df4f72866798e82568497024591386126a59, retained unchanged as preparation provenance) with only its two declared launch placeholders rendered -- 4 substitutions
+  sha256: 5310ff8a08955bd9d18b618269495a9ad57fb5edb86a2f76f282d0f4bdb74715  # canonical sha256 of the frozen copy; exported UNCHANGED (the readiness gate requires it)
+  prompt_version_id: qualifier-mobile-01-appium3-compat-smoke-v3
+  predecessor_prompt_version_ids: [qualifier-mobile-01-appium3-compat-smoke-v1, qualifier-mobile-01-appium3-compat-smoke-v2]  # frozen copies unchanged
+  rendered_variables:
+    PROMPT_STATUS: FROZEN LAUNCH PROMPT OF APPIUM3-COMPAT-SMOKE-AUTH-03  # 2 substitutions (status line; launch-variable list)
+    INSTRUCTION_DATE: "2026-11-02"  # the human issuance date; 2 substitutions (launch-variable list; procedure step 1)
+    INSTRUCTION_ID: APPIUM3-COMPAT-SMOKE-AUTH-03  # already literal in the working copy; not rendered
+    PROMPT_VERSION_ID: qualifier-mobile-01-appium3-compat-smoke-v3  # already literal in the working copy; not rendered
+  rendering_at_issuance: the frozen copy is a byte-for-byte copy of the working copy with exactly two launch placeholders rendered -- PROMPT_STATUS to FROZEN LAUNCH PROMPT OF APPIUM3-COMPAT-SMOKE-AUTH-03, and INSTRUCTION_DATE to the human issuance date (YYYY-MM-DD); no other byte differs
+implementation_lock:
+  path: manifests/compatibility-smoke-implementation-lock-v4.yaml
+  sha256: 11f2a54fadcd77d2d3f36bf6c8b54a80d8980b895967acce36a3bb84dbda4bbd
+  realization_section_sha256: 5988a4e87c9872bda643238498decb85595a8e4499bf0e3e99b9ab809db94af1  # byte-identical to lock v3; recomputed by the gate
+  harness_realization_sha256: 89ad823f215d9287e8411e3c22161e75c0243f9ce94df787b5c62b9c0fe716db  # equal to lock v3; recomputed by the gate (imports smoke.mjs)
+  android_command_sequence_sha256: 6e92f486261eb7d0fe84f874379a3464cf9184fc5bf088965437a8d0223a1f77  # equal to the lock-v3 smoke.mjs value; recomputed by the gate
+  correction: the WebDriver client transport (QUAL-U06, 9.7.4); nothing else
+workflow:
+  path: .github/workflows/e03-mobile-remediation.yml
+  trigger: workflow_dispatch only
+  inputs:
+    instruction_id: APPIUM3-COMPAT-SMOKE-AUTH-03
+    confirm: EXECUTE-REMEDIATION-QUALIFICATION
+  topology: readiness gate, then SUT-02 iOS on macos-15; there is no Android job
+  rerun: refused in every job (run attempt must be 1; 9.7.5)
+output_namespace:
+  ios: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-03/SUT-02-ios/
+  state_at_preparation: absent
+  state_at_issuance: absent  # 2026-11-02; nothing executed
+decisions_for_the_human_research_lead_at_issuance:
+  - "the shared-client disclosure of lock v4: the WebDriver client behind both platforms changes from the built-in fetch to node:http (same method, path, content-type, and body bytes; different default request headers); the Android PASS of AUTH-02 is combined under 9.7.12 on the strength of the unchanged realization hash and the unchanged command-sequence hash, both recomputed by the gate"
+  - "the single attempt is terminal (9.7.7): a FAIL_RUNNER or NOT_EXECUTED leaves the study-level status UNRESOLVED_AFTER_FALLBACK_FAILURE and blocks every mobile condition for good under policy v3"
+  - "after a PASS the mobile-runner status is not restored automatically; the restoration, the lineage record, and the G-7 correction need their own approvals (9.7.10)"
+issuance_procedure:
+  - The human research lead reviews the preparation (manifests/appium3-compat-smoke-lock-v4-preparation-v1.yaml, lock v4, the corrected harness, the workflow, and the files they name) in a published snapshot.
+  - On a separate explicit human issuance instruction only, the ORCHESTRATOR freezes the launch prompt (prompts/frozen/qualifier-mobile-01-appium3-compat-smoke-v3.md, rendering only PROMPT_STATUS and INSTRUCTION_DATE) and promotes this record in place to record_class COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION, status ISSUED, record_validity VALID, authorizes_execution true, dispatch_eligibility ELIGIBLE, with issued_by and issued_at.
+  - Because GitHub Actions runs only from the public repository, the issued record, the frozen prompt, and the locked files must be present in a published snapshot before any dispatch; that publication needs its own human approval. The gate requires every locked file, the README, the lock, and the frozen prompt to be exported UNCHANGED.
+  - On a further separate explicit human dispatch instruction only, exactly one dispatch is made and its run id recorded; afterwards this record is closed in place (dispatch_performed true, dispatch_eligibility CONSUMED_AFTER_DISPATCH), so the gate refuses any second use.
+amendment_history:
+  - on: "2026-11-02"
+    instruction: the human research lead's answer to the ORCHESTRATOR's report on the section 9.7 preparation (verbatim below)
+    changed:
+      lifecycle: "PREPARED -> ISSUED: record_class COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT -> COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION; status PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION -> ISSUED; record_validity null -> VALID; authorizes_execution false -> true; dispatch_eligibility NOT_ELIGIBLE_UNTIL_ISSUED -> ELIGIBLE; issued_by and issued_at set"
+      launch_prompt: "frozen_copy null -> prompts/frozen/qualifier-mobile-01-appium3-compat-smoke-v3.md; sha256 null -> the frozen copy's sha256; rendered_variables added"
+      added: [issued_under_instruction, issuance_basis, lifecycle_before_issuance, execution_at_issuance, review_basis_note, publication_before_dispatch, dispatch_requires, presented_to_the_human, output_namespace.state_at_issuance, steps_9_7_5.explicit_human_issuance (done), amendment_history, human_instruction_verbatim_sha256, issuance_instruction_verbatim]
+      header_comment: rewritten to the issued state; the prepared history is preserved in it and in git history
+    unchanged: [authorization_id, authorization_type, dispatch_performed (false), study_id, protocol_version, prepared_by_role, prepared_on, prepared_under, governing_policy, executing_role, scope, remediation, launch_prompt.working_copy and working_copy_sha256, implementation_lock, workflow, output_namespace.ios, decisions_for_the_human_research_lead_at_issuance, issuance_procedure]
+    reason: explicit human issuance; no locked byte changed (lock v4, its eight artifacts, the harness realization hash, the command-sequence hash, the concrete-realization section, and policy v3 re-verified by the readiness gate code before issuance)
+admission_rule: the gate admits this authorization only while the study-level status is UNRESOLVED_AFTER_FALLBACK_FAILURE, the mirror holds exactly the AUTH-02 SUT-02 android PASS and the AUTH-02 SUT-02 ios FAIL_RUNNER, the README holds exactly the three historical smoke rows, no restoration record exists, no campaign is IN_PROGRESS, and no measured bundle of a mobile condition exists.
+human_instruction_verbatim_sha256: 68ef4e12693d05b6d275c363be4433c3d0692158b6b282d3431a7ea9871ed50c  # sha256 of issuance_instruction_verbatim as UTF-8 without a trailing line feed (74 bytes, as received in the session; transcript stamp 2026-11-02T15:32:54.617Z)
+issuance_instruction_verbatim: |
+  1 y 2 sí cada uno y actualiza el tablero, además de proponer nueva fecha
+issuance_instruction_reading: |
+  Item 1 of the ORCHESTRATOR's list is the issuance of APPIUM3-COMPAT-SMOKE-AUTH-03 and is the only item this record rests on. The same message also approves item 2
+  (the DRAFT mapping record for E02), asks for the refresh of the dashboard, and asks for a proposal of a new date; none of those is an authorization of any
+  execution, publication, or dispatch. The message does not publish, dispatch, execute, or restore anything.

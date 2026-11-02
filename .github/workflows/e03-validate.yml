@@ -437,6 +437,43 @@ jobs:
               print('compatibility-smoke workflow regression check FAILED'); sys.exit(1)
           print('compatibility-smoke workflow regression check ok')
           PY
+      - name: Assert the mobile-remediation workflow stays dispatch-only, single-attempt, iOS-only, and fail-closed
+        run: |
+          set -euo pipefail
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - <<'PY'
+          import sys, yaml
+          # Post-fallback remediation qualification (protocol/mobile-runner-policy-v3.md, 9.7; prepared 2026-11-02 under
+          # protocol/agent-governance-v5.md, Section 3.4). Structure is parsed, not string-matched, where possible. The lifecycle of its
+          # authorization record (a prepared record authorizes nothing; an ELIGIBLE record is issued with its frozen prompt) is
+          # asserted by the compatibility-smoke step above, which globs the whole authorization record family.
+          wf = open('.github/workflows/e03-mobile-remediation.yml').read(); w = yaml.safe_load(wf)
+          on = w.get(True, w.get('on')) or {}
+          jobs = w.get('jobs') or {}
+          ios = jobs.get('remediation-ios') or {}
+          ups = [s for s in ios.get('steps', []) if str(s.get('uses', '')).startswith('actions/upload-artifact')]
+          checks = [
+              ('triggered by workflow_dispatch only (never push)', list(on) == ['workflow_dispatch']),
+              ('token permissions contents: read, no job-level override', w.get('permissions') == {'contents': 'read'} and all('permissions' not in j for j in jobs.values())),
+              ('topology gate -> remediation-ios on macos-15; there is no Android job (policy v3, 9.7.3)', set(jobs) == {'gate', 'remediation-ios'} and ios.get('needs') == 'gate' and ios.get('runs-on') == 'macos-15'),
+              ('the iOS job requires the gate output ready', "needs.gate.outputs.ready == 'true'" in str(ios.get('if', ''))),
+              ('the gate requires policy v3 FROZEN, v2 and v1 AMENDED, governance v5 frozen, and the study-level status exactly UNRESOLVED_AFTER_FALLBACK_FAILURE', all(s in wf for s in ("'| Superseded by | protocol/mobile-runner-policy-v3.md |' in pol2", "'| Document | protocol/mobile-runner-policy-v3.md |' in pol3", "'| Document | protocol/agent-governance-v5.md |' in gov", "sel.get('mobile_runner_status') == 'UNRESOLVED_AFTER_FALLBACK_FAILURE'"))),
+              ('the only admissible trigger is the AUTH-02 SUT-02 iOS FAIL_RUNNER of run 36539790536, its artifacts re-verified (byte-exact, or through the export manifest for the two publication-only classes)', "TRIGGER_ID, TRIGGER_RUN = 'APPIUM3-COMPAT-SMOKE-AUTH-02', '36539790536'" in wf and "PRIOR_IDS = ['APPIUM3-COMPAT-SMOKE-AUTH-01', TRIGGER_ID]" in wf and 'verify against the import record, the archive digest, and the archive members' in wf and "es[0].get('transformations') == [cls]" in wf),
+              ('refuses a restoration record or basis, a second FAIL_RUNNER, a campaign IN_PROGRESS, and any measured mobile bundle', all(s in wf for s in ("not os.path.exists('manifests/mobile-runner-remediation-v1.yaml')", "'restoration_basis' not in sel", "len(me) == 2 and [e for e in me if e.get('result') == 'FAIL_RUNNER'] == m_ios", "v in ('NOT_STARTED', 'FROZEN')", '(ANDROID|IOS)'))),
+              ('requires an issued, non-draft, VALID, human-issued, executable record scoped to SUT-02 iOS only with the remediation block', all(s in wf for s in ("auth.get('record_class') == 'COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION'", "auth.get('status') == 'ISSUED'", "auth.get('record_validity') == 'VALID'", "sc.get('platforms') == ['ios']", "rem.get('attempts_allowed') == 1", "rem.get('correction_restricted_to') == 'QUAL-U06'"))),
+              ('requires dispatch_eligibility exactly ELIGIBLE and no prior dispatch', "auth.get('dispatch_eligibility') == 'ELIGIBLE'" in wf and "auth.get('dispatch_performed') is not True" in wf),
+              ('recomputes the lock-v4 hashes, the realization section, the harness realization hash, and the command-sequence hash', all(s in wf for s in ("os.path.isfile(p) and sha(p) == a.get('sha256')", "hashlib.sha256(sec.encode('utf-8')).hexdigest() == rs.get('sha256')", "h == lock.get('harness_realization_sha256') == lock.get('harness_realization_sha256_in_lock_v3')", "seq == cs.get('sha256') == cs.get('sha256_in_lock_v3_smoke_mjs')"))),
+              ('refuses a GitHub re-run in the gate and in the iOS job (exactly one attempt; 9.7.5)', "os.environ.get('GITHUB_RUN_ATTEMPT', '1') == '1'" in wf and wf.count('test "') >= 1),
+              ('uploads only the iOS directory of its own authorization', len(ups) == 1 and str(ups[0]['with']['path']).endswith('/SUT-02-ios') and ('$' + '{{ inputs.instruction_id }}') in str(ups[0]['with']['path'])),
+              ('writes nothing to raw-data/ (the iOS job never names it; the gate only walks it to refuse a mobile bundle) and never labels a measured experiment', all('raw-data' not in s.get('run', '') for s in ios.get('steps', [])) and wf.count('raw-data') == 4 and "os.walk('raw-data')" in wf and 'MEASURED_EXPERIMENT' not in wf),
+          ]
+          bad = [n for n, ok in checks if not ok]
+          for n, ok in checks:
+              print(('PASS ' if ok else 'FAIL ') + n)
+          if bad:
+              print('mobile-remediation workflow regression check FAILED'); sys.exit(1)
+          print('mobile-remediation workflow regression check ok')
+          PY
       - name: Assert every workflow, job, step, and artifact name is domain-oriented
         run: |
           set -euo pipefail

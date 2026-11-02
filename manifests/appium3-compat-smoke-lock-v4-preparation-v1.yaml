@@ -1,0 +1,110 @@
+# Compatibility-smoke lock v4 preparation record v1 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# Operation OP-MOB-REM-01, 2026-11-02: the DRAFT preparation of the single post-fallback remediation qualification of protocol/mobile-runner-policy-v3.md,
+# section 9.7 (SUT-02 x iOS x Appium 3): the QUAL-U06 correction, the dispatch-only workflow, implementation lock v4, the PREPARED authorization
+# APPIUM3-COMPAT-SMOKE-AUTH-03, the working launch prompt, and the static validation. ORCHESTRATOR record (protocol/agent-governance-v5.md, Section 3.4), written once with the
+# preparation; a correction is a new version file. It authorizes, issues, publishes, dispatches, and executes nothing.
+record_class: COMPATIBILITY_SMOKE_REMEDIATION_PREPARATION_RECORD
+record_id: APPIUM3-COMPAT-SMOKE-LOCK-V4-PREPARATION-01
+study_id: EUS-2026-001
+operation_id: OP-MOB-REM-01
+recorded_by_role: ORCHESTRATOR
+recorded_on: "2026-11-02"
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+authorizes: "nothing: not the issuance of APPIUM3-COMPAT-SMOKE-AUTH-03, not a publication, not a dispatch, not an execution, not the restoration of the mobile-runner status"
+human_decisions_relied_on:
+  - "decision D1 of 2026-10-05 (the QUAL-U06 correction and lock v4 may be prepared as a DRAFT), reused on 2026-11-02 (manifests/campaign-resumption-v1.yaml, items on the section 9.7 path)"
+  - "the freeze of protocol/agent-governance-v5.md on the approval of 2026-11-02 (manifests/agent-governance-v5-amendment-v1.yaml), which lets the ORCHESTRATOR write under qualification/ for the qualifier tasks and only for what the policy in force admits"
+  - "the approval and freeze of protocol/mobile-runner-policy-v3.md (2026-10-02; manifests/mobile-runner-policy-v3-amendment-v1.yaml)"
+state_before:
+  head: d7bc777b33807c6ad35b2ecaaf1695d852db75fc
+  mobile_runner_status: UNRESOLVED_AFTER_FALLBACK_FAILURE
+  mirror: "SUT-02 android PASS and SUT-02 ios FAIL_RUNNER, both APPIUM3-COMPAT-SMOKE-AUTH-02 (run 36539790536); AUTH-01 android NOT_EXECUTED preserved"
+  qual_u06: OPEN
+what_was_prepared:
+  correction: "qualification/compatibility-smoke/harness/wd.mjs (default transport node:http; transport failures keep error and cause; WebDriverError.transport), harness/smoke.mjs (attribution.transport_error, the record field transport, record labels), smoke-common.sh (record labels, header comments, lock name); package.json and package-lock.json byte-unchanged"
+  workflow: ".github/workflows/e03-mobile-remediation.yml (new; the historical .github/workflows/e03-compatibility-smoke.yml is byte-unchanged and keeps refusing every dispatch)"
+  workflow_assertion: ".github/workflows/e03-validate.yml: one new step asserting that the remediation workflow stays dispatch-only, single-attempt, iOS-only, and fail-closed"
+  lock: "manifests/compatibility-smoke-implementation-lock-v4.yaml (sha256 11f2a54fadcd77d2d3f36bf6c8b54a80d8980b895967acce36a3bb84dbda4bbd)"
+  authorization: "manifests/compatibility-smoke-execution-auth-v3-prepared.yaml, APPIUM3-COMPAT-SMOKE-AUTH-03, PREPARED, NOT ISSUED (sha256 c94c9453a5207ea8fa5ff1286a307baf73837260966b5f06e411aa9c06058426)"
+  working_prompt: "prompts/working/qualifier-mobile-01-appium3-compat-smoke-v3.md (sha256 3ce711fe5ad1930ef55bf4f2ae69df4f72866798e82568497024591386126a59); the frozen launch copy is made only at issuance"
+  documentation: "qualification/compatibility-smoke/README.md (Status paragraph, the wd.mjs row, and the section Remediation qualification (prepared); the locked Concrete realization section is byte-identical), qualification/unresolved.md (QUAL-U06 update), experiments/E03-resetability/ci-cd-execution-model.md (workflow and artifact-class rows), manifests/README.md, protocol/CHANGELOG.md (one row)"
+locked_artifacts:
+  .github/workflows/e03-mobile-remediation.yml: {sha256: 2fb5c608f77f5bf5018cf8cc6d53594ba7d5654c462e29d2df0858ac3e8a5910, changed_since_lock_v3: true}
+  qualification/compatibility-smoke/smoke-common.sh: {sha256: 14e3d41d9f495ab864fd1864b6b617d5397b453ca72a375ef35cab36efe968f8, changed_since_lock_v3: true}
+  qualification/compatibility-smoke/run-smoke-android.sh: {sha256: 3de83ad84cf9e2308eaee5c80bdea8321b93b713c4f6fd2b321ea0dbc6f2a703, changed_since_lock_v3: false}
+  qualification/compatibility-smoke/run-smoke-ios.sh: {sha256: c48e99fb6bf3ef68afd33158f140346424924689e0955f0fcb8eb516f1eb25a9, changed_since_lock_v3: false}
+  qualification/compatibility-smoke/harness/package.json: {sha256: 0c7807598f7b5a2e80aed27a8bdf7aed71b23d0ab3a21a48a764c8b347770242, changed_since_lock_v3: false}
+  qualification/compatibility-smoke/harness/package-lock.json: {sha256: 8a4a02cafa1edec0e8eb7704cec107ab6a2c398dd1e0c8e8a9df3dcb9ac3b3f5, changed_since_lock_v3: false}
+  qualification/compatibility-smoke/harness/wd.mjs: {sha256: 7051c28cf75c5261feb757762747655bde87a79b6728bb895c4c764cfb2e19d6, changed_since_lock_v3: true}
+  qualification/compatibility-smoke/harness/smoke.mjs: {sha256: bdad2a874a6e2aa55fa632469fafc2728d696f257e71d1c5e2aa4a550a2cbfb0, changed_since_lock_v3: true}
+  workflow_sha256: 2fb5c608f77f5bf5018cf8cc6d53594ba7d5654c462e29d2df0858ac3e8a5910
+why_a_separate_workflow: "e03-validate.yml asserts the exact structure of the compatibility-smoke workflow (topology gate -> android -> ios, E03 NOT_STARTED, status SELECTED) and lock v3 records its bytes as the historical execution provenance of AUTH-02; editing it in place would alter that provenance and require rewriting those assertions. A new workflow leaves both unchanged."
+facts_about_the_former_transport:  # observed in this operation by the static control test; no causal statement about the AUTH-02 run is made
+  control_result: "control (observation only, not an assertion): failed after 301237 ms: POST /session: transport failure: fetch failed [error TypeError; cause HeadersTimeoutError/UND_ERR_HEADERS_TIMEOUT: Headers Timeout Error; after 301237 ms]"
+  reading: "when no response arrives within about 300 s, the built-in fetch of Node.js 22 and 23 fails with a TypeError 'fetch failed' whose cause is HeadersTimeoutError (UND_ERR_HEADERS_TIMEOUT), however large the harness's own budget (here 1,200,000 ms); the corrected client waits the full 320 s delay and succeeds. The built-in fetch therefore could not honor the declared 1,200 s session-start budget, and its error carried the cause only in e.cause, which the former client discarded (QUAL-U06)."
+  limit_of_the_reading: "the AUTH-02 iOS request ended 389 s after it reached Appium (record.json: step 08:02:54.548Z to 08:09:23.924Z; the request line of appium-server.log at 08:02:54.633), not about 300 s after, and the preserved artifacts carry no cause, so the control does not establish that the HTTP header timeout caused the AUTH-02 failure; the causal role of the former transport stays NOT_ESTABLISHED (qualification/unresolved.md QUAL-U06), and the remediation may end in any of the three results"
+static_validation:
+  harness_tests:
+    script: "static_harness_tests.mjs (untracked ORCHESTRATOR record kept in the local orchestration layer outside the repository; sha256 42de7558e88d1c8a6b0b4388f3155dba639873362d18f5d68dfc26ef1199842d)"
+    fast_suite: "17 of 17 PASS on Node.js 23.6.1 and on 22.22.2 (the pinned runtime is 22.23.2; the same major version): the realization hash and the command-sequence extraction equal the lock-v3 values; request method, path, content-type, and body bytes; W3C error answers; connection reset, refusal, and mid-body cut-off keep error name, code, and message; an injected failure with a cause keeps both; the explicit budget times out and is flagged; attributeFailure adds transport_error only for transport errors; a scripted iOS runner proposes PASS and the record carries transport and the unchanged realization hash; a transport failure at the session request is FAIL_RUNNER by uncertainty with the cause kept; pre-runner harness exceptions stay NOT_EXECUTED / HARNESS_ORCHESTRATION; waitFor behavior unchanged"
+    long_suite: "19 of 19 PASS on both Node.js versions: F1 a session answer delayed 320 s succeeds under the 1,200 s budget with the corrected client; F2 is the control of the former transport (observation, no assertion)"
+  gate_rehearsal:
+    script: "rehearse_gate.py (untracked; kept in the local orchestration layer outside the repository; sha256 ae0bf9a42afc6018236787aff9ab8656dcd563f85e7ab9209aad944a41feaa58)"
+    method: "the gate code is extracted from the workflow (not retyped) and run on a temporary copy of the tree in which the issuance is simulated (PREPARED record promoted, launch prompt rendered); nothing in the repository changes"
+    baseline: "READY with 75 checks on the canonical tree"
+    negative_mutations_all_rejected_for_the_expected_gate: 22
+    mutations:
+    - "status SELECTED instead of UNRESOLVED"
+    - "restoration basis already present"
+    - "remediation lineage record exists"
+    - "mirror ios is PASS (no trigger)"
+    - "mirror ios NOT_EXECUTED"
+    - "a second FAIL_RUNNER (android)"
+    - "a measured mobile bundle exists"
+    - "a campaign is IN_PROGRESS"
+    - "output namespace not empty"
+    - "a locked byte changed (wd.mjs)"
+    - "the realization changed (REALIZATION.android)"
+    - "the command sequence changed"
+    - "the realization section changed"
+    - "authorization already dispatched"
+    - "authorization scope includes android"
+    - "authorization trigger run id wrong"
+    - "authorization governed by policy v2"
+    - "authorization still a draft"
+    - "README ios row not FAIL_RUNNER"
+    - "a preserved AUTH-02 artifact changed"
+    - "governance v5 not frozen"
+    - "Mobilewright not FAILED"
+    public_snapshot_rehearsal:
+      method: "the same script on the public-like main tree produced by the export builder's dry run (PUBLIC-EXPORT-MANIFEST.yaml at its root, the QUAL-U07 transformations applied to the AUTH-02 evidence, policy v3 and the other files with their export classes), with the issuance simulated and the frozen prompt added to the simulated manifest as UNCHANGED"
+      baseline: "READY with 86 checks"
+      additional_negative_mutations_all_rejected: 3
+      additional_mutations:
+        - "PUBLIC: a transformed AUTH-02 file changed after export"
+        - "PUBLIC: the export-manifest entry of a preserved file is missing"
+        - "PUBLIC: a locked file is declared transformed in the export manifest"
+      all_26_cases_as_expected: true
+      locked_files_export_class: "every locked artifact, the README, the lock, the PREPARED authorization, the working prompt, and the preparation record are UNCHANGED in the export; protocol/mobile-runner-policy-v3.md is PROVIDER_NEUTRAL_PATH_ALIAS, which the gate bridges through the manifest"
+  lint: "actionlint 1.7.7 (darwin amd64 release binary, sha256 28e5de5a05fc558474f638323d736d822fff183d2d492f0aecb2b73cc44584f5, equal to the published checksum) with shellcheck 0.10.0: exit 0 on the new workflow and on all six workflows; bash -n clean on smoke-common.sh"
+  validate_workflow_python_steps:
+    script: "run_validate_py.py (untracked; kept in the local orchestration layer outside the repository; sha256 99980bfb5c519f842cb3e1b6f0711feb16d59433374b42e2b88c8cd577ab15c6)"
+    result: "10 of 12 PASS, 1 skipped (the commit-trailer scan, covered by the commit gate at commit time), 1 FAIL: the private-path hygiene scan, whose hits are all in preserved canonical artifacts that this operation did not touch (formal/ import trees and E03 environment-verification logs, redacted by the public export), and none lies in a file of this operation"
+corrections_during_preparation:
+  - "found by the export dry run after the first preparation commit d114f3f and corrected in the commit that follows it: the first draft of the gate re-verified the preserved AUTH-01 and AUTH-02 artifacts only byte-exact, which would have failed on a public snapshot, where the export publishes the AUTH-02 evidence through two publication-only transformations (QUAL-U07: host-path redaction of text files, deterministic re-pack of the iOS archive). The gate now performs the check of the validation workflow's QUAL-U05 step: byte-exact on a canonical checkout, and on a public snapshot through the export-manifest entry for exactly those two classes (a missing entry, a changed file, or any other class fails closed). The lock, the PREPARED authorization, and this record were regenerated after that correction; their earlier versions exist only in d114f3f"
+  - "found by actionlint 1.7.7 after the first preparation commit and corrected in the same following commit: the new assertion step of e03-validate.yml carried the literal text of an Actions expression for the upload path inside a run block, which Actions would evaluate (the context inputs does not exist in that workflow); the string is now split so that no expression is formed"
+attribution_changes_in_the_record:
+  new_fields: ["transport (record top level: the transport settings)", "attribution.transport_error (error {name, code, message}, cause {name, code, message}, timed_out, timeout_ms, elapsed_ms) for transport-kind failures"]
+  labels_changed: "policy -> protocol/mobile-runner-policy-v3.md, section 9; recording role -> the ORCHESTRATOR under protocol/agent-governance-v5.md, Section 3.4; automatic_repeat -> none (policy v3, 9.5 and 9.7.5); no attribution rule, result vocabulary, or basis string changes"
+points_for_the_human_research_lead_at_issuance:
+  - "the WebDriver client behind both platforms changes from the built-in fetch to node:http: the same method, path, content-type, and body bytes, different default request headers; the Android PASS of AUTH-02 is combined under 9.7.12 on the strength of the unchanged realization hash and the unchanged command-sequence hash (recomputed by the gate), and it is a disclosed change of a shared component"
+  - "the control above shows that the former transport could not wait past about 300 s, but it does not show that this caused the AUTH-02 failure; the remediation may therefore still end FAIL_RUNNER or NOT_EXECUTED, and either is terminal under 9.7.7"
+  - "the authorization id APPIUM3-COMPAT-SMOKE-AUTH-03 and the prompt version qualifier-mobile-01-appium3-compat-smoke-v3 keep the existing id patterns so that the shared scripts are unchanged"
+next_steps:
+  - "the human research lead reviews this preparation in a published snapshot (a public export needs its own approval) and, on a separate explicit instruction, issues APPIUM3-COMPAT-SMOKE-AUTH-03; the ORCHESTRATOR then freezes the launch prompt and promotes the record in place"
+  - "publication of the issued state (public export), then a separate explicit human dispatch of exactly one run; recorded before and after; imported byte-exact; the result recorded by the ORCHESTRATOR"
+  - "only after a PASS and only on an explicit human restoration instruction: manifests/mobile-runner-remediation-v1.yaml, tools.mobile_runner_selection.restoration_basis, and a CI correction of gate G-7 of the measured-execution workflow; E03's two mobile conditions need, in addition, a reopening of E03 under change control (the human research lead's decision)"
+not_done:
+  - "no issuance, no frozen prompt, no publication, no export, no push, no dispatch, no execution, no mirror change, no change to manifests/toolchain-manifest.yaml, no restoration; qualification/compatibility-smoke/formal/ is unchanged; the mobile-runner status stays UNRESOLVED_AFTER_FALLBACK_FAILURE"

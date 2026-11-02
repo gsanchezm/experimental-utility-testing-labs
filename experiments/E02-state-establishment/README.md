@@ -38,7 +38,9 @@ Measure the Required Actions, and secondarily the duration, needed to establish 
 
 NOT STARTED
 
-Deferred beyond the DATA FREEZE of the planned manuscript (2026-12-15), not omitted, by the human research lead's scope decision of 2026-10-19 (scope A: E01 and the seven web/api conditions of E03; the manuscript presents the full design): the status above is unchanged, no preparation is scheduled, and resuming this campaign needs an explicit human instruction (manifests/campaign-disposition-v1.yaml).
+Resumed by the human research lead's decision of 2026-11-02 (manifests/campaign-resumption-v1.yaml); the deferral of scope A (manifests/campaign-disposition-v1.yaml) no longer governs the schedule: the status above is unchanged, preparation may begin, and the campaign START needs its own explicit human authorization (protocol/change-control-v1.md, section 7).
+
+Preparation (2026-11-02): the candidate target-state record is the DRAFT canonical scenario CS-003 (experiments/scenario-mappings/CS-003.yaml; not frozen, not an input to any configuration; five design points DP-1 to DP-5 in its `notes` await the human research lead, and a frozen mapping record is required before any E02 execution). experiments/scenario-mappings/CS-001.yaml is scoped to E03-resetability and is not reused. No campaign configuration exists.
 
 ## Warning
 

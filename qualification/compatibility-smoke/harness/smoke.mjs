@@ -1,9 +1,11 @@
-// Appium 3 per-SUT compatibility smoke (protocol/mobile-runner-policy-v2.md, section 9) for SUT-02 (Sauce Labs
+// Appium 3 per-SUT compatibility smoke (protocol/mobile-runner-policy-v3.md, section 9; 9.1-9.4 as carried from v2, and
+// the post-fallback remediation qualification of 9.7) for SUT-02 (Sauce Labs
 // Demo Ecosystem), one clean execution per platform. REALIZATION below is the executable form of the
 // "Concrete realization" section of qualification/compatibility-smoke/README.md, recorded before the execution it governs;
-// both are locked by manifests/compatibility-smoke-implementation-lock-v3.yaml (lock v2 is historical execution provenance). Tool qualification only: nothing
+// both are locked by manifests/compatibility-smoke-implementation-lock-v4.yaml (locks v2 and v3 are historical execution provenance). Tool qualification only: nothing
 // recorded here is evidence about any system under test. The harness records what happened and proposes a
-// result with its attribution; QUALIFIER-MOBILE-01 records the result. Proposals (policy v2, 9.1-9.4): PASS when
+// result with its attribution; the ORCHESTRATOR (protocol/agent-governance-v5.md, Section 3.4; QUALIFIER-MOBILE-01 for
+// the records made before it) records the result. Proposals (policy v3, 9.1-9.4): PASS when
 // every step completed; after the first runner action (the session request) every failure is proposed as
 // FAIL_RUNNER, labeled with what the runner did (see attributeFailure), because NOT_EXECUTED needs a cause
 // outside the runner that only the inspection of the preserved artifacts can demonstrate; a harness exception
@@ -15,8 +17,8 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createClient, waitFor, WebDriverError } from './wd.mjs';
 
-const POLICY = 'protocol/mobile-runner-policy-v2.md, section 9';
-const RECORDING_ROLE = 'proposal by the harness; QUALIFIER-MOBILE-01 records the result (policy v2, section 9: NOT_EXECUTED only on a positively demonstrated cause outside the runner; uncertain attribution is FAIL_RUNNER)';
+const POLICY = 'protocol/mobile-runner-policy-v3.md, section 9 (9.1-9.4 as carried from v2; remediation qualification 9.7)';
+const RECORDING_ROLE = 'proposal by the harness; the ORCHESTRATOR records the result under protocol/agent-governance-v5.md, Section 3.4 (policy v3, section 9: NOT_EXECUTED only on a positively demonstrated cause outside the runner; uncertain attribution is FAIL_RUNNER)';
 
 export const REALIZATION = {
   android: {
@@ -103,7 +105,7 @@ const excerpt = (e) => ({
   stack: String((e && e.stack) || '').split('\n').slice(0, 20),
 });
 
-// Attribution proposal for a failure after the first runner action (policy v2, 9.2-9.4). Always FAIL_RUNNER: the
+// Attribution proposal for a failure after the first runner action (policy v3, 9.2-9.4). Always FAIL_RUNNER: the
 // basis records what the runner did; a harness exception is attached as candidate HARNESS_ORCHESTRATION evidence
 // for QUALIFIER-MOBILE-01, who may record NOT_EXECUTED only if the preserved artifacts positively demonstrate it.
 export function attributeFailure(cause) {
@@ -114,7 +116,7 @@ export function attributeFailure(cause) {
       not_reached: 'REQUIRED_ELEMENT_OR_STATE_NOT_REACHED',
       transport: 'NO_RUNNER_ANSWER_ATTRIBUTION_UNCERTAIN',
     }[cause.kind] || 'UNCLASSIFIED_ATTRIBUTION_UNCERTAIN';
-    return { proposed_result: 'FAIL_RUNNER', proposed_category: 'SELECTED_RUNNER_STACK', basis, failure_kind: cause.kind || null, harness_exception: null };
+    return { proposed_result: 'FAIL_RUNNER', proposed_category: 'SELECTED_RUNNER_STACK', basis, failure_kind: cause.kind || null, harness_exception: null, ...(cause.transport ? { transport_error: cause.transport } : {}) };
   }
   return {
     proposed_result: 'FAIL_RUNNER',
@@ -122,12 +124,12 @@ export function attributeFailure(cause) {
     basis: 'HARNESS_EXCEPTION_AFTER_RUNNER_ACTION_ATTRIBUTION_UNCERTAIN',
     failure_kind: 'harness_exception',
     harness_exception: { ...excerpt(cause), candidate_category: 'HARNESS_ORCHESTRATION',
-      note: 'candidate evidence for QUALIFIER-MOBILE-01; NOT_EXECUTED only if the preserved artifacts positively demonstrate the harness defect (policy v2, 9.3-9.4)' },
+      note: 'candidate evidence for the ORCHESTRATOR recording the result; NOT_EXECUTED only if the preserved artifacts positively demonstrate the harness defect (policy v3, 9.3-9.4)' },
   };
 }
 
 // Record for a harness failure before any runner action (argument, context, or realization lookup): the runner was
-// never contacted, so the proposal is NOT_EXECUTED with cause HARNESS_ORCHESTRATION (policy v2, 9.3).
+// never contacted, so the proposal is NOT_EXECUTED with cause HARNESS_ORCHESTRATION (policy v3, 9.3).
 export function preRunnerHarnessRecord({ platform = null, error, context = {} }) {
   return {
     record_class: 'COMPATIBILITY_SMOKE',
@@ -151,7 +153,7 @@ export function preRunnerHarnessRecord({ platform = null, error, context = {} })
       evidence: ['record.json', 'harness.log'],
     },
     recording_role: RECORDING_ROLE,
-    automatic_repeat: 'none (policy v2, 9.5)',
+    automatic_repeat: 'none (policy v3, 9.5 and 9.7.5)',
     steps: [],
     capabilities_exercised: [],
     at: iso(),
@@ -288,6 +290,7 @@ export async function runSmoke({ platform, client, appPath, udid, outDir, contex
     device: context.device || null,
     realization_sha256: realizationSha256(),
     capabilities_requested: capsUsed,
+    transport: client.transport || null,
     steps,
     capabilities_exercised: exercised,
     expected_final_state: R.expected_final_state,
@@ -296,7 +299,7 @@ export async function runSmoke({ platform, client, appPath, udid, outDir, contex
     proposed_result: failed ? attribution.proposed_result : 'PASS',
     attribution: attribution ? { ...attribution, proposed_result: undefined } : null,
     recording_role: RECORDING_ROLE,
-    automatic_repeat: 'none (policy v2, 9.5)',
+    automatic_repeat: 'none (policy v3, 9.5 and 9.7.5)',
     started_at: iso(new Date(started)),
     ended_at: iso(new Date(ended)),
     duration_ms: ended - started,

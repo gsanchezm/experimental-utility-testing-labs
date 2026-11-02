@@ -32,7 +32,7 @@ Reproduce a target state repeatedly under a fixed condition in each evaluated ec
 
 NOT STARTED
 
-Deferred beyond the DATA FREEZE of the planned manuscript (2026-12-15), not omitted, by the human research lead's scope decision of 2026-10-19 (scope A: E01 and the seven web/api conditions of E03; the manuscript presents the full design): the status above is unchanged, no preparation is scheduled, and resuming this campaign needs an explicit human instruction (manifests/campaign-disposition-v1.yaml).
+Resumed by the human research lead's decision of 2026-11-02 (manifests/campaign-resumption-v1.yaml); the deferral of scope A (manifests/campaign-disposition-v1.yaml) no longer governs the schedule: the status above is unchanged, preparation may begin, and the campaign START needs its own explicit human authorization (protocol/change-control-v1.md, section 7).
 
 ## Warning
 
