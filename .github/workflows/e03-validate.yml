@@ -376,6 +376,48 @@ jobs:
               print('G-7 exhausted-fallback regression check FAILED'); sys.exit(1)
           print('G-7 exhausted-fallback regression check ok')
           PY
+      - name: Assert no string that carries an expression can exceed the expression length limit of GitHub, and the measured-execution gate carries none (OP-CI-15)
+        run: |
+          set -euo pipefail
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - <<'PY'
+          import glob, sys, yaml
+          # OP-CI-15 (2026-11-05): GitHub rejects a workflow file when a string that carries an expression is longer than 21000
+          # characters ("Exceeded max expression length 21000"); neither actionlint nor a local run of a script checks it, which is how
+          # the gate script of the measured-execution workflow (32521 characters after OP-CI-14) was published and rejected.
+          # The estimate below adds the characters that the conversion of a string to an expression escapes (quote and braces), so it
+          # never under-counts; the limit used here keeps a margin below 21000. The opening token is built, never written, because a
+          # literal one would make this very step a string that carries an expression.
+          OPEN = '$' + '{' + '{'
+          LIMIT = 20000
+          measured = []
+          def walk(o, f, where):
+              if isinstance(o, dict):
+                  for k, v in o.items(): walk(v, f, where + [str(k)])
+              elif isinstance(o, list):
+                  for i, v in enumerate(o): walk(v, f, where + [str(i)])
+              elif isinstance(o, str) and OPEN in o:
+                  measured.append((len(o) + o.count("'") + o.count('{') + o.count('}'), len(o), f, '/'.join(where)))
+          files = sorted(glob.glob('.github/workflows/*.yml'))
+          for f in files:
+              walk(yaml.safe_load(open(f)), f, [])
+          measured.sort(reverse=True)
+          bad = [m for m in measured if m[0] > LIMIT]
+          print('workflows', len(files), '| strings that carry an expression', len(measured), '| longest estimate', measured[0][0] if measured else 0)
+          for m in bad:
+              print('FAIL %s %s: %d characters (estimate %d) exceed %d' % (m[2], m[3], m[1], m[0], LIMIT))
+          wf = yaml.safe_load(open('.github/workflows/e03-measured-execution.yml'))
+          g = [s for s in wf['jobs']['gate']['steps'] if s.get('id') == 'gates']
+          ok = len(g) == 1
+          if ok:
+              names = ['GATE_CONDITION_ID', 'GATE_ASSIGNED_SUT', 'GATE_EXECUTION_ID', 'GATE_ATTEMPT', 'GATE_CAMPAIGN_START_AUTHORIZATION_ID', 'GATE_EXECUTOR_PROMPT_VERSION', 'GATE_EXECUTOR_IMPLEMENTATION_SHA256']
+              env = g[0].get('env') or {}
+              ok = OPEN not in g[0]['run'] and all(n in env and OPEN in str(env[n]) and ("os.environ['" + n + "']") in g[0]['run'] for n in names)
+          print(('PASS ' if ok else 'FAIL ') + 'the gate step of the measured-execution workflow carries no expression in its script and reads the seven dispatch inputs from its environment')
+          if bad or not ok:
+              sys.exit(1)
+          print('expression length check ok')
+          PY
       - name: Assert the compatibility-smoke workflow stays dispatch-only and fail-closed
         run: |
           set -euo pipefail

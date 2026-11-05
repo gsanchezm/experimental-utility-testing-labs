@@ -50,6 +50,8 @@ Job, step, and artifact names are domain-oriented; the validation workflow refus
 
 As of 2026-09-22 gates 2, 3, 7, 8 (GitHub Actions verification), 9, and 10 cannot hold, so the measured job cannot run; gate 6 became satisfiable when protocol/agent-governance-v2.md was frozen on 2026-09-22. That is the intended state.
 
+Since 2026-11-05 (operation OP-CI-15) the seven dispatch inputs reach the gate script through the `env:` of its step (`GATE_CONDITION_ID`, `GATE_ASSIGNED_SUT`, `GATE_EXECUTION_ID`, `GATE_ATTEMPT`, `GATE_CAMPAIGN_START_AUTHORIZATION_ID`, `GATE_EXECUTOR_PROMPT_VERSION`, `GATE_EXECUTOR_IMPLEMENTATION_SHA256`) and the script reads them with `os.environ`, so the script text carries no expression. GitHub rejects a workflow file when a string that carries an expression is longer than 21000 characters, a limit that neither actionlint nor a local run of the script checks; the gate script (32521 characters after OP-CI-14) exceeded it in public export v45. The validation workflow asserts both properties (no string of any workflow that carries an expression above 20000 estimated characters, and no expression in the gate script). No gate changed.
+
 ## 4. Reproducibility contract (captured per measured run)
 
 The job "E03 Provenance Capture" writes `ci-provenance.json` and the measured job writes `runtime-environment.json`; both travel inside the attempt bundle:

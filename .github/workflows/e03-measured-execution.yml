@@ -10,7 +10,8 @@
 # qualification has not run, so this workflow cannot execute a measured condition; that is the
 # intended state until a human starts the campaign. (Agent governance v2 was frozen 2026-09-22; agent governance v3 was frozen
 # 2026-10-03 and read by gate G-6 from 2026-10-05, operation OP-CI-03; agent governance v4 is in force since 2026-10-27 and is
-# the document that gate G-6 reads since 2026-10-27, operation OP-CI-11.)
+# the document that gate G-6 reads since 2026-10-27, operation OP-CI-11. The dispatch inputs reach the gate script through the
+# environment of its step since 2026-11-05, operation OP-CI-15, so that the script text carries no expression.)
 #
 # Execution/attempt model: campaign -> SUT -> scenario -> condition -> execution -> attempt. Attempt 1
 # is immutable; a retry is a new dispatch with attempt+1. GitHub-native re-runs of a measured run are
@@ -119,13 +120,24 @@ jobs:
           test "${{ github.run_attempt }}" = "1" || { echo "GitHub-native re-run refused: dispatch a new run with attempt+1 instead"; exit 1; }
       - name: Verify every campaign gate against the repository (fail closed)
         id: gates
+        # OP-CI-15 (2026-11-05): the seven dispatch inputs reach the script through this step's environment, not through expressions
+        # inside the script text, so the script contains no expression and GitHub's limit of 21000 characters for a string that
+        # carries expressions does not apply to it (the script had grown to 32521 characters with OP-CI-14, and GitHub rejected the file).
+        env:
+          GATE_CONDITION_ID: ${{ inputs.condition_id }}
+          GATE_ASSIGNED_SUT: ${{ inputs.assigned_sut }}
+          GATE_EXECUTION_ID: ${{ inputs.execution_id }}
+          GATE_ATTEMPT: ${{ inputs.attempt }}
+          GATE_CAMPAIGN_START_AUTHORIZATION_ID: ${{ inputs.campaign_start_authorization_id }}
+          GATE_EXECUTOR_PROMPT_VERSION: ${{ inputs.executor_prompt_version }}
+          GATE_EXECUTOR_IMPLEMENTATION_SHA256: ${{ inputs.executor_implementation_sha256 }}
         run: |
           set -euo pipefail
           python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
           python3 - <<'PY'
           import glob, hashlib, os, re, subprocess, sys, yaml
-          cond = '${{ inputs.condition_id }}'; sut = '${{ inputs.assigned_sut }}'; attempt = '${{ inputs.attempt }}'
-          auth = '${{ inputs.campaign_start_authorization_id }}'; pv = '${{ inputs.executor_prompt_version }}'; impl_sha = '${{ inputs.executor_implementation_sha256 }}'
+          cond = os.environ['GATE_CONDITION_ID']; sut = os.environ['GATE_ASSIGNED_SUT']; attempt = os.environ['GATE_ATTEMPT']
+          auth = os.environ['GATE_CAMPAIGN_START_AUTHORIZATION_ID']; pv = os.environ['GATE_EXECUTOR_PROMPT_VERSION']; impl_sha = os.environ['GATE_EXECUTOR_IMPLEMENTATION_SHA256']
           failures = []
           def gate(name, ok, detail=''):
               print(('PASS ' if ok else 'FAIL ') + name + (': ' + detail if detail else ''))
@@ -133,7 +145,7 @@ jobs:
           def sha(p): return hashlib.sha256(open(p, 'rb').read()).hexdigest()
           # G-A inputs are self-consistent
           gate('condition matches assigned SUT', cond.split('-')[2] == sut.replace('-', ''), f'{cond} vs {sut}')
-          gate('execution_id format', bool(re.fullmatch(r'EX[0-9]{4}', '${{ inputs.execution_id }}')))
+          gate('execution_id format', bool(re.fullmatch(r'EX[0-9]{4}', os.environ['GATE_EXECUTION_ID'])))
           gate('attempt is a positive integer', attempt.isdigit() and int(attempt) >= 1, attempt)
           # G-1 campaign START exists
           sm = yaml.safe_load(open('manifests/study-manifest.yaml'))
