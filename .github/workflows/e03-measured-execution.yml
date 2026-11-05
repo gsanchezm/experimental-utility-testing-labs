@@ -189,6 +189,9 @@ jobs:
           # manifest are not read. Selected runner none or anything else, a smoke that is not PASS, or an absent version
           # fails closed. The provenance-only keys selection_kind, transcribed_by_role, and
           # values_before_this_transcription are never read.
+          # OP-CI-14 (2026-11-03): the study-wide fallback rule below implements the effective-admissibility rule of v3 sections 9.7.9 to
+          # 9.7.11 (the REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19): it reads the remediation lineage record when one exists and
+          # verifies it clause by clause; the per-condition checks below are unchanged except for the mirror-authorization clause.
           surface = cond.split('-')[3]
           if surface in ('ANDROID', 'IOS'):
               tm = yaml.safe_load(open('manifests/toolchain-manifest.yaml'))['tools']
@@ -214,26 +217,35 @@ jobs:
               plat = surface.lower()
               smk_path = 'manifests/compatibility-smoke-status.yaml'
               smk = (yaml.safe_load(open(smk_path)) or {}) if os.path.isfile(smk_path) else {}
-              # PROTO-U18 (2026-09-26; IMPLEMENTATION_GAP_AGAINST_FROZEN_MOBILE_RUNNER_POLICY_V2; prospective, before any
-              # smoke outcome): study-wide fallback rule of protocol/mobile-runner-policy-v2.md, section 9.5 (carried into
-              # protocol/mobile-runner-policy-v3.md, section 9.5, with the bounded exception of its section 9.7; the effective-
-              # admissibility rule of v3 sections 9.7.9 and 9.7.10 is NOT implemented by this gate: that change is the
-              # REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19 of manifests/mobile-runner-policy-v3-amendment-v1.yaml and protocol/unresolved.md,
-              # a separate human decision; until it is made, every
-              # mobile condition stays blocked by the rule below, as policy v3 itself requires), checked for
-              # EVERY mobile condition before its own smoke. The selected runner stays admissible only if the study-level
-              # status (toolchain mobile_runner_selection.mobile_runner_status) is exactly SELECTED and no compatibility-
-              # smoke record -- ORCHESTRATOR mirror or QUALIFIER-MOBILE-01 source table -- shows FAIL_RUNNER for the
-              # selected runner on ANY SUT x platform. A mirror FAIL_RUNNER counts as a verified observation only with its
-              # QUALIFIER provenance (an existing qualifier_record under qualification/compatibility-smoke/ whose row for
-              # the same SUT and platform reads FAIL_RUNNER with the selected runner's pin, the pin in the entry's
-              # runner_version, and an authorization id); an Appium 3 FAIL_RUNNER so verified, every source FAIL_RUNNER
-              # transcribed, and the status UNRESOLVED_AFTER_FALLBACK_FAILURE is FALLBACK_EXHAUSTED_VERIFIED; any other
-              # combination is PROVENANCE_INCONSISTENT_FAIL_CLOSED (no exhaustion is asserted until reconciled). Every
-              # non-admissible state blocks every mobile condition, including one whose own smoke passed.
+              # PROTO-U18 (2026-09-26; IMPLEMENTATION_GAP_AGAINST_FROZEN_MOBILE_RUNNER_POLICY_V2) and OP-CI-14 (2026-11-03; the
+              # REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19): study-wide fallback rule of protocol/mobile-runner-policy-v3.md,
+              # section 9.5, with the effective-admissibility rule of its sections 9.7.9 to 9.7.11, checked for EVERY mobile
+              # condition before its own smoke. The selected runner stays admissible only if the study-level status (toolchain
+              # mobile_runner_selection.mobile_runner_status) is exactly SELECTED and no UNRESOLVED FAIL_RUNNER of the selected
+              # runner is recorded -- ORCHESTRATOR mirror or QUALIFIER-MOBILE-01 source table -- on ANY SUT x platform. A FAIL_RUNNER
+              # is unresolved unless it is the single historical FAIL_RUNNER named as the trigger by a VERIFIED remediation lineage
+              # record (manifests/mobile-runner-remediation-v1.yaml, 9.7.10): that row is retained, never edited, and no longer counted.
+              # The lineage is verified clause by clause (each a separate gate below, 9.7.9 requirements 1 to 12): the named row is
+              # checked by its authorization, run, result, and row SHA-256; the records it points to by SHA-256; the remediation by its
+              # single authorization, single dispatch, run attempt 1, successor lock, official PASS row, mirror entry, and restoration
+              # basis. The imported artifacts themselves are verified byte-exact against their import records by the validation
+              # workflow (step QUAL-U05, through the export manifest on a public snapshot), not re-hashed here: several are transformed by
+              # the publication-only classes, and every file hashed here is compared through same(), which on a public snapshot
+              # (PUBLIC-EXPORT-MANIFEST.yaml at its root) needs exactly one manifest entry and bridges only UNCHANGED or an alias class.
+              # A FAIL_RUNNER recorded after the lineage record (9.7.11) leaves the lineage valid and is itself unresolved (9.5 applies
+              # again); one that already existed when the status was restored invalidates the lineage (9.7.9, requirement 12). A
+              # source FAIL_RUNNER is verified by its own provenance (the import record of its authorization namespace and the
+              # attribution record of its SUT x platform); a mirror FAIL_RUNNER must match such a row, but the mirror need not show a
+              # historical one. Fallback state, in this order: PROVENANCE_INCONSISTENT_FAIL_CLOSED when a lineage record or restoration
+              # basis exists and does not verify, or when a PASS is recorded after an unresolved FAIL_RUNNER of the same SUT x platform
+              # (no valid lineage); ADMISSIBLE when no unresolved FAIL_RUNNER exists and the status is SELECTED; FALLBACK_EXHAUSTED_VERIFIED
+              # when every unresolved FAIL_RUNNER is verified and the status is UNRESOLVED_AFTER_FALLBACK_FAILURE; any other combination
+              # is PROVENANCE_INCONSISTENT_FAIL_CLOSED (no exhaustion is asserted until reconciled). Every non-admissible state blocks
+              # every mobile condition, including one whose own smoke passed.
               src_path = 'qualification/compatibility-smoke/README.md'
               def smoke_rows(path):
-                  # rows of the "Smoke records" table only (the "Attribution records" table has another column order)
+                  # rows of the "Smoke records" table only (the "Attribution records" table has another column order); the last
+                  # element of a row is its stripped raw line, whose SHA-256 is the row_sha256 of the lineage record
                   out = []
                   if str(path).startswith('qualification/compatibility-smoke/') and os.path.isfile(path):
                       text = open(path).read()
@@ -243,27 +255,124 @@ jobs:
                       for line in text.splitlines():
                           cells = [c.strip() for c in line.strip().strip('|').split('|')]
                           if line.startswith('|') and len(cells) >= 8 and cells[0].startswith('SUT-') and cells[1] in ('android', 'ios'):
-                              out.append(cells)
+                              out.append(cells + [line.strip()])
                   return out
+              def row_auth(r):
+                  m = re.search(r'formal/(APPIUM3-COMPAT-SMOKE-AUTH-[0-9]{2})/', r[8]) if len(r) > 9 else None
+                  return m.group(1) if m else None
+              def row_run(r):
+                  m = re.search(r'\(run ([0-9]+), attempt ([0-9]+)', r[4])
+                  return (m.group(1), m.group(2)) if m else (None, None)
+              def row_time(r):
+                  m = re.match(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}', r[4])
+                  return m.group(0) if m else ''
+              def load_yaml(p):
+                  try: return yaml.safe_load(open(p)) or {}
+                  except Exception: return {}
+              rd = lambda p: open(p, encoding='utf-8').read() if os.path.isfile(p) else ''
+              pem = None
+              if os.path.isfile('PUBLIC-EXPORT-MANIFEST.yaml'):
+                  pem = {}
+                  for pe in load_yaml('PUBLIC-EXPORT-MANIFEST.yaml').get('files') or []:
+                      pem.setdefault(pe.get('path'), []).append(pe)
+              def same(p, want):
+                  # the file's SHA-256 equals want: byte-exact in the canonical repository; on a public snapshot through its unique export-manifest entry
+                  if not (isinstance(p, str) and isinstance(want, str) and os.path.isfile(p)):
+                      return False
+                  h = sha(p)
+                  if pem is None:
+                      return h == want
+                  es = pem.get(p) or []
+                  if len(es) != 1:
+                      return False
+                  tr = es[0].get('transformations')
+                  if tr == ['UNCHANGED']:
+                      return h == want
+                  return bool(tr) and set(tr) <= {'PROVIDER_NEUTRAL_PATH_ALIAS', 'PROVIDER_NEUTRAL_METADATA_REWRITE'} and es[0].get('canonical_sha256') == want and es[0].get('exported_sha256') == h
               of_runner = lambda r: pin is not None and pin in r[5] and runner.split()[0] in r[5]
               status = sel.get('mobile_runner_status')
-              src_fail = [r for r in smoke_rows(src_path) if r[7] == 'FAIL_RUNNER' and of_runner(r)]
-              mir_fail = [e for e in (smk.get('entries') or []) if isinstance(e, dict) and e.get('runner') == runner and e.get('result') == 'FAIL_RUNNER']
-              def verified(e):
-                  rs = [r for r in smoke_rows(str(e.get('qualifier_record') or '')) if r[0] == e.get('sut_id') and r[1] == e.get('platform')]
-                  return bool(e.get('authorization_id')) and bool(rs) and rs[-1][7] == 'FAIL_RUNNER' and of_runner(rs[-1]) and str(e.get('runner_version') or '').strip().split(' ')[0] == pin
-              ver_fail = [e for e in mir_fail if verified(e)]
-              untranscribed = [r for r in src_fail if not any(e.get('sut_id') == r[0] and e.get('platform') == r[1] for e in ver_fail)]
-              fail_evidence = bool(mir_fail or src_fail) or status == 'UNRESOLVED_AFTER_FALLBACK_FAILURE'
-              if not fail_evidence and status == 'SELECTED':
+              rows_all = smoke_rows(src_path)
+              src_fail = [r for r in rows_all if r[7] == 'FAIL_RUNNER' and of_runner(r)]
+              mir_ents = [e for e in (smk.get('entries') or []) if isinstance(e, dict) and e.get('runner') == runner]
+              mir_fail = [e for e in mir_ents if e.get('result') == 'FAIL_RUNNER']
+              def src_verified(r):
+                  a = row_auth(r); run_id = row_run(r)[0]
+                  base = 'qualification/compatibility-smoke/formal/' + str(a) + '/'
+                  ir = load_yaml(base + 'IMPORT-RECORD.yaml'); at = load_yaml(base + 'ATTRIBUTION-' + r[0] + '-' + r[1] + '.yaml')
+                  return bool(a) and run_id is not None and ir.get('authorization_id') == a and str((ir.get('workflow') or {}).get('run_id')) == run_id and at.get('authorization_id') == a and at.get('result') == 'FAIL_RUNNER' and at.get('sut_id') == r[0] and at.get('platform') == r[1]
+              def mir_matches(e):
+                  rs = [r for r in src_fail if r[0] == e.get('sut_id') and r[1] == e.get('platform') and row_auth(r) == e.get('authorization_id')]
+                  return bool(e.get('authorization_id')) and len(rs) == 1 and src_verified(rs[0]) and str(e.get('runner_version') or '').strip().split(' ')[0] == pin
+              # the remediation lineage record of policy v3, 9.7.10, and the constants it must agree with
+              LIN = 'manifests/mobile-runner-remediation-v1.yaml'
+              TRIG, TRIG_RUN = 'APPIUM3-COMPAT-SMOKE-AUTH-02', '36539790536'
+              REM_BASIS = 'restored under mobile-runner-policy-v3 after one successful post-fallback remediation qualification'
+              lin_files = sorted(glob.glob('manifests/mobile-runner-remediation-v*.yaml'))
+              lin = load_yaml(LIN) if lin_files == [LIN] else {}
+              named = [r for r in src_fail if r[0] == 'SUT-02' and r[1] == 'ios' and row_auth(r) == TRIG and row_run(r) == (TRIG_RUN, '1')]
+              lin_in_play = bool(lin_files or 'restoration_basis' in sel)   # a restoration is claimed: a lineage record or a restoration basis exists
+              lin_res = []
+              def lcheck(name, ok, detail=''):
+                  lin_res.append(bool(ok))
+                  gate(name, ok, detail)
+              if lin_in_play:
+                  lcheck('exactly one remediation lineage record exists and it is a REMEDIATION_LINEAGE_RECORD (policy v3, 9.7.10)', lin_files == [LIN] and lin.get('record_class') == 'REMEDIATION_LINEAGE_RECORD', str(lin_files))
+              if lin_in_play and lin:
+                  hf = lin.get('historical_failing_observation') or {}
+                  rem = lin.get('remediation') or {}
+                  osr = rem.get('official_result_source_record') or {}
+                  il = rem.get('implementation_lock') or {}
+                  ar = rem.get('authorization_record') or {}
+                  rri = rem.get('run_identity_record') or {}
+                  RID = str(rem.get('authorization_id'))
+                  auth_rec = load_yaml(str(ar.get('path')))
+                  rrec = load_yaml(str(rri.get('path')))
+                  pol1, pol2, pol3 = rd('protocol/mobile-runner-policy-v1.md'), rd('protocol/mobile-runner-policy-v2.md'), rd('protocol/mobile-runner-policy-v3.md')
+                  lcheck('policy v3 is FROZEN-PRE-DATA with section 9.7, v2 and v1 are AMENDED, and the lineage names v3 as the new policy and v2 as the prior policy (9.7.9, requirement 2)', '| Document | protocol/mobile-runner-policy-v3.md |' in pol3 and '| Protocol state | FROZEN-PRE-DATA |' in pol3 and '### 9.7 Post-fallback remediation qualification' in pol3 and '| Protocol state | AMENDED |' in pol2 and '| Superseded by | protocol/mobile-runner-policy-v3.md |' in pol2 and '| Protocol state | AMENDED |' in pol1 and '| Superseded by | protocol/mobile-runner-policy-v2.md |' in pol1 and lin.get('new_policy') == 'protocol/mobile-runner-policy-v3.md' and lin.get('prior_policy') == 'protocol/mobile-runner-policy-v2.md')
+                  lcheck('the lineage names the historical FAIL_RUNNER: APPIUM3-COMPAT-SMOKE-AUTH-02, run 36539790536, run attempt 1, SUT-02 x iOS, FAIL_RUNNER, historical_result_immutable true (9.7.9, requirement 1)', hf.get('authorization_id') == TRIG and str(hf.get('run_id')) == TRIG_RUN and str(hf.get('run_attempt')) == '1' and str(hf.get('ecosystem_platform')).replace('×', 'x').lower() == 'sut-02 x ios' and hf.get('result') == 'FAIL_RUNNER' and hf.get('historical_result_immutable') is True)
+                  lcheck('the named historical row still exists unchanged in the Smoke records: its authorization, run, result, and the SHA-256 of the row equal the lineage record (9.7.9, requirement 10)', len(named) == 1 and (hf.get('smoke_record_row') or {}).get('file') == src_path and hashlib.sha256(named[0][-1].encode('utf-8')).hexdigest() == (hf.get('smoke_record_row') or {}).get('row_sha256'))
+                  lcheck('the attribution, import, and run-identity records of the historical FAIL_RUNNER are unchanged (SHA-256 equals the lineage record) and agree with it (9.7.9, requirement 10; its imported artifacts are verified byte-exact by the validation workflow, step QUAL-U05)', all(same((hf.get(k) or {}).get('path'), (hf.get(k) or {}).get('sha256')) for k in ('attribution_record', 'import_record', 'run_identity_record')) and len(named) == 1 and src_verified(named[0]) and load_yaml(str((hf.get('run_identity_record') or {}).get('path'))).get('authorization_id') == TRIG and str(load_yaml(str((hf.get('run_identity_record') or {}).get('path'))).get('run_id')) == TRIG_RUN)
+                  lcheck('the remediation authorization is new (not AUTH-01 or AUTH-02), VALID, ISSUED, CONSUMED_AFTER_DISPATCH with dispatch_performed true, of the remediation type, governed by policy v3, and its record equals the lineage SHA-256 (9.7.9, requirement 4)', re.fullmatch(r'APPIUM3-COMPAT-SMOKE-AUTH-[0-9]{2}', RID) is not None and RID not in ('APPIUM3-COMPAT-SMOKE-AUTH-01', TRIG) and same(ar.get('path'), ar.get('sha256')) and auth_rec.get('authorization_id') == RID and auth_rec.get('authorization_type') == 'COMPATIBILITY_SMOKE_REMEDIATION_EXECUTION' and auth_rec.get('record_validity') == 'VALID' and auth_rec.get('status') == 'ISSUED' and auth_rec.get('dispatch_eligibility') == 'CONSUMED_AFTER_DISPATCH' and auth_rec.get('dispatch_performed') is True and auth_rec.get('governing_policy') == 'protocol/mobile-runner-policy-v3.md', RID)
+                  lcheck('the remediation targets only SUT-02 ios with the selected runner, one execution, and names the historical FAIL_RUNNER as its trigger (9.7.9, requirements 1 and 6)', (auth_rec.get('scope') or {}).get('sut_id') == 'SUT-02' and (auth_rec.get('scope') or {}).get('platforms') == ['ios'] and (auth_rec.get('scope') or {}).get('runner') == runner and (auth_rec.get('scope') or {}).get('executions') == 1 and (auth_rec.get('remediation') or {}).get('trigger_authorization') == TRIG and str((auth_rec.get('remediation') or {}).get('trigger_run_id')) == TRIG_RUN)
+                  rem_auths = [p for p in sorted(glob.glob('manifests/compatibility-smoke-execution-auth-v*.yaml')) if load_yaml(p).get('authorization_type') == 'COMPATIBILITY_SMOKE_REMEDIATION_EXECUTION']
+                  lcheck('exactly one remediation authorization exists and it is the one the lineage names (a second remediation never exists; 9.7.5, 9.7.11)', rem_auths == [ar.get('path')], str(rem_auths))
+                  lcheck('the remediation ran once: its run-identity record equals the lineage SHA-256 and shows one dispatch, one remediation run, run attempt 1, and the run id of the lineage (9.7.5; 9.7.9, requirement 3)', same(rri.get('path'), rri.get('sha256')) and rrec.get('authorization_id') == RID and str(rrec.get('run_id')) == str(rem.get('run_id')) and str(rem.get('run_attempt')) == '1' and str(rrec.get('run_attempt')) == '1' and str(rrec.get('dispatch_commands_executed')) == '1' and str(rrec.get('remediation_runs_after_dispatch')) == '1', str(rem.get('run_id')))
+                  lcheck('the remediation used the approved successor implementation lock v4: its SHA-256 equals the lineage record and the authorization record (9.7.9, requirement 5)', il.get('id') == 'manifests/compatibility-smoke-implementation-lock-v4.yaml' and same(il.get('id'), il.get('sha256')) and (auth_rec.get('implementation_lock') or {}).get('path') == il.get('id') and (auth_rec.get('implementation_lock') or {}).get('sha256') == il.get('sha256'))
+                  pass_rows = [r for r in rows_all if row_auth(r) == RID]
+                  lcheck('the official result is a PASS: exactly one Smoke records row cites the remediation namespace (SUT-02 ios, PASS, the selected runner pin, the run id of the lineage, attempt 1) and its SHA-256 equals the lineage record (9.7.9, requirements 6 and 7)', rem.get('official_result') == 'PASS' and len(pass_rows) == 1 and pass_rows[0][0] == 'SUT-02' and pass_rows[0][1] == 'ios' and pass_rows[0][7] == 'PASS' and of_runner(pass_rows[0]) and row_run(pass_rows[0]) == (str(rem.get('run_id')), '1') and osr.get('path') == src_path and hashlib.sha256(pass_rows[0][-1].encode('utf-8')).hexdigest() == osr.get('row_sha256'))
+                  irp = 'qualification/compatibility-smoke/formal/' + RID + '/IMPORT-RECORD.yaml'
+                  irr = load_yaml(irp)
+                  lcheck('the remediation artifacts are imported under their own namespace: the import record and the post-run recording record equal the lineage SHA-256 and the import record names the authorization, the run, and attempt 1 (9.7.9, requirement 8; the artifacts are verified byte-exact by the validation workflow, step QUAL-U05)', same(irp, osr.get('import_record_sha256')) and irr.get('authorization_id') == RID and str((irr.get('workflow') or {}).get('run_id')) == str(rem.get('run_id')) and str((irr.get('workflow') or {}).get('run_attempt')) == '1' and same(osr.get('recording_record'), osr.get('recording_record_sha256')))
+                  rec_at = str(lin.get('recorded_at') or '')[:19]
+                  m_ios = [e for e in mir_ents if e.get('sut_id') == 'SUT-02' and e.get('platform') == 'ios']
+                  lcheck('the mirror holds exactly one SUT-02 ios entry of the selected runner: the PASS transcribed from the remediation authorization, or a FAIL_RUNNER recorded after the lineage record (9.7.9, requirement 9; 9.7.11)', len(m_ios) == 1 and ((m_ios[0].get('result') == 'PASS' and m_ios[0].get('authorization_id') == RID and str(m_ios[0].get('runner_version') or '').strip().split(' ')[0] == pin) or (m_ios[0].get('result') == 'FAIL_RUNNER' and bool(rec_at) and str(m_ios[0].get('executed_at') or '')[:19] > rec_at)))
+                  lcheck('the restoration is explicit: the lineage restored status is SELECTED and its restoration basis equals tools.mobile_runner_selection.restoration_basis and the text of policy v3, 9.7.7 (9.7.9, requirement 11; 9.7.10)', lin.get('restored_runner_status') == 'SELECTED' and bool(sel.get('restoration_basis')) and lin.get('restoration_basis') == sel.get('restoration_basis') == REM_BASIS)
+                  before = lambda t: not t or not rec_at or str(t)[:19] <= rec_at
+                  other_before = [r for r in src_fail if r not in named and before(row_time(r))] + [e for e in mir_fail if before(e.get('executed_at'))]
+                  lcheck('no other FAIL_RUNNER of the selected runner existed when the status was restored (before the recorded_at of the lineage record; 9.7.9, requirement 12)', re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}', rec_at) is not None and not other_before, str([(r[0], r[1], row_auth(r)) for r in other_before if isinstance(r, list)] + [(e.get('sut_id'), e.get('platform')) for e in other_before if isinstance(e, dict)]))
+              lineage_ok = all(lin_res) if lin_in_play else True   # no restoration claimed: nothing to verify
+              lineage_valid = lin_in_play and lineage_ok           # only a verified lineage retains the named historical FAIL_RUNNER
+              unresolved_src = [r for r in src_fail if not (lineage_valid and r in named)]
+              unresolved_mir = list(mir_fail)
+              unresolved = unresolved_src + unresolved_mir
+              def later_pass(sut_id, plat, t):
+                  # a PASS of the same SUT x platform with the selected runner recorded after that FAIL_RUNNER (README row or mirror entry)
+                  ts = [row_time(r) for r in rows_all if r[0] == sut_id and r[1] == plat and r[7] == 'PASS' and of_runner(r)] + [str(e.get('executed_at') or '')[:19] for e in mir_ents if e.get('sut_id') == sut_id and e.get('platform') == plat and e.get('result') == 'PASS']
+                  return any(x and (not t or x > str(t)[:19]) for x in ts)
+              pass_beside_fail = any(later_pass(r[0], r[1], row_time(r)) for r in unresolved_src) or any(later_pass(e.get('sut_id'), e.get('platform'), e.get('executed_at')) for e in unresolved_mir)
+              src_unverified = [r for r in unresolved_src if not src_verified(r)]
+              mir_unmatched = [e for e in unresolved_mir if not mir_matches(e)]
+              if not lineage_ok or pass_beside_fail:
+                  fb_state = 'PROVENANCE_INCONSISTENT_FAIL_CLOSED'
+              elif not unresolved and status == 'SELECTED':
                   fb_state = 'ADMISSIBLE'
-              elif runner == 'Appium 3' and ver_fail and len(ver_fail) == len(mir_fail) and not untranscribed and status == 'UNRESOLVED_AFTER_FALLBACK_FAILURE':
+              elif runner == 'Appium 3' and unresolved and not src_unverified and not mir_unmatched and status == 'UNRESOLVED_AFTER_FALLBACK_FAILURE':
                   fb_state = 'FALLBACK_EXHAUSTED_VERIFIED'
               else:
                   fb_state = 'PROVENANCE_INCONSISTENT_FAIL_CLOSED'
-              fb_detail = f"{fb_state}; status={status}; mirror FAIL_RUNNER={[(e.get('sut_id'), e.get('platform')) for e in mir_fail]} (verified {len(ver_fail)}); QUALIFIER FAIL_RUNNER rows={[(r[0], r[1]) for r in src_fail]}"
-              gate('study-level mobile-runner status is SELECTED (policy v2, 9.5)', status == 'SELECTED', str(status))
-              gate('no FAIL_RUNNER of the selected runner recorded for any SUT x platform (mirror or QUALIFIER record)', not (mir_fail or src_fail), fb_detail)
+              fb_detail = f"{fb_state}; status={status}; lineage={'not applicable' if not lin_in_play else ('verified' if lineage_ok else 'NOT verified')}; QUALIFIER FAIL_RUNNER rows={[(r[0], r[1], row_auth(r)) for r in src_fail]} (retained by the verified lineage: {len(named) if lineage_valid else 0}); unresolved={[(r[0], r[1]) for r in unresolved_src] + [(e.get('sut_id'), e.get('platform')) for e in unresolved_mir]}; mirror FAIL_RUNNER={[(e.get('sut_id'), e.get('platform')) for e in mir_fail]}; PASS recorded after an unresolved FAIL_RUNNER={pass_beside_fail}"
+              gate('study-level mobile-runner status is SELECTED (policy v3, 9.5 and 9.7.9)', status == 'SELECTED', str(status))
+              gate('no unresolved FAIL_RUNNER of the selected runner recorded for any SUT x platform (mirror or QUALIFIER record; the one historical FAIL_RUNNER named by a verified remediation lineage record is retained and not counted)', not unresolved, fb_detail)
               gate('the selected runner remains admissible study-wide (no exhausted or inconsistent fallback state)', fb_state == 'ADMISSIBLE', fb_detail)
               ents = [e for e in (smk.get('entries') or []) if isinstance(e, dict) and e.get('sut_id') == sut and e.get('platform') == plat and e.get('runner') == runner]
               gate(f'exactly one compatibility-smoke entry for {sut} x {plat} x {runner}', len(ents) == 1, f'{len(ents)} in {smk_path}')
@@ -278,6 +387,8 @@ jobs:
                       if line.startswith('|') and len(cells) >= 8 and cells[0] == sut and cells[1] == plat:
                           rows.append(cells)
               gate(f'the QUALIFIER-owned smoke record has a PASS row for {sut} x {plat} with the selected runner version', any(r[7] == 'PASS' and pin is not None and pin in r[5] for r in rows), qr or '(absent)')
+              pr_rows = [r for r in smoke_rows(qr) if r[0] == sut and r[1] == plat and r[7] == 'PASS' and of_runner(r)]
+              gate(f'the smoke entry of {sut} x {plat} names the authorization of a PASS row of that SUT x platform in the QUALIFIER record (table position never decides; policy v3, 9.7.8)', sm1.get('authorization_id') is not None and sm1.get('authorization_id') in {row_auth(r) for r in pr_rows}, f"{sm1.get('authorization_id')} / {sorted({str(row_auth(r)) for r in pr_rows})}")
               gate('Appium 2 never selected', 'Appium 2' not in runner and str(fb.get('candidate')) == 'Appium 3' and 'Appium 2' not in str(fb.get('version')) and not str(fb.get('version') or '').strip().startswith('2'))
           # G-8 controlled instance verified for this condition on GitHub Actions
           try:

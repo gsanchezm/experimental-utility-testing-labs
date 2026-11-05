@@ -353,16 +353,21 @@ jobs:
               print('mobile-qualification authorization resolution regression check FAILED'); sys.exit(1)
           print('mobile-qualification authorization resolution regression check ok')
           PY
-      - name: Assert G-7 enforces the study-wide exhausted-fallback rule of mobile-runner-policy-v2 (PROTO-U18)
+      - name: Assert G-7 enforces the study-wide fallback rule of mobile-runner-policy-v3 (PROTO-U18; effective admissibility, 9.7.9 to 9.7.11)
         run: |
           set -euo pipefail
           python3 - <<'PY'
           import sys
+          # OP-CI-14 (2026-11-03): the strings follow gate G-7 after the implementation of the effective-admissibility rule of
+          # protocol/mobile-runner-policy-v3.md, 9.7.9 to 9.7.11 (the REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19): the FAIL_RUNNER
+          # clause counts only UNRESOLVED observations, and the one historical FAIL_RUNNER is retained only through a verified lineage.
           wf = open('.github/workflows/e03-measured-execution.yml').read()
           checks = [
-              ('G-7 requires the study-level mobile-runner status SELECTED', "gate('study-level mobile-runner status is SELECTED (policy v2, 9.5)', status == 'SELECTED'" in wf),
-              ('G-7 refuses any FAIL_RUNNER of the selected runner on any SUT x platform (mirror or QUALIFIER record)', "gate('no FAIL_RUNNER of the selected runner recorded for any SUT x platform (mirror or QUALIFIER record)', not (mir_fail or src_fail)" in wf),
+              ('G-7 requires the study-level mobile-runner status SELECTED', "gate('study-level mobile-runner status is SELECTED (policy v3, 9.5 and 9.7.9)', status == 'SELECTED'" in wf),
+              ('G-7 refuses any unresolved FAIL_RUNNER of the selected runner on any SUT x platform (mirror or QUALIFIER record)', "gate('no unresolved FAIL_RUNNER of the selected runner recorded for any SUT x platform (mirror or QUALIFIER record; the one historical FAIL_RUNNER named by a verified remediation lineage record is retained and not counted)', not unresolved" in wf),
               ('G-7 classifies the study-wide state and admits only ADMISSIBLE', "fb_state == 'ADMISSIBLE'" in wf and "'FALLBACK_EXHAUSTED_VERIFIED'" in wf and "'PROVENANCE_INCONSISTENT_FAIL_CLOSED'" in wf),
+              ('G-7 retains the named historical FAIL_RUNNER only through a verified remediation lineage record (policy v3, 9.7.9 and 9.7.10)', "LIN = 'manifests/mobile-runner-remediation-v1.yaml'" in wf and "lineage_valid = lin_in_play and lineage_ok" in wf and 'not (lineage_valid and r in named)' in wf and "'REMEDIATION_LINEAGE_RECORD'" in wf),
+              ('G-7 compares record hashes through the export-manifest bridge (canonical byte-exact; public snapshot through its unique manifest entry)', 'def same(p, want):' in wf and "os.path.isfile('PUBLIC-EXPORT-MANIFEST.yaml')" in wf and "tr == ['UNCHANGED']" in wf),
               ('the study-wide check precedes the per-condition smoke check', wf.index("fb_state == 'ADMISSIBLE'") < wf.index("gate(f'exactly one compatibility-smoke entry for")),
           ]
           for n, ok in checks:
