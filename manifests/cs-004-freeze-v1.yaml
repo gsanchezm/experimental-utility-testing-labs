@@ -1,0 +1,72 @@
+# Mapping-record freeze record v1 -- CS-004 (EUS-2026-001, Experimental Utility of Software-Testing Laboratory Ecosystems)
+# The human research lead's decision of 2026-11-06 that froze the canonical scenario CS-004 (DRAFT -> FROZEN) after the confirmation of its eight design points and the judgment of its exposure
+# disclosure. ORCHESTRATOR record, written once and never edited afterwards (a correction is a new version file). It starts, configures, dispatches, exports, and executes nothing; it changes
+# no protocol document: the freeze of a mapping record is recorded by one mapping-record row of protocol/CHANGELOG.md (protocol/change-control-v1.md, section 5;
+# protocol/equivalent-scenario-mapping-v1.md, section 6).
+record_class: MAPPING_RECORD_FREEZE
+record_id: CS-004-FREEZE-01
+authorization_id: E02-CS004-FREEZE-AUTH-01  # assigned by the ORCHESTRATOR to the approval below, on the pattern of E02-CS003-FREEZE-AUTH-01; the human texts carry no id
+study_id: EUS-2026-001
+operation_id: OP-FREEZE-03
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-06'  # America/Mexico_City
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+nature: "a mapping-record freeze: experiments/scenario-mappings/CS-004.yaml moves from DRAFT to FROZEN; no campaign status, protocol document, campaign configuration, workflow, result, or raw-data file changes"
+record_frozen:
+  path: experiments/scenario-mappings/CS-004.yaml
+  canonical_scenario_id: CS-004
+  version: 1
+  campaigns_using: [E02-state-establishment]
+  state_change: "mapping DRAFT -> FROZEN"
+  frozen_at: '2026-11-06'
+  approved_by: gilbertosanchez
+  sha256_of_the_draft_installed: 42cbb88a15a66731f6302ba732ad8ec6a9b9df5a77afb5f858ba02e29b209c5b  # commit 3cf2a4f (2026-11-05); SUT-05 comparability null, which the protocol allows in a DRAFT only
+  sha256_of_the_draft_approved: 031efc63898d0984a728284402fee2dc0a8d05d0f4d5698700d902cd57a39be3  # commit 4b580d3f (2026-11-06): SUT-05 NOT_COMPARABLE, reason OTHER (evidence not sufficient); DP-8 revised
+  sha256_of_the_frozen_record: 590af7258aeeb17b5ed73376ae3d8a2e71f86771b5c086ee5af4c266accc4cfe
+  bytes_of_the_frozen_record: 26843
+  changes_at_freeze: "the header status block, the three status fields (mapping_status, frozen_at, approved_by), the wording 'this draft' in two places (now 'this record'), and the `notes` wording from recommended to decided (with the two discrepancies of CS-003 and the exposure judgment recorded as decided); no mapping entry, comparability decision, evidence_id, or step changed"
+  change_log_row: "protocol/CHANGELOG.md, one mapping-record row of 2026-11-06"
+human_decision:
+  given_by: gilbertosanchez (human research lead)
+  decision_date: '2026-11-06'  # America/Mexico_City
+  channel: "given directly by the human research lead to the ORCHESTRATOR in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25)"
+  recorded_in: manifests/campaign-execution-decisions-v2.yaml  # approval line C, with the whole answer and its SHA-256
+  transcript_stamp: '2026-11-06T17:13:03.464Z'
+  offered_line_exact_text: |-
+    (C) ¿Congelo experiments/scenario-mappings/CS-004.yaml en sha256 031efc63898d0984a728284402fee2dc0a8d05d0f4d5698700d902cd57a39be3 (25598 bytes, commit 4b580d3f) con DP-1..DP-8 como recomendados? Corrección a mi hoja: NO se podía congelar «tal cual», porque SUT-05 estaba en null y el protocolo (mapeo, sección 7) exige COMPARABLE o NOT_COMPARABLE al congelar; ahora SUT-05 queda NOT_COMPARABLE por evidencia insuficiente (DP-8 b, abierto a un CS-004-v2). Dos cosas que mi hoja no te mostró: (1) el archivo declara una exposición PROTO-U09: quien lo redactó leyó las filas de E01 antes de elegir el objetivo checkout-ready, y la independencia respecto a la evidencia no se puede probar desde el archivo, es tu juicio (CS-002 se excluyó por una razón del mismo tipo); lo divulgaría en las amenazas del paper; (2) los selectores de checkout de SUT-02 y SUT-03 no están verificados: esas dos condiciones se rechazan hasta un DRY_RUN que tú autorices.
+  offered_line_sha256: e84ad176290ebcfc07593394a48b0dc492039c8f34e5f4ff1116fad1407b839e
+  answer_exact_text: |-
+    Sí: congela CS-004 con SUT-05 NOT_COMPARABLE (Recomendado)
+  answer_sha256: 26d853b7f15a6f917418ad42f62145782e8d08567e0ad7610cf12c4486a80359
+  preceding_message: {stamp: '2026-11-06T17:04:14.129Z', exact_text: "para el paso 6, vamos por tus recomendaciones,", sha256: 7aa4d48e8f578eaaa27969f06560fbd07381c82e16319180f2818bbc67fd919d}
+  sha256_convention: UTF-8 text exactly as written, without a trailing line feed
+  correction_to_the_earlier_report: "the round-2 report recommended freezing the DRAFT as drafted; it could not be frozen as drafted (SUT-05 comparability null), and the disclosure of the file (exposure of the drafter to the E01 rows) had not been shown. The offered line stated both, the corrected hash, and the unverified checkout selectors of SUT-02 and SUT-03."
+design_point_decisions:
+  DP-1: {field: precondition_class, decision: SEEDED_BUSINESS_STATE, alternative_not_chosen: CLEAN_SESSION}
+  DP-2: {field: target_state_or_transition, decision: "checkout-ready, verified in the checkout entry point; the committing step is not performed", alternative_not_chosen: "a committed order or booking"}
+  DP-3: {field: observable_oracle_class, decision: UI_STATE, note: "same disclosed deviation as CS-003 DP-3"}
+  DP-4: {field: surfaces, decision: "WEB only, for SUT-01, SUT-02, SUT-03 (the H2 scope); API for SUT-01 and the mobile surfaces are not mapped"}
+  DP-5: {field: actor_state, decision: AUTHENTICATED_STANDARD}
+  DP-6: {field: reset_requirement, decision: DATA_RESET, alternative_not_chosen: NONE}
+  DP-7: {field: sut_04, decision: "NOT_COMPARABLE (NO_EQUIVALENT_INTENT)", alternative_not_chosen: "COMPARABLE with the reservation form as the checkout-ready state"}
+  DP-8: {field: sut_05, decision: "NOT_COMPARABLE, reason OTHER (EVIDENCE NOT SUFFICIENT FOR COMPARABLE), open to a CS-004-v2 if a source-verification row is recorded", alternative_not_chosen: "record a new source-verification row first and map SUT-05 afterwards (delays the freeze)"}
+exposure_judgment:
+  disclosure: "the file's own header states that the drafter had read the E01 evidence rows of SUT-01 to SUT-05 before writing it, that the choice of target (checkout-ready) was made after that reading and because of it, and that the independence of the canonical block from the evidence cannot be proven from the file (protocol/equivalent-scenario-mapping-v1.md, section 6, order of writing; PROTO-U09 class)"
+  judged_by: gilbertosanchez (human research lead), with the disclosure in front of the approval line
+  outcome: "accepted by the approval of line C; to be disclosed among the threats to validity of the paper"
+  orchestrator_note: "CS-002 was excluded for a reason of the same class (E03-CS002-EXCLUSION-RULING-01). The header of this record states that its canonical block is taken from the ecosystem-neutral pattern of section 2 of the mapping protocol and was written before the mapping entries; the exposure concerns the choice of target and the split of the pattern, which the file states were made after reading the E01 rows. This note is not part of the decision."
+pre_freeze_check:
+  by: ORCHESTRATOR
+  evidence_ids: "the 31 distinct evidence_id cited by the record each resolve in the evidence.csv of the audit branch of their own SUT (audit/e01-sut0N-*); 28 are SOURCE_VERIFIED and 3 DOCUMENTED; none is EXECUTION_VERIFIED or INFERRED"
+  every_entry_decided: "all six entries carry COMPARABLE or NOT_COMPARABLE (protocol/equivalent-scenario-mapping-v1.md, section 7, template, required at freeze): SUT-01, SUT-02, SUT-03 COMPARABLE (WEB); SUT-04, SUT-05, SUT-06 NOT_COMPARABLE"
+  sut_06: "NOT_COMPARABLE (NO_EQUIVALENT_INTENT) with the same basis as CS-001 and CS-003; no mapping is inferred from the SUT-06 evidence"
+  nothing_inferred: "no vendor product feature is used as evidence about a demo ecosystem (rule 4 of the agent-instructions file)"
+open_after_this_record:
+  checkout_selectors: "HD-S: the checkout selectors of SUT-02 and SUT-03 for CS-004 are not verified, so the E02 executor refuses those two conditions; verifying them needs a DRY_RUN that the human research lead authorizes; a selector found wrong would not change this record (the selectors are a realization detail of the campaign configuration)"
+  e02: "the campaign configuration of E02 must name CS-003 and CS-004 as frozen and fix N-2 (client-cart interplay) and N-3 (SUT-03 reset) of the notes"
+state_after_this_record:
+  e02: "campaign E02-state-establishment stays NOT_STARTED; the frozen mapping records required before any E02 execution now exist for both scenarios; no campaign configuration, START, authorization, or dispatch exists"
+  other_campaigns: "every campaign keeps its status; E03 stays FROZEN"
+  nothing_done: "no campaign was started or configured, nothing was dispatched, exported, or pushed; research-status.html was not edited"

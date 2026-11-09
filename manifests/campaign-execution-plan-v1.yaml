@@ -1,0 +1,81 @@
+# Campaign execution plan record v1 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# The human research lead's decisions of 2026-11-05 on how to execute the pending campaigns before the DATA FREEZE of 2027-01-05: the scope of the
+# minimum campaign set and of a small mobile suite, the route to a per-SUT dispatch authorization (a governance successor), the treatment of H2 and H4,
+# the policy for a failed mobile smoke, and the adoption of the recommended defaults of the design briefs as the working proposal for the drafts.
+# ORCHESTRATOR record, written once and never edited afterwards (a correction is a new version file). It starts, configures, schedules, authorizes and
+# dispatches nothing, and it changes no protocol document in force: the governance successor that it calls for is a DRAFT (protocol/agent-governance-v6.md)
+# whose freeze needs its own explicit approval.
+record_class: CAMPAIGN_EXECUTION_PLAN_RECORD
+record_id: CAMPAIGN-EXECUTION-PLAN-01
+study_id: EUS-2026-001
+operation_id: OP-DISP-04
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-05'  # America/Mexico_City
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+nature: "a written decision on the execution plan: scope, governance route, H2, H4, mobile policy and the adoption of working defaults; no campaign status, protocol document in force, mapping record status, campaign configuration, workflow, result, or raw-data file changes"
+supersedes_in_part:  # the earlier record stays as written (historical)
+  - record: manifests/campaign-resumption-v1.yaml
+    what: "the order in which the ORCHESTRATOR proposed to prepare the resumed campaigns (E02, then E04/E05, E08-E11, E12, with E06/E07 without mobile cells), and the rule of the 2026-11-02 text that the manuscript is not drafted until the experiments are finished, which the human research lead relaxed on 2026-11-05 for the sections on context and methods only (a draft kept outside this repository; the sections on results, findings and conclusions stay undrafted until the data freeze)"
+design_records:  # DRAFT files prepared for this decision; commit 3cf2a4f87b563821c35c342c230879034e3803ca
+  governance_successor: "protocol/agent-governance-v6.md and manifests/agent-governance-v6-amendment-v1.yaml (DRAFT)"
+  scenario_drafts: "experiments/scenario-mappings/CS-004.yaml (E02), CS-005.yaml (E07, API to WEB; the WEB to API direction is named CS-006 and not drafted) and CS-007.yaml (E06, mobile parity), all DRAFT"
+  briefs: "design-brief-draft.md and campaign-configuration-draft.md under experiments/E02-state-establishment, E05-determinism, E06-cross-platform-parity (mobile-path-brief-draft.md), E07-cross-layer-continuity and E09-accessibility; experiments/E05-determinism/integrity-notes-draft.md; experiments/E09-accessibility/axe-core-pin-proposal-draft.md; experiments/E02-state-establishment/h2-reset-side-options-draft.md"
+human_decision:
+  given_by: gilbertosanchez (human research lead)
+  decision_date: '2026-11-05'  # America/Mexico_City
+  channel: "given directly by the human research lead to the ORCHESTRATOR in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25)"
+  texts:
+    - id: message_1
+      transcript_stamp: '2026-11-06T00:16:05.936Z'
+      bytes: 503
+      exact_text: "vamos por ejecutar lo necesario y en paralelo lo que se pueda para completar la ejecución, además me parece bien que se redacten los métodos y contexto, vamos a usar el formato del LACCEI: <local path of the conference template, withheld> y que contenga la estructura de Introduction, Theoretical Framework, MEthodology, Results, Findings and discussion, conclusion y references (mínimo 25 referencias, lo más actuales posibles)"
+      exact_text_sha256: eaf8a50e7d3c541232766ee3ee4f965b8edef93c7c8bbec6dd7567f622e069d0
+      note: "the hash and the byte count are over the original text, which holds a local file path at the place marked; the marker is the only edit"
+      effect: "execute what is necessary and prepare in parallel what can be prepared; the sections on context and methods of the conference paper may be drafted now (relaxing the rule of 2026-11-02 for those sections)"
+    - id: answers_round_1
+      transcript_stamp: '2026-11-06T01:12:23.188Z'
+      bytes: 1285
+      exact_text_sha256: 4f859aee102b868205e46ebd07377e0c9069012fa93ea831bef9e9432f22e1b0
+      answers:
+        - question: "dispatch model for the pending campaigns"
+          answer_label: "New governance version (Recommended)"
+          effect: "a governance successor (v6) gives E02 and E04-E12 one dispatch authorization per assigned SUT, as E03 has under agent-governance Section 3.5; the ORCHESTRATOR prepares a DRAFT only, and its freeze needs a later explicit approval"
+        - question: "scope before the data freeze"
+          answer_exact_text: "punto 2 me parece bien, hay que incluir mobile aunq sea una suite pequeña"
+          answer_exact_text_sha256: 6ee6db134e29afa9b9b5c1c5b196a4b29cc877af4104ab3fdc2e308a12877294
+          answer_bytes: 74
+          effect: "the option presented second: the minimum set of four (E02, E05, E07 web/API, E09) plus a mobile parity attempt, with a small mobile suite"
+        - question: "H2: a second scenario per side"
+          answer_label: "Add a second scenario per side"
+          effect: "superseded by the answer of round 2 on the reset side"
+    - id: answers_round_2
+      transcript_stamp: '2026-11-06T02:06:39.596Z'
+      bytes: 1815
+      exact_text_sha256: 06e1fd32d0d82dafa132fbc7fd637a5becc5a79ceb1bd95912152ee30e5dced7
+      answers:
+        - question: "H2 reset side, after the costs of reopening E03 were shown"
+          answer_label: "Keep E03 closed (Recommended)"
+          effect: "E03 stays FROZEN and nothing of it is reopened; the reset side of H2 stays on its single scenario CS-001; E02 contributes two establish-side scenarios (CS-003, FROZEN, and CS-004, DRAFT); H2 is reported as descriptive and its limit (one reset-side scenario; a paired test cannot reach significance with two pairs, the exact two-sided minimum p being 0.5) is stated openly"
+        - question: "H4 continuity standard"
+          answer_label: "Strict (Recommended)"
+          effect: "an object counts for continuity only if the actor establishes it (as in CS-001 and CS-003); SUT-02 (no API surface) and SUT-03 (no persisted state; its cart never reaches the API, E01 evidence SUT03-EV-0031 and -0032) are NOT_COMPARABLE for continuity, so no confirmatory continuity comparison is evaluable and it is reported as no data with the reason, never as zero; H4 rests on mobile parity (SUT-01 versus SUT-02); E07 is exploratory (SUT-01, SUT-04, SUT-05) and is prepared after E02, E09 and E05"
+        - question: "mobile suite and failure policy"
+          answer_label: "Minimal suite, no pre-drafted fallback (Recommended)"
+          effect: "one mobile parity scenario (CS-007), WEB and ANDROID, SUT-01 versus SUT-02, N = 50, iOS deferred; if the SUT-01 smoke returns FAIL_RUNNER, the mobile parity cells are reported as no data with the reason and no protocol successor is drafted in advance"
+        - question: "how to proceed"
+          answer_label: "Accept defaults and start (Recommended)"
+          effect: "the recommended default of each HUMAN DECISION of the design records (commit 3cf2a4f) is the working proposal for the drafts; it locks nothing and binds nothing until the freeze or the campaign START that locks it, and the human research lead may veto any default by its id; the ORCHESTRATOR builds the E02 and E09 pipelines and the SUT-01 smoke package as DRAFTS"
+approvals_not_given:  # each still needs its own explicit human approval of that exact action
+  - "the freeze of protocol/agent-governance-v6.md (and, with the human research lead's direct written confirmation, the matching edit of the agent-instructions file)"
+  - "the freeze of each scenario record (CS-004, CS-005, CS-007) with its change-log row"
+  - "the a-priori behavior classes of E05 (H3), after the pinned-source checks and after a dated catalogue freeze that precedes any E05 development run"
+  - "each campaign START and the lock of each campaign configuration"
+  - "each dispatch authorization (including APPIUM3-COMPAT-SMOKE-AUTH-04 for the SUT-01 smoke) and each campaign freeze"
+  - "each public export (pushed in person by the human research lead)"
+  - "the handling of the discrepancy of the E01 evidence record SUT01-EV-0019 (an unresolved-register entry or a correction record; no E01 record is edited)"
+open_items:
+  - "whether the endpoint of the SUT-01 Android release build is configurable (not stated in the repository); it decides a controlled backend versus a read-only sign-in against a hosted backend"
+  - "the campaigns E04, E08, E10, E11 and E12 are not scheduled; they are reported as no data with the reason unless time remains (protocol/statistical-analysis-plan-v1.md, section 5)"
+effects_on_other_records: "none by this record: the status of every campaign, scenario record and protocol document is unchanged; this record is the written basis of the preparation that follows and is referenced by the live-status records"

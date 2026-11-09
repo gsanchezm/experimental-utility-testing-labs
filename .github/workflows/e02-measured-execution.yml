@@ -1,0 +1,1046 @@
+# E02 Measured Execution
+# Study EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems).
+# Not a campaign configuration and not a dispatch authorization. Authored by ORCHESTRATOR under CAMPAIGN-CI-WRITE-AUTH-01
+# (the agent-instructions file, "Campaign CI/CD infrastructure for E02 and E04-E12"), and written for the dispatch model of
+# protocol/agent-governance-v6.md, Section 3.7 (FROZEN-PRE-DATA since 2026-11-06).
+#
+# The ONLY path through which an E02-state-establishment MEASURED_EXPERIMENT may run, once the campaign is started. It is
+# manually dispatched, one condition, one execution, first attempt only, and it FAILS CLOSED: the gate job verifies every frozen
+# input and every campaign gate against the checked-out repository before the measured job may start. While E02 is
+# NOT_STARTED, no campaign configuration is locked, no per-SUT dispatch authorization exists, and no controlled instance is
+# verified for E02, this workflow cannot execute a measured condition. That is the intended state until the human research lead
+# starts the campaign and issues the dispatch authorization.
+#
+# Execution/attempt model: campaign -> SUT -> scenario -> condition -> execution -> attempt. Attempt 1 is immutable; this
+# workflow admits no other attempt (a further attempt needs its own approval). GitHub-native re-runs are refused (run_attempt
+# must be 1). Artifacts are uploaded with overwrite disabled. Nothing is committed by this workflow (permissions: contents
+# read); the bundle is imported into the repository under ORCHESTRATOR coordination with digest verification.
+#
+# Read isolation: the measured job checks out only the common frozen inputs and the assigned SUT's own
+# raw-data/E02-state-establishment/<SUT>/ subtree; no other SUT's measured outputs are present in the workspace.
+#
+# Gate inputs reach the gate script through the environment of its step (never through expressions inside the script text),
+# so the script carries no expression; the limit of GitHub for a string that carries expressions is therefore not reached
+# (protocol/CHANGELOG.md, OP-CI-15).
+name: E02 Measured Execution
+
+on:
+  workflow_dispatch:
+    inputs:
+      condition_id:
+        description: "E02 condition to execute (one of the ten conditions of the E02 design brief; mobile conditions are not in this workflow)"
+        required: true
+        type: choice
+        options:
+          - E02-CS003-SUT01-API
+          - E02-CS003-SUT01-WEB
+          - E02-CS003-SUT02-WEB
+          - E02-CS003-SUT03-WEB
+          - E02-CS003-SUT04-API
+          - E02-CS003-SUT04-WEB
+          - E02-CS003-SUT05-API
+          - E02-CS004-SUT01-WEB
+          - E02-CS004-SUT02-WEB
+          - E02-CS004-SUT03-WEB
+      assigned_sut:
+        description: "SUT assigned to this dispatch (must match the condition; one dispatch authorization per assigned SUT)"
+        required: true
+        type: choice
+        options: [SUT-01, SUT-02, SUT-03, SUT-04, SUT-05]
+      execution_id:
+        description: "Execution id within the condition, format EXnnnn (for example EX0001)"
+        required: true
+        type: string
+      attempt:
+        description: "Attempt number; this workflow admits attempt 1 only"
+        required: true
+        default: "1"
+        type: string
+      campaign_start_authorization_id:
+        description: "Human authorization id of the E02 campaign START (must appear in the protocol/CHANGELOG.md campaign NOT_STARTED -> IN_PROGRESS row)"
+        required: true
+        type: string
+      dispatch_authorization_id:
+        description: "Id of the per-SUT dispatch authorization (protocol/agent-governance-v6.md, Section 3.7; manifests/e02-dispatch-authorization-sut0N-v*.yaml)"
+        required: true
+        type: string
+      executor_prompt_version:
+        description: "Frozen executor prompt version id (file prompts/frozen/<id>.md must exist)"
+        required: true
+        type: string
+      executor_implementation_sha256:
+        description: "SHA-256 of experiments/E02-state-establishment/executor/run-condition.sh as recorded in the locked campaign configuration"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e02-measured-${{ inputs.condition_id }}
+  cancel-in-progress: false
+
+env:
+  TZ: UTC
+  RECORD_CLASS: MEASURED_EXPERIMENT
+  RUN_ID: ${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}
+  ARTIFACT_RETENTION_DAYS: "90"
+  TIMEOUT_POLICY: "job timeout-minutes as declared; no step retry; no automatic re-run"
+  RETRY_POLICY: "none: attempt 1 only in this workflow; a further attempt needs its own approval"
+  CONCURRENCY_POLICY: "one run per condition at a time; never cancel in progress"
+
+jobs:
+  gate:
+    name: E02 Measured Execution Gate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      all_gates_passed: ${{ steps.gates.outputs.all_gates_passed }}
+      configuration_sha256: ${{ steps.gates.outputs.configuration_sha256 }}
+      cs003_sha256: ${{ steps.gates.outputs.cs003_sha256 }}
+      cs004_sha256: ${{ steps.gates.outputs.cs004_sha256 }}
+      schema_v2_sha256: ${{ steps.gates.outputs.schema_v2_sha256 }}
+      executor_prompt_sha256: ${{ steps.gates.outputs.executor_prompt_sha256 }}
+      governance_sha256: ${{ steps.gates.outputs.governance_sha256 }}
+      dispatch_authorization_sha256: ${{ steps.gates.outputs.dispatch_authorization_sha256 }}
+      workflow_sha256: ${{ steps.gates.outputs.workflow_sha256 }}
+      environment_type: ${{ steps.gates.outputs.environment_type }}
+      canonical_source_commit: ${{ steps.gates.outputs.canonical_source_commit }}
+    steps:
+      - name: Check out frozen inputs only (no raw-data of any SUT)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            protocol
+            manifests
+            experiments
+            schemas
+            prompts
+            .github/workflows
+          sparse-checkout-cone-mode: true
+      - name: Refuse anything but a first attempt of a dispatch on the default branch
+        env:
+          GUARD_REF: ${{ github.ref }}
+          GUARD_RUN_ATTEMPT: ${{ github.run_attempt }}
+          GUARD_INPUT_ATTEMPT: ${{ inputs.attempt }}
+        run: |
+          set -euo pipefail
+          test "$GUARD_REF" = "refs/heads/main" || { echo "measured execution runs only from refs/heads/main (got $GUARD_REF)"; exit 1; }
+          test "$GUARD_RUN_ATTEMPT" = "1" || { echo "GitHub-native re-run refused: a further attempt needs its own approval"; exit 1; }
+          test "$GUARD_INPUT_ATTEMPT" = "1" || { echo "only the first attempt is admitted by this workflow"; exit 1; }
+      - name: Verify every campaign gate against the repository (fail closed)
+        id: gates
+        env:
+          GATE_CONDITION_ID: ${{ inputs.condition_id }}
+          GATE_ASSIGNED_SUT: ${{ inputs.assigned_sut }}
+          GATE_EXECUTION_ID: ${{ inputs.execution_id }}
+          GATE_ATTEMPT: ${{ inputs.attempt }}
+          GATE_CAMPAIGN_START_AUTHORIZATION_ID: ${{ inputs.campaign_start_authorization_id }}
+          GATE_DISPATCH_AUTHORIZATION_ID: ${{ inputs.dispatch_authorization_id }}
+          GATE_EXECUTOR_PROMPT_VERSION: ${{ inputs.executor_prompt_version }}
+          GATE_EXECUTOR_IMPLEMENTATION_SHA256: ${{ inputs.executor_implementation_sha256 }}
+        run: |
+          set -euo pipefail
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - <<'PY'
+          import glob, hashlib, json, os, re, subprocess, sys, yaml
+
+          E02 = 'E02-state-establishment'
+          cond = os.environ['GATE_CONDITION_ID']
+          sut = os.environ['GATE_ASSIGNED_SUT']
+          execution_id = os.environ['GATE_EXECUTION_ID']
+          attempt = os.environ['GATE_ATTEMPT']
+          auth = os.environ['GATE_CAMPAIGN_START_AUTHORIZATION_ID']
+          dispatch_id = os.environ['GATE_DISPATCH_AUTHORIZATION_ID']
+          pv = os.environ['GATE_EXECUTOR_PROMPT_VERSION']
+          impl_sha = os.environ['GATE_EXECUTOR_IMPLEMENTATION_SHA256']
+          failures = []
+
+          def gate(name, ok, detail=''):
+              print(('PASS ' if ok else 'FAIL ') + name + ((': ' + str(detail)) if detail != '' else ''))
+              if not ok:
+                  failures.append(name)
+
+          def sha(p):
+              return hashlib.sha256(open(p, 'rb').read()).hexdigest() if os.path.isfile(p) else 'absent'
+
+          def load(p):
+              try:
+                  with open(p, encoding='utf-8') as f:
+                      return yaml.safe_load(f) or {}
+              except Exception:
+                  return None
+
+          def text(p):
+              return open(p, encoding='utf-8').read() if os.path.isfile(p) else ''
+
+          # G-A: the inputs are self-consistent (the condition grammar is the one of the ten E02 conditions)
+          m = re.fullmatch(r'E02-(CS003|CS004)-(SUT0[1-5])-(WEB|API)', cond)
+          gate('condition is one of the ten E02 conditions', m is not None, cond)
+          scenario = ('CS-' + m.group(1)[2:]) if m else 'none'
+          cond_sut = ('SUT-' + m.group(2)[3:]) if m else 'none'
+          surface = m.group(3) if m else 'none'
+          gate('condition matches the assigned SUT', cond_sut == sut, f'{cond_sut} vs {sut}')
+          gate('execution_id has the format EXnnnn', re.fullmatch(r'EX[0-9]{4}', execution_id) is not None, execution_id)
+          gate('attempt is 1 (the first attempt of an execution is the only one admitted here)', attempt == '1', attempt)
+          gate('executor prompt version is a plain identifier', re.fullmatch(r'[A-Za-z0-9._-]+', pv) is not None, pv)
+
+          # G-1: the campaign START exists: IN_PROGRESS in the study manifest, one START row with its authorization id
+          sm = load('manifests/study-manifest.yaml') or {}
+          campaigns = {c.get('id'): c.get('status') for c in (sm.get('campaigns') or []) if isinstance(c, dict)}
+          gate('E02 campaign status is IN_PROGRESS', campaigns.get(E02) == 'IN_PROGRESS', campaigns.get(E02))
+          chg = text('protocol/CHANGELOG.md')
+          start_rows = [l for l in chg.splitlines() if 'experiments/E02-state-establishment/README.md' in l and 'campaign NOT_STARTED -> IN_PROGRESS' in l]
+          gate('exactly one E02 campaign START change-log row exists', len(start_rows) == 1, len(start_rows))
+          gate('the E02 START row carries the START authorization id', bool(auth) and len(start_rows) == 1 and re.search(re.escape(auth) + r'(?![A-Za-z0-9-])', start_rows[0]) is not None, auth)
+
+          # G-2: the locked "Campaign configuration" section of the E02 README names the condition, schema v2, the prompt, and the hashes
+          readme = text(f'experiments/{E02}/README.md')
+          mm = re.search(r'\n## Campaign configuration\n(.*?)(\n## |\Z)', readme, re.S)
+          cfg = mm.group(1) if mm else ''
+          req_sha = sha(f'experiments/{E02}/executor/requirements.txt')
+          gate('locked "Campaign configuration" section exists in the E02 README', mm is not None)
+          gate('configuration names the condition', cond in cfg)
+          gate('configuration names run-manifest schema v2', 'run-manifest.schema.v2.json' in cfg)
+          gate('configuration names the executor prompt version', pv != '' and pv in cfg, pv)
+          gate('configuration names the executor implementation hash', impl_sha != '' and impl_sha in cfg)
+          gate('configuration names the executor requirements hash (pinned toolchain)', req_sha != 'absent' and req_sha in cfg)
+          gate('configuration cites no excluded mapping (CS-002)', 'CS-002' not in cfg)
+          gate('configuration names the H2 comparison specification (pair, scenarios, surface, method; G-E02-D)', 'H2' in cfg)
+
+          # G-3: both canonical scenarios of the campaign are FROZEN and named; the assigned SUT is COMPARABLE on the condition's scenario
+          for sc in ('CS-003', 'CS-004'):
+              d = load(f'experiments/scenario-mappings/{sc}.yaml')
+              state = d.get('mapping_status') if isinstance(d, dict) else 'absent'
+              gate(f'{sc} mapping is FROZEN', state == 'FROZEN', state)
+              gate(f'{sc} is named by the configuration', sc in cfg)
+          mp = load(f'experiments/scenario-mappings/{scenario}.yaml') or {}
+          entry = next((e for e in (mp.get('mappings') or []) if isinstance(e, dict) and e.get('sut_id') == sut), None)
+          gate(f'{sut} is COMPARABLE on {scenario} for {surface}', entry is not None and entry.get('comparability') == 'COMPARABLE' and surface in (entry.get('surfaces_used') or []), entry.get('comparability') if entry else 'no entry')
+
+          # G-5: schema v2 with its identifier
+          v2 = load('schemas/run-manifest.schema.v2.json') or {}
+          gate('schema v2 present with the v2 identifier', str(v2.get('$id', '')).endswith(':run-manifest:v2'))
+
+          # G-6: governance in force is FROZEN-PRE-DATA or AMENDED; a DRAFT never gates a dispatch
+          gov = text('protocol/agent-governance-v6.md')
+          gm = re.search(r'\| Protocol state \| ([A-Z-]+) \|', gov)
+          state = gm.group(1) if gm else 'absent'
+          gate('agent-governance-v6 is FROZEN-PRE-DATA or AMENDED', state in ('FROZEN-PRE-DATA', 'AMENDED'), state)
+          gate('governance v6 contains Section 3.7, the per-SUT dispatch authorization (G-E02-A; v6 Section 3.7)', re.search(r'^### 3\.7 Dispatch authorization', gov, re.M) is not None)
+
+          # G-E02-A: one ISSUED, unrevoked dispatch authorization for this SUT names this dispatch, condition, N, attempt 1 (v6, Section 3.7)
+          sut_tag = sut.replace('-', '').lower()
+          matched = []
+          for p in sorted(glob.glob(f'manifests/e02-dispatch-authorization-{sut_tag}-v*.yaml')):
+              d = load(p)
+              if isinstance(d, dict) and d.get('authorization_id') == dispatch_id:
+                  matched.append((p, d))
+          gate('exactly one E02 dispatch authorization record names this dispatch id', len(matched) == 1, [p for p, _ in matched])
+          dispatch_sha = sha(matched[0][0]) if len(matched) == 1 else 'absent'
+          if len(matched) == 1:
+              _, d = matched[0]
+              ex = next((c for c in (d.get('conditions') or []) if isinstance(c, dict) and c.get('condition_id') == cond), None)
+              n = (ex or {}).get('executions')
+              gate('the authorization is an ISSUED, unrevoked E02 dispatch authorization', d.get('record_class') == 'E02_DISPATCH_AUTHORIZATION' and d.get('status') == 'ISSUED' and d.get('revoked') is False, d.get('status'))
+              gate('the authorization names the assigned SUT', d.get('assigned_sut') == sut, d.get('assigned_sut'))
+              gate('the authorization names this condition, N executions, and this execution within N', isinstance(n, int) and n >= 1 and re.fullmatch(r'EX[0-9]{4}', execution_id) is not None and int(execution_id[2:]) <= n, n)
+              gate('the authorization names the START id, the implementation hash, and the prompt version', d.get('campaign_start_authorization_id') == auth and d.get('executor_implementation_sha256') == impl_sha and d.get('executor_prompt_version') == pv)
+              gate('the authorization is for attempt 1 and cites governance v6, Section 3.7', d.get('attempt') == 1 and 'agent-governance-v6.md' in str(d.get('governing_protocol')) and '3.7' in str(d.get('governing_protocol')))
+              gate('the authorization names the executor prompt SHA-256, which equals the frozen prompt file (G-9; v6 Section 3.7)', d.get('executor_prompt_sha256') == sha(f'prompts/frozen/{pv}.md') and re.fullmatch(r'[A-Za-z0-9._-]+', pv) is not None)
+
+          # G-8: the controlled instance of this condition id is CONTROLLED and verified on GitHub Actions (E02 status file)
+          cis = load(f'experiments/{E02}/controlled-instance-status.yaml') or {}
+          cc = ((cis.get('conditions') or {}).get(cond) or {}) if isinstance(cis, dict) else {}
+          ver = cc.get('github_actions_verification') or {}
+          gate('controlled instance of this condition is CONTROLLED', cc.get('status') == 'CONTROLLED', cc.get('status'))
+          gate('GitHub Actions verification of this condition is VERIFIED', ver.get('status') == 'VERIFIED', ver.get('status'))
+          gate('no provisioning change awaits re-verification', not cc.get('reverification_required'))
+          env_type = ver.get('environment_type') or 'UNKNOWN'
+          gate('environment_type is SELF_HOSTED or LOCAL (PUBLIC_HOSTED is refused; protocol/study-design-v1.md, section 10.3)', env_type in ('SELF_HOSTED', 'LOCAL'), env_type)
+
+          # G-9: the executor prompt is a frozen file; G-10: the implementation exists and matches the locked hash
+          pp = f'prompts/frozen/{pv}.md'
+          gate('executor prompt is a frozen file (prompts/frozen/<version>.md)', re.fullmatch(r'[A-Za-z0-9._-]+', pv) is not None and os.path.isfile(pp), pp)
+          ip = f'experiments/{E02}/executor/run-condition.sh'
+          gate('executor implementation exists', os.path.isfile(ip), ip)
+          gate('executor implementation hash equals the input and the configuration', os.path.isfile(ip) and sha(ip) == impl_sha)
+          gate('executor requirements file exists (pinned Playwright, hash-locked)', req_sha != 'absent')
+
+          out = {
+              'all_gates_passed': 'true' if not failures else 'false',
+              'configuration_sha256': sha(f'experiments/{E02}/README.md'),
+              'cs003_sha256': sha('experiments/scenario-mappings/CS-003.yaml'),
+              'cs004_sha256': sha('experiments/scenario-mappings/CS-004.yaml'),
+              'schema_v2_sha256': sha('schemas/run-manifest.schema.v2.json'),
+              'executor_prompt_sha256': sha(pp) if re.fullmatch(r'[A-Za-z0-9._-]+', pv) else 'absent',
+              'governance_sha256': sha('protocol/agent-governance-v6.md'),
+              'dispatch_authorization_sha256': dispatch_sha,
+              'workflow_sha256': sha('.github/workflows/e02-measured-execution.yml'),
+              'environment_type': env_type,
+          }
+          msg = subprocess.run(['git', 'log', '-1', '--format=%(trailers:key=Canonical-Source-Commit,valueonly)'], capture_output=True, text=True).stdout.strip()
+          out['canonical_source_commit'] = msg or 'none (this repository is the canonical repository)'
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
+              for k, v in out.items():
+                  f.write(f'{k}={v}\n')
+          print(json.dumps(out, indent=2))
+          if failures:
+              print('GATES FAILED (' + str(len(failures)) + '): ' + '; '.join(failures))
+              sys.exit(1)
+          print('ALL GATES PASSED')
+          PY
+
+  provenance:
+    name: E02 Provenance Capture
+    needs: gate
+    if: ${{ needs.gate.outputs.all_gates_passed == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PROV_CONDITION_ID: ${{ inputs.condition_id }}
+      PROV_ASSIGNED_SUT: ${{ inputs.assigned_sut }}
+      PROV_EXECUTION_ID: ${{ inputs.execution_id }}
+      PROV_ATTEMPT: ${{ inputs.attempt }}
+      PROV_EXECUTOR_PROMPT_VERSION: ${{ inputs.executor_prompt_version }}
+      PROV_REPOSITORY_SHA: ${{ github.sha }}
+      PROV_REF: ${{ github.ref }}
+      PROV_WORKFLOW_REF: ${{ github.workflow_ref }}
+      PROV_WORKFLOW_SHA256: ${{ needs.gate.outputs.workflow_sha256 }}
+      PROV_CONFIGURATION_SHA256: ${{ needs.gate.outputs.configuration_sha256 }}
+      PROV_CS003_SHA256: ${{ needs.gate.outputs.cs003_sha256 }}
+      PROV_CS004_SHA256: ${{ needs.gate.outputs.cs004_sha256 }}
+      PROV_SCHEMA_V2_SHA256: ${{ needs.gate.outputs.schema_v2_sha256 }}
+      PROV_EXECUTOR_PROMPT_SHA256: ${{ needs.gate.outputs.executor_prompt_sha256 }}
+      PROV_GOVERNANCE_SHA256: ${{ needs.gate.outputs.governance_sha256 }}
+      PROV_DISPATCH_AUTHORIZATION_SHA256: ${{ needs.gate.outputs.dispatch_authorization_sha256 }}
+      PROV_ENVIRONMENT_TYPE: ${{ needs.gate.outputs.environment_type }}
+      PROV_CANONICAL_SOURCE_COMMIT: ${{ needs.gate.outputs.canonical_source_commit }}
+      PROV_RUN_ID: ${{ github.run_id }}
+      PROV_RUN_ATTEMPT: ${{ github.run_attempt }}
+      PROV_RUN_NUMBER: ${{ github.run_number }}
+      PROV_JOB: ${{ github.job }}
+    steps:
+      - name: Check out frozen inputs only
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            manifests
+            .github/workflows
+          sparse-checkout-cone-mode: true
+      - name: Write the CI reproducibility contract (no secret values)
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - <<'PY'
+          import datetime, json, os
+          import yaml
+          cond = os.environ['PROV_CONDITION_ID']
+          sut = os.environ['PROV_ASSIGNED_SUT']
+          surface = cond.split('-')[3].lower()
+          sm = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts'][sut]['components'][surface]
+          rec = {
+            'record_class': os.environ['RECORD_CLASS'], 'study_id': 'EUS-2026-001', 'campaign_id': 'E02-state-establishment',
+            'condition_id': cond, 'sut_id': sut, 'surface': surface, 'execution_id': os.environ['PROV_EXECUTION_ID'],
+            'attempt': int(os.environ['PROV_ATTEMPT']), 'run_id': os.environ['RUN_ID'],
+            'repository': {'sha': os.environ['PROV_REPOSITORY_SHA'], 'ref': os.environ['PROV_REF'], 'canonical_source_commit': os.environ['PROV_CANONICAL_SOURCE_COMMIT']},
+            'workflow': {'ref': os.environ['PROV_WORKFLOW_REF'], 'file_sha256': os.environ['PROV_WORKFLOW_SHA256']},
+            'frozen_input_hashes': {'e02_configuration_sha256': os.environ['PROV_CONFIGURATION_SHA256'], 'cs003_mapping_sha256': os.environ['PROV_CS003_SHA256'],
+                                    'cs004_mapping_sha256': os.environ['PROV_CS004_SHA256'], 'run_manifest_schema_v2_sha256': os.environ['PROV_SCHEMA_V2_SHA256'],
+                                    'executor_prompt_sha256': os.environ['PROV_EXECUTOR_PROMPT_SHA256'], 'executor_prompt_version': os.environ['PROV_EXECUTOR_PROMPT_VERSION'],
+                                    'agent_governance_v6_sha256': os.environ['PROV_GOVERNANCE_SHA256'], 'dispatch_authorization_sha256': os.environ['PROV_DISPATCH_AUTHORIZATION_SHA256']},
+            'sut_version': {'repository': sm.get('repository'), 'commit_sha': sm.get('commit_sha'), 'release': sm.get('release')},
+            'environment_type': os.environ['PROV_ENVIRONMENT_TYPE'],
+            'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'note': 'the measured job records its own runner and runtime versions in runtime-environment.json; this job records the gate-time contract'},
+            'timezone': 'UTC', 'timeout_policy': os.environ['TIMEOUT_POLICY'], 'retry_policy': os.environ['RETRY_POLICY'],
+            'concurrency_policy': os.environ['CONCURRENCY_POLICY'], 'artifact_retention_days': int(os.environ['ARTIFACT_RETENTION_DAYS']),
+            'github': {'run_id': os.environ['PROV_RUN_ID'], 'run_attempt': os.environ['PROV_RUN_ATTEMPT'], 'run_number': os.environ['PROV_RUN_NUMBER'], 'job': os.environ['PROV_JOB'],
+                       'actor': 'not recorded (agent role, not a person identity, is the provenance unit)'},
+            'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            'secrets': 'none used; none recorded',
+          }
+          json.dump(rec, open('ci-provenance.json', 'w'), indent=2)
+          print(json.dumps(rec, indent=2))
+          PY
+      - name: Upload the provenance record
+        uses: actions/upload-artifact@v4
+        with:
+          name: E02-MEASURED_EXPERIMENT-${{ inputs.condition_id }}-${{ inputs.execution_id }}-A${{ inputs.attempt }}-provenance
+          path: ci-provenance.json
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: error
+
+  measured-execution:
+    name: E02 Measured Execution ${{ inputs.condition_id }} ${{ inputs.execution_id }} A${{ inputs.attempt }}
+    needs: [gate, provenance]
+    if: ${{ needs.gate.outputs.all_gates_passed == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out common frozen inputs and only the assigned SUT's raw-data subtree
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            protocol
+            manifests
+            experiments
+            schemas
+            prompts
+            raw-data/E02-state-establishment/${{ inputs.assigned_sut }}
+          sparse-checkout-cone-mode: true
+      - name: Assert read isolation (no other SUT's measured outputs in the workspace)
+        env:
+          ISO_ASSIGNED_SUT: ${{ inputs.assigned_sut }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          for d in raw-data/E02-state-establishment/*/; do
+            case "$d" in "raw-data/E02-state-establishment/$ISO_ASSIGNED_SUT/") ;; *) echo "isolation violated: $d present"; exit 1;; esac
+          done
+          test ! -e "raw-data/E02-state-establishment/$ISO_ASSIGNED_SUT/$RUN_ID" || { echo "run directory $RUN_ID already exists: attempts are immutable"; exit 1; }
+          echo "read isolation ok"
+      - name: Download the provenance record
+        uses: actions/download-artifact@v4
+        with:
+          name: E02-MEASURED_EXPERIMENT-${{ inputs.condition_id }}-${{ inputs.execution_id }}-A${{ inputs.attempt }}-provenance
+          path: provenance
+      - name: Record the runtime environment
+        run: |
+          python3 - <<'PY'
+          import json, os, platform, subprocess, datetime
+          def v(cmd):
+              try: return subprocess.run(cmd, capture_output=True, text=True, timeout=30).stdout.strip()
+              except Exception as e: return f'unavailable: {e.__class__.__name__}'
+          rec = {'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'platform': platform.platform()},
+                 'runtime_versions': {'python': v(['python3', '--version']), 'node': v(['node', '--version']), 'npm': v(['npm', '--version']), 'java': v(['java', '-version']) or v(['bash', '-c', 'java -version 2>&1']), 'docker': v(['docker', '--version']), 'git': v(['git', '--version'])},
+                 'browser_version': {'chrome': v(['bash', '-c', 'google-chrome --version 2>/dev/null || chromium --version 2>/dev/null || echo unavailable'])},
+                 'timezone': os.environ.get('TZ'), 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          json.dump(rec, open('runtime-environment.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+      # Provisioning of the SUT instances: the steps of the E03 measured-execution job (provisioning, pins, and instance interface),
+      # copied unchanged except for the E02 names and the condition gates, which now test the assigned SUT only (see below).
+      - name: Read the pinned SUT-01 provenance
+        if: ${{ inputs.assigned_sut == 'SUT-01' }}
+        id: pin-sut01
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import yaml
+          c = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-01']['components']['api']
+          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
+          PY
+      - name: Clone the pinned SUT source
+        if: ${{ inputs.assigned_sut == 'SUT-01' }}
+        id: clone-sut01
+        run: |
+          set -euo pipefail
+          git clone --quiet "${{ steps.pin-sut01.outputs.repo }}" sut
+          git -C sut checkout --quiet "${{ steps.pin-sut01.outputs.sha }}"
+          test "$(git -C sut rev-parse HEAD)" = "${{ steps.pin-sut01.outputs.sha }}"
+      - name: Set up Python (backend requires 3.11 or 3.12 per the SUT README)
+        if: ${{ inputs.assigned_sut == 'SUT-01' }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Set up Node.js and pnpm (frontend)
+        if: ${{ inputs.assigned_sut == 'SUT-01' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Provision and start the api instance
+        if: ${{ inputs.assigned_sut == 'SUT-01' }}
+        id: api-sut01
+        run: |
+          set -euo pipefail
+          cd sut/backend
+          python -m pip install --quiet -r requirements.txt
+          nohup python -m uvicorn main:app --host 127.0.0.1 --port 8000 > "$GITHUB_WORKSPACE/api-stdout.log" 2> "$GITHUB_WORKSPACE/api-stderr.log" &
+          for _ in $(seq 1 60); do curl -fsS http://127.0.0.1:8000/health >/dev/null 2>&1 && break; sleep 2; done
+          curl -fsS http://127.0.0.1:8000/health
+      - name: Provision, build, and serve the web instance
+        if: ${{ inputs.assigned_sut == 'SUT-01' }}
+        id: web-sut01
+        run: |
+          set -euo pipefail
+          npm install -g pnpm@10 --no-audit --no-fund
+          cd sut/frontend
+          pnpm install --frozen-lockfile
+          VITE_API_URL=http://127.0.0.1:8000 pnpm build
+          nohup pnpm exec vite preview --host 127.0.0.1 --port 3000 --strictPort > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &
+          for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
+      # SUT-02 group (operation OP-CI-05): copied from job sut-02-web of e03-environment-verification.yml; ids suffixed -sut02; one guard line per step
+      - name: Read the pinned SUT-02 web provenance
+        if: ${{ inputs.assigned_sut == 'SUT-02' }}
+        id: pin-sut02
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import yaml
+          c = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-02']['components']['web']
+          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
+          PY
+      - name: Clone the pinned SUT source
+        if: ${{ inputs.assigned_sut == 'SUT-02' }}
+        id: clone-sut02
+        run: |
+          set -euo pipefail
+          git clone --quiet "${{ steps.pin-sut02.outputs.repo }}" sut
+          git -C sut checkout --quiet "${{ steps.pin-sut02.outputs.sha }}"
+          test "$(git -C sut rev-parse HEAD)" = "${{ steps.pin-sut02.outputs.sha }}"
+      - name: Set up Node.js (engines >=24.9.0 at the pinned commit)
+        if: ${{ inputs.assigned_sut == 'SUT-02' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Provision, build, and serve the web instance
+        if: ${{ inputs.assigned_sut == 'SUT-02' }}
+        id: provision-sut02
+        run: |
+          set -euo pipefail
+          cd sut
+          npm ci --no-audit --no-fund
+          npm run build
+          nohup npx vite preview --host 127.0.0.1 --port 3000 --strictPort > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &
+          for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
+      # SUT-03 group (operation OP-CI-05): copied from job sut-03-web of e03-environment-verification.yml; ids suffixed -sut03; one guard line per step
+      - name: Read the pinned SUT-03 provenance
+        if: ${{ inputs.assigned_sut == 'SUT-03' }}
+        id: pin-sut03
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import yaml
+          c = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-03']['components']['web']
+          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
+          PY
+      - name: Clone the pinned SUT source
+        if: ${{ inputs.assigned_sut == 'SUT-03' }}
+        id: clone-sut03
+        run: |
+          set -euo pipefail
+          git clone --quiet "${{ steps.pin-sut03.outputs.repo }}" sut
+          git -C sut checkout --quiet "${{ steps.pin-sut03.outputs.sha }}"
+          test "$(git -C sut rev-parse HEAD)" = "${{ steps.pin-sut03.outputs.sha }}"
+      - name: Set up Node.js 14 (Next.js 10 era; the pinned tree has no lockfile and predates npm 7 peer-dependency enforcement)
+        if: ${{ inputs.assigned_sut == 'SUT-03' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: "14"
+      - name: Provision, build, and serve the web instance
+        if: ${{ inputs.assigned_sut == 'SUT-03' }}
+        id: provision-sut03
+        run: |
+          set -euo pipefail
+          cd sut
+          npm install --legacy-peer-deps --no-audit --no-fund
+          # node_modules/swagger-ui-react/swagger-ui.js at the pinned tree imports formdata-node without any package declaring it; v4 (CommonJS) is added without saving (no SUT source changes)
+          npm install --no-save formdata-node@4 --no-audit --no-fund
+          npm run build
+          nohup npx next start -p 3000 > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &
+          for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
+      - name: Put Node.js 24 first on PATH again for the run-manifest validation (the SUT-03 instance keeps its own Node.js 14 process)
+        if: ${{ inputs.assigned_sut == 'SUT-03' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      # SUT-04 group (operations OP-CI-05 and OP-CI-06): copied from job sut-04-web-api of e03-environment-verification.yml; ids suffixed -sut04; one guard line per step
+      - name: Read the pinned SUT-04 provenance
+        if: ${{ inputs.assigned_sut == 'SUT-04' }}
+        id: pin-sut04
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import yaml
+          c = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-04']['components']['api']
+          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}")
+          PY
+      - name: Clone the pinned SUT source
+        if: ${{ inputs.assigned_sut == 'SUT-04' }}
+        id: clone-sut04
+        run: |
+          set -euo pipefail
+          git clone --quiet "${{ steps.pin-sut04.outputs.repo }}" sut
+          git -C sut checkout --quiet "${{ steps.pin-sut04.outputs.sha }}"
+          test "$(git -C sut rev-parse HEAD)" = "${{ steps.pin-sut04.outputs.sha }}"
+      - name: Set up JDK 26 (the SUT README requires JDK 26 or higher; SUT04-PROV-0001 built with Temurin 26)
+        if: ${{ inputs.assigned_sut == 'SUT-04' }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "26"
+      - name: Set up Node.js 24.21.0 (the assets module's npm install and next build run inside the Maven build; the version of SUT04-PROV-0001)
+        if: ${{ inputs.assigned_sut == 'SUT-04' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.21.0"
+      - name: Install Apache Maven 3.9.14 (the version the SUT's README lists at the pinned commit), verified by its published SHA-512
+        if: ${{ inputs.assigned_sut == 'SUT-04' }}
+        run: |
+          set -euo pipefail
+          curl --fail --location --proto '=https' --retry 3 --output "$RUNNER_TEMP/apache-maven-3.9.14-bin.tar.gz" https://archive.apache.org/dist/maven/maven-3/3.9.14/binaries/apache-maven-3.9.14-bin.tar.gz
+          expected=d50af8ab5e6005b46a07f0ce9d3719e67cfdf898da988a84871304cd59fb1af0fef2f99dea709e6e66f21f732f905979b5c2dce6b6860406f60a70e84d9cf0b8
+          found="$(sha512sum "$RUNNER_TEMP/apache-maven-3.9.14-bin.tar.gz" | cut -d ' ' -f 1)"
+          [ "$found" = "$expected" ] || { echo "SHA-512 mismatch: expected $expected, found $found" >&2; exit 1; }
+          tar -xzf "$RUNNER_TEMP/apache-maven-3.9.14-bin.tar.gz" -C "$RUNNER_TEMP"
+          if [ ! -f "$RUNNER_TEMP/apache-maven-3.9.14/bin/mvn" ] || [ ! -x "$RUNNER_TEMP/apache-maven-3.9.14/bin/mvn" ]; then echo "not an executable file: $RUNNER_TEMP/apache-maven-3.9.14/bin/mvn" >&2; exit 1; fi
+          echo "$RUNNER_TEMP/apache-maven-3.9.14/bin" >> "$GITHUB_PATH"
+      - name: Build the service jars with Maven 3.9.14 (the documented build, tests skipped as in SUT04-PROV-0001)
+        if: ${{ inputs.assigned_sut == 'SUT-04' }}
+        id: build-sut04
+        run: |
+          set -euo pipefail
+          java -version 2>&1 | tee "$GITHUB_WORKSPACE/java-version.txt"
+          mvn -v | tee "$GITHUB_WORKSPACE/maven-version.txt"
+          [[ "$(head -n 1 "$GITHUB_WORKSPACE/maven-version.txt")" == "Apache Maven 3.9.14 "* ]] || { echo "maven-version.txt does not start with Apache Maven 3.9.14: $(head -n 1 "$GITHUB_WORKSPACE/maven-version.txt")" >&2; exit 1; }
+          [ "$(command -v mvn)" = "$RUNNER_TEMP/apache-maven-3.9.14/bin/mvn" ] || { echo "mvn resolves to $(command -v mvn), not $RUNNER_TEMP/apache-maven-3.9.14/bin/mvn" >&2; exit 1; }
+          node --version | tee "$GITHUB_WORKSPACE/node-version.txt"
+          npm --version | tee "$GITHUB_WORKSPACE/npm-version.txt"
+          cd sut
+          mvn -B -q clean install -DskipTests
+          shopt -s nullglob
+          jars=(./*/target/*-exec.jar)
+          shopt -u nullglob
+          [ "${#jars[@]}" -gt 0 ] || { echo "no service exec jar was built under */target/" >&2; exit 1; }
+          printf '%s\n' "${jars[@]}" | tee "$GITHUB_WORKSPACE/built-jars.txt"
+          test -f assets/.next/BUILD_ID
+      - name: Start the six services and the web app on the host by the route of the SUT's README (each in its own session and process group; fail closed)
+        if: ${{ inputs.assigned_sut == 'SUT-04' }}
+        id: provision-sut04
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import glob, json, os, subprocess, sys, time, urllib.request
+          ws = os.environ['GITHUB_WORKSPACE']
+          root = os.path.join(ws, 'sut')
+          # The route of the SUT's README, decided by the human research lead on 2026-10-06 with the web app's production server
+          # (operation OP-PREP-E03-ADD-02): its run_locally.sh at the pinned commit, with npm start (next start -p 3003) in place
+          # of npm run dev and each service's -exec jar named in place of the script's jar glob; the six Spring services run with
+          # the dev profile from the clone's root, and the web app on the .next directory of the Maven build. The
+          # docker-compose.yml of the pinned commit is not used: its image fixes the web app's rewrite destinations at build to
+          # the container's own loopback (operation OP-PREP-E03-ADD-01). The rewrite destinations of this build are the local
+          # defaults, so no *_API, *Domain, dbRefresh, or dbServer variable may be set. Maven is pinned to 3.9.14, the version the
+          # SUT's README lists at the pinned commit, because the runner image's Maven 3.10.0 refuses the pinned POM version (run
+          # 38018788066; operation OP-CI-07).
+          bad = sorted(k for k in os.environ if k.endswith('_API') or k.endswith('Domain') or k in ('dbRefresh', 'dbServer'))
+          if bad:
+              sys.exit(f'SUT configuration variable(s) present in the environment: {bad}')
+          services = [('auth', 3004), ('booking', 3000), ('room', 3001), ('report', 3005), ('branding', 3002), ('message', 3006)]
+          started, procs = [], []
+          def start(name, argv, cwd, port, ready_url):
+              log = f'sut04-{name}.log'
+              p = subprocess.Popen(argv, cwd=cwd, stdin=subprocess.DEVNULL, stdout=open(f'{ws}/{log}', 'w'), stderr=subprocess.STDOUT, start_new_session=True)
+              if os.getpgid(p.pid) != p.pid:
+                  sys.exit(f'{name}: process group {os.getpgid(p.pid)} is not the new session leader {p.pid}')
+              procs.append((name, p))
+              started.append({'name': name, 'argv': argv, 'cwd': os.path.relpath(cwd, ws), 'pid': p.pid, 'pgid': p.pid, 'log': log, 'port': port, 'ready_url': ready_url})
+          for name, port in services:
+              jars = sorted(glob.glob(os.path.join(root, name, 'target', f'restful-booker-platform-{name}-*-exec.jar')))
+              if len(jars) != 1:
+                  sys.exit(f'{name}: expected exactly one -exec jar under {name}/target, found {len(jars)}')
+              start(name, ['java', '-jar', '-Dspring.profiles.active=dev', os.path.relpath(jars[0], root)], root, port, f'http://127.0.0.1:{port}/{name}/actuator/health')
+          start('web', ['npm', 'start'], os.path.join(root, 'assets'), 3003, 'http://127.0.0.1:3003/')
+          # Readiness: every service's actuator health and the web root answer 200 within one bound (workstation route: 46-155 s,
+          # operation OP-PREP-E03-ADD-02); a process that exits, or the bound, fails this step and the record is NOT_VERIFIED.
+          bound_s, t0, ready = 300, time.monotonic(), {}
+          pending = {s['name']: s['ready_url'] for s in started}
+          while pending:
+              for name, p in procs:
+                  if p.poll() is not None:
+                      sys.exit(f'{name} exited early with code {p.returncode} (sut04-{name}.log)')
+              for name, url in list(pending.items()):
+                  try:
+                      with urllib.request.urlopen(url, timeout=5) as r:
+                          if r.status == 200:
+                              ready[name] = round(time.monotonic() - t0, 1)
+                              del pending[name]
+                  except Exception:
+                      pass
+              if pending:
+                  if time.monotonic() - t0 >= bound_s:
+                      sys.exit(f'not ready within {bound_s} s: {sorted(pending)} (ready: {ready})')
+                  time.sleep(3)
+          rec = {'route': "the route of the SUT's README (run_locally.sh at the pinned commit, with npm start in place of npm run dev and each service's -exec jar in place of the script's jar glob; human decision of 2026-10-06)",
+                 'processes': started, 'readiness_s': ready, 'readiness_bound_s': bound_s}
+          json.dump(rec, open(f'{ws}/sut04-start.json', 'w'), indent=2)
+          print(json.dumps(rec, indent=2))
+          PY
+      # SUT-05 group (operation OP-CI-05): copied from job sut-05-api of e03-environment-verification.yml; ids suffixed -sut05; one guard line per step
+      - name: Read the pinned SUT-05 provenance (source commit and release)
+        if: ${{ inputs.assigned_sut == 'SUT-05' }}
+        id: pin-sut05
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import yaml
+          c = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-05']['components']['api']
+          for k in ('repository', 'commit_sha', 'release'):
+              assert c.get(k), f'empty pin field: {k}'
+          print(f"repo={c['repository']}"); print(f"sha={c['commit_sha']}"); print(f"release={c['release']}")
+          PY
+      - name: Clone the pinned SUT source and relate the release tag to the pinned commit (fail closed)
+        if: ${{ inputs.assigned_sut == 'SUT-05' }}
+        id: clone-sut05
+        run: |
+          set -euo pipefail
+          git clone --quiet "${{ steps.pin-sut05.outputs.repo }}" sut
+          git -C sut checkout --quiet "${{ steps.pin-sut05.outputs.sha }}"
+          test "$(git -C sut rev-parse HEAD)" = "${{ steps.pin-sut05.outputs.sha }}"
+          # The packaged distribution below is built by the SUT project from the release tag's commit. The pinned source commit
+          # (the default-branch HEAD at pin time) differs from it only by one documented non-application file; any other
+          # difference fails this step, and the record then says nothing about the reset mechanism (correction of 2026-10-04:
+          # the SUT's own source build at the pinned commit no longer completes because an unpinned build-tool dependency of the
+          # SUT changed upstream after 2026-09-22; the SUT is never patched).
+          git -C sut rev-parse "${{ steps.pin-sut05.outputs.release }}^{commit}" | tee "$GITHUB_WORKSPACE/release-commit.txt"
+          git -C sut diff --name-only "$(cat "$GITHUB_WORKSPACE/release-commit.txt")" "${{ steps.pin-sut05.outputs.sha }}" | tee "$GITHUB_WORKSPACE/release-vs-pin-diff.txt"
+          test "$(cat "$GITHUB_WORKSPACE/release-vs-pin-diff.txt")" = "screenshots/bundle-analysis.png"
+      - name: Set up Node.js 24.21.0 (the Node.js major the packaged distribution is bound to; the version of SUT05-PROV-0001)
+        if: ${{ inputs.assigned_sut == 'SUT-05' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.21.0"
+      - name: Download, verify, and unpack the packaged distribution of the pinned release (the SUT README's Packaged Distributions route)
+        if: ${{ inputs.assigned_sut == 'SUT-05' }}
+        id: package-sut05
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EV_REPO: ${{ steps.pin-sut05.outputs.repo }}
+          EV_RELEASE: ${{ steps.pin-sut05.outputs.release }}
+        run: |
+          set -euo pipefail
+          ASSET="juice-shop-${EV_RELEASE#v}_node24_linux_x64.tgz"
+          gh release download "$EV_RELEASE" --repo "$EV_REPO" --pattern "$ASSET" --clobber
+          SUM="$(sha256sum "$ASSET" | cut -d' ' -f1)"
+          DIGEST="$(gh release view "$EV_RELEASE" --repo "$EV_REPO" --json assets --jq ".assets[] | select(.name == \"$ASSET\") | .digest")"
+          test -n "$DIGEST"
+          test "sha256:$SUM" = "$DIGEST"
+          mkdir -p pkg
+          tar -xzf "$ASSET" -C pkg
+          set -- pkg/*/
+          test "$#" -eq 1
+          PKG_DIR="${1%/}"
+          test -f "$PKG_DIR/package.json"
+          test -f "$PKG_DIR/build/app.js"
+          echo "dir=$PKG_DIR" >> "$GITHUB_OUTPUT"
+          python3 - "$ASSET" "$SUM" "$DIGEST" "$PKG_DIR" <<'PY'
+          import json, sys
+          asset, digest_sha256, github_digest, pkg_dir = sys.argv[1:5]
+          p = json.load(open(pkg_dir + '/package.json'))
+          rec = {'route': 'PACKAGED_DISTRIBUTION (SUT README, Packaged Distributions: download the release archive, unpack, npm start)',
+                 'asset': asset, 'sha256': digest_sha256, 'github_digest': github_digest, 'unpacked_dir': pkg_dir,
+                 'package_json': {k: p.get(k) for k in ('name', 'version', 'engines', 'os', 'cpu')}, 'start_script': (p.get('scripts') or {}).get('start')}
+          json.dump(rec, open('package-provenance.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+      - name: Start the api instance from the packaged distribution in its own session and process group (npm start, the documented route)
+        if: ${{ inputs.assigned_sut == 'SUT-05' }}
+        id: provision-sut05
+        env:
+          SUT_DIR: ${{ steps.package-sut05.outputs.dir }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, subprocess, sys, time, urllib.request
+          ws = os.environ['GITHUB_WORKSPACE']
+          # The instance starts in a new session (setsid(2), via start_new_session): npm, the shell it spawns, and the node process that
+          # serves port 3000 then share one process group, which the verification step stops as a whole. Run 37265782721 had signaled
+          # only the npm process and its direct children, and the API kept answering (correction of 2026-10-05, operation OP-CI-02).
+          p = subprocess.Popen(['npm', 'start'], cwd=os.environ['SUT_DIR'], stdin=subprocess.DEVNULL,
+                               stdout=open(f'{ws}/api-stdout-1.log', 'w'), stderr=open(f'{ws}/api-stderr-1.log', 'w'), start_new_session=True)
+          pgid = os.getpgid(p.pid)
+          assert pgid == p.pid, (p.pid, pgid)
+          open(f'{ws}/pid1.txt', 'w').write(f'{p.pid}\n')
+          open(f'{ws}/pgid1.txt', 'w').write(f'{pgid}\n')
+          body = None
+          for _ in range(90):
+              if p.poll() is not None:
+                  sys.exit(f'npm start exited early with code {p.returncode} (api-stderr-1.log)')
+              try:
+                  with urllib.request.urlopen('http://127.0.0.1:3000/rest/admin/application-version', timeout=20) as r:
+                      if r.status == 200:
+                          body = r.read()
+                          break
+              except Exception:
+                  pass
+              time.sleep(3)
+          if body is None:
+              sys.exit('the api did not answer GET /rest/admin/application-version with 200 within the readiness window')
+          open(f'{ws}/version-1.json', 'wb').write(body)
+          print(f'started: pid {p.pid}, process group {pgid}; version response {body.decode("utf-8", "replace")}')
+          PY
+      - name: Install the executor's pinned tools in a venv outside the workspace and put it first on PATH (Playwright for Python with --require-hashes; Chromium)
+        if: ${{ inputs.assigned_sut == 'SUT-01' || inputs.assigned_sut == 'SUT-02' || inputs.assigned_sut == 'SUT-03' || inputs.assigned_sut == 'SUT-04' || inputs.assigned_sut == 'SUT-05' }}
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -m venv "$RUNNER_TEMP/e02-executor-venv"
+          "$RUNNER_TEMP/e02-executor-venv/bin/python" -m pip install --require-hashes --only-binary :all: -r experiments/E02-state-establishment/executor/requirements.txt
+          "$RUNNER_TEMP/e02-executor-venv/bin/python" -m playwright install --with-deps chromium
+          echo "$RUNNER_TEMP/e02-executor-venv/bin" >> "$GITHUB_PATH"
+          export PATH="$RUNNER_TEMP/e02-executor-venv/bin:$PATH"
+          command -v python3
+          python3 --version
+          python3 -m playwright --version
+          python3 -m playwright install --dry-run chromium
+      - name: Write the instance interface instance.json for SUT-01 (experiments/E02-state-establishment/executor/README.md, section 6)
+        if: ${{ inputs.assigned_sut == 'SUT-01' }}
+        env:
+          E02_INSTANCE_REPOSITORY: ${{ steps.pin-sut01.outputs.repo }}
+          E02_INSTANCE_COMMIT: ${{ steps.pin-sut01.outputs.sha }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          e = os.environ
+          ws = e['GITHUB_WORKSPACE']
+          inst = {
+              'interface_version': 1,
+              'sut_id': 'SUT-01',
+              'record_class': e['RECORD_CLASS'],
+              'surfaces': {'web': {'base_url': 'http://127.0.0.1:3000'}, 'api': {'base_url': 'http://127.0.0.1:8000'}, 'auth': None},
+              'provisioning': {'route': 'GitHub-hosted runner instance provisioned in this job by the steps of job sut-01-web-api of .github/workflows/e03-environment-verification.yml: clone of the pinned commit; api: Python 3.11 (setup-python), pip install -r requirements.txt in backend/, uvicorn main:app on 127.0.0.1:8000; web: Node.js 24 (setup-node), pnpm 10, pnpm install --frozen-lockfile, build with VITE_API_URL=http://127.0.0.1:8000, vite preview on 127.0.0.1:3000',
+                               'repository': e['E02_INSTANCE_REPOSITORY'], 'commit_sha': e['E02_INSTANCE_COMMIT'], 'release': None,
+                               'asset': {'name': None, 'sha256': None},
+                               'commands': ['cd sut/backend', 'python -m pip install --quiet -r requirements.txt', 'nohup python -m uvicorn main:app --host 127.0.0.1 --port 8000 > "$GITHUB_WORKSPACE/api-stdout.log" 2> "$GITHUB_WORKSPACE/api-stderr.log" &', 'for _ in $(seq 1 60); do curl -fsS http://127.0.0.1:8000/health >/dev/null 2>&1 && break; sleep 2; done', 'curl -fsS http://127.0.0.1:8000/health', 'npm install -g pnpm@10 --no-audit --no-fund', 'cd sut/frontend', 'pnpm install --frozen-lockfile', 'VITE_API_URL=http://127.0.0.1:8000 pnpm build', 'nohup pnpm exec vite preview --host 127.0.0.1 --port 3000 --strictPort > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &', 'for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done'],
+                               'provisioning_record': None},
+              'process': None,
+              'logs': [ws + '/' + f for f in ['api-stdout.log', 'api-stderr.log', 'web-stdout.log', 'web-stderr.log']],
+          }
+          need = [('repository', inst['provisioning']['repository']), ('commit_sha', inst['provisioning']['commit_sha'])]
+          assert all(v for _, v in need), f'empty provisioning field(s): {[k for k, v in need if not v]}'
+          text = json.dumps(inst, indent=2) + '\n'
+          assert json.loads(text) == inst and json.loads(text)['interface_version'] == 1
+          with open('instance.json', 'w', encoding='utf-8') as f:
+              f.write(text)
+          print(text)
+          PY
+      - name: Write the instance interface instance.json for SUT-02 (experiments/E02-state-establishment/executor/README.md, section 6)
+        if: ${{ inputs.assigned_sut == 'SUT-02' }}
+        env:
+          E02_INSTANCE_REPOSITORY: ${{ steps.pin-sut02.outputs.repo }}
+          E02_INSTANCE_COMMIT: ${{ steps.pin-sut02.outputs.sha }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          e = os.environ
+          ws = e['GITHUB_WORKSPACE']
+          inst = {
+              'interface_version': 1,
+              'sut_id': 'SUT-02',
+              'record_class': e['RECORD_CLASS'],
+              'surfaces': {'web': {'base_url': 'http://127.0.0.1:3000'}, 'api': None, 'auth': None},
+              'provisioning': {'route': 'GitHub-hosted runner instance provisioned in this job by the steps of job sut-02-web of .github/workflows/e03-environment-verification.yml: clone of the pinned commit; Node.js 24 (setup-node); npm ci; npm run build; vite preview on 127.0.0.1:3000',
+                               'repository': e['E02_INSTANCE_REPOSITORY'], 'commit_sha': e['E02_INSTANCE_COMMIT'], 'release': None,
+                               'asset': {'name': None, 'sha256': None},
+                               'commands': ['cd sut', 'npm ci --no-audit --no-fund', 'npm run build', 'nohup npx vite preview --host 127.0.0.1 --port 3000 --strictPort > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &', 'for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done'],
+                               'provisioning_record': None},
+              'process': None,
+              'logs': [ws + '/' + f for f in ['web-stdout.log', 'web-stderr.log']],
+          }
+          need = [('repository', inst['provisioning']['repository']), ('commit_sha', inst['provisioning']['commit_sha'])]
+          assert all(v for _, v in need), f'empty provisioning field(s): {[k for k, v in need if not v]}'
+          text = json.dumps(inst, indent=2) + '\n'
+          assert json.loads(text) == inst and json.loads(text)['interface_version'] == 1
+          with open('instance.json', 'w', encoding='utf-8') as f:
+              f.write(text)
+          print(text)
+          PY
+      - name: Write the instance interface instance.json for SUT-03 (experiments/E02-state-establishment/executor/README.md, section 6)
+        if: ${{ inputs.assigned_sut == 'SUT-03' }}
+        env:
+          E02_INSTANCE_REPOSITORY: ${{ steps.pin-sut03.outputs.repo }}
+          E02_INSTANCE_COMMIT: ${{ steps.pin-sut03.outputs.sha }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          e = os.environ
+          ws = e['GITHUB_WORKSPACE']
+          inst = {
+              'interface_version': 1,
+              'sut_id': 'SUT-03',
+              'record_class': e['RECORD_CLASS'],
+              'surfaces': {'web': {'base_url': 'http://127.0.0.1:3000'}, 'api': None, 'auth': None},
+              'provisioning': {'route': 'GitHub-hosted runner instance provisioned in this job by the steps of job sut-03-web of .github/workflows/e03-environment-verification.yml: clone of the pinned commit; Node.js 14 (setup-node); npm install --legacy-peer-deps; npm install --no-save formdata-node@4; npm run build; next start on port 3000',
+                               'repository': e['E02_INSTANCE_REPOSITORY'], 'commit_sha': e['E02_INSTANCE_COMMIT'], 'release': None,
+                               'asset': {'name': None, 'sha256': None},
+                               'commands': ['cd sut', 'npm install --legacy-peer-deps --no-audit --no-fund', 'npm install --no-save formdata-node@4 --no-audit --no-fund', 'npm run build', 'nohup npx next start -p 3000 > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &', 'for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done'],
+                               'provisioning_record': None},
+              'process': None,
+              'logs': [ws + '/' + f for f in ['web-stdout.log', 'web-stderr.log']],
+          }
+          need = [('repository', inst['provisioning']['repository']), ('commit_sha', inst['provisioning']['commit_sha'])]
+          assert all(v for _, v in need), f'empty provisioning field(s): {[k for k, v in need if not v]}'
+          text = json.dumps(inst, indent=2) + '\n'
+          assert json.loads(text) == inst and json.loads(text)['interface_version'] == 1
+          with open('instance.json', 'w', encoding='utf-8') as f:
+              f.write(text)
+          print(text)
+          PY
+      - name: Write the instance interface instance.json for SUT-04 (experiments/E02-state-establishment/executor/README.md, section 6)
+        if: ${{ inputs.assigned_sut == 'SUT-04' }}
+        env:
+          E02_INSTANCE_REPOSITORY: ${{ steps.pin-sut04.outputs.repo }}
+          E02_INSTANCE_COMMIT: ${{ steps.pin-sut04.outputs.sha }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          e = os.environ
+          ws = e['GITHUB_WORKSPACE']
+          inst = {
+              'interface_version': 1,
+              'sut_id': 'SUT-04',
+              'record_class': e['RECORD_CLASS'],
+              'surfaces': {'web': {'base_url': 'http://127.0.0.1:3003/'}, 'api': {'base_url': 'http://127.0.0.1:3000'}, 'auth': {'base_url': 'http://127.0.0.1:3004'}},
+              'provisioning': {'route': "GitHub-hosted runner instance provisioned in this job by the steps of job sut-04-web-api of .github/workflows/e03-environment-verification.yml: clone of the pinned commit; JDK 26 (setup-java, temurin); Node.js 24.21.0 (setup-node); Apache Maven 3.9.14 from the Apache archive, SHA-512 verified; mvn -B -q clean install -DskipTests; the route of the SUT's README (run_locally.sh, with npm start in place of npm run dev and each service's -exec jar in place of the script's jar glob): the six service -exec jars with -Dspring.profiles.active=dev (auth on port 3004, booking 3000, room 3001, report 3005, branding 3002, message 3006) and the web app by npm start (next start -p 3003), each in its own session and process group",
+                               'repository': e['E02_INSTANCE_REPOSITORY'], 'commit_sha': e['E02_INSTANCE_COMMIT'], 'release': None,
+                               'asset': {'name': None, 'sha256': None},
+                               'commands': ['curl --fail --location --proto \'=https\' --retry 3 --output "$RUNNER_TEMP/apache-maven-3.9.14-bin.tar.gz" https://archive.apache.org/dist/maven/maven-3/3.9.14/binaries/apache-maven-3.9.14-bin.tar.gz', 'expected=d50af8ab5e6005b46a07f0ce9d3719e67cfdf898da988a84871304cd59fb1af0fef2f99dea709e6e66f21f732f905979b5c2dce6b6860406f60a70e84d9cf0b8', 'found="$(sha512sum "$RUNNER_TEMP/apache-maven-3.9.14-bin.tar.gz" | cut -d \' \' -f 1)"', '[ "$found" = "$expected" ] || { echo "SHA-512 mismatch: expected $expected, found $found" >&2; exit 1; }', 'tar -xzf "$RUNNER_TEMP/apache-maven-3.9.14-bin.tar.gz" -C "$RUNNER_TEMP"', 'if [ ! -f "$RUNNER_TEMP/apache-maven-3.9.14/bin/mvn" ] || [ ! -x "$RUNNER_TEMP/apache-maven-3.9.14/bin/mvn" ]; then echo "not an executable file: $RUNNER_TEMP/apache-maven-3.9.14/bin/mvn" >&2; exit 1; fi', 'echo "$RUNNER_TEMP/apache-maven-3.9.14/bin" >> "$GITHUB_PATH"', 'java -version 2>&1 | tee "$GITHUB_WORKSPACE/java-version.txt"', 'mvn -v | tee "$GITHUB_WORKSPACE/maven-version.txt"', '[[ "$(head -n 1 "$GITHUB_WORKSPACE/maven-version.txt")" == "Apache Maven 3.9.14 "* ]] || { echo "maven-version.txt does not start with Apache Maven 3.9.14: $(head -n 1 "$GITHUB_WORKSPACE/maven-version.txt")" >&2; exit 1; }', '[ "$(command -v mvn)" = "$RUNNER_TEMP/apache-maven-3.9.14/bin/mvn" ] || { echo "mvn resolves to $(command -v mvn), not $RUNNER_TEMP/apache-maven-3.9.14/bin/mvn" >&2; exit 1; }', 'node --version | tee "$GITHUB_WORKSPACE/node-version.txt"', 'npm --version | tee "$GITHUB_WORKSPACE/npm-version.txt"', 'cd sut', 'mvn -B -q clean install -DskipTests', 'shopt -s nullglob', 'jars=(./*/target/*-exec.jar)', 'shopt -u nullglob', '[ "${#jars[@]}" -gt 0 ] || { echo "no service exec jar was built under */target/" >&2; exit 1; }', 'printf \'%s\\n\' "${jars[@]}" | tee "$GITHUB_WORKSPACE/built-jars.txt"', 'test -f assets/.next/BUILD_ID', 'java -jar -Dspring.profiles.active=dev <service>/target/restful-booker-platform-<service>-*-exec.jar from the clone root, for auth, booking, room, report, branding, message, each in its own session and process group', 'npm start in sut/assets (next start -p 3003), in its own session and process group', 'readiness: GET /<service>/actuator/health on each service port and GET / on port 3003 answer 200 within 300 s, or the step fails'],
+                               'provisioning_record': None},
+              'process': None,
+              'logs': [ws + '/' + f for f in ['java-version.txt', 'maven-version.txt', 'node-version.txt', 'npm-version.txt', 'built-jars.txt', 'sut04-start.json', 'sut04-auth.log', 'sut04-booking.log', 'sut04-room.log', 'sut04-report.log', 'sut04-branding.log', 'sut04-message.log', 'sut04-web.log']],
+          }
+          need = [('repository', inst['provisioning']['repository']), ('commit_sha', inst['provisioning']['commit_sha'])]
+          assert all(v for _, v in need), f'empty provisioning field(s): {[k for k, v in need if not v]}'
+          text = json.dumps(inst, indent=2) + '\n'
+          assert json.loads(text) == inst and json.loads(text)['interface_version'] == 1
+          with open('instance.json', 'w', encoding='utf-8') as f:
+              f.write(text)
+          print(text)
+          PY
+      - name: Write the instance interface instance.json for SUT-05 (experiments/E02-state-establishment/executor/README.md, section 6)
+        if: ${{ inputs.assigned_sut == 'SUT-05' }}
+        env:
+          E02_INSTANCE_REPOSITORY: ${{ steps.pin-sut05.outputs.repo }}
+          E02_INSTANCE_COMMIT: ${{ steps.pin-sut05.outputs.sha }}
+          E02_INSTANCE_RELEASE: ${{ steps.pin-sut05.outputs.release }}
+          E02_INSTANCE_PACKAGE_DIR: ${{ steps.package-sut05.outputs.dir }}
+          E02_INSTANCE_START: "1"
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          e = os.environ
+          ws = e['GITHUB_WORKSPACE']
+          n = e['E02_INSTANCE_START']
+          assert n in ('1', '2'), f'E02_INSTANCE_START {n!r} (expected 1 or 2)'
+          pid_f, pgid_f = f'{ws}/pid{n}.txt', f'{ws}/pgid{n}.txt'
+          missing = [os.path.basename(p) for p in (pid_f, pgid_f) if not os.path.isfile(p)]
+          if missing:
+              sys.exit(f'SUT-05 instance start {n}: {", ".join(missing)} absent; instance.json is not written and the executor is not called')
+          pid, pgid = int(open(pid_f).read().strip()), int(open(pgid_f).read().strip())
+          pkg = json.load(open(f'{ws}/package-provenance.json'))
+          pkg_dir = e['E02_INSTANCE_PACKAGE_DIR']
+          out_log, err_log = f'{ws}/api-stdout-{n}.log', f'{ws}/api-stderr-{n}.log'
+          inst = {
+              'interface_version': 1,
+              'sut_id': 'SUT-05',
+              'record_class': e['RECORD_CLASS'],
+              'surfaces': {'web': None, 'api': {'base_url': 'http://127.0.0.1:3000'}, 'auth': None},
+              'provisioning': {'route': 'GitHub-hosted runner instance provisioned in this job by the steps of job sut-05-api of .github/workflows/e03-environment-verification.yml: clone of the pinned commit related to the release tag; Node.js 24.21.0 (setup-node); release archive verified against its GitHub digest and unpacked; npm start in its own session and process group; route recorded by the package step: ' + pkg['route'],
+                               'repository': e['E02_INSTANCE_REPOSITORY'], 'commit_sha': e['E02_INSTANCE_COMMIT'], 'release': e['E02_INSTANCE_RELEASE'],
+                               'asset': {'name': pkg['asset'], 'sha256': pkg['sha256']},
+                               'commands': ['ASSET="juice-shop-${EV_RELEASE#v}_node24_linux_x64.tgz"', 'gh release download "$EV_RELEASE" --repo "$EV_REPO" --pattern "$ASSET" --clobber', 'SUM="$(sha256sum "$ASSET" | cut -d\' \' -f1)"', 'DIGEST="$(gh release view "$EV_RELEASE" --repo "$EV_REPO" --json assets --jq ".assets[] | select(.name == \\"$ASSET\\") | .digest")"', 'test -n "$DIGEST"', 'test "sha256:$SUM" = "$DIGEST"', 'mkdir -p pkg', 'tar -xzf "$ASSET" -C pkg', 'set -- pkg/*/', 'test "$#" -eq 1', 'PKG_DIR="${1%/}"', 'test -f "$PKG_DIR/package.json"', 'test -f "$PKG_DIR/build/app.js"', 'echo "dir=$PKG_DIR" >> "$GITHUB_OUTPUT"', 'python3 - "$ASSET" "$SUM" "$DIGEST" "$PKG_DIR" <<\'PY\'', 'npm start'],
+                               'provisioning_record': None},
+              'process': {'pgid': pgid, 'pid': pid, 'start_command': ['npm', 'start'], 'cwd': os.path.abspath(pkg_dir), 'env': {'SUT_DIR': pkg_dir},
+                          'stdout_log': out_log, 'stderr_log': err_log, 'port': 3000, 'readiness_url': '/rest/admin/application-version',
+                          'readiness_timeout_s': 180, 'stop_timeout_s': 30},
+              'logs': [out_log, err_log],
+          }
+          need = [('repository', inst['provisioning']['repository']), ('commit_sha', inst['provisioning']['commit_sha']), ('release', inst['provisioning']['release']), ('asset.sha256', pkg['sha256'])]
+          assert all(v for _, v in need), f'empty provisioning field(s): {[k for k, v in need if not v]}'
+          text = json.dumps(inst, indent=2) + '\n'
+          assert json.loads(text) == inst and json.loads(text)['interface_version'] == 1
+          with open('instance.json', 'w', encoding='utf-8') as f:
+              f.write(text)
+          print(text)
+          PY
+      - name: Execute the condition through the frozen executor implementation
+        env:
+          CONDITION_ID: ${{ inputs.condition_id }}
+          ASSIGNED_SUT: ${{ inputs.assigned_sut }}
+          EXECUTION_ID: ${{ inputs.execution_id }}
+          ATTEMPT: ${{ inputs.attempt }}
+          EXECUTOR_PROMPT_VERSION: ${{ inputs.executor_prompt_version }}
+          EXPECTED_IMPLEMENTATION_SHA256: ${{ inputs.executor_implementation_sha256 }}
+          OUTPUT_DIR: raw-data/E02-state-establishment/${{ inputs.assigned_sut }}/${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}
+          PROVENANCE_JSON: provenance/ci-provenance.json
+          RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
+          INSTANCE_JSON: instance.json
+        run: |
+          set -euo pipefail
+          test "$(sha256sum experiments/E02-state-establishment/executor/run-condition.sh | cut -c1-64)" = "$EXPECTED_IMPLEMENTATION_SHA256"
+          mkdir -p "$OUTPUT_DIR"
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/started-at.txt"
+          set +e
+          bash experiments/E02-state-establishment/executor/run-condition.sh > "$OUTPUT_DIR/stdout.log" 2> "$OUTPUT_DIR/stderr.log"
+          echo $? > "$OUTPUT_DIR/exit-status.txt"
+          set -e
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/finished-at.txt"
+          cp provenance/ci-provenance.json runtime-environment.json "$OUTPUT_DIR/"
+          echo "executor exit status: $(cat "$OUTPUT_DIR/exit-status.txt")"
+      - name: Validate the run manifest against schema v2 and the E02 campaign convention
+        env:
+          OUTPUT_DIR: raw-data/E02-state-establishment/${{ inputs.assigned_sut }}/${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}
+          EXPECTED_SUT: ${{ inputs.assigned_sut }}
+          EXPECTED_CONDITION: ${{ inputs.condition_id }}
+          EXPECTED_ATTEMPT: ${{ inputs.attempt }}
+          EXPECTED_PROMPT_VERSION: ${{ inputs.executor_prompt_version }}
+        run: |
+          set -euo pipefail
+          test -f "$OUTPUT_DIR/run-manifest.json" || { echo "run-manifest.json missing: the attempt is recorded as ERROR-without-manifest and is not attributable"; exit 1; }
+          npx --yes -p ajv-cli@5 -p ajv-formats@3 ajv validate -s schemas/run-manifest.schema.v2.json --spec=draft2020 --allow-union-types -c ajv-formats -d "$OUTPUT_DIR/run-manifest.json"
+          python3 - <<'PY'
+          import json, os
+          d = os.environ['OUTPUT_DIR']
+          m = json.load(open(os.path.join(d, 'run-manifest.json')))
+          assert m['campaign_id'] == 'E02-state-establishment' and m['sut_id'] == os.environ['EXPECTED_SUT']
+          assert m['run_id'] == os.path.basename(d), (m['run_id'], d)
+          assert m['condition'] == os.environ['EXPECTED_CONDITION'] and m['scenario'] in ('CS-003', 'CS-004')
+          assert int(m['attempt']) == int(os.environ['EXPECTED_ATTEMPT'])
+          assert m.get('establishment_mechanisms'), 'establishment_mechanisms mandatory and non-empty for E02'
+          assert m.get('reset_mechanisms') is None, 'reset_mechanisms is not applicable on the establish side (between-run reset is provisioning)'
+          acts = m.get('actions') or []
+          assert acts or m['outcome']['status'] in ('ABORTED', 'ERROR'), 'actions mandatory unless the run stopped before its first counted action'
+          assert all('outcome' in a for a in acts), 'E02 campaign convention: every action record carries outcome'
+          assert m.get('prompt_version') == os.environ['EXPECTED_PROMPT_VERSION']
+          print('run manifest ok:', m['run_id'], 'counted actions:', len(acts), 'outcomes:', [a['outcome'] for a in acts], 'status:', m['outcome']['status'])
+          PY
+      - name: Replace runner host paths and private network addresses in the bundle's stdout.log and stderr.log by neutral markers (publication hygiene at capture)
+        if: always()
+        env:
+          EV_KEPT: raw-data/E02-state-establishment/${{ inputs.assigned_sut }}/${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}/stdout.log raw-data/E02-state-establishment/${{ inputs.assigned_sut }}/${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}/stderr.log
+        run: |
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
+          paths = []
+          for k in os.environ['EV_KEPT'].split():
+              if os.path.isdir(k):
+                  paths += [os.path.join(d, f) for d, _, fs in os.walk(k) for f in fs]
+              elif os.path.isfile(k):
+                  paths.append(k)
+          changed = 0
+          for p in sorted(paths):
+              b = open(p, 'rb').read()
+              if b'\0' in b[:8000]:
+                  continue
+              try:
+                  t = b.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths and private network addresses replaced in {changed} of {len(paths)} kept file(s)')
+          PY
+      - name: Upload the immutable attempt bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E02-MEASURED_EXPERIMENT-${{ inputs.condition_id }}-${{ inputs.execution_id }}-A${{ inputs.attempt }}
+          path: raw-data/E02-state-establishment/${{ inputs.assigned_sut }}/${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: error

@@ -1,0 +1,46 @@
+# manifests/campaign-execution-decisions-v3.yaml -- decisions record of 2026-11-06 (operation OP-DISP-06; CAMPAIGN-EXECUTION-DECISIONS-03).
+# The human research lead's answers, given in one question dialog, to the four points put with the E02 START package version 1 (manifests/e02-campaign-start-package-v1.yaml, commit 0b351e91).
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing. Immutable once committed; a correction is a new version file.
+record_id: CAMPAIGN-EXECUTION-DECISIONS-03
+record_class: CAMPAIGN_EXECUTION_DECISIONS
+study_id: EUS-2026-001
+operation_id: OP-DISP-06
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-06'
+recorded_on_timezone: America/Mexico_City
+status: RECORDED
+executes_anything: false
+protocol_change: false
+human_decision:
+  given_by: the human research lead
+  decision_date: '2026-11-06'
+  channel: given directly to the ORCHESTRATOR in its conversation, as the answer of a question dialog (single-agent operating model of 2026-10-24 and 2026-10-25)
+  answer:
+    transcript_stamp: '2026-11-06T18:40:53.148Z'
+    bytes: 2123
+    exact_text_sha256: 46958b123e5e5e3c27283459bf4205d75972fddcade638d23d0b96911961b627
+    sha256_convention: UTF-8 text of the tool result exactly as stored, without a trailing line feed
+    note: the answer of the question dialog, whole (the four question texts as put to the human research lead and the option chosen for each); the question texts are the offered lines, the chosen option is the decision
+    exact_text: |-
+      Your questions have been answered: "AGENT-INSTRUCTIONS.md (oración exacta, tu 'si a todo' no la vio). ¿Agrego este bullet a la sección CAMPAIGN-CI-WRITE-AUTH-01? Texto: «- **E06 compatibility-smoke workflow (E06-SMOKE-CI-WRITE-AUTH-01).** Human decision, 2026-11-06: the ORCHESTRATOR may create and maintain `.github/workflows/e06-compatibility-smoke-sut01.yml` only (the dispatch-only, fail-closed workflow of the SUT-01 Android compatibility smoke, labeled SMOKE and never MEASURED_EXPERIMENT); the workflows of E06 otherwise stay under CAMPAIGN-CI-WRITE-AUTH-01, and the grant covers no issuance of APPIUM3-COMPAT-SMOKE-AUTH-04, no dispatch, and no push.» (solo registra la concesión que ya diste; no emite nada.)"="Sí: agrega esa oración exacta (Recomendado)", "Paquete START de E02 listo como PREPARED (commit 0b351e91). Hallazgo 1 (OPEN-1): los selectores de checkout de CS-004 para SUT-02 y SUT-03 no están en ninguna fuente registrada, así que el ejecutor rechaza esas 2 de 10 condiciones; bloquear el hash así quita la mitad CS-004 de los dos pares de H2 (quedaría 1 par por comparación). ¿Cómo seguimos?"="Resolver antes del START (Recomendado)", "Hallazgo 2 (OPEN-2/OPEN-3): el workflow e02-environment-verification.yml exige un prompt congelado (prompts/frozen/...), pero ese archivo se escribe recién en el START (regla 2 de prompts/README); en E03 ese workflow no lo exigía y corrió 9 veces antes del START. Tal como está instalado, ningún DRY_RUN de E02 puede correr antes del START. Ambos workflows además dicen DRAFT en encabezado y nombre. ¿Qué hago?"="OP-CI-17: corregir el gate (Recomendado)", "Dos decisiones menores (OPEN-4 y OPEN-6). (a) Verificación de entorno ANTES del START (porque una verificación fallida puede cambiar el aprovisionamiento que el lock congela; E03 verificó 9 veces antes de su START). (b) El modelo de ejecución de E02 reutiliza por referencia experiments/E03-resetability/ci-cd-execution-model.md (mismo procedimiento de importación) en vez de escribir uno propio. ¿Aceptas ambas?"="Sí a ambas (Recomendado)". You can now continue with these answers in mind.
+decisions:
+- id: AGENT-INSTRUCTIONS-SENTENCE
+  question: put with the exact bullet that records E06-SMOKE-CI-WRITE-AUTH-01 in the section CAMPAIGN-CI-WRITE-AUTH-01 of the agent-instructions file
+  chosen: "Sí: agrega esa oración exacta (Recomendado)"
+  effect: the bullet exactly as offered was added to that section (status commit of this operation); the agent-instructions file has sha256 6947530d60712986bf09c31e02a22933a18c3f7614786c5b3174eddd8f782281 (89546 bytes) after it; the grant it records is the one of line D of manifests/campaign-execution-decisions-v2.yaml and is unchanged
+- id: OPEN-1-SELECTORS
+  question: the CS-004 checkout selectors of SUT-02 and SUT-03 (open item OPEN-1 of the START package)
+  chosen: "Resolver antes del START (Recomendado)"
+  effect: the human research lead authorizes the read-only download (no clone, no run, no execution) of the pinned source trees of SUT-02 (commit 60fdd634) and SUT-03 (commit 7ab934d7) to read the checkout selectors; the ORCHESTRATOR then configures and tests the two CS-004 realizations, which changes the implementation hash, and prepares package version 2 with ten conditions; no selector is guessed and each is still verified by a DRY_RUN before the lock
+- id: OPEN-2-VERIFICATION-GATE
+  question: the frozen-prompt requirement of the E02 environment-verification workflow, and the stale DRAFT wording of both E02 workflows (open items OPEN-2 and OPEN-3)
+  chosen: "OP-CI-17: corregir el gate (Recomendado)"
+  effect: a CI correction under CAMPAIGN-CI-WRITE-AUTH-01 (operation OP-CI-17) makes the DRY_RUN gate of the verification workflow check the working prompt instead of a frozen file (the E03 precedent) and removes the stale DRAFT wording of both workflows, with a change-log row, actionlint and shellcheck, and the OP-CI-15 length check; it dispatches nothing and exports nothing
+- id: OPEN-4-AND-OPEN-6
+  question: environment verification before the START (OPEN-4) and reuse by reference of the E03 execution-model document (OPEN-6)
+  chosen: "Sí a ambas (Recomendado)"
+  effect: the environment verification of the E02 conditions precedes the START, and the import procedure of E02 is that of experiments/E03-resetability/ci-cd-execution-model.md by reference (no E02 document is written)
+approvals_not_given:  # each still needs its own explicit human approval of that exact action
+- the START and the configuration lock of E02, and any dispatch authorization under Section 3.7 of protocol/agent-governance-v6.md
+- any dispatch, including each environment-verification DRY_RUN, and the push of export v47
+- the reading of any source other than the pinned trees of SUT-02 and SUT-03 named above

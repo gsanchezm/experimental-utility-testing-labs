@@ -1,0 +1,571 @@
+# E09 Measured Execution -- DRAFT (operation OP-PREP-E09). Not frozen, not locked, not dispatched.
+# Study EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems).
+# Authored by the ORCHESTRATOR under CAMPAIGN-CI-WRITE-AUTH-01 (the agent-instructions file, "Campaign CI/CD infrastructure
+# for E02 and E04-E12"), for E09-accessibility only.
+#
+# The ONLY path through which an E09-accessibility MEASURED_EXPERIMENT may run. It is dispatched by the ORCHESTRATOR within a
+# dispatch authorization of the human research lead (protocol/agent-governance-v6.md, Section 3.7, DRAFT: while v6 is a DRAFT
+# this workflow refuses every dispatch). It FAILS CLOSED: the gate job verifies every frozen input and campaign gate against the
+# checked-out repository before the measured job may start. As of its creation E09 is NOT_STARTED, has no campaign START, no
+# locked configuration, no dispatch authorization, no controlled-instance verification, and the axe-core pin is not recorded in
+# the toolchain manifest, so this workflow cannot execute a measured condition. That is the intended state.
+#
+# Attempt model: campaign -> SUT -> condition -> execution -> attempt. The first attempt only; GitHub-native re-runs are refused
+# (github.run_attempt must be 1); the artifact is uploaded with overwrite disabled. Nothing is committed by this workflow
+# (permissions: contents: read); the artifact is imported under ORCHESTRATOR coordination with digest verification.
+#
+# Read isolation: the measured job checks out the common frozen inputs and the assigned SUT's own raw-data subtree only.
+#
+# Inputs reach every script through the environment of its step (env:), never through an expression inside the script text,
+# so no script carries an expression (GitHub limit of 21000 characters for a string that carries expressions; the validation
+# workflow of this repository estimates it, OP-CI-15 pattern).
+name: E09 Measured Execution
+
+on:
+  workflow_dispatch:
+    inputs:
+      condition_id:
+        description: "Condition to execute (one of the two candidate E09 conditions; candidate ids, not frozen until the configuration is locked)"
+        required: true
+        type: choice
+        options:
+          - E09-A11Y-SUT01-MISSING-NAME
+          - E09-CTRL-SUT01-STANDARD
+      assigned_sut:
+        description: "SUT assigned to this executor instantiation (E09 has one SUT with a condition: SUT-01)"
+        required: true
+        type: choice
+        options: [SUT-01]
+      execution_id:
+        description: "Execution id within the condition, format EXnnnn (for example EX0001)"
+        required: true
+        type: string
+      attempt:
+        description: "Attempt number; this workflow admits attempt 1 only (governance v6, Section 3.7: an authorization admits no further attempt)"
+        required: true
+        default: "1"
+        type: string
+      campaign_start_authorization_id:
+        description: "Human authorization id of the E09 campaign START (must appear in the protocol/CHANGELOG.md NOT_STARTED -> IN_PROGRESS row)"
+        required: true
+        type: string
+      dispatch_authorization_id:
+        description: "Dispatch authorization id of the human research lead for this SUT (manifests/e09-dispatch-authorization-*.yaml)"
+        required: true
+        type: string
+      executor_prompt_version:
+        description: "Frozen executor prompt version id (file prompts/frozen/<id>.md must exist; a run needs a non-null prompt_version)"
+        required: true
+        type: string
+      executor_implementation_sha256:
+        description: "SHA-256 of experiments/E09-accessibility/executor/run-condition.sh as recorded in the locked configuration and the dispatch authorization"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e09-measured-${{ inputs.condition_id }}
+  cancel-in-progress: false
+
+env:
+  TZ: UTC
+  RECORD_CLASS: MEASURED_EXPERIMENT
+  RUN_ID: ${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}
+  ARTIFACT_RETENTION_DAYS: "90"
+  TIMEOUT_POLICY: "job timeout-minutes as declared; no step retry; no automatic re-run"
+  RETRY_POLICY: "none: a further attempt needs its own human approval; github.run_attempt must be 1"
+  CONCURRENCY_POLICY: "one run per condition at a time; never cancel in progress"
+  AXE_CORE_VERSION: "4.14.0"
+  AXE_CORE_NPM_INTEGRITY: "sha512-9WTZxEjsZ7b13TH8JPmbV2z8CHbl80/2hm3XPEG4JgNdQLK81IBRXmSxHfMAOkSqQeRxT/0dwNDz2GOm3zzpcQ=="
+  AXE_CORE_TARBALL_URL: "https://registry.npmjs.org/axe-core/-/axe-core-4.14.0.tgz"
+
+jobs:
+  gate:
+    name: E09 Measured Execution Gate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      all_gates_passed: ${{ steps.gates.outputs.all_gates_passed }}
+      configuration_sha256: ${{ steps.gates.outputs.configuration_sha256 }}
+      schema_v2_sha256: ${{ steps.gates.outputs.schema_v2_sha256 }}
+      executor_prompt_sha256: ${{ steps.gates.outputs.executor_prompt_sha256 }}
+      governance_sha256: ${{ steps.gates.outputs.governance_sha256 }}
+      workflow_sha256: ${{ steps.gates.outputs.workflow_sha256 }}
+      dispatch_authorization_sha256: ${{ steps.gates.outputs.dispatch_authorization_sha256 }}
+      environment_type: ${{ steps.gates.outputs.environment_type }}
+      canonical_source_commit: ${{ steps.gates.outputs.canonical_source_commit }}
+    steps:
+      - name: Check out frozen inputs only (no raw-data of any SUT)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            protocol
+            manifests
+            experiments
+            schemas
+            prompts
+            .github/workflows
+          sparse-checkout-cone-mode: true
+      - name: Refuse anything but a first attempt of a dispatch on the default branch
+        env:
+          GATE_REF: ${{ github.ref }}
+          GATE_RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          test "$GATE_REF" = "refs/heads/main" || { echo "measured execution runs only from refs/heads/main (got $GATE_REF)"; exit 1; }
+          test "$GATE_RUN_ATTEMPT" = "1" || { echo "GitHub-native re-run refused: a further attempt needs its own human approval"; exit 1; }
+      - name: Verify every campaign gate against the repository (fail closed)
+        id: gates
+        env:
+          GATE_CONDITION_ID: ${{ inputs.condition_id }}
+          GATE_ASSIGNED_SUT: ${{ inputs.assigned_sut }}
+          GATE_EXECUTION_ID: ${{ inputs.execution_id }}
+          GATE_ATTEMPT: ${{ inputs.attempt }}
+          GATE_CAMPAIGN_START_AUTHORIZATION_ID: ${{ inputs.campaign_start_authorization_id }}
+          GATE_DISPATCH_AUTHORIZATION_ID: ${{ inputs.dispatch_authorization_id }}
+          GATE_EXECUTOR_PROMPT_VERSION: ${{ inputs.executor_prompt_version }}
+          GATE_EXECUTOR_IMPLEMENTATION_SHA256: ${{ inputs.executor_implementation_sha256 }}
+        run: |
+          set -euo pipefail
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - <<'PY'
+          import glob, hashlib, json, os, re, sys, yaml
+          cond = os.environ['GATE_CONDITION_ID']; sut = os.environ['GATE_ASSIGNED_SUT']; eid = os.environ['GATE_EXECUTION_ID']
+          attempt = os.environ['GATE_ATTEMPT']; auth = os.environ['GATE_CAMPAIGN_START_AUTHORIZATION_ID']
+          dauth = os.environ['GATE_DISPATCH_AUTHORIZATION_ID']; pv = os.environ['GATE_EXECUTOR_PROMPT_VERSION']
+          impl = os.environ['GATE_EXECUTOR_IMPLEMENTATION_SHA256']
+          failures = []
+          def gate(name, ok, detail=''):
+              print(('PASS ' if ok else 'FAIL ') + name + (': ' + str(detail) if detail != '' else ''))
+              if not ok: failures.append(name)
+          def sha(p): return hashlib.sha256(open(p, 'rb').read()).hexdigest() if os.path.isfile(p) else None
+          def load(p):
+              try: return yaml.safe_load(open(p, encoding='utf-8')) or {}
+              except Exception: return {}
+          def text(p): return open(p, encoding='utf-8').read() if os.path.isfile(p) else ''
+          CONDS = {'E09-A11Y-SUT01-MISSING-NAME': 'a11y_glitch_user', 'E09-CTRL-SUT01-STANDARD': 'standard_user'}
+          # G-A inputs are self-consistent
+          gate('condition is one of the E09 candidate conditions', cond in CONDS, cond)
+          gate('assigned SUT is SUT-01 (the only SUT with a condition in this campaign)', sut == 'SUT-01' and cond.split('-')[2] == 'SUT01', f'{cond} vs {sut}')
+          gate('execution_id format EXnnnn', bool(re.fullmatch(r'EX[0-9]{4}', eid)), eid)
+          gate('attempt is 1 (first attempt only)', attempt == '1', attempt)
+          gate('executor implementation hash is a SHA-256 value', bool(re.fullmatch(r'[0-9a-f]{64}', impl)))
+          # G-1 campaign START exists
+          st = {c.get('id'): c.get('status') for c in (load('manifests/study-manifest.yaml').get('campaigns') or [])}
+          gate('E09 campaign status IN_PROGRESS', st.get('E09-accessibility') == 'IN_PROGRESS', str(st.get('E09-accessibility')))
+          chg = text('protocol/CHANGELOG.md')
+          start_rows = [l for l in chg.splitlines() if 'experiments/E09-accessibility/README.md' in l and 'campaign NOT_STARTED -> IN_PROGRESS' in l]
+          gate('exactly one E09 campaign START change-log row', len(start_rows) == 1, str(len(start_rows)))
+          gate('the START row carries the campaign START authorization id', len(start_rows) == 1 and bool(auth) and auth in start_rows[0])
+          # G-2 locked configuration
+          readme = text('experiments/E09-accessibility/README.md')
+          m = re.search(r'\n## Campaign configuration\n(.*?)(\n## |\Z)', readme, re.S)
+          gate('locked "Campaign configuration" record exists', m is not None)
+          cfg = m.group(1) if m else ''
+          scanner_src = text('experiments/E09-accessibility/executor/executor/scanner.py')
+          pin_version = re.search(r"^AXE_VERSION = '([^']+)'", scanner_src, re.M)
+          pin_integrity = re.search(r"^AXE_NPM_INTEGRITY = '([^']+)'", scanner_src, re.M)
+          pin_member = re.search(r"^AXE_MIN_SHA256 = '([0-9a-f]{64})'", scanner_src, re.M)
+          pin_version = pin_version.group(1) if pin_version else None
+          pin_integrity = pin_integrity.group(1) if pin_integrity else None
+          pin_member = pin_member.group(1) if pin_member else None
+          gate('configuration names the condition', cond in cfg)
+          gate('configuration names run-manifest schema v2', 'run-manifest.schema.v2.json' in cfg)
+          gate('configuration names the executor prompt version', bool(pv) and pv in cfg)
+          gate('configuration names the executor implementation hash', impl in cfg)
+          gate('configuration names the axe-core pin (version and npm integrity)', bool(pin_version) and pin_version in cfg and bool(pin_integrity) and pin_integrity in cfg)
+          gate('configuration names the browser build sha256', bool(pin_member) and pin_member in cfg)
+          gate('configuration names N = 50 executions per condition', 'N = 50' in cfg)
+          # brief section 9 gates 5, 10, 11, 12, 13 (configuration draft, sections 3b, 3h, 4; design brief, sections 9, 13)
+          smanifest = load('manifests/sut-manifest.yaml')
+          web_commit = ((((smanifest.get('suts') or {}).get(sut) or {}).get('components') or {}).get('web') or {}).get('commit_sha')
+          gate('configuration records the SUT-01 web commit of manifests/sut-manifest.yaml', bool(web_commit) and web_commit in cfg, web_commit)
+          probe = re.search(r'Probe record: (\S+)', cfg)
+          gate('configuration names a probe record of the realized-draw classifier and the rule behavior (brief section 13, item 1)',
+               bool(probe) and os.path.isfile(probe.group(1)), probe.group(1) if probe else '(absent)')
+          gate('configuration states the declared behavior class of each condition', 'behavior class' in cfg.lower())
+          gate('configuration records H5 as CONFIRMATORY (HD-2 count unit stated)', 'H5' in cfg and 'CONFIRMATORY' in cfg)
+          gate('configuration records the scenario mapping decision (HD-13)', 'HD-13' in cfg)
+          # G-3 dispatch authorization (governance v6, Section 3.7; the record is issued by the human research lead only)
+          recs = []
+          for p in sorted(glob.glob('manifests/e09-dispatch-authorization-*.yaml')):
+              d = load(p)
+              if isinstance(d, dict) and d.get('authorization_id') == dauth: recs.append((p, d))
+          gate('exactly one dispatch authorization record names the dispatch authorization id', len(recs) == 1, str(len(recs)))
+          d = recs[0][1] if len(recs) == 1 else {}
+          fi = d.get('frozen_inputs') or {}
+          prompt_sha = sha(f'prompts/frozen/{pv}.md')
+          gate('dispatch authorization is ISSUED, VALID, dispatch-eligible, and issued by the human research lead',
+               d.get('status') == 'ISSUED' and d.get('record_validity') == 'VALID' and d.get('dispatch_eligibility') == 'ELIGIBLE'
+               and d.get('issued_by') == 'human research lead', d.get('status'))
+          gate('dispatch authorization names SUT-01', d.get('assigned_sut') == 'SUT-01')
+          gate('dispatch authorization names this condition', cond in (d.get('conditions') or []))
+          gate('dispatch authorization names N = 50 executions and the execution is within N', d.get('n_executions') == 50 and bool(re.fullmatch(r'EX[0-9]{4}', eid)) and 1 <= int(eid[2:]) <= 50)
+          gate('dispatch authorization names the campaign START authorization id', bool(auth) and d.get('campaign_start_authorization_id') == auth)
+          gate('dispatch authorization records attempt 1 and an authorization date (governance v6, Section 3.7)', str(d.get('attempt')) == '1' and bool(d.get('authorization_date')), str(d.get('attempt')))
+          gate('dispatch authorization records the executor implementation SHA-256 equal to the input', fi.get('executor_implementation_sha256') == impl)
+          gate('dispatch authorization records the executor prompt SHA-256 equal to the frozen prompt file', prompt_sha is not None and fi.get('executor_prompt_sha256') == prompt_sha)
+          # G-4 governance v6 frozen (a DRAFT never passes)
+          gov = text('protocol/agent-governance-v6.md')
+          gm = re.search(r'\| Protocol state \| ([A-Z-]+) \|', gov)
+          gate('agent-governance-v6 is FROZEN-PRE-DATA or AMENDED', gm is not None and gm.group(1) in ('FROZEN-PRE-DATA', 'AMENDED'), gm.group(1) if gm else 'no header')
+          gate('agent-governance-v6 names the per-SUT dispatch authorization of Section 3.7', '### 3.7 Dispatch authorization' in gov)
+          # G-5 schema v2
+          v2 = load('schemas/run-manifest.schema.v2.json') if os.path.isfile('schemas/run-manifest.schema.v2.json') else {}
+          gate('run-manifest schema v2 present with the v2 id', str(v2.get('$id', '')).endswith(':run-manifest:v2'))
+          # G-6 controlled instance verified on GitHub Actions for this condition (protocol/study-design-v1.md, section 10.3)
+          c = (load('experiments/E09-accessibility/controlled-instance-status.yaml').get('conditions') or {}).get(cond) or {}
+          gate('controlled instance status CONTROLLED', c.get('status') == 'CONTROLLED', str(c.get('status')))
+          ga = c.get('github_actions_verification') or {}
+          gate('GitHub Actions environment verification VERIFIED', ga.get('status') == 'VERIFIED', str(ga.get('status')))
+          gate('no provisioning change awaiting re-verification', not c.get('reverification_required'), str(c.get('reverification_required')))
+          env_type = ga.get('environment_type') or 'UNKNOWN'
+          gate('environment_type SELF_HOSTED (never PUBLIC_HOSTED for a fault-activation condition)', env_type == 'SELF_HOSTED', env_type)
+          # G-7 pinned toolchain: axe-core and Playwright
+          tools = load('manifests/toolchain-manifest.yaml').get('tools') or {}
+          acc = tools.get('accessibility') or {}
+          gate('toolchain accessibility entry pins axe-core to the pinned version and integrity', str(acc.get('version')) == pin_version and acc.get('npm_integrity') == pin_integrity and pin_integrity is not None, json.dumps({k: acc.get(k) for k in ('version', 'npm_integrity')}))
+          gate('toolchain accessibility entry records pinned_by and pinned_at', bool(acc.get('pinned_by')) and bool(acc.get('pinned_at')))
+          wr = tools.get('web_runner') or {}
+          gate('toolchain web runner is Playwright for Python 1.63.0', str(wr.get('version')) == '1.63.0', str(wr.get('version')))
+          # G-8 frozen prompt
+          gate('executor prompt frozen file exists', prompt_sha is not None, f'prompts/frozen/{pv}.md')
+          # G-9 implementation present and at the locked hash; the glitch account's password is locked in the implementation
+          ip = 'experiments/E09-accessibility/executor/run-condition.sh'
+          gate('executor implementation exists and equals the locked hash', sha(ip) is not None and sha(ip) == impl)
+          account = CONDS.get(cond, '')
+          gate(f'activation password of {account} is locked in the implementation (HUMAN DECISION HD-E09-A)',
+               bool(re.search(r"'" + re.escape(account) + r"': '[^']+'", text('experiments/E09-accessibility/executor/executor/config.py'))), account)
+          # outputs
+          out = {'all_gates_passed': 'true' if not failures else 'false',
+                 'configuration_sha256': sha('experiments/E09-accessibility/README.md') or 'absent',
+                 'schema_v2_sha256': sha('schemas/run-manifest.schema.v2.json') or 'absent',
+                 'executor_prompt_sha256': prompt_sha or 'absent',
+                 'governance_sha256': sha('protocol/agent-governance-v6.md') or 'absent',
+                 'workflow_sha256': sha('.github/workflows/e09-measured-execution.yml') or 'absent',
+                 'dispatch_authorization_sha256': sha(recs[0][0]) if len(recs) == 1 else 'absent',
+                 'environment_type': env_type}
+          msg = os.environ.get('GATE_CANONICAL_TRAILER', '')
+          out['canonical_source_commit'] = msg or 'none (this repository is the canonical repository)'
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              for k, v in out.items(): f.write(f'{k}={v}\n')
+          print(json.dumps(out, indent=2))
+          if failures:
+              print('GATES FAILED (' + str(len(failures)) + '): ' + '; '.join(failures)); sys.exit(1)
+          print('ALL GATES PASSED')
+          PY
+
+  provenance:
+    name: E09 Provenance Capture
+    needs: gate
+    if: ${{ needs.gate.outputs.all_gates_passed == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out frozen inputs only
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            manifests
+            .github/workflows
+          sparse-checkout-cone-mode: true
+      - name: Write the CI reproducibility contract (no secret values)
+        env:
+          PROV_CONDITION_ID: ${{ inputs.condition_id }}
+          PROV_ASSIGNED_SUT: ${{ inputs.assigned_sut }}
+          PROV_EXECUTION_ID: ${{ inputs.execution_id }}
+          PROV_ATTEMPT: ${{ inputs.attempt }}
+          PROV_PROMPT_VERSION: ${{ inputs.executor_prompt_version }}
+          PROV_IMPLEMENTATION_SHA256: ${{ inputs.executor_implementation_sha256 }}
+          PROV_CONFIGURATION_SHA256: ${{ needs.gate.outputs.configuration_sha256 }}
+          PROV_SCHEMA_SHA256: ${{ needs.gate.outputs.schema_v2_sha256 }}
+          PROV_PROMPT_FILE_SHA256: ${{ needs.gate.outputs.executor_prompt_sha256 }}
+          PROV_GOVERNANCE_SHA256: ${{ needs.gate.outputs.governance_sha256 }}
+          PROV_WORKFLOW_SHA256: ${{ needs.gate.outputs.workflow_sha256 }}
+          PROV_DISPATCH_SHA256: ${{ needs.gate.outputs.dispatch_authorization_sha256 }}
+          PROV_ENVIRONMENT_TYPE: ${{ needs.gate.outputs.environment_type }}
+          PROV_CANONICAL_COMMIT: ${{ needs.gate.outputs.canonical_source_commit }}
+          PROV_REPOSITORY_SHA: ${{ github.sha }}
+          PROV_REF: ${{ github.ref }}
+          PROV_WORKFLOW_REF: ${{ github.workflow_ref }}
+          PROV_RUN_ID: ${{ github.run_id }}
+          PROV_RUN_ATTEMPT: ${{ github.run_attempt }}
+          PROV_RUN_NUMBER: ${{ github.run_number }}
+          PROV_JOB: ${{ github.job }}
+        run: |
+          set -euo pipefail
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - <<'PY'
+          import datetime, json, os, yaml
+          e = os.environ
+          cond = e['PROV_CONDITION_ID']; sut = e['PROV_ASSIGNED_SUT']
+          web = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts'][sut]['components']['web']
+          api = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts'][sut]['components']['api']
+          rec = {
+            'record_class': e['RECORD_CLASS'], 'study_id': 'EUS-2026-001', 'campaign_id': 'E09-accessibility',
+            'condition_id': cond, 'sut_id': sut, 'surface': 'web', 'execution_id': e['PROV_EXECUTION_ID'],
+            'attempt': int(e['PROV_ATTEMPT']), 'run_id': e['RUN_ID'],
+            'repository': {'sha': e['PROV_REPOSITORY_SHA'], 'ref': e['PROV_REF'], 'canonical_source_commit': e['PROV_CANONICAL_COMMIT']},
+            'workflow': {'ref': e['PROV_WORKFLOW_REF'], 'file_sha256': e['PROV_WORKFLOW_SHA256']},
+            'frozen_input_hashes': {'e09_configuration_sha256': e['PROV_CONFIGURATION_SHA256'], 'run_manifest_schema_v2_sha256': e['PROV_SCHEMA_SHA256'],
+                                    'executor_prompt_version': e['PROV_PROMPT_VERSION'], 'executor_prompt_sha256': e['PROV_PROMPT_FILE_SHA256'],
+                                    'executor_implementation_sha256': e['PROV_IMPLEMENTATION_SHA256'], 'agent_governance_v6_sha256': e['PROV_GOVERNANCE_SHA256'],
+                                    'dispatch_authorization_sha256': e['PROV_DISPATCH_SHA256']},
+            'sut_version': {'web': {'repository': web.get('repository'), 'commit_sha': web.get('commit_sha'), 'release': web.get('release')},
+                            'api': {'repository': api.get('repository'), 'commit_sha': api.get('commit_sha'), 'release': api.get('release')}},
+            'environment_type': e['PROV_ENVIRONMENT_TYPE'],
+            'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'note': 'the measured job records its own runner and runtime versions in runtime-environment.json; this job records the gate-time contract'},
+            'timezone': 'UTC', 'timeout_policy': e['TIMEOUT_POLICY'], 'retry_policy': e['RETRY_POLICY'], 'concurrency_policy': e['CONCURRENCY_POLICY'],
+            'artifact_retention_days': int(e['ARTIFACT_RETENTION_DAYS']),
+            'github': {'run_id': e['PROV_RUN_ID'], 'run_attempt': e['PROV_RUN_ATTEMPT'], 'run_number': e['PROV_RUN_NUMBER'], 'job': e['PROV_JOB']},
+            'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            'secrets': 'none used; none recorded',
+          }
+          json.dump(rec, open('ci-provenance.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+      - name: Upload the provenance record
+        uses: actions/upload-artifact@v4
+        with:
+          name: E09-MEASURED_EXPERIMENT-${{ inputs.condition_id }}-${{ inputs.execution_id }}-A${{ inputs.attempt }}-provenance
+          path: ci-provenance.json
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: error
+
+  measured-execution:
+    name: E09 Measured Execution ${{ inputs.condition_id }} ${{ inputs.execution_id }} A${{ inputs.attempt }}
+    needs: [gate, provenance]
+    if: ${{ needs.gate.outputs.all_gates_passed == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out common frozen inputs and only the assigned SUT's raw-data subtree
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            protocol
+            manifests
+            experiments
+            schemas
+            prompts
+            raw-data/E09-accessibility/${{ inputs.assigned_sut }}
+          sparse-checkout-cone-mode: true
+      - name: Assert read isolation (no other SUT's measured outputs in the workspace)
+        env:
+          ISO_ASSIGNED_SUT: ${{ inputs.assigned_sut }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          for d in raw-data/E09-accessibility/*/; do
+            case "$d" in "raw-data/E09-accessibility/$ISO_ASSIGNED_SUT/") ;; *) echo "isolation violated: $d present"; exit 1;; esac
+          done
+          test ! -e "raw-data/E09-accessibility/$ISO_ASSIGNED_SUT/$RUN_ID" || { echo "run directory $RUN_ID already exists: attempts are immutable"; exit 1; }
+          echo "read isolation ok"
+      - name: Download the provenance record
+        uses: actions/download-artifact@v4
+        with:
+          name: E09-MEASURED_EXPERIMENT-${{ inputs.condition_id }}-${{ inputs.execution_id }}-A${{ inputs.attempt }}-provenance
+          path: provenance
+      - name: Record the runtime environment
+        run: |
+          python3 - <<'PY'
+          import datetime, json, os, platform, subprocess
+          def v(cmd):
+              try: return subprocess.run(cmd, capture_output=True, text=True, timeout=30).stdout.strip()
+              except Exception as e: return f'unavailable: {e.__class__.__name__}'
+          rec = {'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'platform': platform.platform()},
+                 'runtime_versions': {'python': v(['python3', '--version']), 'node': v(['node', '--version']), 'npm': v(['npm', '--version']), 'git': v(['git', '--version'])},
+                 'timezone': os.environ.get('TZ'), 'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          json.dump(rec, open('runtime-environment.json', 'w'), indent=2); print(json.dumps(rec, indent=2))
+          PY
+      - name: Read the pinned SUT-01 provenance (web and api)
+        id: pin
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import yaml
+          s = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-01']['components']
+          print(f"repo={s['api']['repository']}"); print(f"sha={s['api']['commit_sha']}")
+          print(f"web_repo={s['web']['repository']}"); print(f"web_sha={s['web']['commit_sha']}")
+          PY
+      - name: Clone the pinned SUT-01 source and check out the pinned commit
+        env:
+          PIN_REPO: ${{ steps.pin.outputs.repo }}
+          PIN_SHA: ${{ steps.pin.outputs.sha }}
+        run: |
+          set -euo pipefail
+          git clone --quiet "$PIN_REPO" sut
+          git -C sut checkout --quiet "$PIN_SHA"
+          test "$(git -C sut rev-parse HEAD)" = "$PIN_SHA"
+      - name: Set up Python 3.11 for the SUT-01 api (the backend requires 3.11 or 3.12 per the SUT README)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Set up Node.js 24 for the SUT-01 web frontend
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Provision and start the SUT-01 api instance
+        run: |
+          set -euo pipefail
+          cd sut/backend
+          python -m pip install --quiet -r requirements.txt
+          nohup python -m uvicorn main:app --host 127.0.0.1 --port 8000 > "$GITHUB_WORKSPACE/api-stdout.log" 2> "$GITHUB_WORKSPACE/api-stderr.log" &
+          for _ in $(seq 1 60); do curl -fsS http://127.0.0.1:8000/health >/dev/null 2>&1 && break; sleep 2; done
+          curl -fsS http://127.0.0.1:8000/health
+      - name: Provision, build, and serve the SUT-01 web instance
+        env:
+          SUT01_WEB_PIN: ${{ steps.pin.outputs.web_sha }}
+        run: |
+          set -euo pipefail
+          test "$(git -C sut rev-parse HEAD)" = "$SUT01_WEB_PIN"
+          npm install -g pnpm@10 --no-audit --no-fund
+          cd sut/frontend
+          pnpm install --frozen-lockfile
+          VITE_API_URL=http://127.0.0.1:8000 pnpm build
+          nohup pnpm exec vite preview --host 127.0.0.1 --port 3000 --strictPort > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &
+          for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
+      - name: Set up Python 3.12 for the executor (the pinned wheels are CPython 3.12)
+        id: py312
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install the executor's pinned tools in a venv outside the workspace (Playwright for Python with --require-hashes; Chromium)
+        env:
+          PY312: ${{ steps.py312.outputs.python-path }}
+        run: |
+          set -euo pipefail
+          "$PY312" -m venv "$RUNNER_TEMP/e09-executor-venv"
+          "$RUNNER_TEMP/e09-executor-venv/bin/python" -m pip install --require-hashes --only-binary :all: -r experiments/E09-accessibility/executor/requirements.txt
+          "$RUNNER_TEMP/e09-executor-venv/bin/python" -m playwright install --with-deps chromium
+          echo "$RUNNER_TEMP/e09-executor-venv/bin" >> "$GITHUB_PATH"
+      - name: Download the pinned axe-core tarball and verify its sha512 before any use (provisioning; the executor verifies it again)
+        env:
+          AXE_DIR: ${{ runner.temp }}/axe-core-download
+        run: |
+          set -euo pipefail
+          mkdir -p "$AXE_DIR"
+          curl -fsSL -o "$AXE_DIR/axe-core-$AXE_CORE_VERSION.tgz" "$AXE_CORE_TARBALL_URL"
+          python3 - <<'PY'
+          import base64, hashlib, os
+          path = os.environ['AXE_DIR'] + '/axe-core-' + os.environ['AXE_CORE_VERSION'] + '.tgz'
+          digest = 'sha512-' + base64.b64encode(hashlib.sha512(open(path, 'rb').read()).digest()).decode('ascii')
+          if digest != os.environ['AXE_CORE_NPM_INTEGRITY']:
+              raise SystemExit('axe-core tarball integrity mismatch: ' + digest)
+          print('axe-core tarball integrity verified')
+          PY
+          echo "AXE_TARBALL=$AXE_DIR/axe-core-$AXE_CORE_VERSION.tgz" >> "$GITHUB_ENV"
+      - name: Write the instance interface instance.json for SUT-01 (experiments/E09-accessibility/executor/README.md, section 6)
+        env:
+          E09_INSTANCE_REPOSITORY: ${{ steps.pin.outputs.repo }}
+          E09_INSTANCE_COMMIT: ${{ steps.pin.outputs.sha }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          e = os.environ
+          ws = e['GITHUB_WORKSPACE']
+          inst = {
+              'interface_version': 1,
+              'sut_id': 'SUT-01',
+              'record_class': e['RECORD_CLASS'],
+              'surfaces': {'web': {'base_url': 'http://127.0.0.1:3000'}, 'api': {'base_url': 'http://127.0.0.1:8000'}, 'auth': None},
+              'provisioning': {'route': 'GitHub-hosted runner instance provisioned in this job by the steps of the measured-execution job of .github/workflows/e09-measured-execution.yml: clone of the pinned commit; api: Python 3.11 (setup-python), pip install -r requirements.txt in backend/, uvicorn main:app on 127.0.0.1:8000; web: Node.js 24 (setup-node), pnpm 10, pnpm install --frozen-lockfile, build with VITE_API_URL=http://127.0.0.1:8000, vite preview on 127.0.0.1:3000',
+                               'repository': e['E09_INSTANCE_REPOSITORY'], 'commit_sha': e['E09_INSTANCE_COMMIT'], 'release': None,
+                               'asset': {'name': None, 'sha256': None}, 'commands': [], 'provisioning_record': None},
+              'process': None,
+              'logs': [ws + '/' + f for f in ['api-stdout.log', 'api-stderr.log', 'web-stdout.log', 'web-stderr.log']],
+          }
+          need = [('repository', inst['provisioning']['repository']), ('commit_sha', inst['provisioning']['commit_sha'])]
+          assert all(v for _, v in need), f'empty provisioning field(s): {[k for k, v in need if not v]}'
+          text = json.dumps(inst, indent=2) + '\n'
+          assert json.loads(text) == inst and json.loads(text)['interface_version'] == 1
+          with open('instance.json', 'w', encoding='utf-8') as f:
+              f.write(text)
+          print(text)
+          PY
+      - name: Execute the condition through the frozen executor implementation (fail closed on the locked hash)
+        env:
+          CONDITION_ID: ${{ inputs.condition_id }}
+          ASSIGNED_SUT: ${{ inputs.assigned_sut }}
+          EXECUTION_ID: ${{ inputs.execution_id }}
+          ATTEMPT: ${{ inputs.attempt }}
+          EXECUTOR_PROMPT_VERSION: ${{ inputs.executor_prompt_version }}
+          LOCKED_IMPLEMENTATION_SHA256: ${{ inputs.executor_implementation_sha256 }}
+          OUTPUT_DIR: raw-data/E09-accessibility/${{ inputs.assigned_sut }}/${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}
+          PROVENANCE_JSON: provenance/ci-provenance.json
+          RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
+          INSTANCE_JSON: instance.json
+        run: |
+          set -euo pipefail
+          test "$(sha256sum experiments/E09-accessibility/executor/run-condition.sh | cut -c1-64)" = "$LOCKED_IMPLEMENTATION_SHA256"
+          mkdir -p "$OUTPUT_DIR"
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/started-at.txt"
+          set +e
+          bash experiments/E09-accessibility/executor/run-condition.sh > "$OUTPUT_DIR/stdout.log" 2> "$OUTPUT_DIR/stderr.log"
+          echo $? > "$OUTPUT_DIR/exit-status.txt"
+          set -e
+          date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT_DIR/finished-at.txt"
+          cp provenance/ci-provenance.json runtime-environment.json "$OUTPUT_DIR/"
+          echo "executor exit status: $(cat "$OUTPUT_DIR/exit-status.txt")"
+      - name: Validate the run manifest against schema v2 and the E09 campaign convention
+        env:
+          OUTPUT_DIR: raw-data/E09-accessibility/${{ inputs.assigned_sut }}/${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}
+          VAL_CONDITION_ID: ${{ inputs.condition_id }}
+          VAL_ASSIGNED_SUT: ${{ inputs.assigned_sut }}
+          VAL_ATTEMPT: ${{ inputs.attempt }}
+          VAL_PROMPT_VERSION: ${{ inputs.executor_prompt_version }}
+        run: |
+          set -euo pipefail
+          test -f "$OUTPUT_DIR/run-manifest.json" || { echo "run-manifest.json missing: the attempt is recorded as ERROR-without-manifest and is not attributable"; exit 1; }
+          npx --yes -p ajv-cli@5 -p ajv-formats@3 ajv validate -s schemas/run-manifest.schema.v2.json --spec=draft2020 --allow-union-types -c ajv-formats -d "$OUTPUT_DIR/run-manifest.json"
+          python3 - "$OUTPUT_DIR" <<'PY'
+          import json, os, sys
+          d = sys.argv[1]; m = json.load(open(os.path.join(d, 'run-manifest.json')))
+          e = os.environ
+          assert m['campaign_id'] == 'E09-accessibility' and m['sut_id'] == e['VAL_ASSIGNED_SUT']
+          assert m['run_id'] == os.path.basename(d), (m['run_id'], d)
+          assert m['condition'] == e['VAL_CONDITION_ID'] and int(m['attempt']) == int(e['VAL_ATTEMPT'])
+          assert m.get('prompt_version') == e['VAL_PROMPT_VERSION'], 'prompt_version must equal the frozen prompt id'
+          assert m.get('modality') == 'Accessibility — Web only' and m.get('platform') == 'web'
+          assert 'accessibility' in (m.get('toolchain') or {}), 'the axe-core entry of the toolchain is required'
+          assert (m.get('outcome') or {}).get('status') in ('SUCCESS', 'FAILURE', 'ERROR', 'INCONCLUSIVE', 'ABORTED')
+          print('run manifest ok:', m['run_id'], 'outcome:', m['outcome']['status'], m['outcome'].get('outcome_category'))
+          PY
+      - name: Replace runner host paths and private network addresses in the bundle's stdout.log and stderr.log by neutral markers (publication hygiene at capture)
+        if: always()
+        env:
+          EV_OUTPUT_DIR: raw-data/E09-accessibility/${{ inputs.assigned_sut }}/${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}
+        run: |
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
+          out = os.environ['EV_OUTPUT_DIR']
+          changed = 0
+          for name in ('stdout.log', 'stderr.log'):
+              p = os.path.join(out, name)
+              if not os.path.isfile(p):
+                  continue
+              t = open(p, 'rb').read().decode('utf-8', 'replace')
+              n = t
+              for pre in prefixes:
+                  n = n.replace(pre, '<host-path>')
+              n = homes.sub('<home>', n)
+              n = private.sub('<private-address>', n)
+              if n != t:
+                  open(p, 'w', encoding='utf-8', newline='').write(n)
+                  changed += 1
+          print(f'host paths and private network addresses replaced in {changed} kept log file(s)')
+          PY
+      - name: Upload the immutable attempt bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E09-MEASURED_EXPERIMENT-${{ inputs.condition_id }}-${{ inputs.execution_id }}-A${{ inputs.attempt }}
+          path: raw-data/E09-accessibility/${{ inputs.assigned_sut }}/${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: error

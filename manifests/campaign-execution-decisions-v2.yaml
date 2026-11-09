@@ -1,0 +1,105 @@
+# Campaign execution decisions record v2 -- EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems)
+# The human research lead's decisions of 2026-11-06 on the round-2 decision sheet of the preparation operation OP-PREP-01: acceptance of the recommended answer of each of the six
+# Tier-1 points, and four exact approval lines (the freeze of the governance successor and the delta of the agent-instructions file, the freeze of the scenario CS-004, a narrow CI
+# grant for the SUT-01 compatibility smoke workflow, and the acceptance of the smoke failure risk), each answered after the ORCHESTRATOR put its exact text and hash to the human research lead.
+# ORCHESTRATOR record, written once and never edited afterwards (a correction is a new version file). It is a decision record: the actions it permits are made by their own
+# operations (OP-EXEC-03, OP-FREEZE-03, OP-CI-16), each with its own record. It starts, configures, authorizes (issues), dispatches, and publishes nothing.
+record_class: CAMPAIGN_EXECUTION_DECISIONS_RECORD
+record_id: CAMPAIGN-EXECUTION-DECISIONS-02
+study_id: EUS-2026-001
+operation_id: OP-DISP-05
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-06'  # America/Mexico_City (the UTC date of the texts is the same)
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+nature: "a written decision record: it permits four recorded operations and records configuration decisions for the E02 and E09 campaign configurations; no campaign status, protocol document, mapping record, workflow, authorization, or result changes by this record itself"
+follows: manifests/campaign-execution-plan-v1.yaml (CAMPAIGN-EXECUTION-PLAN-01; decisions of 2026-11-05)
+presented_to_the_human:
+  round_2_report: "the ORCHESTRATOR's closing report of the preparation operation (steps 2 to 6), delivered 2026-11-06, with the six Tier-1 points, each with a recommendation, and the Tier-2 defaults; the working sheet is DECISION-SHEET-2026-11-06 (an untracked local working file)"
+  correction_to_the_report: "the report recommended freezing CS-004 as drafted (point 2). It could not be frozen as drafted: the SUT-05 entry held comparability null, which protocol/equivalent-scenario-mapping-v1.md, section 7 (template), allows in a DRAFT only. The ORCHESTRATOR corrected the DRAFT (commit 4b580d3f, SUT-05 recorded NOT_COMPARABLE, reason OTHER evidence not sufficient; DP-8 revised) and put the corrected text and hash to the human research lead in approval line C. The report also did not show the disclosure that the CS-004 file itself makes (exposure of the drafter to the E01 evidence rows before choosing the target, PROTO-U09 class); approval line C shows it."
+human_decision:
+  given_by: gilbertosanchez (human research lead)
+  decision_date: '2026-11-06'  # America/Mexico_City
+  channel: "given directly by the human research lead to the ORCHESTRATOR in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25)"
+  texts:
+    - id: message_1
+      transcript_stamp: '2026-11-06T17:04:14.129Z'
+      bytes: 46
+      exact_text: "para el paso 6, vamos por tus recomendaciones,"
+      exact_text_sha256: 7aa4d48e8f578eaaa27969f06560fbd07381c82e16319180f2818bbc67fd919d
+      sha256_convention: UTF-8 text exactly as written, without a trailing line feed
+      effect: "acceptance of the recommendation of each of the six Tier-1 points and of the Tier-2 defaults of the round-2 report (no veto was given); for the points that are gated (the freezes, the CI grant, the risk acceptance) the ORCHESTRATOR asked for the exact approval lines below before acting, because each is recorded with its text and hash"
+    - id: approval_lines
+      transcript_stamp: '2026-11-06T17:13:03.464Z'
+      bytes: 2674
+      exact_text_sha256: 483b27ccbbaeab25b560d6233a51896dfa16cb5e67296fb2b2afc174c56cb351
+      note: "the answer of the question dialog, whole (the four question texts as put to the human research lead and the option chosen for each); the question texts are the offered lines, the chosen option is the approval"
+      lines:
+      - id: line_A_and_B
+        question_exact_text: |-
+          Tomo «vamos por tus recomendaciones» como tu decisión sobre los seis puntos; pido estas líneas exactas porque cada congelamiento y concesión se registra con el texto que apruebas y su hash. (A+B) ¿Congelo protocol/agent-governance-v6.md en sha256 f7868cc95b188dac6b75b7f2b46efa46cafb3548f250f11c65f9f48921205144 (51137 bytes, incluye la Sección 3.7 y HD-8; v5 pasa a AMENDED, solo encabezado) y aplico el delta AI-1..AI-8 al archivo de instrucciones en la fecha del congelamiento? Es solo aprobación: no inicia, autoriza ni despacha nada.
+        question_sha256: a186711d0179816633476ca46c6e91ce80362e29dcea26bd505cb0b7a5241ddf
+        question_bytes: 546
+        answer_exact_text: |-
+          Sí: congela v6 y aplica AI-1..AI-8 (Recomendado)
+        answer_sha256: 8502f4d78f81a4b2581babeb61284f55cecd88eb28f47fae31b851cf4e0c683f
+        answer_bytes: 49
+        effect: "protocol/agent-governance-v6.md frozen at DRAFT content SHA-256 f7868cc95b188dac6b75b7f2b46efa46cafb3548f250f11c65f9f48921205144 (51137 bytes), including HD-8 and Section 3.7; protocol/agent-governance-v5.md AMENDED (header only); delta AI-1 to AI-8 applied to the agent-instructions file on the freeze date, exactly the eight replacements of manifests/agent-governance-v6-amendment-v1.yaml and nothing else"
+        performed_by: "OP-EXEC-03 (protocol commit) and its status commit"
+      - id: line_C
+        question_exact_text: |-
+          (C) ¿Congelo experiments/scenario-mappings/CS-004.yaml en sha256 031efc63898d0984a728284402fee2dc0a8d05d0f4d5698700d902cd57a39be3 (25598 bytes, commit 4b580d3f) con DP-1..DP-8 como recomendados? Corrección a mi hoja: NO se podía congelar «tal cual», porque SUT-05 estaba en null y el protocolo (mapeo, sección 7) exige COMPARABLE o NOT_COMPARABLE al congelar; ahora SUT-05 queda NOT_COMPARABLE por evidencia insuficiente (DP-8 b, abierto a un CS-004-v2). Dos cosas que mi hoja no te mostró: (1) el archivo declara una exposición PROTO-U09: quien lo redactó leyó las filas de E01 antes de elegir el objetivo checkout-ready, y la independencia respecto a la evidencia no se puede probar desde el archivo, es tu juicio (CS-002 se excluyó por una razón del mismo tipo); lo divulgaría en las amenazas del paper; (2) los selectores de checkout de SUT-02 y SUT-03 no están verificados: esas dos condiciones se rechazan hasta un DRY_RUN que tú autorices.
+        question_sha256: e84ad176290ebcfc07593394a48b0dc492039c8f34e5f4ff1116fad1407b839e
+        question_bytes: 961
+        answer_exact_text: |-
+          Sí: congela CS-004 con SUT-05 NOT_COMPARABLE (Recomendado)
+        answer_sha256: 26d853b7f15a6f917418ad42f62145782e8d08567e0ad7610cf12c4486a80359
+        answer_bytes: 59
+        effect: "experiments/scenario-mappings/CS-004.yaml frozen at DRAFT content SHA-256 031efc63898d0984a728284402fee2dc0a8d05d0f4d5698700d902cd57a39be3 (25598 bytes, commit 4b580d3f) with DP-1 to DP-8 as recommended, SUT-05 NOT_COMPARABLE; authorization id E02-CS004-FREEZE-AUTH-01; the exposure disclosure of the file (PROTO-U09 class) is accepted as the human research lead's judgment and is to be disclosed among the threats of the paper; the checkout selectors of SUT-02 and SUT-03 stay unverified (their conditions refuse until a DRY_RUN that the human research lead authorizes)"
+        performed_by: "OP-FREEZE-03"
+      - id: line_D
+        question_exact_text: |-
+          (D) ¿Concedes una autorización de CI estrecha, E06-SMOKE-CI-WRITE-AUTH-01 (id que propongo), solo para que yo cree y mantenga .github/workflows/e06-compatibility-smoke-sut01.yml (dispatch-only, falla cerrado, hoy rechaza todo dispatch) y confirmando que los workflows de E06 siguen bajo CAMPAIGN-CI-WRITE-AUTH-01? No cubre emitir AUTH-04, ningún dispatch ni ningún push.
+        question_sha256: d25870d8feb6231b67f0cc8b517d3755d424f7ebb63ac2dd9791e1da6ea931bb
+        question_bytes: 374
+        answer_exact_text: |-
+          Sí: concede E06-SMOKE-CI-WRITE-AUTH-01 (Recomendado)
+        answer_sha256: 3efb450894dbf365de8350f9979adab4abbc671caac92e1b53c8f00b304b58b9
+        answer_bytes: 53
+        effect: "a narrow CI grant, id E06-SMOKE-CI-WRITE-AUTH-01: the ORCHESTRATOR may create and maintain .github/workflows/e06-compatibility-smoke-sut01.yml only (dispatch-only, fail closed, labeled SMOKE, never MEASURED_EXPERIMENT); the workflows of E06 stay under CAMPAIGN-CI-WRITE-AUTH-01; the grant covers no issuance of APPIUM3-COMPAT-SMOKE-AUTH-04, no dispatch, no push, no other workflow"
+        performed_by: "OP-CI-16"
+      - id: line_E
+        question_exact_text: |-
+          (E) Smoke SUT-01 Android: el APK 1.1.8 trae fijo el backend alojado https://omnipizza-backend.onrender.com. Si el smoke termina en FAIL_RUNNER (p. ej. ese backend rechaza tras abrir la sesión), la política v3 devuelve el estudio a UNRESOLVED_AFTER_FALLBACK_FAILURE, bloquea también SUT-02 y no existe segunda remediación; H4 (paridad móvil) quedaría sin datos. ¿Aceptas ese riesgo antes del primer dispatch? Esto no emite ni despacha el smoke.
+        question_sha256: d889d217416d9bf184a99b3ae954e8e07789035387a2f7f93100dc5525d7464b
+        question_bytes: 450
+        answer_exact_text: |-
+          Acepto el riesgo; política v3 tal cual, sin v4 ni plan B (Recomendado)
+        answer_sha256: 3cafef7dd8c9c1f7970f9429b6049121349ba0548604ac981a102060ef495388
+        answer_bytes: 71
+        effect: "the human research lead accepts, before the first dispatch of the SUT-01 Android compatibility smoke, that a FAIL_RUNNER (for example a refusal of the hosted backend that the APK of release 1.1.8 fixes at build time, after the session opens) returns the study to UNRESOLVED_AFTER_FALLBACK_FAILURE under protocol/mobile-runner-policy-v3.md, blocks SUT-02 as well, has no second remediation, and leaves H4 (mobile parity) without data; protocol/mobile-runner-policy-v3.md stays as written, no policy successor and no plan B is drafted; this issues and dispatches nothing"
+        performed_by: "recorded here; acted on at the issuance of AUTH-04 (the human research lead's separate approval)"
+decisions_without_a_separate_line:  # configuration decisions of the campaigns; recorded here under message_1 and carried into the campaign configuration at its START
+  - id: E02-HD-R
+    decision: "the E02 executor provisions a fresh controlled instance for every run instead of executing the named reset of the CS-003 mappings; the provision is not counted and is disclosed (CS-003 is FROZEN and names a reset; the difference is declared, not hidden)"
+  - id: CS-003-HD-8
+    decision: "the oracle of SUT-02 in CS-003 is UI-only and the SUT-04 account in CS-003 is an administrator under the standard actor state; both are used as the frozen text words them and are disclosed in the paper"
+  - id: tier_2_working_defaults
+    decision: "the recommended default of each remaining HUMAN DECISION of the E02, E09 and SUT-01 smoke packages is the working default: E02 HD-15 (every page load started by the experimenter is counted, the first included), HD-22, HD-A, HD-C, HD-E (verification fails closed until governance v6 is frozen, which this record permits), HD-V, HD-F; E09 HD-17 (a measured run needs a non-null prompt_version; a frozen prompt is the default), HD-E09-B, HD-E09-C, HD-E09-E, HD-E09-I; smoke HD-16 (launch activity unknown: the gate refuses until it is resolved), HD-17, HD-18 (E06 NOT_STARTED as precondition). They lock nothing until the campaign START that locks the configuration; the human research lead may veto any by its id"
+  - id: governance_v6_open_decisions
+    decision: "HD-1 to HD-8 of manifests/agent-governance-v6-amendment-v1.yaml are resolved by the approval of line A as their draft defaults (HD-8 explicitly named in the line)"
+still_open_after_these_decisions:
+  - "E09 glitch-account password: not recorded in any E01 row; it needs a read check against the pinned OmniPizza source before the glitch condition can run (E09 stays blocked on that condition)"
+  - "CS-004 checkout selectors of SUT-02 and SUT-03 (HD-S): unverified; needs a DRY_RUN that the human research lead authorizes"
+  - "SUT-01 smoke HD-16 (launch activity), and the canonical hash of the mobile-runner policy for lock v5 at its issuance"
+  - "E05 HD-01 to HD-12 and pins P1 to P6 (at the catalogue freeze round); E01 side corrections; E07 CS-006; E04, E08, E10, E11, E12 unscheduled"
+approvals_not_given:  # each still needs its own explicit human approval of that exact action
+  - "the START and the configuration lock of E02, E09, E05 or any other campaign"
+  - "the issuance or change of any dispatch authorization under Section 3.7 of protocol/agent-governance-v6.md, and any dispatch"
+  - "the issuance of APPIUM3-COMPAT-SMOKE-AUTH-04, lock v5, and any dispatch of the SUT-01 smoke"
+  - "a DRY_RUN or any other run to verify the CS-004 selectors"
+  - "public export v47 and any push (the human research lead pushes in person)"
+  - "a policy successor (v4) of the mobile-runner policy: not opened"
+  - "the reopening of E03: declined, unchanged"
+  - "any edit of the agent-instructions file beyond the eight replacements of line B"

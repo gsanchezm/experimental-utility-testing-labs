@@ -1,0 +1,261 @@
+# experiments/scenario-mappings/CS-004.yaml
+# STATUS: FROZEN 2026-11-06, approved by gilbertosanchez (authorization id E02-CS004-FREEZE-AUTH-01, assigned by the ORCHESTRATOR to the approval recorded in
+# manifests/cs-004-freeze-v1.yaml). The eight design points DP-1 to DP-8 in `notes` were decided by the human research lead as the ORCHESTRATOR had recommended them (DP-8 as revised).
+# Second establish-side canonical scenario for E02-state-establishment (pairing for H2, protocol/statistical-analysis-plan-v1.md, section 4.3).
+# A frozen mapping record is never edited (protocol/equivalent-scenario-mapping-v1.md, section 6); a change is a new version file, CS-004-v2.yaml, with its own mapping-record row of protocol/CHANGELOG.md.
+# Freeze history: created as a DRAFT on 2026-11-05; the SUT-05 entry was corrected on 2026-11-06 before the approval (comparability null to NOT_COMPARABLE, commit 4b580d3f); at the freeze
+# only this block, the three status fields, the wording "this draft" in two places (now "this record"), and `notes` (recommended to decided) changed. It is not an input to any
+# campaign configuration, workflow, or run until the campaign configuration of E02 names it.
+#
+# PROVENANCE OF THE CANONICAL BLOCK (protocol/equivalent-scenario-mapping-v1.md, section 3 and section 6, order of writing).
+# The canonical block is taken from the frozen, ecosystem-neutral illustrative pattern of section 2 of that document: "An authenticated user places one purchasable
+# item into a cart and reaches a checkout-ready state." The pattern is split, not extended: the placing step becomes the precondition, and the checkout-ready state
+# becomes the target. The canonical block was written before the mapping entries.
+# DISCLOSURE (PROTO-U09 exposure, for the human research lead to judge): the drafter had read the E01 evidence rows of SUT-01, SUT-02, SUT-03, SUT-04, and SUT-05
+# before writing this file. The choice of target (checkout-ready rather than a committed order or booking) was made after that reading and because of it: the rows
+# support checkout entry on the three web surfaces and document no commitment on SUT-02. The split of the pattern is a choice made in the same way. The independence of
+# the canonical block from the evidence is therefore a claim that cannot be proven from this file; it is the human research lead's judgment.
+#
+# RELATION TO CS-003 (FROZEN 2026-11-02, experiments/scenario-mappings/CS-003.yaml). The two differ on two named axes:
+#   - precondition_class: CLEAN_SESSION in CS-003; SEEDED_BUSINESS_STATE here (DP-1).
+#   - target_state_or_transition: the actor's business object holds the item, verified in the object's own container (CS-003); the business object is checkout-ready,
+#     verified in the checkout entry point (CS-004). CS-004 performs no commit step, so it persists no order or booking.
+# Overlap, stated, not hidden: on SUT-01 WEB the final read of CS-003 is already the Checkout view, so the two scenarios share that step. See notes.
+#
+# HYGIENE: no assistant or vendor names; the approver is not named; the agent-instructions file is referred to by its role only.
+
+version: 1
+canonical_scenario_id: CS-004
+description: >
+  An authenticated standard actor whose business object already holds one purchasable or reservable item reaches the ecosystem's checkout-ready state for that object,
+  and an observation verifies that the checkout entry point presents the object and is ready for the actor's next, committing step. The committing step is not performed.
+  The business object varies by ecosystem (cart or basket); the semantic intent -- reaching a checkout-ready state for a business object the actor already holds -- does not.
+  The scenario poses a different establishment problem from CS-003 (which establishes presence of the item in its container): it establishes a state in which the object
+  is presented to the actor at the point of commitment.
+precondition_class: SEEDED_BUSINESS_STATE
+actor_state: AUTHENTICATED_STANDARD
+business_intent: >
+  An authenticated standard actor, whose business object already holds one purchasable item, reaches the checkout-ready state for that object and verifies that the
+  checkout entry point presents it, without committing the object.
+target_state_or_transition: >
+  Before the declared starting state: the actor's business object holds exactly the item(s) seeded for the run, placed by the actor's own documented route, and no commitment
+  exists. After the scenario: the ecosystem's checkout entry point presents the object's item(s) and is ready for the committing step, which is not performed; the presentation
+  is verified by an observation of the declared oracle class.
+observable_oracle_class: UI_STATE
+reset_requirement: DATA_RESET
+applicable_surfaces: [WEB, API, ANDROID, IOS]
+allowed_domain_mapping: >
+  Business object may vary: cart (SUT-01, SUT-02, SUT-03); basket (SUT-05, if the evidence gap of SUT-05 is closed); reservation or booking is NOT admissible for this scenario
+  (SUT-04 entry). Vocabulary, endpoint names, selectors, and number of steps may vary. The mechanism class used to seed the precondition and to reach the checkout entry point
+  may vary (UI flow, API seed, direct route, predefined account; setup-effort-v2 section 10 vocabulary). May NOT vary: the seeding must be performed by the actor through the
+  ecosystem's own documented route before the declared starting state is recorded, and is not a study fixture written into the business object out of band; the target
+  must be reached without performing the committing step; the verification must observe the same business object that was seeded; the actor must be a standard identity
+  (not privileged by design). Scenario-specific constraint: the committing step (order submission, payment, reservation confirmation) must not be performed on any reset-side
+  or establish-side run of this scenario, so that no persisted commitment exists to be reset.
+campaigns_using: [E02-state-establishment]
+mapping_status: FROZEN
+frozen_at: "2026-11-06"
+approved_by: gilbertosanchez
+mappings:
+  - sut_id: SUT-01
+    comparability: COMPARABLE
+    surfaces_used: [WEB]
+    domain_object: "cart (pizza order items, server-side session cart with a client-side hydration copy)"
+    precondition_realization: >
+      Seeded before the declared starting state is recorded, not counted: a clean browser context; API login with the documented standard account (SUT01-EV-0007,
+      SUT01-EV-0005); one cart line created through the documented cart route (SUT01-EV-0005, SUT01-EV-0004); and the documented client auth injection (SUT01-EV-0001,
+      SUT01-EV-0002). The starting state is then declared as: server session cart holds the seeded line; no order has been placed by the actor.
+    actor_realization: "Documented standard test account, SUT01-EV-0007 (the fixed TEST_USERS map; the locked_out and error behaviours belong to other accounts and are excluded)."
+    entry_and_steps:
+      - "[web] [navigation] open the checkout route directly, as the documented direct-route entry to a protected screen (SUT01-EV-0001). Counted: navigation action."
+      - "[web] [UI, verification] read the Checkout view for the seeded line (SUT01-EV-0004: Checkout fetches the cart on mount; SUT01-EV-0003 evidences the test-id convention on catalogue components only, and no E01 row states the Checkout test ids). Counted: UI action, verification classified by mechanism (setup-effort-v2 section 5, rule 8)."
+      - "Optional, not in the indicative count unless DP-3 changes: [web, API, verification] GET of the session cart (SUT01-EV-0005 documents the route)."
+      - "Indicative count, not predeclared: 2 counted actions on web. Realization detail to fix at configuration, not evidence: the hydration of the Checkout view depends on the client cart state (see notes, item N-2)."
+    oracle_realization: >
+      The Checkout view shows the seeded line (UI_STATE). The server cart read is the optional second observation of the same business object.
+    reset_realization: >
+      Between runs, by the harness, not counted: POST of the session reset route (SUT01-EV-0006), which clears the caller's session cart. CS-001 (SUT-01 entry) records that
+      this reset does not clear order history; no order is created by CS-004, so the caveat does not affect this scenario. The client-side cart copy is restored by the
+      harness; its restoration is part of the reset realization and must be verified before the next run.
+    environment_type: "PENDING -- fixed per condition in the campaign configuration of E02 (protocol/study-design-v1.md, section 10.3; this scenario changes state that persists beyond a single client, so a controlled instance is required)."
+    not_comparable_reason: null
+    evidence_ids: [SUT01-EV-0001, SUT01-EV-0002, SUT01-EV-0003, SUT01-EV-0004, SUT01-EV-0005, SUT01-EV-0006, SUT01-EV-0007]
+    justification: >
+      The checkout route and direct entry (SUT01-EV-0001), the server cart seeding and its documented routes (SUT01-EV-0004, SUT01-EV-0005), the Checkout view's hydration on
+      mount (SUT01-EV-0004), and the standard account (SUT01-EV-0007) are SOURCE_VERIFIED or DOCUMENTED in the E01 rows. SUT01-EV-0025 and SUT01-EV-0023 are not used: they
+      describe the checkout and order endpoints only in a security-context behaviour. GAP: no E01 row states the request that creates an order, which this scenario never
+      makes; so no order claim is made. The campaign realization must not be treated as E01 evidence.
+  - sut_id: SUT-02
+    comparability: COMPARABLE
+    surfaces_used: [WEB]
+    domain_object: "cart (shopping cart; client-side state, no API surface)"
+    precondition_realization: >
+      Seeded before the declared starting state is recorded, not counted: the documented standard account signs in through the app's login form (SUT02-EV-0001); one catalogue item
+      is added to the cart through the add-to-cart control on the fixed catalogue (SUT02-EV-0013). The starting state is then declared as: the cart holds the seeded item.
+    actor_realization: "standard_user from the six fixed accounts (SUT02-EV-0001). problem_user and error_user are NOT used: SUT02-EV-0003 records deterministic faults in add-to-cart and checkout validation for those accounts."
+    entry_and_steps:
+      - "[web] [UI, verification] read the cart badge or link to confirm the seeded item is in the cart (the badge reflects the ShoppingCart state, as stated in the SUT-02 entry of CS-003, which cites SUT02-EV-0002; the E01 row itself does not state it). Counted: UI action (verification)."
+      - "[web] [navigation] open the checkout entry from the cart to checkout step one (the multi-step checkout flow of SUT02-EV-0018). Counted: navigation action."
+      - "[web] [UI, verification] read that the checkout step-one view is presented. Counted: UI action (verification)."
+      - "Indicative count, not predeclared: 3 counted actions on web. The committing steps of the checkout flow are not performed."
+    oracle_realization: >
+      Cart badge shows the seeded item and the checkout step-one view is presented (UI_STATE). Whether the checkout views present the item lines is NOT stated by any E01 row
+      (SUT02-EV-0018 cites the step files without describing item display); the oracle is therefore limited to the badge and to the entry view.
+    reset_realization: >
+      Between runs, by the harness, not counted: the 'Reset App State' drawer action (SUT02-EV-0002, which calls the cart reset). The reset does not persist a server-side record,
+      because the web surface has no API (SUT02-EV-0004, negative evidence). Verified before the next run by the cart badge.
+    environment_type: "PENDING -- fixed per condition in the campaign configuration of E02 (protocol/study-design-v1.md, section 10.3)."
+    not_comparable_reason: null
+    evidence_ids: [SUT02-EV-0001, SUT02-EV-0002, SUT02-EV-0003, SUT02-EV-0004, SUT02-EV-0013, SUT02-EV-0018]
+    justification: >
+      The standard account (SUT02-EV-0001), the fixed catalogue (SUT02-EV-0013), the cart state reflected by the badge (SUT02-EV-0002), and the reachable multi-step checkout
+      flow (SUT02-EV-0018) are SOURCE_VERIFIED. The web surface has no API, so the oracle is UI_STATE, which the mapping states rather than smooths over. GAP: the completion
+      (commit) page of the checkout is not cited by any E01 row, so this scenario does not claim it.
+  - sut_id: SUT-03
+    comparability: COMPARABLE
+    surfaces_used: [WEB]
+    domain_object: "cart (client-side only; store cart state, no server persistence)"
+    precondition_realization: >
+      Seeded before the declared starting state is recorded, not counted: the documented demouser signs in (SUT03-EV-0001, SUT03-EV-0003); one product is added to the cart
+      through its buy control (SUT03-EV-0005 flow; the client-side cart action of SUT03-EV-0032). The starting state is then declared as: the client cart holds the seeded product.
+    actor_realization: "demouser (SUT03-EV-0001). The other accounts are not used: existing_orders_user and fav_user carry seeded server data that this scenario does not use."
+    entry_and_steps:
+      - "[web] [navigation] open the checkout from the cart (the checkout address form follows the add-to-cart step in the flow of SUT03-EV-0005). Counted: navigation action."
+      - "[web] [UI, verification] read the checkout view for the seeded product and its quantity. Counted: UI action (verification)."
+      - "NOT PERFORMED: the order submission, which calls the checkout API gate (SUT03-EV-0008). The committing step is excluded by the scenario constraint."
+      - "Indicative count, not predeclared: 2 counted actions on web."
+    oracle_realization: >
+      The checkout view shows the seeded product and quantity (UI_STATE only). The cart is never reflected in any API response (SUT03-EV-0032, negative evidence), so this is
+      the same disclosed oracle deviation as CS-003 and CS-001 for this ecosystem.
+    reset_realization: >
+      Between runs, by the harness, not counted: Sign-Out (SUT03-EV-0030), which runs store2.session.clearAll() (SUT03-EV-0031). The E03 executor development runs recorded that
+      the running client can keep the in-memory cart after Sign-Out until a page load (E03 executor README, section 11, finding on the SUT-03 mapping scope). The harness must therefore
+      verify the cleared starting state after a page load, not only after Sign-Out (see notes, item N-3).
+    environment_type: "PENDING -- fixed per condition in the campaign configuration of E02 (protocol/study-design-v1.md, section 10.3)."
+    not_comparable_reason: null
+    evidence_ids: [SUT03-EV-0001, SUT03-EV-0003, SUT03-EV-0005, SUT03-EV-0008, SUT03-EV-0030, SUT03-EV-0031, SUT03-EV-0032]
+    justification: >
+      The documented accounts (SUT03-EV-0001), the sign-in route (SUT03-EV-0003), the browse-to-checkout flow with its address form (SUT03-EV-0005), the client-only cart
+      (SUT03-EV-0032), and the absence of server persistence (SUT03-EV-0031) are SOURCE_VERIFIED. The checkout API gate (SUT03-EV-0008) belongs to order submission, which is excluded.
+  - sut_id: SUT-04
+    comparability: NOT_COMPARABLE
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: null
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      NO_EQUIVALENT_INTENT. The E01 rows document booking as create, read, update, and delete of a single resource (SUT04-EV-0006) and a reservation form whose submission creates the
+      booking (SUT04-EV-0018). No E01 row documents a state in which a reservable item is held in a container before the commitment, which is the precondition and the checkout-ready
+      target of this scenario. Admitting the reservation form as a checkout-ready state would substitute the committing step for the target, which the comparability rule of
+      protocol/equivalent-scenario-mapping-v1.md, section 5, forbids. HUMAN DECISION DP-7 (alternative: COMPARABLE with that stretch recorded). This does not remove SUT-04
+      from E02 (CS-003 applies to it).
+    evidence_ids: [SUT04-EV-0006, SUT04-EV-0018]
+    justification: >
+      Recorded with the same discipline as every other ecosystem (protocol/equivalent-scenario-mapping-v1.md, section 5). Not a score and not a zero (protocol/study-design-v1.md,
+      section 11, rule 9).
+  - sut_id: SUT-05
+    comparability: NOT_COMPARABLE
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: null
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      OTHER (EVIDENCE NOT SUFFICIENT FOR COMPARABLE). Protocol/equivalent-scenario-mapping-v1.md, section 5, admits COMPARABLE only when each of its six conditions is supported
+      by E01 evidence cited by evidence_id. For the web surface in scope (DP-4) no E01 row documents the basket checkout route, the checkout-ready view, or the address and payment
+      steps, so condition 4 (the target can be reached) and condition 5 (an observation of the oracle class is available) are not supported. This is not NO_EQUIVALENT_INTENT: the
+      rows do not show that the ecosystem lacks the intent, only that the evidence for it is missing. The ecosystem stays in E02 (CS-003 applies to it). A later source-verification
+      row for the basket checkout route would support a new record version (CS-004-v2, protocol/equivalent-scenario-mapping-v1.md, section 6, Change); this entry is never edited
+      in place once frozen. HUMAN DECISION DP-8, option (b).
+    evidence_ids: [SUT05-EV-0001, SUT05-EV-0008, SUT05-EV-0027]
+    justification: >
+      The rows examined document the browsable application (SUT05-EV-0001), 61 route modules including basket, address, wallet, and delivery resources (SUT05-EV-0008), and 23 model
+      files including basket, address, card, and delivery (SUT05-EV-0027). None documents the basket checkout route, the checkout-ready view, or the address and payment steps.
+      The protocol requires comparability to be COMPARABLE or NOT_COMPARABLE in every entry at freeze (protocol/equivalent-scenario-mapping-v1.md, section 7, template), so the
+      entry cannot stay undecided; with the evidence as it is, COMPARABLE cannot be stated (section 5). SUT-05 is EXPLORATORY in any case (protocol/statistical-analysis-plan-v1.md,
+      section 4.2), so this entry does not block H2.
+  - sut_id: SUT-06
+    comparability: NOT_COMPARABLE
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: null
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      NO_EQUIVALENT_INTENT. The ecosystem has no purchasable-item business object and no checkout concept; its only stateful mechanism is the generic per-tier Save and Clear
+      (SUT06-EV-0007, SUT06-EV-0015), the same finding recorded for CS-001 and CS-003. Forcing this intent onto that mechanism would substitute a different intent.
+    evidence_ids: [SUT06-EV-0007, SUT06-EV-0015]
+    justification: >
+      As recorded in experiments/scenario-mappings/CS-003.yaml (SUT-06 entry) and CS-001.yaml (SUT-06 entry); those rows were not re-read for this record.
+notes: >
+  FROZEN 2026-11-06 (E02-CS004-FREEZE-AUTH-01). Design points DP-1 to DP-8, each decided by the human research lead before the freeze as recorded in manifests/cs-004-freeze-v1.yaml (a frozen record is never edited; a change after the freeze is a new version file).
+
+  DP-1 precondition_class (the independence lever). Decided: SEEDED_BUSINESS_STATE, with the seeding and the authenticated session performed by the actor's own
+  documented route before the declared starting state, and not counted (setup-effort-v2 section 5, rule 6). Alternative: CLEAN_SESSION, which counts the add step and the login
+  again (setup-effort-v2 section 5, rules 1 and 3); CS-004 would then equal CS-003 plus a navigation, a shape that does not give an independent pair. Trade-off of the decision:
+  CS-004 counts measure the checkout-entry problem only; the login and the add step, counted in CS-003 (CS-003 DP-1), are not counted here. Decided: that
+  difference is accepted; it is the axis that makes the pair independent.
+
+  DP-2 target_state_or_transition. Decided: checkout-ready, verified in the checkout entry point, with the committing step not performed. Reason: the target is the one
+  that the E01 rows support on all three web surfaces (SUT-01: SUT01-EV-0001, SUT01-EV-0004; SUT-02: SUT02-EV-0018; SUT-03: SUT03-EV-0005). Alternative, not chosen: a committed order or booking. It needs an E01 row for the commit on SUT-02 (none exists; the completion page is not cited) and on SUT-01 (no row states the create
+  request), it would persist a record that the reset must restore, and it would combine this scenario with CS-001's reset problem.
+
+  DP-3 observable_oracle_class. Decided: UI_STATE for all mapped ecosystems. Reason: on SUT-02 and SUT-03 the cart exists only in the client, so BUSINESS_STATE cannot be
+  observed; declaring BUSINESS_STATE would make SUT-02 and SUT-03 NOT_COMPARABLE under the observation rule (protocol/equivalent-scenario-mapping-v1.md, section 5, condition 5)
+  and would leave H2 with no pair. This follows the precedent of CS-003 DP-3 (human decision, 2026-11-02). Decided: UI_STATE is confirmed for CS-004. It also raised
+  the same question for CS-003, see the discrepancy below.
+
+  DP-4 surfaces. Decided: map WEB only for SUT-01, SUT-02, and SUT-03, the H2 scope (protocol/statistical-analysis-plan-v1.md, section 4.3, paired on the WEB surface,
+  per the E03 decision D2 of 2026-10-05; the E02 equivalent is confirmed by this decision). API for SUT-01 is not mapped: the seeding route is an API action, and an API checkout-ready
+  observation is not evidenced. ANDROID and IOS are not mapped, as CS-003 DP-4 decided; SUT-03 has no mobile code (SUT03-EV-0010, SUT03-EV-0011).
+
+  DP-5 actor_state. Decided: AUTHENTICATED_STANDARD with the standard accounts listed in each entry. The discrepancy noted in CS-003 DP-5 (its SUT-04 account is an
+  administrator) does not arise here, because SUT-04 is NOT_COMPARABLE on this scenario.
+
+  DP-6 reset_requirement. Decided: DATA_RESET, with the between-run restore performed by the harness and not counted. Alternative: NONE, which would hide that each run needs
+  a restored starting state (the precedent of CS-003 DP-2). Decided: confirmed.
+
+  DP-7 SUT-04. Decided: NOT_COMPARABLE (NO_EQUIVALENT_INTENT). Alternative: COMPARABLE, treating the reservation form before submission as the checkout-ready state; this
+  requires the human research lead to accept that a single form is the equivalent of a container followed by a checkout entry. Not chosen without a new evidence row.
+
+  DP-8 SUT-05. Decided (2026-11-06, as revised): NOT_COMPARABLE with the reason OTHER (EVIDENCE NOT SUFFICIENT FOR COMPARABLE), as the entry above states. The first DRAFT left
+  comparability null, which the protocol does not allow at freeze (section 7, template: COMPARABLE or NOT_COMPARABLE is required in every entry at freeze; null is DRAFT only).
+  Option not chosen: (a) first record a new, separately recorded source-verification row for the checkout route (not an E01 re-opening; a new evidence record under
+  protocol/evidence-rules-v1.md) and map SUT-05 afterwards, which would have delayed the freeze. Chosen: (b) NOT_COMPARABLE with the stated reason, which the current rows cannot support as
+  NO_EQUIVALENT_INTENT, and a later CS-004-v2 if the row is recorded.
+
+  N-1 Independence and overlap. On SUT-01 WEB the final read of CS-003 (the Checkout view) and the read of CS-004 are the same observation. The two scenarios differ on the
+  precondition and the target, but a SUT's two counts are not statistically independent observations. H2 pairs are per SUT and per scenario; the pairing is not a claim that
+  the two counts are independent.
+
+  N-2 Client-cart interplay (realization, not evidence). In the E03 development runs on SUT-01 WEB, the Checkout view showed the line from the client cart after the
+  server reset, because the client copy persisted (E03 executor README, section 12, run DV0010). The E02 realization of CS-004 must fix whether the seeded state is
+  server-side, client-side, or both, and must verify that the view reflects the intended layer. This is a configuration item, not an E01 claim.
+
+  N-3 SUT-03 reset (realization, not evidence). The E03 executor README (section 11, finding on the SUT-03 mapping scope) records that the running client kept the
+  in-memory cart after Sign-Out until a page load. The harness reset for CS-004 must verify the cleared starting state after a page load.
+
+  DISCREPANCY IN THE FROZEN CS-003 (not changed by this record). CS-003 DP-3 declares the SUT-03 oracle a disclosed UI_STATE deviation. The SUT-02 oracle in
+  CS-003 is also UI-rendered client state (its oracle_realization says so), but DP-3 does not name SUT-02. DECIDED 2026-11-06: the SUT-02 case is accepted as the same disclosed deviation
+  by a recorded note (a non-substantive correction is not available for this, because the scenario class is substantive): manifests/campaign-execution-decisions-v2.yaml, CS-003-HD-8. CS-003-v2 is not defined;
+  the E02 configuration cites CS-003 as frozen and the paper discloses the deviation.
+
+  DISCREPANCY IN THE FROZEN CS-003 (second item). CS-003 DP-5 records that the SUT-04 seeded account is an administrator, while the canonical business intent says
+  "standard (non-privileged-by-design) identity". The frozen text accepts this as a disclosed choice. DECIDED 2026-11-06: accepted and disclosed (manifests/campaign-execution-decisions-v2.yaml, CS-003-HD-8); CS-003-v2 is not defined.
+
+  EXPOSURE JUDGMENT (PROTO-U09 class, disclosed in the header of this record). The drafter had read the E01 evidence rows before choosing the target. The human research lead judged this on
+  2026-11-06 with the disclosure in front of the approval line (manifests/campaign-execution-decisions-v2.yaml, line C) and approved the freeze; the exposure is to be disclosed among the threats to validity of the paper.
+
+  Evidence gaps that block COMPARABLE claims beyond the rows named above: (1) the order-creating request on SUT-01 (no E01 row); (2) the commit page on SUT-02 (no E01 row);
+  (3) the basket checkout route on SUT-05 (no E01 row); (4) the line-level display of the checkout views on SUT-02 (no E01 row). Closing any of them is a new evidence
+  record, not an edit of the E01 rows (protocol/evidence-rules-v1.md; E01 is FROZEN).

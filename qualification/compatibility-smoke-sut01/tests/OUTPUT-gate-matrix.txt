@@ -1,0 +1,198 @@
+[INFO] as-is repository: exit 1; PASS 56, FAIL 13
+      PASS explicit confirmation token
+      PASS instruction id is an APPIUM3-COMPAT-SMOKE-AUTH-<nn> id: APPIUM3-COMPAT-SMOKE-AUTH-04
+      PASS run attempt 1 (a GitHub re-run never replaces an observation): 1
+      PASS mobile-runner policy v3 is FROZEN-PRE-DATA and carries section 9 (per-SUT compatibility smoke)
+      PASS mobile-runner policy v2 is AMENDED and superseded by v3
+      PASS exactly one SUT-01 smoke authorization record matches the instruction id: 1 match(es) among ['manifests/sut01-compatibility-smoke-execution-auth-v4-prepared.draft.yaml']
+      FAIL record_class is COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION (not a draft): COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION_DRAFT
+      FAIL status is exactly ISSUED: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION
+      FAIL record_validity is exactly VALID: None
+      FAIL authorizes_execution is explicitly true: False
+      FAIL issued_by is a human identity, not empty, a placeholder, or an agent role: (absent)
+      FAIL issued_at is recorded
+      FAIL dispatch_eligibility is exactly ELIGIBLE (prepared, consumed, or superseded records fail closed): NOT_ELIGIBLE_UNTIL_ISSUED
+      PASS the authorization has not been dispatched before: False
+      PASS the authorization is governed by protocol/mobile-runner-policy-v3.md: protocol/mobile-runner-policy-v3.md
+      PASS scope is SUT-01 Android only, Appium 3 3.7.0, one execution: {"sut_id": "SUT-01", "platforms": ["android"], "runner": "Appium 3", "runner_version": "3.7.0", "executions": 1, "attempts_allowed": 1, "result_vocabulary": ["PASS", "FAIL_RUNNER", "NOT_EXECUTED"], "n
+      FAIL launch prompt frozen copy present and SHA-256 equal to the authorization record: (absent)
+      FAIL prompt version id well formed and names its frozen file
+      FAIL frozen prompt names the instruction id and declares its prompt version id
+      FAIL no unrendered placeholder remains in the frozen prompt
+      PASS implementation lock file present and equal to the authorization record: manifests/compatibility-smoke-implementation-lock-v5.draft.yaml
+      PASS lock covers every execution-critical artifact: []
+      PASS lock hash matches: .github/workflows/e06-compatibility-smoke-sut01.yml
+      PASS lock hash matches: qualification/compatibility-smoke-sut01/smoke-common.sh
+      PASS lock hash matches: qualification/compatibility-smoke-sut01/run-smoke-android.sh
+      PASS lock hash matches: qualification/compatibility-smoke-sut01/harness/package.json
+      PASS lock hash matches: qualification/compatibility-smoke-sut01/harness/package-lock.json
+      PASS lock hash matches: qualification/compatibility-smoke-sut01/harness/wd.mjs
+      PASS lock hash matches: qualification/compatibility-smoke-sut01/harness/smoke.mjs
+      PASS concrete-realization section hash matches the lock
+      FAIL the realization is complete: no null and no TBD in the concrete-realization section
+      PASS harness REALIZATION hash (realizationSha256 of the locked smoke.mjs) equals the lock: 0fd8d16bb0906ba59b73b644863655c51afc25d39b61eac6e61d346d73c246c1
+      PASS step-sequence hash (the runSmoke steps that the platform runs) equals the lock
+      PASS Android build pin (smoke-common.sh) equals the lock
+      PASS harness dependencies are exactly the pinned Appium core and the Android driver: {"appium": "3.7.0", "appium-uiautomator2-driver": "8.7.0", "appium-xcuitest-driver": "12.13.2"}
+      PASS lockfile pins appium 3.7.0 with the recorded integrity
+      PASS lockfile pins appium-uiautomator2-driver 8.7.0 with the recorded integrity
+      PASS no Appium 2 anywhere in the lockfile
+      PASS toolchain pins (smoke-common.sh) equal the lock
+      PASS SUT-01 android pinned identity equals the lock: v1.1.8 3cdbe6596a1ab5ef2058ba4259c44da96a0fa03a
+      PASS workflow Node.js pin equals the lock
+      PASS output namespace absent or empty (only .gitkeep allowed): qualification/compatibility-smoke-sut01/formal/APPIUM3-COMPAT-SMOKE-AUTH-04
+      PASS the Smoke records table holds no row for SUT-01 (no execution has been recorded): 0 row(s)
+      FAIL mirror holds exactly one SUT-01 android entry, NOT_STARTED, with no pointers: 0
+      PASS E06-cross-platform-parity is NOT_STARTED (the smoke precedes the campaign START; HD-18): NOT_STARTED
+      PASS a mobile runner is selected: Mobilewright or Appium 3 (policy sections 1, 8): Appium 3
+      PASS Appium 3 path: fallback is Appium 3 pinned 3.7.0 and the selection names that pin: Appium 3 3.7.0 / 3.7.0
+      PASS Appium 3 path: selection basis is the frozen section 8 switch
+      PASS Mobilewright qualification_status matches the selected-runner path (FAILED): FAILED
+      PASS the selection rests on exactly one VALID, ISSUED, dispatched gate authorization: MOBILE-QUALIFICATION-EXEC-AUTH-03
+      PASS the version of the selected runner itself is recorded and equals its pin: 3.7.0
+      PASS exactly one remediation lineage record exists and it is a REMEDIATION_LINEAGE_RECORD (policy v3, 9.7.10): ['manifests/mobile-runner-remediation-v1.yaml']
+      PASS policy v3 is FROZEN-PRE-DATA with section 9.7, v2 and v1 are AMENDED, and the lineage names v3 as the new policy and v2 as the prior policy (9.7.9, requirement 2)
+      PASS the lineage names the historical FAIL_RUNNER: APPIUM3-COMPAT-SMOKE-AUTH-02, run 36539790536, run attempt 1, SUT-02 x iOS, FAIL_RUNNER, historical_result_immutable true (9.7.9, requirement 1)
+      PASS the named historical row still exists unchanged in the Smoke records: its authorization, run, result, and the SHA-256 of the row equal the lineage record (9.7.9, requirement 10)
+      PASS the attribution, import, and run-identity records of the historical FAIL_RUNNER are unchanged (SHA-256 equals the lineage record) and agree with it (9.7.9, requirement 10; its imported artifacts are verified byte-exact by the validation workflow, step QUAL-U05)
+      PASS the remediation authorization is new (not AUTH-01 or AUTH-02), VALID, ISSUED, CONSUMED_AFTER_DISPATCH with dispatch_performed true, of the remediation type, governed by policy v3, and its record equals the lineage SHA-256 (9.7.9, requirement 4): APPIUM3-COMPAT-SMOKE-AUTH-03
+      PASS the remediation targets only SUT-02 ios with the selected runner, one execution, and names the historical FAIL_RUNNER as its trigger (9.7.9, requirements 1 and 6)
+      PASS exactly one remediation authorization exists and it is the one the lineage names (a second remediation never exists; 9.7.5, 9.7.11): ['manifests/compatibility-smoke-execution-auth-v3-prepared.yaml']
+      PASS the remediation ran once: its run-identity record equals the lineage SHA-256 and shows one dispatch, one remediation run, run attempt 1, and the run id of the lineage (9.7.5; 9.7.9, requirement 3): 41512347186
+      PASS the remediation used the approved successor implementation lock v4: its SHA-256 equals the lineage record and the authorization record (9.7.9, requirement 5)
+      PASS the official result is a PASS: exactly one Smoke records row cites the remediation namespace (SUT-02 ios, PASS, the selected runner pin, the run id of the lineage, attempt 1) and its SHA-256 equals the lineage record (9.7.9, requirements 6 and 7)
+      PASS the remediation artifacts are imported under their own namespace: the import record and the post-run recording record equal the lineage SHA-256 and the import record names the authorization, the run, and attempt 1 (9.7.9, requirement 8; the artifacts are verified byte-exact by the validation workflow, step QUAL-U05)
+      PASS the mirror holds exactly one SUT-02 ios entry of the selected runner: the PASS transcribed from the remediation authorization, or a FAIL_RUNNER recorded after the lineage record (9.7.9, requirement 9; 9.7.11)
+      PASS the restoration is explicit: the lineage restored status is SELECTED and its restoration basis equals tools.mobile_runner_selection.restoration_basis and the text of policy v3, 9.7.7 (9.7.9, requirement 11; 9.7.10)
+      PASS no other FAIL_RUNNER of the selected runner existed when the status was restored (before the recorded_at of the lineage record; 9.7.9, requirement 12): []
+      PASS study-level mobile-runner status is SELECTED (policy v3, 9.5 and 9.7.9): SELECTED
+      PASS no unresolved FAIL_RUNNER of the selected runner recorded for any SUT x platform (mirror or QUALIFIER record; the one historical FAIL_RUNNER named by a verified remediation lineage record is retained and not counted): ADMISSIBLE; status=SELECTED; lineage=verified; QUALIFIER FAIL_RUNNER rows=[('SUT-02', 'ios', 'APPIUM3-COMPAT-SMOKE-AUTH-02')] (retained by the verified lineage: 1); unresolved=[]; mirror FAIL_RUNNER=[]; PASS recorded after an unresolved FAIL_RUNNER=False
+      PASS the selected runner remains admissible study-wide (no exhausted or inconsistent fallback state): ADMISSIBLE; status=SELECTED; lineage=verified; QUALIFIER FAIL_RUNNER rows=[('SUT-02', 'ios', 'APPIUM3-COMPAT-SMOKE-AUTH-02')] (retained by the verified lineage: 1); unresolved=[]; mirror FAIL_RUNNER=[]; PASS recorded after an unresolved FAIL_RUNNER=False
+[INFO] study-wide admissibility gates passing on the as-is tree: 14
+[OK  ] must-pass fixture (issued record, frozen prompt, lock hashes, realization complete, mirror NOT_STARTED): exit 0 (expected 0); PASS 69, FAIL 0
+      PASS explicit confirmation token
+      PASS instruction id is an APPIUM3-COMPAT-SMOKE-AUTH-<nn> id: APPIUM3-COMPAT-SMOKE-AUTH-04
+      PASS run attempt 1 (a GitHub re-run never replaces an observation): 1
+      PASS mobile-runner policy v3 is FROZEN-PRE-DATA and carries section 9 (per-SUT compatibility smoke)
+      PASS mobile-runner policy v2 is AMENDED and superseded by v3
+      PASS exactly one SUT-01 smoke authorization record matches the instruction id: 1 match(es) among ['manifests/sut01-compatibility-smoke-execution-auth-v4-prepared.draft.yaml']
+      PASS record_class is COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION (not a draft): COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION
+      PASS status is exactly ISSUED: ISSUED
+      PASS record_validity is exactly VALID: VALID
+      PASS authorizes_execution is explicitly true: True
+      PASS issued_by is a human identity, not empty, a placeholder, or an agent role: fixture-human-research-lead
+      PASS issued_at is recorded
+      PASS dispatch_eligibility is exactly ELIGIBLE (prepared, consumed, or superseded records fail closed): ELIGIBLE
+      PASS the authorization has not been dispatched before: False
+      PASS the authorization is governed by protocol/mobile-runner-policy-v3.md: protocol/mobile-runner-policy-v3.md
+      PASS scope is SUT-01 Android only, Appium 3 3.7.0, one execution: {"sut_id": "SUT-01", "platforms": ["android"], "runner": "Appium 3", "runner_version": "3.7.0", "executions": 1, "attempts_allowed": 1, "result_vocabulary": ["PASS", "FAIL_RUNNER", "NOT_EXECUTED"], "n
+      PASS launch prompt frozen copy present and SHA-256 equal to the authorization record: prompts/frozen/orchestrator-compat-smoke-sut01-v1.md
+      PASS prompt version id well formed and names its frozen file: orchestrator-compat-smoke-sut01-v1
+      PASS frozen prompt names the instruction id and declares its prompt version id
+      PASS no unrendered placeholder remains in the frozen prompt
+      PASS implementation lock file present and equal to the authorization record: manifests/compatibility-smoke-implementation-lock-v5.draft.yaml
+      PASS lock covers every execution-critical artifact: []
+      PASS lock hash matches: .github/workflows/e06-compatibility-smoke-sut01.yml
+      PASS lock hash matches: qualification/compatibility-smoke-sut01/smoke-common.sh
+      PASS lock hash matches: qualification/compatibility-smoke-sut01/run-smoke-android.sh
+      PASS lock hash matches: qualification/compatibility-smoke-sut01/harness/package.json
+      PASS lock hash matches: qualification/compatibility-smoke-sut01/harness/package-lock.json
+      PASS lock hash matches: qualification/compatibility-smoke-sut01/harness/wd.mjs
+      PASS lock hash matches: qualification/compatibility-smoke-sut01/harness/smoke.mjs
+      PASS concrete-realization section hash matches the lock
+      PASS the realization is complete: no null and no TBD in the concrete-realization section
+      PASS harness REALIZATION hash (realizationSha256 of the locked smoke.mjs) equals the lock: 0fd8d16bb0906ba59b73b644863655c51afc25d39b61eac6e61d346d73c246c1
+      PASS step-sequence hash (the runSmoke steps that the platform runs) equals the lock
+      PASS Android build pin (smoke-common.sh) equals the lock
+      PASS harness dependencies are exactly the pinned Appium core and the Android driver: {"appium": "3.7.0", "appium-uiautomator2-driver": "8.7.0", "appium-xcuitest-driver": "12.13.2"}
+      PASS lockfile pins appium 3.7.0 with the recorded integrity
+      PASS lockfile pins appium-uiautomator2-driver 8.7.0 with the recorded integrity
+      PASS no Appium 2 anywhere in the lockfile
+      PASS toolchain pins (smoke-common.sh) equal the lock
+      PASS SUT-01 android pinned identity equals the lock: v1.1.8 3cdbe6596a1ab5ef2058ba4259c44da96a0fa03a
+      PASS workflow Node.js pin equals the lock
+      PASS output namespace absent or empty (only .gitkeep allowed): qualification/compatibility-smoke-sut01/formal/APPIUM3-COMPAT-SMOKE-AUTH-04
+      PASS the Smoke records table holds no row for SUT-01 (no execution has been recorded): 0 row(s)
+      PASS mirror holds exactly one SUT-01 android entry, NOT_STARTED, with no pointers: 1
+      PASS E06-cross-platform-parity is NOT_STARTED (the smoke precedes the campaign START; HD-18): NOT_STARTED
+      PASS a mobile runner is selected: Mobilewright or Appium 3 (policy sections 1, 8): Appium 3
+      PASS Appium 3 path: fallback is Appium 3 pinned 3.7.0 and the selection names that pin: Appium 3 3.7.0 / 3.7.0
+      PASS Appium 3 path: selection basis is the frozen section 8 switch
+      PASS Mobilewright qualification_status matches the selected-runner path (FAILED): FAILED
+      PASS the selection rests on exactly one VALID, ISSUED, dispatched gate authorization: MOBILE-QUALIFICATION-EXEC-AUTH-03
+      PASS the version of the selected runner itself is recorded and equals its pin: 3.7.0
+      PASS exactly one remediation lineage record exists and it is a REMEDIATION_LINEAGE_RECORD (policy v3, 9.7.10): ['manifests/mobile-runner-remediation-v1.yaml']
+      PASS policy v3 is FROZEN-PRE-DATA with section 9.7, v2 and v1 are AMENDED, and the lineage names v3 as the new policy and v2 as the prior policy (9.7.9, requirement 2)
+      PASS the lineage names the historical FAIL_RUNNER: APPIUM3-COMPAT-SMOKE-AUTH-02, run 36539790536, run attempt 1, SUT-02 x iOS, FAIL_RUNNER, historical_result_immutable true (9.7.9, requirement 1)
+      PASS the named historical row still exists unchanged in the Smoke records: its authorization, run, result, and the SHA-256 of the row equal the lineage record (9.7.9, requirement 10)
+      PASS the attribution, import, and run-identity records of the historical FAIL_RUNNER are unchanged (SHA-256 equals the lineage record) and agree with it (9.7.9, requirement 10; its imported artifacts are verified byte-exact by the validation workflow, step QUAL-U05)
+      PASS the remediation authorization is new (not AUTH-01 or AUTH-02), VALID, ISSUED, CONSUMED_AFTER_DISPATCH with dispatch_performed true, of the remediation type, governed by policy v3, and its record equals the lineage SHA-256 (9.7.9, requirement 4): APPIUM3-COMPAT-SMOKE-AUTH-03
+      PASS the remediation targets only SUT-02 ios with the selected runner, one execution, and names the historical FAIL_RUNNER as its trigger (9.7.9, requirements 1 and 6)
+      PASS exactly one remediation authorization exists and it is the one the lineage names (a second remediation never exists; 9.7.5, 9.7.11): ['manifests/compatibility-smoke-execution-auth-v3-prepared.yaml']
+      PASS the remediation ran once: its run-identity record equals the lineage SHA-256 and shows one dispatch, one remediation run, run attempt 1, and the run id of the lineage (9.7.5; 9.7.9, requirement 3): 41512347186
+      PASS the remediation used the approved successor implementation lock v4: its SHA-256 equals the lineage record and the authorization record (9.7.9, requirement 5)
+      PASS the official result is a PASS: exactly one Smoke records row cites the remediation namespace (SUT-02 ios, PASS, the selected runner pin, the run id of the lineage, attempt 1) and its SHA-256 equals the lineage record (9.7.9, requirements 6 and 7)
+      PASS the remediation artifacts are imported under their own namespace: the import record and the post-run recording record equal the lineage SHA-256 and the import record names the authorization, the run, and attempt 1 (9.7.9, requirement 8; the artifacts are verified byte-exact by the validation workflow, step QUAL-U05)
+      PASS the mirror holds exactly one SUT-02 ios entry of the selected runner: the PASS transcribed from the remediation authorization, or a FAIL_RUNNER recorded after the lineage record (9.7.9, requirement 9; 9.7.11)
+      PASS the restoration is explicit: the lineage restored status is SELECTED and its restoration basis equals tools.mobile_runner_selection.restoration_basis and the text of policy v3, 9.7.7 (9.7.9, requirement 11; 9.7.10)
+      PASS no other FAIL_RUNNER of the selected runner existed when the status was restored (before the recorded_at of the lineage record; 9.7.9, requirement 12): []
+      PASS study-level mobile-runner status is SELECTED (policy v3, 9.5 and 9.7.9): SELECTED
+      PASS no unresolved FAIL_RUNNER of the selected runner recorded for any SUT x platform (mirror or QUALIFIER record; the one historical FAIL_RUNNER named by a verified remediation lineage record is retained and not counted): ADMISSIBLE; status=SELECTED; lineage=verified; QUALIFIER FAIL_RUNNER rows=[('SUT-02', 'ios', 'APPIUM3-COMPAT-SMOKE-AUTH-02')] (retained by the verified lineage: 1); unresolved=[]; mirror FAIL_RUNNER=[]; PASS recorded after an unresolved FAIL_RUNNER=False
+      PASS the selected runner remains admissible study-wide (no exhausted or inconsistent fallback state): ADMISSIBLE; status=SELECTED; lineage=verified; QUALIFIER FAIL_RUNNER rows=[('SUT-02', 'ios', 'APPIUM3-COMPAT-SMOKE-AUTH-02')] (retained by the verified lineage: 1); unresolved=[]; mirror FAIL_RUNNER=[]; PASS recorded after an unresolved FAIL_RUNNER=False
+[OK  ] record PREPARED again (status and dispatch fields as drafted): exit 1 (expected 1); PASS 65, FAIL 4
+      FAIL status is exactly ISSUED: PREPARED_AWAITING_EXPLICIT_HUMAN_AUTHORIZATION
+      FAIL record_validity is exactly VALID: None
+      FAIL authorizes_execution is explicitly true: False
+      FAIL dispatch_eligibility is exactly ELIGIBLE (prepared, consumed, or superseded records fail closed): NOT_ELIGIBLE_UNTIL_ISSUED
+[OK  ] dispatch already performed: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL the authorization has not been dispatched before: True
+[OK  ] issued by an agent role: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL issued_by is a human identity, not empty, a placeholder, or an agent role: orchestrator
+[OK  ] dispatch eligibility consumed: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL dispatch_eligibility is exactly ELIGIBLE (prepared, consumed, or superseded records fail closed): CONSUMED_AFTER_DISPATCH
+[OK  ] scope widened to iOS: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL scope is SUT-01 Android only, Appium 3 3.7.0, one execution: {"sut_id": "SUT-01", "platforms": ["android", "ios"], "runner": "Appium 3", "runner_version": "3.7.0", "executions": 1, "attempts_allowed": 1, "result_vocabulary": ["PASS", "FAIL_RUNNER", "NOT_EXECUTE
+[OK  ] frozen launch prompt missing: exit 1 (expected 1); PASS 66, FAIL 3
+      FAIL launch prompt frozen copy present and SHA-256 equal to the authorization record: prompts/frozen/orchestrator-compat-smoke-sut01-v1.md
+      FAIL frozen prompt names the instruction id and declares its prompt version id
+      FAIL no unrendered placeholder remains in the frozen prompt
+[OK  ] lock file edited after the record was written: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL implementation lock file present and equal to the authorization record: manifests/compatibility-smoke-implementation-lock-v5.draft.yaml
+[OK  ] an execution-critical artifact edited without a new lock: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL lock hash matches: qualification/compatibility-smoke-sut01/smoke-common.sh
+[OK  ] the concrete-realization section edited without a new lock: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL concrete-realization section hash matches the lock
+[OK  ] the REALIZATION constant changed, artifact hash refreshed, realization hash not: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL harness REALIZATION hash (realizationSha256 of the locked smoke.mjs) equals the lock: 472fe41d623e1149c893efaaad58635773b3b4a3f6ec3f9834c5efa385bc6d36
+[OK  ] the step sequence changed, artifact hash refreshed, sequence hash not: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL step-sequence hash (the runSmoke steps that the platform runs) equals the lock
+[OK  ] the Android APK digest changed in the build pin: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL Android build pin (smoke-common.sh) equals the lock
+[OK  ] the TBD launch activity reintroduced into the realization: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL the realization is complete: no null and no TBD in the concrete-realization section
+[OK  ] the historical AUTH-02 lineage record removed (the retained FAIL_RUNNER is then unverified): exit 1 (expected 1); PASS 52, FAIL 3
+      FAIL exactly one remediation lineage record exists and it is a REMEDIATION_LINEAGE_RECORD (policy v3, 9.7.10): []
+      FAIL no unresolved FAIL_RUNNER of the selected runner recorded for any SUT x platform (mirror or QUALIFIER record; the one historical FAIL_RUNNER named by a verified remediation lineage record is retained and not counted): PROVENANCE_INCONSISTENT_FAIL_CLOSED; status=SELECTED; lineage=NOT verified; QUALIFIER FAIL_RUNNER rows=[('SUT-02', 'ios', 'APPIUM3-COMPAT-SMOKE-AUTH-02')] (retained by the verified lineage: 0); unresolved=[('SUT-02', 'ios')]; mirror FAIL_RUNNER=[]; PASS recorded after an unresolved FAIL_RUNNER=True
+      FAIL the selected runner remains admissible study-wide (no exhausted or inconsistent fallback state): PROVENANCE_INCONSISTENT_FAIL_CLOSED; status=SELECTED; lineage=NOT verified; QUALIFIER FAIL_RUNNER rows=[('SUT-02', 'ios', 'APPIUM3-COMPAT-SMOKE-AUTH-02')] (retained by the verified lineage: 0); unresolved=[('SUT-02', 'ios')]; mirror FAIL_RUNNER=[]; PASS recorded after an unresolved FAIL_RUNNER=True
+[OK  ] study-level status UNRESOLVED_AFTER_FALLBACK_FAILURE: exit 1 (expected 1); PASS 67, FAIL 2
+      FAIL study-level mobile-runner status is SELECTED (policy v3, 9.5 and 9.7.9): UNRESOLVED_AFTER_FALLBACK_FAILURE
+      FAIL the selected runner remains admissible study-wide (no exhausted or inconsistent fallback state): PROVENANCE_INCONSISTENT_FAIL_CLOSED; status=UNRESOLVED_AFTER_FALLBACK_FAILURE; lineage=verified; QUALIFIER FAIL_RUNNER rows=[('SUT-02', 'ios', 'APPIUM3-COMPAT-SMOKE-AUTH-02')] (retained by the verified lineage: 1); unresolved=[]; mirror FAIL_RUNNER=[]; PASS recorded after an unresolved FAIL_RUNNER=False
+[OK  ] E06 already IN_PROGRESS: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL E06-cross-platform-parity is NOT_STARTED (the smoke precedes the campaign START; HD-18): IN_PROGRESS
+[OK  ] an output namespace already holds a file: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL output namespace absent or empty (only .gitkeep allowed): qualification/compatibility-smoke-sut01/formal/APPIUM3-COMPAT-SMOKE-AUTH-04: SUT-01-android/record.json
+[OK  ] a smoke row for SUT-01 Android already in the README: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL the Smoke records table holds no row for SUT-01 (no execution has been recorded): 1 row(s)
+[OK  ] mirror entry transcribed as PASS without a record: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL mirror holds exactly one SUT-01 android entry, NOT_STARTED, with no pointers: 1
+[OK  ] a FAIL_RUNNER of the selected runner recorded for SUT-01 Android: exit 1 (expected 1); PASS 65, FAIL 4
+      FAIL mirror holds exactly one SUT-01 android entry, NOT_STARTED, with no pointers: 1
+      FAIL no other FAIL_RUNNER of the selected runner existed when the status was restored (before the recorded_at of the lineage record; 9.7.9, requirement 12): [('SUT-01', 'android')]
+      FAIL no unresolved FAIL_RUNNER of the selected runner recorded for any SUT x platform (mirror or QUALIFIER record; the one historical FAIL_RUNNER named by a verified remediation lineage record is retained and not counted): PROVENANCE_INCONSISTENT_FAIL_CLOSED; status=SELECTED; lineage=NOT verified; QUALIFIER FAIL_RUNNER rows=[('SUT-02', 'ios', 'APPIUM3-COMPAT-SMOKE-AUTH-02')] (retained by the verified lineage: 0); unresolved=[('SUT-02', 'ios'), ('SUT-01', 'android')]; mirror FAIL_RUNNER=[('SUT-01', 'android')]; PASS recorded after an unresolved FAIL_RUNNER=True
+      FAIL the selected runner remains admissible study-wide (no exhausted or inconsistent fallback state): PROVENANCE_INCONSISTENT_FAIL_CLOSED; status=SELECTED; lineage=NOT verified; QUALIFIER FAIL_RUNNER rows=[('SUT-02', 'ios', 'APPIUM3-COMPAT-SMOKE-AUTH-02')] (retained by the verified lineage: 0); unresolved=[('SUT-02', 'ios'), ('SUT-01', 'android')]; mirror FAIL_RUNNER=[('SUT-01', 'android')]; PASS recorded after an unresolved FAIL_RUNNER=True
+[OK  ] wrong confirmation token: exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL explicit confirmation token
+[OK  ] a GitHub re-run (attempt 2): exit 1 (expected 1); PASS 68, FAIL 1
+      FAIL run attempt 1 (a GitHub re-run never replaces an observation): 2
+
+SUMMARY: 24 of 24 checks as expected

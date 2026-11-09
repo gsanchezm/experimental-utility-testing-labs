@@ -1,0 +1,208 @@
+# DRAFT - NOT FROZEN - NOT AN INPUT TO ANY CAMPAIGN - AUTHORIZES NOTHING
+# Proposed repository path when promoted: experiments/scenario-mappings/CS-005.yaml
+# Prepared 2026-11-05 for the E07-cross-layer-continuity design brief (web and API layers only).
+# Structure: protocol/equivalent-scenario-mapping-v1.md, sections 3, 4 and 7.
+# Order (section 6): the canonical intent below is ecosystem-neutral and is written first; the six mapping entries follow.
+# Scope of this record: direction API -> WEB only (establishment through the API layer, verification through the WEB layer).
+#   The reverse direction (WEB -> API) is proposed as CS-006 in design-brief-draft.md, section 5, and is not drafted here.
+# CS-005 is the next unused identifier: CS-001 FROZEN, CS-002 EXCLUDED_FROM_CAMPAIGN and preserved, CS-003 FROZEN (E02).
+# Evidence: E01 rows are read from the SUBMITTED audit branches audit/e01-sut0N-* (the audits/ directories on the main branch
+#   are templates, as stated in the header of experiments/scenario-mappings/CS-001.yaml, PROTO-U07).
+#   The E01 adjudicated matrix was NOT consulted (the task's common rule 2 forbids reading derived-data); the confirmed_score
+#   values quoted in design-brief-draft.md are the auditors' SUBMITTED values and must be checked against the adjudicated matrix
+#   by the ORCHESTRATOR before any freeze.
+# Values marked HUMAN DECISION are null in this DRAFT. The comment beside each one gives the recommendation.
+
+version: 1
+canonical_scenario_id: CS-005
+description: >
+  Starting from a clean session, an actor authenticates, establishes one unit of session-scoped or resource-scoped business
+  state through the programmatic (API) layer, and the same unit is then verified through the user-interface (WEB) layer by a
+  read-only observation that matches the identity keys and the declared attributes recorded at establishment. The business
+  object varies by ecosystem (cart, basket, or booking). The semantic intent (an actor establishes a unit of business state
+  through one layer and observes that same unit through another layer) does not vary.
+precondition_class: CLEAN_SESSION  # DP-1 (HUMAN DECISION). Recommendation: CLEAN_SESSION, as in CS-003 DP-1.
+actor_state: AUTHENTICATED_STANDARD  # DP-2 (HUMAN DECISION). Recommendation: AUTHENTICATED_STANDARD, as in CS-003 DP-5.
+business_intent: >
+  An actor holding the standard identity that the ecosystem requires establishes one purchasable or reservable unit in a
+  session- or resource-scoped business object through the programmatic interface, and verifies through the user interface
+  that the same unit, with the same identity, is visible.
+target_state_or_transition: >
+  After establishment: the business object holds exactly the declared unit, with its declared identity keys and attributes,
+  as read back on the programmatic layer. After verification: the same unit, with the same identity keys and attributes, is
+  observed on the user-interface layer by a read-only observation that changes no state.
+observable_oracle_class: OTHER
+observable_oracle_class_text: >
+  Cross-layer consistency check (protocol/equivalent-scenario-mapping-v1.md, section 3, OTHER with free text): the identity
+  keys and declared attributes recorded from the establishment response or read-back on the API layer are observed unchanged
+  on the WEB layer. The check passes only when every declared key and attribute is observed and matches.
+reset_requirement: DATA_RESET  # Restored between attempts by the campaign harness, outside the measured scenario (as CS-003 DP-2).
+applicable_surfaces: [WEB, API]  # ANDROID and IOS are outside the web/API scope of this draft (see notes, DP-9).
+allowed_domain_mapping: >
+  The business object may vary (cart, basket, booking). Vocabulary, endpoint names, selectors, identifier formats and the number
+  of steps may vary. The establishment layer (API) and the verification layer (WEB) are fixed for this record. May NOT vary:
+  (1) the actor must be authenticated for establishment; (2) the unit must be established by the actor through the ecosystem's
+  documented programmatic interface, not referenced as a pre-existing fixture (DP-4); (3) the verification must be read-only
+  and must observe the same unit whose identity keys were recorded at establishment; (4) the clean starting state must be
+  checked before establishment and restored between attempts. Scenario-specific constraint: the identity keys and the declared
+  attributes of each ecosystem are fixed in the campaign configuration before the first attempt.
+campaigns_using: [E07-cross-layer-continuity]
+mapping_status: DRAFT
+frozen_at: null
+approved_by: null
+mappings:
+  - sut_id: SUT-01
+    comparability: null  # HUMAN DECISION (DP-7 for the evidence basis). Recommendation: COMPARABLE. All six conditions of protocol/equivalent-scenario-mapping-v1.md, section 5, are supported by SOURCE_VERIFIED rows listed in evidence_ids.
+    surfaces_used: [API, WEB]
+    domain_object: "cart (pizza order items in the session cart)"
+    precondition_realization: "Clean session of the declared controlled instance; the session cart is checked empty before establishment. Session identity: the JWT claim sid of the login token, which the API calls and the browser client both use (SUT01-EV-0002, SUT01-EV-0007)."
+    actor_realization: "Documented standard test account; POST /api/auth/login returns the access token (SUT01-EV-0005, SUT01-EV-0007)."
+    entry_and_steps:
+      - "[API, precondition, not counted] POST /api/auth/login with the documented standard account; record the token and its sid claim (SUT01-EV-0007)."
+      - "[API, establishment] POST /api/cart with one catalog line; the response is kept as the establishment record (SUT01-EV-0004)."
+      - "[API, establishment check] GET /api/session reads back the line (SUT01-EV-0006); read-only."
+      - "[WEB, precondition] inject the token and the username into client storage before the first authenticated load (documented 'Web atomic entry', SUT01-EV-0001, SUT01-EV-0002)."
+      - "[WEB, verification] navigate to the protected Checkout route; the page reads GET /api/cart on mount (SUT01-EV-0004)."
+      - "[WEB, verification] read the Checkout view for the established line and record the observed keys and attributes."
+    oracle_realization: "On the WEB layer: the Checkout view rendering the established line after mount (SUT01-EV-0004). Identity traced through the session sid, not through a cart item identifier visible in the UI (not stated in E01)."
+    reset_realization: "POST /api/session/reset clears the caller's session cart and resets the profile to its empty default between attempts, outside the scenario (SUT01-EV-0006; as the SUT-01 entry of CS-001.yaml). The reset is partial: it does not clear order history (SUT01-EV-0006 notes)."
+    environment_type: "PENDING (campaign configuration). For the same ecosystem E03 used SELF_HOSTED instances on GitHub Actions (experiments/E03-resetability/controlled-instance-status.yaml). Not a freeze prerequisite."
+    not_comparable_reason: null
+    evidence_ids: [SUT01-EV-0001, SUT01-EV-0002, SUT01-EV-0004, SUT01-EV-0005, SUT01-EV-0006, SUT01-EV-0007]
+    justification: >
+      The establishment (API cart seeding and session read-back) and the WEB read-through of the same session cart are
+      SOURCE_VERIFIED (SUT01-EV-0004, SUT01-EV-0006). The same token authenticates the API calls and is injected into the
+      browser (SUT01-EV-0002), so both layers act on one session. No EXECUTION_VERIFIED evidence exists for this direction.
+  - sut_id: SUT-02
+    comparability: NOT_COMPARABLE
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: null
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      NO_APPLICABLE_SURFACE. The verification layer (WEB) exists, but the establishment layer (API) is absent in the evaluated
+      version: no business-data API surface was found in any pinned component (SUT02-EV-0004, SUT02-EV-0005, SUT02-EV-0006; audit
+      branch audit/e01-sut02-saucelabs, audits/SUT-02-saucelabs/audit.md, section 3, API row: provisional Score 0; manifests/sut-manifest.yaml,
+      SUT-02 api presence ABSENT). Recorded as an absence, not as a zero or a failure.
+    evidence_ids: [SUT02-EV-0004, SUT02-EV-0005, SUT02-EV-0006]
+    justification: "The establishment step through the API cannot be realized; the scenario is not realizable on this ecosystem's web/API surfaces."
+  - sut_id: SUT-03
+    comparability: NOT_COMPARABLE  # PROPOSED. Depends on DP-4 (HUMAN DECISION). Under the strict standard this stays NOT_COMPARABLE. Under the fixture-referencing standard the entry would be re-decided, and the audit would then show consistency only for the fixed accounts.
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: null
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      OTHER: no API-established business state that persists. The API exposes read responses and userName-keyed fixed
+      responses and has no write path that durably changes product, order or offer data (SUT03-EV-0031, negative evidence).
+      The userName-keyed responses are pre-built fixtures (SUT03-EV-0006, SUT03-EV-0007, SUT03-EV-0008), not states the actor
+      establishes. The cart and the favourites are client-side Redux state and never reach the API (SUT03-EV-0032). Under the
+      strict standard the establishment step of this direction has no mechanism, so the scenario cannot be realized.
+    evidence_ids: [SUT03-EV-0006, SUT03-EV-0007, SUT03-EV-0008, SUT03-EV-0031, SUT03-EV-0032]
+    justification: >
+      Recorded with the same discipline as every other ecosystem (protocol/equivalent-scenario-mapping-v1.md, section 5). The
+      audit's own cross-layer description says the consistency holds only "within the fixed account mechanism" (audit/e01-sut03-browserstack,
+      audits/SUT-03-browserstack/audit.md, section 4, Cross-layer State Continuity).
+  - sut_id: SUT-04
+    comparability: null  # HUMAN DECISION (DP-7). Recommendation: COMPARABLE once the admin booking listing is cited by an E01 evidence_id. Until then the listing rests on source lines only (see the gap note).
+    surfaces_used: [API, WEB]
+    domain_object: "booking (room reservation)"
+    precondition_realization: "Clean session; the seeded admin account authenticates through POST /auth/login, which issues the token cookie (SUT04-EV-0003, SUT04-EV-0008)."
+    actor_realization: "Deterministic seeded account (SUT04-EV-0003). Note: the account is an administrator; CS-003 DP-5 accepted this for continuity with CS-001."
+    entry_and_steps:
+      - "[API, precondition, not counted] POST /auth/login with the seeded credentials; record the token (SUT04-EV-0003, SUT04-EV-0008)."
+      - "[API, establishment] POST /booking/ with run-unique guest names and dates, without email and phone; record the bookingid from the 201 response (SUT04-EV-0006)."
+      - "[API, establishment check] GET /booking/{bookingid} with the token; read-only (SUT04-EV-0006)."
+      - "[WEB, precondition] the browser must hold a valid admin session. Option (a): log in through the admin login form (SUT04-EV-0002). Option (b): inject the API token as a cookie; NOT evidenced in E01 (DP-7)."
+      - "[WEB, verification] open the admin room page for the room and read the booking listing; read-only (SUT04-EV-0002 for the admin route; the listing has no E01 row, see the gap note)."
+    oracle_realization: "On the WEB layer: the admin room page lists the row whose run-unique names and check-in date match the establishment record. The route and the listing are cited from source in experiments/E03-resetability/executor/README.md, section 4.6, and not from an E01 evidence row (gap)."
+    reset_realization: "DELETE /booking/{bookingid} with the establishment token, between attempts, outside the scenario (SUT04-EV-0006; as CS-001.yaml, SUT-04 entry)."
+    environment_type: "PENDING (campaign configuration). E03 used SELF_HOSTED instances for this ecosystem on GitHub Actions (experiments/E03-resetability/controlled-instance-status.yaml)."
+    not_comparable_reason: null
+    evidence_ids: [SUT04-EV-0002, SUT04-EV-0003, SUT04-EV-0006, SUT04-EV-0008, SUT04-EV-0028]
+    justification: >
+      Booking CRUD on the API layer is SOURCE_VERIFIED (SUT04-EV-0006). The web application's server-side routes proxy to the same
+      backend services and database as the API (SUT04-EV-0028), which is the structural basis of continuity. Gap: the listing of
+      bookings on the admin room page is not an E01 evidence row.
+  - sut_id: SUT-05
+    comparability: null  # HUMAN DECISION (DP-7). Recommendation: NOT_COMPARABLE with reason OTHER (no E01 record documents basket visibility on the WEB layer) unless an evidence_id is added under change control.
+    surfaces_used: [API, WEB]  # PROPOSED. Only API is evidenced for the basket; WEB is a gap.
+    domain_object: "basket"
+    precondition_realization: "Clean session of the declared controlled instance; the application starts from its seeded data on every start (SUT05-EV-0003). The actor authenticates with a documented deterministic account (SUT05-EV-0006)."
+    actor_realization: "Deterministic named account (SUT05-EV-0002, SUT05-EV-0006)."
+    entry_and_steps:
+      - "[API, precondition, not counted] POST /rest/user/login with the documented account; record the token and the basket id (SUT05-EV-0006)."
+      - "[API, establishment] POST /api/BasketItems with ProductId 1, the basket id and quantity 1 (SUT05-EV-0008; route and model SOURCE_VERIFIED, SUT05-EV-0027)."
+      - "[API, establishment check] GET on the basket resource; read-only (SUT05-EV-0008)."
+      - "[WEB, verification] view the basket in the user interface. NOT EVIDENCED: no E01 row documents the web basket view (gap, DP-7)."
+    oracle_realization: "On the WEB layer: not evidenced. On the API layer: GET on the basket resource (SUT05-EV-0008)."
+    reset_realization: "Full process restart (sequelize.sync with force true on every start, SUT05-EV-0003), between attempts, outside the scenario. This is the heaviest reset of the six ecosystems (as CS-001.yaml, SUT-05 entry)."
+    environment_type: "PENDING (campaign configuration). Not a freeze prerequisite. The WEB surface has no environment verification record (experiments/E03-resetability/controlled-instance-status.yaml covers the API surface only)."
+    not_comparable_reason: null
+    evidence_ids: [SUT05-EV-0002, SUT05-EV-0003, SUT05-EV-0006, SUT05-EV-0008, SUT05-EV-0027]
+    justification: >
+      The API side is SOURCE_VERIFIED. Web and API share one process and one datastore (SUT05-EV-0003; audit section 4,
+      Cross-layer State Continuity, which cites SUT05-EV-0002, SUT05-EV-0004 and SUT05-EV-0006 for account state). The
+      basket on the WEB layer has no E01 row, so condition 5 of the comparability rule is not supported by E01 evidence.
+  - sut_id: SUT-06
+    comparability: NOT_COMPARABLE
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: null
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      NO_APPLICABLE_SURFACE. The web and api components are ABSENT (manifests/sut-manifest.yaml, SUT-06 components web and api;
+      presence cells cited there as SUT06-EV-0001 to SUT06-EV-0004). The ecosystem is mobile-only; the web/API scope of this
+      draft does not apply to it. Recorded as an absence, not as a zero.
+    evidence_ids: [SUT06-EV-0001, SUT06-EV-0002, SUT06-EV-0003, SUT06-EV-0004]
+    justification: "No web or API surface exists to realize either layer of the scenario."
+notes: >
+  DRAFT. Design points DP-1 to DP-9 are decided by the human research lead, not by this draft. The recommended answers are
+  given so that the decision can be taken quickly.
+  DP-1 precondition_class. Options: CLEAN_SESSION (login inside the measured scenario, as CS-003) or AUTHENTICATED_SESSION
+    (login as provisioning, as CS-001). Recommendation: CLEAN_SESSION. Continuity depends on the session identity that the login
+    creates, so the login belongs to the scenario. HUMAN DECISION.
+  DP-2 actor_state. Recommendation: AUTHENTICATED_STANDARD, the CS-003 DP-5 choice, which keeps the SUT-04 administrator account.
+    HUMAN DECISION.
+  DP-3 direction. Options: (a) one record per direction (CS-005 API -> WEB, CS-006 WEB -> API); (b) one record with the direction
+    as an independent variable. Option (b) needs a per-direction field that the mapping template (section 7) does not have.
+    Recommendation: (a). HUMAN DECISION.
+  DP-4 established-state standard (decisive for SUT-03). Options: (a) strict: the unit must be created by the actor through the
+    programmatic interface, as CS-001 and CS-003 require for the business object; (b) referenced: a pre-existing entity
+    selected by a fixed identifier also counts as established state. The E07 README (Required evidence, "created or referenced
+    during establishment") reads toward (b). Under (b), SUT-03 would be decided by the fixed-account identifiers of SUT03-EV-0006
+    to SUT03-EV-0008, and any "continuity" would hold by construction. Recommendation: (a). Under (a), SUT-03 is NOT_COMPARABLE
+    for this record and for CS-006, so no CONFIRMATORY continuity comparison of SUT-01 against SUT-03 is evaluable. HUMAN DECISION.
+  DP-5 identity keys and oracle. Recommendation: each ecosystem declares, before the first attempt, the identity keys (for example
+    the session sid, the run-unique guest names and check-in date, the basket id) and the attributes that the WEB check must
+    match. VERIFIED requires every declared key and attribute to match. The oracle stays OTHER, with the free text above. HUMAN DECISION.
+  DP-6 reset. Recommendation: DATA_RESET between attempts, outside the measured scenario and not counted, as CS-003 DP-2.
+    The reset realizations are those of CS-001.yaml. HUMAN DECISION.
+  DP-7 evidence sufficiency for the verification surfaces. Gaps: SUT-04 has no E01 row for the admin booking listing; the cookie
+    injection of option (b) of the SUT-04 precondition is not evidenced; SUT-05 has no E01 row for the web basket. Options:
+    (a) a new E01 evidence supplement under protocol/change-control-v1.md; (b) source-line citations in the campaign configuration (not E01 evidence,
+    and a departure from the mapping rule's "E01 evidence" wording); (c) leave the entry NOT_COMPARABLE with reason OTHER until
+    the gap closes. Recommendation: (a) for SUT-04 only if the human research lead wants the specialist's continuity profile,
+    otherwise (c); (c) for SUT-05. HUMAN DECISION.
+  DP-8 continuity proportion. The denominator is not defined in the SAP. Options: (A) VERIFIED / all valid measured attempts
+    (establishment failures count as not verified); (B) VERIFIED / attempts whose establishment succeeded. Recommendation: A as
+    the H4 variable, with B reported descriptively. Both are fixed in the campaign configuration before the first attempt. HUMAN DECISION.
+  DP-9 scope. The E07 README lists API -> Android, API -> iOS and Web -> API. This draft covers WEB and API only, as the human research
+    lead decided on 2026-11-05 for the minimum campaign set. A later mobile record needs the compatibility smoke and the mobile policy
+    (protocol/mobile-runner-policy-v3.md). The README's candidate pair list needs a scope note; this draft does not edit it. HUMAN DECISION.
+  Not decided here: the identity key list per ecosystem, the condition list, the sample size, the exclusion and attribution rules,
+    and the CONFIRMATORY list. These belong to the E07 campaign configuration (campaign-configuration-draft.md).
+  Lifecycle: a frozen mapping record is never edited; a change is a new version file and one mapping-record row in the change log
+    (protocol/equivalent-scenario-mapping-v1.md, section 6).

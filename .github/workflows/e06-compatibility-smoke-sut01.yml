@@ -1,0 +1,449 @@
+# E06 Compatibility Smoke, SUT-01 (OmniPizza) x Android (dispatch-only, fails closed)
+# Study EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems).
+# Status: installed on 2026-11-06 under E06-SMOKE-CI-WRITE-AUTH-01, the narrow CI grant of the human research lead of that date (manifests/campaign-execution-decisions-v2.yaml,
+# approval line D; operation OP-CI-16). This file is not an authorization and refuses every dispatch until an issued, dispatch-eligible authorization exists (the gate below).
+# Neither E03-CI-WRITE-AUTH-01 nor CAMPAIGN-CI-WRITE-AUTH-01 names a compatibility smoke; the grant covers this file only, and the workflows of E06 stay under CAMPAIGN-CI-WRITE-AUTH-01.
+#
+# GitHub Actions path of the per-SUT compatibility smoke of protocol/mobile-runner-policy-v3.md, section 9, for SUT-01 (the
+# OmniPizza monorepo, release v1.1.8, Android build) and the study-selected mobile runner Appium 3 (pinned 3.7.0). One clean
+# execution, no repeat. Class COMPATIBILITY_SMOKE (tool qualification): no evidence about any system under test, nothing written
+# to raw-data/, and no campaign state is read for writing or changed. iOS is deferred (HUMAN DECISION HD-1): there is no iOS job.
+#
+# Dispatch only; never on push. The gate job fails closed unless every prerequisite holds: the confirmation token; the
+# authorization id resolved against manifests/sut01-compatibility-smoke-execution-auth-v*.yaml, whose record is an ISSUED,
+# VALID, human-issued, dispatch-ELIGIBLE, not yet dispatched SUT-01 Android record; its frozen launch prompt; the implementation
+# lock (every locked artifact, the harness REALIZATION hash, the step-sequence hash, and the concrete-realization section
+# recomputed from the checkout); policy v3 FROZEN-PRE-DATA and v2 AMENDED; the study-level mobile-runner admissibility rule of
+# policy v3, sections 9.5 and 9.7.9 to 9.7.11, copied from the G-7 gate of the measured-execution workflow (the retained AUTH-02
+# FAIL_RUNNER is exempt only through the verified remediation lineage record); the SUT-01 and toolchain pins; an absent output
+# namespace for this authorization; a mirror entry for SUT-01 Android that is NOT_STARTED with no pointers; no smoke record yet;
+# and the mobile campaign E06-cross-platform-parity NOT_STARTED (the smoke precedes its START; HUMAN DECISION HD-18).
+# Scenario reference (DRAFT, reference only, not an input to this smoke): CS-007 (experiments/scenario-mappings/CS-007.yaml).
+# The smoke realizes CS-007's Android precondition (quick login of the documented account), sign-in, and arrival at the catalogue.
+# It does not realize the catalogue item-identity oracle (DP-3 fallback; the mapping is not frozen).
+# Governance route: protocol/agent-governance-v6.md, Section 3.4 (FROZEN-PRE-DATA 2026-11-06; carried from v5), under which the ORCHESTRATOR performs the qualifier tasks.
+# Each dispatch needs the human research lead's explicit approval of that exact dispatch; Section 3.7 of v6 does not cover this smoke. The date-bound sentence of Section 3.4 that
+# called the compatibility smoke closed by the exhausted fallback was updated as representation only at the freeze of v6 (open decision HD-8), so protocol/mobile-runner-policy-v3.md,
+# section 9, applies to SUT-01 as well. The risk accepted for this smoke (a FAIL_RUNNER returns the study to UNRESOLVED_AFTER_FALLBACK_FAILURE, with no second remediation) is
+# recorded in manifests/campaign-execution-decisions-v2.yaml, approval line E.
+name: E06 Compatibility Smoke SUT-01 Android
+
+on:
+  workflow_dispatch:
+    inputs:
+      instruction_id:
+        description: "Id of the issued SUT-01 compatibility-smoke execution authorization (APPIUM3-COMPAT-SMOKE-AUTH-<nn>)"
+        required: true
+        type: string
+      confirm:
+        description: "Type EXECUTE-COMPATIBILITY-SMOKE-SUT01 to confirm"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e06-compatibility-smoke-sut01
+  cancel-in-progress: false
+
+env:
+  TZ: UTC
+  RECORD_CLASS: COMPATIBILITY_SMOKE
+  SMOKE_INSTRUCTION_ID: ${{ inputs.instruction_id }}
+  DO_NOT_TRACK: "1"
+
+jobs:
+  gate:
+    name: E06 Compatibility Smoke SUT-01 Gate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      ready: ${{ steps.gate.outputs.ready }}
+      prompt_version_id: ${{ steps.gate.outputs.prompt_version_id }}
+    env:
+      SMOKE_CONFIRM: ${{ inputs.confirm }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up the pinned Node.js (the harness realization hash is computed by importing the locked harness)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.23.2"
+      - name: Verify the SUT-01 compatibility-smoke prerequisites (fail closed)
+        id: gate
+        run: |
+          set -euo pipefail
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - <<'PY'
+          import glob, hashlib, json, os, re, subprocess, sys, yaml
+          failures = []
+          def gate(name, ok, detail=''):
+              print(('PASS ' if ok else 'FAIL ') + name + (': ' + detail if detail else ''))
+              if not ok: failures.append(name)
+          def sha(p): return hashlib.sha256(open(p, 'rb').read()).hexdigest()
+          def load(p):
+              try: return yaml.safe_load(open(p, encoding='utf-8')) or {}
+              except Exception: return {}
+          rd = lambda p: open(p, encoding='utf-8').read() if os.path.isfile(p) else ''
+          # The study-wide mobile-runner rule below (copied from the G-7 block of the measured-execution workflow) reads these names.
+          cond = 'E06-CS007-SUT01-ANDROID'  # scenario CS-007 (DRAFT, reference only); cond.split('-')[3] is ANDROID; no E03 condition is named
+          sut = 'SUT-01'
+          instruction = os.environ.get('SMOKE_INSTRUCTION_ID', '').strip()
+          # G-1 dispatch inputs; no re-run
+          gate('explicit confirmation token', os.environ.get('SMOKE_CONFIRM', '') == 'EXECUTE-COMPATIBILITY-SMOKE-SUT01')
+          gate('instruction id is an APPIUM3-COMPAT-SMOKE-AUTH-<nn> id', re.fullmatch(r'APPIUM3-COMPAT-SMOKE-AUTH-[0-9]{2}', instruction) is not None, instruction or '(missing)')
+          gate('run attempt 1 (a GitHub re-run never replaces an observation)', os.environ.get('GITHUB_RUN_ATTEMPT', '1') == '1', os.environ.get('GITHUB_RUN_ATTEMPT', '1'))
+          # G-2 frozen policy: v3 in force (FROZEN-PRE-DATA, section 9 present); v2 AMENDED and superseded by v3
+          pol2, pol3 = rd('protocol/mobile-runner-policy-v2.md'), rd('protocol/mobile-runner-policy-v3.md')
+          gate('mobile-runner policy v3 is FROZEN-PRE-DATA and carries section 9 (per-SUT compatibility smoke)', '| Document | protocol/mobile-runner-policy-v3.md |' in pol3 and '| Protocol state | FROZEN-PRE-DATA |' in pol3 and '## 9. Per-SUT compatibility smoke' in pol3)
+          gate('mobile-runner policy v2 is AMENDED and superseded by v3', '| Protocol state | AMENDED |' in pol2 and '| Superseded by | protocol/mobile-runner-policy-v3.md |' in pol2)
+          # G-3 the smoke authorization (dynamic resolution; a drafted, prepared, or consumed record never passes)
+          cands = sorted(glob.glob('manifests/sut01-compatibility-smoke-execution-auth-v*.yaml'))
+          matches = [(p, r) for p, r in ((p, load(p)) for p in cands) if r.get('authorization_id') == instruction]
+          gate('exactly one SUT-01 smoke authorization record matches the instruction id', len(matches) == 1, f'{len(matches)} match(es) among {cands}')
+          auth_path, auth = matches[0] if len(matches) == 1 else (None, {})
+          gate('record_class is COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION (not a draft)', auth.get('record_class') == 'COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION', str(auth.get('record_class')))
+          gate('status is exactly ISSUED', auth.get('status') == 'ISSUED', str(auth.get('status')))
+          gate('record_validity is exactly VALID', auth.get('record_validity') == 'VALID', str(auth.get('record_validity')))
+          gate('authorizes_execution is explicitly true', auth.get('authorizes_execution') is True, str(auth.get('authorizes_execution')))
+          issued_by = str(auth.get('issued_by') or '').strip()
+          gate('issued_by is a human identity, not empty, a placeholder, or an agent role', issued_by.lower() not in ('', 'null', 'none', 'tbd', 'pending', 'orchestrator', 'qualifier-mobile-01', 'adjudicator-eu-01', 'executor-e03-resetability'), issued_by or '(absent)')
+          gate('issued_at is recorded', bool(auth.get('issued_at')))
+          gate('dispatch_eligibility is exactly ELIGIBLE (prepared, consumed, or superseded records fail closed)', auth.get('dispatch_eligibility') == 'ELIGIBLE', str(auth.get('dispatch_eligibility')))
+          gate('the authorization has not been dispatched before', auth.get('dispatch_performed') is not True, str(auth.get('dispatch_performed')))
+          gate('the authorization is governed by protocol/mobile-runner-policy-v3.md', auth.get('governing_policy') == 'protocol/mobile-runner-policy-v3.md', str(auth.get('governing_policy')))
+          sc = auth.get('scope') or {}
+          gate('scope is SUT-01 Android only, Appium 3 3.7.0, one execution', sc.get('sut_id') == 'SUT-01' and sc.get('platforms') == ['android'] and sc.get('runner') == 'Appium 3' and str(sc.get('runner_version')) == '3.7.0' and sc.get('executions') == 1, json.dumps(sc)[:200])
+          # G-4 frozen launch prompt
+          lp = auth.get('launch_prompt') or {}
+          pv = str(lp.get('prompt_version_id') or '')
+          prompt = lp.get('frozen_copy') or ''
+          gate('launch prompt frozen copy present and SHA-256 equal to the authorization record', bool(prompt) and os.path.isfile(prompt) and sha(prompt) == lp.get('sha256'), prompt or '(absent)')
+          gate('prompt version id well formed and names its frozen file', re.fullmatch(r'orchestrator-compat-smoke-sut01-v[0-9]+', pv) is not None and prompt == f'prompts/frozen/{pv}.md', pv)
+          ptext = open(prompt, encoding='utf-8').read() if prompt and os.path.isfile(prompt) else ''
+          gate('frozen prompt names the instruction id and declares its prompt version id', bool(ptext) and instruction in ptext and pv in ptext)
+          gate('no unrendered placeholder remains in the frozen prompt', bool(ptext) and re.search(r'\{\{[A-Z_]+\}\}', ptext) is None)
+          # G-5 implementation lock, recomputed from the checkout (never trusted)
+          il = auth.get('implementation_lock') or {}
+          lock_path = il.get('path') or ''
+          gate('implementation lock file present and equal to the authorization record', bool(lock_path) and os.path.isfile(lock_path) and sha(lock_path) == il.get('sha256'), lock_path or '(absent)')
+          lock = load(lock_path) if lock_path and os.path.isfile(lock_path) else {}
+          arts = lock.get('artifacts') or []
+          REQUIRED = {'.github/workflows/e06-compatibility-smoke-sut01.yml', 'qualification/compatibility-smoke-sut01/smoke-common.sh', 'qualification/compatibility-smoke-sut01/run-smoke-android.sh', 'qualification/compatibility-smoke-sut01/harness/package.json', 'qualification/compatibility-smoke-sut01/harness/package-lock.json', 'qualification/compatibility-smoke-sut01/harness/wd.mjs', 'qualification/compatibility-smoke-sut01/harness/smoke.mjs'}
+          gate('lock covers every execution-critical artifact', REQUIRED <= {a.get('path') for a in arts}, str(sorted(REQUIRED - {a.get('path') for a in arts})))
+          for a in arts:
+              p = a.get('path', '')
+              gate('lock hash matches: ' + p, os.path.isfile(p) and sha(p) == a.get('sha256'))
+          rs = lock.get('realization_section') or {}
+          readme_path = rs.get('path') or 'qualification/compatibility-smoke-sut01/README.md'
+          readme = rd(readme_path)
+          sec = ''
+          if '## Concrete realization' in readme and '\n## Implementation' in readme:
+              sec = readme[readme.index('## Concrete realization'):readme.index('\n## Implementation')]
+          gate('concrete-realization section hash matches the lock', bool(sec) and hashlib.sha256(sec.encode('utf-8')).hexdigest() == rs.get('sha256'))
+          gate('the realization is complete: no null and no TBD in the concrete-realization section', bool(sec) and 'null' not in sec.lower() and 'TBD' not in sec)
+          smk_src = rd('qualification/compatibility-smoke-sut01/harness/smoke.mjs')
+          try:
+              node_hash = subprocess.run(['node', '--input-type=module', '-e', "import { realizationSha256 } from './qualification/compatibility-smoke-sut01/harness/smoke.mjs'; process.stdout.write(realizationSha256());"], capture_output=True, text=True, check=False).stdout.strip()
+          except Exception:
+              node_hash = ''
+          gate('harness REALIZATION hash (realizationSha256 of the locked smoke.mjs) equals the lock', bool(node_hash) and node_hash == lock.get('harness_realization_sha256'), node_hash or '(node unavailable)')
+          start_m, end_m = "  try {\n    await step('install and launch the pinned build (MC-01)'", "  } catch (e) {\n    failed = e.step"
+          seq = smk_src[smk_src.index(start_m):smk_src.index(end_m)] if start_m in smk_src and end_m in smk_src else ''
+          gate('step-sequence hash (the runSmoke steps that the platform runs) equals the lock', bool(seq) and hashlib.sha256(seq.encode('utf-8')).hexdigest() == (lock.get('command_sequence') or {}).get('sha256'))
+          # G-6 pins: build, toolchain, identity, and the workflow Node.js pin
+          tc, sb = lock.get('toolchain') or {}, lock.get('sut_builds') or {}
+          andb = sb.get('android') or {}
+          common = rd('qualification/compatibility-smoke-sut01/smoke-common.sh')
+          gate('Android build pin (smoke-common.sh) equals the lock', f'SMOKE_APK_SHA256="{andb.get("sha256")}"' in common and f'SMOKE_APK_URL="{andb.get("url")}"' in common)
+          want = {'appium': '3.7.0', 'appium-uiautomator2-driver': str((tc.get('android_driver') or {}).get('version'))}
+          pkg = load('qualification/compatibility-smoke-sut01/harness/package.json')
+          gate('harness dependencies are exactly the pinned Appium core and the Android driver', (pkg.get('dependencies') or {}).get('appium') == want['appium'] and (pkg.get('dependencies') or {}).get('appium-uiautomator2-driver') == want['appium-uiautomator2-driver'] and str((tc.get('appium_core') or {}).get('version')) == '3.7.0', json.dumps(pkg.get('dependencies')))
+          pl = load('qualification/compatibility-smoke-sut01/harness/package-lock.json')
+          pk = pl.get('packages') or {}
+          for key, n in (('appium_core', 'appium'), ('android_driver', 'appium-uiautomator2-driver')):
+              e = pk.get('node_modules/' + n) or {}
+              gate(f'lockfile pins {n} {(tc.get(key) or {}).get("version")} with the recorded integrity', e.get('version') == str((tc.get(key) or {}).get('version')) and e.get('integrity') == (tc.get(key) or {}).get('integrity'))
+          gate('no Appium 2 anywhere in the lockfile', not [k for k, v in pk.items() if k.endswith('node_modules/appium') and str(v.get('version', '')).startswith('2.')])
+          tm_all = (load('manifests/toolchain-manifest.yaml') or {}).get('tools') or {}
+          gate('toolchain pins (smoke-common.sh) equal the lock', all(f'{v}="{w}"' in common for v, w in (('SMOKE_APPIUM_PIN', '3.7.0'), ('SMOKE_UIA2_PIN', want['appium-uiautomator2-driver']), ('SMOKE_NODE_PIN', str((tc.get('node') or {}).get('version'))))))
+          sut01 = ((load('manifests/sut-manifest.yaml') or {}).get('suts') or {}).get('SUT-01', {}).get('components', {})
+          c = sut01.get('android') or {}
+          gate('SUT-01 android pinned identity equals the lock', str(c.get('release')) == str(andb.get('release')) and str(c.get('commit_sha')) == str(andb.get('commit_sha_or_tag')), f"{c.get('release')} {c.get('commit_sha')}")
+          wf = rd('.github/workflows/e06-compatibility-smoke-sut01.yml')
+          gate('workflow Node.js pin equals the lock', f'node-version: "{(tc.get("node") or {}).get("version")}"' in wf)
+          # G-7 output isolation, README records, and the mirror (no execution has been recorded for SUT-01 Android)
+          ns = 'qualification/compatibility-smoke-sut01/formal/' + instruction
+          present = [os.path.relpath(os.path.join(d, f), ns) for d, _, fs in os.walk(ns) for f in fs if f != '.gitkeep'] if os.path.isdir(ns) else []
+          gate('output namespace absent or empty (only .gitkeep allowed)', bool(instruction) and not (os.path.exists(ns) and not os.path.isdir(ns)) and not present, ns + (': ' + ', '.join(present[:5]) if present else ''))
+          body = readme[readme.index('## Smoke records'):] if '## Smoke records' in readme else ''
+          body = body[:body.index('\n## ', 4)] if '\n## ' in body[4:] else body
+          srows = [l for l in body.splitlines() if l.startswith('|') and not l.startswith('| sut_id') and not l.startswith('|---') and l.strip('| ')]
+          gate('the Smoke records table holds no row for SUT-01 (no execution has been recorded)', len(srows) == 0, str(len(srows)) + ' row(s)')
+          mirror = load('manifests/compatibility-smoke-status.yaml')
+          me = [e for e in (mirror.get('entries') or []) if isinstance(e, dict) and e.get('sut_id') == 'SUT-01' and e.get('platform') == 'android']
+          gate('mirror holds exactly one SUT-01 android entry, NOT_STARTED, with no pointers', len(me) == 1 and me[0].get('result') == 'NOT_STARTED' and me[0].get('qualifier_record') is None and me[0].get('authorization_id') is None, str(len(me)))
+          # G-8 E06 precedes its START (HUMAN DECISION HD-18)
+          st = {c['id']: c['status'] for c in (load('manifests/study-manifest.yaml').get('campaigns') or [])}
+          gate('E06-cross-platform-parity is NOT_STARTED (the smoke precedes the campaign START; HD-18)', st.get('E06-cross-platform-parity') == 'NOT_STARTED', str(st.get('E06-cross-platform-parity')))
+          # G-9 study-wide mobile-runner admissibility (copied from the G-7 block of the measured-execution workflow; policy v3,
+          # sections 9.5, 9.7.9 to 9.7.11). Not the per-condition PASS check: this smoke is the one that produces that result.
+          surface = cond.split('-')[3]
+          if surface in ('ANDROID', 'IOS'):
+              tm = yaml.safe_load(open('manifests/toolchain-manifest.yaml'))['tools']
+              mp = tm['mobile_primary_candidate']; fb = tm['mobile_fallback']; sel = tm.get('mobile_runner_selection') or {}
+              runner = str(sel.get('selected_runner'))
+              gate('a mobile runner is selected: Mobilewright or Appium 3 (policy sections 1, 8)', runner in ('Mobilewright', 'Appium 3'), runner)
+              entry, qual_needed, pin = {}, None, None
+              if runner == 'Appium 3':
+                  entry, qual_needed = fb, 'FAILED'
+                  pin = str((fb.get('pinned_candidate_version') or {}).get('version'))
+                  gate('Appium 3 path: fallback is Appium 3 pinned 3.7.0 and the selection names that pin', str(fb.get('candidate')) == 'Appium 3' and pin == '3.7.0' and str(sel.get('selected_version_pin')) == pin, f"{fb.get('candidate')} {pin} / {sel.get('selected_version_pin')}")
+                  gate('Appium 3 path: selection basis is the frozen section 8 switch', 'protocol/mobile-runner-policy-v1.md section 8' in str(sel.get('basis')))
+              elif runner == 'Mobilewright':
+                  entry, qual_needed = mp, 'PASSED'
+                  pin = str((mp.get('pinned_candidate_version') or {}).get('version'))
+                  gate('Mobilewright path: the primary candidate is Mobilewright and the selection names its pin', str(mp.get('candidate')) == 'Mobilewright' and str(sel.get('selected_version_pin')) == pin, f"{mp.get('candidate')} {pin} / {sel.get('selected_version_pin')}")
+              gate('Mobilewright qualification_status matches the selected-runner path (' + str(qual_needed) + ')', qual_needed is not None and mp.get('qualification_status') == qual_needed, str(mp.get('qualification_status')))
+              ga = str(sel.get('human_authorization'))
+              recs = [r for r in (yaml.safe_load(open(p)) for p in sorted(glob.glob('manifests/mobile-qualification-execution-auth-v*.yaml'))) if isinstance(r, dict) and r.get('authorization_id') == ga]
+              gate('the selection rests on exactly one VALID, ISSUED, dispatched gate authorization', len(recs) == 1 and recs[0].get('record_validity') == 'VALID' and recs[0].get('status') == 'ISSUED' and recs[0].get('dispatch_performed') is True, ga)
+              ver = str(entry.get('version') or '').strip()
+              gate('the version of the selected runner itself is recorded and equals its pin', bool(ver) and pin is not None and ver.split()[0] == pin, ver or '(absent)')
+              plat = surface.lower()
+              smk_path = 'manifests/compatibility-smoke-status.yaml'
+              smk = (yaml.safe_load(open(smk_path)) or {}) if os.path.isfile(smk_path) else {}
+              # PROTO-U18 (2026-09-26; IMPLEMENTATION_GAP_AGAINST_FROZEN_MOBILE_RUNNER_POLICY_V2) and OP-CI-14 (2026-11-03; the
+              # REQUIRED_IMPLEMENTATION_DEPENDENCY_OF_PROTO_U19): study-wide fallback rule of protocol/mobile-runner-policy-v3.md,
+              # section 9.5, with the effective-admissibility rule of its sections 9.7.9 to 9.7.11, checked for EVERY mobile
+              # condition before its own smoke. The selected runner stays admissible only if the study-level status (toolchain
+              # mobile_runner_selection.mobile_runner_status) is exactly SELECTED and no UNRESOLVED FAIL_RUNNER of the selected
+              # runner is recorded -- ORCHESTRATOR mirror or QUALIFIER-MOBILE-01 source table -- on ANY SUT x platform. A FAIL_RUNNER
+              # is unresolved unless it is the single historical FAIL_RUNNER named as the trigger by a VERIFIED remediation lineage
+              # record (manifests/mobile-runner-remediation-v1.yaml, 9.7.10): that row is retained, never edited, and no longer counted.
+              # The lineage is verified clause by clause (each a separate gate below, 9.7.9 requirements 1 to 12): the named row is
+              # checked by its authorization, run, result, and row SHA-256; the records it points to by SHA-256; the remediation by its
+              # single authorization, single dispatch, run attempt 1, successor lock, official PASS row, mirror entry, and restoration
+              # basis. The imported artifacts themselves are verified byte-exact against their import records by the validation
+              # workflow (step QUAL-U05, through the export manifest on a public snapshot), not re-hashed here: several are transformed by
+              # the publication-only classes, and every file hashed here is compared through same(), which on a public snapshot
+              # (PUBLIC-EXPORT-MANIFEST.yaml at its root) needs exactly one manifest entry and bridges only UNCHANGED or an alias class.
+              # A FAIL_RUNNER recorded after the lineage record (9.7.11) leaves the lineage valid and is itself unresolved (9.5 applies
+              # again); one that already existed when the status was restored invalidates the lineage (9.7.9, requirement 12). A
+              # source FAIL_RUNNER is verified by its own provenance (the import record of its authorization namespace and the
+              # attribution record of its SUT x platform); a mirror FAIL_RUNNER must match such a row, but the mirror need not show a
+              # historical one. Fallback state, in this order: PROVENANCE_INCONSISTENT_FAIL_CLOSED when a lineage record or restoration
+              # basis exists and does not verify, or when a PASS is recorded after an unresolved FAIL_RUNNER of the same SUT x platform
+              # (no valid lineage); ADMISSIBLE when no unresolved FAIL_RUNNER exists and the status is SELECTED; FALLBACK_EXHAUSTED_VERIFIED
+              # when every unresolved FAIL_RUNNER is verified and the status is UNRESOLVED_AFTER_FALLBACK_FAILURE; any other combination
+              # is PROVENANCE_INCONSISTENT_FAIL_CLOSED (no exhaustion is asserted until reconciled). Every non-admissible state blocks
+              # every mobile condition, including one whose own smoke passed.
+              src_path = 'qualification/compatibility-smoke/README.md'
+              def smoke_rows(path):
+                  # rows of the "Smoke records" table only (the "Attribution records" table has another column order); the last
+                  # element of a row is its stripped raw line, whose SHA-256 is the row_sha256 of the lineage record
+                  out = []
+                  if str(path).startswith('qualification/compatibility-smoke/') and os.path.isfile(path):
+                      text = open(path).read()
+                      if '## Smoke records' in text:
+                          text = text[text.index('## Smoke records'):]
+                          text = text[:text.index('\n## ', 4)] if '\n## ' in text[4:] else text
+                      for line in text.splitlines():
+                          cells = [c.strip() for c in line.strip().strip('|').split('|')]
+                          if line.startswith('|') and len(cells) >= 8 and cells[0].startswith('SUT-') and cells[1] in ('android', 'ios'):
+                              out.append(cells + [line.strip()])
+                  return out
+              def row_auth(r):
+                  m = re.search(r'formal/(APPIUM3-COMPAT-SMOKE-AUTH-[0-9]{2})/', r[8]) if len(r) > 9 else None
+                  return m.group(1) if m else None
+              def row_run(r):
+                  m = re.search(r'\(run ([0-9]+), attempt ([0-9]+)', r[4])
+                  return (m.group(1), m.group(2)) if m else (None, None)
+              def row_time(r):
+                  m = re.match(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}', r[4])
+                  return m.group(0) if m else ''
+              def load_yaml(p):
+                  try: return yaml.safe_load(open(p)) or {}
+                  except Exception: return {}
+              rd = lambda p: open(p, encoding='utf-8').read() if os.path.isfile(p) else ''
+              pem = None
+              if os.path.isfile('PUBLIC-EXPORT-MANIFEST.yaml'):
+                  pem = {}
+                  for pe in load_yaml('PUBLIC-EXPORT-MANIFEST.yaml').get('files') or []:
+                      pem.setdefault(pe.get('path'), []).append(pe)
+              def same(p, want):
+                  # the file's SHA-256 equals want: byte-exact in the canonical repository; on a public snapshot through its unique export-manifest entry
+                  if not (isinstance(p, str) and isinstance(want, str) and os.path.isfile(p)):
+                      return False
+                  h = sha(p)
+                  if pem is None:
+                      return h == want
+                  es = pem.get(p) or []
+                  if len(es) != 1:
+                      return False
+                  tr = es[0].get('transformations')
+                  if tr == ['UNCHANGED']:
+                      return h == want
+                  return bool(tr) and set(tr) <= {'PROVIDER_NEUTRAL_PATH_ALIAS', 'PROVIDER_NEUTRAL_METADATA_REWRITE'} and es[0].get('canonical_sha256') == want and es[0].get('exported_sha256') == h
+              of_runner = lambda r: pin is not None and pin in r[5] and runner.split()[0] in r[5]
+              status = sel.get('mobile_runner_status')
+              rows_all = smoke_rows(src_path)
+              src_fail = [r for r in rows_all if r[7] == 'FAIL_RUNNER' and of_runner(r)]
+              mir_ents = [e for e in (smk.get('entries') or []) if isinstance(e, dict) and e.get('runner') == runner]
+              mir_fail = [e for e in mir_ents if e.get('result') == 'FAIL_RUNNER']
+              def src_verified(r):
+                  a = row_auth(r); run_id = row_run(r)[0]
+                  base = 'qualification/compatibility-smoke/formal/' + str(a) + '/'
+                  ir = load_yaml(base + 'IMPORT-RECORD.yaml'); at = load_yaml(base + 'ATTRIBUTION-' + r[0] + '-' + r[1] + '.yaml')
+                  return bool(a) and run_id is not None and ir.get('authorization_id') == a and str((ir.get('workflow') or {}).get('run_id')) == run_id and at.get('authorization_id') == a and at.get('result') == 'FAIL_RUNNER' and at.get('sut_id') == r[0] and at.get('platform') == r[1]
+              def mir_matches(e):
+                  rs = [r for r in src_fail if r[0] == e.get('sut_id') and r[1] == e.get('platform') and row_auth(r) == e.get('authorization_id')]
+                  return bool(e.get('authorization_id')) and len(rs) == 1 and src_verified(rs[0]) and str(e.get('runner_version') or '').strip().split(' ')[0] == pin
+              # the remediation lineage record of policy v3, 9.7.10, and the constants it must agree with
+              LIN = 'manifests/mobile-runner-remediation-v1.yaml'
+              TRIG, TRIG_RUN = 'APPIUM3-COMPAT-SMOKE-AUTH-02', '36539790536'
+              REM_BASIS = 'restored under mobile-runner-policy-v3 after one successful post-fallback remediation qualification'
+              lin_files = sorted(glob.glob('manifests/mobile-runner-remediation-v*.yaml'))
+              lin = load_yaml(LIN) if lin_files == [LIN] else {}
+              named = [r for r in src_fail if r[0] == 'SUT-02' and r[1] == 'ios' and row_auth(r) == TRIG and row_run(r) == (TRIG_RUN, '1')]
+              lin_in_play = bool(lin_files or 'restoration_basis' in sel)   # a restoration is claimed: a lineage record or a restoration basis exists
+              lin_res = []
+              def lcheck(name, ok, detail=''):
+                  lin_res.append(bool(ok))
+                  gate(name, ok, detail)
+              if lin_in_play:
+                  lcheck('exactly one remediation lineage record exists and it is a REMEDIATION_LINEAGE_RECORD (policy v3, 9.7.10)', lin_files == [LIN] and lin.get('record_class') == 'REMEDIATION_LINEAGE_RECORD', str(lin_files))
+              if lin_in_play and lin:
+                  hf = lin.get('historical_failing_observation') or {}
+                  rem = lin.get('remediation') or {}
+                  osr = rem.get('official_result_source_record') or {}
+                  il = rem.get('implementation_lock') or {}
+                  ar = rem.get('authorization_record') or {}
+                  rri = rem.get('run_identity_record') or {}
+                  RID = str(rem.get('authorization_id'))
+                  auth_rec = load_yaml(str(ar.get('path')))
+                  rrec = load_yaml(str(rri.get('path')))
+                  pol1, pol2, pol3 = rd('protocol/mobile-runner-policy-v1.md'), rd('protocol/mobile-runner-policy-v2.md'), rd('protocol/mobile-runner-policy-v3.md')
+                  lcheck('policy v3 is FROZEN-PRE-DATA with section 9.7, v2 and v1 are AMENDED, and the lineage names v3 as the new policy and v2 as the prior policy (9.7.9, requirement 2)', '| Document | protocol/mobile-runner-policy-v3.md |' in pol3 and '| Protocol state | FROZEN-PRE-DATA |' in pol3 and '### 9.7 Post-fallback remediation qualification' in pol3 and '| Protocol state | AMENDED |' in pol2 and '| Superseded by | protocol/mobile-runner-policy-v3.md |' in pol2 and '| Protocol state | AMENDED |' in pol1 and '| Superseded by | protocol/mobile-runner-policy-v2.md |' in pol1 and lin.get('new_policy') == 'protocol/mobile-runner-policy-v3.md' and lin.get('prior_policy') == 'protocol/mobile-runner-policy-v2.md')
+                  lcheck('the lineage names the historical FAIL_RUNNER: APPIUM3-COMPAT-SMOKE-AUTH-02, run 36539790536, run attempt 1, SUT-02 x iOS, FAIL_RUNNER, historical_result_immutable true (9.7.9, requirement 1)', hf.get('authorization_id') == TRIG and str(hf.get('run_id')) == TRIG_RUN and str(hf.get('run_attempt')) == '1' and str(hf.get('ecosystem_platform')).replace('×', 'x').lower() == 'sut-02 x ios' and hf.get('result') == 'FAIL_RUNNER' and hf.get('historical_result_immutable') is True)
+                  lcheck('the named historical row still exists unchanged in the Smoke records: its authorization, run, result, and the SHA-256 of the row equal the lineage record (9.7.9, requirement 10)', len(named) == 1 and (hf.get('smoke_record_row') or {}).get('file') == src_path and hashlib.sha256(named[0][-1].encode('utf-8')).hexdigest() == (hf.get('smoke_record_row') or {}).get('row_sha256'))
+                  lcheck('the attribution, import, and run-identity records of the historical FAIL_RUNNER are unchanged (SHA-256 equals the lineage record) and agree with it (9.7.9, requirement 10; its imported artifacts are verified byte-exact by the validation workflow, step QUAL-U05)', all(same((hf.get(k) or {}).get('path'), (hf.get(k) or {}).get('sha256')) for k in ('attribution_record', 'import_record', 'run_identity_record')) and len(named) == 1 and src_verified(named[0]) and load_yaml(str((hf.get('run_identity_record') or {}).get('path'))).get('authorization_id') == TRIG and str(load_yaml(str((hf.get('run_identity_record') or {}).get('path'))).get('run_id')) == TRIG_RUN)
+                  lcheck('the remediation authorization is new (not AUTH-01 or AUTH-02), VALID, ISSUED, CONSUMED_AFTER_DISPATCH with dispatch_performed true, of the remediation type, governed by policy v3, and its record equals the lineage SHA-256 (9.7.9, requirement 4)', re.fullmatch(r'APPIUM3-COMPAT-SMOKE-AUTH-[0-9]{2}', RID) is not None and RID not in ('APPIUM3-COMPAT-SMOKE-AUTH-01', TRIG) and same(ar.get('path'), ar.get('sha256')) and auth_rec.get('authorization_id') == RID and auth_rec.get('authorization_type') == 'COMPATIBILITY_SMOKE_REMEDIATION_EXECUTION' and auth_rec.get('record_validity') == 'VALID' and auth_rec.get('status') == 'ISSUED' and auth_rec.get('dispatch_eligibility') == 'CONSUMED_AFTER_DISPATCH' and auth_rec.get('dispatch_performed') is True and auth_rec.get('governing_policy') == 'protocol/mobile-runner-policy-v3.md', RID)
+                  lcheck('the remediation targets only SUT-02 ios with the selected runner, one execution, and names the historical FAIL_RUNNER as its trigger (9.7.9, requirements 1 and 6)', (auth_rec.get('scope') or {}).get('sut_id') == 'SUT-02' and (auth_rec.get('scope') or {}).get('platforms') == ['ios'] and (auth_rec.get('scope') or {}).get('runner') == runner and (auth_rec.get('scope') or {}).get('executions') == 1 and (auth_rec.get('remediation') or {}).get('trigger_authorization') == TRIG and str((auth_rec.get('remediation') or {}).get('trigger_run_id')) == TRIG_RUN)
+                  rem_auths = [p for p in sorted(glob.glob('manifests/compatibility-smoke-execution-auth-v*.yaml')) if load_yaml(p).get('authorization_type') == 'COMPATIBILITY_SMOKE_REMEDIATION_EXECUTION']
+                  lcheck('exactly one remediation authorization exists and it is the one the lineage names (a second remediation never exists; 9.7.5, 9.7.11)', rem_auths == [ar.get('path')], str(rem_auths))
+                  lcheck('the remediation ran once: its run-identity record equals the lineage SHA-256 and shows one dispatch, one remediation run, run attempt 1, and the run id of the lineage (9.7.5; 9.7.9, requirement 3)', same(rri.get('path'), rri.get('sha256')) and rrec.get('authorization_id') == RID and str(rrec.get('run_id')) == str(rem.get('run_id')) and str(rem.get('run_attempt')) == '1' and str(rrec.get('run_attempt')) == '1' and str(rrec.get('dispatch_commands_executed')) == '1' and str(rrec.get('remediation_runs_after_dispatch')) == '1', str(rem.get('run_id')))
+                  lcheck('the remediation used the approved successor implementation lock v4: its SHA-256 equals the lineage record and the authorization record (9.7.9, requirement 5)', il.get('id') == 'manifests/compatibility-smoke-implementation-lock-v4.yaml' and same(il.get('id'), il.get('sha256')) and (auth_rec.get('implementation_lock') or {}).get('path') == il.get('id') and (auth_rec.get('implementation_lock') or {}).get('sha256') == il.get('sha256'))
+                  pass_rows = [r for r in rows_all if row_auth(r) == RID]
+                  lcheck('the official result is a PASS: exactly one Smoke records row cites the remediation namespace (SUT-02 ios, PASS, the selected runner pin, the run id of the lineage, attempt 1) and its SHA-256 equals the lineage record (9.7.9, requirements 6 and 7)', rem.get('official_result') == 'PASS' and len(pass_rows) == 1 and pass_rows[0][0] == 'SUT-02' and pass_rows[0][1] == 'ios' and pass_rows[0][7] == 'PASS' and of_runner(pass_rows[0]) and row_run(pass_rows[0]) == (str(rem.get('run_id')), '1') and osr.get('path') == src_path and hashlib.sha256(pass_rows[0][-1].encode('utf-8')).hexdigest() == osr.get('row_sha256'))
+                  irp = 'qualification/compatibility-smoke/formal/' + RID + '/IMPORT-RECORD.yaml'
+                  irr = load_yaml(irp)
+                  lcheck('the remediation artifacts are imported under their own namespace: the import record and the post-run recording record equal the lineage SHA-256 and the import record names the authorization, the run, and attempt 1 (9.7.9, requirement 8; the artifacts are verified byte-exact by the validation workflow, step QUAL-U05)', same(irp, osr.get('import_record_sha256')) and irr.get('authorization_id') == RID and str((irr.get('workflow') or {}).get('run_id')) == str(rem.get('run_id')) and str((irr.get('workflow') or {}).get('run_attempt')) == '1' and same(osr.get('recording_record'), osr.get('recording_record_sha256')))
+                  rec_at = str(lin.get('recorded_at') or '')[:19]
+                  m_ios = [e for e in mir_ents if e.get('sut_id') == 'SUT-02' and e.get('platform') == 'ios']
+                  lcheck('the mirror holds exactly one SUT-02 ios entry of the selected runner: the PASS transcribed from the remediation authorization, or a FAIL_RUNNER recorded after the lineage record (9.7.9, requirement 9; 9.7.11)', len(m_ios) == 1 and ((m_ios[0].get('result') == 'PASS' and m_ios[0].get('authorization_id') == RID and str(m_ios[0].get('runner_version') or '').strip().split(' ')[0] == pin) or (m_ios[0].get('result') == 'FAIL_RUNNER' and bool(rec_at) and str(m_ios[0].get('executed_at') or '')[:19] > rec_at)))
+                  lcheck('the restoration is explicit: the lineage restored status is SELECTED and its restoration basis equals tools.mobile_runner_selection.restoration_basis and the text of policy v3, 9.7.7 (9.7.9, requirement 11; 9.7.10)', lin.get('restored_runner_status') == 'SELECTED' and bool(sel.get('restoration_basis')) and lin.get('restoration_basis') == sel.get('restoration_basis') == REM_BASIS)
+                  before = lambda t: not t or not rec_at or str(t)[:19] <= rec_at
+                  other_before = [r for r in src_fail if r not in named and before(row_time(r))] + [e for e in mir_fail if before(e.get('executed_at'))]
+                  lcheck('no other FAIL_RUNNER of the selected runner existed when the status was restored (before the recorded_at of the lineage record; 9.7.9, requirement 12)', re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}', rec_at) is not None and not other_before, str([(r[0], r[1], row_auth(r)) for r in other_before if isinstance(r, list)] + [(e.get('sut_id'), e.get('platform')) for e in other_before if isinstance(e, dict)]))
+              lineage_ok = all(lin_res) if lin_in_play else True   # no restoration claimed: nothing to verify
+              lineage_valid = lin_in_play and lineage_ok           # only a verified lineage retains the named historical FAIL_RUNNER
+              unresolved_src = [r for r in src_fail if not (lineage_valid and r in named)]
+              unresolved_mir = list(mir_fail)
+              unresolved = unresolved_src + unresolved_mir
+              def later_pass(sut_id, plat, t):
+                  # a PASS of the same SUT x platform with the selected runner recorded after that FAIL_RUNNER (README row or mirror entry)
+                  ts = [row_time(r) for r in rows_all if r[0] == sut_id and r[1] == plat and r[7] == 'PASS' and of_runner(r)] + [str(e.get('executed_at') or '')[:19] for e in mir_ents if e.get('sut_id') == sut_id and e.get('platform') == plat and e.get('result') == 'PASS']
+                  return any(x and (not t or x > str(t)[:19]) for x in ts)
+              pass_beside_fail = any(later_pass(r[0], r[1], row_time(r)) for r in unresolved_src) or any(later_pass(e.get('sut_id'), e.get('platform'), e.get('executed_at')) for e in unresolved_mir)
+              src_unverified = [r for r in unresolved_src if not src_verified(r)]
+              mir_unmatched = [e for e in unresolved_mir if not mir_matches(e)]
+              if not lineage_ok or pass_beside_fail:
+                  fb_state = 'PROVENANCE_INCONSISTENT_FAIL_CLOSED'
+              elif not unresolved and status == 'SELECTED':
+                  fb_state = 'ADMISSIBLE'
+              elif runner == 'Appium 3' and unresolved and not src_unverified and not mir_unmatched and status == 'UNRESOLVED_AFTER_FALLBACK_FAILURE':
+                  fb_state = 'FALLBACK_EXHAUSTED_VERIFIED'
+              else:
+                  fb_state = 'PROVENANCE_INCONSISTENT_FAIL_CLOSED'
+              fb_detail = f"{fb_state}; status={status}; lineage={'not applicable' if not lin_in_play else ('verified' if lineage_ok else 'NOT verified')}; QUALIFIER FAIL_RUNNER rows={[(r[0], r[1], row_auth(r)) for r in src_fail]} (retained by the verified lineage: {len(named) if lineage_valid else 0}); unresolved={[(r[0], r[1]) for r in unresolved_src] + [(e.get('sut_id'), e.get('platform')) for e in unresolved_mir]}; mirror FAIL_RUNNER={[(e.get('sut_id'), e.get('platform')) for e in mir_fail]}; PASS recorded after an unresolved FAIL_RUNNER={pass_beside_fail}"
+              gate('study-level mobile-runner status is SELECTED (policy v3, 9.5 and 9.7.9)', status == 'SELECTED', str(status))
+              gate('no unresolved FAIL_RUNNER of the selected runner recorded for any SUT x platform (mirror or QUALIFIER record; the one historical FAIL_RUNNER named by a verified remediation lineage record is retained and not counted)', not unresolved, fb_detail)
+              gate('the selected runner remains admissible study-wide (no exhausted or inconsistent fallback state)', fb_state == 'ADMISSIBLE', fb_detail)
+          ready = not failures
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f"ready={'true' if ready else 'false'}\n")
+              f.write(f"prompt_version_id={pv if ready else ''}\n")
+          if not ready:
+              print('SUT-01 COMPATIBILITY SMOKE NOT READY (' + str(len(failures)) + '): ' + '; '.join(failures)); sys.exit(1)
+          print('SUT-01 COMPATIBILITY SMOKE READY: ' + instruction + ' (SUT-01 android)')
+          PY
+
+  smoke-android:
+    name: E06 Compatibility Smoke SUT-01 Android
+    # Sequential under the gate; there is no second platform job. Any outcome other than a recorded proposal stops the smoke (policy v3, 9.5).
+    needs: gate
+    if: ${{ needs.gate.outputs.ready == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    outputs:
+      proposed_result: ${{ steps.proposal.outputs.proposed_result }}
+    env:
+      SMOKE_PROMPT_VERSION_ID: ${{ needs.gate.outputs.prompt_version_id }}
+      GATE_RUN_ATTEMPT: ${{ github.run_attempt }}
+    steps:
+      - name: Refuse anything but the first attempt
+        run: |
+          set -euo pipefail
+          test "$GATE_RUN_ATTEMPT" = "1" || { echo "GitHub re-run refused: a repeat needs a new explicit human authorization"; exit 1; }
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up the pinned Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.23.2"
+      - name: Enable KVM for the Android emulator
+        run: |
+          set -euo pipefail
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Execute the SUT-01 Android smoke on the pinned emulator
+        # ReactiveCircus/android-emulator-runner v2.38.0 pinned at a commit (manifests/toolchain-manifest.yaml, environments.android_emulator).
+        uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7
+          avd-name: eus-compat-smoke-sut01-pixel7-api35
+          force-avd-creation: true
+          emulator-boot-timeout: 900
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none -camera-front none
+          disable-animations: true
+          script: bash qualification/compatibility-smoke-sut01/run-smoke-android.sh
+      - name: Read the Android proposed result
+        id: proposal
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json, os
+          p = os.path.join('qualification/compatibility-smoke-sut01/formal', os.environ['SMOKE_INSTRUCTION_ID'], 'SUT-01-android', 'record.json')
+          try:
+              r = json.load(open(p))
+              v = r.get('proposed_result') if r.get('outcome') == 'SUCCESS' or r.get('proposed_result') != 'PASS' else 'INCONSISTENT'
+          except Exception:
+              v = 'NO_RECORD'
+          print('Android proposed result:', v)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f'proposed_result={v}\n')
+          PY
+      - name: Upload the SUT-01 Android smoke record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E06-COMPATIBILITY_SMOKE-SUT-01-android-run${{ github.run_id }}-a${{ github.run_attempt }}
+          path: qualification/compatibility-smoke-sut01/formal/${{ inputs.instruction_id }}/SUT-01-android
+          retention-days: 90
+          if-no-files-found: warn

@@ -1,0 +1,243 @@
+# E09 Environment Verification -- DRAFT (operation OP-PREP-E09). Not frozen, not locked, not dispatched.
+# Study EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems).
+# Authored by the ORCHESTRATOR under CAMPAIGN-CI-WRITE-AUTH-01 (the agent-instructions file, "Campaign CI/CD infrastructure
+# for E02 and E04-E12"), for E09-accessibility only.
+#
+# Purpose: NON-MEASURED verification, on a GitHub-hosted runner, of the controlled SUT-01 instance (web and api provisioned from
+# the pinned commit of manifests/sut-manifest.yaml), of the pinned axe-core tarball (sha512 and browser-build sha256), of the
+# login behavior of both documented accounts, and of one Catalog load and one explicit-rule axe run per confirmed account. It
+# writes ENVIRONMENT_VERIFICATION records only. It never writes a run manifest for a measured run, never writes under raw-data/,
+# and its outputs are never imported. A DRY_RUN (input dry_run) additionally runs the executor once per condition; its bundles
+# are DRY_RUN, never imported, never measured.
+#
+# Dispatch-only, manual. The verification fails (exit 1) while any check is FAIL or NOT_VERIFIED, for example while the
+# activation password of the glitch account is not locked in the implementation (HUMAN DECISION HD-E09-A).
+name: E09 Environment Verification
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Also run the executor once per condition after the verification passed (DRY_RUN bundles: never imported, never measured)"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e09-environment-verification
+  cancel-in-progress: false
+
+env:
+  TZ: UTC
+  RECORD_CLASS: ENVIRONMENT_VERIFICATION
+  ARTIFACT_RETENTION_DAYS: 90
+  AXE_CORE_VERSION: "4.14.0"
+  AXE_CORE_NPM_INTEGRITY: "sha512-9WTZxEjsZ7b13TH8JPmbV2z8CHbl80/2hm3XPEG4JgNdQLK81IBRXmSxHfMAOkSqQeRxT/0dwNDz2GOm3zzpcQ=="
+  AXE_CORE_TARBALL_URL: "https://registry.npmjs.org/axe-core/-/axe-core-4.14.0.tgz"
+
+jobs:
+  sut-01-web-api:
+    name: E09 Environment Verification SUT-01 web and api
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out study repository
+        uses: actions/checkout@v4
+      - name: Number the DRY_RUN bundles by this run
+        id: dryrun
+        if: ${{ inputs.dry_run == true }}
+        env:
+          DR_RUN_NUMBER: ${{ github.run_number }}
+          DR_RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          test "$DR_RUN_NUMBER" -ge 1
+          test "$DR_RUN_NUMBER" -le 9999
+          printf 'execution_id=DR%04d\nattempt=%s\n' "$DR_RUN_NUMBER" "$DR_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
+      - name: Read the pinned SUT-01 provenance (web and api)
+        id: pin
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - >> "$GITHUB_OUTPUT" <<'PY'
+          import yaml
+          s = yaml.safe_load(open('manifests/sut-manifest.yaml'))['suts']['SUT-01']['components']
+          print(f"repo={s['api']['repository']}"); print(f"sha={s['api']['commit_sha']}")
+          print(f"web_repo={s['web']['repository']}"); print(f"web_sha={s['web']['commit_sha']}")
+          PY
+      - name: Clone the pinned SUT-01 source and check out the pinned commit
+        env:
+          PIN_REPO: ${{ steps.pin.outputs.repo }}
+          PIN_SHA: ${{ steps.pin.outputs.sha }}
+        run: |
+          set -euo pipefail
+          git clone --quiet "$PIN_REPO" sut
+          git -C sut checkout --quiet "$PIN_SHA"
+          test "$(git -C sut rev-parse HEAD)" = "$PIN_SHA"
+      - name: Set up Python 3.11 for the SUT-01 api
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Set up Node.js 24 for the SUT-01 web frontend
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Provision and start the SUT-01 api instance
+        run: |
+          set -euo pipefail
+          cd sut/backend
+          python -m pip install --quiet -r requirements.txt
+          nohup python -m uvicorn main:app --host 127.0.0.1 --port 8000 > "$GITHUB_WORKSPACE/api-stdout.log" 2> "$GITHUB_WORKSPACE/api-stderr.log" &
+          for _ in $(seq 1 60); do curl -fsS http://127.0.0.1:8000/health >/dev/null 2>&1 && break; sleep 2; done
+          curl -fsS http://127.0.0.1:8000/health
+      - name: Provision, build, and serve the SUT-01 web instance
+        env:
+          SUT01_WEB_PIN: ${{ steps.pin.outputs.web_sha }}
+        run: |
+          set -euo pipefail
+          test "$(git -C sut rev-parse HEAD)" = "$SUT01_WEB_PIN"
+          npm install -g pnpm@10 --no-audit --no-fund
+          cd sut/frontend
+          pnpm install --frozen-lockfile
+          VITE_API_URL=http://127.0.0.1:8000 pnpm build
+          nohup pnpm exec vite preview --host 127.0.0.1 --port 3000 --strictPort > "$GITHUB_WORKSPACE/web-stdout.log" 2> "$GITHUB_WORKSPACE/web-stderr.log" &
+          for _ in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
+      - name: Set up Python 3.12 for the executor (the pinned wheels are CPython 3.12)
+        id: py312
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install the executor's pinned tools in a venv outside the workspace (Playwright for Python with --require-hashes; Chromium)
+        env:
+          PY312: ${{ steps.py312.outputs.python-path }}
+        run: |
+          set -euo pipefail
+          "$PY312" -m venv "$RUNNER_TEMP/e09-executor-venv"
+          "$RUNNER_TEMP/e09-executor-venv/bin/python" -m pip install --require-hashes --only-binary :all: -r experiments/E09-accessibility/executor/requirements.txt
+          "$RUNNER_TEMP/e09-executor-venv/bin/python" -m playwright install --with-deps chromium
+          echo "$RUNNER_TEMP/e09-executor-venv/bin" >> "$GITHUB_PATH"
+      - name: Download the pinned axe-core tarball and verify its sha512 before any use
+        env:
+          AXE_DIR: ${{ runner.temp }}/axe-core-download
+        run: |
+          set -euo pipefail
+          mkdir -p "$AXE_DIR"
+          curl -fsSL -o "$AXE_DIR/axe-core-$AXE_CORE_VERSION.tgz" "$AXE_CORE_TARBALL_URL"
+          python3 - <<'PY'
+          import base64, hashlib, os
+          path = os.environ['AXE_DIR'] + '/axe-core-' + os.environ['AXE_CORE_VERSION'] + '.tgz'
+          digest = 'sha512-' + base64.b64encode(hashlib.sha512(open(path, 'rb').read()).digest()).decode('ascii')
+          if digest != os.environ['AXE_CORE_NPM_INTEGRITY']:
+              raise SystemExit('axe-core tarball integrity mismatch: ' + digest)
+          print('axe-core tarball integrity verified')
+          PY
+          echo "AXE_TARBALL=$AXE_DIR/axe-core-$AXE_CORE_VERSION.tgz" >> "$GITHUB_ENV"
+      - name: Write the instance interface instance.json for SUT-01 (verification record class)
+        env:
+          E09_INSTANCE_REPOSITORY: ${{ steps.pin.outputs.repo }}
+          E09_INSTANCE_COMMIT: ${{ steps.pin.outputs.sha }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          e = os.environ
+          ws = e['GITHUB_WORKSPACE']
+          inst = {
+              'interface_version': 1, 'sut_id': 'SUT-01', 'record_class': e['RECORD_CLASS'],
+              'surfaces': {'web': {'base_url': 'http://127.0.0.1:3000'}, 'api': {'base_url': 'http://127.0.0.1:8000'}, 'auth': None},
+              'provisioning': {'route': 'GitHub-hosted runner instance provisioned in this job by the steps of the sut-01-web-api job of .github/workflows/e09-environment-verification.yml: clone of the pinned commit; api: Python 3.11, pip install -r requirements.txt in backend/, uvicorn main:app on 127.0.0.1:8000; web: Node.js 24, pnpm 10, pnpm install --frozen-lockfile, build with VITE_API_URL=http://127.0.0.1:8000, vite preview on 127.0.0.1:3000',
+                               'repository': e['E09_INSTANCE_REPOSITORY'], 'commit_sha': e['E09_INSTANCE_COMMIT'], 'release': None,
+                               'asset': {'name': None, 'sha256': None}, 'commands': [], 'provisioning_record': None},
+              'process': None,
+              'logs': [ws + '/' + f for f in ['api-stdout.log', 'api-stderr.log', 'web-stdout.log', 'web-stderr.log']],
+          }
+          text = json.dumps(inst, indent=2) + '\n'
+          assert json.loads(text) == inst
+          with open('instance.json', 'w', encoding='utf-8') as f:
+              f.write(text)
+          print(text)
+          PY
+      - name: Verify the controlled instance, the pinned tarball, and the activation path (non-measured; no run manifest)
+        id: verify
+        env:
+          CONDITION_ID: E09-CTRL-SUT01-STANDARD
+          ASSIGNED_SUT: SUT-01
+          EXECUTION_ID: EV0001
+          ATTEMPT: "1"
+          EXECUTOR_PROMPT_VERSION: NOT-APPLICABLE-ENVIRONMENT-VERIFICATION
+          ENTRY_MODULE: executor.verify
+          OUTPUT_DIR: ${{ runner.temp }}/e09-verification
+          PROVENANCE_JSON: provenance/none.json
+          RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
+          INSTANCE_JSON: instance.json
+        run: |
+          set -euo pipefail
+          bash experiments/E09-accessibility/executor/run-condition.sh
+      - name: Run the executor once per condition as a DRY_RUN (only after the verification passed; never imported; never measured)
+        if: ${{ inputs.dry_run == true && steps.verify.outcome == 'success' }}
+        env:
+          DRY_EXECUTION_ID: ${{ steps.dryrun.outputs.execution_id }}
+          DRY_ATTEMPT: ${{ steps.dryrun.outputs.attempt }}
+          EXECUTOR_PROMPT_VERSION: NOT-APPLICABLE-DRY-RUN
+          RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
+          PROVENANCE_JSON: provenance/none.json
+          INSTANCE_JSON: instance.json
+          DRY_BASE: ${{ runner.temp }}/e09-dry-run
+          RECORD_CLASS: DRY_RUN
+        run: |
+          set -euo pipefail
+          for cond in E09-A11Y-SUT01-MISSING-NAME E09-CTRL-SUT01-STANDARD; do
+            run_id="${cond}__${DRY_EXECUTION_ID}__A${DRY_ATTEMPT}"
+            CONDITION_ID="$cond" ASSIGNED_SUT=SUT-01 EXECUTION_ID="$DRY_EXECUTION_ID" ATTEMPT="$DRY_ATTEMPT" \
+              OUTPUT_DIR="$DRY_BASE/$run_id" bash experiments/E09-accessibility/executor/run-condition.sh
+          done
+      - name: Replace runner host paths and private network addresses in the kept files by neutral markers (publication hygiene at capture)
+        if: always()
+        env:
+          SCRUB_ROOT_A: ${{ runner.temp }}/e09-verification
+          SCRUB_ROOT_B: ${{ runner.temp }}/e09-dry-run
+        run: |
+          python3 - <<'PY'
+          import os, re
+          prefixes = sorted({p for p in (os.environ.get('GITHUB_WORKSPACE'), os.environ.get('RUNNER_TEMP'), os.environ.get('HOME')) if p and len(p) > 1}, key=len, reverse=True)
+          homes = re.compile(r'/(?:Users|home)/[A-Za-z0-9._-]+')
+          private = re.compile(r'\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b')
+          changed = total = 0
+          for root in (os.environ['SCRUB_ROOT_A'], os.environ['SCRUB_ROOT_B']):
+              for d, _dirs, files in os.walk(root) if os.path.isdir(root) else []:
+                  for fn in files:
+                      p = os.path.join(d, fn)
+                      b = open(p, 'rb').read()
+                      total += 1
+                      if b'\0' in b[:8000]:
+                          continue
+                      t = b.decode('utf-8', 'replace')
+                      n = t
+                      for pre in prefixes:
+                          n = n.replace(pre, '<host-path>')
+                      n = homes.sub('<home>', n)
+                      n = private.sub('<private-address>', n)
+                      if n != t:
+                          open(p, 'w', encoding='utf-8', newline='').write(n)
+                          changed += 1
+          print(f'host paths and private network addresses replaced in {changed} of {total} kept file(s)')
+          PY
+      - name: Upload the ENVIRONMENT_VERIFICATION record (never imported into raw-data/)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E09-ENVIRONMENT_VERIFICATION-SUT-01-${{ github.run_number }}
+          path: ${{ runner.temp }}/e09-verification
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: warn
+      - name: Upload the DRY_RUN bundles (never imported into raw-data/; never measured)
+        if: ${{ always() && inputs.dry_run == true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: E09-DRY_RUN-SUT-01-${{ github.run_number }}
+          path: ${{ runner.temp }}/e09-dry-run
+          retention-days: 90
+          overwrite: false
+          if-no-files-found: warn

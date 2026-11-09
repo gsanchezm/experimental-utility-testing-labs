@@ -1,0 +1,269 @@
+# DRAFT - candidate canonical scenario for the E06 mobile suite (proposed file experiments/scenario-mappings/CS-007.yaml).
+# Structure follows experiments/scenario-mappings/CS-003.yaml; order follows protocol/equivalent-scenario-mapping-v1.md, section 3
+# (ecosystem-neutral canonical intent first, then the six mapping entries, then the design points).
+#
+# STATUS: DRAFT. Nothing here freezes, starts, authorizes, or dispatches anything. It is not an input to any campaign configuration,
+# workflow, or run. A frozen record is never edited; a later change is a new version file (protocol/equivalent-scenario-mapping-v1.md, section 6).
+#
+# EVIDENCE BASIS: every evidence_id is a row of the E01 evidence files on the audit branches (audit/e01-sut0N-*:audits/SUT-0N-*/evidence.csv),
+# read for this draft. The E01 adjudicated matrix under derived-data/ was NOT read (common rule 2 of the brief). No qualification record,
+# Mobilewright realization, or smoke record is cited as evidence (protocol/mobile-runner-policy-v3.md, section 3). Where E01 has no row for a
+# step, the step says "not evidenced" and is listed in evidence_gaps; nothing is borrowed from another record.
+#
+# IDENTIFIER: CS-007 is a candidate. CS-001 to CS-003 exist, and CS-002 is excluded and preserved. The human research lead confirms the identifier (DP-2).
+#
+# SCAFFOLDING: the keys provisional_reading, evidence_gaps, and design_points are DRAFT-only. At freeze they are removed or folded into
+# notes (CS-003 kept its design points in notes). experiments/scenario-mappings/*.yaml is parsed by the validation workflow
+# (.github/workflows/e03-validate.yml, line 82); its mapping checks are CS-001-specific, and no schema covers mapping records.
+# MARKERS: "HUMAN DECISION" marks a design point with a recommended answer. Comparability is null (undecided) in DRAFT; "provisional_reading"
+# gives the reading this draft would use if the human research lead accepts it.
+
+version: 1
+canonical_scenario_id: CS-007  # candidate; see DP-2
+description: >
+  An actor holding the standard identity that an ecosystem requires signs in on one surface and reaches the authenticated catalogue of that
+  ecosystem's business objects. An observer verifies the arrival and the identity of the catalogue position fixed for the run. The scenario
+  alters no business state; its only server-side effect is the session created by the sign-in, which the per-run reset ends.
+precondition_class: CLEAN_SESSION
+actor_state: AUTHENTICATED_STANDARD
+business_intent: >
+  An actor holding the standard identity signs in and reaches the authenticated catalogue of business objects, where the identity of one
+  object is presented to the actor.
+target_state_or_transition: >
+  The actor's view is the authenticated catalogue of the ecosystem, and the object at the catalogue position fixed for the run presents the same
+  identity on every surface of the same ecosystem, for the same account and the same market or locale parameter.
+observable_oracle_class: UI_STATE
+reset_requirement: SESSION_RESET
+applicable_surfaces: [WEB, ANDROID, IOS]
+allowed_domain_mapping: >
+  The business object may vary (for example product, room, item, or basket). Vocabulary, selectors, the sign-in mechanism (documented account, form, or a login
+  that accepts any credential), and the number of steps may vary; these differences are measured and disclosed. May NOT vary: the actor state
+  (a standard identity presented through the scenario), the sign-in as the only server-side action, the target transition (arrival and identity),
+  the observable oracle class (UI_STATE), reset SESSION_RESET, and the catalogue position, which is fixed per run. The market or locale parameter and the
+  account are fixed per condition in the campaign configuration, never chosen per execution.
+campaigns_using: [E06-cross-platform-parity]
+mapping_status: DRAFT
+frozen_at: null
+approved_by: null
+mappings:
+  - sut_id: SUT-01
+    comparability: null  # DRAFT; decision pending DP-3 and DP-7
+    provisional_reading: "COMPARABLE on [WEB, ANDROID]; iOS not in the first wave (DP-8)"
+    surfaces_used: [WEB, ANDROID]
+    domain_object: "pizza (catalogue item)"
+    precondition_realization: >
+      WEB: sign-in with a documented account through the sign-in form, inside the scenario (the documented test-user roster and the login
+      endpoint: SUT01-EV-0007; the form identifiers are not extracted in this draft). The token-injection shortcut ('Web atomic entry',
+      SUT01-EV-0001, SUT01-EV-0002) is NOT used, because it bypasses the sign-in the scenario must contain.
+      ANDROID: sign-in through the login-screen identifiers (SUT01-EV-0011).
+    actor_realization: >
+      A documented test account. Which account has the default behaviour mode is not stated in the rows read; SUT01-EV-0015 and
+      SUT01-EV-0018 to SUT01-EV-0021 describe account-specific behaviour modes. The account is named in the campaign configuration.
+    entry_and_steps:
+      - "[web, navigation] open the web application at the market or locale fixed for the run (the market selector: SUT01-EV-0028, notes; identifiers not extracted)."
+      - "[web, UI] enter the documented username and password and submit the sign-in form (SUT01-EV-0007; form identifiers not extracted: TBD)."
+      - "[web, UI, verification] arrive at the catalogue screen (screen-catalog, SUT01-EV-0003) and read the identity of the catalogue position fixed for the run (pizza-name-<id>, SUT01-EV-0003, SUT01-EV-0019)."
+      - "[android, UI] enter the documented credentials in input-username and input-password and tap btn-login, or tap the quick-login control btn-user-<id> (SUT01-EV-0011)."
+      - "[android, navigation, verification] arrive at the catalogue. The catalogue route exists (omnipizza://catalog, SUT01-EV-0009, SUT01-EV-0010); the arrival after btn-login is not evidenced as a row (not evidenced)."
+      - "[android, UI, verification] read the identity of the catalogue position fixed for the run: NOT EVIDENCED. No E01 row documents mobile catalogue item identifiers or their rendering. Static evidence from the pinned source is needed before the mapping freeze (DP-3)."
+    oracle_realization: >
+      WEB: screen-catalog and pizza-name-<id> (SUT01-EV-0003). ANDROID: arrival at the authenticated catalogue (route only; not evidenced as a row);
+      catalogue item identity NOT EVIDENCED.
+    reset_realization: >
+      Required (SESSION_RESET). Web: a fresh browser context or sign-out before each execution. Android: the pinned build
+      is removed and reinstalled before each execution. The server-side state is untouched by the scenario.
+    environment_type: "PENDING: not a mapping-freeze input (protocol/study-design-v1.md, section 10.3). The backend classification is DP-7; the repository does not state where the release build's backend endpoint is configured."
+    not_comparable_reason: null
+    evidence_ids: [SUT01-EV-0001, SUT01-EV-0003, SUT01-EV-0007, SUT01-EV-0009, SUT01-EV-0010, SUT01-EV-0011, SUT01-EV-0019, SUT01-EV-0028]
+    evidence_gaps:
+      - "mobile catalogue item identifiers and rendering: not evidenced (DP-3)"
+      - "Android arrival at the catalogue after btn-login: not evidenced as a row"
+      - "default-behaviour account: not stated (SUT01-EV-0015, SUT01-EV-0018 to SUT01-EV-0021)"
+      - "backend endpoint of the release build: not stated in the repository (DP-7)"
+    justification: >
+      WEB: the sign-in, the catalogue-screen identifier, and the item-name identifier are evidenced (SUT01-EV-0003, SUT01-EV-0007, SUT01-EV-0019).
+      ANDROID: the stable login-screen identifiers (SUT01-EV-0011) support the availability of a UI_STATE observation for the sign-in step, and the
+      catalogue route is evidenced (SUT01-EV-0009, SUT01-EV-0010). Under rule 5 of the mapping protocol the oracle class is available; the
+      item-level selector is a configuration item, not a mapping input. Provisional COMPARABLE; not decided.
+
+  - sut_id: SUT-02
+    comparability: null  # DRAFT; decision pending DP-3 and DP-4
+    provisional_reading: "COMPARABLE on [WEB, ANDROID]; iOS evidenced but deferred (DP-8)"
+    surfaces_used: [WEB, ANDROID]
+    domain_object: "product (catalogue item)"
+    precondition_realization: >
+      WEB: sign-in form with the documented fixed accounts (SUT02-EV-0001). ANDROID: sign-in form; any non-empty credentials other than the fixed
+      locked-out account are accepted (SUT02-EV-0007).
+    actor_realization: >
+      WEB: the documented standard account (SUT02-EV-0001). ANDROID: a documented non-locked credential pair; the app does not verify identity beyond
+      the locked-out rule (SUT02-EV-0007). The account is named in the campaign configuration.
+    entry_and_steps:
+      - "[web, UI] enter the documented username and password and submit the sign-in form (SUT02-EV-0001)."
+      - "[web, UI, verification] arrive at the inventory and read the identity of the catalogue position fixed for the run (the fixed, non-randomized product catalogue of SUT02-EV-0013 with the deterministic accounts; item identifiers not extracted: TBD)."
+      - "[android, UI] enter the credentials in the login form and submit; the successful sign-in navigates to the main activity (SUT02-EV-0007)."
+      - "[android, UI, verification] read the identity of the catalogue position fixed for the run: PARTIAL. The catalogue is built by ProductCatalogViewModel (SUT02-EV-0016, described for the visual-test account only); the reload of product data after reset is evidenced (SUT02-EV-0008). The item name rendered for the standard account is not evidenced as a row."
+    oracle_realization: >
+      WEB: the inventory item name at the fixed position (SUT02-EV-0013, read in full). ANDROID: catalogue item identity PARTIAL (see steps).
+    reset_realization: "Required (SESSION_RESET). Web: a fresh browser context before each execution (a sign-out path for the web surface is not read: TBD). Android: application data cleared before each run."
+    environment_type: "PENDING: not a mapping-freeze input (protocol/study-design-v1.md, section 10.3)."
+    not_comparable_reason: null
+    evidence_ids: [SUT02-EV-0001, SUT02-EV-0007, SUT02-EV-0008, SUT02-EV-0010, SUT02-EV-0013, SUT02-EV-0016]
+    evidence_gaps:
+      - "Android standard-account catalogue item name: not evidenced as a row (DP-3)"
+      - "iOS sign-in accepts any credential (SUT02-EV-0010): disclosed; iOS deferred (DP-8)"
+    justification: >
+      WEB: the sign-in and the fixed catalogue are evidenced. ANDROID: the sign-in, its arrival, and the catalogue construction are evidenced; the
+      item-level identity is a configuration item (DP-3). The difference in sign-in mechanism is a permitted domain-mapping variation (DP-4).
+      Provisional COMPARABLE; not decided.
+
+  - sut_id: SUT-03
+    comparability: null  # DRAFT; decision pending DP-5
+    provisional_reading: "COMPARABLE on [WEB] by rule 1 as written; ANDROID and IOS cells not applicable (DP-5)"
+    surfaces_used: [WEB]
+    domain_object: "product (catalogue item)"
+    precondition_realization: "Sign-in through the sign-in form with a documented account (SUT03-EV-0001, SUT03-EV-0003)."
+    actor_realization: "The documented account of SUT03-EV-0001 (cited in CS-003 as the standard test account)."
+    entry_and_steps:
+      - "[web, navigation] open the sign-in page."
+      - "[web, UI] select the documented username, enter the password, and submit (SUT03-EV-0001, SUT03-EV-0003)."
+      - "[web, UI, verification] arrive at the product listing and read the identity of the catalogue position fixed for the run (listing from GET /api/products, SUT03-EV-0006; stable identifiers of the browse flow, SUT03-EV-0005; item identifiers not extracted: TBD)."
+    oracle_realization: "UI_STATE: the listing item identity at the fixed position (identifiers TBD)."
+    reset_realization: "Required (SESSION_RESET). Sign-Out (store2.session.clearAll(), SUT03-EV-0030, SUT03-EV-0031) ends the session, or a fresh browser context before each execution."
+    environment_type: "PENDING: not a mapping-freeze input (protocol/study-design-v1.md, section 10.3)."
+    not_comparable_reason: null
+    evidence_ids: [SUT03-EV-0001, SUT03-EV-0003, SUT03-EV-0005, SUT03-EV-0006, SUT03-EV-0010, SUT03-EV-0011]
+    evidence_gaps:
+      - "listing item identifiers: not extracted in this draft (TBD)"
+    justification: >
+      WEB: the sign-in and the listing are evidenced. ANDROID and IOS: no mobile surface (SUT03-EV-0010 and SUT03-EV-0011, NO_MOBILE_SURFACE).
+      A parity cell cannot be assessed on one platform; the cells are recorded as not applicable, never skipped (protocol/study-design-v1.md, section 11; the agent-instructions file, rule 10).
+
+  - sut_id: SUT-04
+    comparability: null  # DRAFT; decision pending DP-5
+    provisional_reading: "COMPARABLE on [WEB] by rule 1 as written; ANDROID and IOS cells not applicable (DP-5)"
+    surfaces_used: [WEB]
+    domain_object: "room (listing item)"
+    precondition_realization: "Web sign-in with the documented credentials through the login form (SUT04-EV-0001, SUT04-EV-0002)."
+    actor_realization: >
+      The seeded account is an administrator (SUT04-EV-0001). Treating it as AUTHENTICATED_STANDARD follows the choice recorded in CS-003
+      (its DP-5, for continuity). No separate design point is opened here; the choice is listed in the brief as an open item.
+    entry_and_steps:
+      - "[web, UI] enter the documented credentials in the login form (fields username and password, submit control doLogin; SUT04-EV-0002) and submit."
+      - "[web, UI, verification] arrive at the page the sign-in redirects to and read the identity of the room at the position fixed for the run (room listing, SUT04-EV-0004)."
+    oracle_realization: "UI_STATE: the room identity at the fixed position (SUT04-EV-0004)."
+    reset_realization: "Required (SESSION_RESET). A fresh browser context before each execution, which discards the token cookie of the sign-in; no server-side reset is evidenced for the session."
+    environment_type: "PENDING: not a mapping-freeze input (protocol/study-design-v1.md, section 10.3)."
+    not_comparable_reason: null
+    evidence_ids: [SUT04-EV-0001, SUT04-EV-0002, SUT04-EV-0004, SUT04-EV-0011, SUT04-EV-0012, SUT04-EV-0013, SUT04-EV-0014]
+    evidence_gaps:
+      - "the post-sign-in redirect target is named by SUT04-EV-0002 but the listing's visibility to the administrator is not restated here (TBD)"
+    justification: >
+      WEB: the sign-in and the room listing are evidenced. ANDROID and IOS: no mobile surface (SUT04-EV-0011 to SUT04-EV-0014, NO_MOBILE_SURFACE);
+      recorded as not applicable, never skipped.
+
+  - sut_id: SUT-05
+    comparability: null  # DRAFT; provisional NOT_COMPARABLE on evidence grounds (DP-6)
+    provisional_reading: "NOT_COMPARABLE (reason OTHER: evidence absent from E01)"
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: "Not established from E01 rows for this scenario."
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      OTHER: EVIDENCE_ABSENT_FROM_E01. All 29 SUT-05 evidence rows were read in full. SUT05-EV-0001 documents only that a browsable web application exists, and SUT05-EV-0026 documents the sign-in selectors; no row documents a post-sign-in
+      catalogue or listing on the web surface, so rule 4 of the comparability rule cannot be supported. The mobile surfaces are absent
+      (SUT05-EV-0021 and SUT05-EV-0022, NO_MOBILE_SURFACE). Reversible only by an evidence record under protocol/change-control-v1.md,
+      section 5 (E01 is FROZEN); not by a convenience comparison.
+    evidence_ids: [SUT05-EV-0021, SUT05-EV-0022, SUT05-EV-0026]
+    evidence_gaps:
+      - "web post-sign-in catalogue or listing: no row among the 29 (full text scanned for product, catalog, catalogue, listing, browse, shop)"
+    justification: >
+      No E01 row supports the arrival or the identity observation on this ecosystem for this scenario. This is an evidence reading, not a
+      penalty for scope (protocol/equivalent-scenario-mapping-v1.md, section 5; protocol/study-design-v1.md, section 11).
+
+  - sut_id: SUT-06
+    comparability: null  # DRAFT; provisional NOT_COMPARABLE (DP-6)
+    provisional_reading: "NOT_COMPARABLE (reason NO_EQUIVALENT_INTENT)"
+    surfaces_used: []
+    domain_object: null
+    precondition_realization: null
+    actor_realization: null
+    entry_and_steps: []
+    oracle_realization: null
+    reset_realization: null
+    environment_type: null
+    not_comparable_reason: >
+      NO_EQUIVALENT_INTENT: the evaluated version has no catalogue of business objects. Its documented screens (SUT06-EV-0005) and its Data
+      Management tiers (SUT06-EV-0007) are not a catalogue, and login validation is local only (SUT06-EV-0011), so no post-sign-in catalogue is
+      evidenced (rule 4 as well). The ecosystem has no web surface (SUT06-EV-0003 and the sut-manifest presence record, web ABSENT). Its Android
+      and iOS surfaces exist (SUT06-EV-0005 to SUT06-EV-0020); they do not change this reading, and the number of smokes it would need is a cost
+      fact, not a comparability input (protocol/study-design-v1.md, section 11).
+    evidence_ids: [SUT06-EV-0003, SUT06-EV-0005, SUT06-EV-0007, SUT06-EV-0011]
+    evidence_gaps: []
+    justification: >
+      No defensible equivalent of an actor's arrival at an authenticated catalogue of business objects is evidenced in the evaluated version.
+
+design_points:
+  - id: DP-1
+    question: "Read-only intent (reset SESSION_RESET, this draft) or a state-changing intent (one business object with a reset)?"
+    options:
+      - "read-only in business state, with reset SESSION_RESET (the per-run session end that the CLEAN_SESSION precondition requires; CS-003 DP-2 rejected NONE for the same reason); a controlled instance is not required by section 10.3 if the sign-in is classified as non-state-changing (DP-7)"
+      - "state-changing: needs a controlled instance and the reset path; E01 has no add-to-cart row on SUT-02 Android or iOS (CS-003, SUT-02 justification), and SUT-01 mobile establishment is an API seed (SUT01-EV-0030), which the scenario would then have to contain"
+    recommended: read-only
+    status: HUMAN DECISION
+  - id: DP-2
+    question: "Confirm the identifier CS-007."
+    options: ["CS-007 (next free number; CS-002 is excluded and preserved)", "another identifier"]
+    recommended: CS-007
+    status: HUMAN DECISION
+  - id: DP-3
+    question: "Mobile oracle: accept a provisional COMPARABLE for the Android cells with the item-level selector as a configuration item, or narrow the mobile oracle to arrival only?"
+    options:
+      - "accept, provided the selectors are read from the pinned source and recorded in the campaign configuration before the mapping freeze"
+      - "narrow to arrival (screen-level), a weaker oracle that every mobile cell can support from E01 rows"
+      - "commission new E01 evidence rows (a change under protocol/change-control-v1.md, section 5; E01 is FROZEN)"
+    recommended: "accept, with the static reading recorded before the freeze; fall back to arrival only if the reading fails"
+    status: HUMAN DECISION
+  - id: DP-4
+    question: "Disclose the differing sign-in mechanisms (SUT-02 Android and iOS accept any non-empty credential except the locked-out account, SUT02-EV-0007 and SUT02-EV-0010)?"
+    options: ["disclose as a permitted mechanism variation", "exclude SUT-02 mobile cells"]
+    recommended: "disclose as a permitted mechanism variation"
+    status: HUMAN DECISION
+  - id: DP-5
+    question: "Comparability of web-only ecosystems (SUT-03, SUT-04): COMPARABLE on [WEB] with mobile cells not applicable, or NOT_COMPARABLE?"
+    options:
+      - "COMPARABLE on [WEB] (rule 1 of protocol section 5 as written), parity cells not applicable"
+      - "NOT_COMPARABLE with a two-platform scenario constraint, added before the freeze (not after results)"
+    recommended: "COMPARABLE on [WEB], parity cells recorded as not applicable"
+    status: HUMAN DECISION
+  - id: DP-6
+    question: "SUT-05 provisional NOT_COMPARABLE on evidence grounds; SUT-06 NOT_COMPARABLE (NO_EQUIVALENT_INTENT)."
+    options: ["keep both as drafted", "reopen SUT-05 only by an E01 evidence record under protocol/change-control-v1.md, section 5 (E01 is FROZEN; none of the 29 rows documents a web listing)"]
+    recommended: "keep both; check the SUT-05 web rows once before the freeze"
+    status: HUMAN DECISION
+  - id: DP-7
+    question: "Backend classification for SUT-01 mobile: the repository does not state where the release build's backend endpoint is configured."
+    options:
+      - "check first whether the endpoint is configurable without modifying the build; if yes, use the controlled SUT-01 backend (verified on GitHub Actions for web and API, experiments/E03-resetability/controlled-instance-status.yaml)"
+      - "if not configurable: read-only sign-in classified by a human decision under protocol/study-design-v1.md, section 10.3, as non-state-changing, with environment_type PUBLIC_HOSTED recorded and disclosed, and the HOSTED_MAPPING_UNVERIFIED caveat of manifests/sut-manifest.yaml (SUT-01 web and api notes) stated as a version-provenance limit"
+      - "drop SUT-01 mobile cells"
+    recommended: "first option if the endpoint check succeeds; otherwise the second, with the classification recorded"
+    status: HUMAN DECISION
+  - id: DP-8
+    question: "Platforms in the first wave."
+    options: ["WEB and ANDROID; iOS deferred", "WEB, ANDROID, and IOS"]
+    recommended: "WEB and ANDROID; iOS deferred"
+    status: HUMAN DECISION
+  - id: DP-9
+    question: "Market or locale and account per condition (the market changes the language of the catalogue: SUT01-EV-0027, SUT01-EV-0028)."
+    options: ["one market with its default language, one account per ecosystem", "several markets"]
+    recommended: "one market with its default language, one account per ecosystem"
+    status: HUMAN DECISION
+
+notes: >
+  Estimand (the SAP section 4.3 variable "parity presence proportion per canonical scenario") is not defined in this draft; it is decided in the
+  brief (decision HD-12). Between-ecosystem comparisons are made only on canonical scenarios in which both ecosystems are COMPARABLE
+  (protocol/statistical-analysis-plan-v1.md, section 4.1). Nothing in this draft is a result, and no value in it is computed.
