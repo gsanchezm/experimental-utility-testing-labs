@@ -148,5 +148,38 @@ class RealizationContract(unittest.TestCase):
                 self.assertFalse(raises_not_implemented(module, function))
 
 
+class DryRunFindings(unittest.TestCase):
+    """Regression guards for the three defects that the environment-verification DRY_RUNs of 2026-11-09 found in the starting-state checks of the web realizations (all three aborted
+    before any establishment): SUT-01 CS-003 (an absent client cart key was read as a non-empty cart), SUT-02 CS-003 (the cart link was read on the login page, where it does not exist),
+    and SUT-03 CS-004 (the Checkout label, rendered in upper case by the page, was compared case-sensitively). The web pages cannot be driven here, so the checks run on the helpers and the source."""
+
+    def test_sut01_absent_client_cart_key_is_an_empty_client_cart(self):
+        from executor import sut01
+        self.assertTrue(sut01._cart_empty(None))
+        self.assertTrue(sut01._cart_empty({'state': {'items': []}, 'version': 0}))
+        self.assertFalse(sut01._cart_empty({'state': {'items': [{'pizza_id': 'p02'}]}, 'version': 0}))
+        self.assertFalse(sut01._cart_empty('{"state": {"items": [] '))   # present but unparsable: web.parse returns the text
+        self.assertFalse(sut01._cart_empty([]))
+
+    def test_sut03_checkout_control_is_compared_without_regard_to_case(self):
+        from executor import sut03
+        for shown in ('Checkout', 'CHECKOUT', ' checkout '):
+            self.assertTrue(sut03._checkout_control_shown(shown), shown)
+        for not_shown in ('', 'Check out', 'Checkouts', None):
+            self.assertFalse(sut03._checkout_control_shown(not_shown), not_shown)
+
+    def test_sut02_cs003_reads_the_cart_link_only_after_the_authentication(self):
+        import inspect
+        from executor import sut02
+        src = inspect.getsource(sut02.cs003_web)
+        submit = src.index('submit the login form')
+        add = src.index('click add-to-cart of the Sauce Labs Backpack')
+        self.assertEqual(src.count('CART_LINK'), 1)
+        self.assertTrue(submit < src.index('CART_LINK') < add, 'the cart link is read after the login submit and before the add-to-cart')
+        self.assertTrue(submit < src.index("run.step('declared-starting-state'") < add)
+        self.assertTrue(submit < src.index('run.declare_starting_state(') < add)
+        self.assertTrue(src.index("run.step('precondition'") < submit, 'the login form is read on the first load, before the authentication')
+
+
 if __name__ == '__main__':
     unittest.main()

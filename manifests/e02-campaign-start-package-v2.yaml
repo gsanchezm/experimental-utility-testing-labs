@@ -1,0 +1,474 @@
+# manifests/e02-campaign-start-package-v2.yaml -- E02 campaign START package (lock package), version 2, PREPARED.
+# ORCHESTRATOR record of operation OP-LOCK-04 (2026-11-09): version 1 (manifests/e02-campaign-start-package-v1.yaml, kept unchanged as history) with every lock value recomputed from the committed tree after its open items were resolved,
+# the rehearsal of the gates repeated on the canonical tree and on the public tree of export v47 (pushed on 2026-11-09), and the open items that remain for the human research lead.
+# It starts, authorizes, dispatches, freezes, exports, and changes nothing. Immutable once committed; a correction is a new version file (as E03 went from package version 1 to version 2).
+record_class: E02_CAMPAIGN_START_PACKAGE
+
+record_id: E02-START-PACKAGE-02
+
+study_id: EUS-2026-001
+
+campaign_id: E02-state-establishment
+
+operation_id: OP-LOCK-04
+
+recorded_by_role: ORCHESTRATOR
+
+recorded_on: '2026-11-09'
+
+recorded_at_utc: '2026-11-09T13:07:07Z'
+
+supersedes: manifests/e02-campaign-start-package-v1.yaml (E02-START-PACKAGE-01; unchanged, history)
+
+recorded_on_timezone: America/Mexico_City
+
+status: PREPARED
+
+binding_moment: the E02 campaign START (protocol/change-control-v1.md, section 7, moment 1), on the explicit human approval of that exact action; nothing in this record binds anything before it
+
+measured_experiment: false
+
+executes_anything: false
+
+protocol_change: false
+
+authorizes: 'nothing: not the START, not the lock of the configuration, not a dispatch authorization, not a dispatch, not the freeze of the dispatch procedure prompt, not the lock of the implementation hash, not a workflow correction, not an environment verification, not an export'
+
+nature: |-
+  The prepared edit set of the E02 START and the lock values it would bind, recomputed after the resolution of the open items OPEN-1 (the CS-004 realizations of SUT-02 and SUT-03, commit 896adcd6), OPEN-2 and OPEN-3
+  (the verification gate and the stale wording of the two workflows, OP-CI-17, commit a9d19ea3), and OPEN-6 (the E03 execution-model document is used by reference), all on the decisions of the human research lead of 2026-11-06
+  (manifests/campaign-execution-decisions-v3.yaml). Ten conditions are executable and N = 50 each (500 executions). Two corrections of the executor draft were made on the way and change the implementation hash of version 1:
+  the CS-004 realizations (above) and the declared run-level mechanisms of SUT-02 and SUT-03 (OP-PREP-05, commit cd219eb2). The rehearsal of the gates of .github/workflows/e02-measured-execution.yml was repeated on the
+  canonical tree and on the public tree of export v47, read from a fresh clone of the public repository after the push. This version is the START candidate only if the environment-verification DRY_RUNs (open item OPEN-4, decided as a precondition of the START) find no
+  defect that changes a lock value; a defect, or the import of the verification, that changes the implementation hash, a workflow, or the prompt gives a successor version. E02-state-establishment is executed under
+  ORCHESTRATOR coordination (protocol/agent-governance-v6.md, Sections 3.6 and 3.7), so no agent session is launched.
+
+human_instruction:
+  given_by: the human research lead
+  channel: given directly to the ORCHESTRATOR in its conversation (single-agent operating model of 2026-10-24 and 2026-10-25)
+  texts:
+  - id: reply_2026_11_06
+    transcript_stamp: '2026-11-06T18:15:16.711Z'
+    bytes: 89
+    exact_text: "si a todo, pero primero hayq ue hacer un /clear y me digas que decirte después del clear"
+    exact_text_sha256: 1ccad79cb34717972b3a576f6d3d68f571d87b722575bb8cbca957019276d0f8
+    effect: inherited from version 1, yes to the preparation of the START package as a DRAFT only
+  - id: decisions_v3_answer
+    transcript_stamp: '2026-11-06T18:40:53.148Z'
+    bytes: 2123
+    exact_text_sha256: 46958b123e5e5e3c27283459bf4205d75972fddcade638d23d0b96911961b627
+    effect: the four answers recorded in manifests/campaign-execution-decisions-v3.yaml, among them the resolution of OPEN-1 before the START, OP-CI-17, environment verification before the START, and reuse by reference of the E03 execution-model document; the whole text is kept in that record
+  - id: resume_2026_11_07
+    transcript_stamp: '2026-11-07T00:07:16.443Z'
+    bytes: 174
+    exact_text: "Retoma el plan de ejecución: lee la memoria eus-execution-plan-2026-11-05 (párrafo \"PROGRESS 2026-11-06 19:00Z\") y continúa con el export v47 y el paquete START de E02 v2."
+    exact_text_sha256: 8180eb3764ddffa0ae9f8cff516c14e2d97465093317d5fd26f349e0e712dea0
+    effect: the instruction to continue with the export v47 (the build and its scans and checks) and with this package version 2; it authorizes no push, no dispatch, no START, no lock, and no dispatch authorization
+  - id: remote_push_decision
+    transcript_stamp: '2026-11-09T02:32:14.005Z'
+    chosen_option: 'Lo ejecuto yo con tu sí (Recomendado)'
+    answer_text_bytes: 399
+    answer_text_sha256: 76eac1df3aa78b6c98bb286b4e23f122460414de9f68e397a02d74f12cadf393
+    effect: because the human research lead works from a remote session and cannot type the shell-escape command, the ORCHESTRATOR runs each export push, and each dispatch, only after a yes of the human research lead to the exact line; the answer authorizes no push or dispatch by itself
+  - id: push_authorization_export_v47
+    transcript_stamp: '2026-11-09T12:48:12.345Z'
+    chosen_option: 'Sí, ejecuta este push'
+    answer_text_bytes: 901
+    answer_text_sha256: 590600cf416b9c272e6d9225cd0d00aeb7330421336ca34ec9172cbf1602c849
+    effect: authorized the push line of export v47 (line sha256 5f48ad4f877bc2df4b932c1d861c3b51dd4b5fdd26aa77c6f8b93b2b911311d6), once; it authorizes nothing else, and the push was made at 2026-11-09T12:49:05Z
+
+baseline:
+  canonical_head: 785146a5393b3bbc4ea1cd26a57b4f892a20bda7
+  canonical_tree: 8a163ac5746c5b8b11d80d093ad202ce2af4f1ac
+  public_main_before_export_v47: 95efcff4 (export v46, canonical source 8e9322bc6033dd64882b36ad8f9e3c0916a1631b)
+  export_v47_status: PUSHED_2026-11-09T12:49:05Z (run by the ORCHESTRATOR on the human research lead's yes to the exact line; public main 9df73709 over 95efcff4; validation run 42620158864 succeeded in all four jobs; GitHub lists the five new workflows as active with no run; 419 runs in total, and the measured-execution workflow of E03 keeps its 353)
+  export_v47: {canonical_source: 66f6a47eb1d2e03ea341e2073bf5f98bb42c7ad5, snapshot_commit: 9df73709a48eb58b5aec09dc50642dc7a0704b43, root_tree: 809b072a616ee8c45f1f3bdee277b1a2bb82b1cb, content_tree: 98506b0014310edce46664fb7399f9f2a0c0ebb0, manifest_sha256: 068352c432b8e7eccb8c08c8705f6866ea4d184ceb38dda11c3973cbdd547dc7, counts: {"exported_files": 11531, "unchanged": 11260, "transformed": 271, "excluded": 1}, pushed_at: '2026-11-09T12:49:05Z', validation_run: '42620158864 (success, four jobs)', post_push_audit: '27 checks, 0 FAIL', export_log_entry_commit: 0a97582a60de4361d712d02fd593bfbbdeb28d7f}
+  public_main_after_export_v47: 9df73709a48eb58b5aec09dc50642dc7a0704b43
+  e02_campaign_status: NOT_STARTED
+  scenarios: CS-003 FROZEN (2026-11-02), CS-004 FROZEN (2026-11-06)
+  governance: protocol/agent-governance-v6.md FROZEN-PRE-DATA (2026-11-06), Section 3.7 present
+  conditions_verified_on_github_actions: 0
+  environment_verification_runs: none (the E02 verification workflow has never been dispatched; GitHub Actions reads only the public repository, and export v47, pushed on 2026-11-09, put the workflow there, and GitHub lists it as active with no run)
+  files_added_by_this_operation:
+  - manifests/e02-campaign-start-package-v2.yaml
+  files_not_created: experiments/E02-state-establishment/controlled-instance-status.yaml (written by the import of the verification runs; its schema is in controlled_instance_status_template below) and every manifests/e02-dispatch-authorization-sut0N-v1.yaml (written only after the human research lead issues the authorization)
+
+lock_values:
+  executor_implementation:
+    path: experiments/E02-state-establishment/executor/run-condition.sh
+    sha256: 602dfaf6ccc40d6fc9c54d3342a0111860328de149cab25d9463a770353b6228
+    bytes: 3032
+    git_blob: 155bdfc6130080cb8ffa66279f6fcc55d0f5e24d
+    file_mode: 100644 (the workflow runs it with bash)
+    embedded_digests:
+      - {path: executor/__init__.py, sha256: 34cef61488934b6489a5f03cbd890c345e60073b32ee88d71ed3a4ce8e22982f}
+      - {path: executor/common.py, sha256: 469a5aad91b80f2d1f5d0a7555e2a7defb0479f4e2916fbcb7e640092b4f1fce}
+      - {path: executor/instance.py, sha256: f14fc691a8b9ab8282272ea8c1b8000a796ee0a9ae28a6bee21c8ae488bae207}
+      - {path: executor/run.py, sha256: cdaacc83e441960db37c2f256e5e44c92ceae4350a725f9baca80783d68f9ff5}
+      - {path: executor/sut01.py, sha256: fac9b385d4982ec10a613409876227294e19bb06d90147b391c292d83fd9d519}
+      - {path: executor/sut02.py, sha256: c664345e23695ad264b6f40610e6d7a5b328f4297df18a19a06cf0afccd7a0e1}
+      - {path: executor/sut03.py, sha256: 58d01ecc793859634aaa690d06d6a5dcc7a4c68eeeedffbc4ab3bd41212e20a9}
+      - {path: executor/sut04.py, sha256: bef2be5a813ca2bec03274f6b5c8d186f8aef73c02458540c6a9991bfd21c6e7}
+      - {path: executor/sut05.py, sha256: 01336e73088cba8cd8b3d31a3f225e74df3084432c864c80fc9367306d44ae2c}
+      - {path: executor/web.py, sha256: 179f52679b94f966310ac3a1da540b4530d57acbecb26433eabf9f1937a9ee81}
+      - {path: requirements.txt, sha256: 7d8dafab6bda619c24cd690013386dc5c1a03ff7f97733aa644d774382dd435f}
+    clause: the hash locks the 11 embedded digests (the 10 Python modules and requirements.txt); a change to any of them changes the hash and needs a re-lock; the value of package version 1 (aa43d5c4...) is superseded by the CS-004 realizations of SUT-02 and SUT-03 (commit 896adcd6), which gave 170a8581...; the declared-mechanisms correction of OP-PREP-05 (commit cd219eb2, whose message names 170a8581... as the former value) gave the value of this package
+  executor_requirements:
+    path: experiments/E02-state-establishment/executor/requirements.txt
+    sha256: 7d8dafab6bda619c24cd690013386dc5c1a03ff7f97733aa644d774382dd435f
+    note: its 13 non-comment lines equal those of the E03 requirements file; only the header comment differs, which is why the hash differs from the E03 one (a88067fa...)
+  dispatch_procedure_prompt:
+    version_id: ORCHESTRATOR-E02-state-establishment-v1
+    working_path: prompts/working/ORCHESTRATOR-E02-state-establishment-v1.md
+    working_sha256: 9306ac72a6bd49ec47d7efcef3e158d18f76c28c4e2247c29e0c6280604a2f91
+    working_bytes: 16746
+    frozen_path: prompts/frozen/ORCHESTRATOR-E02-state-establishment-v1.md
+    frozen_sha256: null
+    frozen_sha256_note: 'bound at the START: the frozen copy is written once as a byte-identical copy of the working copy (prompts/README.md, rule 2), so the token PROMPT_SHA256 takes the working-copy sha256 above unless the working copy is edited first (an edit re-derives the token and the rehearsal); the frozen copy does not exist'
+    construction: the 13 governance paragraphs it quotes (Sections 3.6, 3.7, and 3.5) were extracted from protocol/agent-governance-v6.md by script and compared with the file; all 13 are verbatim
+  canonical_scenarios:
+  - {path: experiments/scenario-mappings/CS-003.yaml, sha256: 83815775737c258c9e44c9946e9d2264015cf398ef796f7e08d61f5e38dae3f3, mapping_status: FROZEN}
+  - {path: experiments/scenario-mappings/CS-004.yaml, sha256: 590af7258aeeb17b5ed73376ae3d8a2e71f86771b5c086ee5af4c266accc4cfe, mapping_status: FROZEN}
+  run_manifest_schema:
+    path: schemas/run-manifest.schema.v2.json
+    sha256: 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757
+  agent_governance:
+    path: protocol/agent-governance-v6.md
+    sha256: c890a9d004b2989aa9ae33a54bc68b000c47fc9e3f79d60ad0051de78b3f2a4a
+    bytes: 51269
+    state: FROZEN-PRE-DATA
+    in_force_since: '2026-11-06'
+    record: manifests/agent-governance-v6-amendment-v1.yaml
+    public_export: 'exported with class UNCHANGED in export v47 as pushed (the class is the builder result, not an assumption); gate G-6 reads only the header row and the Section 3.7 heading and never compares a sha256; where the class is not UNCHANGED the canonical sha256 is bridged to the public bytes through PUBLIC-EXPORT-MANIFEST.yaml, never compared directly'
+  workflows:
+    measured_execution: {path: .github/workflows/e02-measured-execution.yml, sha256: 900542047c43d58f1375f15f99f6e7716a3185c11db49236907d9bd15bf6d707}
+    environment_verification: {path: .github/workflows/e02-environment-verification.yml, sha256: a17a353bb2a8ba2fe558c810e253d4ed33c9e1e5708e3f6309fd51d097912d17}
+    note: both files are those of commit a9d19ea3 (OP-CI-17, which made the verification gate check the working prompt and removed the stale DRAFT wording); the values of package version 1 are superseded
+  executable_conditions:
+  - E02-CS003-SUT01-WEB
+  - E02-CS003-SUT01-API
+  - E02-CS004-SUT01-WEB
+  - E02-CS003-SUT02-WEB
+  - E02-CS004-SUT02-WEB
+  - E02-CS003-SUT03-WEB
+  - E02-CS004-SUT03-WEB
+  - E02-CS003-SUT04-WEB
+  - E02-CS003-SUT04-API
+  - E02-CS003-SUT05-API
+  blocked_conditions: []
+  sample_size: N = 50 per condition, EX0001 to EX0050, attempt 1 each (500 executions)
+
+verification:
+  implementation_hash:
+    checks_passed: 11
+    checks_failed: 0
+    result: the 11 digests embedded in run-condition.sh equal the sha256 of the files in the working tree (equal to HEAD); no unlisted Python file exists under executor/executor/
+  executor_tests:
+    modules: 6
+    tests_passed: 38
+    tests_failed: 0
+    detail: 'test_counting 15, test_gate_matrix 5 (56 gate runs recorded, exit 0 in 5, non-zero in 51), test_workflows_static 5 (OP-CI-15: 213 strings that carry an expression, longest estimate 1147 of a limit of 20000), test_run_condition 5, test_realization_contract 6 (the sixth checks that the declared mechanisms of each condition cover every mechanism it uses), test_hygiene 2; the recorded output is experiments/E02-state-establishment/executor/tests/RESULTS.txt'
+    not_exercised: the web realizations were not run against any SUT or browser; the tests check their declared counts from the source only (executor README, section 10)
+  gate_rehearsal:
+    script_sha256: 705f12bc8692a9e3efe15ae143d11a1b408ae67e804eea4b1557d5f0b05e9020
+    canonical_tree:
+      checks_passed: 21
+      checks_failed: 0
+      output_sha256: e93a290120ca663c8f41f2933a4e796322f48a8f73ce28659e4b5cfdd7836227
+      result_json_sha256: fa8b745d29598fda4eef7da9a1a37dfaed360b4478bb5584cfb11c65ce72d80f
+    exported_tree:
+      checks_passed: 21
+      checks_failed: 0
+      output_sha256: e16ec7864b8ee1ec3b59ac529533df47f908e940419ab6c22213abf81ff6bb57
+      result_json_sha256: fa8b745d29598fda4eef7da9a1a37dfaed360b4478bb5584cfb11c65ce72d80f
+      tree: a fresh clone of the public repository after the push of export v47 (public main 9df73709, export_v47 above), read through the same script
+    kept_in: the untracked records backup of the ORCHESTRATOR, operation folder op-lock-04 (script, outputs, and result jsons, for both trees)
+    method: the python step 'Verify every campaign gate against the repository' of e02-measured-execution.yml is extracted (no expression in it), the GATE_* environment is supplied as the workflow supplies it, and it runs once per condition on a scratch tree made from the sparse-checkout folders of that job (protocol, manifests, experiments, schemas, prompts, .github/workflows), first without any overlay and then with the START overlay of this record applied (the candidate section inserted before the heading Current status, the change-log row appended, the E02 status IN_PROGRESS, a frozen-prompt copy, a status file with rehearsal VERIFIED records for the ten conditions, one rehearsal authorization per SUT) under rehearsal values that are never reused (date 2099-01-01, ids E02-START-AUTH-REHEARSAL and E02-DISPATCH-SUT0N-REHEARSAL)
+    baseline_without_overlay: every one of the ten conditions is refused on both trees (exit 1; 16 gates pass and 17 fail on the canonical tree, 16 and 17 on the exported tree)
+    with_overlay: ten conditions, exit 0 and 39 gates pass with 0 failing for each on the canonical tree, 39 and 0 on the exported tree; EX0050 passes; EX0051 is refused at the authorization gate (beyond N = 50)
+    negative_controls: 'fifteen controls, each fails the gate it targets: no configuration section; status NOT_STARTED; no START row; a START id that the row does not carry; a wrong implementation hash as input; no frozen prompt; an excluded mapping named in the section; no H2 specification; CS-004 not FROZEN; governance v6 DRAFT; the authorization revoked; reverification required; the requirements file changed after the lock; attempt 2; a condition of another SUT'
+    limits: the rehearsal uses the files as the repository holds them. Before the first dispatch the gate step must be re-run on the exported tree of the START state (export v48), which carries the START edit set; the rehearsal on the exported tree of export v47 shows that the gates read the public bytes of the files they depend on without a difference, not that the START state passes there
+  export_v47_build:
+    analysis_checks_passed: 19
+    analysis_checks_failed: 0
+    e02_start_inputs_exported_unchanged: the 28 files of the executor directory, the dispatch procedure prompt, CS-003, CS-004, both E02 workflows, and the E02 README are exported with class UNCHANGED, equal blob and equal bytes, so the sha256 of the prompt and of run-condition.sh that the gates compare are the same on the public tree
+    executor_files_exported_unchanged: 22
+    embedded_digests: the digests embedded in the exported run-condition.sh of E02 (11) equal the sha256 of the exported files
+  hygiene_scan: 'the publication-hygiene regex of .github/workflows/e03-validate.yml, rebuilt from its hex fragments, run over the working prompt, the candidate section, the candidate row, and this record: 0 hits; the only note is the person identifier in the approver cell of the change-log row, as in the E03 package'
+
+public_tree_reading:
+  basis: the public tree of export v47 as pushed (the manifest of a fresh clone of the public repository after the push); the files that the gates read and the lock values depend on are listed with the class that the builder gave them
+  gate_read_files:
+    experiments/E02-state-establishment/README.md: exported as UNCHANGED
+    protocol/CHANGELOG.md: exported as PROVIDER_NEUTRAL_METADATA_REWRITE (canonical sha256 4981f63b29f1, exported sha256 71e19aa6791a)
+    manifests/study-manifest.yaml: exported as PROVIDER_NEUTRAL_PATH_ALIAS,PROVIDER_NEUTRAL_METADATA_REWRITE (canonical sha256 f8452346b0a9, exported sha256 1c364e343511)
+    experiments/scenario-mappings/CS-003.yaml: exported as UNCHANGED
+    experiments/scenario-mappings/CS-004.yaml: exported as UNCHANGED
+    schemas/run-manifest.schema.v2.json: exported as PROVIDER_NEUTRAL_PATH_ALIAS (canonical sha256 9a86cf37c4cc, exported sha256 7f4a1c27deb1)
+    protocol/agent-governance-v6.md: exported as UNCHANGED
+    .github/workflows/e02-measured-execution.yml: exported as UNCHANGED
+    .github/workflows/e02-environment-verification.yml: exported as UNCHANGED
+    prompts/working/ORCHESTRATOR-E02-state-establishment-v1.md: exported as UNCHANGED
+    experiments/E02-state-establishment/executor/run-condition.sh: exported as UNCHANGED
+    experiments/E02-state-establishment/executor/requirements.txt: exported as UNCHANGED
+  result: 'the files whose class above is not UNCHANGED are: protocol/CHANGELOG.md, manifests/study-manifest.yaml, schemas/run-manifest.schema.v2.json. The files that the lock values bind (the prompt, run-condition.sh, requirements.txt, both workflows, CS-003, CS-004, the schema, the E02 README) are exported unchanged. Gate G-6 reads only the header row and the Section 3.7 heading of governance v6 and G-1 reads the status line and the START row. The START edit set changes the E02 README, the change log, and the study manifest again, so the START state needs a further export (v48) before the first dispatch'
+
+start_edit_set:
+  order:
+  - '1. experiments/E02-state-establishment/README.md: insert the section "Campaign configuration" (candidate_configuration_section, tokens bound) before the heading "Current status"; update the current-status paragraph to the started state; apply the twelve corrections of stale_readme_text below'
+  - '2. protocol/CHANGELOG.md: append the row candidate_change_log_row with the START date and the authorization id (exactly one row with the campaign transition for this README)'
+  - '3. manifests/study-manifest.yaml: the E02 campaign status line (study_manifest_edit), with a study-manifest note of the START operation'
+  - '4. prompts/frozen/ORCHESTRATOR-E02-state-establishment-v1.md: the frozen dispatch procedure prompt, written once as a byte-identical copy of the working copy'
+  - '5. one export of the START state to the public repository, then the gate step re-run on the EXPORTED tree, then the five dispatch authorizations (separate approvals) and the dispatches (the gates read the public tree)'
+  not_in_the_edit_set: manifests/sut-manifest.yaml (evaluated_version_frozen is already true for SUT-01 to SUT-05 since the E03 START of 2026-10-28) and experiments/E02-state-establishment/controlled-instance-status.yaml (written by the verification import, before the START)
+  tokens_bound_at_start:
+  - START_DATE
+  - START_AUTH_ID
+  - PROMPT_SHA256
+  - START_TIMESTAMP
+  study_manifest_edit:
+    file: manifests/study-manifest.yaml
+    line_number_1based: 94
+    before: "    status: NOT_STARTED  # resumed by the decision of 2026-11-02 (manifests/campaign-resumption-v1.yaml); value unchanged; START needs its own authorization"
+    after: '    status: IN_PROGRESS  # transitioned {START_TIMESTAMP} (protocol/change-control-v1.md, section 7; protocol/CHANGELOG.md; human authorization {START_AUTH_ID})'
+  validation_coupling: e03-validate.yml asserts the Campaign configuration heading only for E03-resetability, so an E02 heading does not fail it either way; the heading is nevertheless added only at the START, in the same commit as the change-log row and the status change
+  stale_readme_text:  # design-brief-draft.md, section 6; a correction under the campaign-status rule, not a change to frozen text
+  - {n: 1, where: Objective, correction: cite protocol/setup-effort-v2.md (v1 is AMENDED)}
+  - {n: 2, where: Future independent variables, correction: cite setup-effort-v2 section 10 for the mechanism vocabulary}
+  - {n: 3, where: Future independent variables (target state), correction: state that the frozen records CS-003 and CS-004 are required}
+  - {n: 4, where: Future independent variables (surface), correction: state the mapped surfaces}
+  - {n: 5, where: Future dependent variables, correction: cite setup-effort-v2 sections 4 and 5 (FROZEN-PRE-DATA) and remove the word candidate}
+  - {n: 6, where: Required evidence (schema), correction: schemas/run-manifest.schema.v2.json}
+  - {n: 7, where: Required evidence (provisioning), correction: cite setup-effort-v2 section 8}
+  - {n: 8, where: Required evidence (verification artifact), correction: replace form TBD by the run manifest with actions.json and precondition.json (HD-22 default)}
+  - {n: 9, where: Required evidence (raw observations), correction: raw-data/E02-state-establishment/<SUT>/<run_id>/}
+  - {n: 10, where: missing execution path, correction: add GitHub Actions under CAMPAIGN-CI-WRITE-AUTH-01 and governance v6 Sections 3.6 and 3.7}
+  - {n: 11, where: missing H2 pairing, correction: add the CS-003 and CS-004 pairs and the pairing on WEB}
+  - {n: 12, where: Preparation paragraph, correction: add the CS-004 status line}
+
+candidate_configuration_section_sha256: 53e0e7a0ed90cc210da4f2bd50eed5c1e235553da384075044641a716c8f4220
+
+candidate_configuration_section_note: 'the sha256 of the file e02-campaign-configuration-section.md that the gate rehearsal ran on (its input line in the rehearsal output names the same hash, 15489 bytes); the text below equals that file byte for byte; it records ten executable conditions (OPEN-1 resolved) and is replaced by a successor version of this package if a DRY_RUN or the verification import changes any lock value'
+
+candidate_configuration_section: |
+    ## Campaign configuration
+
+    LOCKED at the E02 campaign START of {START_DATE} under the human authorization `{START_AUTH_ID}` (protocol/change-control-v1.md, section 7, moment 1: `campaign NOT_STARTED -> IN_PROGRESS`, change-log row of the same date). From that moment every item below is locked for the campaign: a change to any of them while IN_PROGRESS requires its own change-log row with the reason, and results collected before the change are analyzed under the earlier configuration. The section is justified item by item in `manifests/e02-campaign-start-package-v2.yaml` (or its successor version); the realization rows, counting conventions, and the decisions listed under "Decisions carried into the configuration" are those of `experiments/E02-state-establishment/executor/README.md` and `executor/IMPLEMENTATION-NOTES.md` at the locked implementation hash.
+
+    ### Canonical scenarios and mapping records
+
+    - **CS-003** (`experiments/scenario-mappings/CS-003.yaml`, sha256 `83815775737c258c9e44c9946e9d2264015cf398ef796f7e08d61f5e38dae3f3`), mapping_status FROZEN (`E02-CS003-FREEZE-AUTH-01`, 2026-11-02): precondition CLEAN_SESSION; COMPARABLE for SUT-01 (WEB, API), SUT-02 (WEB), SUT-03 (WEB), SUT-04 (WEB, API), SUT-05 (API); SUT-06 NOT_COMPARABLE.
+    - **CS-004** (`experiments/scenario-mappings/CS-004.yaml`, sha256 `590af7258aeeb17b5ed73376ae3d8a2e71f86771b5c086ee5af4c266accc4cfe`), mapping_status FROZEN (`E02-CS004-FREEZE-AUTH-01`, 2026-11-06): precondition SEEDED_BUSINESS_STATE (uncounted); WEB only; COMPARABLE for SUT-01, SUT-02, SUT-03; NOT_COMPARABLE for SUT-04, SUT-05, SUT-06.
+    - `experiments/scenario-mappings/CS-001.yaml` is scoped to E03-resetability and is not an input to this configuration.
+    - Population: six systems under test (SUT); SUT-06 stays a member and has no condition (NOT_COMPARABLE on both scenarios, NO_EQUIVALENT_INTENT).
+
+    ### Pinned SUT versions
+
+    `manifests/sut-manifest.yaml` (pinned 2026-09-16; `evaluated_version_frozen` true since the E03 START of 2026-10-28), copied here for the components that the conditions run; no pinned value is changed by this START.
+
+    | SUT | Surface | Repository | Commit | Release |
+    |---|---|---|---|---|
+    | SUT-01 | web | https://github.com/gsanchezm/OmniPizza | 9ca37674d374e9303912e259641ee86baf3aabe1 | none |
+    | SUT-01 | api | https://github.com/gsanchezm/OmniPizza | 9ca37674d374e9303912e259641ee86baf3aabe1 | none |
+    | SUT-02 | web | https://github.com/saucelabs/sample-app-web | 60fdd634bb111c092282fa07977513a0a7765593 | none |
+    | SUT-03 | web | https://github.com/browserstack/browserstack-demo-app | 7ab934d733f2f74d4b912e94e86f59ae0f6b7609 | none |
+    | SUT-04 | web | https://github.com/mwinteringham/restful-booker-platform | d36bd3f8647a091d406e53bad463c5e3e5d2ece1 | 2.2 |
+    | SUT-04 | api | https://github.com/mwinteringham/restful-booker-platform | d36bd3f8647a091d406e53bad463c5e3e5d2ece1 | 2.2 |
+    | SUT-05 | api | https://github.com/juice-shop/juice-shop | 1618a611b173b4bf114028e6e02549950606e29d | v20.2.0 |
+
+    The SUT-05 instance runs the packaged distribution of its pinned release v20.2.0 and the SUT-04 instance follows the route of the SUT's README, as provisioned by the pinned workflow (the provisioning steps are those of the E03 measured job, copied into `.github/workflows/e02-measured-execution.yml`).
+
+    ### Toolchain versions
+
+    - Web runner: Playwright for Python 1.63.0, with its runtime dependencies pinned by exact version and sha256 hashes in `experiments/E02-state-establishment/executor/requirements.txt` (sha256 `7d8dafab6bda619c24cd690013386dc5c1a03ff7f97733aa644d774382dd435f`; its 13 non-comment lines equal those of the E03 requirements file), installed with `--require-hashes --only-binary :all:`; Chromium is the build that this Playwright version names, downloaded by `playwright install chromium`, not hash-pinned by the study, and its observed version is recorded per run.
+    - API client: the Python 3 standard library (`urllib.request`) of the runner's python3; the observed version is recorded per run.
+    - Execution substrate: GitHub Actions, ubuntu-24.04 GitHub-hosted runners, through `.github/workflows/e02-measured-execution.yml` only (CAMPAIGN-CI-WRITE-AUTH-01); the workflow file sha256, the repository SHA, and the runner image are captured per run as gate and provenance outputs.
+    - Mobile runner: not used; no mobile condition exists in this campaign.
+
+    ### Dispatch procedure prompt, implementation, schema
+
+    - Dispatch procedure prompt version id (the `executor_prompt_version` input of the measured-execution workflow and the `prompt_version` of every run manifest): `ORCHESTRATOR-E02-state-establishment-v1` (frozen copy `prompts/frozen/ORCHESTRATOR-E02-state-establishment-v1.md`, sha256 `{PROMPT_SHA256}`); the working copy is byte-identical to the frozen copy, which is written once, at the START (prompts/README.md, rule 2).
+    - Executor implementation: `experiments/E02-state-establishment/executor/run-condition.sh`, sha256 `602dfaf6ccc40d6fc9c54d3342a0111860328de149cab25d9463a770353b6228` (3032 bytes); the digests embedded in that file cover every other implementation file (`executor/executor/*.py`, `requirements.txt`), so this single hash locks the whole implementation; the run manifests record `agent_role` ORCHESTRATOR.
+    - Run-manifest schema: `schemas/run-manifest.schema.v2.json` (sha256 `9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757`); `actions[].outcome` is mandatory on every emitted action record by campaign convention; `establishment_mechanisms`, `starting_state_id`, and `target_state_id` are recorded on every run (protocol/setup-effort-v2.md, section 10).
+    - Agent governance: `protocol/agent-governance-v6.md` (sha256 `c890a9d004b2989aa9ae33a54bc68b000c47fc9e3f79d60ad0051de78b3f2a4a` of the canonical file; the public repository holds the provider-neutral export of that file, bridged to it by `PUBLIC-EXPORT-MANIFEST.yaml`), FROZEN-PRE-DATA since 2026-11-06, whose Sections 3.6 and 3.7 govern the execution of this campaign under ORCHESTRATOR coordination with one dispatch authorization per assigned SUT.
+
+    ### Conditions
+
+    Ten conditions, one per COMPARABLE SUT x surface x scenario, establish direction only (resetting a state belongs to E03-resetability). `environment_type` is SELF_HOSTED on a GitHub-hosted runner for every condition (protocol/study-design-v1.md, section 10.3: a controlled instance, never PUBLIC_HOSTED). A condition is dispatched only while its record in `experiments/E02-state-establishment/controlled-instance-status.yaml` is CONTROLLED and VERIFIED on GitHub Actions (gate G-8). Mechanisms are recorded per run, not per condition.
+
+    | Condition id | SUT | Surface | Scenario | Starting state | Establishment mechanisms declared by the realization | N per condition | Status at START |
+    |---|---|---|---|---|---|---|---|
+    | E02-CS003-SUT01-WEB | SUT-01 | WEB | CS-003 | CLEAN_SESSION | PREDEFINED_ACCOUNT, API_SEED, APP_STATE_CONTROL, DIRECT_ROUTE | 50 (EX0001 to EX0050) | EXECUTABLE |
+    | E02-CS003-SUT01-API | SUT-01 | API | CS-003 | CLEAN_SESSION | PREDEFINED_ACCOUNT, API_SEED | 50 (EX0001 to EX0050) | EXECUTABLE |
+    | E02-CS004-SUT01-WEB | SUT-01 | WEB | CS-004 | SEEDED_BUSINESS_STATE | PREDEFINED_ACCOUNT, API_SEED, APP_STATE_CONTROL, DIRECT_ROUTE | 50 (EX0001 to EX0050) | EXECUTABLE |
+    | E02-CS003-SUT02-WEB | SUT-02 | WEB | CS-003 | CLEAN_SESSION | PREDEFINED_ACCOUNT, DIRECT_ROUTE, UI_FLOW | 50 (EX0001 to EX0050) | EXECUTABLE |
+    | E02-CS004-SUT02-WEB | SUT-02 | WEB | CS-004 | SEEDED_BUSINESS_STATE | PREDEFINED_ACCOUNT, DIRECT_ROUTE, UI_FLOW | 50 (EX0001 to EX0050) | EXECUTABLE |
+    | E02-CS003-SUT03-WEB | SUT-03 | WEB | CS-003 | CLEAN_SESSION | PREDEFINED_ACCOUNT, DIRECT_ROUTE, UI_FLOW | 50 (EX0001 to EX0050) | EXECUTABLE |
+    | E02-CS004-SUT03-WEB | SUT-03 | WEB | CS-004 | SEEDED_BUSINESS_STATE | PREDEFINED_ACCOUNT, DIRECT_ROUTE, UI_FLOW | 50 (EX0001 to EX0050) | EXECUTABLE |
+    | E02-CS003-SUT04-WEB | SUT-04 | WEB | CS-003 | CLEAN_SESSION | PREDEFINED_ACCOUNT, DIRECT_ROUTE, UI_FLOW | 50 (EX0001 to EX0050) | EXECUTABLE |
+    | E02-CS003-SUT04-API | SUT-04 | API | CS-003 | CLEAN_SESSION | PREDEFINED_ACCOUNT, API_SEED | 50 (EX0001 to EX0050) | EXECUTABLE |
+    | E02-CS003-SUT05-API | SUT-05 | API | CS-003 | CLEAN_SESSION | PREDEFINED_ACCOUNT, API_SEED | 50 (EX0001 to EX0050) | EXECUTABLE |
+
+    All ten conditions are executable. The checkout-entry and checkout-view selectors of the CS-004 realizations of SUT-02 and SUT-03 were read from the pinned sources on 2026-11-06 (SUT-02 commit 60fdd634bb111c092282fa07977513a0a7765593, SUT-03 commit 7ab934d733f2f74d4b912e94e86f59ae0f6b7609; decision of the human research lead recorded in `manifests/campaign-execution-decisions-v3.yaml`, OPEN-1) and are verified only by the environment-verification DRY_RUN of each condition, which precedes this START (import record in `experiments/E02-state-establishment/controlled-instance-status.yaml`). The run-level `establishment_mechanisms` of a run is the list that its realization declares (the column above); it names every mechanism that the counted operations and the uncounted precondition steps of the realization use (a contract test of the executor enforces it), and the precondition steps are recorded one by one in `precondition.json`.
+
+    ### Sample size per condition
+
+    N = 50 per condition (protocol/repeatability-determinism-v1.md, section 3, Standard): execution ids EX0001 to EX0050, attempt 1 each, one dispatch per execution; 500 planned executions in all. Required Actions (establish) statistics are computed over the attempts that reached the verification; ABORTED, INCONCLUSIVE, and ERROR attempts are reported beside them, never dropped.
+
+    ### Counting, starting state, and between-run reset
+
+    - Counting follows `experiments/E02-state-establishment/executor/README.md`, section 3, at the locked implementation hash (protocol/setup-effort-v2.md, sections 4 and 5): one counted action is one experimenter-initiated operation with an observable effect, authentication and the verification read count, and no count is predeclared in this configuration.
+    - The declared starting state is checked by an uncounted read; when it does not hold the run stops as ABORTED and keeps the counted operations performed before the check. A failed counted operation stops the establishment; no retry exists.
+    - Between runs each measured job provisions a fresh controlled instance (provisioning, not counted); the named reset realizations of the mapping records are not executed.
+
+    ### Decisions carried into the configuration
+
+    These are the decisions of 2026-11-05 and 2026-11-06 recorded in `manifests/campaign-execution-decisions-v2.yaml` and `manifests/campaign-execution-decisions-v3.yaml`, used as the working defaults: HD-R (a fresh instance per run instead of the named reset; disclosed), HD-8 of the CS-003 record (the SUT-02 oracle is UI-only and the SUT-04 account is an administrator under the standard actor state; used as the frozen text words them and disclosed in the paper), HD-15 (every page load started by the experimenter is counted, the first included), HD-A (the starting-state check follows the first identity action where the state needs it), HD-C (the SUT-03 float-cart close is counted), HD-V (a verification read that completes is SUCCESS and the predicate decides the run outcome), HD-F (no retry after a failed counted operation), HD-22 (the verification artifact is the run manifest with `actions.json` and `precondition.json`), HD-E (resolved: governance v6 was frozen on 2026-11-06 and the CI correction OP-CI-17 made the verification gate check the working prompt), HD-S (the CS-004 checkout selectors of SUT-02 and SUT-03 were read from the pinned sources), and HD-M (the declared run-level mechanisms of a condition name every mechanism that its realization uses).
+
+    ### Exclusion and attribution rules
+
+    None beyond the frozen discipline: no run is excluded after the fact; an attempt keeps its recorded outcome; a further attempt (attempt + 1) is dispatched only on an explicit human instruction that names the condition and the execution; the first attempt of an execution is immutable; no attribution rule is introduced (the deferred issue (xix) belongs to other campaigns).
+
+    ### CONFIRMATORY comparisons
+
+    H2 (`protocol/statistical-analysis-plan-v1.md`, section 4.3): SUT-01 versus SUT-02 and SUT-01 versus SUT-03, on Required Actions (establish) per COMPARABLE canonical scenario, paired on the WEB surface; this campaign contributes the establish side only (the reset side is E03-resetability). The pairs are CS-003 and CS-004 (two pairs per comparison). The method is descriptive: paired per-scenario differences are reported without a significance test, because the statistical analysis plan applies a Wilcoxon test only where the number of non-tied pairs is adequate, a term it does not define, and with n non-tied pairs the smallest two-sided exact p-value is 2 x 2^-n (derived here: 0.5 at n = 2). No comparison involving SUT-04 or SUT-05, and no API comparison, is pre-registered CONFIRMATORY; they stay EXPLORATORY.
+
+    ### Execution
+
+    Every MEASURED_EXPERIMENT runs only through `.github/workflows/e02-measured-execution.yml` on the default branch of the PUBLIC repository (GitHub Actions reads the public tree, so the dispatches follow the publication of the START state), one condition, one execution, one attempt per dispatch, first attempt only, no GitHub re-run. The runs are dispatched by the ORCHESTRATOR under `protocol/agent-governance-v6.md`, Sections 3.6 and 3.7, and the frozen dispatch procedure `ORCHESTRATOR-E02-state-establishment-v1`, with the frozen inputs of this record; no agent session is instantiated per SUT. The ORCHESTRATOR dispatches only within a dispatch authorization that the human research lead issued, one per assigned SUT, naming that SUT's executable conditions and N; a dispatch authorization is not issued by this section, by a prepared record, or by the START, and the human may revoke it at any time. Within it each execution is dispatched in the order below without a further approval of each exact dispatch: exactly one dispatch per execution, never cancelled, re-run, or repeated, and never a second run of a condition while one is in progress.
+
+    ### Order of dispatches and dispatch record
+
+    Order (fixed here, before the first dispatch; protocol/agent-governance-v6.md, Section 3.7, "Order and record"): within a dispatch authorization, the conditions of the assigned SUT are dispatched in the order of the Conditions table above, a condition being completed (EX0001 to EX0050, in ascending order, each only after the run before it concluded) before the next condition of the same SUT starts; no order across SUTs is fixed by this record, the chains of different SUTs are independent, and no decision whether, when, or how to dispatch an execution depends on a measured output of any SUT. Dispatch record: the append-only record is one file per condition, `manifests/e02-measured-dispatch/<condition id>.jsonl`, one line per event; the line of a dispatch (condition id, execution id, attempt, inputs, the UTC clock reading, and the revisions of the public repository and of the workflow file that are dispatched) is committed before the dispatch is made, and the line of its run identity (run id, run number, run attempt, head sha, creation time) is committed no later than the dispatch line of the next execution of that condition, or at the close of the condition. The stop conditions are those of the frozen dispatch procedure.
+
+candidate_change_log_row_sha256: 1302e77edc8f426fe8462013bf86776bf621fd69b5e0b81b5ec8127122393a43
+
+candidate_change_log_row: |
+    | {START_DATE} | experiments/E02-state-establishment/README.md | none | none | campaign NOT_STARTED -> IN_PROGRESS | E02 campaign start under protocol/change-control-v1.md, section 7, by explicit human approval, authorization {START_AUTH_ID}. Campaign configuration record added to experiments/E02-state-establishment/README.md (canonical scenarios CS-003 and CS-004, both mapping FROZEN; pinned SUT versions: manifests/sut-manifest.yaml; toolchain versions: manifests/toolchain-manifest.yaml and experiments/E02-state-establishment/executor/requirements.txt; dispatch procedure prompt version ORCHESTRATOR-E02-state-establishment-v1, sha256 {PROMPT_SHA256}; executor implementation run-condition.sh sha256 602dfaf6ccc40d6fc9c54d3342a0111860328de149cab25d9463a770353b6228; agent governance protocol/agent-governance-v6.md (execution under ORCHESTRATOR coordination, one dispatch authorization per assigned SUT, Section 3.7; order of dispatches and append-only dispatch record per condition fixed in the record); ten executable web/api conditions recorded, N = 50 each; exclusion rules: none beyond the frozen discipline; CONFIRMATORY comparisons: H2 establish side, SUT-01 vs SUT-02 and SUT-01 vs SUT-03, descriptive). All values derived from already-frozen artifacts, no new methodological rule introduced. | E02-state-establishment | gilbertosanchez |
+
+controlled_instance_status_template: |-
+  # experiments/E02-state-establishment/controlled-instance-status.yaml -- written by the ORCHESTRATOR from the import of an environment-verification run; the schema that gate G-8 reads.
+  # The status of a condition is that of the latest environment-verification run that covers it. An entry is VERIFIED only on the recorded result of a run; none exists today.
+  conditions:
+    E02-CS003-SUT01-WEB:
+      status: CONTROLLED
+      reverification_required: false
+      github_actions_verification:
+        status: VERIFIED
+        environment_type: SELF_HOSTED
+        run_id: null
+        run_url: null
+        import_record: null
+
+dispatch_authorizations_to_issue:
+  note: one per assigned SUT (protocol/agent-governance-v6.md, Section 3.7); issued only by the human research lead after the START and after the conditions are verified, each with its own approval line offered verbatim; the ids are proposals that mirror E03-DISPATCH-SUT0N-AUTH-01
+  SUT-01: {authorization_id: E02-DISPATCH-SUT01-AUTH-01, conditions: [E02-CS003-SUT01-WEB, E02-CS003-SUT01-API, E02-CS004-SUT01-WEB], executions_in_all: 150}
+  SUT-02: {authorization_id: E02-DISPATCH-SUT02-AUTH-01, conditions: [E02-CS003-SUT02-WEB, E02-CS004-SUT02-WEB], executions_in_all: 100}
+  SUT-03: {authorization_id: E02-DISPATCH-SUT03-AUTH-01, conditions: [E02-CS003-SUT03-WEB, E02-CS004-SUT03-WEB], executions_in_all: 100}
+  SUT-04: {authorization_id: E02-DISPATCH-SUT04-AUTH-01, conditions: [E02-CS003-SUT04-WEB, E02-CS003-SUT04-API], executions_in_all: 100}
+  SUT-05: {authorization_id: E02-DISPATCH-SUT05-AUTH-01, conditions: [E02-CS003-SUT05-API], executions_in_all: 50}
+
+dispatch_authorization_template: |-
+  # manifests/e02-dispatch-authorization-sut0N-v1.yaml -- the fields that gate G-E02-A reads (e02-measured-execution.yml); PREPARED here, ISSUED only by the human research lead (Section 3.7).
+  record_class: E02_DISPATCH_AUTHORIZATION
+  authorization_id: E02-DISPATCH-SUT0N-AUTH-01
+  version: 1
+  study_id: EUS-2026-001
+  campaign_id: E02-state-establishment
+  assigned_sut: SUT-0N
+  status: ISSUED
+  revoked: false
+  attempt: 1
+  campaign_start_authorization_id: {START_AUTH_ID}
+  governing_protocol: protocol/agent-governance-v6.md, Section 3.7
+  executor_implementation_sha256: 602dfaf6ccc40d6fc9c54d3342a0111860328de149cab25d9463a770353b6228
+  executor_prompt_version: ORCHESTRATOR-E02-state-establishment-v1
+  executor_prompt_sha256: {PROMPT_SHA256}
+  conditions:   # in the order of the Conditions table of the locked configuration
+  - {condition_id: E02-CS003-SUT0N-WEB, executions: 50}
+  human_approval: {message_verbatim: null, message_sha256: null, received_utc: null}   # the human's own message, recorded verbatim with its SHA-256 before the first dispatch (Section 3.7)
+
+decisions_already_taken:
+- id: ROUND-1
+  date: '2026-11-06'
+  what: governance becomes a new version (v6) with one dispatch authorization per SUT; the scope includes a small mobile suite (E06, not part of E02)
+  source: manifests/campaign-execution-plan-v1.yaml (CAMPAIGN-EXECUTION-PLAN-01), the entry stamped 2026-11-06T01:12:23.188Z, text sha256 4f859aee102b868205e46ebd07377e0c9069012fa93ea831bef9e9432f22e1b0
+- id: ROUND-2
+  date: '2026-11-06'
+  what: the reset side of H2 stays with the frozen E03 (no second reset scenario); H4 continuity is evaluated strictly; accept the working defaults and start
+  source: manifests/campaign-execution-plan-v1.yaml, the entry stamped 2026-11-06T02:06:39.596Z, text sha256 06e1fd32d0d82dafa132fbc7fd637a5becc5a79ceb1bd95912152ee30e5dced7
+- id: DECISIONS-02
+  date: '2026-11-06'
+  what: freeze of protocol/agent-governance-v6.md and of CS-004 (E02-CS004-FREEZE-AUTH-01), the narrow CI grant for the SUT-01 smoke workflow, the acceptance of the smoke risk, the Tier-2 working defaults (E02 HD-15, HD-22, HD-A, HD-C, HD-E, HD-V, HD-F), E02-HD-R (a fresh instance per run), and CS-003-HD-8 (disclosed)
+  source: manifests/campaign-execution-decisions-v2.yaml (CAMPAIGN-EXECUTION-DECISIONS-02), message sha256 7aa4d48e8f578eaaa27969f06560fbd07381c82e16319180f2818bbc67fd919d, approval lines sha256 483b27ccbbaeab25b560d6233a51896dfa16cb5e67296fb2b2afc174c56cb351
+- id: DECISIONS-03
+  date: '2026-11-06'
+  what: the agent-instructions sentence for E06-SMOKE-CI-WRITE-AUTH-01; OPEN-1 resolved before the START (the pinned sources of SUT-02 and SUT-03 read for the CS-004 selectors); OP-CI-17 (verification gate and stale wording); environment verification before the START (OPEN-4) and reuse by reference of the E03 execution-model document (OPEN-6)
+  source: manifests/campaign-execution-decisions-v3.yaml (CAMPAIGN-EXECUTION-DECISIONS-03), answer sha256 46958b123e5e5e3c27283459bf4205d75972fddcade638d23d0b96911961b627
+- id: RESUMPTION
+  date: '2026-11-02'
+  what: E02 and E04 to E12 resumed; each START, each dispatch authorization, and each freeze needs its own explicit approval
+  source: manifests/campaign-resumption-v1.yaml
+- id: SINGLE-AGENT
+  date: '2026-10-24'
+  what: no executor agent; the ORCHESTRATOR does the work, including commits and pushes, with as much autonomy as the gates allow
+  source: manifests/e03-campaign-start-package-v2.yaml, decisions_already_taken SINGLE-AGENT
+
+open_items:
+- id: OPEN-1
+  title: the CS-004 checkout selectors of SUT-02 and SUT-03 (HD-S)
+  kind: RESOLVED_AS_TO_THE_SOURCE_READING
+  detail: 'resolved on the decision of 2026-11-06 (decisions-v3): the selectors were read from the pinned sources (SUT-02 commit 60fdd634, SUT-03 commit 7ab934d7) and the two realizations were configured (commit 896adcd6); the realizations were never run, so the environment-verification DRY_RUN of each is the only verification (OPEN-4, OPEN-5)'
+- id: OPEN-2
+  title: the E02 verification workflow could not run before the START
+  kind: RESOLVED
+  detail: 'resolved by OP-CI-17 (commit a9d19ea3): the DRY_RUN gate checks the working prompt, and a frozen copy, if one exists, must be byte-identical to it; on the repository as it stands the verification gate passes (9 of 9) and the measured gate refuses (16 pass, 17 fail, all belonging to the state before the START)'
+- id: OPEN-3
+  title: stale DRAFT wording in both workflows
+  kind: RESOLVED
+  detail: 'resolved in the same operation (OP-CI-17)'
+- id: OPEN-4
+  title: environment verification before the START
+  kind: PRECONDITION_OF_THE_START
+  detail: 'decided on 2026-11-06 (decisions-v3): the verification of the ten conditions on GitHub Actions precedes the START, because a failed verification can change provisioning, which the lock freezes (E03 verified nine times before its START). The push of export v47 is done (2026-11-09); it needs one approval per DRY_RUN dispatch (or one approval block with the exact lines, as for the E03 SUT-02 to SUT-05 authorizations); the bundles are reviewed and never imported as measured data; the import writes controlled-instance-status.yaml. The START approval line is not offered until all ten conditions are VERIFIED on GitHub Actions'
+- id: OPEN-5
+  title: items of the executor that no test and no run has exercised
+  kind: PRECONDITION_OF_THE_START
+  detail: 'executor README, section 10: the SUT-01 unauthenticated session status, the SUT-04 booking list shape and date format, the SUT-05 BasketItems request and response shapes, the SUT-02 landing check, the SUT-03 float-cart close, and every selector, route, and starting-state read of the two CS-004 realizations; the first execution of every web realization is a DRY_RUN. A defect found there changes the implementation hash (and gives a successor version of this package, with the DRY_RUNs repeated on the new bytes)'
+- id: OPEN-6
+  title: the execution-model record of E02
+  kind: RESOLVED
+  detail: 'resolved on 2026-11-06 (decisions-v3): the import procedure and artifact classes of experiments/E03-resetability/ci-cd-execution-model.md are used by reference, as the working prompt states; no E02 document is written'
+- id: OPEN-7
+  title: the START date and the START authorization id
+  kind: HUMAN_DECISION
+  detail: 'the id is the human research lead''s (proposal: E02-START-AUTH-01, mirroring E03-START-AUTH-01); the START and the configuration lock are one approval of the exact action (protocol/change-control-v1.md, section 7; governance v6, Section 3.6, Human-gated), asked with the exact line and recorded with its hash'
+- id: OPEN-8
+  title: the five dispatch authorizations
+  kind: HUMAN_DECISION
+  detail: 'after the START and the verification, one per SUT (dispatch_authorizations_to_issue); an authorization names a condition only if its gates hold at issuance; each is issued only by the human research lead'
+- id: OPEN-9
+  title: the H2 consequence of the ten conditions
+  kind: DISCLOSURE
+  detail: 'the establish side of H2 has two pairs per comparison (CS-003 and CS-004); two pairs cannot reach significance in any case (smallest two-sided exact p-value 0.5 at n = 2, derived), so H2 is descriptive (HD-16); the paper states this'
+- id: OPEN-10
+  title: the declared run-level mechanisms of SUT-02 and SUT-03
+  kind: CORRECTION_DISCLOSED
+  detail: 'the declared run-level establishment_mechanisms of the four conditions of SUT-02 and SUT-03 omitted DIRECT_ROUTE, which the first load of those realizations is marked with, while SUT-01 WEB and SUT-04 WEB declared it. It was corrected before the lock (OP-PREP-05, commit cd219eb2), a contract test now enforces that the declared list covers every mechanism used, and this is the reason the implementation hash differs from version 1. Reported so that the human research lead can ask for the former lists; the former lists would fail the new test'
+
+sequence_after_the_human_answers:
+- 'S1. [DONE 2026-11-06] OPEN-1, OPEN-2, OPEN-4, OPEN-6 answered (decisions-v3)'
+- 'S2. [DONE] the two CS-004 realizations configured and tested (commit 896adcd6); the declared mechanisms corrected (OP-PREP-05)'
+- 'S3. [DONE] OP-CI-17 (commit a9d19ea3)'
+- 'S4. [DONE 2026-11-09T12:49:05Z] export v47 (built and pushed by the ORCHESTRATOR on the human research lead''s yes to the exact line): published the executor, the workflows, governance v6, CS-004, the prompt, and the E09 and E06 smoke files; its validation run 42620158864 passed in all four jobs and GitHub registered the E02 workflows as active, with no rejected workflow run (a rejected workflow file makes a failed run, as in export v45)'
+- 'S5. the environment-verification DRY_RUNs of the ten conditions, each dispatch on the human research lead''s approval; bundles reviewed, never imported as measured data; the verification import writes controlled-instance-status.yaml'
+- 'S6. if a DRY_RUN or the import changes a lock value, package version 3 (values recomputed, the rehearsal repeated); otherwise this version is the START candidate and S7 follows'
+- 'S7. the START approval line offered verbatim; on approval the START edit set is applied in one commit; the frozen prompt is written'
+- 'S8. export v48 (the START state), the gate step re-run on the exported tree, then the five dispatch authorizations, each on its own approval line, then the dispatches'
+
+does_not:
+- start the campaign, lock any configuration item, or write the frozen prompt
+- issue, prepare as issued, or change any dispatch authorization
+- dispatch any workflow, run any executor, start any SUT, or clone any SUT
+- edit a workflow, the E02 README, the change log, the study manifest, or the agent-instructions file
+- analyze or state any result for H1 to H5

@@ -14,7 +14,7 @@
 - Ten realizations in five modules, all configured (CS-003 x 7; CS-004 x 3). The CS-004 realizations of SUT-02 and SUT-03 were refused as not configured until 2026-11-06 and were then configured from the pinned sources (decisions record `manifests/campaign-execution-decisions-v3.yaml`, OPEN-1); they are not exercised by any test or run.
 - `.github/workflows/e02-measured-execution.yml`: dispatch-only; gate job with the gates of section 5; provenance; measured job with the provisioning of the five SUTs (copied from the E03 measured job, with the SUT gates rewritten to the assigned SUT); executor through `run-condition.sh`; manifest validation; host-path replacement; immutable upload.
 - `.github/workflows/e02-environment-verification.yml`: dispatch-only; DRY_RUN only (`dry_run` must be true); gate that fails closed today; provisioning (same copy); one DRY_RUN execution; validation; upload of the DRY_RUN bundle (never imported).
-- Tests (section 8): 38 test cases in six modules, plus 56 recorded gate runs; all pass.
+- Tests (section 8): 41 test cases in six modules, plus 56 recorded gate runs; all pass.
 - actionlint 1.7.7 with shellcheck 0.10.0 on both workflows: exit 0 (re-run after OP-CI-17, 2026-11-06).
 
 ## 2. What is NOT done
@@ -95,7 +95,7 @@ Run on 2026-11-06 on canonical `main` (cwd = repository root, the `run-condition
 | `test_counting.py` | 15 | OK |
 | `test_gate_matrix.py` | 5 tests; 56 gate runs (fixture pass, mutations, verification, real worktree, guards) | OK: exit 0 in 5 runs, non-zero in 51 |
 | `test_run_condition.py` | 5 | OK |
-| `test_realization_contract.py` | 6 | OK |
+| `test_realization_contract.py` | 9 (the last three are the regression guards of HD-N) | OK |
 | `test_hygiene.py` | 2 | OK |
 | `test_workflows_static.py` | 5 | OK; OP-CI-15 longest estimate 1147 (limit 20000) |
 | actionlint 1.7.7 with shellcheck 0.10.0 | both workflows | exit 0 |
@@ -135,6 +135,7 @@ The brief's recommendations are the defaults (the plan record adopts them as the
 | HD-S | CS-004 SUT-02 and SUT-03 checkout selectors | read from the pinned sources on 2026-11-06 (decisions-v3, OPEN-1) and configured; verified only by a DRY_RUN | **resolved as to the source reading**; the DRY_RUN is the open verification (brief section 9, gap 1) |
 | HD-E | verification before governance v6 is frozen | resolved: v6 was frozen on 2026-11-06 and OP-CI-17 made the verification gate check the working prompt, so the verification gate passes on `main` | the E03 precedent (verification before the START) applies |
 | HD-M | run-level establishment mechanisms | the declared list of a condition names every mechanism that its counted operations and its precondition steps use; OP-PREP-05 (2026-11-07) added DIRECT_ROUTE to the lists of SUT-02 and SUT-03 (the first load is marked DIRECT_ROUTE there as for SUT-01 and SUT-04) and a contract test that enforces the rule | **new**; a correction of the draft before the lock; the implementation hash changed |
+| HD-N | starting-state checks after the first DRY_RUNs | the ten environment-verification DRY_RUNs of 2026-11-09 (execution_id DR0001, implementation hash 602dfaf6...) ran seven conditions to SUCCESS with the declared counts and aborted three in the starting-state check, before any establishment: (a) SUT-01 WEB CS-003 read an absent `omnipizza-cart` key as a non-empty cart, now an absent key (the app writes none on the first load) is an empty client cart, and a present but unparsable value is not; (b) SUT-02 WEB CS-003 read the cart link on the login page, where it does not exist, now the login form is read on the first load (uncounted precondition) and the cart half (no badge, cart link reads "Cart, empty") after the authentication and before the add-to-cart, as HD-A allows; (c) SUT-03 WEB CS-004 compared the Checkout label with a case-sensitive test although the page renders it in upper case, now the comparison ignores case | **new**; defects of the checks, found by the DRY_RUN as OPEN-5 expected; no counted operation, selector of the establishment, expected value, or outcome rule changed; the implementation hash changes from 602dfaf6... to d0b1bbb9...; three tests guard the corrections and fail on the former sources |
 | HD-V | per-action outcome of a verification read | SUCCESS when the observation is obtained; the predicate decides the run | **new** interpretation of rule 9 for reads |
 | HD-F | failure of a counted operation | stops the establishment; no further operation; no retry | consistent with the E03 no-retry rule |
 
@@ -145,5 +146,6 @@ The brief's recommendations are the defaults (the plan record adopts them as the
 - The SUT-05 `POST /api/BasketItems` shape and the basket response; its route is SOURCE_VERIFIED only.
 - The SUT-02 landing check (`**/inventory.html`) and the SUT-03 float-cart close are new steps; the SUT-03 close may be unnecessary (HD-C).
 - The web run (Playwright 1.63.0 and its Chromium) is not exercised by any test here; the first execution is a DRY_RUN.
+- The three realizations corrected by HD-N have not run since the corrections, and the seven that passed the first DRY_RUNs have not run on the new bytes; the DRY_RUNs are repeated on the new implementation hash before the START.
 - The CS-004 selectors of SUT-02 and SUT-03 were read from the pinned sources (SUT-02 `60fdd634`, SUT-03 `7ab934d7`) and nothing was run; if a DRY_RUN finds a defect, the implementation hash changes and the lock values are recomputed.
 - The copied provisioning block is the E03 code; the E03 provisioning was verified on GitHub Actions for its own conditions, not for these E02 steps (the steps are the same, but the verification is per condition id).

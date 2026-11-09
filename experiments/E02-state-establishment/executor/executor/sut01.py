@@ -53,7 +53,9 @@ def _storage(token, behavior):
 
 
 def _cart_empty(cart):
-    return isinstance(cart, dict) and (cart.get('state') or {}).get('items') in (None, [])
+    """An empty client cart: no persisted cart at all (web.parse returns None only for an absent key; the app writes none on the first load,
+    DRY_RUN finding of 2026-11-09) or a persisted cart without items. A value that is present but unparsable comes back as text and is not empty."""
+    return cart is None or (isinstance(cart, dict) and (cart.get('state') or {}).get('items') in (None, []))
 
 
 def components_api(run):

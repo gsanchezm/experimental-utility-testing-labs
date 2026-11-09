@@ -100,6 +100,11 @@ def cs003_web(run):
     return common.Result('SUCCESS' if quantity == '1' else 'FAILURE', EXPECTED_CS003, f'closed-cart bag quantity {quantity!r}', MECH_CS003)
 
 
+def _checkout_control_shown(text):
+    """The control reads 'Checkout' in the markup and the page's CSS renders it in upper case (DRY_RUN finding of 2026-11-09), so it is compared without regard to case."""
+    return isinstance(text, str) and text.strip().lower() == 'checkout'
+
+
 def cs004_web(run):
     """CS-004, SUT-03 WEB. The seeding is the precondition, not counted (DP-1 SEEDED): the load of the sign-in page, the sign-in with
     the documented demouser account, and the buy of product 1, which opens the float cart (all through the app's own controls).
@@ -140,7 +145,7 @@ def cs004_web(run):
             control = b.page.locator(FLOAT_CART_OPEN_CHECKOUT).inner_text().strip()
             s['observation'] = {'bag_quantity': bag, 'sessionStorage.state.cart.products': products, 'checkout_control_text': control}
         run.declare_starting_state('the open float cart holds the seeded product: header bag quantity 1, one product in sessionStorage, Checkout control present (src/components/FloatChart/index.jsx:139-141,156,178@7ab934d)',
-                                   CITATIONS_CS004, s['observation'], bag == '1' and isinstance(products, list) and len(products) == 1 and control == 'Checkout')
+                                   CITATIONS_CS004, s['observation'], bag == '1' and isinstance(products, list) and len(products) == 1 and _checkout_control_shown(control))
         with run.action('navigation action', 'click the Checkout control of the float cart; the route changes to /checkout (establishment)', 'UI_FLOW') as a:
             b.page.locator(FLOAT_CART_OPEN_CHECKOUT).click()
             landed = False

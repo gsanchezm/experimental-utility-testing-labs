@@ -47,7 +47,8 @@ def _wait_inventory(b):
 
 def cs003_web(run):
     """CS-003, SUT-02 WEB. Counted: the first load of the login page, two fills and a submit (authentication), the add-to-cart click,
-    and the badge read (6). The starting state is read after the first load (its check is not counted)."""
+    and the badge read (6). The login form is read after the first load (an uncounted precondition) and the cart half of the starting state, which the
+    login page does not render, after the authentication and before the add-to-cart (the declared starting-state check, not counted)."""
     site = instance.base(run.instance, 'web')
     b = web.Browser(run)
     try:
@@ -55,13 +56,12 @@ def cs003_web(run):
             status = b.goto(site + '/')
             a['observation'] = {'status': status}
             a['outcome'] = 'SUCCESS' if status == 200 else 'FAILURE'
-        with run.step('declared-starting-state', 'login form present; no cart badge; cart link aria-label "Cart, empty"') as s:
+        with run.step('precondition', 'first load of the login page: the login form is visible and no cart badge is rendered (not counted)') as s:
             visible = b.page.locator(USER_NAME).is_visible()
-            badges = b.page.locator(BADGE).count()
-            label = b.page.locator(CART_LINK).get_attribute('aria-label')
-            s['observation'] = {'login_form_visible': visible, 'badge_count': badges, 'cart_link_aria_label': label}
-        run.declare_starting_state('login form visible, no badge, cart link reads "Cart, empty" (src/components/CartButton.jsx:24-42@60fdd63)',
-                                   CITATIONS_CS003, s['observation'], visible and badges == 0 and label == 'Cart, empty')
+            pre_badges = b.page.locator(BADGE).count()
+            s['observation'] = {'login_form_visible': visible, 'badge_count': pre_badges}
+            if not (visible and pre_badges == 0):
+                s['outcome'] = 'FAILURE'
         with run.action('UI action', 'fill the documented username standard_user in the login form (authentication)', 'PREDEFINED_ACCOUNT') as a:
             b.page.locator(USER_NAME).fill('standard_user')
             a['outcome'] = 'SUCCESS'
@@ -73,6 +73,14 @@ def cs003_web(run):
             landed = _wait_inventory(b)
             a['observation'] = {'url': b.page.url, 'landed_on_inventory': landed}
             a['outcome'] = 'SUCCESS' if landed else 'FAILURE'
+        # The cart link is rendered only after the authentication (DRY_RUN finding of 2026-11-09: it does not exist on the login page), so the
+        # cart half of the declared starting state is read here, after the authentication and before the first establishing action. Not counted.
+        with run.step('declared-starting-state', 'after the authentication and before the add-to-cart: no cart badge; cart link aria-label "Cart, empty"') as s:
+            badges = b.page.locator(BADGE).count()
+            label = b.page.locator(CART_LINK).get_attribute('aria-label')
+            s['observation'] = {'login_form_visible_on_first_load': visible, 'first_load_badge_count': pre_badges, 'badge_count_after_login': badges, 'cart_link_aria_label_after_login': label}
+        run.declare_starting_state('a clean session on the login form (first load), and, once authenticated and before the add-to-cart, no badge and a cart link that reads "Cart, empty" (src/components/CartButton.jsx:24-42@60fdd63)',
+                                   CITATIONS_CS003, s['observation'], visible and pre_badges == 0 and badges == 0 and label == 'Cart, empty')
         with run.action('UI action', 'click add-to-cart of the Sauce Labs Backpack (establishment)', 'UI_FLOW') as a:
             b.page.locator(ADD_BACKPACK).click()
             a['outcome'] = 'SUCCESS'
