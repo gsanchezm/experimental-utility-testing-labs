@@ -1,0 +1,547 @@
+# manifests/e02-environment-verification-import-v1.yaml -- E02 environment verification (ORCHESTRATOR record of operation OP-ENV-E02-01, 2026-11-09). Immutable once committed; a correction is a new version file.
+record_class: ENVIRONMENT_VERIFICATION_IMPORT
+record_id: E02-ENVIRONMENT-VERIFICATION-IMPORT-01
+study_id: EUS-2026-001
+campaign_id: E02-state-establishment
+operation_id: OP-ENV-E02-01
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-09'
+recorded_at_utc: '2026-11-09T17:21:20Z'
+status: RECORDED
+measured_experiment: false
+executes_anything: false
+nature: 'The environment-verification record of the ten E02 conditions: two rounds of DRY_RUN runs of .github/workflows/e02-environment-verification.yml, one run per condition and round (execution ids DR0001
+  and DR0002), each dispatched once on the human research lead''s yes to the exact lines and never re-run. The runs are non-measured (record class DRY_RUN): no bundle is imported into raw-data/ or stored
+  in the repository, and no value of a bundle is a measurement. Round DR0001 ran on the bytes of export v47 (implementation hash 602dfaf6ccc4...): seven conditions ran to SUCCESS and three aborted in the
+  declared starting-state check before any establishment, because of defects of those checks and not of any system under test; the three checks were corrected (operation OP-PREP-07, commit e6984eea, implementation
+  hash d0b1bbb9d3014fedb0edaa58186b1cfb2d52759dfd67c2bc1c218c7f45db5200) and published by export v48. Round DR0002 ran on those bytes: all ten conditions ran to SUCCESS with the declared counted operations.
+  The status of a condition in experiments/E02-state-establishment/controlled-instance-status.yaml is that of its latest run, round DR0002.'
+review_method: 'Per run: the workflow run and its single artifact were read from GitHub (attempt 1, event workflow_dispatch, completed, head equal to the public head of the round); the artifact archive
+  was downloaded and its sha256 equals the digest that GitHub reports; the bundle was read: exit status 0, run manifest outcome, counted actions equal to the count declared in the executor README, every
+  action outcome SUCCESS, the declared starting state holds, stderr empty. A run is reviewed OK only if every one of these holds.'
+workflow:
+  path: .github/workflows/e02-environment-verification.yml
+  canonical_sha256: a17a353bb2a8ba2fe558c810e253d4ed33c9e1e5708e3f6309fd51d097912d17
+  exported: UNCHANGED in exports v47 and v48
+prompt_version: ORCHESTRATOR-E02-state-establishment-v1
+rounds:
+- execution_id: DR0001
+  public_head: 9df73709a48eb58b5aec09dc50642dc7a0704b43
+  export: export v47
+  implementation_sha256: 602dfaf6ccc40d6fc9c54d3342a0111860328de149cab25d9463a770353b6228
+  authorization:
+    question_stamp: '2026-11-09T13:09:52.337Z'
+    answer_stamp: '2026-11-09T13:46:45.686Z'
+    answer_text_bytes: 1046
+    answer_text_sha256: b2915b35ec89fac0d76e6820ca35831b22725682d926e602bb550fc2b4c1a172
+    chosen_option: Sí, las diez líneas
+    lines_file_sha256: 9d9e1464b6516183fdce62bbfded96098985eac718d04a1822c2394702872f93
+    preview_equals_lines_file: true
+  runs:
+  - condition_id: E02-CS003-SUT01-API
+    run_id: 42628610560
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42628610560
+    created_at: '2026-11-09T13:47:47Z'
+    updated_at: '2026-11-09T13:49:22Z'
+    workflow_conclusion: success
+    artifact_id: 13678829170
+    artifact_name: E02-DRY_RUN-E02-CS003-SUT01-API-DR0001-A1
+    artifact_size_bytes: 12049
+    artifact_digest: sha256:077bb6af5f6bd32fa768a5daf1292f76ca818a39fd0196241968d231d1e70df3
+    artifact_expires_at: '2027-02-07T13:47:49Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 3
+    declared_counted_actions: 3
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS003-SUT01-WEB
+    run_id: 42628629700
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42628629700
+    created_at: '2026-11-09T13:47:55Z'
+    updated_at: '2026-11-09T13:49:19Z'
+    workflow_conclusion: success
+    artifact_id: 13679129113
+    artifact_name: E02-DRY_RUN-E02-CS003-SUT01-WEB-DR0001-A1
+    artifact_size_bytes: 10022
+    artifact_digest: sha256:984a5154519b813c6b4828d9e1a844967cc7ee70ab536c8164656590c64307f9
+    artifact_expires_at: '2027-02-07T13:47:57Z'
+    archive_digest_verified: true
+    manifest_outcome: ABORTED
+    counted_actions: 1
+    declared_counted_actions: 6
+    actions_outcomes:
+    - SUCCESS
+    declared_starting_state_holds: false
+    exit_status: '0'
+    stderr_bytes: 0
+    abort_cause: 'the declared starting state did not hold, or a precondition failed: declared starting state does not hold: {''token_present'': False, ''omnipizza-cart'': None}'
+  - condition_id: E02-CS004-SUT01-WEB
+    run_id: 42628649949
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42628649949
+    created_at: '2026-11-09T13:48:04Z'
+    updated_at: '2026-11-09T13:49:33Z'
+    workflow_conclusion: success
+    artifact_id: 13679577140
+    artifact_name: E02-DRY_RUN-E02-CS004-SUT01-WEB-DR0001-A1
+    artifact_size_bytes: 135111
+    artifact_digest: sha256:63e923c1f643662454001b2a043f033f642a900a4c42386b5429509d468e5d5d
+    artifact_expires_at: '2027-02-07T13:48:05Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 2
+    declared_counted_actions: 2
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS003-SUT02-WEB
+    run_id: 42628671986
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42628671986
+    created_at: '2026-11-09T13:48:12Z'
+    updated_at: '2026-11-09T13:49:34Z'
+    workflow_conclusion: success
+    artifact_id: 13680091845
+    artifact_name: E02-DRY_RUN-E02-CS003-SUT02-WEB-DR0001-A1
+    artifact_size_bytes: 9079
+    artifact_digest: sha256:130b8e0380ebfe3e8b9b00dffc8ec3f8858d51cb0869a84be1f15dae46e9b4c0
+    artifact_expires_at: '2027-02-07T13:48:14Z'
+    archive_digest_verified: true
+    manifest_outcome: ABORTED
+    counted_actions: 1
+    declared_counted_actions: 6
+    actions_outcomes:
+    - SUCCESS
+    declared_starting_state_holds: null
+    exit_status: '0'
+    stderr_bytes: 0
+    abort_cause: 'the declared starting state did not hold, or a precondition failed: declared-starting-state failed (login form present; no cart badge; cart link aria-label "Cart, empty"): TimeoutError:
+      Locator.get_attribute: Timeout 15000ms exceeded.'
+  - condition_id: E02-CS004-SUT02-WEB
+    run_id: 42628714310
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42628714310
+    created_at: '2026-11-09T13:48:30Z'
+    updated_at: '2026-11-09T13:49:44Z'
+    workflow_conclusion: success
+    artifact_id: 13679866980
+    artifact_name: E02-DRY_RUN-E02-CS004-SUT02-WEB-DR0001-A1
+    artifact_size_bytes: 36052
+    artifact_digest: sha256:fe27d7d5a470ec46c2fc8ef3d4d9ae685e47ebc5984f0fdc1484b892818b10b5
+    artifact_expires_at: '2027-02-07T13:48:31Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 4
+    declared_counted_actions: 4
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS003-SUT03-WEB
+    run_id: 42628748746
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42628748746
+    created_at: '2026-11-09T13:48:44Z'
+    updated_at: '2026-11-09T13:50:59Z'
+    workflow_conclusion: success
+    artifact_id: 13679084022
+    artifact_name: E02-DRY_RUN-E02-CS003-SUT03-WEB-DR0001-A1
+    artifact_size_bytes: 675733
+    artifact_digest: sha256:d8f93019c246ed8ca96a194c0f46669edeb7f3bb4b9c839f35402b555e923d65
+    artifact_expires_at: '2027-02-07T13:48:45Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 7
+    declared_counted_actions: 7
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS004-SUT03-WEB
+    run_id: 42628772416
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42628772416
+    created_at: '2026-11-09T13:48:54Z'
+    updated_at: '2026-11-09T13:51:58Z'
+    workflow_conclusion: success
+    artifact_id: 13680575678
+    artifact_name: E02-DRY_RUN-E02-CS004-SUT03-WEB-DR0001-A1
+    artifact_size_bytes: 11439
+    artifact_digest: sha256:4ac3ba1f8d53e21c5b41b55fbe7f115cc762238fde231c86e2e2e070a78a37b1
+    artifact_expires_at: '2027-02-07T13:48:55Z'
+    archive_digest_verified: true
+    manifest_outcome: ABORTED
+    counted_actions: 0
+    declared_counted_actions: 2
+    actions_outcomes: []
+    declared_starting_state_holds: false
+    exit_status: '0'
+    stderr_bytes: 0
+    abort_cause: 'the declared starting state did not hold, or a precondition failed: declared starting state does not hold: {''bag_quantity'': ''1'', ''sessionStorage.state.cart.products'': [{''availableSizes'':
+      [''Apple''], ''currencyFormat'': ''$'', ''currencyId'': ''USD'', ''description'': ''iPhone 12'', ''id'': 1, ''installments'': 9, ''isFav'': False, ''altText'': ''img'', ''price'': 799, ''sku'': ''iPhone12-device-info.png'',
+      ''title'': ''iPhone 12'
+  - condition_id: E02-CS003-SUT04-API
+    run_id: 42628794433
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42628794433
+    created_at: '2026-11-09T13:49:03Z'
+    updated_at: '2026-11-09T13:52:51Z'
+    workflow_conclusion: success
+    artifact_id: 13680540931
+    artifact_name: E02-DRY_RUN-E02-CS003-SUT04-API-DR0001-A1
+    artifact_size_bytes: 25067
+    artifact_digest: sha256:2fbef50f25d5af91deb14c06765953f2222cc5f172e9488f5189b960cba2509a
+    artifact_expires_at: '2027-02-07T13:49:04Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 3
+    declared_counted_actions: 3
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS003-SUT04-WEB
+    run_id: 42628815199
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42628815199
+    created_at: '2026-11-09T13:49:11Z'
+    updated_at: '2026-11-09T13:52:11Z'
+    workflow_conclusion: success
+    artifact_id: 13680022542
+    artifact_name: E02-DRY_RUN-E02-CS003-SUT04-WEB-DR0001-A1
+    artifact_size_bytes: 202220
+    artifact_digest: sha256:9e73b111148eeef67274a6011e6280a9417afafe04e372d63c3c8dbc05793c57
+    artifact_expires_at: '2027-02-07T13:49:12Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 13
+    declared_counted_actions: 13
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS003-SUT05-API
+    run_id: 42628834154
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42628834154
+    created_at: '2026-11-09T13:49:19Z'
+    updated_at: '2026-11-09T13:50:28Z'
+    workflow_conclusion: success
+    artifact_id: 13680580428
+    artifact_name: E02-DRY_RUN-E02-CS003-SUT05-API-DR0001-A1
+    artifact_size_bytes: 13010
+    artifact_digest: sha256:14bfefcda62f90d46d9bb2f2b3ffaf295e5f57fc9e249c1643be0f167bef914f
+    artifact_expires_at: '2027-02-07T13:49:20Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 3
+    declared_counted_actions: 3
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  reviewed_ok: 7
+  reviewed_not_ok:
+  - E02-CS003-SUT01-WEB
+  - E02-CS003-SUT02-WEB
+  - E02-CS004-SUT03-WEB
+- execution_id: DR0002
+  public_head: 154031f2418796cb3697c8446c81fbb015916020
+  export: export v48
+  implementation_sha256: d0b1bbb9d3014fedb0edaa58186b1cfb2d52759dfd67c2bc1c218c7f45db5200
+  authorization:
+    question_stamp: '2026-11-09T17:01:51.063Z'
+    answer_stamp: '2026-11-09T17:11:41.037Z'
+    answer_text_bytes: 956
+    answer_text_sha256: 73dfe0c5a397a4952a1f2c1cd52e0233284df3bcb44e462400e7f3c3b0a21936
+    chosen_option: Sí, las diez líneas
+    lines_file_sha256: aa3bd926726ed243654dba42f75a2015fd99961a762f37ddaeae7745d9e214f0
+    preview_equals_lines_file: true
+  runs:
+  - condition_id: E02-CS003-SUT01-API
+    run_id: 42662247836
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42662247836
+    created_at: '2026-11-09T17:11:56Z'
+    updated_at: '2026-11-09T17:13:29Z'
+    workflow_conclusion: success
+    artifact_id: 13693819567
+    artifact_name: E02-DRY_RUN-E02-CS003-SUT01-API-DR0002-A1
+    artifact_size_bytes: 12055
+    artifact_digest: sha256:6b6faefb15dcf5d5ec7618872566963bf6f75a29b669f705a17e05892cb03cd8
+    artifact_expires_at: '2027-02-07T17:11:58Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 3
+    declared_counted_actions: 3
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS003-SUT01-WEB
+    run_id: 42662270496
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42662270496
+    created_at: '2026-11-09T17:12:04Z'
+    updated_at: '2026-11-09T17:16:43Z'
+    workflow_conclusion: success
+    artifact_id: 13694553585
+    artifact_name: E02-DRY_RUN-E02-CS003-SUT01-WEB-DR0002-A1
+    artifact_size_bytes: 134722
+    artifact_digest: sha256:21b8ecc14e8389d9444f5f704ce457636a976149f8dd795318982ca4f3e6bda5
+    artifact_expires_at: '2027-02-07T17:12:05Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 6
+    declared_counted_actions: 6
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS004-SUT01-WEB
+    run_id: 42662293052
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42662293052
+    created_at: '2026-11-09T17:12:13Z'
+    updated_at: '2026-11-09T17:13:49Z'
+    workflow_conclusion: success
+    artifact_id: 13693904485
+    artifact_name: E02-DRY_RUN-E02-CS004-SUT01-WEB-DR0002-A1
+    artifact_size_bytes: 135186
+    artifact_digest: sha256:82b66e3767ceacd7eadeedc121704e13273deda73bb43ece41ad4d4a737626b9
+    artifact_expires_at: '2027-02-07T17:12:14Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 2
+    declared_counted_actions: 2
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS003-SUT02-WEB
+    run_id: 42662316023
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42662316023
+    created_at: '2026-11-09T17:12:21Z'
+    updated_at: '2026-11-09T17:13:32Z'
+    workflow_conclusion: success
+    artifact_id: 13694118347
+    artifact_name: E02-DRY_RUN-E02-CS003-SUT02-WEB-DR0002-A1
+    artifact_size_bytes: 287189
+    artifact_digest: sha256:3d6e02d5d2655b1155c1c29c6bff65aa13d4798043255eafb952ce8138887931
+    artifact_expires_at: '2027-02-07T17:12:22Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 6
+    declared_counted_actions: 6
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS004-SUT02-WEB
+    run_id: 42662338500
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42662338500
+    created_at: '2026-11-09T17:12:29Z'
+    updated_at: '2026-11-09T17:14:14Z'
+    workflow_conclusion: success
+    artifact_id: 13695431557
+    artifact_name: E02-DRY_RUN-E02-CS004-SUT02-WEB-DR0002-A1
+    artifact_size_bytes: 36029
+    artifact_digest: sha256:0d95659e7c22984d0fb7056d4cfb450fb083c8cd35e7d8a6249ef4a71ef0316b
+    artifact_expires_at: '2027-02-07T17:12:30Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 4
+    declared_counted_actions: 4
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS003-SUT03-WEB
+    run_id: 42662359246
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42662359246
+    created_at: '2026-11-09T17:12:37Z'
+    updated_at: '2026-11-09T17:14:53Z'
+    workflow_conclusion: success
+    artifact_id: 13695661424
+    artifact_name: E02-DRY_RUN-E02-CS003-SUT03-WEB-DR0002-A1
+    artifact_size_bytes: 675739
+    artifact_digest: sha256:fc8fb8335c1e3adb48a9c356dc5561ecbd492bcf5ad33e0464567d2bc658be2c
+    artifact_expires_at: '2027-02-07T17:12:38Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 7
+    declared_counted_actions: 7
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS004-SUT03-WEB
+    run_id: 42662382833
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42662382833
+    created_at: '2026-11-09T17:12:46Z'
+    updated_at: '2026-11-09T17:15:45Z'
+    workflow_conclusion: success
+    artifact_id: 13694213502
+    artifact_name: E02-DRY_RUN-E02-CS004-SUT03-WEB-DR0002-A1
+    artifact_size_bytes: 43982
+    artifact_digest: sha256:d1b561b62da2198e94bb6f8273d5f6eb53a83c07f75c4651ea9ebd73b9ea6fd3
+    artifact_expires_at: '2027-02-07T17:12:47Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 2
+    declared_counted_actions: 2
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS003-SUT04-API
+    run_id: 42662427613
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42662427613
+    created_at: '2026-11-09T17:13:02Z'
+    updated_at: '2026-11-09T17:16:19Z'
+    workflow_conclusion: success
+    artifact_id: 13693884928
+    artifact_name: E02-DRY_RUN-E02-CS003-SUT04-API-DR0002-A1
+    artifact_size_bytes: 25043
+    artifact_digest: sha256:a8b30b88d2d8add8b44c1ff6336ca7d23ce6a91afd7a28522e10e36eea2222e3
+    artifact_expires_at: '2027-02-07T17:13:03Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 3
+    declared_counted_actions: 3
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS003-SUT04-WEB
+    run_id: 42662474655
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42662474655
+    created_at: '2026-11-09T17:13:18Z'
+    updated_at: '2026-11-09T17:17:03Z'
+    workflow_conclusion: success
+    artifact_id: 13694707827
+    artifact_name: E02-DRY_RUN-E02-CS003-SUT04-WEB-DR0002-A1
+    artifact_size_bytes: 202406
+    artifact_digest: sha256:bb185684a1bdb9e162c507daacae1f0ed28ded92b731e6c57224d79600df1681
+    artifact_expires_at: '2027-02-07T17:13:19Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 13
+    declared_counted_actions: 13
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  - condition_id: E02-CS003-SUT05-API
+    run_id: 42662502181
+    run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/42662502181
+    created_at: '2026-11-09T17:13:28Z'
+    updated_at: '2026-11-09T17:14:47Z'
+    workflow_conclusion: success
+    artifact_id: 13694553208
+    artifact_name: E02-DRY_RUN-E02-CS003-SUT05-API-DR0002-A1
+    artifact_size_bytes: 13022
+    artifact_digest: sha256:3d83315305bbf91a4bfd13607578a67a379fb66b96e3c53e9b42c5cb577639b4
+    artifact_expires_at: '2027-02-07T17:13:30Z'
+    archive_digest_verified: true
+    manifest_outcome: SUCCESS
+    counted_actions: 3
+    declared_counted_actions: 3
+    actions_outcomes:
+    - SUCCESS
+    - SUCCESS
+    - SUCCESS
+    declared_starting_state_holds: true
+    exit_status: '0'
+    stderr_bytes: 0
+  reviewed_ok: 10
+  reviewed_not_ok: []
+findings_of_round_DR0001:
+- condition_id: E02-CS003-SUT01-WEB
+  defect: an absent client cart key (omnipizza-cart) was read as a non-empty cart; the app writes none on the first load
+- condition_id: E02-CS003-SUT02-WEB
+  defect: the cart link was read on the login page, where it does not exist; the cart half of the starting state is read after the authentication
+- condition_id: E02-CS004-SUT03-WEB
+  defect: the Checkout label was compared case-sensitively although the page renders it in upper case
+derived:
+  conditions_verified_on_github_actions: 10
+  implementation_sha256_verified: d0b1bbb9d3014fedb0edaa58186b1cfb2d52759dfd67c2bc1c218c7f45db5200
+  lock_values_changed_by_the_runs: the implementation hash (602dfaf6ccc4... to d0b1bbb9d301...) changed between the rounds; the START package version 2 is superseded by a version 3 that recomputes it
+does_not:
+- start, configure, authorize, dispatch, or freeze anything
+- import any bundle as measured data
+- verify anything about the systems under test beyond what the declared starting-state checks and counted operations observed

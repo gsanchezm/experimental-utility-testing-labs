@@ -1,0 +1,71 @@
+# manifests/e02-campaign-start-v1.yaml -- provenance record of the E02-state-establishment campaign START (operation OP-START-02; protocol/change-control-v1.md, section 7, moment 1; modeled on manifests/e03-campaign-start-v1.yaml). Immutable once committed.
+record_class: CAMPAIGN_START
+record_id: E02-CAMPAIGN-START-01
+study_id: EUS-2026-001
+campaign_id: E02-state-establishment
+operation_id: OP-START-02
+recorded_by_role: ORCHESTRATOR
+start_date: '2026-11-10'
+start_timestamp_utc: '2026-11-10T11:58:30Z'
+authorization_id: E02-START-AUTH-01
+binding: protocol/change-control-v1.md, section 7, moment 1 (campaign NOT_STARTED -> IN_PROGRESS)
+approval:
+  given_by: the human research lead
+  channel: given directly to the ORCHESTRATOR in its conversation, as the answer to one question that offered the exact line
+  question_stamp: '2026-11-09T17:33:04.073Z'
+  answer_stamp: '2026-11-10T11:53:35.534Z'
+  chosen_option: Sí, apruebo el START
+  answer_text_bytes: 1507
+  answer_text_sha256: c98f15d468bad9212d6d1ebb922f8c776afe53f6da4bc43e9f129c88454b8065
+  approved_line: 'APPROVE E02 START: campaign E02-state-establishment NOT_STARTED -> IN_PROGRESS under authorization id E02-START-AUTH-01, START_DATE 2026-11-09, locking the configuration of manifests/e02-campaign-start-package-v3.yaml
+    (commit ef0a5198; candidate section sha256 163ffedae046266ce1517d7773cce06e32d6f7593ae9366c0f3939b7222c9f8f; candidate change-log row sha256 75bc00179aaa331b2b446ae96dd30dd56a8328e84816f9cab0df3afac47d7216), the executor
+    implementation hash d0b1bbb9d3014fedb0edaa58186b1cfb2d52759dfd67c2bc1c218c7f45db5200, and the dispatch procedure prompt ORCHESTRATOR-E02-state-establishment-v1 (sha256 9306ac72a6bd49ec47d7efcef3e158d18f76c28c4e2247c29e0c6280604a2f91,
+    to be frozen as a byte-identical copy). This approval authorizes no dispatch, no dispatch authorization, and no export.'
+  approved_line_bytes: 792
+  approved_line_sha256: 3336be3260be0a5bbf540df86ea7513e2a0cc8e1169ac2bc3c156dbd3842a983
+disclosure_start_date: The approved line was composed on 2026-11-09 and names START_DATE 2026-11-09. The answer arrived at 2026-11-10T11:53:35.534Z (2026-11-10 in America/Mexico_City), and the START takes effect when it is
+  applied, 2026-11-10T11:58:30Z, so the date bound in the change-log row, the E02 README, and the study manifest is 2026-11-10 (the date of the transition, as in the START of E03), not the date written in the offered line.
+  Every other value of the line is bound as approved. If the human research lead wants 2026-11-09 recorded, the START commit is unpublished and is corrected before any export.
+package:
+  path: manifests/e02-campaign-start-package-v3.yaml
+  commit: ef0a51985b80be6d278cceb4fdb87c13dc4249c1
+  record_id: E02-START-PACKAGE-03
+locked:
+  implementation_sha256: d0b1bbb9d3014fedb0edaa58186b1cfb2d52759dfd67c2bc1c218c7f45db5200
+  implementation_bytes: 3032
+  executable_conditions:
+  - E02-CS003-SUT01-WEB
+  - E02-CS003-SUT01-API
+  - E02-CS004-SUT01-WEB
+  - E02-CS003-SUT02-WEB
+  - E02-CS004-SUT02-WEB
+  - E02-CS003-SUT03-WEB
+  - E02-CS004-SUT03-WEB
+  - E02-CS003-SUT04-WEB
+  - E02-CS003-SUT04-API
+  - E02-CS003-SUT05-API
+  sample_size: N = 50 per condition, EX0001 to EX0050, attempt 1 each (500 executions)
+  prompt_version: ORCHESTRATOR-E02-state-establishment-v1
+  prompt_sha256: 9306ac72a6bd49ec47d7efcef3e158d18f76c28c4e2247c29e0c6280604a2f91
+  candidate_section_sha256_unbound: 163ffedae046266ce1517d7773cce06e32d6f7593ae9366c0f3939b7222c9f8f
+  section_inserted_sha256: f8f090e3d81237eda87f78fcecadd89cb58525b4b662cadd0bdfffb1260d1094
+  change_log_row_sha256_unbound: 75bc00179aaa331b2b446ae96dd30dd56a8328e84816f9cab0df3afac47d7216
+  tokens_bound:
+    START_DATE: '2026-11-10'
+    START_AUTH_ID: E02-START-AUTH-01
+    PROMPT_SHA256: 9306ac72a6bd49ec47d7efcef3e158d18f76c28c4e2247c29e0c6280604a2f91
+    START_TIMESTAMP: '2026-11-10T11:58:30Z'
+files_written:
+- experiments/E02-state-establishment/README.md
+- protocol/CHANGELOG.md
+- manifests/study-manifest.yaml
+- prompts/frozen/ORCHESTRATOR-E02-state-establishment-v1.md
+- manifests/e02-campaign-start-v1.yaml
+- manifests/README.md
+does_not:
+- issue any dispatch authorization (E02-DISPATCH-SUT01-AUTH-01 to E02-DISPATCH-SUT05-AUTH-01 are names, not issued)
+- dispatch anything or run any workflow
+- export or push anything
+- edit any workflow, executor file, scenario record, or protocol document
+- edit the agent-instructions file (its update waits for export v49)
+next: the export of the START state (version 49, on the human research lead's yes to its exact line), the gate step re-run on the exported tree, then one dispatch authorization per assigned SUT, each a separate approval line
