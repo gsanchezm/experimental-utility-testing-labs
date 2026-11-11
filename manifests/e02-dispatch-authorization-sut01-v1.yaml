@@ -1,0 +1,84 @@
+# manifests/e02-dispatch-authorization-sut01-v1.yaml -- record of the dispatch authorization E02-DISPATCH-SUT01-AUTH-01 (protocol/agent-governance-v6.md, Section 3.7).
+# The human research lead's issuance, for the assigned system under test (SUT) SUT-01, of the authorization under which the ORCHESTRATOR dispatches the frozen measured-execution workflow
+# of E02-state-establishment for that SUT's executable conditions. ORCHESTRATOR record of operation OP-DISPATCH-E02-01. Immutable once committed; a revocation or a change is a new version file.
+# The record itself is not a measured experiment and executes nothing; the dispatches it covers are recorded one by one in manifests/e02-measured-dispatch/<condition id>.jsonl.
+record_id: E02-DISPATCH-AUTHORIZATION-SUT01-01  # ORCHESTRATOR bookkeeping identifier; the authorization id is the next key
+record_class: E02_DISPATCH_AUTHORIZATION
+authorization_id: E02-DISPATCH-SUT01-AUTH-01
+version: 1
+study_id: EUS-2026-001
+campaign_id: E02-state-establishment
+operation_id: OP-DISPATCH-E02-01
+assigned_sut: SUT-01
+recorded_by_role: ORCHESTRATOR
+recorded_on: "2026-11-11"  # the America/Mexico_City date
+recorded_utc: "2026-11-11T16:21:24Z"
+status: ISSUED
+revoked: false
+attempt: 1
+issued_by: gilbertosanchez  # the human research lead
+authorizes_dispatches: true  # of exactly the executions listed under scope, within the limits below
+measured_experiment: false  # this record; the executions it covers are MEASURED_EXPERIMENT runs of the frozen GitHub Actions path
+executes_anything: false
+revocable_by_the_human_research_lead: true  # at any time; no revocation exists at the time of this record
+campaign_start_authorization_id: E02-START-AUTH-01
+governing_protocol: protocol/agent-governance-v6.md, Section 3.7
+executor_implementation_sha256: d0b1bbb9d3014fedb0edaa58186b1cfb2d52759dfd67c2bc1c218c7f45db5200  # experiments/E02-state-establishment/executor/run-condition.sh, 3032 bytes
+executor_prompt_version: ORCHESTRATOR-E02-state-establishment-v1
+executor_prompt_sha256: 9306ac72a6bd49ec47d7efcef3e158d18f76c28c4e2247c29e0c6280604a2f91
+conditions:   # in the order of the Conditions table of the locked campaign configuration (experiments/E02-state-establishment/README.md)
+  - {condition_id: E02-CS003-SUT01-WEB, executions: 50}
+  - {condition_id: E02-CS003-SUT01-API, executions: 50}
+  - {condition_id: E02-CS004-SUT01-WEB, executions: 50}
+
+human_approval:
+  text_verbatim: "Your questions have been answered: \"¿Emites la autorización de despacho E02-DISPATCH-SUT01-AUTH-01 para SUT-01 (3 condiciones, 50 ejecuciones cada una, 150 en total, intento 1)? Solo tú puedes emitirla (gobernanza v6, Sección 3.7). Emitirla no despacha nada: yo registro tu respuesta, publico el registro con un export v50 (con un sí tuyo aparte a esa línea) y solo después empiezo la cadena. Riesgo declarado en la Sección 3.7: una vez emitida, las 150 ejecuciones corren una tras otra sin que apruebes cada una; solo se detienen por una condición de parada o porque la revoques. La primera ejecución es la primera medición de E02. Referencia de duración: en E03, 350 ejecuciones tomaron unas 14.6 horas.\"=\"APRUEBO E02-DISPATCH-SUT01-AUTH-01\" selected preview:\nRegistro: manifests/e02-dispatch-authorization-sut01-v1.yaml\n\n- Campaña E02-state-establishment, START E02-START-AUTH-01, SUT-01, intento 1\n- Orden: E02-CS003-SUT01-WEB, luego E02-CS003-SUT01-API, luego E02-CS004-SUT01-WEB\n- 50 ejecuciones cada una (EX0001 a EX0050, en orden, cada una solo tras concluir la anterior), 150 en total\n- Entradas congeladas: implementación d0b1bbb9… (3032 B); prompt ORCHESTRATOR-E02-state-establishment-v1 (9306ac72…); público 16b4cfa (export v49)\n- Gates con el registro superpuesto, sobre el árbol exportado: 39 PASS, 0 FAIL en las 3 condiciones\n- Paradas: las de la sección 4 del prompt congelado (incluyen las de la Sección 3.5)\n- Revocable en cualquier momento; un run iniciado no se cancela\n\nNo cubre: otros SUT, reintentos, re-ejecuciones, cambios de workflow o configuración, análisis, publicación de datos medidos, ni el push del export v50 (ese necesita tu sí aparte a su línea exacta).. You can now continue with these answers in mind."
+  bytes: 1766
+  sha256: e43bfc96da053cb645368763048e7529f4e40918c0499d9ec7391f33fdf4a988
+  received_utc: "2026-11-11T16:20:27.631Z"  # stamp of the stored conversation entry (an entry of origin human)
+  received_local: "2026-11-11T10:20:27.631-06:00 (America/Mexico_City)"
+  question_stamp: "2026-11-11T16:08:08.033Z"
+  entry_kind: "the answer of the human research lead to a question that offered the approval line APRUEBO E02-DISPATCH-SUT01-AUTH-01 together with the scope restated below (shown in the question in other words: the conditions in this order, 50 executions each, 150 in all, attempt 1, revocable, the exclusions) and the risks of Section 3.7 (Disclosed difference); the answer is the text above"
+  scope_restated: "the conditions E02-CS003-SUT01-WEB, then E02-CS003-SUT01-API, then E02-CS004-SUT01-WEB, 50 executions each (EX0001 to EX0050, ascending, each only after the run before it concluded), attempt 1, one dispatch per execution, 150 executions in all, on the frozen inputs, with the stop conditions of the frozen dispatch procedure; the first execution is the first measured run of E02; revocable at any time; it does not cover any other SUT, any retry, or any analysis"
+
+scope:
+  assigned_sut: SUT-01
+  conditions_in_dispatch_order:  # the order of the Conditions table of the locked campaign configuration
+    - {condition_id: E02-CS003-SUT01-WEB, executions: "EX0001 to EX0050, ascending, each only after the run before it concluded", n: 50}
+    - {condition_id: E02-CS003-SUT01-API, executions: "EX0001 to EX0050, ascending, each only after the run before it concluded", n: 50}
+    - {condition_id: E02-CS004-SUT01-WEB, executions: "EX0001 to EX0050, ascending, each only after the run before it concluded", n: 50}
+  executions_in_all: 150
+  attempt: 1  # attempt + 1 is dispatched only on a separate explicit instruction that names the condition and the execution
+  dispatches_per_execution: 1
+  one_condition_at_a_time: "a condition is completed before the next condition of the assigned SUT starts; never a second run of a condition while one is in progress"
+  record_of_dispatches: "manifests/e02-measured-dispatch/<condition id>.jsonl, one file per condition, append-only, one line per event (experiments/E02-state-establishment/README.md, 'Order of dispatches and dispatch record')"
+  chains_of_other_sut: "independent of this chain and each under its own authorization (Section 3.7, 'Order and record'); no decision whether, when, or how to dispatch depends on a measured output of any SUT"
+
+frozen_inputs:
+  public_repository: gsanchezm/experimental-utility-testing-labs
+  ref: main
+  public_main_revision: 16b4cfa0f307da87d79900c7b754031f88a294f2  # export v49, the START state, pushed 2026-11-11T15:36:56Z; validation run 43050129118 success; the record itself is published by a later export, which the gate needs before the first dispatch
+  workflow: .github/workflows/e02-measured-execution.yml
+  executor_prompt_version: ORCHESTRATOR-E02-state-establishment-v1
+  executor_implementation_sha256: d0b1bbb9d3014fedb0edaa58186b1cfb2d52759dfd67c2bc1c218c7f45db5200
+  executor_prompt_sha256: 9306ac72a6bd49ec47d7efcef3e158d18f76c28c4e2247c29e0c6280604a2f91
+  campaign_start_authorization_id: E02-START-AUTH-01
+
+checks_before_the_first_dispatch:  # public bytes of the START state (export v49) equal the canonical bytes of the locked inputs: all of them are class UNCHANGED in the export
+  run_condition_sh: {public_sha256: d0b1bbb9d3014fedb0edaa58186b1cfb2d52759dfd67c2bc1c218c7f45db5200, locked_sha256: d0b1bbb9d3014fedb0edaa58186b1cfb2d52759dfd67c2bc1c218c7f45db5200, bytes: 3032, result: EQUAL}
+  frozen_prompt: {path: prompts/frozen/ORCHESTRATOR-E02-state-establishment-v1.md, present: true, sha256: 9306ac72a6bd49ec47d7efcef3e158d18f76c28c4e2247c29e0c6280604a2f91, bytes: 16746, result: EQUAL_TO_THE_WORKING_COPY_AND_TO_THE_PUBLIC_BYTES}
+  workflow_file: {sha256: 900542047c43d58f1375f15f99f6e7716a3185c11db49236907d9bd15bf6d707, bytes: 72827, result: PUBLIC_BYTES_EQUAL_CANONICAL_BYTES}
+  controlled_instances: "E02-CS003-SUT01-WEB, E02-CS003-SUT01-API, E02-CS004-SUT01-WEB: CONTROLLED and VERIFIED on GitHub Actions by non-measured DRY_RUN runs of the second round (DR0002) on the locked implementation (E02-CS003-SUT01-WEB run 42662270496, E02-CS003-SUT01-API run 42662247836, E02-CS004-SUT01-WEB run 42662293052); the bundles are reviewed and never imported as measured data; experiments/E02-state-establishment/controlled-instance-status.yaml"
+  gates: "the gates step of the measured-execution workflow (G-1 to G-11 and G-E02-A, 39 items per condition), extracted from the exported tree of export v49 and run locally with the real START inputs (authorization id E02-START-AUTH-01, implementation hash d0b1bbb9d3014fedb0edaa58186b1cfb2d52759dfd67c2bc1c218c7f45db5200, prompt version ORCHESTRATOR-E02-state-establishment-v1) and a draft of this record overlaid, for the three conditions of SUT-01: 39 PASS and 0 FAIL for each (without the record, 32 PASS and the dispatch-authorization gate FAIL, as recorded in the export log entry 49); the workflow runs them again in the gate job of every dispatch, and a failed gate job is a stop condition"
+
+stop_conditions: "those of section 4 of the frozen dispatch procedure prompts/frozen/ORCHESTRATOR-E02-state-establishment-v1.md, unchanged, which include those of protocol/agent-governance-v6.md, Section 3.5 (Execution without cross-SUT adaptation); on a stop nothing further is dispatched in this campaign under any authorization until the human research lead instructs otherwise"
+
+disclosed_difference: "protocol/agent-governance-v6.md, Section 3.7: approval is given once per SUT per campaign, so no dispatch waits for the human research lead to see the previous outcome; the controls are the locked configuration, the stop conditions, the gates at each dispatch, the append-only dispatch records, the isolation of measured jobs, and revocation; a defect that passes every gate and triggers no stop repeats until a stop or a revocation"
+
+does_not_authorize:
+  - any other assigned SUT (each needs its own dispatch authorization)
+  - any attempt other than 1, any retry, any re-run, any cancellation, any second dispatch of an execution
+  - any change to a workflow, a pinned input, a setting, or the locked configuration
+  - any analysis of E02 measured data, any comparison, any statement about H1 to H5 (no result before the campaign freeze)
+  - the publication of any measured output (a separate export, under its own approval), and the push of the public export that publishes this record (an approval of its own exact line)
+  - the import of a bundle as anything other than the byte-exact, digest-verified import of the frozen dispatch procedure
