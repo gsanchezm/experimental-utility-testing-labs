@@ -5,14 +5,17 @@
 # protocol/agent-governance-v6.md, Section 3.7 (FROZEN-PRE-DATA since 2026-11-06).
 #
 # The ONLY path through which an E02-state-establishment MEASURED_EXPERIMENT may run, once the campaign is started. It is
-# manually dispatched, one condition, one execution, first attempt only, and it FAILS CLOSED: the gate job verifies every frozen
+# manually dispatched, one condition, one execution, one attempt (attempt 1 under the dispatch authorization; a further attempt only under
+# its own recorded human approval, OP-CI-18), and it FAILS CLOSED: the gate job verifies every frozen
 # input and every campaign gate against the checked-out repository before the measured job may start. While E02 is
 # NOT_STARTED, no campaign configuration is locked, no per-SUT dispatch authorization exists, and no controlled instance is
 # verified for E02, this workflow cannot execute a measured condition. That is the intended state until the human research lead
 # starts the campaign and issues the dispatch authorization.
 #
 # Execution/attempt model: campaign -> SUT -> scenario -> condition -> execution -> attempt. Attempt 1 is immutable; this
-# workflow admits no other attempt (a further attempt needs its own approval). GitHub-native re-runs are refused (run_attempt
+# workflow admits a further attempt (attempt + 1) only when a further-attempt approval record of the human research lead names its
+# condition, execution and attempt (protocol/agent-governance-v6.md, Section 3.7, "Further attempts"; gate G-E02-A2). GitHub-native
+# re-runs are refused (run_attempt
 # must be 1). Artifacts are uploaded with overwrite disabled. Nothing is committed by this workflow (permissions: contents
 # read); the bundle is imported into the repository under ORCHESTRATOR coordination with digest verification.
 #
@@ -52,7 +55,7 @@ on:
         required: true
         type: string
       attempt:
-        description: "Attempt number; this workflow admits attempt 1 only"
+        description: "Attempt number: 1 under the dispatch authorization; 2 or more only under a further-attempt approval record that names this condition and execution (gate G-E02-A2)"
         required: true
         default: "1"
         type: string
@@ -86,7 +89,7 @@ env:
   RUN_ID: ${{ inputs.condition_id }}__${{ inputs.execution_id }}__A${{ inputs.attempt }}
   ARTIFACT_RETENTION_DAYS: "90"
   TIMEOUT_POLICY: "job timeout-minutes as declared; no step retry; no automatic re-run"
-  RETRY_POLICY: "none: attempt 1 only in this workflow; a further attempt needs its own approval"
+  RETRY_POLICY: "none: attempt 1 under the dispatch authorization; a further attempt only under a further-attempt approval record (v6, Section 3.7); no GitHub re-run"
   CONCURRENCY_POLICY: "one run per condition at a time; never cancel in progress"
 
 jobs:
@@ -103,6 +106,7 @@ jobs:
       executor_prompt_sha256: ${{ steps.gates.outputs.executor_prompt_sha256 }}
       governance_sha256: ${{ steps.gates.outputs.governance_sha256 }}
       dispatch_authorization_sha256: ${{ steps.gates.outputs.dispatch_authorization_sha256 }}
+      further_attempt_approval_sha256: ${{ steps.gates.outputs.further_attempt_approval_sha256 }}
       workflow_sha256: ${{ steps.gates.outputs.workflow_sha256 }}
       environment_type: ${{ steps.gates.outputs.environment_type }}
       canonical_source_commit: ${{ steps.gates.outputs.canonical_source_commit }}
@@ -118,7 +122,7 @@ jobs:
             prompts
             .github/workflows
           sparse-checkout-cone-mode: true
-      - name: Refuse anything but a first attempt of a dispatch on the default branch
+      - name: Refuse a GitHub-native re-run, a malformed attempt, and a dispatch off the default branch
         env:
           GUARD_REF: ${{ github.ref }}
           GUARD_RUN_ATTEMPT: ${{ github.run_attempt }}
@@ -127,7 +131,7 @@ jobs:
           set -euo pipefail
           test "$GUARD_REF" = "refs/heads/main" || { echo "measured execution runs only from refs/heads/main (got $GUARD_REF)"; exit 1; }
           test "$GUARD_RUN_ATTEMPT" = "1" || { echo "GitHub-native re-run refused: a further attempt needs its own approval"; exit 1; }
-          test "$GUARD_INPUT_ATTEMPT" = "1" || { echo "only the first attempt is admitted by this workflow"; exit 1; }
+          [[ "$GUARD_INPUT_ATTEMPT" =~ ^[1-9][0-9]*$ ]] || { echo "the attempt must be a positive integer; whether a further attempt is approved is decided by gate G-E02-A2"; exit 1; }
       - name: Verify every campaign gate against the repository (fail closed)
         id: gates
         env:
@@ -182,7 +186,7 @@ jobs:
           surface = m.group(3) if m else 'none'
           gate('condition matches the assigned SUT', cond_sut == sut, f'{cond_sut} vs {sut}')
           gate('execution_id has the format EXnnnn', re.fullmatch(r'EX[0-9]{4}', execution_id) is not None, execution_id)
-          gate('attempt is 1 (the first attempt of an execution is the only one admitted here)', attempt == '1', attempt)
+          gate('attempt is a positive integer (attempt 1 under the dispatch authorization; a further attempt needs the approval of G-E02-A2)', re.fullmatch(r'[1-9][0-9]*', attempt) is not None, attempt)
           gate('executor prompt version is a plain identifier', re.fullmatch(r'[A-Za-z0-9._-]+', pv) is not None, pv)
 
           # G-1: the campaign START exists: IN_PROGRESS in the study manifest, one START row with its authorization id
@@ -249,6 +253,26 @@ jobs:
               gate('the authorization is for attempt 1 and cites governance v6, Section 3.7', d.get('attempt') == 1 and 'agent-governance-v6.md' in str(d.get('governing_protocol')) and '3.7' in str(d.get('governing_protocol')))
               gate('the authorization names the executor prompt SHA-256, which equals the frozen prompt file (G-9; v6 Section 3.7)', d.get('executor_prompt_sha256') == sha(f'prompts/frozen/{pv}.md') and re.fullmatch(r'[A-Za-z0-9._-]+', pv) is not None)
 
+          # G-E02-A2 (OP-CI-18): a further attempt (attempt 2 or more) needs its own recorded human approval that names this SUT, condition, execution and attempt
+          # (v6, Sections 3.6 and 3.7, "Further attempts"); that record is not a dispatch authorization and extends none
+          fa_sha = 'not applicable (attempt 1)'
+          if attempt != '1' and re.fullmatch(r'[1-9][0-9]*', attempt):
+              fa = []
+              for p in sorted(glob.glob(f'manifests/e02-further-attempt-approval-{sut_tag}-v*.yaml')):
+                  d = load(p)
+                  if isinstance(d, dict):
+                      for a in (d.get('attempts') or []):
+                          if isinstance(a, dict) and a.get('condition_id') == cond and a.get('execution_id') == execution_id and str(a.get('attempt')) == attempt:
+                              fa.append((p, d, a))
+              gate('exactly one further-attempt approval entry names this condition, this execution and this attempt', len(fa) == 1, [p for p, _, _ in fa])
+              if len(fa) == 1:
+                  p, d, a = fa[0]
+                  fa_sha = sha(p)
+                  gate('the approval is an ISSUED, unrevoked E02 further-attempt approval for the assigned SUT', d.get('record_class') == 'E02_FURTHER_ATTEMPT_APPROVAL' and d.get('status') == 'ISSUED' and d.get('revoked') is False and d.get('assigned_sut') == sut, d.get('status'))
+                  gate('the approval cites the dispatch authorization of this dispatch, the START id, the implementation hash, and the prompt version', d.get('dispatch_authorization_id') == dispatch_id and d.get('campaign_start_authorization_id') == auth and d.get('executor_implementation_sha256') == impl_sha and d.get('executor_prompt_version') == pv)
+                  gate('the approval names the executor prompt SHA-256, which equals the frozen prompt file', d.get('executor_prompt_sha256') == sha(f'prompts/frozen/{pv}.md') and re.fullmatch(r'[A-Za-z0-9._-]+', pv) is not None)
+                  gate('the approval cites governance v6, Section 3.7, and names the attempt before this one', 'agent-governance-v6.md' in str(d.get('governing_protocol')) and '3.7' in str(d.get('governing_protocol')) and a.get('previous_attempt') == int(attempt) - 1, a.get('previous_attempt'))
+
           # G-8: the controlled instance of this condition id is CONTROLLED and verified on GitHub Actions (E02 status file)
           cis = load(f'experiments/{E02}/controlled-instance-status.yaml') or {}
           cc = ((cis.get('conditions') or {}).get(cond) or {}) if isinstance(cis, dict) else {}
@@ -276,6 +300,7 @@ jobs:
               'executor_prompt_sha256': sha(pp) if re.fullmatch(r'[A-Za-z0-9._-]+', pv) else 'absent',
               'governance_sha256': sha('protocol/agent-governance-v6.md'),
               'dispatch_authorization_sha256': dispatch_sha,
+              'further_attempt_approval_sha256': fa_sha,
               'workflow_sha256': sha('.github/workflows/e02-measured-execution.yml'),
               'environment_type': env_type,
           }
@@ -314,6 +339,7 @@ jobs:
       PROV_EXECUTOR_PROMPT_SHA256: ${{ needs.gate.outputs.executor_prompt_sha256 }}
       PROV_GOVERNANCE_SHA256: ${{ needs.gate.outputs.governance_sha256 }}
       PROV_DISPATCH_AUTHORIZATION_SHA256: ${{ needs.gate.outputs.dispatch_authorization_sha256 }}
+      PROV_FURTHER_ATTEMPT_APPROVAL_SHA256: ${{ needs.gate.outputs.further_attempt_approval_sha256 }}
       PROV_ENVIRONMENT_TYPE: ${{ needs.gate.outputs.environment_type }}
       PROV_CANONICAL_SOURCE_COMMIT: ${{ needs.gate.outputs.canonical_source_commit }}
       PROV_RUN_ID: ${{ github.run_id }}
@@ -347,7 +373,8 @@ jobs:
             'frozen_input_hashes': {'e02_configuration_sha256': os.environ['PROV_CONFIGURATION_SHA256'], 'cs003_mapping_sha256': os.environ['PROV_CS003_SHA256'],
                                     'cs004_mapping_sha256': os.environ['PROV_CS004_SHA256'], 'run_manifest_schema_v2_sha256': os.environ['PROV_SCHEMA_V2_SHA256'],
                                     'executor_prompt_sha256': os.environ['PROV_EXECUTOR_PROMPT_SHA256'], 'executor_prompt_version': os.environ['PROV_EXECUTOR_PROMPT_VERSION'],
-                                    'agent_governance_v6_sha256': os.environ['PROV_GOVERNANCE_SHA256'], 'dispatch_authorization_sha256': os.environ['PROV_DISPATCH_AUTHORIZATION_SHA256']},
+                                    'agent_governance_v6_sha256': os.environ['PROV_GOVERNANCE_SHA256'], 'dispatch_authorization_sha256': os.environ['PROV_DISPATCH_AUTHORIZATION_SHA256'],
+                                    'further_attempt_approval_sha256': os.environ['PROV_FURTHER_ATTEMPT_APPROVAL_SHA256']},
             'sut_version': {'repository': sm.get('repository'), 'commit_sha': sm.get('commit_sha'), 'release': sm.get('release')},
             'environment_type': os.environ['PROV_ENVIRONMENT_TYPE'],
             'runner': {'os': os.environ.get('RUNNER_OS'), 'image': os.environ.get('ImageOS'), 'image_version': os.environ.get('ImageVersion'), 'arch': os.environ.get('RUNNER_ARCH'), 'note': 'the measured job records its own runner and runtime versions in runtime-environment.json; this job records the gate-time contract'},

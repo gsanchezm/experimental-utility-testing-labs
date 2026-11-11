@@ -1,0 +1,73 @@
+# manifests/e02-further-attempt-approval-sut01-v1.yaml -- record of the further-attempt approval E02-FURTHER-ATTEMPT-SUT01-APPROVAL-01 (protocol/agent-governance-v6.md, Sections 3.6 and 3.7, "Further attempts").
+# The human research lead's explicit approval of attempt 2 of ONE execution of the assigned system under test (SUT) SUT-01, naming its condition and its execution. It is not a dispatch authorization and extends none:
+# the dispatch authorization E02-DISPATCH-SUT01-AUTH-01 admits attempt 1 only and stays as it is. ORCHESTRATOR record of operation OP-ATTEMPT2-E02-01. Immutable once committed; a revocation or a change is a new version file.
+# The record itself is not a measured experiment and executes nothing; the dispatch it covers is recorded in manifests/e02-measured-dispatch/E02-CS003-SUT01-WEB.jsonl.
+record_id: E02-FURTHER-ATTEMPT-APPROVAL-SUT01-01  # ORCHESTRATOR bookkeeping identifier; the approval id is the next key
+record_class: E02_FURTHER_ATTEMPT_APPROVAL
+approval_id: E02-FURTHER-ATTEMPT-SUT01-APPROVAL-01
+version: 1
+study_id: EUS-2026-001
+campaign_id: E02-state-establishment
+operation_id: OP-ATTEMPT2-E02-01
+assigned_sut: SUT-01
+recorded_by_role: ORCHESTRATOR
+recorded_on: "2026-11-11"  # the America/Mexico_City date
+recorded_utc: "2026-11-11T21:36:21Z"
+status: ISSUED
+revoked: false
+issued_by: gilbertosanchez  # the human research lead
+authorizes_dispatches: true  # of exactly the attempts listed under attempts, once each
+measured_experiment: false  # this record; the attempt it covers is a MEASURED_EXPERIMENT run of the frozen GitHub Actions path
+executes_anything: false
+revocable_by_the_human_research_lead: true  # at any time; no revocation exists at the time of this record
+dispatch_authorization_id: E02-DISPATCH-SUT01-AUTH-01  # the authorization of the chain this attempt belongs to; this record extends none of its limits
+campaign_start_authorization_id: E02-START-AUTH-01
+governing_protocol: protocol/agent-governance-v6.md, Sections 3.6 and 3.7 ("Further attempts")
+executor_implementation_sha256: d0b1bbb9d3014fedb0edaa58186b1cfb2d52759dfd67c2bc1c218c7f45db5200
+executor_prompt_version: ORCHESTRATOR-E02-state-establishment-v1
+executor_prompt_sha256: 9306ac72a6bd49ec47d7efcef3e158d18f76c28c4e2247c29e0c6280604a2f91
+workflow: .github/workflows/e02-measured-execution.yml  # the revision with gate G-E02-A2 (operation OP-CI-18); the workflow before that revision admitted attempt 1 only
+
+attempts:
+  - condition_id: E02-CS003-SUT01-WEB
+    execution_id: EX0008
+    attempt: 2
+    previous_attempt: 1
+    previous_attempt_record:
+      github_run_id: 43095065967
+      workflow_conclusion: cancelled
+      frozen_executor_ran: false
+      bundle: "none; nothing was imported under raw-data/ for the attempt"
+      observed: "the gate job succeeded; the provenance job was cancelled at the step \"Upload the provenance record\"; the measured job was skipped, so the frozen executor never ran and the SUT was not touched by this attempt"
+      recorded_in: "manifests/e02-measured-dispatch/E02-CS003-SUT01-WEB.jsonl, events RUN_IDENTITY_RECORDED and RUN_CONCLUDED_WITHOUT_BUNDLE_NOT_IMPORTED (dispatch-branch commit b33b121a)"
+      cause: "not established; the dispatch tool read HTTP 502 from the jobs endpoint of GitHub and the three runs of 2026-11-11 that ended without a bundle (43094844376, 43094956611, 43095065967) were listed as in_progress, without update, until their conclusion at about 21:01Z"
+      treatment_in_the_campaign: "attempt 1 keeps its recorded outcome and is reported beside the attempts that reached the verification (experiments/E02-state-establishment/README.md, Campaign configuration); it is never rewritten, replaced, or deleted"
+
+scope:
+  assigned_sut: SUT-01
+  condition_id: E02-CS003-SUT01-WEB
+  execution_id: EX0008
+  attempt: 2
+  dispatches: 1  # one dispatch of attempt 2; no attempt 3 and no second dispatch of attempt 2
+  order: "attempt 2 of EX0008 is dispatched before the next execution of the condition, which then continues under the unchanged authorization as attempt 1 (the authorization orders each execution after the run before it concluded)"
+  record_of_dispatches: "manifests/e02-measured-dispatch/E02-CS003-SUT01-WEB.jsonl, append-only: the dispatch line of attempt 2 is committed before the dispatch, the run identity after it starts"
+  import: "byte-exact and digest-verified under raw-data/E02-state-establishment/SUT-01/E02-CS003-SUT01-WEB__EX0008__A2/, as for attempt 1; the directory of attempt 1 never exists"
+
+human_approval:
+  text_verbatim: "Your questions have been answered: \"¿Apruebas OP-CI-18 y la emisión de los tres registros de intento 2? OP-CI-18 es el cambio del workflow e02-measured-execution.yml para que admita un intento adicional solo si existe un registro de aprobación humana que nombre condición, ejecución e intento (gobernanza v6, Sección 3.7, 'Further attempts'); el intento 1 se comporta igual que hoy. Los tres registros aprueban, cada uno por una sola vez, el intento 2 de: E02-CS003-SUT01-WEB EX0008 (intento 1 = run 43095065967, cancelado, el executor nunca corrió), E02-CS003-SUT02-WEB EX0007 (run 43094844376, el executor corrió y falló la subida del bundle, que se perdió) y E02-CS003-SUT03-WEB EX0005 (run 43094956611, igual). Aplicarlo son solo commits locales en main: no publica, no despacha y no toca a SUT-04, que sigue corriendo. Después construyo el export v51 y te pido aparte el sí a su línea exacta de push. Pruebas hechas: matriz de gates 80 ejecuciones OK (la base de 56 sigue OK; las pruebas nuevas fallan contra el workflow viejo), ensayo sobre el árbol real 33 de 33 conformes (intento 1 sigue con 39 gates PASS; los tres intentos 2 aprobados, 44 PASS; intento 3, ejecuciones vecinas, otras condiciones y otros SUT, rechazados), actionlint y shellcheck exit 0. No cubre: intento 3, otras ejecuciones, análisis ni publicación de datos medidos. El detalle está en op-attempt2/text/PACKAGE.md.\"=\"APRUEBO OP-CI-18 Y LOS 3 REGISTROS (Recomendado)\". You can now continue with these answers in mind."
+  bytes: 1512
+  sha256: 641fac5b145cbb70366be4edecb055f3ede7bd0066ee1b17af38746186888c1a
+  received_utc: "2026-11-11T21:35:45.044Z"  # stamp of the stored conversation entry (an entry of origin human)
+  received_local: "2026-11-11T15:35:45.044-06:00 (America/Mexico_City)"
+  question_stamp: "2026-11-11T21:35:24.641Z"
+
+does_not_authorize:
+  - any attempt other than attempt 2 of the one execution named here, and any attempt 3 of it
+  - any other execution, condition, or SUT (each needs its own explicit approval naming the condition and the execution)
+  - any retry, re-run, cancellation, or second dispatch of an execution, and any GitHub-native re-run
+  - any change to a workflow, a pinned input, a setting, or the locked configuration beyond the revision of operation OP-CI-18 approved separately
+  - the exclusion of attempt 1 from the campaign report, or its replacement by attempt 2
+  - any analysis of E02 measured data, any comparison, any statement about H1 to H5 (no result before the campaign freeze)
+  - the publication of any measured output (a separate export, under its own approval)
+
+disclosed_difference: "protocol/agent-governance-v6.md, Section 3.7, 'Disclosed difference': the chains run without an approval of each dispatch; this record is an exception that the human research lead gave for the one named attempt after the run of attempt 1 ended without a bundle. A bundle that never reached GitHub cannot be recovered; attempt 2 is a new measurement of the same execution on the same frozen inputs, and both attempts are reported."

@@ -1,0 +1,49 @@
+# manifests/e02-op-ci-18-v1.yaml -- record of operations OP-CI-18 and OP-ATTEMPT2-E02-01 (2026-11-11).
+# ORCHESTRATOR record. CI correction of the E02 measured-execution workflow so that a further attempt is admitted only under its own recorded human approval (protocol/agent-governance-v6.md, Sections 3.6 and 3.7, "Further attempts"),
+# and the issuance of the three further-attempt approval records. Immutable once committed. It dispatches, publishes and exports nothing.
+record_id: E02-OP-CI-18-01
+record_class: E02_CI_CORRECTION_RECORD
+study_id: EUS-2026-001
+campaign_id: E02-state-establishment
+operation_ids: [OP-CI-18, OP-ATTEMPT2-E02-01]
+recorded_by_role: ORCHESTRATOR
+recorded_on: "2026-11-11"
+governing_authorization: CAMPAIGN-CI-WRITE-AUTH-01
+human_approval:
+  answer_verbatim_sha256: 641fac5b145cbb70366be4edecb055f3ede7bd0066ee1b17af38746186888c1a
+  answer_bytes: 1512
+  answer_stamp_utc: "2026-11-11T21:35:45.044Z"
+  answer_label: "APRUEBO OP-CI-18 Y LOS 3 REGISTROS (Recomendado)"
+  embedded_verbatim_in: [manifests/e02-further-attempt-approval-sut01-v1.yaml, manifests/e02-further-attempt-approval-sut02-v1.yaml, manifests/e02-further-attempt-approval-sut03-v1.yaml]
+changed_files:
+  - {path: .github/workflows/e02-measured-execution.yml, sha256_before: 900542047c43d58f1375f15f99f6e7716a3185c11db49236907d9bd15bf6d707, sha256_after: 37e31e428422dfd83b0b0b57df27f5fb36e3ee122b2a4945c291144fcf77b016}
+  - {path: experiments/E02-state-establishment/executor/tests/test_gate_matrix.py, sha256_before: c9163ae7a4f30e4b59acfc62212b94c698b3a592e74935e928f72960b6a67533, sha256_after: e6120b2205bee1cfadbee867a83049a8f97014c59f04ea58406524fb4f9a3f02}
+new_files:
+  - {path: manifests/e02-further-attempt-approval-sut01-v1.yaml, sha256: a37c2372b1d4eca84e6d65c9736e0cd0be79a3d3b0202759cff9935ae0934190, approval_id: E02-FURTHER-ATTEMPT-SUT01-APPROVAL-01, condition_id: E02-CS003-SUT01-WEB, execution_id: EX0008, attempt: 2}
+  - {path: manifests/e02-further-attempt-approval-sut02-v1.yaml, sha256: 4561ac110e7d7d7a129b9af94492bb711423430e85ad2b3edd4da318a510ab64, approval_id: E02-FURTHER-ATTEMPT-SUT02-APPROVAL-01, condition_id: E02-CS003-SUT02-WEB, execution_id: EX0007, attempt: 2}
+  - {path: manifests/e02-further-attempt-approval-sut03-v1.yaml, sha256: 6ae8a20ef462ac0f71c0779b2c1ef268524aa3934d36ab9226ba255904a01ac0, approval_id: E02-FURTHER-ATTEMPT-SUT03-APPROVAL-01, condition_id: E02-CS003-SUT03-WEB, execution_id: EX0005, attempt: 2}
+
+failed_attempts_recorded_in_the_dispatch_records:  # manifests/e02-measured-dispatch/<condition id>.jsonl on the dispatch branch; events RUN_IDENTITY_RECORDED and RUN_CONCLUDED_WITHOUT_BUNDLE_NOT_IMPORTED
+  - {condition_id: E02-CS003-SUT01-WEB, execution_id: EX0008, attempt: 1, github_run_id: 43095065967, conclusion: cancelled, frozen_executor_ran: false}
+  - {condition_id: E02-CS003-SUT02-WEB, execution_id: EX0007, attempt: 1, github_run_id: 43094844376, conclusion: failure, frozen_executor_ran: true}
+  - {condition_id: E02-CS003-SUT03-WEB, execution_id: EX0005, attempt: 1, github_run_id: 43094956611, conclusion: failure, frozen_executor_ran: true}
+design:
+  unchanged: "the dispatch authorizations (attempt 1 only), the executor implementation and requirements, the frozen prompt, the locked campaign configuration, schema v2, the isolation and the other gates; attempt 1 of every execution behaves as before"
+  guard: "the attempt input must be a positive integer; a GitHub-native re-run (run_attempt other than 1) is still refused"
+  gate_attempt_format: "'attempt is a positive integer' replaces 'attempt is 1'"
+  gate_G_E02_A2: "evaluated only for an attempt other than 1: exactly one entry of one further-attempt approval record names condition, execution and attempt; the record is ISSUED, unrevoked, for the assigned SUT; it cites the dispatch authorization id, the START id, the implementation hash, the prompt version and prompt SHA-256 (equal to the frozen file) and governance v6 Section 3.7; previous_attempt equals attempt - 1"
+  provenance: "ci-provenance.json frozen_input_hashes gains further_attempt_approval_sha256 ('not applicable (attempt 1)' for attempt 1)"
+  tool: "the ORCHESTRATOR's dispatch tool (not a repository file) gains the chain mode attempt2: it commits the pre-dispatch entry of attempt 2 with the approval id and SHA-256 before dispatching once, imports byte-exact under <condition>__<execution>__A2, and the chain continues at the next execution as attempt 1"
+checks_before_the_install:
+  gate_matrix_proposed_tests_on_proposed_workflow: "6 tests OK; 80 runs; exit 0 in 8, non-zero in 72"
+  gate_matrix_original_tests_on_original_workflow: "5 tests OK; 56 runs"
+  proposed_tests_on_original_workflow: "4 failures and 1 error (the new cases are sensitive)"
+  rehearsal_on_the_real_tree: "33 rows, none unexpected: attempt 1 of EX0001 and EX0050 of the ten conditions 39 PASS and 0 FAIL; the three approved attempts 2, 44 PASS and 0 FAIL; attempt 3, a neighbouring execution, another condition of the SUT, SUT-04, SUT-05 and a non-numeric attempt refused by the named gate"
+  lint: "actionlint 1.7.7 with shellcheck 0.10.0 (pinned binaries, hashes verified) exit 0 on the new workflow"
+  expression_length: "longest string with an expression 1123 characters, longest string 12298, limit 21000 (OP-CI-15)"
+checks_after_the_install: "gate matrix 6 tests OK and 80 runs, and the rehearsal 33 rows with none unexpected, repeated on the installed files and the issued records"
+does_not:
+  - dispatch, cancel, re-run or import anything
+  - publish or export anything (the export that carries this correction needs its own approval of its exact push line)
+  - approve any attempt other than attempt 2 of the three executions named in the records, any attempt 3, or any other execution, condition or SUT
+  - change a measured output, the locked configuration, the executor, the frozen prompt or a dispatch authorization

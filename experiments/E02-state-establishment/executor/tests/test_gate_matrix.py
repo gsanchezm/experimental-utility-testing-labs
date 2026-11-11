@@ -23,13 +23,14 @@ if os.environ.get('EUS_PYLIB'):
     sys.path.insert(0, os.environ['EUS_PYLIB'])
 import yaml  # noqa: E402
 
-MEASURED = os.path.join(REPO_ROOT, '.github', 'workflows', 'e02-measured-execution.yml')
+MEASURED = os.environ.get('EUS_E02_MEASURED') or os.path.join(REPO_ROOT, '.github', 'workflows', 'e02-measured-execution.yml')
 VERIFY = os.path.join(REPO_ROOT, '.github', 'workflows', 'e02-environment-verification.yml')
 
 AUTH = 'E02-START-AUTH-01'
 DISPATCH_ID = 'E02-DISPATCH-SUT01-AUTH-01'
 PV = 'ORCHESTRATOR-E02-state-establishment-v1'
 COND = 'E02-CS003-SUT01-API'
+FURTHER = 'manifests/e02-further-attempt-approval-sut01-v1.yaml'
 SUT = 'SUT-01'
 EXEC_ID = 'EX0001'
 IMPL_TEXT = 'set -euo pipefail\necho fixture implementation\n'
@@ -97,6 +98,17 @@ def fixture(impl_sha, req_sha):
         f'prompts/working/{PV}.md': '# frozen prompt fixture\n',  # byte-identical to the frozen copy, as the START leaves it
         '.github/workflows/e02-measured-execution.yml': 'name: fixture\n',
     }
+
+
+def approval(impl_sha, **over):
+    """A further-attempt approval record (OP-CI-18) for attempt 2 of EX0001 of the fixture condition."""
+    d = {'record_class': 'E02_FURTHER_ATTEMPT_APPROVAL', 'approval_id': 'E02-FURTHER-ATTEMPT-SUT01-APPROVAL-01', 'assigned_sut': SUT,
+         'status': 'ISSUED', 'revoked': False, 'dispatch_authorization_id': DISPATCH_ID, 'campaign_start_authorization_id': AUTH,
+         'executor_implementation_sha256': impl_sha, 'executor_prompt_version': PV, 'executor_prompt_sha256': sha_text('# frozen prompt fixture\n'),
+         'governing_protocol': 'protocol/agent-governance-v6.md, Section 3.7 (Further attempts)',
+         'attempts': [{'condition_id': COND, 'execution_id': EXEC_ID, 'attempt': 2, 'previous_attempt': 1}]}
+    d.update(over)
+    return json.dumps(d)
 
 
 def write_tree(files):
@@ -214,20 +226,58 @@ class GateMatrix(unittest.TestCase):
             ('condition not one of the ten', None, 'condition is one of the ten E02 conditions'),
             ('condition of another SUT', None, 'condition matches the assigned SUT'),
             ('execution id malformed', None, 'execution_id has the format EXnnnn'),
-            ('attempt 2', None, 'attempt is 1'),
+            ('attempt 2 without an approval record', None, 'exactly one further-attempt approval entry names this condition, this execution and this attempt'),
+            ('attempt 0', None, 'attempt is a positive integer'),
+            ('attempt not a number', None, 'attempt is a positive integer'),
             ('prompt version with a path', None, 'executor prompt version is a plain identifier'),
         ]
         envs = {
             'condition not one of the ten': {'GATE_CONDITION_ID': 'E02-CS003-SUT06-API'},
             'condition of another SUT': {'GATE_ASSIGNED_SUT': 'SUT-02'},
             'execution id malformed': {'GATE_EXECUTION_ID': 'EX1'},
-            'attempt 2': {'GATE_ATTEMPT': '2'},
+            'attempt 2 without an approval record': {'GATE_ATTEMPT': '2'},
+            'attempt 0': {'GATE_ATTEMPT': '0'},
+            'attempt not a number': {'GATE_ATTEMPT': 'x'},
             'prompt version with a path': {'GATE_EXECUTOR_PROMPT_VERSION': '../x'},
         }
         for name, mutate, text in cases:
             with self.subTest(case=name):
                 env = {**self.measured_env, **envs.get(name, {})}
                 self._check(name, mutate, text, env=env)
+
+    def test_further_attempt_gate(self):
+        env2 = {**self.measured_env, 'GATE_ATTEMPT': '2'}
+        put = lambda **over: (lambda f: f.__setitem__(FURTHER, approval(self.impl_sha, **over)))  # noqa: E731
+        entry = lambda **over: [{'condition_id': COND, 'execution_id': EXEC_ID, 'attempt': 2, 'previous_attempt': 1, **over}]  # noqa: E731
+        # attempt 1 is unchanged by the approval record: it passes with or without one
+        self._check('attempt 1 with an unrelated approval record present', put(), None)
+        # the approved further attempt passes every gate
+        self._check('attempt 2 with its approval', put(), None, env=env2)
+        cases = [
+            ('approval for another execution', put(attempts=entry(execution_id='EX0002')), 'exactly one further-attempt approval entry'),
+            ('approval for another condition', put(attempts=entry(condition_id='E02-CS003-SUT01-WEB')), 'exactly one further-attempt approval entry'),
+            ('approval for attempt 3 only', put(attempts=entry(attempt=3, previous_attempt=2)), 'exactly one further-attempt approval entry'),
+            ('approval entry names the wrong previous attempt', put(attempts=entry(previous_attempt=2)), 'names the attempt before this one'),
+            ('approval DRAFT', put(status='DRAFT'), 'ISSUED, unrevoked E02 further-attempt approval'),
+            ('approval revoked', put(revoked=True), 'ISSUED, unrevoked E02 further-attempt approval'),
+            ('approval for another SUT', put(assigned_sut='SUT-02'), 'ISSUED, unrevoked E02 further-attempt approval'),
+            ('approval of another record class', put(record_class='E02_DISPATCH_AUTHORIZATION'), 'ISSUED, unrevoked E02 further-attempt approval'),
+            ('approval cites another dispatch authorization', put(dispatch_authorization_id='E02-DISPATCH-SUT01-AUTH-99'), 'cites the dispatch authorization of this dispatch'),
+            ('approval cites another START id', put(campaign_start_authorization_id='E02-START-AUTH-02'), 'cites the dispatch authorization of this dispatch'),
+            ('approval cites another implementation hash', put(executor_implementation_sha256='0' * 64), 'cites the dispatch authorization of this dispatch'),
+            ('approval cites another prompt SHA-256', put(executor_prompt_sha256='0' * 64), 'names the executor prompt SHA-256, which equals the frozen prompt file'),
+            ('approval cites no governance section', put(governing_protocol='none'), 'names the attempt before this one'),
+            ('two approval files name the same attempt', lambda f: (f.__setitem__(FURTHER, approval(self.impl_sha)), f.__setitem__(FURTHER.replace('-v1', '-v2'), approval(self.impl_sha))), 'exactly one further-attempt approval entry'),
+            ('no approval file at all', None, 'exactly one further-attempt approval entry'),
+        ]
+        for name, mutate, text in cases:
+            with self.subTest(case=name):
+                self._check(name, mutate, text, env=env2)
+        # the dispatch authorization still admits attempt 1 only: attempt 2 under an authorization that says attempt 2 is refused
+        def auth_for_attempt_2(f):
+            d = json.loads(f['manifests/e02-dispatch-authorization-sut01-v1.yaml']); d['attempt'] = 2
+            f['manifests/e02-dispatch-authorization-sut01-v1.yaml'] = json.dumps(d); f[FURTHER] = approval(self.impl_sha)
+        self._check('authorization itself edited to attempt 2', auth_for_attempt_2, 'the authorization is for attempt 1', env=env2)
 
     def test_verification_gate_fails_closed_today_and_passes_on_the_fixture(self):
         self._check('verify-fixture-pass', None, None, env=self.verify_env, script=self.verify_script)
@@ -256,13 +306,17 @@ class GateMatrix(unittest.TestCase):
         self.assertNotIn('Traceback', out)
 
     def test_guard_steps_refuse_what_they_must(self):
-        guard = extract(MEASURED, 'gate', step_name='Refuse anything but a first attempt of a dispatch on the default branch')['run']
+        guard = extract(MEASURED, 'gate', step_name='Refuse a GitHub-native re-run, a malformed attempt, and a dispatch off the default branch')['run']
         verify_guard = extract(VERIFY, 'gate', step_name='Refuse anything but a DRY_RUN on the default branch')['run']
         cases = [
             (guard, {'GUARD_REF': 'refs/heads/main', 'GUARD_RUN_ATTEMPT': '1', 'GUARD_INPUT_ATTEMPT': '1'}, 0),
             (guard, {'GUARD_REF': 'refs/heads/feature', 'GUARD_RUN_ATTEMPT': '1', 'GUARD_INPUT_ATTEMPT': '1'}, 1),
             (guard, {'GUARD_REF': 'refs/heads/main', 'GUARD_RUN_ATTEMPT': '2', 'GUARD_INPUT_ATTEMPT': '1'}, 1),
-            (guard, {'GUARD_REF': 'refs/heads/main', 'GUARD_RUN_ATTEMPT': '1', 'GUARD_INPUT_ATTEMPT': '2'}, 1),
+            (guard, {'GUARD_REF': 'refs/heads/main', 'GUARD_RUN_ATTEMPT': '1', 'GUARD_INPUT_ATTEMPT': '2'}, 0),
+            (guard, {'GUARD_REF': 'refs/heads/main', 'GUARD_RUN_ATTEMPT': '1', 'GUARD_INPUT_ATTEMPT': '0'}, 1),
+            (guard, {'GUARD_REF': 'refs/heads/main', 'GUARD_RUN_ATTEMPT': '1', 'GUARD_INPUT_ATTEMPT': 'x'}, 1),
+            (guard, {'GUARD_REF': 'refs/heads/main', 'GUARD_RUN_ATTEMPT': '1', 'GUARD_INPUT_ATTEMPT': ''}, 1),
+            (guard, {'GUARD_REF': 'refs/heads/main', 'GUARD_RUN_ATTEMPT': '2', 'GUARD_INPUT_ATTEMPT': '2'}, 1),
             (verify_guard, {'GUARD_REF': 'refs/heads/main', 'GUARD_RUN_ATTEMPT': '1', 'GUARD_DRY_RUN': 'true'}, 0),
             (verify_guard, {'GUARD_REF': 'refs/heads/main', 'GUARD_RUN_ATTEMPT': '1', 'GUARD_DRY_RUN': 'false'}, 1),
         ]
