@@ -1,0 +1,349 @@
+{
+  "record": "E05-determinism conditions (DRAFT-1, 2026-11-12)",
+  "state": "DRAFT. Machine-readable mirror of section 7 of experiments/E05-determinism/campaign-configuration-draft.md; read by the E05 executor and by analysis/h3-analysis. Not locked, not hashed, not an authorization. When the configuration is locked, this file is hashed with it.",
+  "phase_prefixes": {
+    "in_S": [
+      "S_",
+      "INTERRUPTED_"
+    ],
+    "not_in_S": [
+      "RESET_",
+      "ESTABLISHMENT_",
+      "STUB_"
+    ]
+  },
+  "non_stimulus_categories": [
+    "RESET_STARTING_STATE_NOT_REACHED",
+    "RESET_FAILED",
+    "ESTABLISHMENT_FAILED",
+    "ESTABLISHMENT_VERIFICATION_FAILED",
+    "ESTABLISHMENT_INTERRUPTED",
+    "STUB_NO_BUNDLE"
+  ],
+  "schema_class_values": [
+    "deterministic",
+    "stochastic",
+    "time-dependent",
+    "external dependency"
+  ],
+  "min_s_for_h3": 45,
+  "n_per_condition": 50,
+  "wilson_z": 1.959963984540054,
+  "attribution_labels": [
+    "TOOLING",
+    "SUT"
+  ],
+  "conditions": [
+    {
+      "condition_id": "E05-SUT01-API-01",
+      "sut_id": "SUT-01",
+      "surface": "api",
+      "account": "standard_user",
+      "behavior_class": "deterministic",
+      "h3_labeled": true,
+      "expected_category": "S_ORDER_TOTAL_MATCH",
+      "stimulus_categories": [
+        "S_ORDER_TOTAL_MATCH",
+        "S_ORDER_TOTAL_MISMATCH",
+        "S_HTTP_NON_200",
+        "INTERRUPTED_"
+      ],
+      "k": 4,
+      "n": 50,
+      "reset_between_attempts": "process_restart",
+      "nominal_stimulus": false,
+      "pending": [
+        "expected total computed from the pinned constants before START (D-12)"
+      ],
+      "creates_state": "orders"
+    },
+    {
+      "condition_id": "E05-SUT01-API-02",
+      "sut_id": "SUT-01",
+      "surface": "api",
+      "account": "standard_user",
+      "behavior_class": "deterministic",
+      "h3_labeled": true,
+      "expected_category": "S_CATALOG_MATCH",
+      "stimulus_categories": [
+        "S_CATALOG_MATCH",
+        "S_CATALOG_MISMATCH",
+        "S_HTTP_NON_200",
+        "INTERRUPTED_"
+      ],
+      "k": 4,
+      "n": 50,
+      "reset_between_attempts": "api_reset",
+      "nominal_stimulus": true,
+      "pending": []
+    },
+    {
+      "condition_id": "E05-SUT01-API-03",
+      "sut_id": "SUT-01",
+      "surface": "api",
+      "account": "standard_user",
+      "behavior_class": "deterministic",
+      "h3_labeled": true,
+      "expected_category": "S_LOCKOUT_403_EXACT_MESSAGE",
+      "stimulus_categories": [
+        "S_LOCKOUT_403_EXACT_MESSAGE",
+        "S_OTHER_STATUS_OR_BODY",
+        "INTERRUPTED_"
+      ],
+      "k": 3,
+      "n": 50,
+      "reset_between_attempts": "api_reset",
+      "nominal_stimulus": true,
+      "pending": []
+    },
+    {
+      "condition_id": "E05-SUT01-API-04",
+      "sut_id": "SUT-01",
+      "surface": "api",
+      "account": "performance_glitch_user",
+      "behavior_class": "deterministic",
+      "h3_labeled": true,
+      "expected_category": "S_CONTENT_MATCH_200",
+      "stimulus_categories": [
+        "S_CONTENT_MATCH_200",
+        "S_CONTENT_MISMATCH",
+        "S_HTTP_NON_200",
+        "S_CLIENT_TIMEOUT",
+        "INTERRUPTED_"
+      ],
+      "k": 5,
+      "n": 50,
+      "reset_between_attempts": "api_reset",
+      "nominal_stimulus": false,
+      "pending": [
+        "client timeout 30 s proposed; confirmed in the START package"
+      ],
+      "client_timeout_s": 30
+    },
+    {
+      "condition_id": "E05-SUT01-API-05",
+      "sut_id": "SUT-01",
+      "surface": "api",
+      "account": "a11y_glitch_user",
+      "behavior_class": "stochastic",
+      "h3_labeled": false,
+      "expected_category": "S_MODE_MISSING_NAME",
+      "stimulus_categories": [
+        "S_MODE_MISSING_NAME",
+        "S_MODE_WRONG_LANG",
+        "S_MODE_EXTREME_TEXT",
+        "S_OTHER",
+        "INTERRUPTED_"
+      ],
+      "k": 5,
+      "n": 50,
+      "reset_between_attempts": "api_reset",
+      "nominal_stimulus": false,
+      "pending": [
+        "expected category proposed; confirmed in the START package"
+      ],
+      "expected_policy": "D-07 option (a): one pre-declared category, CEOR descriptive"
+    },
+    {
+      "condition_id": "E05-SUT01-API-06",
+      "sut_id": "SUT-01",
+      "surface": "api",
+      "account": "error_user",
+      "behavior_class": "stochastic",
+      "h3_labeled": false,
+      "expected_category": "S_ORDER_CREATED",
+      "stimulus_categories": [
+        "S_ORDER_CREATED",
+        "S_HTTP_500",
+        "S_OTHER",
+        "INTERRUPTED_"
+      ],
+      "k": 4,
+      "n": 50,
+      "reset_between_attempts": "process_restart",
+      "nominal_stimulus": false,
+      "pending": [
+        "expected category proposed; confirmed in the START package"
+      ],
+      "creates_state": "orders",
+      "discriminant_control": true,
+      "expected_policy": "D-07 option (a)"
+    },
+    {
+      "condition_id": "E05-SUT01-WEB-01",
+      "sut_id": "SUT-01",
+      "surface": "web",
+      "account": "standard_user",
+      "behavior_class": "deterministic",
+      "h3_labeled": true,
+      "expected_category": "S_ORDER_CONFIRMED",
+      "stimulus_categories": [
+        "S_ORDER_CONFIRMED",
+        "S_VALIDATION_MESSAGE",
+        "S_HTTP_ERROR_VISIBLE",
+        "S_OTHER_VIEW",
+        "INTERRUPTED_"
+      ],
+      "k": 5,
+      "n": 50,
+      "reset_between_attempts": "process_restart",
+      "nominal_stimulus": false,
+      "pending": [],
+      "creates_state": "orders"
+    },
+    {
+      "condition_id": "E05-SUT02-WEB-01",
+      "sut_id": "SUT-02",
+      "surface": "web",
+      "account": "standard_user",
+      "behavior_class": "deterministic",
+      "h3_labeled": false,
+      "expected_category": "S_BADGE_2",
+      "stimulus_categories": [
+        "S_BADGE_2",
+        "S_BADGE_OTHER",
+        "S_NO_CHANGE",
+        "INTERRUPTED_"
+      ],
+      "k": 4,
+      "n": 50,
+      "reset_between_attempts": "app_data_clear",
+      "nominal_stimulus": false,
+      "pending": []
+    },
+    {
+      "condition_id": "E05-SUT02-WEB-02",
+      "sut_id": "SUT-02",
+      "surface": "web",
+      "account": "visual_user",
+      "behavior_class": "stochastic",
+      "h3_labeled": false,
+      "expected_category": "S_VISUAL_MARKER_PRESENT",
+      "stimulus_categories": [
+        "S_VISUAL_MARKER_PRESENT",
+        "S_VISUAL_MARKER_ABSENT",
+        "S_OTHER",
+        "INTERRUPTED_"
+      ],
+      "k": 4,
+      "n": 50,
+      "reset_between_attempts": "app_data_clear",
+      "nominal_stimulus": false,
+      "pending": []
+    },
+    {
+      "condition_id": "E05-SUT04-WEB-01",
+      "sut_id": "SUT-04",
+      "surface": "web",
+      "account": "admin",
+      "behavior_class": "deterministic",
+      "h3_labeled": false,
+      "expected_category": "S_NO_CONFIRMATION_FORM_REMAINS",
+      "stimulus_categories": [
+        "S_NO_CONFIRMATION_FORM_REMAINS",
+        "S_BOOKING_CONFIRMED",
+        "S_OTHER",
+        "INTERRUPTED_"
+      ],
+      "k": 4,
+      "n": 50,
+      "reset_between_attempts": "delete_control",
+      "nominal_stimulus": false,
+      "pending": [
+        "provisional category name; the web conflict shows no message (source finding F10, inferred); confirmed in the environment verification"
+      ],
+      "rejected_only_stimulus": true
+    },
+    {
+      "condition_id": "E05-SUT04-API-01",
+      "sut_id": "SUT-04",
+      "surface": "api",
+      "account": "admin",
+      "behavior_class": "deterministic",
+      "h3_labeled": false,
+      "expected_category": "S_CONFLICT_REJECTED",
+      "stimulus_categories": [
+        "S_CONFLICT_REJECTED",
+        "S_CREATED_UNEXPECTED",
+        "S_OTHER_STATUS",
+        "INTERRUPTED_"
+      ],
+      "k": 4,
+      "n": 50,
+      "reset_between_attempts": "api_delete",
+      "nominal_stimulus": false,
+      "pending": [],
+      "rejected_only_stimulus": true
+    },
+    {
+      "condition_id": "E05-SUT04-API-02",
+      "sut_id": "SUT-04",
+      "surface": "api",
+      "account": "admin",
+      "behavior_class": "external dependency",
+      "h3_labeled": false,
+      "expected_category": "S_MESSAGE_RECORD_PRESENT",
+      "stimulus_categories": [
+        "S_MESSAGE_RECORD_PRESENT",
+        "S_MESSAGE_RECORD_ABSENT",
+        "S_BOOKING_NON_2XX",
+        "INTERRUPTED_"
+      ],
+      "k": 4,
+      "n": 50,
+      "reset_between_attempts": "api_delete_with_stimulus_booking",
+      "nominal_stimulus": false,
+      "pending": [
+        "message-service endpoint and whether the instance runs it or a double: not read"
+      ],
+      "creates_state": "bookings",
+      "expected_policy": "D-07 option (a)",
+      "residual_state_declared": [
+        "message record kept by the message service"
+      ]
+    },
+    {
+      "condition_id": "E05-SUT05-API-01",
+      "sut_id": "SUT-05",
+      "surface": "api",
+      "account": "documented_account",
+      "behavior_class": "deterministic",
+      "h3_labeled": false,
+      "expected_category": "S_REJECTED_AS_EXPECTED",
+      "stimulus_categories": [
+        "S_REJECTED_AS_EXPECTED",
+        "S_ACCEPTED_UNEXPECTED",
+        "S_OTHER",
+        "INTERRUPTED_"
+      ],
+      "k": 4,
+      "n": 50,
+      "reset_between_attempts": "environment_restart",
+      "nominal_stimulus": false,
+      "pending": []
+    },
+    {
+      "condition_id": "E05-SUT05-API-02",
+      "sut_id": "SUT-05",
+      "surface": "api",
+      "account": "documented_account",
+      "behavior_class": "stochastic",
+      "h3_labeled": false,
+      "expected_category": "S_CAPTCHA_ISSUED",
+      "stimulus_categories": [
+        "S_CAPTCHA_ISSUED",
+        "S_CAPTCHA_NOT_ISSUED",
+        "S_OTHER",
+        "INTERRUPTED_"
+      ],
+      "k": 4,
+      "n": 50,
+      "reset_between_attempts": "environment_restart",
+      "nominal_stimulus": false,
+      "pending": [],
+      "projection_exclusions_extra": [
+        "captchaId"
+      ]
+    }
+  ]
+}

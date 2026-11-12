@@ -1,0 +1,29 @@
+# manifests/campaign-execution-decisions-v7.yaml -- decision of 2026-11-12, round 4 (operation OP-DISP-07; CAMPAIGN-EXECUTION-DECISIONS-07): the stimulus booking of E05-SUT04-API-02.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing. Immutable once committed; a correction is a new version file. Earlier rounds: -v4, -v5, -v6 (unchanged).
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-07"
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+study_id: "EUS-2026-001"
+operation_id: "OP-DISP-07"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-12"
+executes_anything: false
+protocol_change: false
+supersedes: null
+earlier_rounds: [manifests/campaign-execution-decisions-v4.yaml, manifests/campaign-execution-decisions-v5.yaml, manifests/campaign-execution-decisions-v6.yaml]
+human_decision:
+  given_by: the human research lead
+  decision_date: '2026-11-12'
+  channel: "answer of a question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25)"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog:
+    transcript_stamp: "2026-11-12T20:00:57.543Z"
+    bytes: 575
+    exact_text_sha256: 8c546567871efe75bb5c11ad062f61ec31244e85aab2cd6aab895307661eb533
+    note: the answer of the question dialog, whole; the chosen option is the decision
+    exact_text: "Your questions have been answered: \"Al escribir la tabla de condiciones de E05 encontré que la condición E05-SUT04-API-02 no cabe con lo que decidiste en D-03. Su estímulo es una reserva aceptada (el mensaje solo se publica si la reserva se crea), y una reserva aceptada persiste, mientras que D-03 fijó para SUT-04 estímulos que solo se rechazan. Las otras dos condiciones de SUT-04 (conflicto de fechas) sí son solo rechazadas. ¿Qué hacemos con esta?\"=\"(i) Borrar la reserva del estímulo en el reset (Recomendado)\". You can now continue with these answers in mind."
+decisions:
+- id: D-03-FOLLOW-UP-E05-SUT04-API-02
+  question: "how the accepted booking that the stimulus of E05-SUT04-API-02 creates is controlled, since D-03 fixed rejected-only stimuli for SUT-04 and this stimulus cannot be rejected (the message is posted only after a successful create)"
+  chosen: "(i) Borrar la reserva del estímulo en el reset (Recomendado)"
+  effect: "the reset of E05-SUT04-API-02 deletes the booking that the stimulus created, by the id of the 201 response, in addition to the CS-001 booking that the E03 reset deletes: a new, small realization, for this condition only (option (b) of D-03 applied to it); the message record that the message service keeps is not deleted and is declared residual state of the condition; the other two SUT-04 conditions stay rejected-only. A failure to delete the stimulus booking is a reset-phase category of the next attempt (RESET_STARTING_STATE_NOT_REACHED), never a stimulus outcome."
+open_decisions_not_answered: []

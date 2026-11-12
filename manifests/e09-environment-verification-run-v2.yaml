@@ -1,0 +1,36 @@
+# manifests/e09-environment-verification-run-v2.yaml -- run identity and review of the second E09 environment-verification DRY_RUN (operation OP-DISP-07).
+# ORCHESTRATOR record written after the dispatch of manifests/e09-environment-verification-dispatch-v2.yaml. Non-measured; the artifacts are reviewed and never imported into raw-data/.
+record_id: "E09-ENVVERIF-DRYRUN-RUN-02"
+record_class: "ENVIRONMENT_VERIFICATION_DRY_RUN_RUN_RECORD"
+study_id: "EUS-2026-001"
+campaign: "E09-accessibility"
+recorded_on: "2026-11-12"
+instruction_record: "manifests/e09-environment-verification-dispatch-v2.yaml"
+earlier_run_record: "manifests/e09-environment-verification-run-v1.yaml"
+measured: false
+run:
+  workflow: .github/workflows/e09-environment-verification.yml
+  run_id: 43326329851
+  attempt: 1
+  head_sha: 6a8abc5d0212f3b04c1cd8d475315fb588812f02
+  event: workflow_dispatch
+  inputs: {dry_run: true}
+  created_at: '2026-11-12T23:08:55Z'
+  completed_at: '2026-11-12T23:11:25Z'
+  dispatches_made: 1  # never re-run
+  github_conclusion: success  # read together with the artifacts, which were reviewed
+artifacts:  # downloaded and compared with the GitHub digest of each archive: both equal
+- {id: 13992443216, name: E09-ENVIRONMENT_VERIFICATION-SUT-01-2, bytes: 224771, sha256: b0d3522024f2c4974b340d428802107a73e3c8a10bf45d67573e72820deccf65}
+- {id: 13992713170, name: E09-DRY_RUN-SUT-01-2, bytes: 2058313, sha256: 5f6f2778dbf8bb4e411f5b35e79f9e631200c08b90536e01443c5fc06a939ec9}
+results:
+  verification: "verified true; twelve checks PASS: the seven of the first run (instance interface, pinned axe-core tarball, health, both logins with the glitch password locked, one Catalog load and one explicit-rule axe 4.14.0 run per account; here the glitch load drew ALL_EMPTY with 12 matching nodes and the control load NOT_EMPTY with 0) and the five of the probe: realized draws (the glitch Catalog was loaded twice, NOT_EMPTY then ALL_EMPTY); one GET of the catalog API per page load, one draw per load (2 loads, 1 request each); no matching node at the draw that was not ALL_EMPTY; empty-heading (explicit rule set) reports the affected h2 at the ALL_EMPTY draw (12 nodes, test ids pizza-name-p01-desktop to p12-desktop, so the selector with the -desktop suffix matches); image-alt (explicit pair of rules) reports 0 nodes at the ALL_EMPTY draw; the default rule set reports empty-heading for the affected h2 (12 nodes)"
+  dry_run_bundles: "E09-A11Y-SUT01-MISSING-NAME__DR0002__A1: status SUCCESS, outcome category DETECTED, DOM state ALL_EMPTY (12 of 12 headings empty), 12 matching nodes, realized draw MISSING_NAME, single draw; E09-CTRL-SUT01-STANDARD__DR0002__A1: status SUCCESS, outcome category CONTROL_RULE_ABSENT, DOM state NOT_EMPTY, 0 matching nodes. Both manifests carry record class DRY_RUN, agent_role ORCHESTRATOR, seed null, prompt version NOT-APPLICABLE-DRY-RUN, axe-core 4.14.0, Chromium 153.0.8010.12, Playwright 1.63.0; environment_type OTHER (a DRY_RUN has no provenance record; the measured workflow supplies SELF_HOSTED, HD-10)"
+what_it_decides: "the assumptions of HD-3 and HD-4 hold on the pinned instance: empty-heading fires on the affected h2 at a missing_name draw, image-alt does not fire on an empty alt, the default rule set reports empty-heading, the catalog is requested once per load, and the selector with the -desktop suffix matches. This is one ground-truth draw and a non-measured verification, not a result about detection."
+findings:  # about the rehearsal, none about the SUT
+- id: F01
+  statement: "The corroboration of the realized draw by the catalog response body read AGREES in 0 of 2 probe loads and NOT_INTERPRETABLE in both DRY_RUN bundles: the catalog API answers an object {\"pizzas\": [...]} and the classifier read a bare list, so every body was classified UNPARSEABLE. The judgment of detection is made from the DOM and is not affected; the bodies are kept in full in the bundles."
+  correction: "Corrected in the executor: classify.body_class reads both shapes; tests added; digests re-embedded (commit following this record). Not yet on GitHub Actions."
+- id: F02
+  statement: "Observed, not a finding to correct: environment_type is OTHER in the DRY_RUN manifests, because a DRY_RUN carries no provenance record."
+  correction: "None; the measured workflow supplies the provenance (SELF_HOSTED)."
+not_authorized_by_this_record: [the START or the configuration lock of E09, any dispatch authorization, any measured dispatch, a second dispatch of the same instruction, any export or push]

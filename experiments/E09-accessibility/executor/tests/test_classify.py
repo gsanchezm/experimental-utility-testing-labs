@@ -84,6 +84,13 @@ class CorroborationTests(unittest.TestCase):
         self.assertEqual(classify.body_class('not json'), 'UNPARSEABLE')
         self.assertEqual(classify.body_class(json.dumps({'name': 'x'})), 'UNPARSEABLE')
         self.assertEqual(classify.body_class(None), 'UNPARSEABLE')
+        # The real shape of the catalog response (observed on GitHub Actions, run 43326329851): an object with a pizzas list.
+        self.assertEqual(classify.body_class(json.dumps({'pizzas': [{'id': 'p01', 'name': ''}, {'id': 'p02', 'name': ''}]})), 'MISSING_NAME_BODY')
+        self.assertEqual(classify.body_class(json.dumps({'pizzas': [{'id': 'p01', 'name': 'Margarita'}]})), 'NON_EMPTY_NAMES')
+        self.assertEqual(classify.body_class(json.dumps({'pizzas': [{'name': ''}, {'name': 'x'}]})), 'MIXED_NAMES')
+        self.assertEqual(classify.body_class(json.dumps({'pizzas': []})), 'UNPARSEABLE')
+        self.assertEqual(classify.body_class(json.dumps({'pizzas': 'x'})), 'UNPARSEABLE')
+        self.assertEqual(classify.corroboration('ALL_EMPTY', [classify.body_class(json.dumps({'pizzas': [{'name': ''}]}))]), 'AGREES')
 
     def test_corroboration_matrix(self):
         self.assertEqual(classify.corroboration('ALL_EMPTY', ['MISSING_NAME_BODY']), 'AGREES')

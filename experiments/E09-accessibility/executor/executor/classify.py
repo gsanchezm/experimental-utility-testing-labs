@@ -68,6 +68,10 @@ def body_class(body_text):
         data = json.loads(body_text)
     except (TypeError, ValueError):
         return 'UNPARSEABLE'
+    # The catalog API answers {"pizzas": [...]} (observed in the DRY_RUN of 2026-11-12, run 43326329851; the web client reads
+    # response.data.pizzas), and the first draft of this function expected a bare list: both shapes are read.
+    if isinstance(data, dict) and isinstance(data.get('pizzas'), list):
+        data = data['pizzas']
     if not isinstance(data, list):
         return 'UNPARSEABLE'
     names = [str(p.get('name') or '') for p in data if isinstance(p, dict) and 'name' in p]

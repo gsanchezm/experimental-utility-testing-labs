@@ -68,6 +68,8 @@ Drift control (brief s.8): the per-attempt toolchain values are recorded in ever
 
 ## 7. Conditions
 
+The machine-readable mirror of this section is experiments/E05-determinism/conditions-draft.json (categories, expected categories, classes, k, reset kind, minimum S); the executor and the analysis read it, and it is hashed with the configuration at START.
+
 Each condition is one record. Common fields for all: seed null (protocol section 5, rule 7); N = 50; environment_type as in section 6; controlled-instance verification run: null (none exists); categories are phase-tagged (S_ stimulus, INTERRUPTED_, ESTABLISHMENT_, RESET_; brief s.4.1).
 
 ### E05-SUT01-API-01
@@ -154,6 +156,7 @@ Each condition is one record. Common fields for all: seed null (protocol section
 - Categories (k = 4): S_MESSAGE_RECORD_PRESENT, S_MESSAGE_RECORD_ABSENT, S_BOOKING_NON_2XX, INTERRUPTED_.
 - Expected: D-07 decided as option (a); the category is proposed here as S_MESSAGE_RECORD_PRESENT (the documented flow posts a message when email and phone are present, F09) and is confirmed in the START package; it depends on whether the instance runs the message service or a double.
 - behavior_class: external dependency (audit section 4 Determinism; rows SUT04-EV-0028 and SUT04-EV-0029 for the in-repo doubles). Whether the measured instance uses a double is TBD.
+- DECIDED 2026-11-12 (D-03 follow-up, manifests/campaign-execution-decisions-v7.yaml): the stimulus is an ACCEPTED booking (the message is posted only after a successful create, F09), which persists; the reset of this condition deletes the stimulus booking by the id of the 201 response in addition to the CS-001 booking (a new, small realization, for this condition only). The message record kept by the message service is not deleted and is declared residual state. The other two SUT-04 conditions stay rejected-only.
 
 ### E05-SUT05-API-01
 - SUT: SUT-05, surface api. Account: documented account (block 4.7, reused unchanged with the ENVIRONMENT_RESTART reset).
@@ -198,7 +201,7 @@ Each condition is one record. Common fields for all: seed null (protocol section
 
 ## 12. Analysis specification
 
-- Script: TBD (not written). Input: the run manifests of raw-data/E05-determinism/ (after import). Output: a derived-data table naming the input file hashes, the script hash, and the runtime (SAP section 5; analysis/README.md).
+- Script: the pure core exists, analysis/h3-analysis/h3-metrics.js (TSRR, CEOR, E2E-ROR, H(Y), Wilson, NOT_ESTIMABLE, the H3 rule with the minimum S, the consistency checks of brief s.5.7, the attribution table), with its tests (analysis/h3-analysis/test, node --test, 15 tests on synthetic records). The loader that turns the bundles of raw-data/E05-determinism/ into attempt records and the CLI with the pinned raw-data tree are written after the configuration is locked. Input: the run manifests of raw-data/E05-determinism/ (after import). Output: a derived-data table naming the input file hashes, the script hash, and the runtime (SAP section 5; analysis/README.md).
 - Metrics: TSRR, CEOR, E2E-ROR and H(Y) as in brief s.5, with Wilson intervals without continuity correction (DECIDED, D-05) and NOT_ESTIMABLE handling (brief s.5.3).
 - Minimum denominator for H3: DECIDED (D-06): S at least 45 of the N = 50 attempts of the condition; below that the condition is not evaluable for H3, with the reason (the value 45 was proposed by the ORCHESTRATOR).
 - Expected-category policy for stochastic and external conditions: DECIDED (D-07): option (a), one pre-declared category, CEOR descriptive, H(Y) with counts primary.

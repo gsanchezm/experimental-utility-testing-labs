@@ -1,0 +1,39 @@
+# manifests/e09-environment-verification-dispatch-v2.yaml -- instruction record of the SECOND E09 environment-verification DRY_RUN, written BEFORE the dispatch (operation OP-DISP-07).
+# ORCHESTRATOR record. A DRY_RUN is non-measured (record class ENVIRONMENT_VERIFICATION and DRY_RUN), never imported into raw-data/, never part of a measured dataset. It is not the START of E09 and authorizes nothing else.
+record_id: "E09-ENVVERIF-DRYRUN-DISPATCH-02"
+record_class: "ENVIRONMENT_VERIFICATION_DRY_RUN_DISPATCH_INSTRUCTION"
+study_id: "EUS-2026-001"
+campaign: "E09-accessibility"
+operation_id: "OP-DISP-07"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-12"
+earlier_instruction_record: "manifests/e09-environment-verification-dispatch-v1.yaml"
+earlier_run_record: "manifests/e09-environment-verification-run-v1.yaml"
+measured: false
+human_approval:
+  given_by: the human research lead
+  transcript_stamp: "2026-11-12T23:08:11.542Z"
+  answer_bytes: 2108
+  answer_sha256: 82b6cbc6ab2e3470c552fe686e7264346483c545ca8920680e09ef8647a368f5
+  answer_choice: "Sí, despacha esta línea (Recomendado)"
+  note: the answer record is the whole tool result of the question that offered the exact line below; the line is the same text as that of the first instruction record, and what changes is the content that it runs (the corrected workflow and the probe, published by export v55)
+dispatch:
+  exact_line: "gh workflow run e09-environment-verification.yml --repo gsanchezm/experimental-utility-testing-labs --ref main -f dry_run=true"
+  exact_line_bytes: 126
+  exact_line_sha256: 43174b94ec9faeef3cf3d46df46415c68f8e04c31f5a0f9d9e9a1e3c8036ae5b
+  workflow: .github/workflows/e09-environment-verification.yml
+  repository: gsanchezm/experimental-utility-testing-labs
+  ref: main
+  public_main_at_instruction: 6a8abc5d0212f3b04c1cd8d475315fb588812f02
+  inputs: {dry_run: true}
+  dispatches_allowed: 1
+  run_identity: null  # filled by the record written after the dispatch
+pre_dispatch_checks:
+- "public main is 6a8abc5d (export v55) and the workflow is active with one earlier run (43292830947)"
+- "the workflow, run-condition.sh, probe.py, verify.py, run.py, config.py, requirements.txt and toolchain-manifest.yaml have the same blob in the public repository and in the canonical repository"
+- "the rtk hook does not rewrite the line (rtk rewrite rc 1)"
+what_the_result_decides: "if the probe confirms that empty-heading fires on the affected h2 at a missing_name draw, that image-alt does not fire on an empty alt, that the default rule set reports empty-heading and that the catalog is requested once per load, the assumptions of HD-3 and HD-4 hold and the E09 START package can be prepared; otherwise the finding is read by the human research lead before any lock"
+stop_conditions:
+- "the ORCHESTRATOR never re-runs a run or a job; a failed or cancelled run is read from its artifacts and logs (never from the conclusion of GitHub alone), recorded, and corrected in the canonical repository if the cause is a defect of the rehearsal; a corrected file needs an export before it can run and a further dispatch is a new line under its own approval"
+- "the artifacts are downloaded, compared with the GitHub digest of each archive, and reviewed; never imported into raw-data/"
+not_authorized_by_this_record: [the START or the configuration lock of E09, any dispatch authorization under Section 3.7 of protocol/agent-governance-v6.md, any measured dispatch, any second dispatch of this line, any export or push]
