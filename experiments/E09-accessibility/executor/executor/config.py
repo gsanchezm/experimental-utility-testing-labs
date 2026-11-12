@@ -10,12 +10,14 @@ CONDITIONS = {
 }
 ASSIGNED_SUT = 'SUT-01'
 # Documented SUT-01 test accounts. The control password is the one the E03 SUT-01 realization uses (executor README, section 4.1).
-# The password of a11y_glitch_user is NOT recorded in the E01 evidence rows (SUT01-EV-0017 to -0019) and is NOT guessed:
-# it stays None until the human research lead decides its source (HUMAN DECISION HD-E09-A). While it is None, every
-# glitch attempt is refused before any browser starts.
+# The password of a11y_glitch_user is not recorded in the E01 evidence rows (SUT01-EV-0017 to -0019). Its source is the account table of
+# the SUT-01 README at the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 (row a11y_glitch_user, behavior "Random a11y defect per
+# call"; README blob sha256 9c49c616e0e2fb44f7d99adbf7c09653c66437fecbc62cd9038bc6f1cab53348), read read-only without a clone on the
+# explicit human authorization of 2026-11-12 (HD-E09-A; manifests/campaign-execution-decisions-v5.yaml). It is not guessed.
+# While a password is None, every attempt of that account is refused before any browser starts.
 ACCOUNTS = {
     'standard_user': 'pizza123',
-    'a11y_glitch_user': None,
+    'a11y_glitch_user': 'pizza123',
 }
 CATALOG_PATH = '/catalog'
 CATALOG_API_PATH = '/api/pizzas'

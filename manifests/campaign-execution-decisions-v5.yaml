@@ -1,0 +1,69 @@
+# manifests/campaign-execution-decisions-v5.yaml -- decisions record of 2026-11-12, round 2 (operation OP-DISP-07; CAMPAIGN-EXECUTION-DECISIONS-05).
+# The human research lead's answers to the three points that closed the status report of round 1 (read authorization for the E09 glitch account, go-ahead for the E05 decision round, approval of the export v54 build) and the answers of that E05 round (experiments/E05-determinism/design-brief-draft.md, sections 5, 6 and 11).
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing. Immutable once committed; a correction is a new version file. Round 1 is manifests/campaign-execution-decisions-v4.yaml (unchanged).
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-05"
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+study_id: "EUS-2026-001"
+operation_id: "OP-DISP-07"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-12"
+recorded_on_timezone: "America/Mexico_City"
+status: "RECORDED"
+executes_anything: false
+protocol_change: false
+supersedes: null
+round_1_record: manifests/campaign-execution-decisions-v4.yaml
+human_decision:
+  given_by: the human research lead
+  decision_date: '2026-11-12'
+  channel: "given directly to the ORCHESTRATOR in its conversation (single-agent operating model of 2026-10-24 and 2026-10-25), in two parts: a written message and, after it, the answer of a question dialog"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  message_1:
+    transcript_stamp: null  # not available to the ORCHESTRATOR when the record was written; null, not guessed
+    in_reply_to: "the three-point list that closed the status report of round 1 (1: authorization of a read-only read of the SUT-01 README at the pinned commit; 2: the E05 decisions D-03, D-09 and D-16b first, then the others in grouped rounds; 3: the public export v54, not built, any push needing a yes to the exact line)"
+    exact_text_sha256: 75908d1322b2df4d1ba16648b9fe0f4ecb1ba5b2d91acfa7f36f62da906635da
+    exact_text: "1. autorizo la lectura, 2. adelante, 3. apruebo"
+  message_2_question_dialog:
+    transcript_stamp: null
+    bytes: 925
+    exact_text_sha256: 406b3f8f8bad6b909833a3bae6f321f847b442f7543ef8d746ebd5a2e5d8f494
+    note: the answer of the question dialog, whole (the three question texts as put to the human research lead and the option chosen for each); the chosen option is the decision
+    exact_text: "Your questions have been answered: \"D-03 (E05, estado residual): en SUT-01 las órdenes persisten tras el reinicio (solo un reinicio del proceso del backend las borra) y en SUT-04 una reserva creada por un estímulo aceptado sobrevive al reinicio de CS-001. ¿Cómo se controla ese residuo antes de fijar la configuración?\"=\"b para SUT-01, a para el resto (Recomendado)\", \"D-09 (E05, intentos sin bundle): en E03 dos intentos fallaron antes de que corriera el ejecutor y no dejaron manifiesto. ¿Cómo se contabilizan en E05?\"=\"a: intento interrumpido dentro de T, con registro stub (Recomendado)\", \"D-16b (E05/E04, interacción de H3 con interrupciones por herramienta): una interrupción etiquetada TOOLING después de establecer el estado, ¿cuenta como categoría INTERRUPTED_ (y por tanto impide que se cumpla H3)?\"=\"Contarla y reportarla con su etiqueta (Recomendado)\". You can now continue with these answers in mind."
+readings_of_message_1:  # the ORCHESTRATOR's reading of each short answer, stated so that it can be corrected
+- item: 1
+  answer: "autorizo la lectura"
+  reading: "authorization of a read-only read, without a clone and without any SUT start, of the README of the SUT-01 repository at the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1, to obtain the activation password of a11y_glitch_user (HD-E09-A). Nothing else is authorized by it."
+  performed: true
+  performed_how: "one HTTPS GET of raw.githubusercontent.com/gsanchezm/OmniPizza/9ca37674d374e9303912e259641ee86baf3aabe1/README.md by a Python urllib call; 17418 bytes, sha256 9c49c616e0e2fb44f7d99adbf7c09653c66437fecbc62cd9038bc6f1cab53348; nothing was cloned, installed, started or kept in the repository"
+  observed: "the README account table lists a11y_glitch_user with the password pizza123 and the behavior Random a11y defect per call (the same table lists standard_user with the same password)"
+- item: 2
+  answer: "adelante"
+  reading: "go-ahead to open the grouped decision round of E05 now, starting with D-03, D-09 and D-16b. It decides none of them: they were put to the human research lead in the question dialog above."
+- item: 3
+  answer: "apruebo"
+  reading: "approval to build and check the public export v54 (the state after the commits of round 1 and this round). It is not read as the yes to the push, which needs its own yes to the exact line (decision of 2026-11-08, memory eus-remote-session-push-by-exact-line); the exact line is put to the human research lead after the build and its checks."
+decisions:
+- id: HD-E09-A-GLITCH-ACCOUNT-PASSWORD
+  question: "where the activation password of a11y_glitch_user comes from (experiments/E09-accessibility/executor/IMPLEMENTATION-NOTES.md, section 3, HD-E09-A)"
+  chosen: "autorizo la lectura (message 1, item 1)"
+  effect: "executor/executor/config.py ACCOUNTS now holds pizza123 for a11y_glitch_user, with the source (README at the pinned commit, blob sha256 9c49c616e0e2fb44f7d99adbf7c09653c66437fecbc62cd9038bc6f1cab53348) in the comment above it; run-condition.sh carries the re-embedded digests (only executor/config.py changed); the notes and the README of the executor record HD-E09-A as resolved. The tests of the executor ran 59, 0 failures, 15 skipped (no YAML or browser library installed). The gate regex of the measured workflow for a locked password passes on the real file. The environment-verification DRY_RUN is no longer blocked by this item; its own exact line, and the other E09 decisions HD-1 to HD-15 and HD-17 to HD-20, still need their own approval. No run, dispatch, START or freeze."
+- id: D-03-E05-RESIDUAL-STATE
+  question: "how the state that the reset does not clear (SUT-01 orders; SUT-04 bookings created by an accepted stimulus) is controlled in E05 (experiments/E05-determinism/design-brief-draft.md, sections 4.4 and 11, D-03)"
+  chosen: "b para SUT-01, a para el resto (Recomendado)"
+  effect: "SUT-01: a process-restart reset between attempts for the conditions that create orders (SUT01-API-01, SUT01-API-06, SUT01-WEB-01), a new realization that E03 does not contain and that the E05 executor has to implement and verify before any START; order identifiers stay excluded and the starting-state check does not depend on the order count (brief, section 4.4). SUT-04 and the other surfaces: stimuli that do not persist only (rejected-only for the booking conditions), no extended reset. Which draft conditions of SUT-04 stay as written and which are restricted or dropped is settled when the configuration is written, not here. The process-restart realization and its verification are preparation work and need no approval; the configuration lock, the START and every dispatch still do."
+- id: D-09-E05-NO-BUNDLE-ATTEMPTS
+  question: "how an attempt that fails before the executor runs, and so leaves no run manifest, is counted in E05 (brief, section 5 and 11, D-09)"
+  chosen: "a: intento interrumpido dentro de T, con registro stub (Recomendado)"
+  effect: "option (a). Such an attempt is an interrupted attempt in T, recorded by a stub record with its reason and its own attempt index (protocol/repeatability-determinism-v1.md, section 5, rules 5 and 6); it counts against TSRR and E2E-ROR and never against CEOR. The stub record format, and how it is told apart from a bundle in the import, are fixed in the E05 configuration and executor, which are not written yet."
+- id: D-16B-H3-INTERACTION-OF-TOOLING-INTERRUPTIONS
+  question: "whether a TOOLING-labeled interruption after the starting state is established counts as an INTERRUPTED_ category (brief, section 6, rule 6, D-16b)"
+  chosen: "Contarla y reportarla con su etiqueta (Recomendado)"
+  effect: "a TOOLING interruption after establishment counts as an INTERRUPTED_ category in S and in H(Y) (protocol section 5, rules 5 and 6) and is reported with its label in the secondary table; a tooling-labeled unexpected response stays an unexpected outcome. No attempt leaves any denominator. With D-16 option B of round 1 this completes the attribution rule that the configurations of E05 and E04 lock at their START; issue (xix) stays DEFERRED-BEFORE-CAMPAIGN until a configuration locks it. No protocol change."
+approvals_not_given:  # each still needs its own explicit human approval of that exact action
+- the START and the configuration lock of E04, E05, or E09, and any dispatch authorization under Section 3.7 of protocol/agent-governance-v6.md
+- any dispatch, including the E09 environment-verification DRY_RUN (its exact line is put later, for its own approval), and the push of the public export v54 (its exact line is put after the build and its checks)
+- the writing of the E05 workflow and dispatch prompt before the remaining decisions below that shape them are answered
+open_decisions_not_answered:
+  e05_e04: [D-01, D-04, D-05, D-06, D-07, D-08, D-10, D-11, D-12, D-13, D-14, D-15, D-17, D-18, D-19]
+  e09: [HD-1, HD-2, HD-3, HD-4, HD-5, HD-6, HD-7, HD-8, HD-9, HD-10, HD-11, HD-12, HD-13, HD-14, HD-15, HD-17, HD-18, HD-19, HD-20]
+decided_so_far_e05_e04: [D-02, D-03, D-09, D-16, D-16b, D-20]

@@ -113,10 +113,23 @@ tools:
       - {authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-02, run_id: 36539790536, run_attempt: 1, platform: ios, observed_core: "3.7.0", observed_driver: "appium-xcuitest-driver 12.13.2", observed_install_date: "2026-09-29", observed_host: "Darwin arm64, macos-15 image 20260907.0337.1; Node.js v22.23.2", pins_match_observed: true, record: qualification/compatibility-smoke/formal/APPIUM3-COMPAT-SMOKE-AUTH-02/SUT-02-ios/environment/toolchain-install.json}
   accessibility:
     candidate: axe-core
-    version: null
+    package: axe-core  # npm registry
+    version: "4.14.0"  # a pin, not an install record: install_date and platform stay null; the measured job fetches the tarball by URL and verifies the integrity below before use (experiments/E09-accessibility/axe-core-pin-proposal-draft.md, section 5, route T, which is HUMAN DECISION HD-12 and is not decided by this pin)
+    npm_integrity: "sha512-9WTZxEjsZ7b13TH8JPmbV2z8CHbl80/2hm3XPEG4JgNdQLK81IBRXmSxHfMAOkSqQeRxT/0dwNDz2GOm3zzpcQ=="
+    shasum_sha1: a9819d3932a8198fbe935d8cbd8afcdfecbcf31d
+    tarball_url: https://registry.npmjs.org/axe-core/-/axe-core-4.14.0.tgz
+    published_at: "2026-10-05T17:43:36.099Z"  # registry `time`
+    license: MPL-2.0
+    engines: "node >=4"
+    source_repository: https://github.com/dequelabs/axe-core.git
+    source_commit: null  # not stated: the registry record of 4.14.0 has no gitHead; left null, not guessed
+    browser_build_member: package/axe.min.js
+    browser_build_sha256: 20c09fe157a8a34a30e241aaa1fcdade657734f08ab379ecfbeb7d45cc46e878  # computed from the tarball on 2026-11-06 (proposal, section 2)
+    pinned_by: ORCHESTRATOR
+    pinned_at: "2026-11-12"
     install_date: null
     platform: null
-    notes: null
+    notes: "Pinned on the human research lead's explicit approval of 2026-11-12 (HUMAN DECISION HD-16 of experiments/E09-accessibility/design-brief-draft.md, option 4.14.0 as recommended; answer to the question on the E09 axe-core pin). On the pin date the registry showed dist-tag latest = 4.14.0, the same integrity and shasum as the proposal, no deprecation, no gitHead. The pin authorizes no run, no installation, no campaign START, and decides no other HUMAN DECISION of the E09 brief (HD-1 to HD-15, HD-17 to HD-20); the scanner loading route (HD-12), the rule set (HD-3, HD-4) and the scan options stay as drafted until the configuration is locked."
   visual:
     candidate: "Playwright screenshots + Pixelmatch"
     version: null

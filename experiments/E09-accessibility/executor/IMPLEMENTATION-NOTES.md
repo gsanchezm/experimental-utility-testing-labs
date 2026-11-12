@@ -1,7 +1,10 @@
 # E09-accessibility executor -- implementation notes (DRAFT, operation OP-PREP-E09)
 
 **DRAFT. Nothing here starts, locks, authorizes, freezes, or dispatches anything.** Campaign status: NOT_STARTED (unchanged). Protocol
-state: protocol/agent-governance-v6.md is a DRAFT and is not in force; protocol/agent-governance-v5.md remains the document in force.
+state when this file was written: protocol/agent-governance-v6.md was a DRAFT and not in force; protocol/agent-governance-v5.md was the
+document in force. Update 2026-11-12 (representation only; nothing below was re-run): protocol/agent-governance-v6.md has been
+FROZEN-PRE-DATA since 2026-11-06 and v5 is AMENDED, so gate G-4 now passes on the real file (its `| Protocol state |` field and its
+"### 3.7 Dispatch authorization" heading were checked directly); statements below that say v6 is a DRAFT describe the state at writing.
 
 ## 0. Base, sources, and the hard rules of this task
 
@@ -46,10 +49,10 @@ state: protocol/agent-governance-v6.md is a DRAFT and is not in force; protocol/
 
 | Blocker | Who decides or does it | Notes |
 |---|---|---|
-| Activation password of `a11y_glitch_user` (executor/executor/config.py, `ACCOUNTS`) | human research lead (HD-E09-A) | Not in the E01 evidence rows (SUT01-EV-0017 to -0019), not guessed. Source to be read from the SUT-01 README at the pinned commit 9ca37674 by a reviewed change; the implementation digests are then re-embedded. Until then glitch attempts are refused and the verification reports NOT_VERIFIED. |
+| Activation password of `a11y_glitch_user` (executor/executor/config.py, `ACCOUNTS`) | human research lead (HD-E09-A) | **RESOLVED 2026-11-12** (representation of the decision; see manifests/campaign-execution-decisions-v5.yaml). Not in the E01 evidence rows (SUT01-EV-0017 to -0019), not guessed: read read-only, without a clone, from the account table of the SUT-01 README at the pinned commit 9ca37674 (README blob sha256 9c49c616...), on the explicit human authorization of 2026-11-12; `config.py` now locks it and the implementation digests were re-embedded. The refusal and NOT_VERIFIED paths stay as the fail-closed behavior for an unlocked password. |
 | E09 campaign START (NOT_STARTED to IN_PROGRESS row with the authorization id) | human research lead | protocol/change-control-v1.md, section 7 |
 | "Campaign configuration" lock of experiments/E09-accessibility/README.md | ORCHESTRATOR after the human approval of the exact text | The gate reads the section and names the items listed in section 5 below |
-| Governance v6 freeze (DRAFT to FROZEN-PRE-DATA at its content SHA-256) | human research lead, explicit approval | Until then the gate refuses every dispatch, by design |
+| Governance v6 freeze (DRAFT to FROZEN-PRE-DATA at its content SHA-256) | human research lead, explicit approval | Done 2026-11-06 (manifests/agent-governance-v6-amendment-v1.yaml). Until then the gate refused every dispatch, by design |
 | Dispatch authorization per SUT (governance v6, Section 3.7) | human research lead, issued in writing | Field names defined in executor/README.md, section 11 (not in governance v6; a choice of this draft) |
 | Controlled-instance verification of both conditions on GitHub Actions | ORCHESTRATOR (after HD-E09-A) | Environment verification run; import of its artifacts; status record |
 | Probe record of the classifier and the rule behaviour (brief section 13, item 1) | ORCHESTRATOR, from the verified run's imported artifacts | The lock names the probe record path; the gate checks the file exists |
@@ -104,7 +107,7 @@ proposal, so the brief defaults below are used.
 | HD-18 | Python executor lock | a new E09 lock with the same pins (copied); Python 3.12 series for the executor, the exact version recorded per run | as recommended |
 | HD-19 | Recording the SUT01-EV-0019 discrepancy | (i) or (ii) recommended; not performed (blocked, section 3) | **open** |
 | HD-20 | Attribution of a non-detection | (i): recorded as a non-detection of the predeclared rule set on the DOM condition; no cause inferred | as recommended |
-| HD-E09-A | Password of `a11y_glitch_user` | not set (None); refused until the source is decided | **open, blocks everything glitch** |
+| HD-E09-A | Password of `a11y_glitch_user` | locked in config.py from the SUT-01 README at the pinned commit (read-only read authorized 2026-11-12); digests re-embedded | **resolved 2026-11-12**; the DRY_RUN environment verification is no longer blocked by it |
 | HD-E09-B | Run status for each outcome category | the mapping of executor/README.md section 4 (DETECTED = SUCCESS; NOT_DETECTED = FAILURE; a draw without ground truth = INCONCLUSIVE with its category) | default; the schema has no value for a non-ground-truth draw |
 | HD-E09-C | Declared behavior class of the control | null (TBD); the configuration draft proposes "deterministic (to confirm)"; the activation record confirms the account's behavior at run time | open |
 | HD-E09-D | Candidate condition ids | the candidate ids of the configuration draft, unchanged | candidate, not frozen |

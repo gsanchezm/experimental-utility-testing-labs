@@ -27,7 +27,7 @@
 | source_commit | **not stated** (the registry record has no `gitHead` for 4.14.0; left null, not guessed) | packument |
 | browser build file (candidate) | `package/axe.min.js`, 652140 bytes, sha256 `20c09fe157a8a34a30e241aaa1fcdade657734f08ab379ecfbeb7d45cc46e878` | tarball, computed 2026-11-06 |
 | unminified build (reference) | `package/axe.js`, 1477661 bytes, sha256 `aae0b8b36278089962105b2351ea64f4da7d3d440b54e162e21616d597aa0d6f` | tarball |
-| pinned_by / pinned_at | null (proposal only) | — |
+| pinned_by / pinned_at | null at the time of the proposal; ORCHESTRATOR / 2026-11-12 on the human research lead's approval of 4.14.0 (HD-16), recorded in manifests/toolchain-manifest.yaml, `tools.accessibility` | manifests/campaign-execution-decisions-v4.yaml |
 
 **Retrieval.** Registry metadata for `latest`: 2026-11-06T01:25:42Z (UTC), which is 2026-11-05 local time (UTC-6). Full packument (release history, integrity values): https://registry.npmjs.org/axe-core, same retrieval window. Tarball: https://registry.npmjs.org/axe-core/-/axe-core-4.14.0.tgz, retrieved 2026-11-06T01:31:09Z (UTC).
 

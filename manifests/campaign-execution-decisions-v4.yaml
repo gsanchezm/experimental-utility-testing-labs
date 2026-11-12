@@ -1,0 +1,50 @@
+# manifests/campaign-execution-decisions-v4.yaml -- decisions record of 2026-11-12 (operation OP-DISP-07; CAMPAIGN-EXECUTION-DECISIONS-04).
+# The human research lead's answers, given in one question dialog, to four points put after the orientation of E04, E05 and E09 (experiments/E05-determinism/design-brief-draft.md, sections 2.2, 6, 9 and 11; experiments/E09-accessibility/design-brief-draft.md, section 12).
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing. Immutable once committed; a correction is a new version file.
+record_id: CAMPAIGN-EXECUTION-DECISIONS-04
+record_class: CAMPAIGN_EXECUTION_DECISIONS
+study_id: EUS-2026-001
+operation_id: OP-DISP-07
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-12'
+recorded_on_timezone: America/Mexico_City
+status: RECORDED
+executes_anything: false
+protocol_change: false
+human_decision:
+  given_by: the human research lead
+  decision_date: '2026-11-12'
+  channel: given directly to the ORCHESTRATOR in its conversation, as the answer of a question dialog (single-agent operating model of 2026-10-24 and 2026-10-25)
+  answer:
+    transcript_stamp: null  # not available to the ORCHESTRATOR when the record was written; null, not guessed
+    bytes: 910
+    exact_text_sha256: 3570a257e7e3338aa3cd4b9e1a70e229bcb681c4f9986f315965f085702dea94
+    sha256_convention: UTF-8 text of the tool result exactly as stored, without a trailing line feed
+    note: the answer of the question dialog, whole (the four question texts as put to the human research lead and the option chosen for each); the question texts are the offered lines, the chosen option is the decision
+    exact_text: |-
+      Your questions have been answered: "D-20 (E04): el borrador de diseño dice que H3 se calcula solo con E05 (CEOR y H(Y)) y que E04 solo añadiría la tabla de TSRR. ¿Qué hacemos con E04?"="E04 mínimo después de E05 (Recomendado)", "D-16 (tema xix, E04/E05): regla de atribución de desviaciones al ejecutor, driver, dispositivo o infraestructura en vez de al SUT. Hay que fijarla antes de congelar E04/E05. ¿Cuál adoptamos?"="B: etiquetas mecánicas junto a las tasas crudas (Recomendado)", "D-02 (E05): modelo de despacho de los N = 50 intentos de cada condición."="B: instancia compartida, reinicio entre intentos (Recomendado)", "E09 (accesibilidad, H5): hay ejecutor, flujos y esqueleto de configuración listos como borrador. El siguiente paso que depende de ti es fijar el pin de axe-core. ¿Lo aprobamos?"="Sí: pin axe-core 4.14.0 (Recomendado)". You can now continue with these answers in mind.
+decisions:
+- id: D-20-E04-DISPOSITION
+  question: "whether and when E04-repeatability runs, given that H3 is computed from E05 alone (experiments/E05-determinism/design-brief-draft.md, sections 9 and 11, D-20)"
+  chosen: "E04 mínimo después de E05 (Recomendado)"
+  note_on_label: the label "(Recomendado)" on the chosen option followed section 9 of the brief ("(a) or (b)"); section 11, D-20, of the brief marks (a) as its recommendation. The human research lead chose (b) from the options as offered; the decision is (b).
+  effect: "option (b) of D-20. E04 stays within the resumption of 2026-11-02 (manifests/campaign-resumption-v1.yaml, unchanged) and outside the H3 critical path. Its minimum content (establishment-only attempts, no stimulus, N = 50 per condition, same reset and target states as E05) is designed only after E05 has run, and no E04 file is written before then. The wording gap of protocol/statistical-analysis-plan-v1.md, section 4.3 (it lists E04 and E05 for H3 although its criteria are E05 quantities) stays flagged and is not amended here. The START of E04 still needs its own explicit human authorization."
+- id: D-16-ISSUE-XIX-ATTRIBUTION
+  question: "the attribution rule of issue (xix) for deviations caused by the runner, driver, device, or infrastructure rather than by the SUT in E04 and E05 (protocol/study-design-v1.md, section 13, row (xix); protocol/repeatability-determinism-v1.md, section 6)"
+  chosen: "B: etiquetas mecánicas junto a las tasas crudas (Recomendado)"
+  effect: "option B of the brief, rules 1 to 5 of its section 6, adopted as the rule that the campaign configurations of E05 and E04 are to lock at their START. The raw primary rates count every attempt; an attempt is labeled TOOLING only on mechanical, harness-level records (a runner or client exception before the stimulus request is sent, a browser or client crash or disconnect before the stimulus request is sent, a runner cancelled or lost as recorded by the workflow); any response received from the SUT after the stimulus request is sent, and any attempt whose cause cannot be assigned mechanically, is labeled SUT; attribution is never made after seeing the pattern of results; a secondary table reports the TOOLING-labeled counts per category, and no attempt leaves any denominator. Option C (exclusion) stays rejected by protocol/repeatability-determinism-v1.md, section 5, rules 4 and 5. NOT decided by this answer, and still open: D-16b (whether a TOOLING interruption after establishment counts as an INTERRUPTED outcome category against H3, which the brief recommends; rule 6 of its section 6). The protocol is not amended, issue (xix) stays DEFERRED-BEFORE-CAMPAIGN in the Open-Issue Register until a campaign configuration locks the rule at its START (protocol/change-control-v1.md, section 7), and `open_issue_register` of manifests/study-manifest.yaml is unchanged."
+- id: D-02-E05-DISPATCH-MODEL
+  question: "whether the N = 50 attempts of an E05 condition share one instance (experiments/E05-determinism/design-brief-draft.md, section 2.2, D-02)"
+  chosen: "B: instancia compartida, reinicio entre intentos (Recomendado)"
+  effect: "model B for E05. N sequential attempts per condition on one controlled instance, with the declared reset between attempts, and the starting-state check of step 2 of each attempt recorded as an observation (an attempt whose check fails is ABORTED with its cause, the E03 convention). The residual-state list of the brief, section 4.4, is fixed in the configuration and is not decided here (D-03 stays open). No E05 executor, workflow, or prompt exists, and none is started by this answer."
+- id: HD-16-E09-AXE-CORE-PIN
+  question: "whether to pin axe-core 4.14.0 for E09-accessibility (experiments/E09-accessibility/axe-core-pin-proposal-draft.md; experiments/E09-accessibility/design-brief-draft.md, section 12, HD-16)"
+  chosen: "Sí: pin axe-core 4.14.0 (Recomendado)"
+  effect: "the pin is recorded in manifests/toolchain-manifest.yaml, `tools.accessibility` (version 4.14.0, npm integrity sha512-9WTZ..., pinned_by ORCHESTRATOR, pinned_at 2026-11-12; install_date and platform stay null because nothing is installed). On the pin date the npm registry showed dist-tag latest = 4.14.0 and the same integrity and shasum as the proposal, with no deprecation and no gitHead (source_commit stays null). The version, integrity, tarball URL, and member digest equal the constants of experiments/E09-accessibility/executor/executor/scanner.py, which is what gate G-7 of .github/workflows/e09-measured-execution.yml compares. The same operation corrected the stale wording that called governance v6 a DRAFT in the E09 executor README, its implementation notes, and the header comment of the E09 measured workflow (representation only; no hashed executor file and no gate logic changed; gate G-4 passes on the real governance v6 file, checked directly). The pin decides no other HUMAN DECISION of the E09 brief."
+approvals_not_given:  # each still needs its own explicit human approval of that exact action
+- the START and the configuration lock of E04, E05, or E09, and any dispatch authorization under Section 3.7 of protocol/agent-governance-v6.md
+- any dispatch, including the E09 environment-verification DRY_RUN (its exact line comes later, for its own approval), and any export push
+- the writing of the E05 executor, workflow, or dispatch prompt (the open decisions below shape it)
+open_decisions_not_answered:
+  e05_e04: [D-01, D-03, D-04, D-05, D-06, D-07, D-08, D-09, D-10, D-11, D-12, D-13, D-14, D-15, D-16b, D-17, D-18, D-19]
+  e09: [HD-1, HD-2, HD-3, HD-4, HD-5, HD-6, HD-7, HD-8, HD-9, HD-10, HD-11, HD-12, HD-13, HD-14, HD-15, HD-17, HD-18, HD-19, HD-20]

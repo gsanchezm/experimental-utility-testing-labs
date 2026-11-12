@@ -2,7 +2,7 @@
 
 **DRAFT. Not frozen, not locked, not dispatched.** Nothing in this directory starts, configures, authorizes, or dispatches a campaign. Its
 measured workflow fails closed until the E09 campaign START, the locked "Campaign configuration" record, a dispatch authorization of the
-human research lead (protocol/agent-governance-v6.md, Section 3.7, which is itself a DRAFT), a controlled-instance verification on GitHub
+human research lead (protocol/agent-governance-v6.md, Section 3.7, FROZEN-PRE-DATA since 2026-11-06), a controlled-instance verification on GitHub
 Actions, and a locked activation password are all present. Working basis: experiments/E09-accessibility/design-brief-draft.md,
 campaign-configuration-draft.md, and axe-core-pin-proposal-draft.md. Deviations and open items: IMPLEMENTATION-NOTES.md (same folder).
 
@@ -174,5 +174,5 @@ heading and a non-DRAFT state of protocol/agent-governance-v6.md.
 the tarball, writes `instance.json` with record class ENVIRONMENT_VERIFICATION, and runs `executor.verify` (non-measured): interface, tarball, the login behaviour
 of both accounts, and, for each account whose activation is confirmed, one Catalog load and one explicit-rule axe run in a browser. It writes
 `verification.json` and no run manifest; its artifact is labeled ENVIRONMENT_VERIFICATION and is never imported. The input `dry_run` additionally
-runs the executor once per condition after the verification passed (DRY_RUN, never imported, never measured). While the glitch account's
-password is not locked, the verification reports NOT_VERIFIED and the job fails by design.
+runs the executor once per condition after the verification passed (DRY_RUN, never imported, never measured). While a password is not locked,
+the verification reports NOT_VERIFIED for that account and the job fails by design (the glitch account's password is locked since 2026-11-12).
