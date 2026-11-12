@@ -1,0 +1,39 @@
+# derived-data/E02-state-establishment/required-actions-establish-per-attempt.csv.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (CSV cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/E02-state-establishment/required-actions-establish-per-attempt.csv
+dataset_sha256: 250bdcd040a277ef582092b74a24f8e7ee1dc183362dc6a0281f8ad8781fab7f
+campaign_id: E02-state-establishment
+sut_ids: [SUT-01, SUT-02, SUT-03, SUT-04, SUT-05]
+conditions: [E02-CS003-SUT01-WEB, E02-CS003-SUT01-API, E02-CS004-SUT01-WEB, E02-CS003-SUT02-WEB, E02-CS004-SUT02-WEB, E02-CS003-SUT03-WEB, E02-CS004-SUT03-WEB, E02-CS003-SUT04-WEB, E02-CS003-SUT04-API, E02-CS003-SUT05-API]
+raw_inputs:
+  tree:
+    path: raw-data/E02-state-establishment
+    git_tree: c7beaebe6b290c23e0f5ae49af7fbcd95828ae5b
+    pinned_at_commit: 1b0442f740e8059ede681fe6a0fa21a31bcf73dd
+    campaign_state: FROZEN
+  files_read_per_bundle: [run-manifest.json, actions.json]
+  files_read_outside_the_tree:
+    - "experiments/E02-state-establishment/README.md (digest check of the locked configuration section, at HEAD and at the START commit)"
+    - "manifests/e02-measured-dispatch/<condition id>.jsonl (the three conditions with an attempt that left no bundle)"
+  bundles: 500
+  content_addressing: the columns run_manifest_sha256 and actions_json_sha256 of the dataset give the sha256 of the two files read for each bundle
+transformation_script:
+  path: analysis/h2-analysis/compute-h2-establish.js
+  version: git-blob-sha 9dfab66dbc0467d97d4d77fe55dc3223cd37dccc
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime, equal to the `node --version` observed at generation; standard library only)
+date_generated: "2026-11-12"
+date_note: local date (America/Mexico_City)
+protocol_version: v1
+correction_records_applied: []
+notes: >
+  One row per imported attempt bundle (500 rows, one per execution EX0001 to EX0050 of each of the ten
+  executable conditions). required_actions_establish is the number of entries of actions[] of the bundle
+  (experiments/E02-state-establishment/executor/README.md, section 3); verification_flagged_actions is the number
+  of those entries whose verification flag is true; run_outcome_status is the run manifest's outcome.status as
+  recorded, copied without interpretation. The script verifies the actions.json sha256 against the one listed in the
+  run manifest, the recorded counted_action_count against the number of entries, and the run-level fields against
+  the locked configuration, and fails on any disagreement. The three dispatched attempts that left no bundle
+  (EX0008 of E02-CS003-SUT01-WEB, run 43095065967; EX0007 of E02-CS003-SUT02-WEB, run 43094844376; EX0005 of
+  E02-CS003-SUT03-WEB, run 43094956611; attempt 1 each) have no row; the rows of those executions are their
+  imported attempt 2. The script was run twice and wrote equal bytes.

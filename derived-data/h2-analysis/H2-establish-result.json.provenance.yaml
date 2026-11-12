@@ -1,0 +1,47 @@
+# derived-data/h2-analysis/H2-establish-result.json.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (JSON cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/h2-analysis/H2-establish-result.json
+dataset_sha256: a413a0bbf7ef06e42a050e192afea91626769edfca3befcf0b0a0a816cbbc756
+campaign_id: E02-state-establishment
+hypothesis_id: H2
+part: establish side (E02 contribution); the reset side is derived-data/h2-analysis/H2-reset-result.json (E03-resetability), computed on a different canonical scenario and never combined with this output
+sut_ids: [SUT-01, SUT-02, SUT-03, SUT-04, SUT-05]
+sut_ids_in_confirmatory_comparison: [SUT-01, SUT-02, SUT-03]
+sut_ids_excluded_from_comparison: [SUT-04, SUT-05, SUT-06]
+raw_inputs:
+  tree:
+    path: raw-data/E02-state-establishment
+    git_tree: c7beaebe6b290c23e0f5ae49af7fbcd95828ae5b
+    pinned_at_commit: 1b0442f740e8059ede681fe6a0fa21a31bcf73dd
+    campaign_state: FROZEN
+  per_run_table:
+    path: derived-data/E02-state-establishment/required-actions-establish-per-attempt.csv
+    sha256: 250bdcd040a277ef582092b74a24f8e7ee1dc183362dc6a0281f8ad8781fab7f
+    note: written by the same script run from the same bundles; the result is not computed from it
+  bundles: 500
+transformation_script:
+  path: analysis/h2-analysis/compute-h2-establish.js
+  version: git-blob-sha 9dfab66dbc0467d97d4d77fe55dc3223cd37dccc
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime, equal to the `node --version` observed at generation; standard library only)
+date_generated: "2026-11-12"
+date_note: local date (America/Mexico_City)
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: protocol/statistical-analysis-plan-v1.md, sections 3, 4.1, 4.2, 4.3 (H2 row), 5; protocol/study-design-v1.md, section 6 (H2 wording, notes (c), (d)); experiments/E02-state-establishment/README.md, "Campaign configuration", subsections "CONFIRMATORY comparisons", "Sample size per condition" and "Counting, starting state, and between-run reset" (section sha256 f8f090e3d81237eda87f78fcecadd89cb58525b4b662cadd0bdfffb1260d1094, unchanged since the START commit 1e308f440e2a7cb29c3467a8738dd2bd881f3430; the script verifies it at HEAD and at that commit); experiments/E02-state-establishment/executor/README.md, section 3; protocol/setup-effort-v2.md, sections 4 and 5
+notes: >
+  Deterministic, non-interpretive computation. Implements the descriptive branch pre-registered in the E02 campaign
+  configuration for the two CONFIRMATORY (H2) comparisons, SUT-01 vs SUT-02 and SUT-01 vs SUT-03 on the WEB
+  surface, with two pairs each (CS-003 and CS-004): the per-condition distribution of Required Actions (establish)
+  over the executions that reached the verification, with the run outcome.status frequencies beside it; for each
+  pair the per-scenario counts and their paired difference in the original unit (SUT-01 minus the baseline); and the
+  median of the two differences. The descriptive branch is fixed by the plan (section 3) and by the configuration,
+  so it was not chosen after seeing the data. No Wilcoxon test, bootstrap interval, rank-biserial correlation,
+  p-value (so no Holm correction), or support/non-support determination is computed (none is frozen for H2). The
+  result's limitations field states why the interval and the standardized effect size are not estimable and that,
+  under section 5 of the plan, the comparison rows are descriptive observations and not inferential results. The
+  classification of the two comparisons is written in the script from the campaign configuration and is not
+  derived from the data. Comparisons involving SUT-04 and SUT-05, and every API comparison, stay EXPLORATORY and
+  are not computed; their conditions appear only in the per-condition descriptives. This output is not combined
+  with H2-reset-result.json: the two sides use different canonical scenarios (CS-001 on the reset side; CS-003 and
+  CS-004 on the establish side) and cannot be paired. The script was run twice and wrote equal bytes.

@@ -1,0 +1,558 @@
+{
+  "study_id": "EUS-2026-001",
+  "hypothesis_id": "H2",
+  "part": "establish side (E02 contribution); the reset side is in derived-data/h2-analysis/H2-reset-result.json",
+  "frozen_hypothesis_text_verbatim": "H2: OmniPizza will require fewer preparation/reset actions to establish equivalent target states than the general-purpose baselines. (protocol/study-design-v1.md, section 6)",
+  "campaign_id": "E02-state-establishment",
+  "campaign_state_at_analysis": "FROZEN",
+  "raw_data": {
+    "path": "raw-data/E02-state-establishment",
+    "git_tree": "c7beaebe6b290c23e0f5ae49af7fbcd95828ae5b",
+    "pinned_at_commit": "1b0442f740e8059ede681fe6a0fa21a31bcf73dd",
+    "n_bundles": 500,
+    "n_conditions": 10,
+    "executions_per_condition": 50,
+    "per_run_table": "derived-data/E02-state-establishment/required-actions-establish-per-attempt.csv",
+    "attempts_without_bundle": [
+      {
+        "condition_id": "E02-CS003-SUT01-WEB",
+        "execution_id": "EX0008",
+        "attempt": 1,
+        "github_run_id": 43095065967,
+        "dispatch_record": "manifests/e02-measured-dispatch/E02-CS003-SUT01-WEB.jsonl",
+        "workflow_conclusion": "cancelled",
+        "frozen_executor_step_of_the_measured_job": "the measured job did not run (skipped)",
+        "bundle_artifact": "none: the attempt bundle was never uploaded; nothing was imported under raw-data/"
+      },
+      {
+        "condition_id": "E02-CS003-SUT02-WEB",
+        "execution_id": "EX0007",
+        "attempt": 1,
+        "github_run_id": 43094844376,
+        "dispatch_record": "manifests/e02-measured-dispatch/E02-CS003-SUT02-WEB.jsonl",
+        "workflow_conclusion": "failure",
+        "frozen_executor_step_of_the_measured_job": {
+          "number": 39,
+          "conclusion": "success"
+        },
+        "bundle_artifact": "none: the attempt bundle was never uploaded; nothing was imported under raw-data/"
+      },
+      {
+        "condition_id": "E02-CS003-SUT03-WEB",
+        "execution_id": "EX0005",
+        "attempt": 1,
+        "github_run_id": 43094956611,
+        "dispatch_record": "manifests/e02-measured-dispatch/E02-CS003-SUT03-WEB.jsonl",
+        "workflow_conclusion": "failure",
+        "frozen_executor_step_of_the_measured_job": {
+          "number": 39,
+          "conclusion": "success"
+        },
+        "bundle_artifact": "none: the attempt bundle was never uploaded; nothing was imported under raw-data/"
+      }
+    ]
+  },
+  "configuration": {
+    "source": "experiments/E02-state-establishment/README.md, \"Campaign configuration\", subsection \"CONFIRMATORY comparisons\"",
+    "campaign_start_commit": "1e308f440e2a7cb29c3467a8738dd2bd881f3430",
+    "section_sha256_at_start": "f8f090e3d81237eda87f78fcecadd89cb58525b4b662cadd0bdfffb1260d1094",
+    "canonical_scenarios_in_confirmatory_pairs": [
+      "CS-003",
+      "CS-004"
+    ],
+    "confirmatory_pairs": [
+      "SUT-01 vs SUT-02",
+      "SUT-01 vs SUT-03"
+    ],
+    "exploratory_not_computed": "comparisons involving SUT-04 or SUT-05, and every API comparison, stay EXPLORATORY and are not computed here; their conditions appear only in the per-condition descriptives"
+  },
+  "variable_definition": "Required Actions (establish) per execution = number of entries of actions[] of the bundle as recorded (experiments/E02-state-establishment/executor/README.md, section 3; authentication and the verification read are counted actions), computed over the attempts that reached the verification, defined operationally as at least one actions[] entry with verification true; run outcome.status frequencies are reported beside; the count does not depend on outcome.status; the recorded counted_action_count equals the count in every bundle.",
+  "method": "Descriptive branch of the plan (statistical-analysis-plan-v1.md, sections 3 and 4.3), pre-registered in the campaign configuration, \"CONFIRMATORY comparisons\": per-condition count distribution with median and interquartile range (quantile type 7); for each of the two CONFIRMATORY (H2) comparisons, SUT-01 vs SUT-02 and SUT-01 vs SUT-03 on the WEB surface, the per-scenario counts of CS-003 and CS-004, their paired differences in the original unit, and the median of the two differences; no test, no p-value (so no Holm correction), no bootstrap, no standardized effect size. The branch is fixed by the plan and the configuration, not chosen after seeing the data.",
+  "per_condition": {
+    "E02-CS003-SUT01-WEB": {
+      "sut_id": "SUT-01",
+      "surface": "WEB",
+      "canonical_scenario_id": "CS-003",
+      "starting_state": "CLEAN_SESSION",
+      "declared_establishment_mechanisms": [
+        "PREDEFINED_ACCOUNT",
+        "API_SEED",
+        "APP_STATE_CONTROL",
+        "DIRECT_ROUTE"
+      ],
+      "n_bundles": 50,
+      "n_reached_verification": 50,
+      "n_without_verification": 0,
+      "attempt_frequency": {
+        "1": 49,
+        "2": 1
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_establish": {
+        "n": 50,
+        "min": 6,
+        "q1": 6,
+        "median": 6,
+        "q3": 6,
+        "max": 6,
+        "frequency": {
+          "6": 50
+        }
+      },
+      "verification_flagged_actions_per_run_frequency": {
+        "1": 50
+      },
+      "action_class_and_outcome_sequences": {
+        "navigation action | API action | state/configuration action | API action | navigation action | UI action || SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E02-CS003-SUT01-API": {
+      "sut_id": "SUT-01",
+      "surface": "API",
+      "canonical_scenario_id": "CS-003",
+      "starting_state": "CLEAN_SESSION",
+      "declared_establishment_mechanisms": [
+        "PREDEFINED_ACCOUNT",
+        "API_SEED"
+      ],
+      "n_bundles": 50,
+      "n_reached_verification": 50,
+      "n_without_verification": 0,
+      "attempt_frequency": {
+        "1": 50
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_establish": {
+        "n": 50,
+        "min": 3,
+        "q1": 3,
+        "median": 3,
+        "q3": 3,
+        "max": 3,
+        "frequency": {
+          "3": 50
+        }
+      },
+      "verification_flagged_actions_per_run_frequency": {
+        "1": 50
+      },
+      "action_class_and_outcome_sequences": {
+        "API action | API action | API action || SUCCESS | SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E02-CS004-SUT01-WEB": {
+      "sut_id": "SUT-01",
+      "surface": "WEB",
+      "canonical_scenario_id": "CS-004",
+      "starting_state": "SEEDED_BUSINESS_STATE",
+      "declared_establishment_mechanisms": [
+        "PREDEFINED_ACCOUNT",
+        "API_SEED",
+        "APP_STATE_CONTROL",
+        "DIRECT_ROUTE"
+      ],
+      "n_bundles": 50,
+      "n_reached_verification": 50,
+      "n_without_verification": 0,
+      "attempt_frequency": {
+        "1": 50
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_establish": {
+        "n": 50,
+        "min": 2,
+        "q1": 2,
+        "median": 2,
+        "q3": 2,
+        "max": 2,
+        "frequency": {
+          "2": 50
+        }
+      },
+      "verification_flagged_actions_per_run_frequency": {
+        "1": 50
+      },
+      "action_class_and_outcome_sequences": {
+        "navigation action | UI action || SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E02-CS003-SUT02-WEB": {
+      "sut_id": "SUT-02",
+      "surface": "WEB",
+      "canonical_scenario_id": "CS-003",
+      "starting_state": "CLEAN_SESSION",
+      "declared_establishment_mechanisms": [
+        "PREDEFINED_ACCOUNT",
+        "DIRECT_ROUTE",
+        "UI_FLOW"
+      ],
+      "n_bundles": 50,
+      "n_reached_verification": 50,
+      "n_without_verification": 0,
+      "attempt_frequency": {
+        "1": 49,
+        "2": 1
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_establish": {
+        "n": 50,
+        "min": 6,
+        "q1": 6,
+        "median": 6,
+        "q3": 6,
+        "max": 6,
+        "frequency": {
+          "6": 50
+        }
+      },
+      "verification_flagged_actions_per_run_frequency": {
+        "1": 50
+      },
+      "action_class_and_outcome_sequences": {
+        "navigation action | UI action | UI action | UI action | UI action | UI action || SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E02-CS004-SUT02-WEB": {
+      "sut_id": "SUT-02",
+      "surface": "WEB",
+      "canonical_scenario_id": "CS-004",
+      "starting_state": "SEEDED_BUSINESS_STATE",
+      "declared_establishment_mechanisms": [
+        "PREDEFINED_ACCOUNT",
+        "DIRECT_ROUTE",
+        "UI_FLOW"
+      ],
+      "n_bundles": 50,
+      "n_reached_verification": 50,
+      "n_without_verification": 0,
+      "attempt_frequency": {
+        "1": 50
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_establish": {
+        "n": 50,
+        "min": 4,
+        "q1": 4,
+        "median": 4,
+        "q3": 4,
+        "max": 4,
+        "frequency": {
+          "4": 50
+        }
+      },
+      "verification_flagged_actions_per_run_frequency": {
+        "2": 50
+      },
+      "action_class_and_outcome_sequences": {
+        "UI action | navigation action | navigation action | UI action || SUCCESS | SUCCESS | SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E02-CS003-SUT03-WEB": {
+      "sut_id": "SUT-03",
+      "surface": "WEB",
+      "canonical_scenario_id": "CS-003",
+      "starting_state": "CLEAN_SESSION",
+      "declared_establishment_mechanisms": [
+        "PREDEFINED_ACCOUNT",
+        "DIRECT_ROUTE",
+        "UI_FLOW"
+      ],
+      "n_bundles": 50,
+      "n_reached_verification": 50,
+      "n_without_verification": 0,
+      "attempt_frequency": {
+        "1": 49,
+        "2": 1
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_establish": {
+        "n": 50,
+        "min": 7,
+        "q1": 7,
+        "median": 7,
+        "q3": 7,
+        "max": 7,
+        "frequency": {
+          "7": 50
+        }
+      },
+      "verification_flagged_actions_per_run_frequency": {
+        "1": 50
+      },
+      "action_class_and_outcome_sequences": {
+        "navigation action | UI action | UI action | UI action | UI action | UI action | UI action || SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E02-CS004-SUT03-WEB": {
+      "sut_id": "SUT-03",
+      "surface": "WEB",
+      "canonical_scenario_id": "CS-004",
+      "starting_state": "SEEDED_BUSINESS_STATE",
+      "declared_establishment_mechanisms": [
+        "PREDEFINED_ACCOUNT",
+        "DIRECT_ROUTE",
+        "UI_FLOW"
+      ],
+      "n_bundles": 50,
+      "n_reached_verification": 50,
+      "n_without_verification": 0,
+      "attempt_frequency": {
+        "1": 50
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_establish": {
+        "n": 50,
+        "min": 2,
+        "q1": 2,
+        "median": 2,
+        "q3": 2,
+        "max": 2,
+        "frequency": {
+          "2": 50
+        }
+      },
+      "verification_flagged_actions_per_run_frequency": {
+        "1": 50
+      },
+      "action_class_and_outcome_sequences": {
+        "navigation action | UI action || SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E02-CS003-SUT04-WEB": {
+      "sut_id": "SUT-04",
+      "surface": "WEB",
+      "canonical_scenario_id": "CS-003",
+      "starting_state": "CLEAN_SESSION",
+      "declared_establishment_mechanisms": [
+        "PREDEFINED_ACCOUNT",
+        "DIRECT_ROUTE",
+        "UI_FLOW"
+      ],
+      "n_bundles": 50,
+      "n_reached_verification": 50,
+      "n_without_verification": 0,
+      "attempt_frequency": {
+        "1": 50
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_establish": {
+        "n": 50,
+        "min": 13,
+        "q1": 13,
+        "median": 13,
+        "q3": 13,
+        "max": 13,
+        "frequency": {
+          "13": 50
+        }
+      },
+      "verification_flagged_actions_per_run_frequency": {
+        "1": 50
+      },
+      "action_class_and_outcome_sequences": {
+        "navigation action | UI action | UI action | UI action | navigation action | UI action | UI action | UI action | UI action | UI action | UI action | navigation action | UI action || SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E02-CS003-SUT04-API": {
+      "sut_id": "SUT-04",
+      "surface": "API",
+      "canonical_scenario_id": "CS-003",
+      "starting_state": "CLEAN_SESSION",
+      "declared_establishment_mechanisms": [
+        "PREDEFINED_ACCOUNT",
+        "API_SEED"
+      ],
+      "n_bundles": 50,
+      "n_reached_verification": 50,
+      "n_without_verification": 0,
+      "attempt_frequency": {
+        "1": 50
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_establish": {
+        "n": 50,
+        "min": 3,
+        "q1": 3,
+        "median": 3,
+        "q3": 3,
+        "max": 3,
+        "frequency": {
+          "3": 50
+        }
+      },
+      "verification_flagged_actions_per_run_frequency": {
+        "1": 50
+      },
+      "action_class_and_outcome_sequences": {
+        "API action | API action | API action || SUCCESS | SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    },
+    "E02-CS003-SUT05-API": {
+      "sut_id": "SUT-05",
+      "surface": "API",
+      "canonical_scenario_id": "CS-003",
+      "starting_state": "CLEAN_SESSION",
+      "declared_establishment_mechanisms": [
+        "PREDEFINED_ACCOUNT",
+        "API_SEED"
+      ],
+      "n_bundles": 50,
+      "n_reached_verification": 50,
+      "n_without_verification": 0,
+      "attempt_frequency": {
+        "1": 50
+      },
+      "run_outcome_status_frequency": {
+        "SUCCESS": 50
+      },
+      "required_actions_establish": {
+        "n": 50,
+        "min": 3,
+        "q1": 3,
+        "median": 3,
+        "q3": 3,
+        "max": 3,
+        "frequency": {
+          "3": 50
+        }
+      },
+      "verification_flagged_actions_per_run_frequency": {
+        "1": 50
+      },
+      "action_class_and_outcome_sequences": {
+        "API action | API action | API action || SUCCESS | SUCCESS | SUCCESS": 50
+      },
+      "n_retries": 0
+    }
+  },
+  "comparisons": [
+    {
+      "comparison_id": "H2 establish side (SUT-01 vs SUT-02), CS-003 and CS-004, WEB",
+      "classification": "CONFIRMATORY (H2)",
+      "baseline": "SUT-02",
+      "pairing_unit": "canonical_scenario_id",
+      "n_pairs": 2,
+      "pairs": [
+        {
+          "canonical_scenario_id": "CS-003",
+          "omnipizza_condition": "E02-CS003-SUT01-WEB",
+          "baseline_condition": "E02-CS003-SUT02-WEB",
+          "n_executions_per_arm": {
+            "SUT-01": 50,
+            "SUT-02": 50
+          },
+          "per_scenario_count_omnipizza": 6,
+          "per_scenario_count_baseline": 6,
+          "paired_difference_original_unit": 0,
+          "direction": "EQUAL"
+        },
+        {
+          "canonical_scenario_id": "CS-004",
+          "omnipizza_condition": "E02-CS004-SUT01-WEB",
+          "baseline_condition": "E02-CS004-SUT02-WEB",
+          "n_executions_per_arm": {
+            "SUT-01": 50,
+            "SUT-02": 50
+          },
+          "per_scenario_count_omnipizza": 2,
+          "per_scenario_count_baseline": 4,
+          "paired_difference_original_unit": -2,
+          "direction": "OMNIPIZZA_FEWER"
+        }
+      ],
+      "paired_difference_definition": "per-scenario count of SUT-01 minus per-scenario count of the baseline, in Required Actions (establish); the per-scenario count of an ecosystem is the median over the executions of its WEB condition for that scenario",
+      "median_paired_difference_original_unit": -1,
+      "direction_of_median_difference": "OMNIPIZZA_FEWER",
+      "wilcoxon_signed_rank_applied": false,
+      "wilcoxon_reason": "two canonical scenarios give two pairs; the smallest two-sided exact p-value of the test with n non-tied pairs is 2 x 2^-n, 0.5 at n = 2, derived in the campaign configuration; the method is descriptive by the plan's own fallback branch (statistical-analysis-plan-v1.md, sections 3 and 4.3) and was pre-registered in the configuration before the first dispatch",
+      "min_two_sided_exact_p_at_n_pairs": 0.5,
+      "confidence_interval": null,
+      "confidence_interval_reason": "not estimable from two pairs; the executions within a condition are repetitions of one scenario, not pairs",
+      "rank_biserial_correlation": null,
+      "rank_biserial_reason": "reported only where the Wilcoxon signed-rank test is applied (statistical-analysis-plan-v1.md, section 3, effect sizes)"
+    },
+    {
+      "comparison_id": "H2 establish side (SUT-01 vs SUT-03), CS-003 and CS-004, WEB",
+      "classification": "CONFIRMATORY (H2)",
+      "baseline": "SUT-03",
+      "pairing_unit": "canonical_scenario_id",
+      "n_pairs": 2,
+      "pairs": [
+        {
+          "canonical_scenario_id": "CS-003",
+          "omnipizza_condition": "E02-CS003-SUT01-WEB",
+          "baseline_condition": "E02-CS003-SUT03-WEB",
+          "n_executions_per_arm": {
+            "SUT-01": 50,
+            "SUT-03": 50
+          },
+          "per_scenario_count_omnipizza": 6,
+          "per_scenario_count_baseline": 7,
+          "paired_difference_original_unit": -1,
+          "direction": "OMNIPIZZA_FEWER"
+        },
+        {
+          "canonical_scenario_id": "CS-004",
+          "omnipizza_condition": "E02-CS004-SUT01-WEB",
+          "baseline_condition": "E02-CS004-SUT03-WEB",
+          "n_executions_per_arm": {
+            "SUT-01": 50,
+            "SUT-03": 50
+          },
+          "per_scenario_count_omnipizza": 2,
+          "per_scenario_count_baseline": 2,
+          "paired_difference_original_unit": 0,
+          "direction": "EQUAL"
+        }
+      ],
+      "paired_difference_definition": "per-scenario count of SUT-01 minus per-scenario count of the baseline, in Required Actions (establish); the per-scenario count of an ecosystem is the median over the executions of its WEB condition for that scenario",
+      "median_paired_difference_original_unit": -0.5,
+      "direction_of_median_difference": "OMNIPIZZA_FEWER",
+      "wilcoxon_signed_rank_applied": false,
+      "wilcoxon_reason": "two canonical scenarios give two pairs; the smallest two-sided exact p-value of the test with n non-tied pairs is 2 x 2^-n, 0.5 at n = 2, derived in the campaign configuration; the method is descriptive by the plan's own fallback branch (statistical-analysis-plan-v1.md, sections 3 and 4.3) and was pre-registered in the configuration before the first dispatch",
+      "min_two_sided_exact_p_at_n_pairs": 0.5,
+      "confidence_interval": null,
+      "confidence_interval_reason": "not estimable from two pairs; the executions within a condition are repetitions of one scenario, not pairs",
+      "rank_biserial_correlation": null,
+      "rank_biserial_reason": "reported only where the Wilcoxon signed-rank test is applied (statistical-analysis-plan-v1.md, section 3, effect sizes)"
+    }
+  ],
+  "support_determination": null,
+  "support_determination_note": "Not computed: protocol/statistical-analysis-plan-v1.md and protocol/study-design-v1.md define no support/non-support satisfaction criterion for H2 (contrast H3).",
+  "limitations": [
+    "Establish side only: H2 concerns preparation and reset actions to establish equivalent target states (E02 establish, E03 reset). The reset side is in H2-reset-result.json on a different canonical scenario (CS-001); the two sides cover different scenarios, cannot be paired with one another, and are not combined, added, or averaged here; each campaign contributes one side. This output alone is not an evaluation of H2.",
+    "Two canonical scenarios (CS-003 and CS-004) give two pairs per comparison: no Wilcoxon signed-rank test, interval, or rank-biserial correlation can be computed. Under statistical-analysis-plan-v1.md, section 5, a comparison that lacks an interval is not reported as a result; the two comparison rows are the descriptive observations that the plan's fallback branch yields, with the interval stated as not estimable, and they are not offered as inferential results.",
+    "The count is the realized count of the locked implementation (run-condition.sh sha256 d0b1bbb9d3014fedb0edaa58186b1cfb2d52759dfd67c2bc1c218c7f45db5200, which locks the whole implementation), whose counting conventions follow protocol/setup-effort-v2.md and the executor README, section 3: it counts the first page load of the run (HD-15), the authentication, and the verification read; it does not count the precondition, the starting-state check, or provisioning. The per-condition sequences of action classes and outcomes show the composition of each count; this analysis does not interpret them.",
+    "Required Actions (establish) counts per execution, whatever the run outcome.status; every run outcome.status is reported beside it. The count is a count of counted operations, not of effort, time, or difficulty; duration (establishment_duration_s) is a secondary variable of the setup-effort protocol, is not the H2 variable, and is not analyzed here (it would need the BCa bootstrap of the plan, with a recorded seed).",
+    "A fresh controlled instance was provisioned for every run (HD-R, disclosed in the configuration), so the between-run reset is not a counted action in any condition.",
+    "Counts come from the locked implementation of two canonical scenarios on the ten web/api conditions (SUT-02 and SUT-03 on the web surface only; SUT-04 on the web and API surfaces; SUT-05 on the API surface only); SUT-06 is NOT_COMPARABLE on CS-003 and CS-004 and has no condition; the two mobile surfaces have no condition. The study has six ecosystems, a disclosed small-N design limitation (statistical-analysis-plan-v1.md, section 4.1).",
+    "Dispatched attempts: 503 (500 bundles and the three attempts of attempts_without_bundle, which left no bundle); the three corresponding executions are represented by their imported attempt 2, each admitted by its own further-attempt approval (manifests/e02-op-ci-18-v1.yaml)."
+  ]
+}
