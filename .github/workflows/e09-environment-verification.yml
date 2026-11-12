@@ -10,6 +10,11 @@
 # and its outputs are never imported. A DRY_RUN (input dry_run) additionally runs the executor once per condition; its bundles
 # are DRY_RUN, never imported, never measured.
 #
+# Rehearsal lessons of the first DRY_RUN (run 43292830947, 2026-11-12): the DRY_RUN step wrote no valid run because instance.json
+# carried the record class ENVIRONMENT_VERIFICATION while the executor requires the record class of the run (DRY_RUN), and the step
+# still ended green because run-condition.sh exits 0 whenever a manifest was written, an ERROR included. The DRY_RUN step now uses
+# an instance file with the record class DRY_RUN and fails when any bundle records an ERROR or a RUNNER_FAULT. The verification also
+# runs the probe of executor/executor/probe.py (the activation mode is drawn at random, so one Catalog load cannot show the scanner).
 # Dispatch-only, manual. The verification fails (exit 1) while any check is FAIL or NOT_VERIFIED, for example while the
 # activation password of the glitch account is not locked in the implementation (HUMAN DECISION HD-E09-A).
 name: E09 Environment Verification
@@ -182,16 +187,34 @@ jobs:
           EXECUTOR_PROMPT_VERSION: NOT-APPLICABLE-DRY-RUN
           RUNTIME_ENVIRONMENT_JSON: runtime-environment.json
           PROVENANCE_JSON: provenance/none.json
-          INSTANCE_JSON: instance.json
+          INSTANCE_JSON: instance-dry-run.json
           DRY_BASE: ${{ runner.temp }}/e09-dry-run
           RECORD_CLASS: DRY_RUN
         run: |
           set -euo pipefail
+          python3 - <<'PY'
+          import json
+          inst = json.load(open('instance.json', encoding='utf-8'))
+          inst['record_class'] = 'DRY_RUN'
+          open('instance-dry-run.json', 'w', encoding='utf-8').write(json.dumps(inst, indent=2) + '\n')
+          PY
           for cond in E09-A11Y-SUT01-MISSING-NAME E09-CTRL-SUT01-STANDARD; do
             run_id="${cond}__${DRY_EXECUTION_ID}__A${DRY_ATTEMPT}"
             CONDITION_ID="$cond" ASSIGNED_SUT=SUT-01 EXECUTION_ID="$DRY_EXECUTION_ID" ATTEMPT="$DRY_ATTEMPT" \
               OUTPUT_DIR="$DRY_BASE/$run_id" bash experiments/E09-accessibility/executor/run-condition.sh
           done
+          # run-condition.sh exits 0 whenever a manifest was written, an ERROR included: read every manifest here.
+          python3 - <<'PY'
+          import glob, json, os, sys
+          bad = []
+          for p in sorted(glob.glob(os.environ['DRY_BASE'] + '/*/run-manifest.json')):
+              o = json.load(open(p, encoding='utf-8')).get('outcome') or {}
+              print(os.path.basename(os.path.dirname(p)), 'status', o.get('status'), 'category', o.get('outcome_category'))
+              if o.get('status') in ('ERROR', 'ABORTED') or o.get('outcome_category') == 'RUNNER_FAULT':
+                  bad.append(p)
+          if bad:
+              sys.exit('DRY_RUN bundle(s) record an error: ' + ', '.join(os.path.basename(os.path.dirname(p)) for p in bad))
+          PY
       - name: Replace runner host paths and private network addresses in the kept files by neutral markers (publication hygiene at capture)
         if: always()
         env:

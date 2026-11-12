@@ -1,0 +1,41 @@
+# manifests/e09-environment-verification-run-v1.yaml -- run identity and review of the first E09 environment-verification DRY_RUN (operation OP-DISP-07).
+# ORCHESTRATOR record written after the dispatch of manifests/e09-environment-verification-dispatch-v1.yaml. Non-measured; the artifacts are reviewed and never imported into raw-data/.
+record_id: "E09-ENVVERIF-DRYRUN-RUN-01"
+record_class: "ENVIRONMENT_VERIFICATION_DRY_RUN_RUN_RECORD"
+study_id: "EUS-2026-001"
+campaign: "E09-accessibility"
+recorded_on: "2026-11-12"
+instruction_record: "manifests/e09-environment-verification-dispatch-v1.yaml"
+measured: false
+run:
+  workflow: .github/workflows/e09-environment-verification.yml
+  run_id: 43292830947
+  attempt: 1
+  head_sha: a4fc640eafad82a9c026bfeca0eee7ea3a9d1fa0
+  event: workflow_dispatch
+  inputs: {dry_run: true}
+  created_at: '2026-11-12T19:42:01Z'
+  completed_at: '2026-11-12T19:43:29Z'
+  dispatches_made: 1  # never re-run
+  github_conclusion: success  # the conclusion is not the result: see findings 2 and 3
+artifacts:  # downloaded and compared with the GitHub digest of each archive: both equal
+- {id: 13977164124, name: E09-ENVIRONMENT_VERIFICATION-SUT-01-1, bytes: 8359, sha256: 1a664fb7a8209340c0198909b179e43ec4a803955a238cfadfd736fc5d5c2e4c}
+- {id: 13979140398, name: E09-DRY_RUN-SUT-01-1, bytes: 4730, sha256: b8fcea56385385e82edf0ecc0aa9631d2f08a16023361bc3a3ea4873a3bc0d45}
+results:
+  verification: "verified true; seven checks PASS: instance interface and record class; pinned axe-core tarball (sha512 sha512-9WTZxEjsZ7b13TH8JPmbV2z8CHbl80/2hm3XPEG4JgNdQLK81IBRXmSxHfMAOkSqQeRxT/0dwNDz2GOm3zzpcQ== and browser build sha256 20c09fe157a8a34a30e241aaa1fcdade657734f08ab379ecfbeb7d45cc46e878); api health 200; login of a11y_glitch_user (behavior a11y_glitch) and of standard_user (behavior standard); one Catalog load and one explicit-rule axe 4.14.0 run per account (Chromium 153.0.8010.12, Python 3.12.16, Playwright 1.63.0); glitch load DOM state NOT_EMPTY, matching nodes 0; control load NOT_EMPTY, matching nodes 0"
+  dry_run_bundles: "both conditions (E09-A11Y-SUT01-MISSING-NAME__DR0001__A1 and E09-CTRL-SUT01-STANDARD__DR0001__A1) recorded status ERROR, outcome category RUNNER_FAULT: instance.json rejected: record_class 'ENVIRONMENT_VERIFICATION' differs from RECORD_CLASS DRY_RUN; the executor never reached the browser"
+findings:  # about the rehearsal, none about the SUT
+- id: F01
+  statement: "The DRY_RUN step reused the instance file of the verification (record class ENVIRONMENT_VERIFICATION) while the executor requires the record class of the run (DRY_RUN)."
+  correction: "Corrected in the workflow: the step writes instance-dry-run.json with the record class DRY_RUN."
+- id: F02
+  statement: "The DRY_RUN step ended green over two ERROR bundles, because run-condition.sh exits 0 whenever a manifest was written, an ERROR included."
+  correction: "Corrected in the workflow: the step reads every DRY_RUN manifest and fails on status ERROR or ABORTED or category RUNNER_FAULT."
+- id: F03
+  statement: "The activation mode is drawn at random per catalog call and the one glitch load drew a mode other than missing_name, so the verification could not show empty-heading firing, image-alt not firing on an empty alt, or the default rule set (design brief, section 13, item 1)."
+  correction: "Corrected in the executor: executor/probe.py loads the glitch Catalog up to 30 times until a missing_name draw and runs the explicit pair and the default rule set on it; part of the verification only."
+- id: F04
+  statement: "Observed, not a finding to correct: in the recorded load the catalog API was requested once (31 network entries, one GET of /api/pizzas), and the catalog requests of both loads were answered 200."
+  correction: "None; the probe now checks one request and one draw per load over every load it makes."
+corrections_status: "made in the canonical repository (commit following this record: workflow, executor probe.py, verify.py, tests, re-embedded digests, implementation notes section 9); NOT yet on GitHub Actions: a second DRY_RUN needs an export of these files and its own exact-line approval"
+not_authorized_by_this_record: [the START or the configuration lock of E09, any dispatch authorization, any measured dispatch, a second dispatch of the first line, any export or push]

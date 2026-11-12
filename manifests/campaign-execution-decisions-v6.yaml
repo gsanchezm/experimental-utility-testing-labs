@@ -1,0 +1,119 @@
+# manifests/campaign-execution-decisions-v6.yaml -- decisions record of 2026-11-12, round 3 (operation OP-DISP-07; CAMPAIGN-EXECUTION-DECISIONS-06).
+# The human research lead's instruction to put the remaining E05 and E09 decisions now, and the answers of the three question dialogs that followed (experiments/E05-determinism/design-brief-draft.md, section 11; experiments/E09-accessibility/design-brief-draft.md, section 12).
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing. Immutable once committed; a correction is a new version file. Rounds 1 and 2 are manifests/campaign-execution-decisions-v4.yaml and -v5.yaml (unchanged).
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-06"
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+study_id: "EUS-2026-001"
+operation_id: "OP-DISP-07"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-12"
+executes_anything: false
+protocol_change: false
+supersedes: null
+earlier_rounds: [manifests/campaign-execution-decisions-v4.yaml, manifests/campaign-execution-decisions-v5.yaml]
+human_decision:
+  given_by: the human research lead
+  decision_date: '2026-11-12'
+  channel: "given directly to the ORCHESTRATOR in its conversation (single-agent operating model of 2026-10-24 and 2026-10-25): one written instruction and the answers of three question dialogs"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  message_1:
+    transcript_stamp: '2026-11-12T19:03:22.215Z'
+    exact_text_sha256: 85a0d0a084e1e187674ff3e09204b6247c9a179b85384f3cac9dab76f084dd6e
+    exact_text: "De una vez proponlas"
+    reading: "an instruction to put now the decisions that remained open after round 2 (E05: D-01, D-04 to D-08, D-10 to D-15, D-17 to D-19; E09: HD-1 to HD-15 and HD-17 to HD-20), grouped by theme; it decides none of them"
+  question_dialog_1:
+    transcript_stamp: "2026-11-12T19:06:12.507Z"
+    bytes: 3270
+    exact_text_sha256: dc7cb5baf45220ad645fb706d2b9c2850b1106ea35d7714a32e861bcc84e351b
+    note: the answer of the question dialog, whole (the question texts as put to the human research lead and the option chosen for each); the chosen option is the decision
+    exact_text: "Your questions have been answered: \"E05, convenciones de análisis y registro (cuatro decisiones; todas con la recomendación del brief, salvo la nota marcada como mía). D-05: intervalo de Wilson sin corrección de continuidad, porque el plan de análisis no especifica ninguna. D-07: para SUT01-API-05, SUT01-API-06 y SUT04-API-02 se predeclara una categoría esperada, el CEOR se reporta como descriptivo y la medida principal es H(Y) con los conteos por categoría. D-08: la fase del intento va en la etiqueta outcome_category, sin cambiar el esquema v2 congelado; además, propuesta mía (el brief la deja abierta y de baja prioridad): el reset no se emite también como actions[], porque E05 no cuenta Required Actions. D-19: convención de identificadores de E03 (execution_id = índice de repetición, attempt = índice de reejecución dentro de ella, run_id = condición__ejecución__A intento), con la diferencia respecto de la descripción del esquema registrada. ¿Las apruebas?\"=\"Aprobar las cuatro (Recomendado)\", \"D-06, denominador mínimo para evaluar H3 en una condición determinista (S = intentos cuya verificación del estado objetivo pasó; T = intentos válidos). El brief recomienda (a) S = T. Dato que conviene ver antes de decidir: en E03 2 de 350 intentos (0,6 %) y en E02 3 de 500 (0,6 %) fallaron antes de que corriera el ejecutor; con N = 50 la probabilidad de que una condición tenga al menos uno así es de unos 26 %, y bajo (a) ese solo intento dejaría H3 sin evaluar en esa condición aunque la causa sea de infraestructura (por D-09 esos intentos cuentan en T). ¿Qué regla fijamos antes del START?\"=\"b: mínimo S ≥ 45 de 50 (Recomendado por mí)\", \"E05, alcance y elegibilidad (cinco decisiones; todas con la recomendación del brief). D-01: SUT-05 web no tiene condición este ciclo (el reinicio de entorno está registrado para la API; el protocolo dice «registrado para ese ecosistema», no «para esa superficie»). D-14: SUT-03 sin condiciones hasta que exista una fila de evidencia de E01 que nombre un estímulo determinista; no se agrega una clase solo documental. D-15: las condiciones móviles de E05 quedan fuera y tendrían un diseño aparte sujeto a la política del runner móvil. D-17: solo estados objetivo de CS-001, sin escenario canónico nuevo. D-18: environment_type SELF_HOSTED por condición en runners hospedados por GitHub, y verificación de la instancia controlada de cada condición antes del START (esa verificación sería un DRY_RUN que pediría su propia aprobación con la línea exacta). ¿Las apruebas?\"=\"Aprobar las cinco (Recomendado)\", \"E05, clase de dos condiciones de SUT-01 (ambas con la recomendación del brief). D-04: SUT01-API-04 (retraso fijo de 3,0 s de performance_glitch_user) se declara determinista por mecanismo, con el tiempo límite del cliente muy por encima de 3,0 s fijado antes del START y la categoría S_CLIENT_TIMEOUT conservada; la alternativa conservadora sería «dependiente del tiempo». D-10: SUT01-API-02 (contenido estático) y SUT01-API-03 (el estímulo no actúa sobre el estado objetivo) cuentan para H3 con una marca de «estímulo nominal» y no se excluyen. ¿Las apruebas?\"=\"Aprobar ambas (Recomendado)\". You can now continue with these answers in mind."
+  question_dialog_2:
+    transcript_stamp: "2026-11-12T19:09:09.773Z"
+    bytes: 3918
+    exact_text_sha256: 348de6334ffcd57f2a599de8a13f27e68219521baf4b5faed2cf25c9b764237f
+    note: the answer of the question dialog, whole (the question texts as put to the human research lead and the option chosen for each); the chosen option is the decision
+    exact_text: "Your questions have been answered: \"Lectura del código fuente de los SUT, que cierra D-11 (clases basadas en ausencia: SUT01-WEB-01, SUT02-WEB-01 y parte de SUT01-API-01), D-12 (campos MX requeridos, control de «realizar pedido», cuerpo del 500, códigos y mensajes marcados TBD, ruta del CAPTCHA) y D-13 (si el DateCheckValidator de SUT-04 usa solo las fechas de la solicitud o un reloj), y de paso dos puntos abiertos de E09 (si el h2 del catálogo de SUT-01 lleva aria-label, aria-labelledby o title, y la ruta /catalog). El código no está en el repositorio. ¿Autorizas lecturas de solo lectura (GET de archivos concretos, en el commit fijado de cada SUT, desde GitHub; sin clonar, sin instalar ni ejecutar nada), igual que la del README de SUT-01? Lo leído y su hash se registran en un registro nuevo; si algo no queda determinado por la lectura, te lo vuelvo a preguntar.\"=\"Sí, SUT-01, 02, 04 y 05 (Recomendado)\", \"E09, diseño de la detección en SUT-01 (seis decisiones; todas con la recomendación del brief). HD-1: una sola condición con el modo missing_name, N = 50 intentos y estratificación por la extracción realizada (no adaptativa, no tres condiciones). HD-2: el conteo de H5 para SUT-01 es 1 (solo el modo con regla nombrada). HD-3: regla esperada = solo empty-heading, porque image-alt no puede dispararse con alt vacío en el axe-core 4.14.0 fijado; se confirma con un sondeo antes del bloqueo, y si el h2 llevara aria-label o title se vuelve a decidir antes del bloqueo, nunca después de datos. HD-4: inclusión explícita de empty-heading en el conjunto de reglas, dejando registrado que es una regla de buenas prácticas de impacto menor, de modo que la verdad de referencia es más débil que una falla WCAG. HD-5: detectado = al menos un nodo coincidente con el selector predeclarado. HD-20: una no detección se registra como no detección del conjunto de reglas predeclarado sobre la condición DOM confirmada al escanear, sin inferir causa. ¿Las apruebas?\"=\"Aprobar las seis (Recomendado)\", \"E09, parámetros de las condiciones (cinco decisiones; todas con la recomendación del brief). HD-6: incluir la condición de control (standard_user, misma página y viewport, regla esperada ausente; no cuenta en H5). HD-7: mercado y lenguaje de E03 (MX, es). HD-8: solo la página del catálogo (el carrito requeriría su propio sondeo). HD-9: N = 50 intentos por condición (el estándar del protocolo; unos 17 serían extracciones missing_name si los tres modos fueran equiprobables, supuesto que los registros no establecen). HD-12: carga del escáner descargando el tarball fijado por URL, verificando sha512 e inyectando axe.min.js desde Python, sin Node en el ejecutor (el borrador del ejecutor ya está construido así). ¿Las apruebas?\"=\"Aprobar las cinco (Recomendado)\", \"E09, infraestructura y registros (siete decisiones; todas con la recomendación del brief). HD-10: E09 hace su propia verificación de entorno en GitHub Actions (no reutiliza la de E03; será un DRY_RUN que pedirá su propia aprobación con la línea exacta), la decisión de instancia controlada se registra solo por condición y el booleano controlled_instance_available del manifiesto de SUT queda en null. HD-11: se excluyen las violaciones incidentales (como las alt faltantes de SUT-03) porque no se pueden activar ni reiniciar. HD-13: sin registro de mapeo ahora (no existe condición de SUT-02 ni SUT-03); se decidirá antes de cualquier comparación de tasas entre SUT. HD-14: esquema de manifiesto v2, como E03. HD-15: sin Required Actions en E09. HD-17: sin prompt de procedimiento de despacho congelado (el despacho lo hace el ORCHESTRATOR bajo CAMPAIGN-CI-WRITE-AUTH-01). HD-18: bloqueo propio del ejecutor de E09 con los mismos pins, sin tocar el bloqueo de E03 (el borrador ya está así). ¿Las apruebas?\"=\"Aprobar las siete (Recomendado)\". You can now continue with these answers in mind."
+  question_dialog_3:
+    transcript_stamp: "2026-11-12T19:10:53.360Z"
+    bytes: 560
+    exact_text_sha256: 0ab011b807eb13852befd3cd24007ba35f1334c51a67c4bb463057382ac813e1
+    note: the answer of the question dialog, whole (the question texts as put to the human research lead and the option chosen for each); the chosen option is the decision
+    exact_text: "Your questions have been answered: \"HD-19, cómo registrar una discrepancia con E01. El registro congelado SUT01-EV-0019 espera que image-alt se dispare con alt vacío, pero en el axe-core 4.14.0 fijado image-alt solo falla con alt compuesto de espacios, así que esa mitad de la expectativa no puede ocurrir (la otra mitad, empty-heading sobre el h2 vacío, sí). Ningún registro de E01 se edita en ningún caso. El brief admite (i) o (ii); ¿cuál uso?\"=\"(i) Entrada en protocol/unresolved.md (Recomendado)\". You can now continue with these answers in mind."
+decisions:
+- id: D-05-WILSON-CONTINUITY
+  dialog: 1
+  chosen: "Aprobar las cuatro (Recomendado)"
+  effect: "E05 Wilson intervals are computed without continuity correction (the statistical analysis plan specifies none); fixed before any analysis."
+- id: D-07-EXPECTED-CATEGORY-RANDOM-CONDITIONS
+  dialog: 1
+  chosen: "Aprobar las cuatro (Recomendado)"
+  effect: "SUT01-API-05, SUT01-API-06 and SUT04-API-02 each pre-declare one expected category; their CEOR is reported as descriptive and H(Y) with the category counts is the primary descriptive measure. SUT02-WEB-02 and SUT05-API-02 carry a declared expected category in the configuration instead (brief s.11)."
+- id: D-08-SCHEMA-PHASE-LABELS-ACTIONS
+  dialog: 1
+  chosen: "Aprobar las cuatro (Recomendado)"
+  effect: "(a) the phase of an attempt is carried in the outcome_category label (ESTABLISHMENT_, RESET_, S_, INTERRUPTED_), with no change to the frozen run-manifest schema v2; (c) the reset is not also emitted as actions[], because E05 counts no Required Actions (the item (c) proposal was the ORCHESTRATOR's; the brief left it open at low priority)."
+- id: D-19-IDENTIFIERS
+  dialog: 1
+  chosen: "Aprobar las cuatro (Recomendado)"
+  effect: "E03 convention: execution_id = repetition index EX0001 to EX00N (N = 50), attempt = re-execution index within it, run_id = condition__execution__A attempt; the difference from the schema's description is recorded in the configuration."
+- id: D-06-MINIMUM-DENOMINATOR
+  dialog: 1
+  chosen: "b: mínimo S ≥ 45 de 50 (Recomendado por mí)"
+  effect: "A deterministic condition is evaluable for H3 only when S is at least 45 of its N = 50 attempts (S = attempts whose target-state verification passed); below that, CEOR and H3 for the condition read 'not evaluable', with the reason. The brief recommended (a) S = T; the ORCHESTRATOR recommended (b) after showing that 2 of 350 attempts of E03 and 3 of 500 of E02 (0.6 percent each) failed before the executor ran, so that under (a) about 26 percent of conditions of N = 50 would be left unevaluable by infrastructure alone. The value 45 was proposed by the ORCHESTRATOR, not by the brief, and is fixed in the configuration before START; the raw rates still count every attempt (D-16)."
+- id: D-01-SUT05-WEB
+  dialog: 1
+  chosen: "Aprobar las cinco (Recomendado)"
+  effect: "SUT-05 web has no E05 condition in this cycle; the environment restart of SUT-05 stays recorded for its API surface only."
+- id: D-14-SUT03-CONDITIONS
+  dialog: 1
+  chosen: "Aprobar las cinco (Recomendado)"
+  effect: "No SUT-03 condition until an E01 evidence row names a deterministic stimulus; no documented-only class is added."
+- id: D-15-MOBILE-E05
+  dialog: 1
+  chosen: "Aprobar las cinco (Recomendado)"
+  effect: "Mobile E05 conditions are outside the current design; a separate design, gated by protocol/mobile-runner-policy-v3.md, would be needed."
+- id: D-17-CANONICAL-SCENARIO
+  dialog: 1
+  chosen: "Aprobar las cinco (Recomendado)"
+  effect: "E05 uses CS-001 target states only; no new canonical scenario record."
+- id: D-18-ENVIRONMENT-TYPE
+  dialog: 1
+  chosen: "Aprobar las cinco (Recomendado)"
+  effect: "environment_type SELF_HOSTED per condition on GitHub-hosted runners, and a controlled-instance verification of each condition before START; that verification would be a non-measured DRY_RUN whose exact line needs its own approval."
+- id: D-04-PERFORMANCE-READ-CLASS
+  dialog: 1
+  chosen: "Aprobar ambas (Recomendado)"
+  effect: "SUT01-API-04 is declared deterministic by mechanism; the client timeout is fixed well above the 3.0 s delay before START and the category S_CLIENT_TIMEOUT is kept (a timeout that occurs is an unexpected category and counts)."
+- id: D-10-NOMINAL-STIMULI
+  dialog: 1
+  chosen: "Aprobar ambas (Recomendado)"
+  effect: "SUT01-API-02 (static content) and SUT01-API-03 (the stimulus does not act on the target state) count toward H3 with a flag 'nominal stimulus'; they are not excluded."
+- id: SOURCE-READS-AUTHORIZATION
+  dialog: 2
+  chosen: "Sí, SUT-01, 02, 04 y 05 (Recomendado)"
+  effect: "Authorization of read-only reads (HTTPS GET of individual files at the pinned commit of SUT-01, SUT-02, SUT-04 and SUT-05 from their GitHub repositories; no clone, no install, no execution, no SUT start) to settle D-11, D-12 and D-13 of E05 and the E09 verification items on the SUT-01 catalog h2 (aria-label, aria-labelledby, title) and the /catalog route. What is read and its sha256 are recorded in a new record; anything the reading does not settle is put again to the human research lead. The reads are not themselves decisions of D-11, D-12 or D-13."
+- id: E09-HD-1-HD-2-HD-3-HD-4-HD-5-HD-20-DETECTION-DESIGN
+  dialog: 2
+  chosen: "Aprobar las seis (Recomendado)"
+  effect: "HD-1: one SUT-01 condition, the missing_name stratum, N = 50 attempts, stratified by the realized draw (not adaptive, not three conditions). HD-2: the H5 count for SUT-01 is 1. HD-3: the predeclared expected rule is empty-heading only (image-alt cannot fire on an empty alt in the pinned axe-core 4.14.0); confirmed by a probe before the lock, and re-decided before the lock, never after data, if the h2 carries aria-label, aria-labelledby or title. HD-4: empty-heading is included explicitly in the rule set, recorded as a best-practice, minor-impact rule, so the ground truth is weaker than a WCAG failure. HD-5: detected = at least one node matching the predeclared selector. HD-20: a non-detection is recorded as a non-detection of the predeclared rule set on the DOM condition confirmed at scan time, with no cause inferred (a DOM assertion beside the scanner only if the probe shows the DOM condition is unstable)."
+- id: E09-HD-6-HD-7-HD-8-HD-9-HD-12-CONDITION-PARAMETERS
+  dialog: 2
+  chosen: "Aprobar las cinco (Recomendado)"
+  effect: "HD-6: include the control condition (standard_user, same page and viewport, expected rule absent; not counted in H5). HD-7: market MX and language es, as in E03. HD-8: the catalog page only. HD-9: N = 50 attempts per condition. HD-12: scanner loaded by fetching the pinned tarball by URL, verifying its sha512 and injecting axe.min.js from Python, with no Node in the executor (the DRAFT executor is already built so)."
+- id: E09-HD-10-HD-11-HD-13-HD-14-HD-15-HD-17-HD-18-INFRASTRUCTURE-AND-RECORDS
+  dialog: 2
+  chosen: "Aprobar las siete (Recomendado)"
+  effect: "HD-10: E09 runs its own environment verification on GitHub Actions (a non-measured DRY_RUN needing its own exact-line approval), the controlled-instance decision is recorded per condition only, and controlled_instance_available in the SUT manifest stays null. HD-11: incidental violations (such as the missing alt attributes of SUT-03) are excluded. HD-13: no mapping record now; decided before any cross-SUT rate comparison. HD-14: run-manifest schema v2. HD-15: no Required Actions in E09. HD-17: no frozen dispatch-procedure prompt (the ORCHESTRATOR dispatches under CAMPAIGN-CI-WRITE-AUTH-01). HD-18: an E09 implementation lock of its own with the same pins, leaving the E03 lock untouched (the DRAFT is built so)."
+- id: E09-HD-19-RECORDING-THE-SUT01-EV-0019-DISCREPANCY
+  dialog: 3
+  chosen: "(i) Entrada en protocol/unresolved.md (Recomendado)"
+  effect: "An entry in protocol/unresolved.md describes that the image-alt half of the expected outcome of SUT01-EV-0019 cannot occur under the pinned axe-core, and points to the E09 configuration; no E01 record is edited (E01 is FROZEN) and no correction record is made. The ORCHESTRATOR reads the E01 Score 3 as unaffected because the missing_name mode keeps a documented violation (the empty h2); that reading is the ORCHESTRATOR's and is stated in the entry."
+approvals_not_given:  # each still needs its own explicit human approval of that exact action
+- the START and the configuration lock of E04, E05, or E09, and any dispatch authorization under Section 3.7 of protocol/agent-governance-v6.md
+- any dispatch, including the E09 environment-verification DRY_RUN and the controlled-instance verifications of E05 conditions (their exact lines are put later, each for its own approval)
+- the E05 workflow and dispatch prompt, and the E09 probe, are not written or run by this record
+open_decisions_not_answered:
+  e05_e04: [D-11, D-12, D-13]  # they wait for the source reads authorized above
+  e09: []  # none of the decisions HD-1 to HD-20 is left; the open verification items of the brief, section 13, remain (probe, source checks, adjudicated-matrix check)
+decided_so_far_e05_e04: [D-01, D-02, D-03, D-04, D-05, D-06, D-07, D-08, D-09, D-10, D-14, D-15, D-16, D-16b, D-17, D-18, D-19, D-20]
+decided_so_far_e09: [HD-1, HD-2, HD-3, HD-4, HD-5, HD-6, HD-7, HD-8, HD-9, HD-10, HD-11, HD-12, HD-13, HD-14, HD-15, HD-16, HD-17, HD-18, HD-19, HD-20]

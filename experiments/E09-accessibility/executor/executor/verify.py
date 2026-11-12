@@ -3,7 +3,8 @@
 DRAFT (operation OP-PREP-E09). Checks the controlled SUT-01 instance and the activation path before any measured
 dispatch: the instance interface, the pinned axe-core tarball, the control account's login behavior, the glitch
 account's login behavior (only when its password is locked), and, in a browser, one load of the Catalog page per
-account with one explicit-rule axe run. Writes verification.json; writes no run manifest and nothing under raw-data/.
+account with one explicit-rule axe run, then the probe of probe.py (up to PROBE_MAX_LOADS loads of the glitch account until one
+renders the missing_name draw, with the explicit-rule, explicit-pair, and default-rule scans). Writes verification.json; writes no run manifest and nothing under raw-data/.
 Exit 0 only when every check passed; any FAIL or NOT_VERIFIED exits 1, so the workflow job reports it.
 """
 import importlib.metadata
@@ -13,7 +14,7 @@ import platform
 import sys
 import traceback
 
-from . import classify, common, config, instance, scanner, sut01_catalog, web
+from . import classify, common, config, instance, probe, scanner, sut01_catalog, web
 
 
 def main():
@@ -100,6 +101,14 @@ def main():
             b.close()
     if not browser_ok and logged:
         check('browser available', 'FAIL', 'no Chromium context could be started')
+    glitch = [c for c in logged if config.CONDITIONS[c]['kind'] == classify.GLITCH]
+    if glitch and browser_ok:
+        token, body = logged[glitch[0]]
+        try:
+            for name, result, detail in probe.summarize(probe.run_probe(run, site, token, body, axe_source)):
+                check(name, result, detail)
+        except Exception as e:  # noqa: BLE001 - recorded as FAIL
+            check('probe: Catalog loads of the glitch account', 'FAIL', f'{e.__class__.__name__}: {e}')
     if not logged:
         check('catalog load and explicit-rule axe run', 'NOT_VERIFIED', 'no account with a locked password and a confirmed activation')
     return finish(run, checks, env)

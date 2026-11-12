@@ -1,0 +1,108 @@
+# manifests/source-reads-v1.yaml -- record of the read-only source reads of 2026-11-12 (operation OP-DISP-07; SOURCE-READS-01).
+# Authorized by the human research lead in question dialog 2 of manifests/campaign-execution-decisions-v6.yaml (stamp 2026-11-12T19:09:09.773Z): read-only reads of individual files at the pinned commit of SUT-01, SUT-02, SUT-04 and SUT-05, no clone, no install, no execution, no SUT start.
+# ORCHESTRATOR record. Nothing here changes a SUT, a protocol file or a locked configuration. Immutable once committed; a correction is a new version file.
+record_id: "SOURCE-READS-01"
+record_class: "SOURCE_READS"
+study_id: "EUS-2026-001"
+operation_id: "OP-DISP-07"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-12"
+authorization: "manifests/campaign-execution-decisions-v6.yaml, question_dialog_2, answer 'Sí, SUT-01, 02, 04 y 05 (Recomendado)'"
+method: "file lists by the GitHub REST git-trees endpoint at the pinned commit (gh api, GET); file contents by one HTTPS GET each of raw.githubusercontent.com/<repository>/<commit>/<path> from a Python urllib call; bytes and sha256 of each body below; the files were saved in the session scratch area and are not part of the repository; nothing was cloned, installed, built or executed"
+executes_anything: false
+pins:  # manifests/sut-manifest.yaml, components.web and components.api
+  SUT-01: {repository: "https://github.com/gsanchezm/OmniPizza", commit: 9ca37674d374e9303912e259641ee86baf3aabe1}
+  SUT-02_web: {repository: "https://github.com/saucelabs/sample-app-web", commit: 60fdd634bb111c092282fa07977513a0a7765593}
+  SUT-04: {repository: "https://github.com/mwinteringham/restful-booker-platform", commit: d36bd3f8647a091d406e53bad463c5e3e5d2ece1}
+  SUT-05: {repository: "https://github.com/juice-shop/juice-shop", commit: 1618a611b173b4bf114028e6e02549950606e29d}
+files_read:
+- {sut: "SUT-01", path: "backend/constants.py", bytes: 14173, sha256: f40cad1f571cb64a2a09e298abcd6c7818c2e7f4cec1dc65fc02f6c7d6065dc7}
+- {sut: "SUT-01", path: "backend/database.py", bytes: 14018, sha256: 031520e95f39c5301ea2a9bad63b0439ee48fa161d3c6b31cc5b8b99601ae8a5}
+- {sut: "SUT-01", path: "backend/main.py", bytes: 3102, sha256: a7c11ab3279e73fb48d668f2dda1538eaeaba0b4ba537a8a1ff1d115bd3fff0f}
+- {sut: "SUT-01", path: "backend/middleware.py", bytes: 2163, sha256: 4f5b1e3e9baab556ef9c973e7cd7a4f64a15e1e8e7cd9a20b2370e376358f9d7}
+- {sut: "SUT-01", path: "backend/models.py", bytes: 5995, sha256: 491cc5fa1c41a35b20e83080ae3d1934ea54acea71c3a838ecfe55cdc890d155}
+- {sut: "SUT-01", path: "backend/routers/catalog.py", bytes: 2731, sha256: d67d810d0f0c8dec1e157f9e7278036f4922dfc552a4c6000f71e46b49fa3d3d}
+- {sut: "SUT-01", path: "backend/routers/checkout.py", bytes: 7359, sha256: a46d45f0047d5e7e857c6b414aef19a8d41659ac1a568ae765913c070a10e5b3}
+- {sut: "SUT-01", path: "frontend/src/App.jsx", bytes: 2843, sha256: 19f9ff5ae64b95994a467a4742a3b178446f13bc3f30b3e1279b78516797ed7a}
+- {sut: "SUT-01", path: "frontend/src/components/ProductCard.jsx", bytes: 3177, sha256: a5cad3b6f56c84e79ae4a6e0b16c44e51d0d632a890d6ae85bf04b712c212db5}
+- {sut: "SUT-01", path: "frontend/src/features/catalog/hooks/useCatalogPizzas.js", bytes: 908, sha256: 55de54f9fb76d0c54dea10d60f177ec25f3428e57e20fe125da0882701af6c75}
+- {sut: "SUT-01", path: "frontend/src/features/catalog/repositories/pizzaRepository.js", bytes: 207, sha256: 6dc066d4d3580fd5c8886b6be603cf726fb6a0856406a819fcb053e65db234d9}
+- {sut: "SUT-01", path: "frontend/src/features/checkout/useCases/buildCheckoutPayload.js", bytes: 1145, sha256: 5e8b2220c520cca18b4f468d9e3caa5041a129daaeb793cbe409bf78bdd6d023}
+- {sut: "SUT-01", path: "frontend/src/pages/Catalog.jsx", bytes: 7360, sha256: 79d804a8289aa274b20f3cb036b0f4f47705d4dff074e985d41d35f7f2a839ea}
+- {sut: "SUT-01", path: "frontend/src/pages/Checkout.jsx", bytes: 51848, sha256: ba4c6869d5649577279e07200f45c725593cefc4fd40fb12da3a2254cd2c4796}
+- {sut: "SUT-01", path: "frontend/src/pages/OrderSuccess.jsx", bytes: 11293, sha256: 90d0dd1fbb6e0f1238d9e88937b9f4f895a8d321d0335966f8ca7da97a6e17da}
+- {sut: "SUT-02 (web)", path: "src/components/CartButton.jsx", bytes: 1432, sha256: 7d680c088631ca5de159d4c7ad1217dfc184532778da4e014d245549ea4ed103}
+- {sut: "SUT-02 (web)", path: "src/components/HeaderContainer.jsx", bytes: 3242, sha256: e0b12af02f47bb044f112341249db2fe2aab1a5e29766661a3ae065e0002320f}
+- {sut: "SUT-02 (web)", path: "src/components/InventoryListItem.jsx", bytes: 6041, sha256: 07f1fe2d241d4bad9afa4f9af10a85254507e940058129d62d276e568616ddf7}
+- {sut: "SUT-02 (web)", path: "src/pages/Inventory.jsx", bytes: 4537, sha256: 59590d440a2739c30b91ebfb9d1de0b0d7ec527fbd4288f536e38ac48635b618}
+- {sut: "SUT-02 (web)", path: "src/utils/Credentials.js", bytes: 2107, sha256: c85a18a69fd66d30d745f5c218867b36212efcf629c09fd2677b14fa0fad3c7c}
+- {sut: "SUT-02 (web)", path: "src/utils/shopping-cart.js", bytes: 2142, sha256: c56d393b6854fa57d13d058badb6a585ee69cfdf0b8d36ea9257aa085432eed4}
+- {sut: "SUT-04", path: "assets/src/components/reservation/BookingForm.tsx", bytes: 13878, sha256: 238e181c062ab037e19e0b23d03715e6e92e86442257e281f5f7039095511c82}
+- {sut: "SUT-04", path: "booking/src/main/java/com/automationintesting/api/BookingController.java", bytes: 3607, sha256: 7b0ba583a56956cfa4c09536c8ba57653c3a838abaee286e2394bdce807a92cd}
+- {sut: "SUT-04", path: "booking/src/main/java/com/automationintesting/db/BookingDB.java", bytes: 8523, sha256: c2d5eddcec92c168750043a164d79ac78397a3c307d378670948971cc2b236da}
+- {sut: "SUT-04", path: "booking/src/main/java/com/automationintesting/model/service/BookingResult.java", bytes: 1595, sha256: 8e9a39452c2e0f597bddbc3a1309b01f7abf22e0da821229d58d50eb4253b960}
+- {sut: "SUT-04", path: "booking/src/main/java/com/automationintesting/service/BookingService.java", bytes: 5213, sha256: fdcdd54defd409f167c2ed919d05691c6c554acae97dff1fe86b3bf77440a229}
+- {sut: "SUT-04", path: "booking/src/main/java/com/automationintesting/service/DatabaseScheduler.java", bytes: 1573, sha256: 267b855085d80077be25cb1308c0cfc545f9c8ef08af517f527ed8ad3e9d8d68}
+- {sut: "SUT-04", path: "booking/src/main/java/com/automationintesting/service/DateCheckValidator.java", bytes: 485, sha256: 61d46011175c8a752081ea1a72c06a045f4e4971bbcdd195b527b94e25fd715f}
+- {sut: "SUT-05", path: "routes/captcha.ts", bytes: 1557, sha256: b48ecb634f38f033ce1331148a2a0c1dc24aecd3a01e72c773fd74b716cf17e1}
+- {sut: "SUT-05", path: "routes/login.ts", bytes: 5086, sha256: cf11d682edff6744bcb54339bce4b2dd6da5e80f9038facd7605df857b0a0b7b}
+- {sut: "SUT-05", path: "server.ts", bytes: 40368, sha256: 1774fac7f05f9f78fad0b4f82a10eaf0d2ef5b2522ddbe75133e65e423c0a90b}
+findings:  # statements read from the files above; evidence status SOURCE_VERIFIED unless the finding says INFERRED; line numbers are those of the files at the pinned commit
+- id: F01
+  statement: "SUT-01 API checkout for a user whose behavior is neither error nor security_glitch has no random and no clock in its outcome: the totals depend only on the items, the market and the tip percentage (subtotal, tax, tip and total from the constants of the market; order id and timestamps are the only run-varying fields). Randomness exists only in should_trigger_error (probability 0.5, behaviors error and security_glitch) and in the a11y mode draw."
+  where: "backend/database.py lines 308-348 (calculate_order_total), 361-364 (should_trigger_error), 151-153 (order id, timestamp); backend/routers/checkout.py"
+  bears_on: "D-11 (no-evidence-row part of SUT01-API-01), D-12"
+- id: F02
+  statement: "Market MX requires the field colonia (name 2-100 characters, address at least 5, phone at least 8 are required for every market); tip field propina (percentages 0, 5, 10, 15 offered), optional zip_code (five digits when given); currency MXN, tax rate 0.16, delivery fee 2.0 USD converted by the rate table. A missing required field gives HTTP 400 with the detail \"Field 'colonia' is required for country MX\"."
+  where: "backend/constants.py lines 89-100; backend/models.py lines 92-129; backend/routers/checkout.py (required-field loop)"
+  bears_on: "D-12 (required MX fields); the expected total is to be computed from these constants and the catalog and rate tables before START, not from a run"
+- id: F03
+  statement: "For behavior error the checkout returns HTTP 500 with the JSON detail 'Random checkout error triggered for testing purposes' with probability 0.5 per call; for behavior security_glitch the detail is a random choice among the leak messages."
+  where: "backend/routers/checkout.py (status 500 branch); backend/database.py lines 361-364"
+  bears_on: "D-12 (500 body for behavior error; SUT01-API-06)"
+- id: F04
+  statement: "SUT-01 performance_glitch behavior sleeps 3.0 s on each call of an endpoint that applies apply_user_behavior (the checkout and catalog routes that depend on it), a fixed delay with no random or clock input."
+  where: "backend/middleware.py (apply_user_behavior)"
+  bears_on: "D-04 (SUT01-API-04 mechanism, already decided as deterministic by mechanism)"
+- id: F05
+  statement: "SUT-01 web checkout: the place-order control is the element with data-testid built by tid('place-order-btn'); activating it opens a confirmation modal (data-testid confirm-order-modal) whose control data-testid confirm-order-yes submits the form; the submit handler posts the order, clears the cart and navigates to /order-success; on failure it sets the error text of the key checkoutFailed. The outcome path has no Math.random or clock (the only random use in Checkout.jsx builds a client-side cart item id). Routes /catalog, /checkout and /order-success are under ProtectedRoute."
+  where: "frontend/src/pages/Checkout.jsx lines 166, 323-343, 1105, 1137-1177; frontend/src/App.jsx lines 45-54; frontend/src/features/checkout/useCases/buildCheckoutPayload.js"
+  bears_on: "D-11 (SUT01-WEB-01), D-12 (place-order control, order-success route)"
+- id: F06
+  statement: "SUT-01 catalog: the product heading is an h2 with data-testid built by tid('pizza-name-<id>') carrying only a data-testid and a class (no aria-label, no aria-labelledby, no title); the image alt is the product name; so under the missing_name mode both are empty. The route /catalog is declared. The catalog is fetched in a useEffect that runs on mount and again when the country code or the language changes, so a second fetch in one page load is possible."
+  where: "frontend/src/components/ProductCard.jsx lines 24, 36; frontend/src/App.jsx line 51; frontend/src/features/catalog/hooks/useCatalogPizzas.js"
+  bears_on: "E09 open verification items 2 and 6 of the brief, section 13 (the h2 has none of the three attributes that would prevent empty-heading; /catalog confirmed); item 1 (single fetch per load) stays for the probe"
+- id: F07
+  statement: "SUT-02 web cart path for a user that is neither problem_user nor error_user is deterministic: adding an item stores its id in localStorage under cart-contents (an id already present is not added twice), and the cart badge (data-test shopping-cart-badge) shows the number of stored ids. The add control has the data-test built as the label, a hyphen and the item name, lowercased with spaces turned into hyphens (for example add-to-cart-<item name>). The only Math.random of the inventory page is the price of visual_user (randomPrice), confirming the stochastic mechanism of E05-SUT02-WEB-02."
+  where: "src/components/InventoryListItem.jsx lines 31-47, 87-90; src/utils/shopping-cart.js; src/components/CartButton.jsx lines 24-27; src/pages/Inventory.jsx lines 31, 122"
+  bears_on: "D-11 (SUT02-WEB-01), D-12 (selectors)"
+- id: F08
+  statement: "SUT-04 DateCheckValidator.isValid compares only the two dates of the request (check-in strictly before check-out; a null date is invalid) and reads no clock. The booking conflict check (checkForBookingConflict) queries the stored bookings of the same room by the dates of the request; Calendar.getInstance is used only to add one day to the request's own check-in date. No wall-clock comparison exists in the booking create or conflict path."
+  where: "booking/src/main/java/com/automationintesting/service/DateCheckValidator.java; booking/.../db/BookingDB.java lines 142-164"
+  bears_on: "D-13 (the class of SUT04-WEB-01 and SUT04-API-01)"
+- id: F09
+  statement: "SUT-04 booking create: invalid dates or a conflict return HTTP 409 with no body; success returns 201 with the created booking; a message is posted to the message service only when both email and phone are present. The scheduled database reset reads the environment variable dbRefresh and does nothing when it is unset or 0."
+  where: "booking/.../service/BookingService.java (createBooking); booking/.../api/BookingController.java (POST /); booking/.../service/DatabaseScheduler.java"
+  bears_on: "D-12 (status of the API conflict), D-13; SUT04-API-01 and SUT04-API-02"
+- id: F10
+  statement: "SUT-04 web booking form: after the dates step, the details step posts to /api/booking; for a response that is not ok it parses the body as JSON and shows errors from it, and a failure to parse is caught and only logged to the console. A 409 has no body, so, INFERRED from this code (not observed), a conflict shows no message and no confirmation: the page stays on the form. The category S_CONFLICT_MESSAGE of E05-SUT04-WEB-01 therefore cannot be produced by a conflict; its expected observable has to be defined as the absence of the confirmation with the form still shown, to be confirmed in the environment verification. Whether the date selection of the page lets an overlapping range be chosen is not read here."
+  where: "assets/src/components/reservation/BookingForm.tsx lines 120-134"
+  bears_on: "D-12 (message text), D-13; E05-SUT04-WEB-01 categories"
+- id: F11
+  statement: "SUT-05 login with a wrong password returns HTTP 401 with the body 'Invalid email or password.' (translated text of the active language); the query has no random or clock input. The route is POST /rest/user/login."
+  where: "routes/login.ts; server.ts line 615"
+  bears_on: "D-12 (status for SUT05-API-01)"
+- id: F12
+  statement: "SUT-05 captcha: GET /rest/captcha returns JSON with captchaId, captcha (an expression built from Math.random terms and operators) and answer; captchaId comes from a counter in app.locals that increases on every call and persists until the process restarts, so it varies between calls even with the same operands excluded."
+  where: "routes/captcha.ts; server.ts lines 172, 634"
+  bears_on: "D-12 (CAPTCHA route path); E05-SUT05-API-02 projection must exclude captchaId as well as operands and answer"
+resolutions:  # how each decision that waited for these reads is read under the rule the human research lead approved; each is open to the human research lead's objection until the configuration lock
+- decision: D-11
+  reading: "the rule 'source check first' was executed: F01 (SUT01-API-01), F05 (SUT01-WEB-01) and F07 (SUT02-WEB-01) show no random and no clock in the outcome path for the declared accounts, so the three classes are deterministic, now SOURCE_VERIFIED at the pinned commits instead of absence-based."
+- decision: D-12
+  reading: "the values marked TBD are taken from F02, F03, F05, F07, F09, F11 and F12; the expected total of SUT01-API-01 is computed from the constants before START; F10 changes the expected observable of E05-SUT04-WEB-01 and F12 adds captchaId to the exclusions of E05-SUT05-API-02."
+- decision: D-13
+  reading: "under the rule 'deterministic if the request dates only, time-dependent if any clock comparison', F08 gives deterministic for both SUT04-WEB-01 and SUT04-API-01; the E01 audit placed DateCheckValidator under its time-dependent bullet without an evidence row, and the source at the pin does not support that. The class counts of the brief, section 4.3, become deterministic 9, time-dependent 0, stochastic 4, external dependency 1. The class is declared before execution and is not revised from observed variance."
+not_done:
+- no clone, no install, no build, no execution, no SUT start; no file of the SUT was copied into the repository
+- no configuration was locked and no condition table was edited by this record; the brief marks and the configuration follow separately

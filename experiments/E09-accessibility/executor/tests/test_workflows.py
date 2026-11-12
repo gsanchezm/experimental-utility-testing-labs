@@ -118,6 +118,18 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn('ENTRY_MODULE: executor.verify', text)
         self.assertIn('OUTPUT_DIR: ${{ runner.temp }}/e09-verification', text)
 
+    def test_dry_run_step_uses_a_dry_run_instance_file_and_fails_on_an_error_bundle(self):
+        # Rehearsal lesson of run 43292830947: the step ended green with two ERROR bundles (record class mismatch; exit 0 by design).
+        with open(WORKFLOWS[1], encoding='utf-8') as f:
+            text = f.read()
+        i = text.index('Run the executor once per condition as a DRY_RUN')
+        step = text[i:text.index('- name:', i + 10)]
+        self.assertIn('INSTANCE_JSON: instance-dry-run.json', step)
+        self.assertIn("inst['record_class'] = 'DRY_RUN'", step)
+        self.assertIn("RUNNER_FAULT", step)
+        self.assertIn("('ERROR', 'ABORTED')", step)
+        self.assertIn('sys.exit(', step)
+
 
 class ImportAndCompileTests(unittest.TestCase):
     def test_every_executor_module_compiles(self):
@@ -127,7 +139,7 @@ class ImportAndCompileTests(unittest.TestCase):
 
     def test_every_executor_module_imports_without_a_browser(self):
         sys.path.insert(0, EXEC)
-        for name in ('classify', 'common', 'config', 'instance', 'scanner', 'sut01_catalog', 'run', 'verify'):
+        for name in ('classify', 'common', 'config', 'instance', 'probe', 'scanner', 'sut01_catalog', 'run', 'verify'):
             __import__(f'executor.{name}')
 
 
