@@ -1,0 +1,51 @@
+{
+  "run_id": "E02-CS004-SUT01-WEB__EX0011__A1",
+  "actions": [
+    {
+      "position": 1,
+      "class": "navigation action",
+      "description": "open the Checkout route directly {web}/checkout",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": "DIRECT_ROUTE",
+      "verification": false,
+      "started_at": "2026-11-12T02:31:48.228Z",
+      "observation": {
+        "status": 200,
+        "url": "http://127.0.0.1:3000/checkout"
+      },
+      "evidence": [],
+      "finished_at": "2026-11-12T02:31:48.256Z"
+    },
+    {
+      "position": 2,
+      "class": "UI action",
+      "description": "read the Checkout view for the seeded p02 line (verification)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": null,
+      "verification": true,
+      "started_at": "2026-11-12T02:31:48.256Z",
+      "observation": {
+        "order_lines_p02": 1,
+        "settle": {
+          "network_quiet": true,
+          "quiet_ms": 500,
+          "elapsed_s": 0.716
+        }
+      },
+      "evidence": [
+        "evidence/005-sut01-cs004-checkout.png"
+      ],
+      "finished_at": "2026-11-12T02:31:49.106Z"
+    }
+  ],
+  "establishment_duration_s": 0.878,
+  "counted_action_count": 2,
+  "comparison": {
+    "declared_starting_state": "the server session cart holds exactly the seeded p02 line; no order has been placed (CS-004 notes)",
+    "expected": "the Checkout view presents the seeded p02 line; the committing step is not performed",
+    "observed": "order lines p02 in the Checkout view: 1",
+    "outcome": "SUCCESS"
+  }
+}

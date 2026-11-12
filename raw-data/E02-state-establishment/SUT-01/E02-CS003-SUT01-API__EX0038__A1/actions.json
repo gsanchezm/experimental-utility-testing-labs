@@ -1,0 +1,75 @@
+{
+  "run_id": "E02-CS003-SUT01-API__EX0038__A1",
+  "actions": [
+    {
+      "position": 1,
+      "class": "API action",
+      "description": "POST /api/auth/login with the documented standard account (authentication)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": "PREDEFINED_ACCOUNT",
+      "verification": false,
+      "started_at": "2026-11-12T01:41:43.215Z",
+      "observation": {
+        "status": 200,
+        "token_received": true
+      },
+      "evidence": [
+        "evidence/003-sut01-login.json"
+      ],
+      "finished_at": "2026-11-12T01:41:43.218Z"
+    },
+    {
+      "position": 2,
+      "class": "API action",
+      "description": "POST /api/cart with one p02 line (seeds the session cart)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": "API_SEED",
+      "verification": false,
+      "started_at": "2026-11-12T01:41:43.218Z",
+      "observation": {
+        "status": 200,
+        "error": null
+      },
+      "evidence": [
+        "evidence/004-sut01-seed-cart.json"
+      ],
+      "finished_at": "2026-11-12T01:41:43.219Z"
+    },
+    {
+      "position": 3,
+      "class": "API action",
+      "description": "GET /api/session: read the session cart (verification)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": null,
+      "verification": true,
+      "started_at": "2026-11-12T01:41:43.220Z",
+      "observation": {
+        "status": 200,
+        "cart_items": [
+          {
+            "pizza_id": "p02",
+            "quantity": 1,
+            "size": "small",
+            "toppings": [],
+            "item_id": "ITEM-2C72D762"
+          }
+        ]
+      },
+      "evidence": [
+        "evidence/005-sut01-session-verify.json"
+      ],
+      "finished_at": "2026-11-12T01:41:43.221Z"
+    }
+  ],
+  "establishment_duration_s": 0.006,
+  "counted_action_count": 3,
+  "comparison": {
+    "declared_starting_state": "no authenticated session exists in the fresh instance, so no session cart does (backend/middleware.py:8,28-50)",
+    "expected": "after the establishment, GET /api/session shows exactly one p02 line of quantity 1",
+    "observed": "cart_items [{\"pizza_id\": \"p02\", \"quantity\": 1, \"size\": \"small\", \"toppings\": [], \"item_id\": \"ITEM-2C72D762\"}]",
+    "outcome": "SUCCESS"
+  }
+}

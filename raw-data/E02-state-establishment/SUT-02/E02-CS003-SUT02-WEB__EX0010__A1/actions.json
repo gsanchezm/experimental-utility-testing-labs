@@ -1,0 +1,107 @@
+{
+  "run_id": "E02-CS003-SUT02-WEB__EX0010__A1",
+  "actions": [
+    {
+      "position": 1,
+      "class": "navigation action",
+      "description": "open {web}/, the login page (the first load of the run; counted, HD-15 default)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": "DIRECT_ROUTE",
+      "verification": false,
+      "started_at": "2026-11-11T22:41:36.765Z",
+      "observation": {
+        "status": 200
+      },
+      "evidence": [],
+      "finished_at": "2026-11-11T22:41:36.954Z"
+    },
+    {
+      "position": 2,
+      "class": "UI action",
+      "description": "fill the documented username standard_user in the login form (authentication)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": "PREDEFINED_ACCOUNT",
+      "verification": false,
+      "started_at": "2026-11-11T22:41:37.002Z",
+      "observation": null,
+      "evidence": [],
+      "finished_at": "2026-11-11T22:41:37.013Z"
+    },
+    {
+      "position": 3,
+      "class": "UI action",
+      "description": "fill the documented password in the login form (authentication)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": "PREDEFINED_ACCOUNT",
+      "verification": false,
+      "started_at": "2026-11-11T22:41:37.013Z",
+      "observation": null,
+      "evidence": [],
+      "finished_at": "2026-11-11T22:41:37.021Z"
+    },
+    {
+      "position": 4,
+      "class": "UI action",
+      "description": "submit the login form; the page lands on /inventory.html (authentication)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": "PREDEFINED_ACCOUNT",
+      "verification": false,
+      "started_at": "2026-11-11T22:41:37.021Z",
+      "observation": {
+        "url": "http://127.0.0.1:3000/inventory.html",
+        "landed_on_inventory": true
+      },
+      "evidence": [],
+      "finished_at": "2026-11-11T22:41:37.057Z"
+    },
+    {
+      "position": 5,
+      "class": "UI action",
+      "description": "click add-to-cart of the Sauce Labs Backpack (establishment)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": "UI_FLOW",
+      "verification": false,
+      "started_at": "2026-11-11T22:41:37.102Z",
+      "observation": null,
+      "evidence": [],
+      "finished_at": "2026-11-11T22:41:37.152Z"
+    },
+    {
+      "position": 6,
+      "class": "UI action",
+      "description": "read the cart badge (verification)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": null,
+      "verification": true,
+      "started_at": "2026-11-11T22:41:37.152Z",
+      "observation": {
+        "badge_text": "1",
+        "settle": {
+          "network_quiet": false,
+          "quiet_ms": 500,
+          "elapsed_s": 15.018,
+          "in_flight": 0,
+          "in_flight_requests": []
+        }
+      },
+      "evidence": [
+        "evidence/002-sut02-after-establishment.png"
+      ],
+      "finished_at": "2026-11-11T22:41:52.279Z"
+    }
+  ],
+  "establishment_duration_s": 15.514,
+  "counted_action_count": 6,
+  "comparison": {
+    "declared_starting_state": "a clean session on the login form (first load), and, once authenticated and before the add-to-cart, no badge and a cart link that reads \"Cart, empty\" (src/components/CartButton.jsx:24-42@60fdd63)",
+    "expected": "after the add-to-cart of one catalogue item, the cart badge shows 1",
+    "observed": "cart badge text '1'",
+    "outcome": "SUCCESS"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E02-CS004-SUT01-WEB__EX0005__A1",
+  "condition": "E02-CS004-SUT01-WEB",
+  "scenario": "CS-004",
+  "declared_starting_state": {
+    "id": "CS-004-STARTING",
+    "definition": "the server session cart holds exactly the seeded p02 line; no order has been placed (CS-004 notes)",
+    "citations": [
+      "experiments/scenario-mappings/CS-004.yaml (SUT-01 entry)",
+      "SUT01-EV-0001",
+      "SUT01-EV-0004",
+      "SUT01-EV-0005",
+      "SUT01-EV-0007"
+    ],
+    "observed_before_establishment": {
+      "status": 200,
+      "cart_items": [
+        {
+          "pizza_id": "p02",
+          "quantity": 1,
+          "size": "small",
+          "toppings": [],
+          "item_id": "ITEM-8F7609D7"
+        }
+      ]
+    },
+    "holds": true
+  },
+  "steps": [
+    {
+      "phase": "precondition",
+      "description": "first load of {web}/ (not counted)",
+      "mechanisms": [
+        "DIRECT_ROUTE"
+      ],
+      "started_at": "2026-11-12T02:18:52.170Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "first_load_status": 200
+      },
+      "evidence": [],
+      "counted_as_required_action": false,
+      "finished_at": "2026-11-12T02:18:53.264Z"
+    },
+    {
+      "phase": "precondition",
+      "description": "API login with the standard account (not counted)",
+      "mechanisms": [
+        "PREDEFINED_ACCOUNT"
+      ],
+      "started_at": "2026-11-12T02:18:53.264Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "token_received": true
+      },
+      "evidence": [
+        "evidence/002-sut01-cs004-login.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-11-12T02:18:53.270Z"
+    },
+    {
+      "phase": "precondition",
+      "description": "one p02 line seeded through POST /api/cart (not counted)",
+      "mechanisms": [
+        "API_SEED"
+      ],
+      "started_at": "2026-11-12T02:18:53.270Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200
+      },
+      "evidence": [
+        "evidence/003-sut01-cs004-seed.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-11-12T02:18:53.273Z"
+    },
+    {
+      "phase": "precondition",
+      "description": "client auth injection with an empty client cart (not counted)",
+      "mechanisms": [
+        "APP_STATE_CONTROL"
+      ],
+      "started_at": "2026-11-12T02:18:53.273Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "keys": [
+          "countryCode",
+          "omnipizza-auth",
+          "omnipizza-cart",
+          "omnipizza-country",
+          "token",
+          "username"
+        ],
+        "read_back_equal": true
+      },
+      "evidence": [],
+      "counted_as_required_action": false,
+      "finished_at": "2026-11-12T02:18:53.318Z"
+    },
+    {
+      "phase": "declared-starting-state",
+      "description": "GET /api/session: the server session cart holds the p02 line; the client holds the token",
+      "mechanisms": [],
+      "started_at": "2026-11-12T02:18:53.318Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "cart_items": [
+          {
+            "pizza_id": "p02",
+            "quantity": 1,
+            "size": "small",
+            "toppings": [],
+            "item_id": "ITEM-8F7609D7"
+          }
+        ]
+      },
+      "evidence": [
+        "evidence/004-sut01-cs004-session-start.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-11-12T02:18:53.321Z"
+    }
+  ],
+  "note": "precondition, declared starting-state check, and provisioning: recorded, never counted as Required Actions (setup-effort-v2, section 5, rule 6)"
+}

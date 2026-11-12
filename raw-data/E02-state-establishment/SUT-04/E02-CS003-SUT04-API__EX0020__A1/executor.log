@@ -1,0 +1,15 @@
+{"t": "2026-11-12T02:36:31.895Z", "event": "run-start", "condition": "E02-CS003-SUT04-API", "run_id": "E02-CS003-SUT04-API__EX0020__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-12T02:36:31.896Z", "event": "instance", "sha256": "edad8bbb218882dac4432867a4569c00e88ae2cff31b985d894626365f5a7b71"}
+{"t": "2026-11-12T02:36:31.896Z", "event": "action-start", "position": 1, "cls": "API action", "description": "POST {auth}/auth/login with the seeded admin account (authentication)"}
+{"t": "2026-11-12T02:36:31.962Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3004/auth/login", "status": 200, "error": null, "elapsed_s": 0.066, "evidence": "evidence/002-sut04-api-login.json"}
+{"t": "2026-11-12T02:36:31.963Z", "event": "action-end", "position": 1, "outcome": "SUCCESS", "error": null}
+{"t": "2026-11-12T02:36:31.963Z", "event": "step-start", "phase": "declared-starting-state", "description": "GET {booking}/booking/?roomid=1 with the token: no booking with this run's guest names"}
+{"t": "2026-11-12T02:36:32.110Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/booking/?roomid=1", "status": 200, "error": null, "elapsed_s": 0.147, "evidence": "evidence/003-sut04-api-list-start.json"}
+{"t": "2026-11-12T02:36:32.110Z", "event": "step-end", "phase": "declared-starting-state", "outcome": "SUCCESS"}
+{"t": "2026-11-12T02:36:32.110Z", "event": "action-start", "position": 2, "cls": "API action", "description": "POST {booking}/booking/ with the run-unique guest and dates, without email and phone (establishment)"}
+{"t": "2026-11-12T02:36:32.249Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3000/booking/", "status": 201, "error": null, "elapsed_s": 0.138, "evidence": "evidence/004-sut04-api-create.json"}
+{"t": "2026-11-12T02:36:32.249Z", "event": "action-end", "position": 2, "outcome": "SUCCESS", "error": null}
+{"t": "2026-11-12T02:36:32.249Z", "event": "action-start", "position": 3, "cls": "API action", "description": "GET {booking}/booking/{id} with the token: read the booking (verification)"}
+{"t": "2026-11-12T02:36:32.275Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/booking/4", "status": 200, "error": null, "elapsed_s": 0.025, "evidence": "evidence/005-sut04-api-verify.json"}
+{"t": "2026-11-12T02:36:32.275Z", "event": "action-end", "position": 3, "outcome": "SUCCESS", "error": null}
+{"t": "2026-11-12T02:36:32.280Z", "event": "run-end", "status": "SUCCESS", "actions": 3}

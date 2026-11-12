@@ -1,0 +1,15 @@
+{"t": "2026-11-11T20:05:20.086Z", "event": "run-start", "condition": "E02-CS003-SUT05-API", "run_id": "E02-CS003-SUT05-API__EX0049__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-11T20:05:20.087Z", "event": "instance", "sha256": "0d74e8cf743d430bc6e55e93928d5be0bf71301ee3f05186fa120fb61c94f953"}
+{"t": "2026-11-11T20:05:20.087Z", "event": "action-start", "position": 1, "cls": "API action", "description": "POST /rest/user/login with the documented account (authentication; returns token and bid)"}
+{"t": "2026-11-11T20:05:20.651Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3000/rest/user/login", "status": 200, "error": null, "elapsed_s": 0.564, "evidence": "evidence/002-sut05-login.json"}
+{"t": "2026-11-11T20:05:20.651Z", "event": "action-end", "position": 1, "outcome": "SUCCESS", "error": null}
+{"t": "2026-11-11T20:05:20.651Z", "event": "step-start", "phase": "declared-starting-state", "description": "GET /rest/basket/{bid}: the basket of the documented account holds no product"}
+{"t": "2026-11-11T20:05:21.130Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/rest/basket/6", "status": 200, "error": null, "elapsed_s": 0.478, "evidence": "evidence/003-sut05-basket-start.json"}
+{"t": "2026-11-11T20:05:21.130Z", "event": "step-end", "phase": "declared-starting-state", "outcome": "SUCCESS"}
+{"t": "2026-11-11T20:05:21.130Z", "event": "action-start", "position": 2, "cls": "API action", "description": "POST /api/BasketItems with ProductId 1, quantity 1, in the actor basket (establishment)"}
+{"t": "2026-11-11T20:05:21.583Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3000/api/BasketItems", "status": 200, "error": null, "elapsed_s": 0.453, "evidence": "evidence/004-sut05-basket-add.json"}
+{"t": "2026-11-11T20:05:21.583Z", "event": "action-end", "position": 2, "outcome": "SUCCESS", "error": null}
+{"t": "2026-11-11T20:05:21.583Z", "event": "action-start", "position": 3, "cls": "API action", "description": "GET /rest/basket/{bid}: read the basket (verification)"}
+{"t": "2026-11-11T20:05:21.596Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/rest/basket/6", "status": 200, "error": null, "elapsed_s": 0.012, "evidence": "evidence/005-sut05-basket-verify.json"}
+{"t": "2026-11-11T20:05:21.596Z", "event": "action-end", "position": 3, "outcome": "SUCCESS", "error": null}
+{"t": "2026-11-11T20:05:21.597Z", "event": "run-end", "status": "SUCCESS", "actions": 3}

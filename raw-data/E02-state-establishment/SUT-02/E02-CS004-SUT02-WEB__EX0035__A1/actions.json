@@ -1,0 +1,95 @@
+{
+  "run_id": "E02-CS004-SUT02-WEB__EX0035__A1",
+  "actions": [
+    {
+      "position": 1,
+      "class": "UI action",
+      "description": "read the cart badge for the seeded item (verification)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": null,
+      "verification": true,
+      "started_at": "2026-11-12T01:36:13.224Z",
+      "observation": {
+        "badge_text": "1",
+        "settle": {
+          "network_quiet": false,
+          "quiet_ms": 500,
+          "elapsed_s": 15.003,
+          "in_flight": 0,
+          "in_flight_requests": []
+        }
+      },
+      "evidence": [],
+      "finished_at": "2026-11-12T01:36:28.230Z"
+    },
+    {
+      "position": 2,
+      "class": "navigation action",
+      "description": "click the cart link; the route changes to /cart.html (establishment)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": "UI_FLOW",
+      "verification": false,
+      "started_at": "2026-11-12T01:36:28.230Z",
+      "observation": {
+        "url": "http://127.0.0.1:3000/cart.html",
+        "landed_on_cart": true,
+        "cart_items": 1,
+        "cart_item_names": [
+          "Sauce Labs Backpack"
+        ]
+      },
+      "evidence": [],
+      "finished_at": "2026-11-12T01:36:28.274Z"
+    },
+    {
+      "position": 3,
+      "class": "navigation action",
+      "description": "click the Checkout control of the cart page; the route changes to /checkout-step-one.html (establishment)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": "UI_FLOW",
+      "verification": false,
+      "started_at": "2026-11-12T01:36:28.275Z",
+      "observation": {
+        "url": "http://127.0.0.1:3000/checkout-step-one.html",
+        "landed_on_step_one": true
+      },
+      "evidence": [],
+      "finished_at": "2026-11-12T01:36:28.311Z"
+    },
+    {
+      "position": 4,
+      "class": "UI action",
+      "description": "read the checkout step-one view: its container and its title are presented (verification)",
+      "is_retry": false,
+      "outcome": "SUCCESS",
+      "mechanism": null,
+      "verification": true,
+      "started_at": "2026-11-12T01:36:28.311Z",
+      "observation": {
+        "step_one_visible": true,
+        "title": "Checkout: Your Information",
+        "url": "http://127.0.0.1:3000/checkout-step-one.html",
+        "settle": {
+          "network_quiet": true,
+          "quiet_ms": 500,
+          "elapsed_s": 0.509
+        }
+      },
+      "evidence": [
+        "evidence/002-sut02-cs004-step-one.png"
+      ],
+      "finished_at": "2026-11-12T01:36:28.877Z"
+    }
+  ],
+  "establishment_duration_s": 15.653,
+  "counted_action_count": 4,
+  "comparison": {
+    "declared_starting_state": "the cart holds the seeded item: badge text 1 and cart link aria-label \"Cart, 1 items\" (src/components/CartButton.jsx:26,36-38@60fdd63); no checkout view opened",
+    "expected": "after the seeded add-to-cart of one catalogue item, the cart badge shows 1 and the checkout step-one view is presented (UI_STATE oracle limited to the badge and the entry view, as the mapping states)",
+    "observed": "cart badge text '1'; checkout step-one view presented True (title 'Checkout: Your Information')",
+    "outcome": "SUCCESS"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E02-CS003-SUT04-WEB__EX0014__A1",
+  "condition": "E02-CS003-SUT04-WEB",
+  "scenario": "CS-003",
+  "declared_starting_state": {
+    "id": "CS-003-STARTING",
+    "definition": "room 1 holds no booking with this run's guest names (booking/.../BookingController.java:23-28)",
+    "citations": [
+      "experiments/scenario-mappings/CS-003.yaml (SUT-04 entry)",
+      "SUT04-EV-0001",
+      "SUT04-EV-0002",
+      "SUT04-EV-0003",
+      "SUT04-EV-0004",
+      "SUT04-EV-0006",
+      "SUT04-EV-0008",
+      "SUT04-EV-0018"
+    ],
+    "observed_before_establishment": {
+      "status": 200,
+      "bookings_listed": 1,
+      "bookings_with_run_names": 0
+    },
+    "holds": true
+  },
+  "steps": [
+    {
+      "phase": "declared-starting-state",
+      "description": "GET {booking}/booking/?roomid=1 with the token cookie: no booking with this run's guest names",
+      "mechanisms": [],
+      "started_at": "2026-11-11T22:10:53.008Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "bookings_listed": 1,
+        "bookings_with_run_names": 0
+      },
+      "evidence": [
+        "evidence/002-sut04-web-list-start.json"
+      ],
+      "counted_as_required_action": false,
+      "finished_at": "2026-11-11T22:10:53.233Z"
+    }
+  ],
+  "note": "precondition, declared starting-state check, and provisioning: recorded, never counted as Required Actions (setup-effort-v2, section 5, rule 6)"
+}

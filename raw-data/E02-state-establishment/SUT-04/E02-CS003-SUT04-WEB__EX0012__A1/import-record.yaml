@@ -1,0 +1,225 @@
+# raw-data/E02-state-establishment/SUT-04/E02-CS003-SUT04-WEB__EX0012__A1/import-record.yaml -- import record of the MEASURED_EXPERIMENT attempt E02-CS003-SUT04-WEB__EX0012__A1 (ORCHESTRATOR)
+record_class: "MEASURED_EXPERIMENT_IMPORT"
+imported_by: "ORCHESTRATOR"
+imported_at: "2026-11-11T22:02:23Z"
+operation_id: "OP-DISPATCH-E02-06"
+note: "Written by the ORCHESTRATOR at the import; it is not part of the bundle, whose members are imported unchanged beside it (the files list below gives their bytes and sha256). The report fields follow section 5 of the frozen dispatch procedure and quote the run manifest and the logs without interpretation."
+campaign_id: "E02-state-establishment"
+condition_id: "E02-CS003-SUT04-WEB"
+assigned_sut: "SUT-04"
+execution_id: "EX0012"
+attempt: 1
+run_id: "E02-CS003-SUT04-WEB__EX0012__A1"
+authorization:
+  authorization_id: "E02-DISPATCH-SUT04-AUTH-01"
+  record: "manifests/e02-dispatch-authorization-sut04-v1.yaml"
+  campaign_start_authorization_id: "E02-START-AUTH-01"
+dispatch_record: "manifests/e02-measured-dispatch/E02-CS003-SUT04-WEB.jsonl"
+dispatch_clock_readings_utc:
+  - "2026-11-11T21:58:54Z"
+  - "2026-11-11T21:58:56Z"
+github:
+  repository: "gsanchezm/experimental-utility-testing-labs"
+  workflow: ".github/workflows/e02-measured-execution.yml"
+  run_id: 43107788868
+  run_number: 82
+  run_attempt: 1
+  head_sha: "041bde9e9b54ba6e97c667e80896b116a6a41a19"
+  created_at: "2026-11-11T21:58:56Z"
+  updated_at: "2026-11-11T22:02:14Z"
+  conclusion: "success"
+  jobs:
+    - id: 130815566901
+      name: "E02 Measured Execution Gate"
+      conclusion: "success"
+    - id: 130815667854
+      name: "E02 Provenance Capture"
+      conclusion: "success"
+    - id: 130815732088
+      name: "E02 Measured Execution E02-CS003-SUT04-WEB EX0012 A1"
+      conclusion: "success"
+  manifest_validation_step: "success"
+artifacts:
+  bundle:
+    id: 13895291543
+    name: "E02-MEASURED_EXPERIMENT-E02-CS003-SUT04-WEB-EX0012-A1"
+    size_in_bytes: 202643
+    github_digest: "sha256:52af3f323a929e4dd49c99cbc10bd69de8876e3579c2459540c4efbd6296de5d"
+    archive_sha256_verified: true
+  provenance:
+    id: 13894113472
+    name: "E02-MEASURED_EXPERIMENT-E02-CS003-SUT04-WEB-EX0012-A1-provenance"
+    size_in_bytes: 1546
+    github_digest: "sha256:966cd5d68c16589c43c3ebaa3277fd1d549077a694f1d33259a1c55dea6591c1"
+    archive_sha256_verified: true
+    equals_bundle_member: "ci-provenance.json"
+verification:
+  files_in_bundle: 30
+  manifest_listed_hashes_checked: 25
+  hash_mismatches: 0
+  members_without_listed_sha256:
+    - "exit-status.txt"
+    - "finished-at.txt"
+    - "run-manifest.json"
+    - "stderr.log"
+    - "stdout.log"
+  bundle_members_equal_manifest_list: true
+  ci_provenance_ids_equal_the_run: true
+  imported_bytes_equal_extracted_bytes: true
+report:
+  outcome_status: "SUCCESS"
+  outcome_expected: "after the reservation, the admin room page lists one booking with the run-unique names and check-in date"
+  outcome_observed: "rows with the run names and check-in date: 1"
+  actions:
+    - class: "navigation action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "open {web}/admin, the admin login page (the first load of the run; counted, HD-15 default)"
+    - class: "UI action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "fill the seeded admin username (authentication)"
+    - class: "UI action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "fill the seeded admin password (authentication)"
+    - class: "UI action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "submit the admin login; the route changes to /admin/rooms and the token cookie is set (authentication)"
+    - class: "navigation action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "open the reservation page {web}/reservation/1 with the run-unique dates (DIRECT_ROUTE)"
+    - class: "UI action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "open the booking form (#doReservation)"
+    - class: "UI action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "fill the guest first name"
+    - class: "UI action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "fill the guest last name"
+    - class: "UI action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "fill the guest email"
+    - class: "UI action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "fill the guest phone"
+    - class: "UI action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "click Reserve Now; the page shows Booking Confirmed (establishment)"
+    - class: "navigation action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "open the admin room page {web}/admin/room/1 (DIRECT_ROUTE)"
+    - class: "UI action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "read the admin room rows (verification)"
+  establishment_mechanisms:
+    - "PREDEFINED_ACCOUNT"
+    - "DIRECT_ROUTE"
+    - "UI_FLOW"
+  starting_state_id: "CS-003-STARTING"
+  target_state_id: "CS-003"
+  anomalies_quoted_from_the_job_log:
+    - "##[warning]setup-java v4 is deprecated and will no longer receive updates. Please migrate to actions/setup-java@v5."
+    - "##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/download-artifact@v4, actions/setup-java@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog"
+files:
+  - path: "actions.json"
+    bytes: 6178
+    sha256: "defaf102355d712cfd496843dc68f0a49e2e408fa67e3bfcc9741fe6a8c15a25"
+  - path: "ci-provenance.json"
+    bytes: 2625
+    sha256: "5dcc62c8abd32b3a1b7744fa8ae1bde9f0eaf63a6470f6e291ca21514dc6d07d"
+  - path: "evidence/001-instance.json"
+    bytes: 4339
+    sha256: "02a90bc86632e136a8aa633c4ce6377e62f71e8a5bc453df5fffba18cb13f2fd"
+  - path: "evidence/002-sut04-web-list-start.json"
+    bytes: 763
+    sha256: "924a19001859d6c67fd4a45f35ebc381c8c204603d7df1eb2b45705bd4cb70df"
+  - path: "evidence/003-sut04-web-admin-room.png"
+    bytes: 181044
+    sha256: "746ed85dc6cdcc1ba3bbd8adb108f45d0398296d912919aac26313f2fbeef31a"
+  - path: "evidence/004-network-log.json"
+    bytes: 30065
+    sha256: "d02361825330625280ba4510e88e3c2ebf475cfc329cda5f27fd37ddafe58600"
+  - path: "evidence/005-console-log.json"
+    bytes: 2
+    sha256: "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  - path: "evidence/006-sut-log-java-version.txt.log"
+    bytes: 188
+    sha256: "a6ab9f3c1bd24744c513b334449c57f4882a8a37325845c28fd103cfe780d451"
+  - path: "evidence/007-sut-log-maven-version.txt.log"
+    bytes: 355
+    sha256: "5ccb5810abaf71c0d1540fa85e2c75731f930b4430e51b1b925272dcbb1511a5"
+  - path: "evidence/008-sut-log-node-version.txt.log"
+    bytes: 9
+    sha256: "f2ec568164f99546161909b0189b57bb5be3e80f8e2ccd8a51a4aed8c4055a04"
+  - path: "evidence/009-sut-log-npm-version.txt.log"
+    bytes: 8
+    sha256: "005206ab803f8881d8227540b7980b37e723b69a8849edb31734a90b7e7964e2"
+  - path: "evidence/010-sut-log-built-jars.txt.log"
+    bytes: 414
+    sha256: "70302ea7991ea8b67148e9dbb086e5d94d91d8159765bbf25c3ef99d6685b1d1"
+  - path: "evidence/011-sut-log-sut04-start.json.log"
+    bytes: 3009
+    sha256: "a216cf31442c62fb2f3c858584aa7ec65617e653783cbea7dcd13238650a8bac"
+  - path: "evidence/012-sut-log-sut04-auth.log.log"
+    bytes: 3012
+    sha256: "6d466d44f50f8e942f53559bc5afb1560025ca3a08a3e5137c919056b42cbd8c"
+  - path: "evidence/013-sut-log-sut04-booking.log.log"
+    bytes: 5560
+    sha256: "f204439c6fd33099c3639f423aad1c894e73d48f8452f6b53d9a2248762e9215"
+  - path: "evidence/014-sut-log-sut04-room.log.log"
+    bytes: 5543
+    sha256: "d7e62f123471e270c94ed59197df3d3b9590635ca6d84a4dbb76d4bdc1e3d8ef"
+  - path: "evidence/015-sut-log-sut04-report.log.log"
+    bytes: 2724
+    sha256: "7ef5c1e1d5ef4e97657a29f61f3ca29ee3f3ce1f28da571e5723ec8b2a203519"
+  - path: "evidence/016-sut-log-sut04-branding.log.log"
+    bytes: 5564
+    sha256: "92eeabcf183f041248898d2faf01593c84ba8fd0d3564b6f0e8fff7acbeb7726"
+  - path: "evidence/017-sut-log-sut04-message.log.log"
+    bytes: 5559
+    sha256: "727e4de1c0aaf017e0d1957cb706655ece8f0cfda0932107e1739b50f46c038e"
+  - path: "evidence/018-sut-log-sut04-web.log.log"
+    bytes: 309
+    sha256: "2b55b2d1eaacfaad000837aebbdd698f8cf76dd19860f62bfa467fda65808272"
+  - path: "executor.log"
+    bytes: 4646
+    sha256: "68e338fe336584233693153b17703a99c1975e25a97b46f0b33354b7ddfe9fbf"
+  - path: "exit-status.txt"
+    bytes: 2
+    sha256: "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  - path: "finished-at.txt"
+    bytes: 21
+    sha256: "9142edd3bbb03b661ed8fe8cbcc07b70b7a2e8b300afcf09e9d20fb4f2506441"
+  - path: "precondition.json"
+    bytes: 1471
+    sha256: "921a9aa5d21b7d7d5edf28fec5e6da1ecb603fd526773cd676b95139e939cb86"
+  - path: "run-manifest.json"
+    bytes: 12793
+    sha256: "5ac3b76d3b079d85425718ab167e3790563bcc5313dab545220d555d97e9e474"
+  - path: "runtime-environment.json"
+    bytes: 723
+    sha256: "7b08df6a7e408583272eeee87ddec05c114409e1ee9e137bf119fab8081d39e5"
+  - path: "started-at.txt"
+    bytes: 21
+    sha256: "6f408d0030baf48c705cd9618abb2cf0c56cb338a423dfceb18b310cfeabdaec"
+  - path: "stderr.log"
+    bytes: 0
+    sha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  - path: "stdout.log"
+    bytes: 421
+    sha256: "633e68db7c2c2a7f2d9207bfbed8b3bb76bf47bb8f5c1d7402e7d3133d2b45c3"
+  - path: "tool-versions.json"
+    bytes: 407
+    sha256: "b66d6ff3661cc4d5f8a396a195df5855d4a8d2f743dfd34be33652d28f60f2ed"

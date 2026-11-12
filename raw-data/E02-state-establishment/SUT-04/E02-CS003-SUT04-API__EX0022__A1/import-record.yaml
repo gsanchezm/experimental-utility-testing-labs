@@ -1,0 +1,184 @@
+# raw-data/E02-state-establishment/SUT-04/E02-CS003-SUT04-API__EX0022__A1/import-record.yaml -- import record of the MEASURED_EXPERIMENT attempt E02-CS003-SUT04-API__EX0022__A1 (ORCHESTRATOR)
+record_class: "MEASURED_EXPERIMENT_IMPORT"
+imported_by: "ORCHESTRATOR"
+imported_at: "2026-11-12T02:45:51Z"
+operation_id: "OP-DISPATCH-E02-06"
+note: "Written by the ORCHESTRATOR at the import; it is not part of the bundle, whose members are imported unchanged beside it (the files list below gives their bytes and sha256). The report fields follow section 5 of the frozen dispatch procedure and quote the run manifest and the logs without interpretation."
+campaign_id: "E02-state-establishment"
+condition_id: "E02-CS003-SUT04-API"
+assigned_sut: "SUT-04"
+execution_id: "EX0022"
+attempt: 1
+run_id: "E02-CS003-SUT04-API__EX0022__A1"
+authorization:
+  authorization_id: "E02-DISPATCH-SUT04-AUTH-01"
+  record: "manifests/e02-dispatch-authorization-sut04-v1.yaml"
+  campaign_start_authorization_id: "E02-START-AUTH-01"
+dispatch_record: "manifests/e02-measured-dispatch/E02-CS003-SUT04-API.jsonl"
+dispatch_clock_readings_utc:
+  - "2026-11-12T02:42:13Z"
+  - "2026-11-12T02:42:15Z"
+github:
+  repository: "gsanchezm/experimental-utility-testing-labs"
+  workflow: ".github/workflows/e02-measured-execution.yml"
+  run_id: 43143226732
+  run_number: 417
+  run_attempt: 1
+  head_sha: "7e8c8713fcd8e995f3e73190399324456dae7973"
+  created_at: "2026-11-12T02:42:15Z"
+  updated_at: "2026-11-12T02:45:35Z"
+  conclusion: "success"
+  jobs:
+    - id: 130934964138
+      name: "E02 Measured Execution Gate"
+      conclusion: "success"
+    - id: 130935026712
+      name: "E02 Provenance Capture"
+      conclusion: "success"
+    - id: 130935068239
+      name: "E02 Measured Execution E02-CS003-SUT04-API EX0022 A1"
+      conclusion: "success"
+  manifest_validation_step: "success"
+artifacts:
+  bundle:
+    id: 13911121026
+    name: "E02-MEASURED_EXPERIMENT-E02-CS003-SUT04-API-EX0022-A1"
+    size_in_bytes: 25812
+    github_digest: "sha256:819053e098719f40f87b58be1142ed59fbc5c12d5c243a8b346b14c8d6ea84f4"
+    archive_sha256_verified: true
+  provenance:
+    id: 13911240180
+    name: "E02-MEASURED_EXPERIMENT-E02-CS003-SUT04-API-EX0022-A1-provenance"
+    size_in_bytes: 1602
+    github_digest: "sha256:0ce0ba5c916a90b80f971717df0871d2371d35f6ebac31dea494cdd5f3433ec5"
+    archive_sha256_verified: true
+    equals_bundle_member: "ci-provenance.json"
+verification:
+  files_in_bundle: 30
+  manifest_listed_hashes_checked: 25
+  hash_mismatches: 0
+  members_without_listed_sha256:
+    - "exit-status.txt"
+    - "finished-at.txt"
+    - "run-manifest.json"
+    - "stderr.log"
+    - "stdout.log"
+  bundle_members_equal_manifest_list: true
+  ci_provenance_ids_equal_the_run: true
+  imported_bytes_equal_extracted_bytes: true
+report:
+  outcome_status: "SUCCESS"
+  outcome_expected: "after the create, GET /booking/{id} returns the booking with the run-unique guest names"
+  outcome_observed: "booking 4: names match True"
+  actions:
+    - class: "API action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "POST {auth}/auth/login with the seeded admin account (authentication)"
+    - class: "API action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "POST {booking}/booking/ with the run-unique guest and dates, without email and phone (establishment)"
+    - class: "API action"
+      outcome: "SUCCESS"
+      is_retry: false
+      description: "GET {booking}/booking/{id} with the token: read the booking (verification)"
+  establishment_mechanisms:
+    - "PREDEFINED_ACCOUNT"
+    - "API_SEED"
+  starting_state_id: "CS-003-STARTING"
+  target_state_id: "CS-003"
+  anomalies_quoted_from_the_job_log:
+    - "##[warning]setup-java v4 is deprecated and will no longer receive updates. Please migrate to actions/setup-java@v5."
+    - "##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/download-artifact@v4, actions/setup-java@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog"
+files:
+  - path: "actions.json"
+    bytes: 2114
+    sha256: "32399dd673d1480da9dd8810844d78b6e833b38f7be29abab5cc41747bad029b"
+  - path: "ci-provenance.json"
+    bytes: 2764
+    sha256: "6e06294da047cf098e4c67d31b598ae1a94959aeac43e31f6c395faf55b475bc"
+  - path: "evidence/001-instance.json"
+    bytes: 4261
+    sha256: "f8426f511aef8b6d8fd6845a501b79009dbd02500ff4ba920c5a9d36cdc35484"
+  - path: "evidence/002-sut04-api-login.json"
+    bytes: 621
+    sha256: "2d1fbf894d418514381807a43ff579ecac4257d5b46134019d775a8ea1e11875"
+  - path: "evidence/003-sut04-api-list-start.json"
+    bytes: 763
+    sha256: "f1d737efa3570902ecbb959c8479cc73b71ae5e847071ba93395e35e619621ee"
+  - path: "evidence/004-sut04-api-create.json"
+    bytes: 931
+    sha256: "8b906f0d44a9c8493f5521a2347b3cfb0c23ec42b83453e4109ab4056039357a"
+  - path: "evidence/005-sut04-api-verify.json"
+    bytes: 747
+    sha256: "5b957e1b5556abf79f08d87676c4f9c3e963af1469849e99acc48ee26f27c3a2"
+  - path: "evidence/006-sut-log-java-version.txt.log"
+    bytes: 188
+    sha256: "a6ab9f3c1bd24744c513b334449c57f4882a8a37325845c28fd103cfe780d451"
+  - path: "evidence/007-sut-log-maven-version.txt.log"
+    bytes: 355
+    sha256: "5ccb5810abaf71c0d1540fa85e2c75731f930b4430e51b1b925272dcbb1511a5"
+  - path: "evidence/008-sut-log-node-version.txt.log"
+    bytes: 9
+    sha256: "f2ec568164f99546161909b0189b57bb5be3e80f8e2ccd8a51a4aed8c4055a04"
+  - path: "evidence/009-sut-log-npm-version.txt.log"
+    bytes: 8
+    sha256: "005206ab803f8881d8227540b7980b37e723b69a8849edb31734a90b7e7964e2"
+  - path: "evidence/010-sut-log-built-jars.txt.log"
+    bytes: 414
+    sha256: "70302ea7991ea8b67148e9dbb086e5d94d91d8159765bbf25c3ef99d6685b1d1"
+  - path: "evidence/011-sut-log-sut04-start.json.log"
+    bytes: 3009
+    sha256: "da51c32d0dfb002b91fc493ebd95336ef98fe4a688429118315410316a97c5f9"
+  - path: "evidence/012-sut-log-sut04-auth.log.log"
+    bytes: 2998
+    sha256: "7775ca7df3c2e76ef364c91a046f5b70e51a25c05d5d092dcd3c8306d3f883da"
+  - path: "evidence/013-sut-log-sut04-booking.log.log"
+    bytes: 5548
+    sha256: "c833329f45eaad3416b1d831ccf6325d86cccaaa397e64e2bfd6d70ec552bb1d"
+  - path: "evidence/014-sut-log-sut04-room.log.log"
+    bytes: 5532
+    sha256: "57ce3b457a3d3a1aabec581d9ca9925ef83ddb0282e6de4892d475a6aed3f886"
+  - path: "evidence/015-sut-log-sut04-report.log.log"
+    bytes: 2712
+    sha256: "79d0a37ce0c27f9c86d2db4bfcd1ccd110f905139f84093dd804af6dcb2caa55"
+  - path: "evidence/016-sut-log-sut04-branding.log.log"
+    bytes: 5553
+    sha256: "5865f6c40b59a8e0cda8ea8d015666b0edae2bbac9570cdaf6c9d098760bade5"
+  - path: "evidence/017-sut-log-sut04-message.log.log"
+    bytes: 5546
+    sha256: "9c71196d3ab777dc05a9ffa5ea03c0ea143cd6ee3ea47f7cb2ad5fa52fc6d452"
+  - path: "evidence/018-sut-log-sut04-web.log.log"
+    bytes: 309
+    sha256: "6b0eff3e2463c803376fc59abd6f18494990e975ac763ffaaf825bc563e23c7b"
+  - path: "executor.log"
+    bytes: 2474
+    sha256: "eca4901df4b77c50230a51a8e88e18ae5561e4eceb3b41eed2c0e86c2304f8e2"
+  - path: "exit-status.txt"
+    bytes: 2
+    sha256: "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  - path: "finished-at.txt"
+    bytes: 21
+    sha256: "d24c57bb8a600cf160e3a736cef55f3698b2558d56e062365e28af01ff1f64f0"
+  - path: "precondition.json"
+    bytes: 1464
+    sha256: "f9d73e1d80699852f204e4929e71bc01de34131c2213301d4b8c8ee5cbd0e897"
+  - path: "run-manifest.json"
+    bytes: 10414
+    sha256: "30f797d19e8a8c877c8d73d679699632db7179637e544df9aaf14ebbe02d897d"
+  - path: "runtime-environment.json"
+    bytes: 723
+    sha256: "20772e19e21d58523f5773ab85274bfb43c5b2ce3d647d7b399087285e741e32"
+  - path: "started-at.txt"
+    bytes: 21
+    sha256: "7926fc38e0414f966512fbc106f6c72d4539c08c73b17307fb329d862d2a5327"
+  - path: "stderr.log"
+    bytes: 0
+    sha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  - path: "stdout.log"
+    bytes: 140
+    sha256: "5aaaa84ce56ee9b38a7f816f33904f1a8046578aecf7bc3a0b85826e83782ff2"
+  - path: "tool-versions.json"
+    bytes: 248
+    sha256: "50bbe8e4b7682532e2701fb9608778f110c31fe400dc61765723c19ca85bb63e"
