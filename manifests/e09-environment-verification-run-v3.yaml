@@ -1,0 +1,31 @@
+# manifests/e09-environment-verification-run-v3.yaml -- run identity and review of the third E09 environment-verification DRY_RUN (operation OP-DISP-07).
+# ORCHESTRATOR record written after the dispatch of manifests/e09-environment-verification-dispatch-v3.yaml. Non-measured; the artifacts are reviewed and never imported into raw-data/. This is the verification record that the campaign configuration names as its probe record (brief section 13, item 1).
+record_id: "E09-ENVVERIF-DRYRUN-RUN-03"
+record_class: "ENVIRONMENT_VERIFICATION_DRY_RUN_RUN_RECORD"
+study_id: "EUS-2026-001"
+campaign: "E09-accessibility"
+recorded_on: "2026-11-12"
+instruction_record: "manifests/e09-environment-verification-dispatch-v3.yaml"
+earlier_run_records: "manifests/e09-environment-verification-run-v1.yaml, manifests/e09-environment-verification-run-v2.yaml"
+measured: false
+run:
+  workflow: .github/workflows/e09-environment-verification.yml
+  run_id: 43338329772
+  attempt: 1
+  head_sha: b72ca03f9364fd2608baaf3d6293250b7101c4ff
+  event: workflow_dispatch
+  inputs: {dry_run: true}
+  created_at: '2026-11-13T00:35:58Z'
+  completed_at: '2026-11-13T00:39:40Z'
+  dispatches_made: 1  # never re-run
+  github_conclusion: success  # read together with the artifacts, which were reviewed
+  implementation_run_condition_sha256: 9eeb2a1c1a7b35ac8fceb016897d317d5534f09777a03f315e4e132dd3b11156
+artifacts:  # downloaded and compared with the GitHub digest of each archive: both equal
+- {id: 13997862796, name: E09-ENVIRONMENT_VERIFICATION-SUT-01-3, bytes: 231896, sha256: ad821a3f0e6ae0ffd70850e0ed560a10dc529b161879441c541d96fba1e15ce3}
+- {id: 13999045030, name: E09-DRY_RUN-SUT-01-3, bytes: 2058286, sha256: 03a3304e355eb3d58e93806f0c7a2120950f04732824f8da90bca7fa400b959a}
+results:
+  verification: "verified true; thirteen checks PASS: the seven of the first run (instance interface; pinned axe-core tarball sha512 and browser build sha256 20c09fe157a8a34a30e241aaa1fcdade657734f08ab379ecfbeb7d45cc46e878; api health 200; login of a11y_glitch_user (behavior a11y_glitch) and of standard_user (behavior standard) with the glitch password locked; one Catalog load and one explicit-rule axe 4.14.0 run per account: glitch ALL_EMPTY with 12 matching nodes, control NOT_EMPTY with 0) and the six of the probe: five Catalog loads of the glitch account (four NOT_EMPTY draws, then an ALL_EMPTY draw at load 5; the corroboration by the response body AGREES in 5 of 5); one GET of the catalog API per page load and one draw per load (5 loads, 1 request each); no matching node at the four draws that were not ALL_EMPTY; empty-heading (explicit rule set) reports the 12 affected h2 at the ALL_EMPTY draw (test ids pizza-name-p01-desktop to p12-desktop); image-alt (explicit pair of rules) reports 0 nodes; the default rule set reports empty-heading for the affected h2 (12 nodes). Chromium 153.0.8010.12, Python 3.12.16, Playwright 1.63.0"
+  dry_run_bundles: "E09-A11Y-SUT01-MISSING-NAME__DR0003__A1: status SUCCESS, outcome category DETECTED, DOM state ALL_EMPTY, 12 matching nodes, corroboration AGREES (response body class MISSING_NAME_BODY), single draw; E09-CTRL-SUT01-STANDARD__DR0003__A1: status SUCCESS, outcome category CONTROL_RULE_ABSENT, DOM state NOT_EMPTY, 0 matching nodes, corroboration AGREES (NON_EMPTY_NAMES), single draw. Both are record class DRY_RUN; environment_type OTHER because a DRY_RUN has no provenance record (the measured workflow supplies SELF_HOSTED)"
+what_it_decides: "this implementation (run-condition.sh sha256 9eeb2a1c1a7b35ac8fceb016897d317d5534f09777a03f315e4e132dd3b11156) ran complete on GitHub Actions: the controlled SUT-01 instance, the pinned scanner, both conditions, and the corroboration corrected after the second run. It is the implementation that the E09 START package proposes to lock. This is a non-measured verification of one draw per condition, not a result about detection."
+findings: []  # no defect of the rehearsal was found in this run
+not_authorized_by_this_record: [the START or the configuration lock of E09, any dispatch authorization, any measured dispatch, a second dispatch of the same instruction, any export or push]

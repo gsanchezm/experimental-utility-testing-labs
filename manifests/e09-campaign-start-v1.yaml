@@ -1,0 +1,48 @@
+# manifests/e09-campaign-start-v1.yaml -- provenance record of the E09-accessibility campaign START (operation OP-START-E09; protocol/change-control-v1.md, section 7, moment 1; modeled on manifests/e02-campaign-start-v1.yaml). Immutable once committed.
+record_class: "CAMPAIGN_START"
+record_id: "E09-CAMPAIGN-START-01"
+study_id: "EUS-2026-001"
+campaign_id: "E09-accessibility"
+operation_id: "OP-START-E09"
+recorded_by_role: "ORCHESTRATOR"
+start_date: "2026-11-12"
+start_timestamp_utc: "2026-11-13T04:35:11Z"
+authorization_id: "E09-START-AUTH-01"
+binding: "protocol/change-control-v1.md, section 7, moment 1 (campaign NOT_STARTED -> IN_PROGRESS)"
+approval:
+  given_by: the human research lead
+  channel: given directly to the ORCHESTRATOR in its conversation, as the answer to one question that offered the START, its lock values and what it applies
+  question_stamp: "2026-11-13T00:54:11.137Z"
+  answer_stamp: "2026-11-13T04:33:54.704Z"
+  chosen_option: "Sí, aprueba el START, el bloqueo y el prompt (Recomendado)"
+  answer_text_bytes: 2555
+  answer_text_sha256: 5c88c122cc5a40265a13d92a7ec7a596dc37cc920925a9cbf4e5b22074ffa8d0
+  answer_text: "Your questions have been answered: \"El tercer DRY_RUN de E09 pasó limpio (corrida 43338329772, revisada en los artefactos): 13 chequeos en PASS, corroboración del sorteo en AGREES en las 5 cargas del sondeo y en los dos paquetes, que quedaron en SUCCESS. Con eso el paquete de START está listo. ¿Apruebas el START de E09-accessibility? Qué bloquea: dos condiciones sobre SUT-01, E09-A11Y-SUT01-MISSING-NAME (cuenta a11y_glitch_user, clase estocástica, se detecta si empty-heading reporta al menos un nodo de un h2 pizza-name-* cuando todos están vacíos) y E09-CTRL-SUT01-STANDARD (cuenta standard_user, la regla debe estar ausente), N = 50 ejecuciones cada una (100 en total), intento 1, entorno SELF_HOSTED en runners de GitHub, mercado MX/es, viewport 1280x800; regla solo empty-heading (regla de buenas prácticas, impacto menor: la verdad de referencia es más débil que una falla WCAG, y queda dicho en la configuración); el denominador de la tasa de detección son los sorteos con h2 todos vacíos (ALL_EMPTY) de las 50 ejecuciones, y los otros sorteos se reportan aparte sin entrar al denominador; ninguna ejecución se excluye después del hecho; H5 es CONFIRMATORY y descriptivo, sin criterio de apoyo. Hashes: implementación (run-condition.sh) 9eeb2a1c1a7b35ac8fceb016897d317d5534f09777a03f315e4e132dd3b11156; prompt ORCHESTRATOR-E09-accessibility-v1 1734cf977102e0f22c721a1ad1ffdfdebfa62fef76e0e9964eca686e8070a2f0; texto de la configuración (10642 bytes) a7ffbabd1349c4404ab074d2d9c73a37d8f7012748d0d3cdf658cbbc0de4ec77. Orden de despacho: para n = 1 a 50, la ejecución EXnnnn de la condición glitch y luego la del control, cada corrida completa y leída antes de la siguiente. Qué aplica el START (solo con tu aprobación de esta acción): copia el texto en el README de E09 como su Campaign configuration, agrega la fila de cambio al registro de protocolo con el id E09-START-AUTH-01, pasa E09 a IN_PROGRESS, congela el prompt (copia idéntica byte a byte) y escribe el registro del START. Qué NO hace: no emite ninguna autorización de despacho, no despacha nada y no exporta; después hace falta un export que publique el START (la compuerta lee el repositorio público) y la autorización de despacho de SUT-01 que emites tú. Ensayé la compuerta real del workflow de medición sobre una copia con estas ediciones y una autorización sintética que no se confirmó: las dos condiciones pasan los 43 chequeos.\"=\"Sí, aprueba el START, el bloqueo y el prompt (Recomendado)\". You can now continue with these answers in mind."
+  what_the_question_offered: "the START of E09-accessibility under the authorization id E09-START-AUTH-01; the lock of the Campaign configuration text of manifests/e09-campaign-start-package-v1.yaml (sha256 a7ffbabd1349c4404ab074d2d9c73a37d8f7012748d0d3cdf658cbbc0de4ec77), the executor implementation hash 9eeb2a1c1a7b35ac8fceb016897d317d5534f09777a03f315e4e132dd3b11156, and the dispatch procedure prompt ORCHESTRATOR-E09-accessibility-v1 (sha256 1734cf977102e0f22c721a1ad1ffdfdebfa62fef76e0e9964eca686e8070a2f0, frozen as a byte-identical copy); the order of dispatch (execution EXnnnn of the glitch condition, then of the control, for n = 1 to 50); and it stated that the START authorizes no dispatch, no dispatch authorization and no export"
+package:
+  path: manifests/e09-campaign-start-package-v1.yaml
+  record_id: E09-START-PACKAGE-01
+locked:
+  implementation_sha256: 9eeb2a1c1a7b35ac8fceb016897d317d5534f09777a03f315e4e132dd3b11156
+  executable_conditions: [E09-A11Y-SUT01-MISSING-NAME, E09-CTRL-SUT01-STANDARD]
+  sample_size: "N = 50 per condition, EX0001 to EX0050, attempt 1 each (100 executions)"
+  prompt_version: ORCHESTRATOR-E09-accessibility-v1
+  prompt_sha256: 1734cf977102e0f22c721a1ad1ffdfdebfa62fef76e0e9964eca686e8070a2f0
+  configuration_text_sha256: a7ffbabd1349c4404ab074d2d9c73a37d8f7012748d0d3cdf658cbbc0de4ec77
+  section_inserted_sha256: 76c39acb702baa6c7c7109604a8b558d4b11f2489b7cc7c1f7a1ef15b757a7f6
+  rule_set: empty-heading only (explicit runOnly), a best-practice, minor-impact rule
+  start_authorization_id: E09-START-AUTH-01
+files_written:
+- experiments/E09-accessibility/README.md
+- protocol/CHANGELOG.md
+- manifests/study-manifest.yaml
+- prompts/frozen/ORCHESTRATOR-E09-accessibility-v1.md
+- manifests/e09-campaign-start-v1.yaml
+- experiments/E09-accessibility/controlled-instance-status.yaml
+does_not:
+- "issue any dispatch authorization (E09-DISPATCH-SUT01-AUTH-01 is a name, not issued)"
+- "dispatch anything or run any workflow"
+- "export or push anything"
+- "edit any workflow, executor file, scenario record, or protocol document other than the change-log row"
+- "edit the agent-instructions file (its update needs the human research lead's yes)"
+next: "the export of the START state (version 57, on the human research lead's yes to its exact line), the gate step re-run on the exported tree, then the dispatch authorization of SUT-01 that the human research lead issues under Section 3.7 (one record, both conditions, N = 50, attempt 1, with the implementation and prompt SHA-256 values above), its export, and then the dispatches under the frozen procedure."

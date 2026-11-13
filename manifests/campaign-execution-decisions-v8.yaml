@@ -1,0 +1,39 @@
+# manifests/campaign-execution-decisions-v8.yaml -- decisions of 2026-11-12, round 5 (operation OP-DISP-07; CAMPAIGN-EXECUTION-DECISIONS-08): the path before the E09 START, and the correction of HD-17.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing. Immutable once committed; a correction is a new version file. Earlier rounds: -v4 to -v7 (unchanged).
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-08"
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+study_id: "EUS-2026-001"
+operation_id: "OP-DISP-07"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-12"
+executes_anything: false
+protocol_change: false
+supersedes: null
+earlier_rounds: [manifests/campaign-execution-decisions-v4.yaml, manifests/campaign-execution-decisions-v5.yaml, manifests/campaign-execution-decisions-v6.yaml, manifests/campaign-execution-decisions-v7.yaml]
+human_decision:
+  given_by: the human research lead
+  channel: "answers of two question dialogs in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25)"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_1_before_start:
+    transcript_stamp: "2026-11-12T23:15:37.711Z"
+    bytes: 1203
+    exact_text_sha256: 08ab916ff4d39bda0f35232f7beea0c4ea3d251a3871c2a602c117d89b91700c
+    note: the answer of the question dialog, whole; the chosen option is the decision
+    exact_text: "Your questions have been answered: \"El segundo DRY_RUN de E09 (corrida 43326329851) fue un pase de verdad, revisado en los artefactos y no solo en la conclusión de GitHub: 12 chequeos en PASS, el sondeo confirmó lo que HD-3 y HD-4 daban por supuesto (empty-heading se dispara en los 12 h2 afectados, image-alt no se dispara con alt vacío, el conjunto por defecto reporta empty-heading, una sola petición al catálogo por carga) y los dos paquetes del DRY_RUN quedaron en SUCCESS (DETECTED y CONTROL_RULE_ABSENT). Encontré un defecto pequeño del ejecutor: la corroboración del sorteo por el cuerpo de la respuesta saltó siempre a «no interpretable» porque la API devuelve un objeto con la lista de pizzas y el clasificador esperaba una lista; el juicio de detección sale del DOM y no se afectó, y los cuerpos se guardan completos. Ya está corregido en el repositorio canónico con pruebas (70 OK), pero aún no está en GitHub. El START de E09 bloquea el hash exacto del ejecutor, y en E02 el hash bloqueado fue el de la implementación que pasó el último DRY_RUN. ¿Cómo seguimos?\"=\"Export v56 y DRY_RUN #3 antes del START (Recomendado)\". You can now continue with these answers in mind."
+  question_dialog_2_hd17_correction:
+    transcript_stamp: "2026-11-12T23:33:21.690Z"
+    bytes: 1046
+    exact_text_sha256: 14c7bf1499196cf9c58b4fdc72aaeb5fe5292fb371551ab579c076a6e2960110
+    note: the answer of the question dialog, whole; the chosen option is the decision
+    exact_text: "Your questions have been answered: \"Corrijo una recomendación mía de la ronda 3. En HD-17 de E09 (prompt de procedimiento de despacho) aceptáste mi recomendación de no tener ninguno, pero eso no es viable: la regla 9 del repositorio y la regla 5 de prompts/README exigen que todo manifiesto de corrida referencie un prompt_version que resuelva a un archivo congelado en prompts/frozen (solo puede ser null en una corrida ejecutada por una persona), y el workflow de medición de E09 tiene una compuerta (G-8) que exige ese archivo y que la autorización de despacho registre su sha256. E02 y E03 tienen el suyo (ORCHESTRATOR-E02-state-establishment-v1 y ORCHESTRATOR-E03-resetability-v1). ¿Cambiamos HD-17 a un prompt congelado propio de E09, adaptado del de E02? El texto lo escribo yo y se congela en el START junto con la configuración (necesita tu aprobación en ese momento). Lo mismo valdrá para E05, cuando le toque.\"=\"Sí, prompt congelado de E09 adaptado del de E02 (Recomendado)\". You can now continue with these answers in mind."
+decisions:
+- id: E09-PATH-BEFORE-START
+  question: "how to proceed after the second E09 environment-verification DRY_RUN, given the defect found in the corroboration of the realized draw (classify.body_class read a bare list; the catalog API answers an object with a pizzas list)"
+  chosen: "Export v56 y DRY_RUN #3 antes del START (Recomendado)"
+  effect: "the corrected classifier is published by export v56 and a third environment-verification DRY_RUN runs on GitHub Actions before the E09 START, so that the implementation hash that the START locks is that of an implementation that ran complete on GitHub Actions (the E02 precedent). Each of the two steps keeps its own exact-line approval: the push of v56 and the dispatch of the third DRY_RUN."
+- id: HD-17-REVISED
+  supersedes_decision: "HD-17 as recorded in manifests/campaign-execution-decisions-v6.yaml (no frozen dispatch-procedure prompt for E09)"
+  question: "whether E09 has a frozen dispatch-procedure prompt, given that rule 9 of the agent-instructions file and rule 5 of prompts/README.md require a prompt_version that resolves to a frozen file in every run executed by the ORCHESTRATOR, and that gate G-8 of .github/workflows/e09-measured-execution.yml requires that file and the SHA-256 recorded in the dispatch authorization"
+  chosen: "Sí, prompt congelado de E09 adaptado del de E02 (Recomendado)"
+  effect: "HD-17 becomes: E09 has a frozen dispatch-procedure prompt, ORCHESTRATOR-E09-accessibility-v1, adapted from ORCHESTRATOR-E02-state-establishment-v1 (working copy prompts/working/ORCHESTRATOR-E09-accessibility-v1.md, written 2026-11-12); its frozen copy prompts/frozen/ORCHESTRATOR-E09-accessibility-v1.md is written once, byte-identical, at the E09 START, on the human research lead's approval of that START, and its SHA-256 goes into the dispatch authorization. The earlier HD-17 outcome was recommended by the ORCHESTRATOR in error (it overlooked the rule and the gate) and is corrected here. The same applies to E05 when its START package is prepared."
+open_decisions_not_answered: []

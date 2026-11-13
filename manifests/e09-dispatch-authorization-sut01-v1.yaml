@@ -1,0 +1,58 @@
+# manifests/e09-dispatch-authorization-sut01-v1.yaml -- record of the dispatch authorization E09-DISPATCH-SUT01-AUTH-01 (protocol/agent-governance-v6.md, Section 3.7).
+# The human research lead's issuance, for the assigned system under test (SUT) SUT-01, of the authorization under which the ORCHESTRATOR dispatches the frozen measured-execution workflow of E09-accessibility for the two executable conditions. ORCHESTRATOR record of operation OP-DISPATCH-E09-01. Immutable once committed; a revocation or a change is a new version file.
+# The record itself is not a measured experiment and executes nothing; the dispatches it covers are recorded one by one in manifests/e09-measured-dispatch/e09-sut01.jsonl.
+record_id: "E09-DISPATCH-AUTHORIZATION-SUT01-01"
+record_class: "E09_DISPATCH_AUTHORIZATION"
+authorization_id: "E09-DISPATCH-SUT01-AUTH-01"
+version: 1
+study_id: "EUS-2026-001"
+campaign_id: "E09-accessibility"
+operation_id: "OP-DISPATCH-E09-01"
+assigned_sut: "SUT-01"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-13"
+recorded_utc: "2026-11-13T08:05:49Z"
+status: "ISSUED"
+record_validity: "VALID"
+dispatch_eligibility: "ELIGIBLE"
+revoked: false
+attempt: 1
+authorization_date: "2026-11-13"
+issued_by: "human research lead"
+authorizes_dispatches: true  # of exactly the executions listed under scope, within the limits below
+measured_experiment: false  # this record; the executions it covers are MEASURED_EXPERIMENT runs of the frozen GitHub Actions path
+executes_anything: false
+revocable_by_the_human_research_lead: true  # at any time; no revocation exists at the time of this record
+campaign_start_authorization_id: E09-START-AUTH-01
+governing_protocol: protocol/agent-governance-v6.md, Section 3.7
+n_executions: 50  # per condition
+conditions:  # in the order of the dispatch fixed by the locked campaign configuration (experiments/E09-accessibility/README.md)
+  - E09-A11Y-SUT01-MISSING-NAME
+  - E09-CTRL-SUT01-STANDARD
+scope:
+  assigned_sut: SUT-01
+  executions_in_all: 100
+  order: "for n = 1 to 50: execution EXnnnn of E09-A11Y-SUT01-MISSING-NAME, then execution EXnnnn of E09-CTRL-SUT01-STANDARD; each only after the run before it concluded; never a second run of a condition while one is in progress"
+  attempt: 1  # attempt + 1 is dispatched only on a separate explicit instruction that names the condition and the execution
+  dispatches_per_execution: 1
+  record_of_dispatches: manifests/e09-measured-dispatch/e09-sut01.jsonl  # append-only, committed before each dispatch; the run identity is appended after it
+  no_adaptation: "no decision whether, when, or how to dispatch depends on a measured output of any SUT (Section 3.5 and 3.7)"
+  not_authorized: [any further attempt, any other condition or SUT, any change of workflow or executor, the freeze of the campaign]
+frozen_inputs:
+  public_repository: gsanchezm/experimental-utility-testing-labs
+  ref: main
+  workflow: .github/workflows/e09-measured-execution.yml
+  executor_prompt_version: ORCHESTRATOR-E09-accessibility-v1
+  executor_implementation_sha256: 9eeb2a1c1a7b35ac8fceb016897d317d5534f09777a03f315e4e132dd3b11156  # experiments/E09-accessibility/executor/run-condition.sh
+  executor_prompt_sha256: 1734cf977102e0f22c721a1ad1ffdfdebfa62fef76e0e9964eca686e8070a2f0  # prompts/frozen/ORCHESTRATOR-E09-accessibility-v1.md
+  campaign_start_authorization_id: E09-START-AUTH-01
+human_approval:
+  text_verbatim: "Your questions have been answered: \"¿Emites la autorización de despacho E09-DISPATCH-SUT01-AUTH-01 para SUT-01? Solo tú puedes emitirla (gobernanza v6, Sección 3.7). Alcance exacto: SUT-01; las dos condiciones E09-A11Y-SUT01-MISSING-NAME y E09-CTRL-SUT01-STANDARD, 50 ejecuciones cada una (EX0001 a EX0050), 100 en total, intento 1, un despacho por ejecución; orden fijado en la configuración que bloqueaste: para n = 1 a 50, la ejecución n de la condición glitch y después la del control, cada una solo después de que la anterior concluyó (nunca dos corridas de una condición a la vez); bajo la autorización de START E09-START-AUTH-01, con la implementación de hash 9eeb2a1c1a7b35ac8fceb016897d317d5534f09777a03f315e4e132dd3b11156 y el prompt congelado ORCHESTRATOR-E09-accessibility-v1 de hash 1734cf977102e0f22c721a1ad1ffdfdebfa62fef76e0e9964eca686e8070a2f0. Qué permite: que yo despache esas 100 ejecuciones con el workflow de medición congelado, sin pedirte aprobación de cada una, registrando cada despacho antes de hacerlo y la identidad de la corrida después, y que importe cada paquete byte a byte tras verificar su digest. Diferencia que debes saber: ninguna ejecución espera a que veas el resultado de la anterior; los controles son la configuración bloqueada, la compuerta del workflow, el orden fijo y las condiciones de parada del prompt (paro y te reporto si falla la compuerta, si una corrida termina distinto de éxito o de falla del trabajo de medición, si un paquete no trae run-manifest, si un insumo difiere de lo bloqueado, o si me ordenas parar). Qué NO permite: ningún intento adicional (un intento 2 requiere tu instrucción que nombre condición y ejecución), ninguna otra condición ni SUT, ningún cambio de workflow o ejecutor, ni congelar la campaña. Es revocable por ti en cualquier momento. Duración estimada: unas 5 horas de reloj si no hay paros. No empieza hasta que el START esté publicado (export v57) y la compuerta pase sobre el árbol público. Mi respuesta registrará tu texto verbatim con su sha256 en manifests/e09-dispatch-authorization-sut01-v1.yaml.\"=\"APRUEBO E09-DISPATCH-SUT01-AUTH-01 (Recomendado)\", \"¿Apruebas que yo construya y verifique el export v57, que publica el START de E09 (README con su Campaign configuration, fila de cambio, estado IN_PROGRESS, prompt congelado, registros) y, si la emites arriba, la autorización de despacho? El build y sus comprobaciones tardan unos 25 a 30 minutos; no publico nada: cuando termine y lo haya verificado yo mismo te pongo la línea exacta del push para tu sí o no. Tras ese push y la validación de GitHub, re-ejecuto la compuerta del workflow sobre el árbol público y solo entonces empiezo a despachar bajo la autorización.\"=\"Sí, construye el v57 (Recomendado)\". You can now continue with these answers in mind."
+  bytes: 2844
+  sha256: a3be49780f44dd6b2cb4e8dd2afc2edad5b6d58ecbbfe59cf810d93256b0109c
+  received_utc: "2026-11-13T08:05:17.028Z"  # stamp of the stored conversation entry (an entry of origin human)
+  question_stamp: "2026-11-13T04:36:35.576Z"
+  chosen_option: "APRUEBO E09-DISPATCH-SUT01-AUTH-01 (Recomendado)"
+  entry_kind: "the answer of the human research lead to a question that offered the approval line APRUEBO E09-DISPATCH-SUT01-AUTH-01 together with the scope restated above, the disclosed difference (no execution waits for the human research lead to see the previous outcome; the controls are the locked configuration, the gate, the fixed order and the stop conditions of the frozen prompt), the exclusions and the revocability"
+limits_and_stops: "the stop conditions of the frozen dispatch procedure prompts/frozen/ORCHESTRATOR-E09-accessibility-v1.md, section 4; on a stop nothing further is dispatched in this campaign under any authorization until the human research lead instructs a resumption"
+not_in_force_until: "the START state and this record are published by an export and the gate step of the measured workflow passes on the public tree; the first dispatch is recorded before it is made"

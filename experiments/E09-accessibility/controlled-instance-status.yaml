@@ -1,0 +1,42 @@
+# experiments/E09-accessibility/controlled-instance-status.yaml -- written by the ORCHESTRATOR from the review of the third environment-verification DRY_RUN of 2026-11-13 (run 43338329772; manifests/e09-environment-verification-run-v3.yaml).
+# The status of a condition is that of the latest environment-verification run that covers it. An entry is VERIFIED only on the recorded result of a run. The runs are DRY_RUN runs and are never measured data. Nothing here is a measurement and nothing here authorizes a dispatch.
+study_id: EUS-2026-001
+campaign_id: E09-accessibility
+updated: '2026-11-12'
+campaign_status: IN_PROGRESS
+measured_execution_prerequisites_common:
+- "campaign START"
+- "locked campaign configuration"
+- "agent-governance-v6 frozen and in force since 2026-11-06 (Section 3.7)"
+- "a dispatch authorization for SUT-01"
+- "the frozen dispatch procedure prompt ORCHESTRATOR-E09-accessibility-v1"
+- "the implementation hash equal to the locked value"
+- "the toolchain entry of axe-core 4.14.0 equal to the pins of the implementation"
+verification_record: manifests/e09-environment-verification-run-v3.yaml
+conditions:
+  E09-A11Y-SUT01-MISSING-NAME:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 43338329772
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/43338329772
+      execution_id: DR0003
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 9eeb2a1c1a7b35ac8fceb016897d317d5534f09777a03f315e4e132dd3b11156
+      account: a11y_glitch_user
+      instance: "SUT-01 web and api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"
+  E09-CTRL-SUT01-STANDARD:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 43338329772
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/43338329772
+      execution_id: DR0003
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 9eeb2a1c1a7b35ac8fceb016897d317d5534f09777a03f315e4e132dd3b11156
+      account: standard_user
+      instance: "SUT-01 web and api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"

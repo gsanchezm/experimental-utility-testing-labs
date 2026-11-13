@@ -1,5 +1,37 @@
 # E09-accessibility — Campaign configuration (skeleton)
 
+## 0. DRAFT-1 (2026-11-12): the decisions incorporated, and what is still open
+
+Every decision HD-1 to HD-20 of design-brief-draft.md, section 12, is answered (manifests/campaign-execution-decisions-v4.yaml, -v6.yaml and -v8.yaml; the source reads that closed two verification items are in manifests/source-reads-v1.yaml). The text below keeps the skeleton's wording; where it says HUMAN DECISION, read the value in this table. Still a DRAFT: nothing is locked, started or authorized.
+
+| HD | Decided value |
+|---|---|
+| HD-1 | one SUT-01 condition, the missing_name stratum, N = 50 attempts, stratified by the realized draw (not adaptive, not three conditions) |
+| HD-2 | the H5 count for SUT-01 is 1 |
+| HD-3 | predeclared expected rule: empty-heading only; confirmed by the probe of the second DRY_RUN (empty-heading fires on the 12 affected h2; image-alt reports 0 nodes on an empty alt) |
+| HD-4 | explicit inclusion of empty-heading in the rule set (`runOnly` rule), recorded as a best-practice, minor-impact rule, so the ground truth is weaker than a WCAG failure; the default rule set also reports it (probe) |
+| HD-5 | detected = at least one node of empty-heading matching the predeclared selector |
+| HD-6 | include the control condition E09-CTRL-SUT01-STANDARD (not counted in H5) |
+| HD-7 | market MX, language es (the E03 values) |
+| HD-8 | the catalog page only |
+| HD-9 | N = 50 attempts per condition |
+| HD-10 | an environment verification of E09's own on GitHub Actions; the controlled-instance decision is per condition only; controlled_instance_available in the SUT manifest stays null |
+| HD-11 | incidental violations (such as the missing alt attributes of SUT-03) are excluded |
+| HD-12 | scanner loaded from the pinned tarball by URL, sha512 verified, axe.min.js injected from Python; no Node in the executor |
+| HD-13 | no mapping record now; decided before any cross-SUT rate comparison |
+| HD-14 | run-manifest schema v2 |
+| HD-15 | no Required Actions in E09 |
+| HD-16 | axe-core 4.14.0 (manifests/campaign-execution-decisions-v4.yaml) |
+| HD-17 | REVISED 2026-11-12 (manifests/campaign-execution-decisions-v8.yaml): a frozen dispatch-procedure prompt, ORCHESTRATOR-E09-accessibility-v1 (working copy prompts/working/ORCHESTRATOR-E09-accessibility-v1.md), frozen at START; the earlier outcome (no prompt) was a recommendation made in error |
+| HD-18 | an E09 implementation lock of its own (the digests in run-condition.sh), same pins, leaving the E03 lock untouched |
+| HD-19 | an entry in protocol/unresolved.md (PROTO-U22); no E01 record edited |
+| HD-20 | a non-detection is recorded as a non-detection of the predeclared rule set on the DOM condition confirmed at scan time, no cause inferred |
+
+Open before the START package (nothing here is a decision of this draft):
+1. A third environment-verification DRY_RUN on the bytes that the START will lock (decided 2026-11-12, manifests/campaign-execution-decisions-v8.yaml): export v56 publishes the corrected classifier first. The controlled-instance status record experiments/E09-accessibility/controlled-instance-status.yaml (read by gate G-5 of the measured workflow) is written from that run.
+2. The START itself: the lock of this record, the implementation hash (sha256 of experiments/E09-accessibility/executor/run-condition.sh), the freeze of the dispatch prompt, the order of conditions and executions and the location of the dispatch record, and the dispatch authorization of SUT-01 (one authorization, 100 executions: 50 of each condition, attempt 1). Each needs the human research lead's explicit approval.
+3. The toolchain entry for axe-core 4.14.0 in manifests/toolchain-manifest.yaml (written 2026-11-12 on the decision HD-16) must equal the pins of the executor at START; the measured workflow checks it.
+
 **DRAFT skeleton. Not locked.** The "Campaign configuration" is locked only at campaign START under explicit human authorization (protocol/change-control-v1.md, section 7). Every unknown is marked HUMAN DECISION; the options are in design-brief-draft.md, section 12 (HD-1 to HD-20). Candidate condition ids are not frozen. Nothing here starts, authorizes, or dispatches anything.
 
 Order follows experiments/README.md, "Common rules for all campaigns".
