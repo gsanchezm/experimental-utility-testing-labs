@@ -1,0 +1,90 @@
+# manifests/e09-campaign-freeze-v1.yaml -- provenance record of the E09-accessibility campaign freeze (protocol/change-control-v1.md, section 7, moment 2: IN_PROGRESS -> FROZEN).
+# Modeled on manifests/e02-campaign-freeze-v1.yaml and manifests/e09-campaign-start-v1.yaml. A provenance record, not a second campaign-configuration record: the configuration itself stays authoritative and locked in
+# experiments/E09-accessibility/README.md, section "Campaign configuration" (unchanged by this freeze). ORCHESTRATOR record of operation OP-FREEZE-05 (2026-11-13). Immutable once committed; a correction is a new version file.
+record_class: E09_CAMPAIGN_FREEZE
+record_id: E09-FREEZE-01
+study_id: EUS-2026-001
+campaign_id: E09-accessibility
+operation_id: OP-FREEZE-05
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-13'
+recorded_on_timezone: America/Mexico_City (the UTC date at the time of writing was also 2026-11-13)
+status: RECORDED
+transition: IN_PROGRESS -> FROZEN
+previous_status: IN_PROGRESS
+new_status: FROZEN
+freeze_timestamp: "2026-11-13T17:18:19Z"  # one UTC clock reading taken when the edits were written; the commit that carries them follows it
+authorization_id: E09-FREEZE-AUTH-01
+freeze_approved_by: gilbertosanchez
+frozen_by: ORCHESTRATOR
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+human_approval:
+  text_verbatim: "Your questions have been answered: \"Las 100 ejecuciones de E09-accessibility están importadas byte a byte y fusionadas en main (merge 3692cfa0, estado en 0d44a3a7): 50 de E09-A11Y-SUT01-MISSING-NAME y 50 de E09-CTRL-SUT01-STANDARD, todas intento 1, sin paro, workflows en success, y una auditoría independiente de los 100 directorios (2300 archivos) con 0 defectos; nada publicado ni analizado. ¿Congelo la campaña E09 ahora (protocol/change-control-v1.md, sección 7, momento 2, con id E09-FREEZE-AUTH-01 y tu respuesta literal en el registro)? El freeze vuelve append-only raw-data/E09-accessibility/, deja inmutable el registro de configuración y hace que el workflow de ejecución medida rechace cualquier despacho; no analiza nada ni publica nada.\"=\"APRUEBO EL FREEZE DE E09 (Recomendado)\", \"Si congelo, el registro de freeze de E02 declaró los conteos de outcome del manifiesto de cada corrida tal como quedaron registrados. En E09 el campo outcome del manifiesto toma más de un valor entre las dos condiciones y el prompt congelado prohíbe resumir resultados antes del análisis. ¿Qué declaro en el registro de freeze de E09?\"=\"Solo conclusiones de workflow (Recomendado)\", \"AGENT-INSTRUCTIONS.md todavía dice que E09 está NOT_STARTED y que no se despachó nada. ¿Actualizo su sección de estado actual con el START de E09, la autorización de despacho de SUT-01 y las 100 ejecuciones importadas (y el freeze, solo si lo apruebas arriba)? Es un commit local que no publica nada.\"=\"Sí, actualiza AGENT-INSTRUCTIONS.md\". You can now continue with these answers in mind."
+  bytes: 1564
+  sha256: 643554b1aeb3f996a3b435d3e7d92111467552236a132f01b57b3a18014d1d6b
+  received_utc: "2026-11-13T17:11:08.696Z"  # stamp of the stored conversation entry
+  received_local: "2026-11-13T11:11:08.696-06:00 (America/Mexico_City)"
+  question_stamp: "2026-11-13T17:10:25.864Z"
+  entry_kind: >
+    the answer of the human research lead to a question dialog (the permission decision of the entry is user_temporary, accepted once) that offered the option "APRUEBO EL FREEZE DE E09 (Recomendado)" and stated its effects; the text above is the whole stored answer, which also holds the answer to a second question (what the record declares about outcomes: "Solo conclusiones de workflow (Recomendado)") and to a third (the agent-instructions file: "Sí, actualiza AGENT-INSTRUCTIONS.md")
+  scope: the freeze of the E09 campaign with the two executable web conditions on SUT-01, 100 executions, N = 50 per condition, under the authorization id above
+trigger: >
+  protocol/change-control-v1.md, section 7, moment 2: every planned run of the campaign (all ecosystems, all conditions, the recorded N) has been executed. The locked configuration plans two executable web conditions
+  on SUT-01, E09-A11Y-SUT01-MISSING-NAME and E09-CTRL-SUT01-STANDARD, with N = 50 each (EX0001 to EX0050); no other SUT has a condition in the configuration.
+pre_freeze_state:
+  canonical_head: 0d44a3a7fe2af6895098d9da7415c6549ca67e51  # the head before the freeze commit: the merge 3692cfa0 and two status commits
+  merge_commit: 3692cfa0a1f4329e708f215ccf9c94b625661674   # the merge of the dispatch branch into main
+  dispatch_branch_head: dc481210170ba93edb6d09888137814c59c91a2b
+  public_main: 54f50283d877ea1428dbf1466151f20dbbf4fc6a   # export v57; nothing is pushed by the freeze
+  e09_status_before: IN_PROGRESS
+  configuration_section: {path: experiments/E09-accessibility/README.md, heading: Campaign configuration, sha256: a9a6fc5377ff0ab796196e20aa7b73db8c49c82f4606705b6590c2da4b51a2c4, bytes: 10669, unchanged_since_the_start: true}   # slice from the heading to the end of file, read at d362b8ed and now: byte-identical
+  start_record: manifests/e09-campaign-start-v1.yaml
+executions:
+  conditions: [E09-A11Y-SUT01-MISSING-NAME, E09-CTRL-SUT01-STANDARD]
+  n_per_condition: 50
+  executions_imported: 100   # all attempt 1
+  dispatches: 100
+  first_dispatch_utc: '2026-11-13T12:10:56Z'   # EX0001 attempt 1 of E09-A11Y-SUT01-MISSING-NAME (run 43423002189, run created_at; the dispatch record entry is dated 12:10:51Z)
+  last_import_utc: '2026-11-13T16:18:09Z'   # EX0050 of E09-CTRL-SUT01-STANDARD (dispatch-record event; run 43460876798; dispatch-branch commit dc481210, clock of the commit 16:18:13Z)
+  dispatch_authorizations: [E09-DISPATCH-SUT01-AUTH-01]
+  dispatch_records: manifests/e09-measured-dispatch/e09-sut01.jsonl   # one record, append-only, complete (1 RECORD_OPENED, 100 DISPATCH_RECORDED, 100 RUN_IDENTITY_RECORDED, 100 RUN_CONCLUDED_AND_IMPORTED)
+  imports: raw-data/E09-accessibility/SUT-01/<condition id>__<execution id>__A1/   # each with run-manifest.json, the bundle members unchanged, and import-record.yaml
+  consumed_attempts_without_bundle: []   # none: no attempt left without a bundle, no attempt 2
+  github_measured_execution_runs: {total: 100, success: 100, event: workflow_dispatch for all, branch: main, run_attempt: 1}   # read from the workflow's run list after the last import; no run is in progress or queued
+  workflow_revisions_of_the_imported_runs: {'11089e99f8c4817908ce2f845c3aa86301591af375404aaa4093f1dca46035be (public main 54f50283)': 100}   # ci-provenance.json workflow.file_sha256 of each import
+audit_of_the_imports:
+  method: a read-only script (untracked scratch, not part of the repository) over the 100 run directories and the dispatch record
+  checks: >
+    the directories of each condition equal the expected set of 50, the files on disk equal the import record, bytes and sha256 of every file equal the import record, the sha256 values that the run manifest lists equal the files, the
+    verification fields of the import record (no hash mismatch, bundle members equal the manifest list, provenance ids equal the run, imported bytes equal extracted bytes, both archive digests verified), the identity fields of
+    import record and run manifest, the workflow conclusion success and run_attempt 1 with its three jobs successful at head 54f50283, one distinct GitHub run id and run numbers 1 to 100, the authorization ids, the interleaved
+    dispatch order of the frozen prompt, one DISPATCH_RECORDED before one run identity before one import event for every execution, each dispatch entry recorded before its clock reading and after the previous import
+  result: {run_directories: 100, files_checked: 2300, defects: 0}
+  prescan_for_publication: "a literal scan of the 2402 tracked files (111309459 bytes) for vendor and assistant terms, host and runner paths, tokens, private addresses, session identifiers, e-mail addresses and credential keywords found no vendor term, no host path, no token, no private address and no session identifier; the activation password and every access token are redacted by the executor in the evidence (<redacted-password>, <redacted-token sha256:...>); matches are only the repository owner name in provenance fields, the key authorization_id of the import records, and byte sequences of PNG screenshots that resemble an address"
+  observed_outcomes: "workflow conclusion success in 100 of 100 imports, stated as recorded; no tally of the run-manifest outcome field is recorded here, by the answer of the human research lead above (\"Solo conclusiones de workflow\"); the outcomes stay in the run manifests and import records, unanalyzed"
+effect: >
+  From this moment raw-data/E09-accessibility/ is append-only in the sense of raw-data/README.md: every existing raw file is immutable, and a further run may be appended only with a "run appended after campaign
+  freeze" row in protocol/CHANGELOG.md stating the reason (raw-data/README.md, rule 1). The campaign configuration record is immutable. The measured-execution workflow requires the campaign status IN_PROGRESS (gate G-1),
+  so it refuses every dispatch from the freeze on; a run appended after the freeze would need its own change-log row and a CI correction. Reopening the campaign follows protocol/change-control-v1.md, section 5 in full.
+other_edits_of_the_freeze_commit:
+  - "protocol/CHANGELOG.md: one row for this transition (after the row of 2026-11-12 of the E09 START)"
+  - "manifests/study-manifest.yaml: the E09 status line FROZEN with the transition clock reading, and a note of the operation"
+  - "status lines that the freeze makes out of date, edited with counted replacements: README.md, experiments/README.md, raw-data/README.md, the E09 README (current status)"
+  - "manifests/README.md: the rows of this record"
+not_authorized_by_this_record:
+  - any dispatch, re-run, or run appended after the freeze
+  - any export or push, and the publication of raw-data/E09-accessibility/ (a separate decision, made through the export that carries it, version 58)
+  - any change to a workflow, a protocol document other than the change log, a prompt, a SUT, or a raw file
+  - any analysis: the H5 analysis is a separate step under protocol/statistical-analysis-plan-v1.md, section 4, and starts only on its own instruction; H5 is NOT_ANALYZED
+  - any edit of the agent-instructions file beyond the one the human research lead approved in the same dialog (a separate commit)
+resulting_freeze_commit: null   # a commit cannot name its own id; the commit that adds this file is the freeze commit
+next_steps:
+  - the export that publishes raw-data/E09-accessibility/, the dispatch record, this freeze and the status lines (version 58), which needs the human research lead's yes to its exact push line
+  - the export-log entry and the post-push audit in PUBLIC-EXPORT-MANIFEST.yaml
+  - the refresh of the dashboard research-status.html (standing rule), when asked
+  - the H5 analysis under protocol/statistical-analysis-plan-v1.md, on a separate instruction
+notes: |
+  The freeze closes the set of E09 runs of this campaign version. It introduces no sample size, exclusion rule, attribution rule, or comparison that was not already in the locked configuration.
+  No E09 result is analyzed or summarized by this record.
