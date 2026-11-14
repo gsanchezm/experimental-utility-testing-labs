@@ -14,11 +14,12 @@ class ConditionsFile(unittest.TestCase):
 
     def test_shape(self):
         cs = self.cfg['conditions']
-        self.assertEqual(len(cs), 14)
+        self.assertEqual(len(cs), 13)
         by_sut = {}
         for c in cs:
             by_sut[c['sut_id']] = by_sut.get(c['sut_id'], 0) + 1
-        self.assertEqual(by_sut, {'SUT-01': 7, 'SUT-02': 2, 'SUT-04': 3, 'SUT-05': 2})
+        self.assertEqual(by_sut, {'SUT-01': 7, 'SUT-02': 1, 'SUT-04': 3, 'SUT-05': 2})
+        self.assertNotIn('E05-SUT02-WEB-02', {c['condition_id'] for c in cs})
         self.assertNotIn('SUT-03', by_sut)
         self.assertTrue(all(c['n'] == 50 for c in cs))
 
@@ -32,10 +33,12 @@ class ConditionsFile(unittest.TestCase):
         self.assertEqual(c['behavior_class'], 'stochastic')
         self.assertFalse(c['h3_labeled'])
 
-    def test_known_gap_sut04_api_02_has_no_catch_all(self):
-        # Recorded in the START package items: the condition declares no other-category (k = 4 without one).
-        self.assertIsNone(config.catch_all(config.condition(self.cfg, 'E05-SUT04-API-02')))
-        self.assertTrue(all(config.catch_all(c) for c in self.cfg['conditions'] if c['condition_id'] != 'E05-SUT04-API-02'))
+    def test_every_condition_declares_a_catch_all_and_sut04_api_02_has_s_other_with_k_5(self):
+        # Decision of 2026-11-14 (manifests/campaign-execution-decisions-v9.yaml): S_OTHER added to E05-SUT04-API-02 (k = 5).
+        c = config.condition(self.cfg, 'E05-SUT04-API-02')
+        self.assertEqual(config.catch_all(c), 'S_OTHER')
+        self.assertEqual((c['k'], len(c['stimulus_categories'])), (5, 5))
+        self.assertTrue(all(config.catch_all(x) for x in self.cfg['conditions']))
 
     def test_unknown_condition(self):
         with self.assertRaises(config.ConfigError):
@@ -105,8 +108,16 @@ class Classifier(unittest.TestCase):
         self.assertEqual(label, 'S_BADGE_OTHER')
         self.assertIn('S_BADGE_3', note)
 
-    def test_undeclared_label_without_catch_all_stays_visible(self):
+    def test_the_two_undeclared_labels_of_sut04_api_02_go_to_s_other_with_a_note(self):
         c = config.condition(self.cfg, 'E05-SUT04-API-02')
+        for label in ('S_MESSAGE_COUNT_UNREADABLE', 'S_MESSAGE_COUNT_UNEXPECTED'):
+            out, note = classify.finalize_label(self.cfg, c, label)
+            self.assertEqual(out, 'S_OTHER')
+            self.assertIn(label, note)
+
+    def test_undeclared_label_without_catch_all_stays_visible(self):
+        c = copy.deepcopy(config.condition(self.cfg, 'E05-SUT04-API-02'))
+        c['stimulus_categories'] = [x for x in c['stimulus_categories'] if x != 'S_OTHER']
         label, note = classify.finalize_label(self.cfg, c, 'S_SOMETHING')
         self.assertEqual(label, 'S_SOMETHING')
         self.assertIn('no catch-all', note)

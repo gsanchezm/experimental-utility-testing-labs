@@ -12,6 +12,7 @@ import os
 import re
 import shutil
 import subprocess
+import tempfile
 import unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -164,11 +165,16 @@ class WorkflowTests(unittest.TestCase):
         for cid in self.ids:
             self.assertIn(cid.split('-')[2], ('API', 'WEB'), cid)
 
-    def test_no_attempt_or_execution_input_and_the_first_attempt_guard(self):
-        self.assertNotIn('attempt', inputs_of(self.m))
-        self.assertNotIn('execution_id', inputs_of(self.m))
+    def test_attempt_inputs_default_to_the_first_attempt_and_the_guard_refuses_rerun_and_malformed_values(self):
+        ins = inputs_of(self.m)
+        self.assertNotIn('execution_id', ins)
+        for key in ('attempt', 'first_execution'):
+            self.assertEqual((ins[key]['default'], ins[key]['required'], ins[key]['type']), ('1', False, 'string'), key)
+        self.assertNotIn('attempt', inputs_of(self.v))
         guard = named(self.m['jobs']['gate']['steps'], 'Refuse anything but a first attempt of a dispatch on the default branch')
         self.assertIn('test "$GUARD_RUN_ATTEMPT" = "1"', guard['run'])
+        self.assertIn('GUARD_INPUT_ATTEMPT" =~ ^[1-9][0-9]*$', guard['run'])
+        self.assertIn('GUARD_INPUT_FIRST" =~ ^[1-9][0-9]*$', guard['run'])
         self.assertIn('test "$GUARD_REF" = "refs/heads/main"', named(self.m['jobs']['gate']['steps'], 'Refuse anything but a first attempt of a dispatch on the default branch')['run'])
 
     def test_record_class_is_fixed_per_workflow_and_never_crossed(self):
@@ -187,7 +193,9 @@ class WorkflowTests(unittest.TestCase):
             step = next(s for s in wf['jobs'][job]['steps'] if s.get('name', '').startswith(prefix))
             provided = set(step.get('env', {})) | set(wf['env'])
             self.assertTrue(EXECUTOR_REQUIRED_ENV <= provided | {'RECORD_CLASS'}, sorted(EXECUTOR_REQUIRED_ENV - provided))
-            self.assertEqual(step['env']['ATTEMPT'], '1')
+            self.assertEqual(step['env']['ATTEMPT'], '1' if wf is self.v else '${{ inputs.attempt }}')
+            if wf is self.m:
+                self.assertEqual(step['env']['FIRST_EXECUTION'], '${{ inputs.first_execution }}')
 
     def test_executions_are_set_only_by_the_verification(self):
         verify_exec = next(s for s in self.v['jobs']['verify']['steps'] if s.get('name', '').startswith('Run the executor'))
@@ -198,8 +206,9 @@ class WorkflowTests(unittest.TestCase):
 
     def test_measured_job_runs_one_condition_with_the_provisional_timeout(self):
         job = self.m['jobs']['measured-execution']
-        self.assertEqual(job['timeout-minutes'], 330)
-        self.assertIn('330 minutes is a provisional ceiling', self.mtext)
+        self.assertEqual(job['timeout-minutes'], 60)
+        self.assertIn('60 minutes is the ceiling', self.mtext)
+        self.assertIn('(60, set from the measured DRY_RUN durations', self.m['env']['TIMEOUT_POLICY'])
         self.assertEqual(self.m['jobs']['gate']['timeout-minutes'], 10)
         self.assertEqual(self.m['jobs']['provenance']['timeout-minutes'], 10)
         self.assertLessEqual(self.v['jobs']['verify']['timeout-minutes'], 330)
@@ -301,7 +310,7 @@ class WorkflowTests(unittest.TestCase):
     def test_measured_inputs_are_exactly_the_declared_set(self):
         self.assertEqual(sorted(inputs_of(self.m)), sorted(['condition_id', 'assigned_sut', 'campaign_start_authorization_id',
                                                              'dispatch_authorization_id', 'executor_prompt_version',
-                                                             'executor_implementation_sha256']))
+                                                             'executor_implementation_sha256', 'attempt', 'first_execution']))
 
 
 class ImportAndCompileTests(unittest.TestCase):
@@ -359,6 +368,163 @@ class HygieneTests(unittest.TestCase):
         for path in (VERIFY, MEASURED):
             with open(path, encoding='utf-8') as f:
                 self.assertIn('DRAFT', f.read(1200), os.path.relpath(path, REPO))
+
+
+class MeasuredStepRuntimeTests(unittest.TestCase):
+    """Runs the read-isolation step and the bundle-validation step of the measured workflow, as written, on synthetic trees.
+
+    The measured workflow cannot be rehearsed on GitHub Actions before the START (every gate fails closed), so these two steps, which carry
+    the attempt arithmetic, are executed here with bash. The ajv loop is replaced by a stub that only records its calls."""
+    PV = 'TEST-FIXTURE-PROMPT-v1'
+    COND, SUT = 'E05-SUT01-API-02', 'SUT-01'
+
+    @classmethod
+    def setUpClass(cls):
+        if shutil.which('bash') is None:
+            raise unittest.SkipTest('bash is needed')
+        cls.m = load_workflow(MEASURED)
+        steps = cls.m['jobs']['measured-execution']['steps']
+        cls.iso = next(x for x in steps if x.get('name', '').startswith('Assert read isolation'))['run']
+        cls.val = next(x for x in steps if x.get('name', '').startswith('Validate the bundle'))['run']
+        cls.work = tempfile.mkdtemp(prefix='e05-steps-')
+        cls.bin = os.path.join(cls.work, 'bin')
+        os.makedirs(cls.bin)
+        npx = os.path.join(cls.bin, 'npx')
+        with open(npx, 'w', encoding='utf-8') as f:
+            f.write('#!/bin/sh\necho "$@" >> "$FAKE_NPX_LOG"\n')
+        os.chmod(npx, 0o755)
+
+    def tree(self, label):
+        path = os.path.join(self.work, label)
+        shutil.rmtree(path, ignore_errors=True)
+        os.makedirs(path)
+        return path
+
+    def run_step(self, script, tree, env):
+        e = {k: v for k, v in os.environ.items() if k != 'PYTHONPATH'}
+        e['PATH'] = self.bin + os.pathsep + e['PATH']
+        e['FAKE_NPX_LOG'] = os.path.join(tree, 'npx.log')
+        e.update(env)
+        return subprocess.run(['bash', '-c', script], cwd=tree, env=e, capture_output=True, text=True, timeout=120)
+
+    def bundle(self, tree, attempt, first, manifest_attempt=None, run_attempt=None, exit_status='0'):
+        out = os.path.join(tree, 'raw-data', 'E05-determinism', self.SUT, self.COND)
+        for i in range(first, 51):
+            rid = f'{self.COND}__EX{i:04d}__A{run_attempt or attempt}'
+            d = os.path.join(out, 'executions', rid)
+            os.makedirs(d)
+            with open(os.path.join(d, 'run-manifest.json'), 'w', encoding='utf-8') as f:
+                json.dump({'run_id': rid, 'campaign_id': 'E05-determinism', 'sut_id': self.SUT, 'condition': self.COND,
+                           'attempt': manifest_attempt or attempt, 'prompt_version': self.PV}, f)
+        with open(os.path.join(out, 'exit-status.txt'), 'w', encoding='utf-8') as f:
+            f.write(exit_status + '\n')
+        return out
+
+    def validate(self, tree, attempt, first):
+        env = {'VAL_OUTPUT_DIR': os.path.join('raw-data', 'E05-determinism', self.SUT, self.COND), 'VAL_CONDITION_ID': self.COND,
+               'VAL_ASSIGNED_SUT': self.SUT, 'VAL_PROMPT_VERSION': self.PV, 'VAL_ATTEMPT': str(attempt), 'VAL_FIRST_EXECUTION': str(first),
+               'EXPECTED_EXECUTIONS': self.m['env']['EXPECTED_EXECUTIONS']}
+        return self.run_step(self.val, tree, env)
+
+    def npx_calls(self, tree):
+        path = os.path.join(tree, 'npx.log')
+        if not os.path.isfile(path):
+            return 0
+        with open(path, encoding='utf-8') as f:
+            return len(f.read().splitlines())
+
+    def test_validation_accepts_attempt_1_with_fifty_executions(self):
+        t = self.tree('val-a1')
+        self.bundle(t, 1, 1)
+        r = self.validate(t, 1, 1)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertEqual(self.npx_calls(t), 50)
+        self.assertIn('50 run manifests checked', r.stdout)
+
+    def test_validation_accepts_a_further_attempt_from_execution_7(self):
+        t = self.tree('val-a2')
+        self.bundle(t, 2, 7)
+        r = self.validate(t, 2, 7)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertEqual(self.npx_calls(t), 44)
+        self.assertIn('44 run manifests checked', r.stdout)
+
+    def test_validation_refuses_the_wrong_number_of_manifests(self):
+        t = self.tree('val-count')
+        self.bundle(t, 1, 2)  # 49 executions for a job that must hold 50
+        r = self.validate(t, 1, 1)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn('expected 50 run manifests', r.stdout + r.stderr)
+        t = self.tree('val-count-further')
+        self.bundle(t, 2, 1)  # 50 executions for a job that starts at execution 7
+        r = self.validate(t, 2, 7)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn('expected 44 run manifests', r.stdout + r.stderr)
+
+    def test_validation_refuses_a_set_of_run_directories_of_another_attempt(self):
+        t = self.tree('val-set')
+        self.bundle(t, 2, 7, run_attempt=1)  # 44 directories, but of attempt 1
+        r = self.validate(t, 2, 7)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn('run directories differ from the expected set', r.stdout + r.stderr)
+
+    def test_validation_refuses_a_manifest_whose_attempt_is_not_the_dispatch_attempt(self):
+        t = self.tree('val-attempt')
+        self.bundle(t, 2, 7, manifest_attempt=1)
+        r = self.validate(t, 2, 7)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn('attempt of the dispatch', r.stdout + r.stderr)
+
+    def test_validation_refuses_an_executor_exit_status_that_is_not_0(self):
+        t = self.tree('val-exit')
+        self.bundle(t, 1, 1, exit_status='1')
+        r = self.validate(t, 1, 1)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn('executor exit status is not 0', r.stdout + r.stderr)
+
+    def isolate(self, tree, attempt, first):
+        env = {'ISO_ASSIGNED_SUT': self.SUT, 'ISO_CONDITION_ID': self.COND, 'ISO_ATTEMPT': str(attempt), 'ISO_FIRST_EXECUTION': str(first)}
+        return self.run_step(self.iso, tree, env)
+
+    def imported(self, tree, attempt, first, last, sut=None):
+        base = os.path.join(tree, 'raw-data', 'E05-determinism', sut or self.SUT)
+        for i in range(first, last + 1):
+            os.makedirs(os.path.join(base, f'{self.COND}__EX{i:04d}__A{attempt}'))
+        os.makedirs(os.path.join(base, f'{self.COND}__job'), exist_ok=True)
+
+    def test_isolation_admits_a_further_attempt_beside_the_imported_first_attempt(self):
+        t = self.tree('iso-ok')
+        self.imported(t, 1, 1, 6)
+        r = self.isolate(t, 2, 7)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn('read isolation ok', r.stdout)
+
+    def test_isolation_admits_attempt_1_on_an_empty_subtree(self):
+        t = self.tree('iso-empty')
+        os.makedirs(os.path.join(t, 'raw-data', 'E05-determinism', self.SUT))
+        self.assertEqual(self.isolate(t, 1, 1).returncode, 0)
+        t = self.tree('iso-no-raw-data')
+        self.assertEqual(self.isolate(t, 1, 1).returncode, 0)
+
+    def test_isolation_refuses_an_existing_run_directory_of_the_same_attempt(self):
+        t = self.tree('iso-existing-a1')
+        self.imported(t, 1, 1, 6)
+        r = self.isolate(t, 1, 1)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn('already exists: attempts are immutable', r.stdout + r.stderr)
+        t = self.tree('iso-existing-a2')
+        self.imported(t, 1, 1, 6)
+        self.imported(t, 2, 10, 10)
+        r = self.isolate(t, 2, 7)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn('EX0010__A2 already exists', r.stdout + r.stderr)
+
+    def test_isolation_refuses_the_measured_output_of_another_sut(self):
+        t = self.tree('iso-other-sut')
+        self.imported(t, 1, 1, 2, sut='SUT-05')
+        r = self.isolate(t, 1, 1)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn('isolation violated', r.stdout + r.stderr)
 
 
 if __name__ == '__main__':

@@ -3,14 +3,14 @@
 # Authored by the ORCHESTRATOR under CAMPAIGN-CI-WRITE-AUTH-01 (the agent-instructions file, "Campaign CI/CD infrastructure
 # for E02 and E04-E12"), for E05-determinism only.
 #
-# Purpose: NON-MEASURED verification, on GitHub-hosted runners, of the fourteen conditions of
+# Purpose: NON-MEASURED verification, on GitHub-hosted runners, of the thirteen conditions of
 # experiments/E05-determinism/conditions-draft.json. One job per condition (a matrix built by the plan job from that file). Each job
 # provisions its own fresh controlled instance of the condition's SUT from the version pinned in manifests/sut-manifest.yaml, writes the
 # instance interface (experiments/E05-determinism/executor/README.md, section 3), and runs the frozen executor implementation for two or
 # three executions (DRY_RUN; never fifty). The DRY_RUN bundles are uploaded for review, are never imported into raw-data/, and are never
 # measured. A job fails when a gate fails, when the executor refuses the condition or exits non-zero, when a DRY_RUN execution has no run
-# manifest, records an ERROR or ABORTED outcome, or is attributed to TOOLING. E05-SUT02-WEB-02 is not configured (no recorded source defines
-# its visual marker; executor/run.py refuses it), so its job fails by design until the START package decides it.
+# manifest, records an ERROR or ABORTED outcome, or is attributed to TOOLING. E05-SUT02-WEB-02 was retired before the START (no recorded
+# source defines its visual marker; manifests/campaign-execution-decisions-v9.yaml), so the conditions file no longer lists it.
 #
 # The provisioning steps of each SUT group carry the same names and the same run text as in e05-measured-execution.yml. Tests in
 # experiments/E05-determinism/executor/tests/test_workflows.py enforce this, so the measured instance is provisioned exactly as the
@@ -24,7 +24,7 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: "Condition to verify: all (the fourteen conditions, one job each) or one condition id of experiments/E05-determinism/conditions-draft.json"
+        description: "Condition to verify: all (the thirteen conditions, one job each) or one condition id of experiments/E05-determinism/conditions-draft.json"
         required: true
         default: all
         type: choice
@@ -38,7 +38,6 @@ on:
           - E05-SUT01-API-06
           - E05-SUT01-WEB-01
           - E05-SUT02-WEB-01
-          - E05-SUT02-WEB-02
           - E05-SUT04-WEB-01
           - E05-SUT04-API-01
           - E05-SUT04-API-02
@@ -147,7 +146,7 @@ jobs:
           except Exception:
               conds = []
           ids = [c.get('condition_id') for c in conds]
-          gate('conditions file lists fourteen unique E05 conditions', len(ids) == 14 and len(set(ids)) == 14, str(len(ids)))
+          gate('conditions file lists thirteen unique E05 conditions', len(ids) == 13 and len(set(ids)) == 13, str(len(ids)))
           gate('target is all or one condition of the conditions file', target == 'all' or target in ids, target)
           gate('every condition is a web or api condition (no mobile condition in E05)', bool(conds) and all(c.get('surface') in ('web', 'api') for c in conds))
           gate('executions is 2 or 3 (DRY_RUN; never 50)', executions in ('2', '3'), executions)
@@ -208,8 +207,8 @@ jobs:
           import json, os, sys
           conds = json.load(open('experiments/E05-determinism/conditions-draft.json', encoding='utf-8'))['conditions']
           ids = [c['condition_id'] for c in conds]
-          if len(ids) != 14 or len(set(ids)) != 14:
-              sys.exit(f'the conditions file must list fourteen unique conditions, found {len(ids)}')
+          if len(ids) != 13 or len(set(ids)) != 13:
+              sys.exit(f'the conditions file must list thirteen unique conditions, found {len(ids)}')
           target = os.environ['PLAN_TARGET']
           if target == 'all':
               chosen = conds

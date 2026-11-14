@@ -164,7 +164,23 @@ def controlled_fixture(cond):
 def measured_inputs(cond, sut):
     return {'GATE_CONDITION_ID': cond, 'GATE_ASSIGNED_SUT': sut, 'GATE_CAMPAIGN_START_AUTHORIZATION_ID': AUTH_START,
             'GATE_DISPATCH_AUTHORIZATION_ID': AUTH_DISPATCH, 'GATE_EXECUTOR_PROMPT_VERSION': PV,
-            'GATE_EXECUTOR_IMPLEMENTATION_SHA256': IMPL_SHA}
+            'GATE_EXECUTOR_IMPLEMENTATION_SHA256': IMPL_SHA, 'GATE_ATTEMPT': '1', 'GATE_FIRST_EXECUTION': '1'}
+
+
+def further_fixture(cond, sut, attempt=2, first=7):
+    return {'record_class': 'E05_FURTHER_ATTEMPT_APPROVAL', 'status': 'ISSUED', 'revoked': False, 'assigned_sut': sut,
+            'issued_by': 'human research lead', 'dispatch_authorization_id': AUTH_DISPATCH, 'campaign_start_authorization_id': AUTH_START,
+            'executor_implementation_sha256': IMPL_SHA, 'executor_prompt_version': PV, 'executor_prompt_sha256': PROMPT_SHA,
+            'governing_protocol': 'protocol/agent-governance-v6.md, Sections 3.6 and 3.7 (Further attempts)',
+            'attempts': [{'condition_id': cond, 'first_execution': first, 'attempt': attempt, 'previous_attempt': attempt - 1}]}
+
+
+def further_state(cond=COND_SUT01, attempt=2, first=7):
+    """The must-pass state of a further attempt: attempt 2 from execution 7, with its approval record."""
+    state = measured_state(cond)
+    state['inputs']['GATE_ATTEMPT'], state['inputs']['GATE_FIRST_EXECUTION'] = str(attempt), str(first)
+    state['files'][f'manifests/e05-further-attempt-approval-{SUT_TAGS[SUT_OF[cond]]}-v1.yaml'] = json.dumps(further_fixture(cond, SUT_OF[cond], attempt, first))
+    return state
 
 
 def measured_state(cond=COND_SUT01):
@@ -372,7 +388,7 @@ class MeasuredGateTests(unittest.TestCase):
             ('mapping-without-the-assigned-sut', 'CS-001 names a mapping entry for the assigned SUT', mapping('sut', None)),
             ('schema-id-wrong', 'run-manifest schema v2 present with the v2 id', put(SCHEMA, '{"$id": "urn:other"}')),
             ('implementation-hash-differs', 'executor implementation exists and equals the locked hash', put(IMPL, 'changed\n')),
-            ('condition-not-in-file', 'condition is one of the fourteen E05 conditions', inp('GATE_CONDITION_ID', 'E05-OTHER-API-01')),
+            ('condition-not-in-file', 'condition is one of the thirteen E05 conditions', inp('GATE_CONDITION_ID', 'E05-OTHER-API-01')),
             ('condition-wrong-sut', 'condition belongs to the assigned SUT', inp('GATE_ASSIGNED_SUT', 'SUT-05')),
             ('condition-mobile-surface', 'condition is a web or api condition', conditions_surface(COND_SUT01, 'android')),
             ('sut-manifest-without-commit', 'SUT has pinned commits for the E05 surface components', sut_manifest_without_commit('SUT-01')),
@@ -383,6 +399,70 @@ class MeasuredGateTests(unittest.TestCase):
         for label, fragment, change in cases:
             with self.subTest(case=label):
                 self.mutate(label, fragment, change)
+
+    def test_a_further_attempt_with_its_approval_record_passes(self):
+        self.assertPasses(further_state(COND_SUT01), 'pass-further-sut01')
+        self.assertPasses(further_state(COND_SUT05, attempt=3, first=1), 'pass-further-sut05')
+
+    def test_a_further_attempt_without_a_matching_approval_fails_closed(self):
+        path = lambda c: f'manifests/e05-further-attempt-approval-{SUT_TAGS[SUT_OF[c]]}-v1.yaml'
+
+        def appr(key, value, cond=COND_SUT01):
+            def f(s):
+                d = json.loads(s['files'][path(cond)])
+                d[key] = value
+                s['files'][path(cond)] = json.dumps(d)
+            return f
+
+        def entry(key, value, cond=COND_SUT01):
+            def f(s):
+                d = json.loads(s['files'][path(cond)])
+                d['attempts'][0][key] = value
+                s['files'][path(cond)] = json.dumps(d)
+            return f
+
+        def inp(key, value):
+            return lambda s: s['inputs'].__setitem__(key, value)
+
+        no_entry = 'exactly one further-attempt approval entry names this condition, this first execution and this attempt'
+        cases = [
+            ('record-absent', no_entry, lambda s: s['files'].pop(path(COND_SUT01))),
+            ('other-condition', no_entry, entry('condition_id', 'E05-SUT01-API-03')),
+            ('other-first-execution', no_entry, entry('first_execution', 8)),
+            ('other-attempt', no_entry, entry('attempt', 3)),
+            ('revoked', 'the approval is an ISSUED, unrevoked E05 further-attempt approval', appr('revoked', True)),
+            ('not-issued', 'the approval is an ISSUED, unrevoked E05 further-attempt approval', appr('status', 'PENDING')),
+            ('issued-by-agent', 'the approval is an ISSUED, unrevoked E05 further-attempt approval', appr('issued_by', 'ORCHESTRATOR')),
+            ('wrong-class', 'the approval is an ISSUED, unrevoked E05 further-attempt approval', appr('record_class', 'E05_DISPATCH_AUTHORIZATION')),
+            ('other-sut', 'the approval is an ISSUED, unrevoked E05 further-attempt approval', appr('assigned_sut', 'SUT-05')),
+            ('other-dispatch-id', 'the approval cites the dispatch authorization of this dispatch', appr('dispatch_authorization_id', 'OTHER')),
+            ('other-start-id', 'the approval cites the dispatch authorization of this dispatch', appr('campaign_start_authorization_id', 'OTHER')),
+            ('other-impl-hash', 'the approval cites the dispatch authorization of this dispatch', appr('executor_implementation_sha256', '0' * 64)),
+            ('other-prompt-version', 'the approval cites the dispatch authorization of this dispatch', appr('executor_prompt_version', 'OTHER')),
+            ('other-prompt-sha', 'the approval names the executor prompt SHA-256', appr('executor_prompt_sha256', '0' * 64)),
+            ('no-section-3-7', 'the approval cites governance v6, Section 3.7', appr('governing_protocol', 'protocol/agent-governance-v6.md, Section 3.6')),
+            ('wrong-previous-attempt', 'the approval cites governance v6, Section 3.7, and names the attempt before this one', entry('previous_attempt', 5)),
+            ('attempt-zero', 'attempt is a positive integer', inp('GATE_ATTEMPT', '0')),
+            ('attempt-text', 'attempt is a positive integer', inp('GATE_ATTEMPT', 'two')),
+            ('first-fifty-one', 'first execution is an integer from 1 to 50', inp('GATE_FIRST_EXECUTION', '51')),
+            ('first-zero', 'first execution is an integer from 1 to 50', inp('GATE_FIRST_EXECUTION', '0')),
+            ('attempt-1-from-execution-5', 'first execution is an integer from 1 to 50, and 1 for attempt 1', None),
+        ]
+        for label, fragment, change in cases:
+            with self.subTest(case=label):
+                state = further_state(COND_SUT01)
+                if change is None:
+                    state = measured_state(COND_SUT01)
+                    state['inputs']['GATE_FIRST_EXECUTION'] = '5'
+                else:
+                    change(state)
+                self.assertFailsOn(state, 'fa-' + label, fragment)
+
+    def test_attempt_1_needs_no_approval_and_ignores_a_stray_one(self):
+        self.assertPasses(measured_state(COND_SUT01), 'attempt-1-plain')
+        state = measured_state(COND_SUT01)  # a stray approval record for attempt 2 does not change an attempt-1 dispatch
+        state['files'][f'manifests/e05-further-attempt-approval-{SUT_TAGS[SUT_OF[COND_SUT01]]}-v1.yaml'] = json.dumps(further_fixture(COND_SUT01, SUT_OF[COND_SUT01]))
+        self.assertPasses(state, 'attempt-1-stray-approval')
 
     def test_sut05_release_missing_from_the_configuration_fails(self):
         self.mutate('sut05-release-absent', 'configuration names the pinned release of the assigned SUT',
@@ -473,10 +553,11 @@ class PlanTests(unittest.TestCase):
                         matrix = json.loads(line[len('matrix='):])
         return proc.returncode, proc.stdout + proc.stderr, matrix
 
-    def test_all_builds_the_fourteen_conditions_with_their_suts(self):
+    def test_all_builds_the_thirteen_conditions_with_their_suts(self):
         code, out, matrix = self.plan('all')
         self.assertEqual(code, 0, out)
-        self.assertEqual(len(matrix['include']), 14)
+        self.assertEqual(len(matrix['include']), 13)
+        self.assertNotIn('E05-SUT02-WEB-02', {i['condition_id'] for i in matrix['include']})
         for item in matrix['include']:
             self.assertEqual(item['sut_id'], SUT_OF[item['condition_id']])
 

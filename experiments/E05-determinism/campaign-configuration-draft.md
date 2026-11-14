@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Document | campaign-configuration-draft.md (DRAFT-1, 2026-11-12: the decisions of manifests/campaign-execution-decisions-v4.yaml, -v5.yaml and -v6.yaml and the source findings of manifests/source-reads-v1.yaml are incorporated; still a draft) |
+| Document | campaign-configuration-draft.md (DRAFT-2, 2026-11-14: the decisions of manifests/campaign-execution-decisions-v4.yaml to -v9.yaml, the source findings of manifests/source-reads-v1.yaml to -v4.yaml and the two DRY_RUN rounds are incorporated; still a draft) |
 | State | DRAFT skeleton. Not a campaign configuration, not locked, not an authorization. Nothing here starts E05, selects a condition, or dispatches anything. |
 | Heading it is meant for | "Campaign configuration" in experiments/E05-determinism/README.md (the record is locked at campaign START, protocol/change-control-v1.md, section 7) |
 | Order | Follows the items of experiments/README.md, "Common rules for all campaigns" (campaign configuration bullet), then E05-specific items (sections 10 to 13). |
@@ -15,7 +15,7 @@ Conventions: null = unknown and must stay null until a source records it. TBD = 
 - campaign_id: E05-determinism
 - status: NOT_STARTED (unchanged by this draft)
 - START authorization id: null. To be issued by the human research lead (protocol/change-control-v1.md, section 7, moment 1).
-- configuration version: DRAFT-1 (not a locked version). What is decided and what is still TBD is marked per item; the items that still need the human research lead are listed in section 15.
+- configuration version: DRAFT-2 (not a locked version). What is decided and what is still TBD is marked per item; the items that still need the human research lead are listed in section 15.
 - protocol: v1, FROZEN-PRE-DATA: protocol/repeatability-determinism-v1.md; protocol/study-design-v1.md; protocol/statistical-analysis-plan-v1.md; protocol/cross-cutting-properties-v1.md.
 - Hypothesis label: H3 applies to SUT-01 conditions classified a priori as deterministic (protocol/statistical-analysis-plan-v1.md, section 4.3). The same metrics are computed for the deterministic conditions of every ecosystem and are descriptive for them (protocol/study-design-v1.md, section 6, note (d)).
 - Dispatch authorization: TBD. A per-SUT dispatch authorization is announced for the campaigns in the minimum set (the governance successor is not yet written). Dispatch needs its own explicit approval, and the agent-instructions file (CAMPAIGN-CI-WRITE-AUTH-01) applies.
@@ -38,20 +38,20 @@ Copy at START from manifests/sut-manifest.yaml. The values in use are those of e
 | Tool | Value to record | Status | Gap (brief s.8) |
 |---|---|---|---|
 | Web runner | Playwright for Python 1.63.0 with pinned runtime dependencies and hashes (experiments/E03-resetability/executor/requirements.txt) | pinned | none for the runner itself |
-| Browser | Chromium build named by Playwright 1.63.0 (E03 README: chromium-1243, Chrome for Testing 153.0.8010.12) | build identifier TBD | P1: no study pin; per-run equality check needed |
-| API client | Python 3 standard library (urllib.request) on the runner's python3 | exact CPython version TBD | P2 |
-| Runner image | ubuntu-24.04 GitHub-hosted runner | image identifier TBD (recorded per run only) | P3 |
-| SUT-04 provisioning | Temurin JDK 26 (build TBD); Apache Maven 3.9.14; Node.js 24.21.0 | JDK build TBD | P4 |
-| Manifest validation | ajv-cli and ajv-formats as used by the measured workflow | versions TBD; manifests/toolchain-manifest.yaml schema_validator.version is null | P5 |
-| Analysis runtime | Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; platform recorded as Darwin x86_64) | pin to be confirmed for the host that runs the H3 script; script hash TBD | P6 |
+| Browser | Chromium build named by Playwright 1.63.0 (E03 README: chromium-1243, Chrome for Testing 153.0.8010.12) | reference value 153.0.8010.12, recorded in the tool-versions file of every DRY_RUN execution of round 2 (decisions-v9) | P1: no study pin; the per-run record is the control |
+| API client | Python 3 standard library (urllib.request) on the runner's python3 | reference values: executor runtime 3.12.16, system python3 3.12.3 (round 2; decisions-v9) | P2: recorded per run |
+| Runner image | ubuntu-24.04 GitHub-hosted runner | reference value ImageOS ubuntu24, image version 20261111.370.1 (round 2); drift is recorded in the runtime-environment file of every job and is not a gate (decisions-v9) | P3: recorded per job |
+| SUT-04 provisioning | Temurin JDK 26 (reference build Temurin-26.0.2.1+1, read from the log of run 43579847658); Apache Maven 3.9.14; Node.js 24.21.0 | JDK build recorded as a reference value | P4: recorded per job in the job log |
+| Manifest validation | ajv-cli@5 and ajv-formats@3 as used by the validation step of the measured workflow | reference values ajv-cli 5.0.0 and ajv-formats 3.0.1 (npm registry, 2026-11-14); the step resolves them by major version; manifests/toolchain-manifest.yaml schema_validator.version is null | P5 |
+| Analysis runtime | Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; platform recorded as Darwin x86_64) | pin to be confirmed for the host that runs the H3 script at the START package; script hash recorded before its first run | P6 |
 | Schema | schemas/run-manifest.schema.v2.json (sha256 as recorded in experiments/E03-resetability/README.md) | pinned | none |
 
 Drift control (brief s.8): the per-attempt toolchain values are recorded in every run manifest. The analysis script reports any change of a value inside a condition.
 
 ## 5. Prompt version(s) and frozen implementation
 
-- Dispatch procedure prompt id: TBD (no E05 prompt exists). It must be frozen before START and named here (experiments/README.md, Common rules; prompts/README.md).
-- Implementation: TBD. The E05 realizations, projection file and category file are hashed and locked; the hash is recorded here at START.
+- Dispatch procedure prompt id: ORCHESTRATOR-E05-determinism-v1 (working copy prompts/working/ORCHESTRATOR-E05-determinism-v1.md). DECIDED 2026-11-14 (decisions-v9): its frozen copy, byte-identical, is written to prompts/frozen/ at the START, on the human research lead's approval of the START (experiments/README.md, Common rules; prompts/README.md).
+- Implementation: the candidate hash is the sha256 of experiments/E05-determinism/executor/run-condition.sh, bade00d2a45e69da3b25707e6c00cd84d892c15ccdf0bf69485ae8f3570f9ac0, the implementation that ran complete on GitHub Actions in the second DRY_RUN round (run 43579847658); it embeds the digests of the realizations, the projection file and the requirements. The conditions file is hashed with this record at START. The hash is locked here at START.
 - Run-manifest schema: schemas/run-manifest.schema.v2.json.
 - agent_role in run manifests: ORCHESTRATOR (agent-instructions file, CAMPAIGN-CI-WRITE-AUTH-01; protocol/agent-governance-v5.md, Section 3.6).
 
@@ -64,7 +64,7 @@ Drift control (brief s.8): the per-attempt toolchain values are recorded in ever
 - No-bundle attempts: DECIDED 2026-11-12 (D-09, manifests/campaign-execution-decisions-v5.yaml): an interrupted attempt in T with a stub record and its own attempt index; it counts against TSRR and E2E-ROR and never against CEOR.
 - Abort rule: an attempt whose starting-state check fails is recorded as ABORTED with its cause (executor README, section 3, item 11). Whether the job continues after an abort is part of D-02.
 - Environment type: DECIDED 2026-11-12 (D-18): SELF_HOSTED per condition for web and api instances on GitHub-hosted runners, as the E03 route records (experiments/E03-resetability/ci-cd-execution-model.md, section 6), and a controlled-instance verification of each condition before START.
-- Controlled-instance verification: TBD (a non-measured DRY_RUN per condition, each needing its own exact-line approval). Every condition needs a controlled instance verified on GitHub Actions before the campaign measures it (agent-instructions file, CAMPAIGN-CI-WRITE-AUTH-01). No E05 verification run exists.
+- Controlled-instance verification: two non-measured DRY_RUN rounds ran on GitHub Actions, each on the exact-line approval of the human research lead: round 1, run 43547714203 (2026-11-14, 2 executions per condition; 11 of 14 conditions green, three defects found and corrected); round 2, run 43579847658 (2026-11-14, 3 executions per condition; an outcome recorded in all 13 configured conditions). Every condition needs a controlled instance verified on GitHub Actions before the campaign measures it (agent-instructions file, CAMPAIGN-CI-WRITE-AUTH-01); the status record experiments/E05-determinism/controlled-instance-status.yaml that gate G-6 reads is written with the START package.
 
 ## 7. Conditions
 
@@ -99,21 +99,21 @@ Each condition is one record. Common fields for all: seed null (protocol section
 - SUT: SUT-01, surface api. Account: performance_glitch_user (establishment block 4.1 with this account; reset block 4.1; account changed).
 - Stimulus: GET /api/pizzas as performance_glitch_user.
 - Projection: content only; latency excluded from the comparison (protocol section 6: speed is not a determinism criterion).
-- Categories (k = 5): S_CONTENT_MATCH_200 (expected), S_CONTENT_MISMATCH, S_HTTP_NON_200, S_CLIENT_TIMEOUT, INTERRUPTED_. Client timeout value: proposed 30 s (to be confirmed in the START package; the decision requires it well above the 3.0 s delay).
+- Categories (k = 5): S_CONTENT_MATCH_200 (expected), S_CONTENT_MISMATCH, S_HTTP_NON_200, S_CLIENT_TIMEOUT, INTERRUPTED_. Client timeout value: 30 s, DECIDED 2026-11-14 (decisions-v9; ten times the fixed 3.0 s delay, which the second DRY_RUN measured as 3.01 s per execution).
 - behavior_class: deterministic by mechanism, DECIDED (D-04): a fixed 3.0 s delay applied by apply_user_behavior to the catalog and checkout routes (row SUT01-EV-0015; F04), the timeout category kept.
 
 ### E05-SUT01-API-05
 - SUT: SUT-01, surface api. Account: a11y_glitch_user (account changed).
 - Stimulus: GET /api/pizzas as a11y_glitch_user.
 - Categories (k = 5): S_MODE_MISSING_NAME, S_MODE_WRONG_LANG, S_MODE_EXTREME_TEXT, S_OTHER, INTERRUPTED_.
-- Expected: D-07 decided as option (a) (one pre-declared category, CEOR descriptive, H(Y) primary); the category is proposed here as S_MODE_MISSING_NAME and is confirmed in the START package (the choice among three equiprobable modes is arbitrary; it changes no H(Y) value).
+- Expected: D-07 decided as option (a) (one pre-declared category, CEOR descriptive, H(Y) primary); the category is S_MODE_MISSING_NAME, DECIDED 2026-11-14 (decisions-v9; the choice among three equiprobable modes is arbitrary and changes no H(Y) value).
 - behavior_class: stochastic (row SUT01-EV-0018).
 
 ### E05-SUT01-API-06 (discriminant control)
 - SUT: SUT-01, surface api. Account: error_user (account changed).
 - Stimulus: POST /api/checkout as error_user.
 - Categories (k = 4): S_ORDER_CREATED, S_HTTP_500, S_OTHER, INTERRUPTED_. The 500 for behavior error carries the detail 'Random checkout error triggered for testing purposes' (F03, SOURCE_VERIFIED; probability 0.5 per call).
-- Expected: D-07 decided as option (a); the category is proposed here as S_ORDER_CREATED (what the documented standard checkout does) and is confirmed in the START package.
+- Expected: D-07 decided as option (a); the category is S_ORDER_CREATED (what the documented standard checkout does), DECIDED 2026-11-14 (decisions-v9).
 - behavior_class: stochastic (row SUT01-EV-0025). Its role is to show that the classifier can report non-determinism; it is excluded from H3 by class.
 
 ### E05-SUT01-WEB-01
@@ -128,19 +128,14 @@ Each condition is one record. Common fields for all: seed null (protocol section
 - Categories (k = 4): S_BADGE_2 (expected), S_BADGE_OTHER, S_NO_CHANGE, INTERRUPTED_.
 - behavior_class: deterministic, SOURCE_VERIFIED (F07: the cart path of a user that is neither problem_user nor error_user has no random and no clock; D-11 resolved by the source check).
 
-### E05-SUT02-WEB-02
-- SUT: SUT-02, surface web. Account: visual_user (account changed; reset block 4.3).
-- Stimulus: load the inventory page.
-- Projection: presence of the visual marker (row SUT02-EV-0015); price excluded because it is random.
-- Categories (k = 4): S_VISUAL_MARKER_PRESENT (expected), S_VISUAL_MARKER_ABSENT, S_OTHER, INTERRUPTED_.
-- behavior_class: stochastic (audit section 4 Determinism: Math.random() price on each render). Granularity note: brief s.4.2 and integrity-notes-draft.md, R4.
-- Expected: S_VISUAL_MARKER_PRESENT, declared before START from the deterministic marker branch (audit section 4; row SUT02-EV-0015). Not a D-07 item.
+### E05-SUT02-WEB-02 (RETIRED before the START)
+- RETIRED on 2026-11-14, before any measured datum (decisions-v9, E05-SUT02-WEB-02-RETIRED): its category set rested on a visual marker (row SUT02-EV-0015) that no recorded source defines. The SUT-02 audit holds no such row, and the only branch specific to visual_user in the files read at the pin is the random price (manifests/source-reads-v3.yaml, F23), which the projection excludes. The condition is not in the conditions file, not in the choices of the workflows and not in any dispatch authorization. The study keeps 13 conditions (650 executions); H3 is unchanged because stochastic conditions are excluded from H3 by class. The original record is kept in design-brief-draft.md, section 4.
 
 ### E05-SUT04-WEB-01
 - SUT: SUT-04, surface web. Account: admin (block 4.6 establishment with the guest form).
 - target_state_id: CS-001 (block 4.6, reused unchanged with the delete-control reset).
 - Stimulus: second reservation through the web form for room 1 with the run's dates (overlapping).
-- Categories (k = 4): S_NO_CONFIRMATION_SHOWN (expected), S_BOOKING_CONFIRMED, S_OTHER, INTERRUPTED_. A conflict answers 409 with no body (F09) and the web form then shows no confirmation. The earlier provisional name S_NO_CONFIRMATION_FORM_REMAINS rested on the inference that the page stays on the form (F10); the first DRY_RUN (run 43547714203, 2026-11-14) showed the framework error page 'This page couldn't load' instead, so the category is defined by the source facts (HTTP 409 and no confirmation) and the page state is recorded as evidence only (IMPLEMENTATION-NOTES.md, point 21); the human research lead confirms the name at the START. S_CONFLICT_MESSAGE of the earlier draft is dropped.
+- Categories (k = 4): S_NO_CONFIRMATION_SHOWN (expected), S_BOOKING_CONFIRMED, S_OTHER, INTERRUPTED_. A conflict answers 409 with no body (F09) and the web form then shows no confirmation. The earlier provisional name S_NO_CONFIRMATION_FORM_REMAINS rested on the inference that the page stays on the form (F10); the first DRY_RUN (run 43547714203, 2026-11-14) showed the framework error page 'This page couldn't load' instead, so the category is defined by the source facts (HTTP 409 and no confirmation) and the page state is recorded as evidence only (IMPLEMENTATION-NOTES.md, point 21); the name was confirmed on 2026-11-14 (decisions-v9). S_CONFLICT_MESSAGE of the earlier draft is dropped.
 - behavior_class: deterministic, resolved by the source check (D-13; F08: the date validator and the conflict check read request dates only). Residual: the stimulus is rejected-only (D-03), so no booking persists.
 
 ### E05-SUT04-API-01
@@ -152,10 +147,10 @@ Each condition is one record. Common fields for all: seed null (protocol section
 ### E05-SUT04-API-02
 - SUT: SUT-04, surface api. target_state_id: CS-001 (block 4.5).
 - Stimulus: POST /booking/ with email and phone.
-- Projection: presence of the message record (message service endpoint TBD; not read, the message service is outside the files read).
-- Categories (k = 4): S_MESSAGE_RECORD_PRESENT, S_MESSAGE_RECORD_ABSENT, S_BOOKING_NON_2XX, INTERRUPTED_.
-- Expected: D-07 decided as option (a); the category is proposed here as S_MESSAGE_RECORD_PRESENT (the documented flow posts a message when email and phone are present, F09) and is confirmed in the START package; it depends on whether the instance runs the message service or a double.
-- behavior_class: external dependency (audit section 4 Determinism; rows SUT04-EV-0028 and SUT04-EV-0029 for the in-repo doubles). Whether the measured instance uses a double is TBD.
+- Projection: presence of the message record (the count of GET /message/count on the message service, manifests/source-reads-v3.yaml, F24; the instance runs the real message service, not a double).
+- Categories (k = 5): S_MESSAGE_RECORD_PRESENT (expected), S_MESSAGE_RECORD_ABSENT, S_BOOKING_NON_2XX, S_OTHER, INTERRUPTED_. DECIDED 2026-11-14 (decisions-v9): S_OTHER is the catch-all; the executor's labels S_MESSAGE_COUNT_UNREADABLE and S_MESSAGE_COUNT_UNEXPECTED map to it and the original label stays in the note of the attempt.
+- Expected: D-07 decided as option (a); the category is S_MESSAGE_RECORD_PRESENT (the documented flow posts a message when email and phone are present, F09), DECIDED 2026-11-14 (decisions-v9).
+- behavior_class: external dependency (audit section 4 Determinism; rows SUT04-EV-0028 and SUT04-EV-0029 for the in-repo doubles). The measured instance runs the real message service (executor README, section 3).
 - DECIDED 2026-11-12 (D-03 follow-up, manifests/campaign-execution-decisions-v7.yaml): the stimulus is an ACCEPTED booking (the message is posted only after a successful create, F09), which persists; the reset of this condition deletes the stimulus booking by the id of the 201 response in addition to the CS-001 booking (a new, small realization, for this condition only). The message record kept by the message service is not deleted and is declared residual state. The other two SUT-04 conditions stay rejected-only.
 
 ### E05-SUT05-API-01
@@ -173,7 +168,7 @@ Each condition is one record. Common fields for all: seed null (protocol section
 
 ## 8. Sample size and seeds
 
-- N = 50 for each of the fourteen conditions in section 7 (protocol section 3).
+- N = 50 for each of the thirteen conditions in section 7 (protocol section 3), 650 executions in all: SUT-01 350 (7 conditions), SUT-02 50 (1), SUT-04 150 (3), SUT-05 100 (2); 13 dispatches under 4 per-SUT authorizations.
 - seed: null for every attempt (protocol section 5, rule 7). No SUT exposes a seed in the rows read for these mechanisms.
 - Timestamps are recorded per attempt for traceability only (protocol section 5, rule 8).
 
@@ -210,31 +205,29 @@ Each condition is one record. Common fields for all: seed null (protocol section
 
 ## 13. Gates the measured workflow must enforce (mirror of the agent-instructions file, CAMPAIGN-CI-WRITE-AUTH-01)
 
-The workflow does not exist. These are the gates it must check before any MEASURED_EXPERIMENT:
+The workflow (.github/workflows/e05-measured-execution.yml) implements these gates and, as gate G-9, requires that this record names the sha256 of the workflow file; it stays a DRAFT until it is exported (export v61) and the START locks its hash. These are the gates it checks before any MEASURED_EXPERIMENT:
 
 1. START recorded with its authorization id (section 1).
 2. This locked configuration present, with its hash recorded.
 3. A FROZEN mapping record for every canonical scenario used (CS-001, section 2).
 4. The run-manifest schema the configuration names (schema v2, section 5).
 5. Frozen agent governance in force (protocol/agent-governance-v5.md or its successor).
-6. Controlled instance verified on GitHub Actions for every condition that requires one (section 6). Not yet present.
+6. Controlled instance verified on GitHub Actions for every condition that requires one (section 6); the status record is written with the START package.
 7. Pinned repository commit and workflow revision (sections 3 and 5).
 8. The frozen prompt and frozen implementation hashes (section 5).
-9. First attempt only; default branch only; no re-run.
+9. Attempt 1 under the dispatch authorization; default branch only; no GitHub re-run; a further attempt only under gate G-E05-A2 (item 12).
 10. No mobile condition present in the configuration (brief s.3; a separate design is needed).
-11. Per-SUT dispatch authorization, once the governance successor is written (section 1).
+11. Per-SUT dispatch authorization, issued under protocol/agent-governance-v6.md, Section 3.7 (section 1).
+12. A further attempt (attempt 2 or more, executions first_execution to 50) only under a further-attempt approval record of the human research lead that names the condition, the first execution and the attempt (gate G-E05-A2; decisions-v9).
 
 ## 15. What is still open before a START package (nothing here is a decision of this draft)
 
-Decided and incorporated above: D-01 to D-10, D-14 to D-20 and D-11 to D-13 (resolved by the source reads). Still to do or to confirm:
+Decided and incorporated above: D-01 to D-10, D-14 to D-20 and D-11 to D-13 (resolved by the source reads), and, on 2026-11-14 (manifests/campaign-execution-decisions-v9.yaml): the retirement of E05-SUT02-WEB-02, the catch-all S_OTHER of E05-SUT04-API-02 (k = 5), the four confirmed values (30 s timeout of E05-SUT01-API-04; the expected categories of E05-SUT01-API-05, E05-SUT01-API-06 and E05-SUT04-API-02; the name S_NO_CONFIRMATION_SHOWN), the job timeout of 60 minutes, the reference pins, the freezing of the dispatch prompt at the START and the further-attempt mechanism (gate G-E05-A2). Realized and verified: the executor (two DRY_RUN rounds on GitHub Actions) and the two workflows. Still to do or to confirm:
 
-1. **Realizations to write and verify (preparation, no approval needed):** the E05 executor (attempt loop on one shared instance, reset-first order of brief s.2.1, stimulus and classifier, attribution labels, stub records for no-bundle attempts), the process-restart reset of the SUT-01 instance (D-03), the extended handling of SUT-04 (rejected-only stimuli, D-03), the projection and category file, and the measured workflow with the gates of section 13.
-2. **Values to compute from the source before START:** the expected total of SUT01-API-01 from the constants and the catalog and rate tables of the pinned commit (F01, F02); the message-service endpoint for SUT04-API-02; whether the measured SUT-04 instance runs the message service or a double.
-3. **Values proposed here to confirm in the START package:** the client timeout of SUT01-API-04 (30 s); the expected category of SUT01-API-05 (S_MODE_MISSING_NAME), SUT01-API-06 (S_ORDER_CREATED) and SUT04-API-02 (S_MESSAGE_RECORD_PRESENT); the name S_NO_CONFIRMATION_SHOWN of SUT04-WEB-01 (corrected from the provisional S_NO_CONFIRMATION_FORM_REMAINS by the first DRY_RUN).
-4. **Pins missing (brief s.8):** Chromium build identifier, exact CPython, runner image, SUT-04 JDK build, ajv-cli and ajv-formats versions, the analysis runtime on the host that runs the H3 script and the script hash.
-5. **Dispatch procedure prompt:** no decision was put for E05 (HD-17 decided none for E09 only); to be decided in the START package.
-6. **Controlled-instance verification:** a non-measured DRY_RUN per condition (D-18), each needing its own exact-line approval, after the workflow is exported.
-7. **Approvals that only the human research lead can give:** the START and the configuration lock, the per-SUT dispatch authorizations under Section 3.7 of protocol/agent-governance-v6.md, each DRY_RUN line, the freeze. The governance successor mentioned in section 1 is protocol/agent-governance-v6.md, in force.
+1. **Export v61 (preparation, then the human research lead's yes to its exact push line):** publishes the corrected conditions file, the two workflows (timeout 60, gate G-E05-A2, thirteen conditions), the working prompt and decisions-v9, so that the workflow hash that gate G-9 reads is that of the corrected file. The executor implementation is unchanged (bade00d2...), so no further DRY_RUN is required by that change; a DRY_RUN is run only if the human research lead asks for one.
+2. **Records written with the START package:** the controlled-instance status record of the 13 conditions (from the two DRY_RUN rounds); the lock of this record with the sha256 of the conditions file, of the workflow file, of the executor implementation and of the frozen prompt; the import layout of the dispatch procedure (each executions/<run_id>/ directory under raw-data/E05-determinism/<SUT>/<run_id>/, the job files under <condition_id>__job__A<attempt>/ because a further attempt also has job files and a bare __job directory would collide); the template of the further-attempt approval, which enumerates the executions it covers (first_execution to 50, one by one) so that it names "the condition and the execution" as Section 3.7 requires; the dispatch record location; the order of conditions per SUT.
+3. **Pins still to record at the START package:** the analysis runtime on the host that runs the H3 script and the script hash (the other pins are reference values in section 4).
+4. **Approvals that only the human research lead can give:** the push of export v61, the START and the configuration lock (with the copy of the frozen prompt), the four per-SUT dispatch authorizations under Section 3.7 of protocol/agent-governance-v6.md (SUT-01, SUT-02, SUT-04, SUT-05), any further DRY_RUN line, any further-attempt approval, the freeze.
 
 ## 14. Change log
 

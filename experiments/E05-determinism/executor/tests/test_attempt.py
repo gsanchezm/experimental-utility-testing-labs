@@ -286,7 +286,7 @@ class PhaseMappingTests(AttemptCase):
         c = config.condition(cfg, 'E05-SUT05-API-01')
         self.assertEqual(classify.finalize_label(cfg, c, 'S_SOMETHING')[0], 'S_OTHER')
         self.assertEqual(classify.finalize_label(cfg, config.condition(cfg, 'E05-SUT04-API-02'), 'S_MESSAGE_COUNT_UNEXPECTED')[0],
-                         'S_MESSAGE_COUNT_UNEXPECTED')
+                         'S_OTHER')
 
     def test_a_bundle_that_cannot_be_written_leaves_a_stub(self):
         job = make_job('E05-SUT05-API-01', 1, 1)
@@ -329,12 +329,16 @@ class RefusalTests(unittest.TestCase):
         self.assertIsNone(self.check('E05-SUT05-API-01', 'DRY_RUN', 2))
         self.assertIn('is not a condition', self.check('E05-SUT03-WEB-01', 'DRY_RUN', 2))
 
-    def test_unconfigured_conditions_are_the_ones_the_start_package_decides(self):
+    def test_the_only_unconfigured_realization_is_the_retired_condition_and_the_configuration_does_not_list_it(self):
+        # E05-SUT02-WEB-02 was retired before the START (manifests/campaign-execution-decisions-v9.yaml); its stub stays unreferenced in sut02.py.
         from executor import sut02
         unconfigured = sorted(c for m in (sut01, sut02, sut04, sut05) for c, cls in m.REALIZATIONS.items() if not cls.SPEC.configured)
         self.assertEqual(unconfigured, ['E05-SUT02-WEB-02'])
         every = {c for m in (sut01, sut02, sut04, sut05) for c in m.REALIZATIONS}
-        self.assertEqual(every, {c['condition_id'] for c in config.load()['conditions']})
+        listed = {c['condition_id'] for c in config.load()['conditions']}
+        self.assertEqual(every - listed, {'E05-SUT02-WEB-02'})
+        self.assertEqual(listed - every, set())
+        self.assertIn('is not a condition', self.check('E05-SUT02-WEB-02', 'DRY_RUN', 2))
 
 
 if __name__ == '__main__':

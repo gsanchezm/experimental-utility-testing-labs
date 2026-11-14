@@ -8,7 +8,7 @@
 
 ## 1. Shape
 
-One job runs the N executions of ONE condition, sequentially, on one shared instance (D-02, model B): 14 conditions, 14 jobs. Entry point: `run-condition.sh` (verifies the embedded digests, then `python3 -m executor.run`).
+One job runs the N executions of ONE condition, sequentially, on one shared instance (D-02, model B): 13 conditions, 13 jobs (E05-SUT02-WEB-02 was retired before the START, manifests/campaign-execution-decisions-v9.yaml). Entry point: `run-condition.sh` (verifies the embedded digests, then `python3 -m executor.run`).
 
 Environment (all set by the workflow, or by hand for a DEVELOPMENT run):
 
@@ -36,7 +36,7 @@ OUTPUT_DIR/
   sut-logs/                       tails of the SUT logs named in instance.json and of the kept restarts
 ```
 
-stdout.log, stderr.log, exit-status.txt and finished-at.txt of the job are written by the workflow at the artifact root. The upload step runs with `if: always()`, so if the runner dies at execution k the executions 1 to k-1 are complete and importable; replacing k to 50 is a further attempt under a recorded approval, never a re-run.
+stdout.log, stderr.log, exit-status.txt and finished-at.txt of the job are written by the workflow at the artifact root. The upload step runs with `if: always()`, so if the runner dies at execution k the executions 1 to k-1 are complete and importable; replacing k to 50 is a further attempt under a recorded approval (gate G-E05-A2 of the measured workflow, with the dispatch inputs `attempt` and `first_execution`), never a re-run.
 
 Exit status of run-condition.sh: 0 when every execution that began has a run manifest (every RESET_, ESTABLISHMENT_, S_ and INTERRUPTED_ category is a recorded outcome); 1 when an execution has none (a stub record, STUB_NO_BUNDLE, is written first when the ordinary bundle fails); 2 when the executor refused the run before it began (no record). A digest mismatch, an unlisted Python file or a missing variable exits 1 before anything runs.
 
@@ -77,9 +77,9 @@ Per condition, the reset: SUT-01 API-02 to API-05 clear the session (API_RESET, 
 
 `PYTHONDONTWRITEBYTECODE=1 python3 -I -m unittest discover -s tests` from this directory: configuration and classifier tests, the attempt loop against fake systems (tests/fake_sut.py, separate processes, so the restarts are real), the manifest check against schemas/run-manifest.schema.v2.json, the digest lock and the entry point. The web realizations (SUT-01 WEB-01, SUT-02, SUT-04 WEB-01) need a browser and are exercised by the first DRY_RUN only.
 
-## 6. Conditions that cannot run yet (decisions of the START package)
+## 6. Decisions of the START package that touch the executor
 
-E05-SUT02-WEB-02 is not configured: no recorded source defines its visual marker (source-reads-v3.yaml, F23), and run.py refuses it. E05-SUT04-API-02 declares no catch-all category (k = 4). The SUT-01 web controls built by tid(...) are located by contains selectors (confirmed working by the first DRY_RUN, IMPLEMENTATION-NOTES.md, point 21). The pins that are still missing are listed in ../campaign-configuration-draft.md, section 15.
+E05-SUT02-WEB-02 was retired before the START (no recorded source defines its visual marker, source-reads-v3.yaml, F23; decisions-v9): the conditions file no longer lists it, so the entry point refuses it as 'not a condition'; its stub stays in sut02.py, unreferenced, because the implementation hash of the second DRY_RUN round is the candidate hash of the START and no executor file is edited. E05-SUT04-API-02 declares the catch-all S_OTHER (k = 5): the labels S_MESSAGE_COUNT_UNREADABLE and S_MESSAGE_COUNT_UNEXPECTED map to it and keep their original name in the note of the attempt. The SUT-01 web controls built by tid(...) are located by contains selectors (confirmed working by the first DRY_RUN, IMPLEMENTATION-NOTES.md, point 21). The pins are listed in ../campaign-configuration-draft.md, sections 4 and 15.
 
 ## 7. Not here
 

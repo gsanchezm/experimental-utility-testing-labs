@@ -1,5 +1,5 @@
 {
-  "record": "E05-determinism conditions (DRAFT-1, 2026-11-12)",
+  "record": "E05-determinism conditions (DRAFT-2, 2026-11-14)",
   "state": "DRAFT. Machine-readable mirror of section 7 of experiments/E05-determinism/campaign-configuration-draft.md; read by the E05 executor and by analysis/h3-analysis. Not locked, not hashed, not an authorization. When the configuration is locked, this file is hashed with it.",
   "phase_prefixes": {
     "in_S": [
@@ -52,9 +52,7 @@
       "n": 50,
       "reset_between_attempts": "process_restart",
       "nominal_stimulus": false,
-      "pending": [
-        "expected total computed from the pinned constants before START (D-12)"
-      ],
+      "pending": [],
       "creates_state": "orders"
     },
     {
@@ -115,9 +113,7 @@
       "n": 50,
       "reset_between_attempts": "api_reset",
       "nominal_stimulus": false,
-      "pending": [
-        "client timeout 30 s proposed; confirmed in the START package"
-      ],
+      "pending": [],
       "client_timeout_s": 30
     },
     {
@@ -139,9 +135,7 @@
       "n": 50,
       "reset_between_attempts": "api_reset",
       "nominal_stimulus": false,
-      "pending": [
-        "expected category proposed; confirmed in the START package"
-      ],
+      "pending": [],
       "expected_policy": "D-07 option (a): one pre-declared category, CEOR descriptive"
     },
     {
@@ -162,9 +156,7 @@
       "n": 50,
       "reset_between_attempts": "process_restart",
       "nominal_stimulus": false,
-      "pending": [
-        "expected category proposed; confirmed in the START package"
-      ],
+      "pending": [],
       "creates_state": "orders",
       "discriminant_control": true,
       "expected_policy": "D-07 option (a)"
@@ -212,26 +204,6 @@
       "pending": []
     },
     {
-      "condition_id": "E05-SUT02-WEB-02",
-      "sut_id": "SUT-02",
-      "surface": "web",
-      "account": "visual_user",
-      "behavior_class": "stochastic",
-      "h3_labeled": false,
-      "expected_category": "S_VISUAL_MARKER_PRESENT",
-      "stimulus_categories": [
-        "S_VISUAL_MARKER_PRESENT",
-        "S_VISUAL_MARKER_ABSENT",
-        "S_OTHER",
-        "INTERRUPTED_"
-      ],
-      "k": 4,
-      "n": 50,
-      "reset_between_attempts": "app_data_clear",
-      "nominal_stimulus": false,
-      "pending": []
-    },
-    {
       "condition_id": "E05-SUT04-WEB-01",
       "sut_id": "SUT-04",
       "surface": "web",
@@ -249,9 +221,7 @@
       "n": 50,
       "reset_between_attempts": "delete_control",
       "nominal_stimulus": false,
-      "pending": [
-        "provisional category name; the web conflict shows no message (source finding F10, inferred); confirmed in the environment verification"
-      ],
+      "pending": [],
       "rejected_only_stimulus": true
     },
     {
@@ -287,15 +257,14 @@
         "S_MESSAGE_RECORD_PRESENT",
         "S_MESSAGE_RECORD_ABSENT",
         "S_BOOKING_NON_2XX",
+        "S_OTHER",
         "INTERRUPTED_"
       ],
-      "k": 4,
+      "k": 5,
       "n": 50,
       "reset_between_attempts": "api_delete_with_stimulus_booking",
       "nominal_stimulus": false,
-      "pending": [
-        "message-service endpoint and whether the instance runs it or a double: not read"
-      ],
+      "pending": [],
       "creates_state": "bookings",
       "expected_policy": "D-07 option (a)",
       "residual_state_declared": [
