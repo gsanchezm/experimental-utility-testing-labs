@@ -1,0 +1,24 @@
+# manifests/source-reads-v2.yaml -- record of the read-only source read of 2026-11-13 (operation OP-PREP-E05; SOURCE-READS-02).
+# Authorized by the human research lead's message of 2026-11-13 in the ORCHESTRATOR's conversation (see authorization). ORCHESTRATOR record. Nothing here changes a SUT, a protocol file or a locked configuration. Immutable once committed; a correction is a new version file.
+record_id: "SOURCE-READS-02"
+record_class: "SOURCE_READS"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E05"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-13"
+authorization: "The report of the ORCHESTRATOR of 2026-11-13 asked, as item 1, whether the human research lead authorizes a read of the code of the SUT-04 message service at the pinned tree to find its endpoint for listing messages, or prefers to discover it in the first DRY_RUN. The answer was the message (the name of the agent-instructions file is replaced here by that phrase in brackets, for publication hygiene; nothing else is changed) 'Tienes mi aprobaci\u00f3n en lo de [the agent-instructions file] y lo dem\u00e1s y puedes continuar cn los m\u00f3dulos del ejecutor'. The ORCHESTRATOR read 'lo dem\u00e1s' as the approval of that item (and of the other open item of the same report, the update of the agent-instructions file, which was made in a separate commit); the read is read-only and limited to the message service files named below, so a narrower reading would not change what was done beyond one extra read of public source."
+method: "file list by the GitHub REST git-trees endpoint at the pinned commit (GET, unauthenticated Python urllib call to api.github.com, recursive); file contents by gh api GET repos/<repository>/contents/<path>?ref=<commit> with the raw media type. A first attempt through raw.githubusercontent.com failed in the local Python 3.14 TLS verification (certificate verify failed) and was not retried with verification disabled."
+executes_anything: false
+pin: {SUT: "SUT-04", repository: "https://github.com/mwinteringham/restful-booker-platform", commit: "d36bd3f8647a091d406e53bad463c5e3e5d2ece1"}
+files_read:
+- {path: "message/src/main/java/com/automationintesting/api/MessageController.java", bytes: 2713, sha256: 744766c9076c27501f7c6df1ca8183c2c276a55262f7356f8178acf1f2041031}
+- {path: "message/src/main/java/com/automationintesting/service/MessageService.java", bytes: 2655, sha256: 5196427cb60c8990375cee4cd4a3f3d12a160c68cbc7fb6fbe3794d87f24faa8}
+- {path: "message/src/main/java/com/automationintesting/model/db/Message.java", bytes: 3221, sha256: 0a07375a82b3bacf047be3b9ae139e780a5b96523d005b5497183409ced84c7f}
+- {path: "message/src/main/java/com/automationintesting/model/db/Messages.java", bytes: 538, sha256: fa53f582eeaaebd712efa6e7e4215093b83ae12615c62a310c6b7b3b40b28323}
+- {path: "message/src/main/java/com/automationintesting/db/MessageDB.java", bytes: 5206, sha256: 4bb07c5236d59b5435f3bf563a64819c411126b88195519b21ddccacbbfd169f}
+- {path: "message/src/main/resources/application.properties", bytes: 146, sha256: 7500ed3176b9c1388b73dce5f7ec711d55b9dd4a34b1cd44db48dd2adaf74f5c}
+findings:
+- {id: F13, statement: "The message service listens on port 3006 with the context path /message (message/src/main/resources/application.properties lines 3 and 5).", where: "message/src/main/resources/application.properties", bears_on: "E05-SUT04-API-02 projection (presence of the message record) and its stimulus fields"}
+- {id: F14, statement: "The message controller exposes GET /message/ (the list, answering a body {messages: [MessageSummary...]}), GET /message/count, GET /message/{id}, POST /message/, DELETE /message/{id} and PUT /message/{id}/read; the list and count reads take no token (MessageController.java lines 22-41), the delete and the read mark read a token cookie.", where: "message/src/main/java/com/automationintesting/api/MessageController.java", bears_on: "E05-SUT04-API-02 projection (presence of the message record) and its stimulus fields"}
+- {id: F15, statement: "A message must carry name, email and a phone of 11 to 21 characters (Message.java, lines 17-30), so a booking whose phone is shorter than 11 characters cannot post a message; the phone of the SUT04-API-02 stimulus has to satisfy this for the message record to exist.", where: "message/src/main/java/com/automationintesting/model/db/Message.java", bears_on: "E05-SUT04-API-02 projection (presence of the message record) and its stimulus fields"}
+not_read: "MessageService.java, MessageDB.java and Messages.java were fetched and hashed but not analyzed beyond what the controller shows; the summary fields of MessageSummary, the scheduler of the message service (DatabaseScheduler.java) and the booking service side that builds the posted message are not read here."

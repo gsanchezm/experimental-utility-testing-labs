@@ -1,0 +1,43 @@
+# derived-data/h5-analysis/H5-e09-result.json.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (JSON cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/h5-analysis/H5-e09-result.json
+dataset_sha256: 860e2012ddadf4bd79c325d2284ce88bb13ca16911eafd8ebcd6bb3e206e1e8d
+campaign_id: E09-accessibility
+hypothesis_id: H5
+part: accessibility (E09) contribution only; the H5 variable spans E08, E09, E10 and E11, and E08, E10 and E11 have no data
+sut_ids: [SUT-01]
+sut_ids_in_confirmatory_comparison: [SUT-01, SUT-02, SUT-03]
+sut_ids_excluded_from_comparison: [SUT-04, SUT-05, SUT-06]
+per_run_table:
+  path: derived-data/E09-accessibility/detections-per-attempt.csv
+  sha256: ad29fdc821159fd0ba39d65643ef2acddacb910bfba11a0942aa4f63734653e4
+  note: written by the same script run from the same bundles; the result is not computed from it
+raw_inputs:
+  tree:
+    path: raw-data/E09-accessibility
+    git_tree: b1cfd6f4826669a5d9b57dc5b0bea41547c03c1d
+    pinned_at_commit: 0ad90f64d156e87e02c0293dd62fe73600222bc3
+    campaign_state: FROZEN
+  bundles: 100
+  files_read: run-manifest.json and evidence/011-detection.json of each bundle (the detection record is checked against the sha256 that the run manifest lists)
+transformation_script:
+  path: analysis/h5-analysis/compute-h5-e09.js
+  version: git-blob-sha c5fbb4deed1f684c62b95037f1785d9e2c4fdd31
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only)
+date_generated: "2026-11-13"
+date_note: local date (America/Mexico_City)
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: protocol/statistical-analysis-plan-v1.md, sections 3, 4.3 (H5 row) and 5; protocol/study-design-v1.md, section 6 (H5 wording, notes (c), (d)); experiments/E09-accessibility/README.md, "Campaign configuration" (sha256 a9a6fc5377ff0ab796196e20aa7b73db8c49c82f4606705b6590c2da4b51a2c4)
+notes: >
+  Deterministic, non-interpretive computation. Implements the descriptive procedure pre-registered in the E09 campaign
+  configuration: the detection rate of the glitch condition over the ground-truth instances (draws whose DOM state at scan
+  time is ALL_EMPTY) with a Wilson 95% interval, the other draws reported beside it and never in the denominator, the control
+  condition's rule reports, and the H5 count of controlled ground-truth conditions per ecosystem for the E09 contribution
+  (SUT-01 one; SUT-02 to SUT-05 zero, no data; SUT-06 structural, no data). The classification of the H5 comparisons is
+  written in the script from the configuration and is not derived from the data. No test, p-value, Holm correction, Fisher
+  table, risk difference or support / non-support determination is computed (none is frozen for H5; SUT-02 and SUT-03 have
+  no condition). The recorded classification of every bundle equals the one the script derives from its evidence (listed
+  disagreements: none). The script was run twice and wrote equal bytes, and an independent recomputation in a second
+  language from the same bundles gave the same counts and intervals.

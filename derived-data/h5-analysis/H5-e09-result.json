@@ -1,0 +1,131 @@
+{
+  "record_class": "DERIVED_ANALYSIS_RESULT",
+  "study_id": "EUS-2026-001",
+  "campaign_id": "E09-accessibility",
+  "hypothesis_id": "H5",
+  "part": "accessibility (E09) contribution only; the H5 variable of protocol/statistical-analysis-plan-v1.md, section 4.3, spans E08, E09, E10 and E11, and E08, E10 and E11 have no data",
+  "method": "descriptive; Wilson 95% interval without continuity correction; no test, no p-value, no Holm correction, no support or non-support criterion (none is frozen for H5)",
+  "classification": "CONFIRMATORY (H5), descriptive count comparison (written from the E09 campaign configuration, subsection CONFIRMATORY comparisons; never derived from the data)",
+  "inputs": {
+    "raw_data_tree": "b1cfd6f4826669a5d9b57dc5b0bea41547c03c1d",
+    "pinned_at_commit": "0ad90f64d156e87e02c0293dd62fe73600222bc3",
+    "bundles": 100,
+    "configuration_section_sha256": "a9a6fc5377ff0ab796196e20aa7b73db8c49c82f4606705b6590c2da4b51a2c4",
+    "campaign_state": "FROZEN"
+  },
+  "h5_count_of_controlled_non_functional_ground_truth_conditions": {
+    "scope": "E09 contribution only",
+    "SUT-01": {
+      "count": 1,
+      "basis": "HD-2 count unit: the stochastic condition E09-A11Y-SUT01-MISSING-NAME (the control condition E09-CTRL-SUT01-STANDARD is not a ground-truth condition)"
+    },
+    "SUT-02": {
+      "count": 0,
+      "reason": "no data: no ground-truth condition available (no condition configured)"
+    },
+    "SUT-03": {
+      "count": 0,
+      "reason": "no data: no ground-truth condition available (no condition configured)"
+    },
+    "SUT-04": {
+      "count": 0,
+      "reason": "no data: no ground-truth condition available (no condition configured)"
+    },
+    "SUT-05": {
+      "count": 0,
+      "reason": "no data: no ground-truth condition available (no condition configured)"
+    },
+    "SUT-06": {
+      "count": null,
+      "reason": "no data: modality rated Score 0 in E01 (NO_WEB_SURFACE)"
+    },
+    "comparisons": {
+      "SUT-01 vs SUT-02": "CONFIRMATORY (H5), descriptive count comparison on the E09 contribution: 1 versus 0; no pairwise detection comparison exists (SUT-02 has no condition), no Fisher table and no risk difference is formed",
+      "SUT-01 vs SUT-03": "CONFIRMATORY (H5), descriptive count comparison on the E09 contribution: 1 versus 0; no pairwise detection comparison exists (SUT-03 has no condition), no Fisher table and no risk difference is formed"
+    },
+    "not_evaluated": "E08, E10 and E11 have not been executed; the H5 count over all its campaigns does not exist yet"
+  },
+  "conditions": {
+    "E09-A11Y-SUT01-MISSING-NAME": {
+      "condition_id": "E09-A11Y-SUT01-MISSING-NAME",
+      "n_executions": 50,
+      "behavior_class_declared": "stochastic",
+      "realized_draws_by_dom_state": {
+        "ALL_EMPTY": 16,
+        "NOT_EMPTY": 34
+      },
+      "realized_draws_by_recorded_body_class": {
+        "MISSING_NAME_BODY": 16,
+        "NON_EMPTY_NAMES": 34
+      },
+      "ground_truth_instances": {
+        "x": 16,
+        "n": 50,
+        "point": 0.32,
+        "wilson95": [
+          0.20758216260656845,
+          0.45810297308144077
+        ]
+      },
+      "detection_rate": {
+        "x": 16,
+        "n": 16,
+        "point": 1,
+        "wilson95": [
+          0.8063923194655637,
+          1
+        ]
+      },
+      "non_detections_on_confirmed_instances": 0,
+      "excluded_from_denominator_other_draws": 34,
+      "recorded_outcome_status": {
+        "SUCCESS": 16,
+        "INCONCLUSIVE": 34
+      },
+      "recorded_outcome_category": {
+        "DETECTED": 16,
+        "NO_GROUND_TRUTH_INSTANCE": 34
+      },
+      "corroboration_of_the_draw": {
+        "AGREES": 50
+      },
+      "draw_consistency": {
+        "SINGLE_DRAW": 50
+      },
+      "matching_nodes_per_ground_truth_instance": {
+        "12": 16
+      },
+      "rule_nodes_total_descriptive_sum": 192
+    },
+    "E09-CTRL-SUT01-STANDARD": {
+      "condition_id": "E09-CTRL-SUT01-STANDARD",
+      "n_executions": 50,
+      "executions_in_which_the_rule_reports_a_product_heading": {
+        "x": 0,
+        "n": 50,
+        "point": 0,
+        "wilson95": [
+          0,
+          0.07134759913335872
+        ]
+      },
+      "realized_dom_state": {
+        "NOT_EMPTY": 50
+      },
+      "recorded_outcome_status": {
+        "SUCCESS": 50
+      },
+      "recorded_outcome_category": {
+        "CONTROL_RULE_ABSENT": 50
+      },
+      "corroboration_of_the_draw": {
+        "AGREES": 50
+      }
+    }
+  },
+  "consistency": {
+    "recorded_classification_equals_the_one_derived_from_the_evidence": true,
+    "disagreements": []
+  },
+  "notes": "Deterministic, non-interpretive computation: counts, proportions and intervals of recorded fields. A non-detection would be recorded as a non-detection of the predeclared rule set on the DOM condition confirmed at scan time, with no cause inferred (HD-20). The ground-truth is weak by design: the rule empty-heading is a best-practice, minor-impact rule (HD-3, HD-4)."
+}
