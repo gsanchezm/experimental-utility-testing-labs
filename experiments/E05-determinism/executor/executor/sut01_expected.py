@@ -11,7 +11,7 @@ import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(HERE, '..', 'expected-sut01.json')
-LOCKOUT_STATUS, LOCKOUT_DETAIL = 403, 'Sorry, this user has been locked out.'  # backend/auth.py lines 25-29 (SOURCE-READS-03)
+LOCKOUT_STATUS, LOCKOUT_DETAIL = 403, 'Sorry, this user has been locked out.'  # backend/auth.py lines 25-29, carried in the body key `error` (backend/main.py 75-84; SOURCE-READS-04, F25)
 ERROR_USER_DETAIL = 'Random checkout error triggered for testing purposes'  # backend/routers/checkout.py line 71 (F03)
 CHECKOUT_ITEM = {'pizza_id': 'p02', 'quantity': 1, 'size': 'small', 'toppings': []}
 CHECKOUT_BODY = {'country_code': 'MX', 'items': [CHECKOUT_ITEM], 'name': 'E05 Tester', 'address': 'Calle Uno 123', 'phone': '5512345678',

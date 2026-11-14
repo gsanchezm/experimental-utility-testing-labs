@@ -70,16 +70,16 @@ class H(http.server.BaseHTTPRequestHandler):
         b, p = self.body(), self.path
         if p == '/api/auth/login':
             if b.get('password') != 'pizza123' or b.get('username') not in BEHAVIOR:
-                return self.reply(401, {'detail': 'Invalid username or password'})
+                return self.reply(401, {'error': 'Invalid username or password', 'status_code': 0, 'timestamp': 'x'})
             if BEHAVIOR[b['username']] == 'locked_out':
-                return self.reply(403, {'detail': ex.LOCKOUT_DETAIL})
+                return self.reply(403, {'error': ex.LOCKOUT_DETAIL, 'status_code': 0, 'timestamp': 'x'})
             S['logins'] += 1
             tok = f'{JWT_HEAD}hbGciOi.{JWT_HEAD}{b["username"]}{S["logins"]}.sig{S["logins"]}abc'
             S['sessions'][tok] = {'username': b['username'], 'behavior': BEHAVIOR[b['username']], 'cart': []}
             return self.reply(200, {'access_token': tok, 'username': b['username'], 'behavior': BEHAVIOR[b['username']]})
         tok, u = self.user()
         if u is None:
-            return self.reply(401, {'detail': 'Could not validate credentials'})
+            return self.reply(401, {'error': 'Could not validate credentials', 'status_code': 0, 'timestamp': 'x'})
         if p == '/api/cart':
             u['cart'] = [dict(i) for i in b['items']]
             return self.reply(200, {'ok': True})
@@ -89,17 +89,17 @@ class H(http.server.BaseHTTPRequestHandler):
         if p == '/api/checkout':
             S['checkouts'] += 1
             if u['behavior'] == 'error' and S['checkouts'] % 2 == 1:
-                return self.reply(500, {'detail': ex.ERROR_USER_DETAIL})
+                return self.reply(500, {'error': ex.ERROR_USER_DETAIL, 'status_code': 0, 'timestamp': 'x'})
             order = ex.expected_order(b['items'], float(b.get('propina') or 0.0))
             return self.reply(200, {**order, 'order_id': f'ORDER-{S["checkouts"]:04d}', 'status': 'confirmed', 'timestamp': 'x', 'currency_symbol': '$'})
-        self.reply(404, {'detail': 'not found'})
+        self.reply(404, {'error': 'not found', 'status_code': 0, 'timestamp': 'x'})
 
     def get_sut01(self):
         if self.path == '/health':
             return self.reply(200, {'ok': True})
         tok, u = self.user()
         if u is None:
-            return self.reply(401, {'detail': 'Could not validate credentials'})
+            return self.reply(401, {'error': 'Could not validate credentials', 'status_code': 0, 'timestamp': 'x'})
         if self.path == '/api/session':
             return self.reply(200, {'cart_items': u['cart'], 'country_code': 'MX'})
         if self.path == '/api/pizzas':
@@ -109,7 +109,7 @@ class H(http.server.BaseHTTPRequestHandler):
             return self.reply(200, {'pizzas': ex.expected_catalog(DATA), 'country_code': 'MX', 'currency': 'MXN'})
         if self.path == '/health':
             return self.reply(200, {'ok': True})
-        self.reply(404, {'detail': 'not found'})
+        self.reply(404, {'error': 'not found', 'status_code': 0, 'timestamp': 'x'})
 
     # ---------------- SUT-05
     def post_sut05(self):

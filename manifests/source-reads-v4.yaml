@@ -1,0 +1,19 @@
+# manifests/source-reads-v4.yaml -- record of one read-only source read of 2026-11-14 (operation OP-PREP-E05; SOURCE-READS-04).
+# ORCHESTRATOR record. Nothing here changes a SUT, a protocol file or a locked configuration. Immutable once committed; a correction is a new version file.
+record_id: "SOURCE-READS-04"
+record_class: "SOURCE_READS"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E05"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-14"
+authorization: "The ORCHESTRATOR reads the human research lead's answer of 2026-11-12 in question dialog 2 of manifests/campaign-execution-decisions-v6.yaml ('Sí, SUT-01, 02, 04 y 05 (Recomendado)': read-only reads of individual files at the pinned commit of SUT-01, SUT-02, SUT-04 and SUT-05) as covering this re-read of backend/main.py, a file named in SOURCE-READS-01 whose sha256 equals the recorded one; the human research lead answered 'si a todo' on 2026-11-13 to the report that put the same reading of that answer for the files of SOURCE-READS-03."
+method: "file content by gh api GET repos/<repository>/contents/<path>?ref=<commit> with the raw media type (GET only; saved in the session scratch area, not part of the repository); bytes and sha256 below; nothing was cloned, installed, built or executed"
+executes_anything: false
+pin: {SUT: "SUT-01", repository: "https://github.com/gsanchezm/OmniPizza", commit: 9ca37674d374e9303912e259641ee86baf3aabe1}
+files_read:
+- {sut: "SUT-01", path: "backend/main.py", bytes: 3102, sha256: a7c11ab3279e73fb48d668f2dda1538eaeaba0b4ba537a8a1ff1d115bd3fff0f, relation: "same sha256 as SOURCE-READS-01"}
+findings:
+- {id: F25, statement: "The SUT-01 application registers one handler for HTTPException that answers the status of the exception with the JSON body {error: <detail>, status_code: <status>, timestamp: <UTC time>}, and one handler for any other exception that answers HTTP 500 with {error: 'Internal server error', ...}. Every error body of the API therefore carries its message in the key error, not in the key detail: the lockout message of locked_out_user (F19) and the 500 message of error_user (F03) are the value of error. The statements of F03 and F19 about 'the JSON detail' are corrected here as to the key; their message texts and statuses stand.", where: "backend/main.py lines 75-93", bears_on: "E05-SUT01-API-03 (S_LOCKOUT_403_EXACT_MESSAGE) and E05-SUT01-API-06 (the 500 body); found by the first DRY_RUN of E05 (run 43547714203, 2026-11-14), which showed the body of the 403"}
+not_done:
+- no clone, no install, no build, no execution, no SUT start; no file of a SUT was copied into the repository
+- no configuration was locked and no condition table was edited by this record

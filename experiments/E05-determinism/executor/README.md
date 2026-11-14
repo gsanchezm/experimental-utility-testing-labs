@@ -79,7 +79,7 @@ Per condition, the reset: SUT-01 API-02 to API-05 clear the session (API_RESET, 
 
 ## 6. Conditions that cannot run yet (decisions of the START package)
 
-E05-SUT02-WEB-02 is not configured: no recorded source defines its visual marker (source-reads-v3.yaml, F23), and run.py refuses it. E05-SUT04-API-02 declares no catch-all category (k = 4). The SUT-01 web controls built by tid(...) are located by contains selectors until the DRY_RUN confirms them (F22). The pins that are still missing are listed in ../campaign-configuration-draft.md, section 15.
+E05-SUT02-WEB-02 is not configured: no recorded source defines its visual marker (source-reads-v3.yaml, F23), and run.py refuses it. E05-SUT04-API-02 declares no catch-all category (k = 4). The SUT-01 web controls built by tid(...) are located by contains selectors (confirmed working by the first DRY_RUN, IMPLEMENTATION-NOTES.md, point 21). The pins that are still missing are listed in ../campaign-configuration-draft.md, section 15.
 
 ## 7. Not here
 

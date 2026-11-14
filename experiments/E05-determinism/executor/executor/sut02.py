@@ -12,8 +12,8 @@ line 122, which the projection excludes). The marker is a decision for the START
 from . import attempt, common, instance, web
 
 PASSWORD = 'secret_sauce'
-SPEC = common.Spec('Web UI Functional', 'web', ['APP_DATA_CLEAR'], ['PREDEFINED_ACCOUNT', 'UI_FLOW'], [('web', 'web')], True)
-SPEC_WEB02 = common.Spec('Web UI Functional', 'web', ['APP_DATA_CLEAR'], ['PREDEFINED_ACCOUNT', 'UI_FLOW'], [('web', 'web')], False)
+SPEC = common.Spec('Web UI Functional', 'web', ['APP_DATA_CLEAR'], ['PREDEFINED_ACCOUNT', 'DIRECT_ROUTE', 'UI_FLOW'], [('web', 'web')], True)
+SPEC_WEB02 = common.Spec('Web UI Functional', 'web', ['APP_DATA_CLEAR'], ['PREDEFINED_ACCOUNT', 'DIRECT_ROUTE', 'UI_FLOW'], [('web', 'web')], False)
 VISUAL_MARKER = None  # TBD at START: what S_VISUAL_MARKER_PRESENT observes (see the module docstring)
 FIRST_ITEM = '[data-test="add-to-cart-sauce-labs-backpack"]'
 NEXT_ITEM = '[data-test^="add-to-cart-"]'
@@ -81,9 +81,12 @@ class Sut02(attempt.Realization):
             run.capture(rec, self.b.shot, 'sut02-start')
 
     def establish(self, run):
-        with run.step('establishment', f'click {FIRST_ITEM}', ['UI_FLOW']) as rec:
+        """The inventory page keeps the 'Remove' state of the buttons it showed before 'Reset App State' until it is loaded again (first
+        DRY_RUN: the cart badge was gone, the add control of the first item was not there), so the establishment loads the page first."""
+        with run.step('establishment', f'load {{web}}/inventory.html, then click {FIRST_ITEM}', ['DIRECT_ROUTE', 'UI_FLOW']) as rec:
+            status = self.b.goto(self.site + '/inventory.html')
             self.b.page.locator(FIRST_ITEM).click()
-            rec['observation'] = {'cart-contents': web.local_storage(self.b, 'cart-contents')}
+            rec['observation'] = {'status': status, 'cart-contents': web.local_storage(self.b, 'cart-contents')}
 
     def verify_target(self, run):
         with run.step('verification', '[data-test="shopping-cart-badge"] text 1') as rec:

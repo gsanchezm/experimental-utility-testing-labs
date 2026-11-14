@@ -249,6 +249,7 @@ class Web01(Sut04):
     def web_login(self, run):
         b = self.b
         status = b.goto(self.site + '/admin')
+        b.settle()  # a logged-in session is redirected by the page itself; a navigation started meanwhile is aborted (first DRY_RUN, ERR_ABORTED)
         if b.page.locator('#username').count():
             b.page.locator('#username').fill('admin')
             b.page.locator('#password').fill('password')
@@ -330,18 +331,22 @@ class Web01(Sut04):
             settle = b.settle()
             confirmed = b.page.get_by_text('Booking Confirmed').count() > 0
             form_remains = b.page.locator('.room-firstname').count() > 0
+            body_text = b.page.locator('body').inner_text(timeout=web.ACTION_TIMEOUT_MS)
+            page_state = 'form_remains' if form_remains else ('error_page' if "couldn\u2019t load" in body_text or "couldn't load" in body_text else 'other')
             run.capture(rec, b.shot, 'sut04-web-after-stimulus')
             run.capture(rec, b.dom, 'sut04-web-stimulus-text')
-            obs = {'post_status': post, 'confirmation_visible': confirmed, 'form_remains': form_remains, 'settle': settle}
+            obs = {'post_status': post, 'confirmation_visible': confirmed, 'form_remains': form_remains, 'page_state': page_state, 'settle': settle}
             rec['observation'] = obs
         return obs
 
     def classify(self, run, obs):
         if obs['confirmation_visible']:
             return 'S_BOOKING_CONFIRMED', f'confirmation shown; form post answered {obs["post_status"]}'
-        if obs['form_remains']:
-            return 'S_NO_CONFIRMATION_FORM_REMAINS', f'no confirmation, the form is still shown; form post answered {obs["post_status"]}'
-        return 'S_OTHER', f'no confirmation and no form; form post answered {obs["post_status"]}'
+        if obs['post_status'] == 409:
+            # F09: a conflict answers 409 with no body. The page state afterwards (form still shown, or the framework error page that the
+            # first DRY_RUN showed, F10 corrected) is evidence in the observation and in the screenshot, not part of the category.
+            return 'S_NO_CONFIRMATION_SHOWN', f'form post answered 409 and no confirmation is shown; page state {obs["page_state"]}'
+        return 'S_OTHER', f'no confirmation; form post answered {obs["post_status"]}; page state {obs["page_state"]}'
 
 
 REALIZATIONS = {'E05-SUT04-API-01': Api01, 'E05-SUT04-API-02': Api02, 'E05-SUT04-WEB-01': Web01}

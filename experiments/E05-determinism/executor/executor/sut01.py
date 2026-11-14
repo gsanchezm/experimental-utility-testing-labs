@@ -169,7 +169,9 @@ class Api02(Sut01Api):
 
 
 class Api03(Sut01Api):
-    """Stimulus: POST /api/auth/login as locked_out_user, in a separate request that carries no token (backend/auth.py lines 25-29)."""
+    """Stimulus: POST /api/auth/login as locked_out_user, in a separate request that carries no token (backend/auth.py lines 25-29). The
+    message is carried in the key `error` of the body: the app's HTTPException handler answers {error, status_code, timestamp} (backend/main.py
+    lines 75-84; SOURCE-READS-04, F25; the first DRY_RUN showed it)."""
 
     def stimulus(self, run):
         with run.observe('stimulus', 'POST /api/auth/login as locked_out_user') as rec:
@@ -177,7 +179,7 @@ class Api03(Sut01Api):
             r = run.http('POST', f'{self.api()}/api/auth/login', {'username': 'locked_out_user', 'password': PASSWORD}, label='sut01-stimulus-lockout')
             rec['evidence'].append(r.evidence)
             try:
-                detail = r.json().get('detail')
+                detail = r.json().get('error')
             except (ValueError, AttributeError):
                 detail = None
             obs = {'status': r.status, 'error': r.error, 'detail': detail}
@@ -252,7 +254,7 @@ class Api06(Sut01Api):
             except ValueError:
                 body = None
             obs = {'status': r.status, 'error': r.error, 'has_order_id': isinstance(body, dict) and bool(body.get('order_id')),
-                   'detail': body.get('detail') if isinstance(body, dict) else None}
+                   'detail': body.get('error') if isinstance(body, dict) else None}
             rec['observation'] = obs
         return obs
 
