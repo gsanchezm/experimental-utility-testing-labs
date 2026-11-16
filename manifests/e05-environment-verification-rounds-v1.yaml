@@ -1,0 +1,57 @@
+# manifests/e05-environment-verification-rounds-v1.yaml -- record of the three non-measured environment-verification DRY_RUN rounds of E05-determinism (operation OP-PREP-E05; OP-PREP-E05-02).
+# ORCHESTRATOR record. The runs are DRY_RUN runs of .github/workflows/e05-environment-verification.yml, dispatched by the ORCHESTRATOR on the human research lead's yes to each exact line; their bundles were reviewed and never imported; they are never measured data and never enter raw-data/. Immutable once committed; a correction is a new version file.
+record_class: "E05_ENVIRONMENT_VERIFICATION_ROUNDS"
+record_id: "E05-ENVIRONMENT-VERIFICATION-ROUNDS-01"
+study_id: "EUS-2026-001"
+campaign_id: "E05-determinism"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-16"
+measured_experiment: false
+executes_anything: false
+authorizes: "nothing"
+rounds:
+- round: 1
+  run_id: 43547714203
+  run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/43547714203
+  dispatched_utc: "2026-11-14T02:41:46Z"   # clock after the dispatch command; the clock before was 02:41:43Z; run created 02:41:45Z
+  head_sha: 9d01cc383c9b5f0d6f1dffe58891b13a3191a2b7   # export v59
+  executions_per_condition: 2
+  implementation_run_condition_sha256: b2cb3c70fba7061a1bea57cb0a791dc97692a0414e283b3d35890a72dc2468d8
+  conclusion: failure
+  result: "the gate and plan jobs and 11 of the 14 condition jobs succeeded; E05-SUT02-WEB-02 was refused by design (unconfigured); E05-SUT02-WEB-01 and E05-SUT04-WEB-01 failed their DRY_RUN check; E05-SUT01-API-03 did not reach its expected category because the lockout message is the value of the error key (IMPLEMENTATION-NOTES.md, point 21, item a)"
+  defects_found_and_corrected: "IMPLEMENTATION-NOTES.md, point 21; SOURCE-READS-04 (manifests/source-reads-v4.yaml, F25); corrected by commit 8ffef0ce and published by export v60"
+- round: 2
+  run_id: 43579847658
+  run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/43579847658
+  dispatched_utc: "2026-11-14T09:17:27Z"   # clock before 09:17:25Z; run created 09:17:27Z
+  head_sha: 282a6727cf555860697740216efef14f15a34b3e   # export v60
+  executions_per_condition: 3
+  implementation_run_condition_sha256: bade00d2a45e69da3b25707e6c00cd84d892c15ccdf0bf69485ae8f3570f9ac0
+  conclusion: failure   # only the refusal of E05-SUT02-WEB-02 (exit 2, no record written)
+  result: "an outcome was recorded in every one of the 13 configured conditions, 3 of 3 executions each, all attributed to the SUT; the three defects of round 1 were corrected; E05-SUT02-WEB-02 refused by design"
+- round: 3
+  run_id: 43913235559
+  run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/43913235559
+  dispatched_utc: "2026-11-16T16:57:49Z"   # clock before 16:57:46Z; run created 16:57:49Z
+  head_sha: b7f5c86653ea597096ef714590d6e28e29abe362   # export v61: the 13-condition conditions file with S_OTHER and the corrected workflows
+  executions_per_condition: 3
+  implementation_run_condition_sha256: bade00d2a45e69da3b25707e6c00cd84d892c15ccdf0bf69485ae8f3570f9ac0
+  conclusion: success
+  result: "15 of 15 jobs succeeded (the gate, the plan and the 13 conditions); 39 run manifests, all of the stimulus phase, all attributed to the SUT; the implementation hash is in the 13 provenance records; the longest job lasted 4 min 30 s"
+  categories_by_condition:
+      E05-SUT01-API-01: {"S_ORDER_TOTAL_MATCH": 3}
+      E05-SUT01-API-02: {"S_CATALOG_MATCH": 3}
+      E05-SUT01-API-03: {"S_LOCKOUT_403_EXACT_MESSAGE": 3}
+      E05-SUT01-API-04: {"S_CONTENT_MATCH_200": 3}
+      E05-SUT01-API-05: {"S_MODE_MISSING_NAME": 2, "S_MODE_WRONG_LANG": 1}
+      E05-SUT01-API-06: {"S_HTTP_500": 2, "S_ORDER_CREATED": 1}
+      E05-SUT01-WEB-01: {"S_ORDER_CONFIRMED": 3}
+      E05-SUT02-WEB-01: {"S_BADGE_2": 3}
+      E05-SUT04-API-01: {"S_CONFLICT_REJECTED": 3}
+      E05-SUT04-API-02: {"S_MESSAGE_RECORD_PRESENT": 3}
+      E05-SUT04-WEB-01: {"S_NO_CONFIRMATION_SHOWN": 3}
+      E05-SUT05-API-01: {"S_REJECTED_AS_EXPECTED": 3}
+      E05-SUT05-API-02: {"S_CAPTCHA_ISSUED": 3}
+governing_run: "round 3 (the latest run governs every condition)"
+decisions_taken_after_round_2: "manifests/campaign-execution-decisions-v9.yaml"
+review_basis: "the downloaded bundles and the GitHub run and job records were read by the ORCHESTRATOR; the operator records of each round (dispatch line, clocks before and after, return code, run identity, summaries, artifact digests as reported by GitHub) are kept outside the repository"

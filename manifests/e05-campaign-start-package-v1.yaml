@@ -1,0 +1,62 @@
+# manifests/e05-campaign-start-package-v1.yaml -- E05 campaign START package (lock package), version 1, PREPARED.
+# ORCHESTRATOR record of operation OP-PREP-E05-02 (2026-11-16). It holds the lock values, the prepared edit set of the E05 START, the rehearsal of the gate of the measured workflow on those edits, the texts of the four dispatch authorizations and of the further-attempt approval, and the items that remain for the human research lead. It starts, authorizes, dispatches, freezes, exports, and changes nothing. Immutable once committed; a correction is a new version file (as E02 and E09 went from package version 1 to a later one when a value changed).
+record_class: "E05_CAMPAIGN_START_PACKAGE"
+record_id: "E05-START-PACKAGE-01"
+study_id: "EUS-2026-001"
+campaign_id: "E05-determinism"
+operation_id: "OP-PREP-E05-02"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-16"
+status: "PREPARED"
+supersedes: null
+binding_moment: "the E05 campaign START (protocol/change-control-v1.md, section 7, moment 1), on the explicit human approval of that exact action; nothing in this record binds anything before it"
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+authorizes: "nothing: not the START, not the lock of the configuration, not the freeze of the dispatch prompt, not a dispatch authorization, not a dispatch, not an export"
+nature: "The prepared edit set of the E05 START and the lock values it would bind, computed after the third environment-verification DRY_RUN (run 43913235559, 2026-11-16), which ran the implementation complete on GitHub Actions with the conditions file and the workflows that the START locks, with no defect (manifests/e05-environment-verification-rounds-v1.yaml). Thirteen conditions are executable, N = 50 each (650 executions), on four systems under test (SUT-01 7 conditions, SUT-02 1, SUT-04 3, SUT-05 2); E05-SUT02-WEB-02 was retired before the START (manifests/campaign-execution-decisions-v9.yaml). A change of the implementation hash, of the conditions file, of the measured workflow or of the prompt before the START makes a new package version."
+lock_values:
+  implementation_sha256: bade00d2a45e69da3b25707e6c00cd84d892c15ccdf0bf69485ae8f3570f9ac0  # experiments/E05-determinism/executor/run-condition.sh; the digests of the 13 executor files, the expected-values file and the requirements are embedded in it
+  conditions_file: {path: experiments/E05-determinism/conditions-draft.json, sha256: 40b226610904f339a7e40d90ffeaf6e4d0ddb8862f6adba4cc2cf5efc2923eb8, conditions: 13}
+  measured_workflow: {path: .github/workflows/e05-measured-execution.yml, sha256: df04c65f777754ce3dd85358c0751b8bb80205838ada99041cb6bef4f5687afd, note: "gate G-9 reads this hash from the locked configuration; the public file is byte-identical to the canonical one (export v61)"}
+  dispatch_prompt: {id: ORCHESTRATOR-E05-determinism-v1, working_copy: prompts/working/ORCHESTRATOR-E05-determinism-v1.md, working_copy_sha256: c094e62471fe3142bb5210ee18f598615a026b898632091f0194f1b72737879e, frozen_copy_to_write: prompts/frozen/ORCHESTRATOR-E05-determinism-v1.md}
+  run_manifest_schema: {path: schemas/run-manifest.schema.v2.json, sha256: 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757}
+  scenario_mapping: {path: experiments/scenario-mappings/CS-001.yaml, sha256: e251e3825ebbbe3aa1a0f3fee8a30131fa1e0910161ae583a09cb34d9f1cc583, status: FROZEN}
+  configuration_text: {path: experiments/E05-determinism/campaign-configuration-start-text-draft.md, sha256: ca33b25d13b7c7191bbf7bca4b85778621201ad02bd1490e3e8b30001f235ea1, destination: the section 'Campaign configuration' of experiments/E05-determinism/README.md, copied verbatim}
+  controlled_instance_status: {path: experiments/E05-determinism/controlled-instance-status.yaml, sha256: c7cad3808fd2107ca1afd902a73e4f8805ad8a6d4a104d5c6937113f1dc0abb4}
+  environment_verification_record: {path: manifests/e05-environment-verification-rounds-v1.yaml, sha256: 0fc3812b78fcda327983a60d8d7372f815ea371c9d80205e1086809ecb5ddc2c, governing_run: 43913235559}
+  pinned_suts: "manifests/sut-manifest.yaml: SUT-01 web and api OmniPizza 9ca37674d374e9303912e259641ee86baf3aabe1; SUT-02 web saucelabs/sample-app-web 60fdd634bb111c092282fa07977513a0a7765593; SUT-04 web and api restful-booker-platform d36bd3f8647a091d406e53bad463c5e3e5d2ece1 (release 2.2); SUT-05 api juice-shop 1618a611b173b4bf114028e6e02549950606e29d (release v20.2.0)"
+  web_runner: 'Playwright for Python 1.63.0 (hashed requirements of the executor)'
+  start_authorization_id_proposed: E05-START-AUTH-01
+prepared_edit_set:  # applied only at the START, on the human research lead's approval of that exact action
+- {n: 1, edit: "experiments/E05-determinism/README.md: the section 'Campaign configuration' is added with the text of the configuration_text file, verbatim, and 'Current status' is updated to IN_PROGRESS (START)"}
+- {n: 2, edit: "protocol/CHANGELOG.md: one row 'campaign NOT_STARTED -> IN_PROGRESS' for experiments/E05-determinism/README.md that names the START authorization id (the measured workflow requires exactly one such row)"}
+- {n: 3, edit: "manifests/study-manifest.yaml: the status of E05-determinism changes from NOT_STARTED to IN_PROGRESS, with a dated note"}
+- {n: 4, edit: "prompts/frozen/ORCHESTRATOR-E05-determinism-v1.md: written once as a byte-identical copy of the working copy (prompts/README.md, rules 1 to 3), before the first run that uses it"}
+- {n: 5, edit: "manifests/e05-campaign-start-v1.yaml: the START record (record_class CAMPAIGN_START), with the human research lead's approval verbatim and its sha256"}
+- {n: 6, edit: "experiments/E05-determinism/controlled-instance-status.yaml: campaign_status changes to IN_PROGRESS"}
+- {n: 7, edit: "the append-only dispatch records manifests/e05-measured-dispatch/e05-sut01.jsonl, -sut02, -sut04 and -sut05 are created at the first dispatch of each SUT, not at the START"}
+dispatch_authorizations_to_issue:  # prepared texts; each is recorded only when the human research lead issues it (Section 3.7); one per assigned SUT
+- {id: E05-DISPATCH-SUT01-AUTH-01, assigned_sut: SUT-01, record_file_when_issued: manifests/e05-dispatch-authorization-sut01-v1.yaml, conditions: [E05-SUT01-API-01, E05-SUT01-API-02, E05-SUT01-API-03, E05-SUT01-API-04, E05-SUT01-API-05, E05-SUT01-API-06, E05-SUT01-WEB-01], n_executions: 50, executions_total: 350, dispatches: 7, attempt: 1}
+- {id: E05-DISPATCH-SUT02-AUTH-01, assigned_sut: SUT-02, record_file_when_issued: manifests/e05-dispatch-authorization-sut02-v1.yaml, conditions: [E05-SUT02-WEB-01], n_executions: 50, executions_total: 50, dispatches: 1, attempt: 1}
+- {id: E05-DISPATCH-SUT04-AUTH-01, assigned_sut: SUT-04, record_file_when_issued: manifests/e05-dispatch-authorization-sut04-v1.yaml, conditions: [E05-SUT04-API-01, E05-SUT04-API-02, E05-SUT04-WEB-01], n_executions: 50, executions_total: 150, dispatches: 3, attempt: 1}
+- {id: E05-DISPATCH-SUT05-AUTH-01, assigned_sut: SUT-05, record_file_when_issued: manifests/e05-dispatch-authorization-sut05-v1.yaml, conditions: [E05-SUT05-API-01, E05-SUT05-API-02], n_executions: 50, executions_total: 100, dispatches: 2, attempt: 1}
+dispatch_authorization_common_fields: "record_class E05_DISPATCH_AUTHORIZATION; status ISSUED; record_validity VALID; dispatch_eligibility ELIGIBLE; revoked false; issued_by 'human research lead'; authorization_date; assigned_sut; conditions; n_executions 50; attempt 1; campaign_start_authorization_id E05-START-AUTH-01; governing_protocol protocol/agent-governance-v6.md, Section 3.7; frozen_inputs: executor_implementation_sha256 bade00d2a45e69da3b25707e6c00cd84d892c15ccdf0bf69485ae8f3570f9ac0, executor_prompt_sha256 (the sha256 of the frozen prompt file, equal to the working copy sha256 above); the order of dispatch of the configuration; the dispatch record file of the SUT"
+further_attempt_approval_template:  # not a record: a file named manifests/e05-further-attempt-approval-sut0N-v<version>.yaml is a record and is created only when the human research lead approves a further attempt
+  record_class: E05_FURTHER_ATTEMPT_APPROVAL
+  fields: "approval_id; status ISSUED; revoked false; issued_by 'human research lead'; assigned_sut; dispatch_authorization_id; campaign_start_authorization_id E05-START-AUTH-01; governing_protocol 'protocol/agent-governance-v6.md, Sections 3.6 and 3.7 (Further attempts)'; executor_implementation_sha256; executor_prompt_version; executor_prompt_sha256; attempts: a list of {condition_id, first_execution, attempt, previous_attempt, executions: [EXnnnn, ... one by one up to EX0050], previous_attempt_record: {github_run_id, workflow_conclusion, bundle, observed, cause, treatment_in_the_campaign}}"
+  gate: "G-E05-A2 of .github/workflows/e05-measured-execution.yml reads condition_id, first_execution, attempt and previous_attempt; the enumeration of the executions is what makes the record name 'the condition and the execution' of Section 3.7"
+rehearsal_of_the_gate:
+  what: "the gate step of .github/workflows/e05-measured-execution.yml (extracted from the file) was run on a scratch copy of the files it reads, with the prepared edit set applied (the configuration section, the change-log row, the IN_PROGRESS status, the frozen prompt copy, the START record) and a SYNTHETIC dispatch authorization named REHEARSAL-E05-DISPATCH-SUT0N for each SUT that was never committed and is not an authorization"
+  result: "ALL GATES PASSED for each of the 13 conditions (46 gates PASS, 0 FAIL, attempt 1, first execution 1). The executor tests (107) pass; they include the gate must-pass tree, one mutation per gate that must fail, the further-attempt gate with its matrix, the as-is repository that must fail closed, and runs of the isolation and validation steps on synthetic bundles."
+  limit: "the rehearsal proves that the prepared text and values satisfy the gate; it is not an authorization and the scratch copy and the synthetic records were deleted; the steps of the measured job itself cannot run before the first dispatch (the bundle validation and the isolation steps were exercised on synthetic bundles)"
+not_part_of_the_start:
+- "the four dispatch authorizations (issued separately by the human research lead under Section 3.7, one per SUT, each after the export that publishes the START state, because the measured workflow reads the public repository; the ORCHESTRATOR records each only when the human research lead issues it)"
+- "the exports of the START state and of the authorizations (each with its own exact-line approval)"
+- "any dispatch, any import of measured data, and the freeze of the campaign (E05-FREEZE needs its own approval after the 650 executions)"
+open_items_for_the_human_research_lead:
+- {id: OPEN-1, text: "Approve the START of E05-determinism and the lock of its Campaign configuration (the text file named above, sha256 in lock_values), under the authorization id E05-START-AUTH-01. Recommended: approve."}
+- {id: OPEN-2, text: "Approve the freeze of the dispatch procedure prompt ORCHESTRATOR-E05-determinism-v1 (working copy sha256 in lock_values) at the same moment. Recommended: approve; it is adapted from the E02 and E09 prompts with the further-attempt rule of gate G-E05-A2."}
+- {id: OPEN-3, text: "Confirm the order of dispatch fixed in the configuration (SUT-01: API-01 to API-06 then WEB-01; SUT-02: WEB-01; SUT-04: API-01, API-02, WEB-01; SUT-05: API-01, API-02; one condition at a time per SUT, the chains of different SUTs concurrent) and the dispatch record locations. Recommended: confirm."}
+- {id: OPEN-4, text: "After the START and the export that publishes it, issue the four dispatch authorizations (Section 3.7), each one by an explicit yes. Not asked now."}
+- {id: OPEN-5, text: "The agent-instructions file catch-up for export v61 and for the START (offered separately, only on an explicit yes). Not asked now."}

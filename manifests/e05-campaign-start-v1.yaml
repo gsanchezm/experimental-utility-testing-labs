@@ -1,0 +1,50 @@
+# manifests/e05-campaign-start-v1.yaml -- provenance record of the E05-determinism campaign START (operation OP-START-E05; protocol/change-control-v1.md, section 7, moment 1; modeled on manifests/e09-campaign-start-v1.yaml). Immutable once committed.
+record_class: "CAMPAIGN_START"
+record_id: "E05-CAMPAIGN-START-01"
+study_id: "EUS-2026-001"
+campaign_id: "E05-determinism"
+operation_id: "OP-START-E05"
+recorded_by_role: "ORCHESTRATOR"
+start_date: "2026-11-16"
+start_timestamp_utc: "2026-11-16T18:20:47Z"
+authorization_id: "E05-START-AUTH-01"
+binding: "protocol/change-control-v1.md, section 7, moment 1 (campaign NOT_STARTED -> IN_PROGRESS)"
+approval:
+  given_by: the human research lead
+  channel: given directly to the ORCHESTRATOR in its conversation, as the answers of one question dialog of three questions (the START and the lock; the freeze of the dispatch prompt; the order of dispatch)
+  question_stamp: "2026-11-16T18:09:42.776Z"
+  answer_stamp: "2026-11-16T18:18:13.978Z"
+  chosen_options: ["Sí, aprueba el START (Recomendado)", "Sí, congelarlo en el START (Recomendado)", "Sí, confirmar (Recomendado)"]
+  answer_text_bytes: 1854
+  answer_text_sha256: 42d26dda5f0713a3c426049ece93d8d8036d3ad00688107ecff743c60d4c820d
+  answer_text: "Your questions have been answered: \"Paquete del START de E05 v1 preparado (commit 74ec4623, solo local). Todo verificado: las 3 rondas DRY_RUN (la 3 en verde, 13 de 13), 107 pruebas, y el gate del workflow medido pasa 46 de 46 chequeos para cada una de las 13 condiciones con autorizaciones sintéticas que no se commitearon. Diseño a bloquear: 13 condiciones, N = 50 cada una, 650 ejecuciones, 13 despachos bajo 4 autorizaciones por SUT. Hash del ejecutor bade00d2…, del workflow medido df04c65f…, del archivo de condiciones 40b22661…, del texto de configuración ca33b25d….\n\n¿Apruebas el START de E05-determinism y el bloqueo de su configuración bajo el id E05-START-AUTH-01? El START aplica en un commit: la sección 'Campaign configuration' en el README de E05 (texto verbatim del archivo), el estado IN_PROGRESS, la fila del change-log, el registro del START con tu respuesta textual, y el estado de las instancias controladas. No autoriza ningún despacho ni exporta nada.\"=\"Sí, aprueba el START (Recomendado)\", \"Congelamiento del prompt de procedimiento de despacho ORCHESTRATOR-E05-determinism-v1 (copia de trabajo sha256 c094e624…, adaptado de los de E02 y E09, con la regla de intento adicional G-E05-A2). Se escribe una vez en prompts/frozen/ como copia byte a byte, en el mismo commit del START. ¿Lo apruebas?\"=\"Sí, congelarlo en el START (Recomendado)\", \"Orden de despacho fijado en la configuración (un condición a la vez por SUT, las cadenas de SUT distintos pueden correr en paralelo): SUT-01: API-01, API-02, API-03, API-04, API-05, API-06, WEB-01; SUT-02: WEB-01; SUT-04: API-01, API-02, WEB-01; SUT-05: API-01, API-02. Registros de despacho en manifests/e05-measured-dispatch/e05-sut0N.jsonl (uno por SUT, solo anexar). ¿Lo confirmas?\"=\"Sí, confirmar (Recomendado)\". You can now continue with these answers in mind."
+  what_the_question_offered: "the START of E05-determinism under the authorization id E05-START-AUTH-01; the lock of the Campaign configuration text of manifests/e05-campaign-start-package-v1.yaml (sha256 ca33b25d13b7c7191bbf7bca4b85778621201ad02bd1490e3e8b30001f235ea1), the executor implementation hash bade00d2a45e69da3b25707e6c00cd84d892c15ccdf0bf69485ae8f3570f9ac0, the measured workflow file and the conditions file as hashed in that text, and the dispatch procedure prompt ORCHESTRATOR-E05-determinism-v1 (sha256 c094e62471fe3142bb5210ee18f598615a026b898632091f0194f1b72737879e, frozen as a byte-identical copy); the order of dispatch of the configuration; and it stated that the START authorizes no dispatch, no dispatch authorization and no export"
+package:
+  path: manifests/e05-campaign-start-package-v1.yaml
+  record_id: E05-START-PACKAGE-01
+locked:
+  implementation_sha256: bade00d2a45e69da3b25707e6c00cd84d892c15ccdf0bf69485ae8f3570f9ac0
+  executable_conditions: [E05-SUT01-API-01, E05-SUT01-API-02, E05-SUT01-API-03, E05-SUT01-API-04, E05-SUT01-API-05, E05-SUT01-API-06, E05-SUT01-WEB-01, E05-SUT02-WEB-01, E05-SUT04-API-01, E05-SUT04-API-02, E05-SUT04-WEB-01, E05-SUT05-API-01, E05-SUT05-API-02]
+  sample_size: "N = 50 per condition, EX0001 to EX0050, attempt 1 each (650 executions)"
+  prompt_version: ORCHESTRATOR-E05-determinism-v1
+  prompt_sha256: c094e62471fe3142bb5210ee18f598615a026b898632091f0194f1b72737879e
+  configuration_text_sha256: ca33b25d13b7c7191bbf7bca4b85778621201ad02bd1490e3e8b30001f235ea1
+  section_inserted_sha256: 51b9933ee49ab8a8ff77915dc741471e101b9c9c15b61d7368566731df9c2e90
+  conditions_file_sha256: 40b226610904f339a7e40d90ffeaf6e4d0ddb8862f6adba4cc2cf5efc2923eb8
+  measured_workflow_sha256: df04c65f777754ce3dd85358c0751b8bb80205838ada99041cb6bef4f5687afd
+  start_authorization_id: E05-START-AUTH-01
+files_written:
+- experiments/E05-determinism/README.md
+- protocol/CHANGELOG.md
+- manifests/study-manifest.yaml
+- prompts/frozen/ORCHESTRATOR-E05-determinism-v1.md
+- manifests/e05-campaign-start-v1.yaml
+- experiments/E05-determinism/controlled-instance-status.yaml
+- experiments/README.md
+does_not:
+- "issue any dispatch authorization (E05-DISPATCH-SUT01-AUTH-01, -SUT02-, -SUT04- and -SUT05- are names, not issued)"
+- "dispatch anything or run any workflow"
+- "export or push anything"
+- "edit any workflow, executor file, scenario record, or protocol document other than the change-log row"
+- "edit the agent-instructions file (its update needs the human research lead's yes)"
+next: "the export of the START state (version 62, on the human research lead's yes to its exact line), the gate step re-run on the exported tree, then the four dispatch authorizations that the human research lead issues under Section 3.7 (one record per SUT, N = 50, attempt 1, with the implementation and prompt SHA-256 values above), their export, and then the dispatches under the frozen procedure."

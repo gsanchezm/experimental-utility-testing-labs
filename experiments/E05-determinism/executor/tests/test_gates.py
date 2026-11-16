@@ -44,6 +44,7 @@ SUT_TAGS = {'SUT-01': 'sut01', 'SUT-02': 'sut02', 'SUT-04': 'sut04', 'SUT-05': '
 AUTH_START = 'TEST-FIXTURE-E05-START'
 AUTH_DISPATCH = 'TEST-FIXTURE-E05-DISPATCH'
 PV = 'TEST-FIXTURE-PROMPT-v1'
+REAL_PROMPT = 'ORCHESTRATOR-E05-determinism-v1'  # the frozen dispatch prompt of the campaign START (2026-11-16)
 PROMPT_TEXT = b'DRAFT fixture prompt text for the E05 gate tests only.\n'
 IMPL_TEXT = b'DRAFT fixture implementation text for the E05 gate tests only.\n'
 PROMPT_SHA = hashlib.sha256(PROMPT_TEXT).hexdigest()
@@ -469,24 +470,27 @@ class MeasuredGateTests(unittest.TestCase):
                     lambda s: s['files'].__setitem__(README, s['files'][README].replace(SUT05_RELEASE, 'x')), cond=COND_SUT05)
 
     def test_as_is_repository_state_fails_closed(self):
-        """The files of this repository as they are now (copied where present) must not pass the gate."""
+        """The files of this repository as they are now (copied where present) must not pass the gate. Since the campaign START the START
+        record, the locked configuration, the controlled-instance status and the frozen prompt are present, so the only checks that may fail
+        are those about the dispatch authorization of the assigned SUT, which the human research lead issues separately (Section 3.7)."""
         files = {}
-        for rel in (STUDY, CHANGELOG, GOV, README, CONDITIONS_REL, SUT_MANIFEST, MAPPING, SCHEMA, IMPL, WORKFLOW_REL):
+        for rel in (STUDY, CHANGELOG, GOV, README, CONDITIONS_REL, SUT_MANIFEST, MAPPING, SCHEMA, IMPL, WORKFLOW_REL, START_RECORD, CONTROLLED,
+                    f'prompts/frozen/{REAL_PROMPT}.md'):
             path = os.path.join(REPO, rel)
             if os.path.isfile(path):
                 with open(path, encoding='utf-8') as f:
                     files[rel] = f.read()
-        code, out = run_script({'files': files, 'inputs': measured_inputs(COND_SUT01, 'SUT-01')}, self.script,
-                               os.path.join(self.work, 'as-is'), self.work)
+        inputs = measured_inputs(COND_SUT01, 'SUT-01')
+        inputs['GATE_EXECUTOR_PROMPT_VERSION'] = REAL_PROMPT
+        inputs['GATE_EXECUTOR_IMPLEMENTATION_SHA256'] = hashlib.sha256(open(os.path.join(REPO, IMPL), 'rb').read()).hexdigest()
+        inputs['GATE_CAMPAIGN_START_AUTHORIZATION_ID'] = 'E05-START-AUTH-01'
+        code, out = run_script({'files': files, 'inputs': inputs}, self.script, os.path.join(self.work, 'as-is'), self.work)
         self.assertNotEqual(code, 0, out)
-        for fragment in ('E05 campaign status IN_PROGRESS', 'exactly one E05 campaign START change-log row',
-                         'locked "Campaign configuration" record exists',
-                         'exactly one dispatch authorization record of the assigned SUT', 'controlled instance status CONTROLLED',
-                         'executor prompt frozen file exists'):
-            self.assertIn(fragment, out)
+        fails = [l for l in out.splitlines() if l.startswith('FAIL ')]
+        self.assertTrue(any('exactly one dispatch authorization record of the assigned SUT' in l for l in fails), out)
+        self.assertTrue(all('dispatch authorization' in l for l in fails), [l for l in fails if 'dispatch authorization' not in l])
 
 
-@unittest.skipIf(shutil.which('ruby') is None and not _pyyaml_importable(), 'the gates need PyYAML or ruby (stand-in)')
 class VerificationGateTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
