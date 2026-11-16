@@ -1,0 +1,60 @@
+# manifests/e05-dispatch-authorization-sut05-v1.yaml -- record of the dispatch authorization E05-DISPATCH-SUT05-AUTH-01 (protocol/agent-governance-v6.md, Section 3.7).
+# The human research lead's issuance, for the assigned system under test (SUT) SUT-05, of the authorization under which the ORCHESTRATOR dispatches the frozen measured-execution workflow of E05-determinism for its conditions. ORCHESTRATOR record of operation OP-DISPATCH-E05-01. Immutable once committed; a revocation or a change is a new version file.
+# The record itself is not a measured experiment and executes nothing; the dispatches it covers are recorded one by one in manifests/e05-measured-dispatch/e05-sut05.jsonl.
+record_id: "E05-DISPATCH-AUTHORIZATION-SUT05-01"
+record_class: "E05_DISPATCH_AUTHORIZATION"
+authorization_id: "E05-DISPATCH-SUT05-AUTH-01"
+version: 1
+study_id: "EUS-2026-001"
+campaign_id: "E05-determinism"
+operation_id: "OP-DISPATCH-E05-01"
+assigned_sut: "SUT-05"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-16"
+recorded_utc: "2026-11-16T23:31:10Z"
+status: "ISSUED"
+record_validity: "VALID"
+dispatch_eligibility: "ELIGIBLE"
+revoked: false
+attempt: 1
+authorization_date: "2026-11-16"
+issued_by: "human research lead"
+authorizes_dispatches: true  # of exactly the conditions listed under conditions, within the limits below
+measured_experiment: false  # this record; the executions it covers are MEASURED_EXPERIMENT runs of the frozen GitHub Actions path
+executes_anything: false
+revocable_by_the_human_research_lead: true  # at any time; no revocation exists at the time of this record
+campaign_start_authorization_id: E05-START-AUTH-01
+governing_protocol: protocol/agent-governance-v6.md, Section 3.7
+n_executions: 50  # per condition
+conditions:  # in the order of the dispatch fixed by the locked campaign configuration (experiments/E05-determinism/README.md)
+  - E05-SUT05-API-01
+  - E05-SUT05-API-02
+scope:
+  assigned_sut: SUT-05
+  conditions_in_all: 2
+  executions_in_all: 100
+  dispatches: 2  # one per condition; each dispatch runs the 50 executions EX0001 to EX0050 of its condition in one job
+  order: "the order of conditions above, one condition at a time; a condition's dispatch only after the previous run of this authorization has concluded and been imported; never a second run of a condition while one is in progress; chains of other SUTs run under their own authorizations and may run concurrently"
+  attempt: 1  # a further attempt only under a further-attempt approval record of the human research lead (gate G-E05-A2)
+  record_of_dispatches: manifests/e05-measured-dispatch/e05-sut05.jsonl  # append-only, committed before each dispatch; the run identity is appended after it
+  no_adaptation: "no decision whether, when, or how to dispatch depends on a measured output of any SUT (Sections 3.5 and 3.7)"
+  not_authorized: [any further attempt, any other condition or SUT, any change of workflow or executor, the freeze of the campaign]
+frozen_inputs:
+  public_repository: gsanchezm/experimental-utility-testing-labs
+  ref: main
+  workflow: .github/workflows/e05-measured-execution.yml
+  executor_prompt_version: ORCHESTRATOR-E05-determinism-v1
+  executor_implementation_sha256: bade00d2a45e69da3b25707e6c00cd84d892c15ccdf0bf69485ae8f3570f9ac0  # experiments/E05-determinism/executor/run-condition.sh
+  executor_prompt_sha256: c094e62471fe3142bb5210ee18f598615a026b898632091f0194f1b72737879e  # prompts/frozen/ORCHESTRATOR-E05-determinism-v1.md
+  campaign_start_authorization_id: E05-START-AUTH-01
+human_approval:
+  text_verbatim: "Your questions have been answered: \"¿Emites la autorización de despacho E05-DISPATCH-SUT01-AUTH-01 para SUT-01? Solo tú puedes emitirla (gobernanza v6, Sección 3.7). Alcance exacto: SUT-01; las 7 condiciones E05-SUT01-API-01, API-02, API-03, API-04, API-05, API-06 y WEB-01, 50 ejecuciones cada una (EX0001 a EX0050), 350 en total, intento 1, un despacho por condición (7 despachos; cada despacho corre las 50 ejecuciones en un solo job); orden fijado en la configuración que bloqueaste: ese mismo orden, una condición a la vez, cada una solo después de que la anterior concluyó y se importó; bajo la autorización de START E05-START-AUTH-01, con la implementación de hash bade00d2a45e69da3b25707e6c00cd84d892c15ccdf0bf69485ae8f3570f9ac0 y el prompt congelado ORCHESTRATOR-E05-determinism-v1 de hash c094e62471fe3142bb5210ee18f598615a026b898632091f0194f1b72737879e. Qué permite: que yo despache esas 7 condiciones con el workflow de medición congelado, sin pedirte aprobación de cada despacho, registrando cada despacho antes de hacerlo y la identidad de la corrida después, e importando cada paquete byte a byte tras verificar su digest. Diferencia que debes saber: ninguna condición espera a que veas el resultado de la anterior; los controles son la configuración bloqueada, la compuerta del workflow, el orden fijo y las condiciones de parada del prompt (paro y te reporto si falla la compuerta, si una corrida termina distinto de éxito o de falla del job de medición, si un paquete no trae los 50 run-manifest, si un insumo difiere de lo bloqueado, o si me ordenas parar). Qué NO permite: ningún intento adicional (un intento 2 requiere un registro de aprobación tuyo), ninguna otra condición ni SUT, ningún cambio de workflow o ejecutor, ni congelar la campaña. Es revocable por ti en cualquier momento. No empieza hasta que esta autorización esté publicada por un export (que construyo y te muestro con su línea exacta de push) y la compuerta pase sobre el árbol público.\"=\"APRUEBO E05-DISPATCH-SUT01-AUTH-01 (Recomendado)\", \"¿Emites la autorización de despacho E05-DISPATCH-SUT02-AUTH-01 para SUT-02? Solo tú puedes emitirla (gobernanza v6, Sección 3.7). Alcance exacto: SUT-02; la condición E05-SUT02-WEB-01, 50 ejecuciones (EX0001 a EX0050), intento 1, un despacho (un job con las 50 ejecuciones); bajo E05-START-AUTH-01, implementación bade00d2a45e69da3b25707e6c00cd84d892c15ccdf0bf69485ae8f3570f9ac0, prompt congelado ORCHESTRATOR-E05-determinism-v1 c094e62471fe3142bb5210ee18f598615a026b898632091f0194f1b72737879e. Permite que yo despache esa condición con el workflow de medición congelado sin pedirte aprobación del despacho, registrándolo antes y la identidad de la corrida después, e importando el paquete byte a byte tras verificar su digest; mismos controles y condiciones de parada que la de SUT-01 (la compuerta, el orden fijo, el prompt congelado). NO permite: intento adicional sin tu registro de aprobación, otra condición u otro SUT, cambios de workflow o ejecutor, ni congelar la campaña. Revocable por ti en cualquier momento; no empieza hasta que esté publicada por un export y la compuerta pase sobre el árbol público.\"=\"APRUEBO E05-DISPATCH-SUT02-AUTH-01 (Recomendado)\", \"¿Emites la autorización de despacho E05-DISPATCH-SUT04-AUTH-01 para SUT-04? Solo tú puedes emitirla (gobernanza v6, Sección 3.7). Alcance exacto: SUT-04; las 3 condiciones E05-SUT04-API-01, E05-SUT04-API-02 y E05-SUT04-WEB-01 (en ese orden, una a la vez), 50 ejecuciones cada una (EX0001 a EX0050), 150 en total, intento 1, 3 despachos (un job por condición); bajo E05-START-AUTH-01, implementación bade00d2a45e69da3b25707e6c00cd84d892c15ccdf0bf69485ae8f3570f9ac0, prompt congelado ORCHESTRATOR-E05-determinism-v1 c094e62471fe3142bb5210ee18f598615a026b898632091f0194f1b72737879e. Permite que yo despache esas condiciones con el workflow de medición congelado sin pedirte aprobación de cada despacho, registrando cada uno antes y la identidad de la corrida después, e importando cada paquete byte a byte tras verificar su digest; mismos controles y condiciones de parada que la de SUT-01. Nota: E05-SUT04-API-02 crea una reserva que su reset borra, y el registro de mensaje del servicio de mensajes queda declarado como estado residual en la configuración. NO permite: intento adicional sin tu registro de aprobación, otra condición u otro SUT, cambios de workflow o ejecutor, ni congelar la campaña. Revocable por ti en cualquier momento; no empieza hasta que esté publicada por un export y la compuerta pase sobre el árbol público.\"=\"APRUEBO E05-DISPATCH-SUT04-AUTH-01 (Recomendado)\", \"¿Emites la autorización de despacho E05-DISPATCH-SUT05-AUTH-01 para SUT-05? Solo tú puedes emitirla (gobernanza v6, Sección 3.7). Alcance exacto: SUT-05; las 2 condiciones E05-SUT05-API-01 y E05-SUT05-API-02 (en ese orden, una a la vez), 50 ejecuciones cada una (EX0001 a EX0050), 100 en total, intento 1, 2 despachos (un job por condición); bajo E05-START-AUTH-01, implementación bade00d2a45e69da3b25707e6c00cd84d892c15ccdf0bf69485ae8f3570f9ac0, prompt congelado ORCHESTRATOR-E05-determinism-v1 c094e62471fe3142bb5210ee18f598615a026b898632091f0194f1b72737879e. Permite que yo despache esas condiciones con el workflow de medición congelado sin pedirte aprobación de cada despacho, registrando cada uno antes y la identidad de la corrida después, e importando cada paquete byte a byte tras verificar su digest; mismos controles y condiciones de parada que la de SUT-01. NO permite: intento adicional sin tu registro de aprobación, otra condición u otro SUT, cambios de workflow o ejecutor, ni congelar la campaña. Revocable por ti en cualquier momento; no empieza hasta que esté publicada por un export y la compuerta pase sobre el árbol público.\"=\"APRUEBO E05-DISPATCH-SUT05-AUTH-01 (Recomendado)\". You can now continue with these answers in mind."
+  bytes: 5915
+  sha256: 892edae0db72985e63e715e0c45a5d44ec777652c1a602feb0737a177a3dc8be
+  note: "the answer of the question dialog of four questions, whole (one per SUT); this authorization is the one named SUT05 in it"
+  received_utc: "2026-11-16T23:30:38.330Z"  # stamp of the stored conversation entry (the tool result of the answer)
+  question_stamp: "2026-11-16T19:12:26.292Z"
+  chosen_option: "APRUEBO E05-DISPATCH-SUT05-AUTH-01 (Recomendado)"
+  entry_kind: "the answer of the human research lead to a question that offered the approval line APRUEBO E05-DISPATCH-SUT05-AUTH-01 together with the scope restated above, the disclosed difference (no condition waits for the human research lead to see the previous outcome; the controls are the locked configuration, the gate, the fixed order and the stop conditions of the frozen prompt), the exclusions and the revocability"
+limits_and_stops: "the stop conditions of the frozen dispatch procedure prompts/frozen/ORCHESTRATOR-E05-determinism-v1.md, section 4; on a stop nothing further is dispatched in this campaign under any authorization until the human research lead instructs a resumption"
+not_in_force_until: "this record is published by an export and the gate step of the measured workflow passes on the public tree; the first dispatch is recorded before it is made"
