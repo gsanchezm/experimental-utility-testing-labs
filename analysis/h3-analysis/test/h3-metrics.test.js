@@ -129,7 +129,7 @@ test('toolchain drift inside one condition is reported as a confound, never excl
 });
 
 test('the conditions table is internally consistent', () => {
-  assert.equal(cfg.conditions.length, 14); assert.equal(cfg.min_s_for_h3, 45);
+  assert.equal(cfg.conditions.length, 13); assert.equal(cfg.min_s_for_h3, 45);   // 13: E05-SUT02-WEB-02 was retired before the START (decision of 2026-11-14)
   for (const c of cfg.conditions) {
     assert.ok(cfg.schema_class_values.includes(c.behavior_class), c.condition_id);
     assert.ok(c.stimulus_categories.includes(c.expected_category), c.condition_id);

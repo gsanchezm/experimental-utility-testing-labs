@@ -1,0 +1,29 @@
+# derived-data/E05-determinism/outcomes-per-attempt.csv.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (a CSV cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/E05-determinism/outcomes-per-attempt.csv
+dataset_sha256: 6882e9d9ea38e4f2ec1f19c432407155e9fa1868b6c1b78715c6cdb0c0292840
+campaign_id: E05-determinism
+hypothesis_id: H3
+part: "one row per attempt of the 650 imported bundles (50 per condition, 13 conditions), with the recorded outcome category, its phase, the expected category, the recorded match flag, the attribution, the workflow outcome status, the stimulus flag, the last phase, the cause and the note of the attempt record"
+raw_inputs:
+  tree:
+    path: raw-data/E05-determinism
+    git_tree: 01276eab8c0dc750f5a03efefa213749fc8ef73f
+    pinned_at_commit: 7653ea2f3f7f81384871c4b8c84c53643d0827f0
+    campaign_state: FROZEN
+  bundles: 650
+  files_read: run-manifest.json and attempt-record.json of each bundle (the attempt record is checked against the sha256 that the run manifest lists)
+transformation_script:
+  path: analysis/h3-analysis/compute-h3-e05.js
+  version: git-blob-sha f9c36801f4c116c9e9c14728f9b4e1244d1c6efa
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only)
+date_generated: "2026-11-17"
+date_note: local date (America/Mexico_City)
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: experiments/E05-determinism/README.md, "Campaign configuration" (sha256 51b9933ee49ab8a8ff77915dc741471e101b9c9c15b61d7368566731df9c2e90); protocol/statistical-analysis-plan-v1.md, section 4.3 (H3 row)
+notes: >
+  Written by the same script as derived-data/h3-analysis/H3-e05-result.json, from the same bundles. Every column is a recorded
+  field of a bundle or the phase that the pure core derives from the recorded category; none is interpreted, and no label is
+  re-mapped. Rows follow the order of the conditions file and the execution identifier.

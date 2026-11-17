@@ -1,0 +1,55 @@
+# derived-data/h3-analysis/H3-e05-result.json.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (JSON cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/h3-analysis/H3-e05-result.json
+dataset_sha256: c0dc6b9571806cac3c43a269bf7ee26a1f038cdbc5a573855cbceec26653c132
+campaign_id: E05-determinism
+hypothesis_id: H3
+part: E05 contribution only; the H3 variable of the plan spans E04 and E05, and E04 has no data
+sut_ids: [SUT-01, SUT-02, SUT-04, SUT-05]
+sut_ids_with_h3_label: [SUT-01]
+sut_ids_descriptive_only: [SUT-02, SUT-04, SUT-05]
+sut_ids_without_condition: [SUT-03, SUT-06]
+per_run_table:
+  path: derived-data/E05-determinism/outcomes-per-attempt.csv
+  sha256: 6882e9d9ea38e4f2ec1f19c432407155e9fa1868b6c1b78715c6cdb0c0292840
+  note: written by the same script run from the same bundles; the result is not computed from it
+raw_inputs:
+  tree:
+    path: raw-data/E05-determinism
+    git_tree: 01276eab8c0dc750f5a03efefa213749fc8ef73f
+    pinned_at_commit: 7653ea2f3f7f81384871c4b8c84c53643d0827f0
+    campaign_state: FROZEN
+  bundles: 650
+  job_directories_ignored: 13
+  files_read: run-manifest.json and attempt-record.json of each of the 650 bundles (1300 files); the attempt record is checked against the sha256 that its run manifest lists, and the outcome category, the expected category and the behavior class of the run manifest are checked against the attempt record and the conditions file
+transformation_script:
+  path: analysis/h3-analysis/compute-h3-e05.js
+  version: git-blob-sha f9c36801f4c116c9e9c14728f9b4e1244d1c6efa
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only)
+pure_core:
+  path: analysis/h3-analysis/h3-metrics.js
+  version: git-blob-sha 72b1f74949cc76ce907ca2a162e5d5fbd28ef6a0
+  note: written and committed before the START (commit ee9ed870, 2026-11-12) and run unchanged; its tests (analysis/h3-analysis/test/h3-metrics.test.js) pass 0 failures
+  test_correction: the test of the conditions table asserted 14 conditions, the count before E05-SUT02-WEB-02 was retired (decision of 2026-11-14, before the START); the expected count was corrected to 13 in the test file only, in the commit that precedes this dataset; the core was not changed
+date_generated: "2026-11-17"
+date_note: local date (America/Mexico_City)
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: protocol/statistical-analysis-plan-v1.md, sections 3, 4.3 (H3 row) and 5; protocol/repeatability-determinism-v1.md, sections 2, 4 and 5; experiments/E05-determinism/README.md, "Campaign configuration" (sha256 51b9933ee49ab8a8ff77915dc741471e101b9c9c15b61d7368566731df9c2e90, equal at the START commit 0269def116294197183a8635d527160422d84a9a and at HEAD); conditions file experiments/E05-determinism/conditions-draft.json (sha256 40b226610904f339a7e40d90ffeaf6e4d0ddb8862f6adba4cc2cf5efc2923eb8)
+instruction: >
+  the human research lead chose "Análisis H3 de E05 (Recomendado)" in an answer to a question dialog of 2026-11-17 (the option
+  text: write the loader and the command-line driver over the pure core and produce derived-data/h3-analysis descriptively,
+  quoting the recorded results without interpreting them, with a local commit), after choosing "Export v64, luego H3
+  (Recomendado)" earlier the same day
+notes: >
+  Deterministic, non-interpretive computation. Implements the descriptive procedure pre-registered in the E05 campaign
+  configuration: TSRR, CEOR, E2E-ROR and Outcome Entropy H(Y) with k stated, per condition, with Wilson 95% intervals without
+  continuity correction (D-05), the H3 evaluation of the five SUT-01 conditions classified a priori as deterministic (satisfied
+  when M = S with S at or above 45 of 50; falsified by any unexpected stimulus-phase category; not evaluable below S = 45), and
+  the secondary attribution table. The H3 label and the classification are written from the configuration and never derived
+  from the data. No label is re-mapped; no attempt is excluded; no test, p-value, effect size, pooled rate, cross-ecosystem
+  difference, ranking or composite is computed (none is frozen for H3). The consistency checks of the core returned no
+  violation, and the toolchain drift report is empty. The script was run twice and wrote equal bytes (--check), and an
+  independent recomputation in a second language (Python) from the same 650 bundles gave the same counts, category counts,
+  entropy, Wilson bounds and H3 statuses for each of the 13 conditions. A SATISFIED status is not a proof of determinism.
