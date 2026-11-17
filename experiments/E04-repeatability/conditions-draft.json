@@ -1,0 +1,196 @@
+{
+  "record": "E04-repeatability conditions (DRAFT, operation OP-PREP-E04)",
+  "state": "DRAFT. Machine-readable; read by the E04 executor. Not locked, not hashed, not an authorization; no E04 START exists. Each condition mirrors the E05 condition of the same SUT and surface (experiments/E05-determinism/conditions-draft.json). When the configuration is locked, this file is hashed with it.",
+  "working_defaults_pending": "The working defaults of design-notes-draft.md (categories, attribution, retry gate, the message baseline, the mirror of the identical conditions) are pending the human research lead's confirmation at the START package; none is decided.",
+  "primary_metric": "TSRR = successful target-state establishments / all valid measured attempts (protocol/repeatability-determinism-v1.md, section 4)",
+  "phase_prefixes": {
+    "success": "TARGET_STATE_",
+    "failure": [
+      "RESET_",
+      "ESTABLISHMENT_",
+      "STUB_"
+    ]
+  },
+  "success_category": "TARGET_STATE_VERIFIED",
+  "failure_categories": [
+    "RESET_FAILED",
+    "RESET_STARTING_STATE_NOT_REACHED",
+    "ESTABLISHMENT_FAILED",
+    "ESTABLISHMENT_VERIFICATION_FAILED",
+    "ESTABLISHMENT_INTERRUPTED",
+    "STUB_NO_BUNDLE"
+  ],
+  "attribution_labels": [
+    "TOOLING",
+    "SUT"
+  ],
+  "n_per_condition": 50,
+  "conditions": [
+    {
+      "condition_id": "E04-SUT01-API-01",
+      "mirrors": "E05-SUT01-API-01",
+      "sut_id": "SUT-01",
+      "surface": "api",
+      "account": "standard_user",
+      "establishment_only": true,
+      "expected_category": "TARGET_STATE_VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "process_restart",
+      "pending": []
+    },
+    {
+      "condition_id": "E04-SUT01-API-02",
+      "mirrors": "E05-SUT01-API-02",
+      "sut_id": "SUT-01",
+      "surface": "api",
+      "account": "standard_user",
+      "establishment_only": true,
+      "expected_category": "TARGET_STATE_VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "api_reset",
+      "pending": [
+        "START package: E04-SUT01-API-02 and E04-SUT01-API-03 have the same reset, establishment and verification (they differ only in account and in their E05 stimulus); confirm that both are kept, as the one-to-one mirror requires."
+      ]
+    },
+    {
+      "condition_id": "E04-SUT01-API-03",
+      "mirrors": "E05-SUT01-API-03",
+      "sut_id": "SUT-01",
+      "surface": "api",
+      "account": "standard_user",
+      "establishment_only": true,
+      "expected_category": "TARGET_STATE_VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "api_reset",
+      "pending": [
+        "START package: same blocks as E04-SUT01-API-02; decide whether both condition ids are kept."
+      ]
+    },
+    {
+      "condition_id": "E04-SUT01-API-04",
+      "mirrors": "E05-SUT01-API-04",
+      "sut_id": "SUT-01",
+      "surface": "api",
+      "account": "performance_glitch_user",
+      "establishment_only": true,
+      "expected_category": "TARGET_STATE_VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "api_reset",
+      "pending": []
+    },
+    {
+      "condition_id": "E04-SUT01-API-05",
+      "mirrors": "E05-SUT01-API-05",
+      "sut_id": "SUT-01",
+      "surface": "api",
+      "account": "a11y_glitch_user",
+      "establishment_only": true,
+      "expected_category": "TARGET_STATE_VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "api_reset",
+      "pending": []
+    },
+    {
+      "condition_id": "E04-SUT01-API-06",
+      "mirrors": "E05-SUT01-API-06",
+      "sut_id": "SUT-01",
+      "surface": "api",
+      "account": "error_user",
+      "establishment_only": true,
+      "expected_category": "TARGET_STATE_VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "process_restart",
+      "pending": []
+    },
+    {
+      "condition_id": "E04-SUT01-WEB-01",
+      "mirrors": "E05-SUT01-WEB-01",
+      "sut_id": "SUT-01",
+      "surface": "web",
+      "account": "standard_user",
+      "establishment_only": true,
+      "expected_category": "TARGET_STATE_VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "process_restart",
+      "pending": []
+    },
+    {
+      "condition_id": "E04-SUT02-WEB-01",
+      "mirrors": "E05-SUT02-WEB-01",
+      "sut_id": "SUT-02",
+      "surface": "web",
+      "account": "standard_user",
+      "establishment_only": true,
+      "expected_category": "TARGET_STATE_VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "app_data_clear",
+      "pending": []
+    },
+    {
+      "condition_id": "E04-SUT04-WEB-01",
+      "mirrors": "E05-SUT04-WEB-01",
+      "sut_id": "SUT-04",
+      "surface": "web",
+      "account": "admin",
+      "establishment_only": true,
+      "expected_category": "TARGET_STATE_VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "delete_control",
+      "pending": []
+    },
+    {
+      "condition_id": "E04-SUT04-API-01",
+      "mirrors": "E05-SUT04-API-01",
+      "sut_id": "SUT-04",
+      "surface": "api",
+      "account": "admin",
+      "establishment_only": true,
+      "expected_category": "TARGET_STATE_VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "api_delete",
+      "pending": []
+    },
+    {
+      "condition_id": "E04-SUT04-API-02",
+      "mirrors": "E05-SUT04-API-02",
+      "sut_id": "SUT-04",
+      "surface": "api",
+      "account": "admin",
+      "establishment_only": true,
+      "expected_category": "TARGET_STATE_VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "api_delete_with_stimulus_booking",
+      "pending": [
+        "START package: the message-count baseline read in verification (the baseline of the E05 stimulus) is kept as part of the verification block; confirm it or remove it."
+      ]
+    },
+    {
+      "condition_id": "E04-SUT05-API-01",
+      "mirrors": "E05-SUT05-API-01",
+      "sut_id": "SUT-05",
+      "surface": "api",
+      "account": "documented_account",
+      "establishment_only": true,
+      "expected_category": "TARGET_STATE_VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "environment_restart",
+      "pending": [
+        "START package: same blocks as E04-SUT05-API-02 once the stimuli are removed; decide whether both condition ids are kept."
+      ]
+    },
+    {
+      "condition_id": "E04-SUT05-API-02",
+      "mirrors": "E05-SUT05-API-02",
+      "sut_id": "SUT-05",
+      "surface": "api",
+      "account": "documented_account",
+      "establishment_only": true,
+      "expected_category": "TARGET_STATE_VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "environment_restart",
+      "pending": [
+        "START package: same blocks as E04-SUT05-API-01 once the stimuli are removed; decide whether both condition ids are kept."
+      ]
+    }
+  ]
+}
