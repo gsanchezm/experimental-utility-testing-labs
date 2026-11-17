@@ -1,0 +1,20 @@
+{"t": "2026-11-17T03:21:25.950Z", "event": "run-start", "condition": "E05-SUT05-API-02", "run_id": "E05-SUT05-API-02__EX0024__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-17T03:21:25.951Z", "event": "step-start", "phase": "reset", "description": "restart the SUT process (SIGTERM to the process group, port refused, start in a new session and group, readiness)"}
+{"t": "2026-11-17T03:21:28.549Z", "event": "step-end", "phase": "reset", "outcome": "SUCCESS"}
+{"t": "2026-11-17T03:21:28.549Z", "event": "step-start", "phase": "starting-state", "description": "POST /rest/user/login (documented account), then GET /rest/basket/{bid}: the basket holds no item"}
+{"t": "2026-11-17T03:21:28.566Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3000/rest/user/login", "status": 200, "error": null, "elapsed_s": 0.017, "evidence": "evidence/005-sut05-login.json"}
+{"t": "2026-11-17T03:21:28.591Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/rest/basket/6", "status": 200, "error": null, "elapsed_s": 0.024, "evidence": "evidence/006-sut05-basket-start.json"}
+{"t": "2026-11-17T03:21:28.591Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-17T03:21:28.591Z", "event": "step-start", "phase": "establishment", "description": "POST /api/BasketItems {ProductId 1, BasketId <bid>, quantity 1}"}
+{"t": "2026-11-17T03:21:28.598Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3000/api/BasketItems", "status": 200, "error": null, "elapsed_s": 0.006, "evidence": "evidence/007-sut05-add-item.json"}
+{"t": "2026-11-17T03:21:28.598Z", "event": "step-end", "phase": "establishment", "outcome": null}
+{"t": "2026-11-17T03:21:28.598Z", "event": "step-start", "phase": "verification", "description": "GET /rest/basket/{bid} shows ProductId 1"}
+{"t": "2026-11-17T03:21:28.610Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/rest/basket/6", "status": 200, "error": null, "elapsed_s": 0.012, "evidence": "evidence/008-sut05-basket-pre-stimulus.json"}
+{"t": "2026-11-17T03:21:28.610Z", "event": "step-end", "phase": "verification", "outcome": null}
+{"t": "2026-11-17T03:21:28.611Z", "event": "step-start", "phase": "stimulus", "description": "GET /rest/captcha"}
+{"t": "2026-11-17T03:21:28.611Z", "event": "stimulus-sent"}
+{"t": "2026-11-17T03:21:28.622Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/rest/captcha", "status": 200, "error": null, "elapsed_s": 0.011, "evidence": "evidence/009-sut05-stimulus-captcha.json"}
+{"t": "2026-11-17T03:21:28.622Z", "event": "step-end", "phase": "stimulus", "outcome": "OBSERVED"}
+{"t": "2026-11-17T03:21:28.622Z", "event": "step-start", "phase": "classification", "description": "classify the stimulus observation"}
+{"t": "2026-11-17T03:21:28.622Z", "event": "step-end", "phase": "classification", "outcome": "OBSERVED"}
+{"t": "2026-11-17T03:21:28.626Z", "event": "run-end", "category": "S_CAPTCHA_ISSUED", "attribution": "SUT"}

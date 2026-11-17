@@ -1,0 +1,27 @@
+{"t": "2026-11-17T03:21:00.302Z", "event": "run-start", "condition": "E05-SUT04-API-02", "run_id": "E05-SUT04-API-02__EX0027__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-17T03:21:00.302Z", "event": "step-start", "phase": "reset", "description": "DELETE /booking/{id} for every booking of room 1 with this condition's guest names"}
+{"t": "2026-11-17T03:21:00.306Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3004/auth/login", "status": 200, "error": null, "elapsed_s": 0.003, "evidence": "evidence/002-sut04-login.json"}
+{"t": "2026-11-17T03:21:00.313Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/booking/?roomid=1", "status": 200, "error": null, "elapsed_s": 0.007, "evidence": "evidence/003-sut04-bookings-before-reset.json"}
+{"t": "2026-11-17T03:21:00.320Z", "event": "http", "method": "DELETE", "url": "http://127.0.0.1:3000/booking/54", "status": 202, "error": null, "elapsed_s": 0.006, "evidence": "evidence/004-sut04-delete-54.json"}
+{"t": "2026-11-17T03:21:00.329Z", "event": "http", "method": "DELETE", "url": "http://127.0.0.1:3000/booking/55", "status": 202, "error": null, "elapsed_s": 0.008, "evidence": "evidence/005-sut04-delete-55.json"}
+{"t": "2026-11-17T03:21:00.329Z", "event": "step-end", "phase": "reset", "outcome": null}
+{"t": "2026-11-17T03:21:00.329Z", "event": "step-start", "phase": "starting-state", "description": "GET /booking/?roomid=1: no booking with this condition's guest names"}
+{"t": "2026-11-17T03:21:00.336Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/booking/?roomid=1", "status": 200, "error": null, "elapsed_s": 0.007, "evidence": "evidence/006-sut04-bookings-start.json"}
+{"t": "2026-11-17T03:21:00.336Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-17T03:21:00.336Z", "event": "step-start", "phase": "establishment", "description": "POST /booking/ for room 1 with the condition guest names, without email and phone"}
+{"t": "2026-11-17T03:21:00.340Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3000/booking/", "status": 201, "error": null, "elapsed_s": 0.003, "evidence": "evidence/007-sut04-create.json"}
+{"t": "2026-11-17T03:21:00.340Z", "event": "step-end", "phase": "establishment", "outcome": null}
+{"t": "2026-11-17T03:21:00.340Z", "event": "step-start", "phase": "verification", "description": "GET /booking/{id} answers 200"}
+{"t": "2026-11-17T03:21:00.347Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/booking/56", "status": 200, "error": null, "elapsed_s": 0.006, "evidence": "evidence/008-sut04-get-pre-stimulus.json"}
+{"t": "2026-11-17T03:21:00.347Z", "event": "step-end", "phase": "verification", "outcome": null}
+{"t": "2026-11-17T03:21:00.347Z", "event": "step-start", "phase": "verification", "description": "GET {message}/message/count answers with a count (the baseline of the stimulus)"}
+{"t": "2026-11-17T03:21:00.352Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3006/message/count", "status": 200, "error": null, "elapsed_s": 0.005, "evidence": "evidence/009-sut04-message-count-before.json"}
+{"t": "2026-11-17T03:21:00.352Z", "event": "step-end", "phase": "verification", "outcome": null}
+{"t": "2026-11-17T03:21:00.352Z", "event": "step-start", "phase": "stimulus", "description": "POST /booking/ for room 1 with email and phone on non-overlapping dates, then read the message count"}
+{"t": "2026-11-17T03:21:00.352Z", "event": "stimulus-sent"}
+{"t": "2026-11-17T03:21:00.362Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3000/booking/", "status": 201, "error": null, "elapsed_s": 0.01, "evidence": "evidence/010-sut04-stimulus-booking.json"}
+{"t": "2026-11-17T03:21:00.365Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3006/message/count", "status": 200, "error": null, "elapsed_s": 0.003, "evidence": "evidence/011-sut04-message-count-after.json"}
+{"t": "2026-11-17T03:21:00.365Z", "event": "step-end", "phase": "stimulus", "outcome": "OBSERVED"}
+{"t": "2026-11-17T03:21:00.365Z", "event": "step-start", "phase": "classification", "description": "classify the stimulus observation"}
+{"t": "2026-11-17T03:21:00.365Z", "event": "step-end", "phase": "classification", "outcome": "OBSERVED"}
+{"t": "2026-11-17T03:21:00.366Z", "event": "run-end", "category": "S_MESSAGE_RECORD_PRESENT", "attribution": "SUT"}

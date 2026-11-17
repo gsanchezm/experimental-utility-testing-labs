@@ -1,0 +1,17 @@
+{"t": "2026-11-17T03:26:32.698Z", "event": "run-start", "condition": "E05-SUT04-WEB-01", "run_id": "E05-SUT04-WEB-01__EX0002__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-17T03:26:32.698Z", "event": "browser", "version": "153.0.8010.12", "viewport": {"width": 1280, "height": 800}, "context_number": 1}
+{"t": "2026-11-17T03:26:32.698Z", "event": "step-start", "phase": "reset", "description": "admin web login, then the delete control of every booking row of room 1 with this condition's guest names"}
+{"t": "2026-11-17T03:26:34.982Z", "event": "step-end", "phase": "reset", "outcome": null}
+{"t": "2026-11-17T03:26:34.982Z", "event": "step-start", "phase": "starting-state", "description": "GET /booking/?roomid=1: no booking with this condition's guest names"}
+{"t": "2026-11-17T03:26:34.994Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/booking/?roomid=1", "status": 200, "error": null, "elapsed_s": 0.012, "evidence": "evidence/003-sut04-bookings-start.json"}
+{"t": "2026-11-17T03:26:34.994Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-17T03:26:34.994Z", "event": "step-start", "phase": "establishment", "description": "web booking form at {web}/reservation/1 with the condition guest names and dates"}
+{"t": "2026-11-17T03:26:35.669Z", "event": "step-end", "phase": "establishment", "outcome": null}
+{"t": "2026-11-17T03:26:35.669Z", "event": "step-start", "phase": "verification", "description": "{web}/admin/room/1 lists the CS-001 booking row"}
+{"t": "2026-11-17T03:26:35.885Z", "event": "step-end", "phase": "verification", "outcome": null}
+{"t": "2026-11-17T03:26:35.885Z", "event": "step-start", "phase": "stimulus", "description": "second reservation through the web form for room 1 with dates that overlap the CS-001 booking"}
+{"t": "2026-11-17T03:26:36.034Z", "event": "stimulus-sent"}
+{"t": "2026-11-17T03:26:36.845Z", "event": "step-end", "phase": "stimulus", "outcome": "OBSERVED"}
+{"t": "2026-11-17T03:26:36.845Z", "event": "step-start", "phase": "classification", "description": "classify the stimulus observation"}
+{"t": "2026-11-17T03:26:36.845Z", "event": "step-end", "phase": "classification", "outcome": "OBSERVED"}
+{"t": "2026-11-17T03:26:36.848Z", "event": "run-end", "category": "S_NO_CONFIRMATION_SHOWN", "attribution": "SUT"}

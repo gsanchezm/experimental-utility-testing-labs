@@ -1,0 +1,182 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E05-SUT01-API-01__EX0002__A1",
+  "condition": "E05-SUT01-API-01",
+  "execution_id": "EX0002",
+  "attempt": 1,
+  "scenario": "CS-001",
+  "outcome_category": "S_ORDER_TOTAL_MATCH",
+  "observed": "total 340.26 MXN",
+  "cause": null,
+  "attribution": "SUT",
+  "stimulus_request_sent": true,
+  "last_phase": "classification",
+  "duration_s": 1.592,
+  "steps": [
+    {
+      "phase": "reset",
+      "description": "restart the backend process (SIGTERM to the process group, port refused, start in a new session and group, readiness)",
+      "mechanisms": [
+        "ENVIRONMENT_RESTART"
+      ],
+      "started_at": "2026-11-17T03:12:28.054Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "stop_signal": "SIGTERM to process group 3249",
+        "stop_sent_at": "2026-11-17T03:12:28.071Z",
+        "port_refused_at": "2026-11-17T03:12:28.572Z",
+        "port_polls": 2,
+        "start_at": "2026-11-17T03:12:28.590Z",
+        "new_pid": 3262,
+        "new_pgid": 3262,
+        "ready_at": "2026-11-17T03:12:29.619Z",
+        "readiness_polls": 2,
+        "last_readiness_status": 200
+      },
+      "evidence": [
+        "evidence/002-process-tree-before-stop.txt",
+        "evidence/003-process-tree-after-stop.txt",
+        "evidence/004-process-tree-after-restart.txt"
+      ],
+      "finished_at": "2026-11-17T03:12:29.637Z"
+    },
+    {
+      "phase": "reset",
+      "description": "POST /api/auth/login after the restart (the restart clears the in-memory session store)",
+      "mechanisms": [
+        "PREDEFINED_ACCOUNT"
+      ],
+      "started_at": "2026-11-17T03:12:29.637Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "login_status": 200,
+        "token_received": true,
+        "behavior": "standard"
+      },
+      "evidence": [
+        "evidence/005-sut01-login.json"
+      ],
+      "finished_at": "2026-11-17T03:12:29.640Z"
+    },
+    {
+      "phase": "starting-state",
+      "description": "GET /api/session: the cart is empty",
+      "mechanisms": [],
+      "started_at": "2026-11-17T03:12:29.640Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "cart_items": [],
+        "country_code": "MX"
+      },
+      "evidence": [
+        "evidence/006-sut01-session-start.json"
+      ],
+      "finished_at": "2026-11-17T03:12:29.642Z"
+    },
+    {
+      "phase": "establishment",
+      "description": "POST /api/cart with one p02 line",
+      "mechanisms": [
+        "API_SEED"
+      ],
+      "started_at": "2026-11-17T03:12:29.642Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200
+      },
+      "evidence": [
+        "evidence/007-sut01-seed-cart.json"
+      ],
+      "finished_at": "2026-11-17T03:12:29.643Z"
+    },
+    {
+      "phase": "verification",
+      "description": "GET /api/session shows exactly the p02 line",
+      "mechanisms": [],
+      "started_at": "2026-11-17T03:12:29.643Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "cart_items": [
+          {
+            "pizza_id": "p02",
+            "quantity": 1,
+            "size": "small",
+            "toppings": [],
+            "item_id": "ITEM-E41D4BAA"
+          }
+        ]
+      },
+      "evidence": [
+        "evidence/008-sut01-session-pre-stimulus.json"
+      ],
+      "finished_at": "2026-11-17T03:12:29.644Z"
+    },
+    {
+      "phase": "stimulus",
+      "description": "POST /api/checkout (market MX, one p02 line, tip 0)",
+      "mechanisms": [],
+      "started_at": "2026-11-17T03:12:29.644Z",
+      "outcome": "OBSERVED",
+      "observation": {
+        "status": 200,
+        "error": null,
+        "projection": {
+          "subtotal": 263.07,
+          "delivery_fee": 35.1,
+          "tax_rate": 0.16,
+          "tip_percentage": 0.0,
+          "tax": 42.09,
+          "tip": 0.0,
+          "total": 340.26,
+          "currency": "MXN",
+          "items": [
+            {
+              "pizza_id": "p02",
+              "quantity": 1,
+              "size": "small",
+              "toppings": []
+            }
+          ]
+        },
+        "expected": {
+          "subtotal": 263.07,
+          "delivery_fee": 35.1,
+          "tax_rate": 0.16,
+          "tip_percentage": 0.0,
+          "tax": 42.09,
+          "tip": 0.0,
+          "total": 340.26,
+          "currency": "MXN",
+          "items": [
+            {
+              "pizza_id": "p02",
+              "quantity": 1,
+              "size": "small",
+              "toppings": []
+            }
+          ]
+        }
+      },
+      "evidence": [
+        "evidence/009-sut01-stimulus-checkout.json"
+      ],
+      "finished_at": "2026-11-17T03:12:29.646Z"
+    },
+    {
+      "phase": "classification",
+      "description": "classify the stimulus observation",
+      "mechanisms": [],
+      "started_at": "2026-11-17T03:12:29.646Z",
+      "outcome": "OBSERVED",
+      "observation": {
+        "category": "S_ORDER_TOTAL_MATCH"
+      },
+      "evidence": [],
+      "finished_at": "2026-11-17T03:12:29.646Z"
+    }
+  ],
+  "notes": [],
+  "note": "attribution is mechanical (D-16, D-16b): TOOLING only for an exception before the stimulus request was sent; the label is carried in outcome.outcome_category of run-manifest.json and never changes a rate"
+}

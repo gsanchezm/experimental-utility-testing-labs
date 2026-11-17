@@ -1,0 +1,22 @@
+{"t": "2026-11-17T03:36:20.009Z", "event": "run-start", "condition": "E05-SUT01-API-06", "run_id": "E05-SUT01-API-06__EX0038__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-17T03:36:20.009Z", "event": "step-start", "phase": "reset", "description": "restart the backend process (SIGTERM to the process group, port refused, start in a new session and group, readiness)"}
+{"t": "2026-11-17T03:36:21.586Z", "event": "step-end", "phase": "reset", "outcome": "SUCCESS"}
+{"t": "2026-11-17T03:36:21.586Z", "event": "step-start", "phase": "reset", "description": "POST /api/auth/login after the restart (the restart clears the in-memory session store)"}
+{"t": "2026-11-17T03:36:21.589Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/auth/login", "status": 200, "error": null, "elapsed_s": 0.003, "evidence": "evidence/005-sut01-login.json"}
+{"t": "2026-11-17T03:36:21.589Z", "event": "step-end", "phase": "reset", "outcome": null}
+{"t": "2026-11-17T03:36:21.590Z", "event": "step-start", "phase": "starting-state", "description": "GET /api/session: the cart is empty"}
+{"t": "2026-11-17T03:36:21.592Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:8000/api/session", "status": 200, "error": null, "elapsed_s": 0.002, "evidence": "evidence/006-sut01-session-start.json"}
+{"t": "2026-11-17T03:36:21.592Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-17T03:36:21.592Z", "event": "step-start", "phase": "establishment", "description": "POST /api/cart with one p02 line"}
+{"t": "2026-11-17T03:36:21.593Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/cart", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/007-sut01-seed-cart.json"}
+{"t": "2026-11-17T03:36:21.593Z", "event": "step-end", "phase": "establishment", "outcome": null}
+{"t": "2026-11-17T03:36:21.593Z", "event": "step-start", "phase": "verification", "description": "GET /api/session shows exactly the p02 line"}
+{"t": "2026-11-17T03:36:21.594Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:8000/api/session", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/008-sut01-session-pre-stimulus.json"}
+{"t": "2026-11-17T03:36:21.594Z", "event": "step-end", "phase": "verification", "outcome": null}
+{"t": "2026-11-17T03:36:21.595Z", "event": "step-start", "phase": "stimulus", "description": "POST /api/checkout as error_user (market MX, one p02 line, tip 0)"}
+{"t": "2026-11-17T03:36:21.595Z", "event": "stimulus-sent"}
+{"t": "2026-11-17T03:36:21.596Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/checkout", "status": 500, "error": null, "elapsed_s": 0.001, "evidence": "evidence/009-sut01-stimulus-checkout.json"}
+{"t": "2026-11-17T03:36:21.596Z", "event": "step-end", "phase": "stimulus", "outcome": "OBSERVED"}
+{"t": "2026-11-17T03:36:21.596Z", "event": "step-start", "phase": "classification", "description": "classify the stimulus observation"}
+{"t": "2026-11-17T03:36:21.596Z", "event": "step-end", "phase": "classification", "outcome": "OBSERVED"}
+{"t": "2026-11-17T03:36:21.597Z", "event": "run-end", "category": "S_HTTP_500", "attribution": "SUT"}

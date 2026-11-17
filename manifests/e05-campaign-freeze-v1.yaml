@@ -1,0 +1,89 @@
+# manifests/e05-campaign-freeze-v1.yaml -- provenance record of the E05-determinism campaign freeze (protocol/change-control-v1.md, section 7, moment 2: IN_PROGRESS -> FROZEN).
+# Modeled on manifests/e09-campaign-freeze-v1.yaml and manifests/e02-campaign-freeze-v1.yaml. A provenance record, not a second campaign-configuration record: the configuration itself stays authoritative and locked in
+# experiments/E05-determinism/README.md, section "Campaign configuration" (unchanged by this freeze). ORCHESTRATOR record of operation OP-FREEZE-06 (2026-11-16 local, 2026-11-17 UTC). Immutable once committed; a correction is a new version file.
+record_class: E05_CAMPAIGN_FREEZE
+record_id: E05-FREEZE-01
+study_id: EUS-2026-001
+campaign_id: E05-determinism
+operation_id: OP-FREEZE-06
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-16'
+recorded_on_timezone: America/Mexico_City (the UTC date at the time of writing was 2026-11-17)
+status: RECORDED
+transition: IN_PROGRESS -> FROZEN
+previous_status: IN_PROGRESS
+new_status: FROZEN
+freeze_timestamp: "2026-11-17T04:05:53Z"  # one UTC clock reading taken when the edits were written; the commit that carries them follows it
+authorization_id: E05-FREEZE-AUTH-01
+freeze_approved_by: gilbertosanchez
+frozen_by: ORCHESTRATOR
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+human_approval:
+  text_verbatim: "Your questions have been answered: \"Las 650 ejecuciones de E05-determinism (13 condiciones, N = 50 cada una: SUT-01 ×7, SUT-02 ×1, SUT-04 ×3, SUT-05 ×2) están importadas byte a byte bajo raw-data/E05-determinism/ y fusionadas en main (merge 1624df16): todas intento 1, sin paro, 13 corridas de GitHub en success y una auditoría independiente de 29/29 comprobaciones. ¿Congelo la campaña E05 ahora (protocol/change-control-v1.md, sección 7, momento 2, con id E05-FREEZE-AUTH-01 y tu respuesta literal en el registro manifests/e05-campaign-freeze-v1.yaml)? El freeze vuelve append-only raw-data/E05-determinism/, deja inmutable el registro de configuración, hace que el workflow de ejecución medida rechace cualquier despacho y agrega una fila a protocol/CHANGELOG.md; no analiza (H3 queda NOT_ANALYZED), no publica y no hace push de nada.\"=\"APRUEBO EL FREEZE DE E05 (Recomendado)\", \"Si congelo, el registro de freeze de E02 declaró los conteos de outcome de cada corrida y el de E09 solo las conclusiones de workflow. En E05 el outcome toma varios valores dentro de una misma condición (por ejemplo SUT01-API-05 y API-06), y el prompt congelado dice que no se resume entre corridas ni condiciones antes del análisis. ¿Qué declaro en el registro de freeze de E05?\"=\"Solo conclusiones de workflow (Recomendado)\", \"AGENT-INSTRUCTIONS.md todavía dice que E05 está NOT_STARTED y que no existe START ni autorización de despacho, y no menciona los exports v61 a v63. ¿Actualizo su sección de estado actual con el START de E05, las cuatro autorizaciones de despacho, las 650 ejecuciones importadas, esos exports y el freeze (este último solo si lo apruebas arriba)? Es un commit local que no publica nada.\"=\"Sí, actualiza AGENT-INSTRUCTIONS.md\". You can now continue with these answers in mind."
+  bytes: 1784
+  sha256: 6e44033427384b3367793ab2c1ad87479a5bced4d8ac411a4d3db5df5870ccc5
+  received_utc: "2026-11-17T04:00:39.003Z"  # stamp of the stored conversation entry
+  received_local: "2026-11-16T22:00:39.003-06:00 (America/Mexico_City)"
+  question_stamp: "2026-11-17T04:00:24.650Z"
+  entry_kind: >
+    the answer of the human research lead to a question dialog (the permission decision of the entry is user_temporary, accepted once) that offered the option "APRUEBO EL FREEZE DE E05 (Recomendado)" and stated its effects; the text above is the whole stored answer, which also holds the answer to a second question (what the record declares about outcomes: "Solo conclusiones de workflow (Recomendado)") and to a third (the agent-instructions file: "Sí, actualiza AGENT-INSTRUCTIONS.md")
+  scope: the freeze of the E05 campaign with its thirteen executable web/api conditions on SUT-01, SUT-02, SUT-04 and SUT-05, 650 executions, N = 50 per condition, under the authorization id above
+trigger: >
+  protocol/change-control-v1.md, section 7, moment 2: every planned run of the campaign (all ecosystems, all conditions, the recorded N) has been executed. The locked configuration plans thirteen executable web/api conditions,
+  seven on SUT-01, one on SUT-02, three on SUT-04 and two on SUT-05, with N = 50 each (EX0001 to EX0050); no other SUT has a condition in the configuration, and E05-SUT02-WEB-02 was retired before the START (decision of 2026-11-14).
+pre_freeze_state:
+  canonical_head: 1624df1658a8247ac41b575919ee296157cefce3  # the head before the freeze commit: the merge of the dispatch branch into main
+  merge_commit: 1624df1658a8247ac41b575919ee296157cefce3
+  dispatch_branch_head: 01bec00ff795048fc0b52682b5c274a222e06560
+  public_main: 4c2ff86d20a665dd92bb8fd716d79c7f94b6981f   # export v63; nothing is pushed by the freeze
+  e05_status_before: IN_PROGRESS
+  configuration_section: {path: experiments/E05-determinism/README.md, heading: Campaign configuration, sha256: 51b9933ee49ab8a8ff77915dc741471e101b9c9c15b61d7368566731df9c2e90, bytes: 15932, unchanged_since_the_start: true}   # slice from the heading to the end of file, read at the START (section_inserted_sha256 of the start record) and now: byte-identical
+  start_record: manifests/e05-campaign-start-v1.yaml
+executions:
+  conditions: [E05-SUT01-API-01, E05-SUT01-API-02, E05-SUT01-API-03, E05-SUT01-API-04, E05-SUT01-API-05, E05-SUT01-API-06, E05-SUT01-WEB-01, E05-SUT02-WEB-01, E05-SUT04-API-01, E05-SUT04-API-02, E05-SUT04-WEB-01, E05-SUT05-API-01, E05-SUT05-API-02]
+  n_per_condition: 50
+  executions_imported: 650   # all attempt 1; SUT-01 350, SUT-02 50, SUT-04 150, SUT-05 100
+  dispatches: 13   # one dispatch per condition, 50 executions in each job (the unit of dispatch that the frozen prompt fixes)
+  first_dispatch_utc: '2026-11-17T03:10:42Z'   # run created_at of the first run (E05-SUT01-API-01 chain start; the first dispatch record entry is dated 03:10:34Z)
+  last_import_utc: '2026-11-17T03:43:21Z'   # dispatch-record event RUN_CONCLUDED_AND_IMPORTED of the last condition (E05-SUT01-WEB-01); the commit that carries it is dated 2026-11-16T21:43:38-06:00
+  dispatch_authorizations: [E05-DISPATCH-SUT01-AUTH-01, E05-DISPATCH-SUT02-AUTH-01, E05-DISPATCH-SUT04-AUTH-01, E05-DISPATCH-SUT05-AUTH-01]
+  dispatch_records: manifests/e05-measured-dispatch/e05-sut0N.jsonl   # four records, append-only, complete (each: 1 RECORD_OPENED, then one DISPATCH_RECORDED, one RUN_IDENTITY_RECORDED and one RUN_CONCLUDED_AND_IMPORTED per condition: 7 / 1 / 3 / 2 conditions for SUT-01 / SUT-02 / SUT-04 / SUT-05)
+  imports: raw-data/E05-determinism/<SUT>/<condition id>__<execution id>__A1/   # each with run-manifest.json, the bundle members unchanged and import-record.yaml; the job-level files of each condition beside them in <condition id>__job__A1/
+  consumed_attempts_without_bundle: []   # none: no attempt left without a bundle, no attempt 2
+  github_measured_execution_runs: {total: 13, success: 13, event: workflow_dispatch for all, branch: main, run_attempt: 1}   # read from the workflow's run list after the last import; no run is in progress or queued
+  workflow_revisions_of_the_imported_runs: {'df04c65f777754ce3dd85358c0751b8bb80205838ada99041cb6bef4f5687afd (public main 4c2ff86d)': 13}   # ci-provenance.json workflow.file_sha256 (the locked measured-workflow hash of the START record) and the head of each run
+audit_of_the_imports:
+  method: a read-only script (untracked scratch, not part of the repository) over the 650 run directories, the 13 job directories, the four dispatch records and the GitHub run list, run on the canonical tree at the head above
+  checks: >
+    tracked tree clean; the 18 commits after f3c81953 (four record openings, thirteen imports, the merge); the directories of each condition equal the expected set of 50, all attempt 1; every file listed by the 650 run manifests exists and its listed
+    sha256 equals the bytes on disk; each dispatch record has one RECORD_OPENED and one DISPATCH_RECORDED, RUN_IDENTITY_RECORDED and RUN_CONCLUDED_AND_IMPORTED per condition, the last event being an import; run ids distinct; every run concluded success; GitHub lists exactly 13 runs of
+    the measured workflow, all workflow_dispatch, attempt 1, success, at head 4c2ff86d; public main unchanged at 4c2ff86d
+  result: {checks: 29, passed: 29, run_directories: 650, job_directories: 13, files_listed_and_verified: 9497, defects: 0}
+  earlier_audit: "the same checks were run on the dispatch worktree right after the last import (29 of 29) before the branch was merged and the worktree removed"
+  observed_outcomes: "workflow conclusion success in 13 of 13 runs (650 of 650 executions imported), stated as recorded; no tally of the run-manifest outcome or category fields is recorded here, by the answer of the human research lead above (\"Solo conclusiones de workflow\") and because the frozen dispatch prompt forbids summarizing across runs or conditions; the outcomes stay in the run manifests and import records, unanalyzed"
+effect: >
+  From this moment raw-data/E05-determinism/ is append-only in the sense of raw-data/README.md: every existing raw file is immutable, and a further run may be appended only with a "run appended after campaign
+  freeze" row in protocol/CHANGELOG.md stating the reason (raw-data/README.md, rule 1). The campaign configuration record is immutable. The measured-execution workflow requires the campaign status IN_PROGRESS (gate G-1),
+  so it refuses every dispatch from the freeze on; a run appended after the freeze would need its own change-log row and a CI correction. Reopening the campaign follows protocol/change-control-v1.md, section 5 in full.
+other_edits_of_the_freeze_commit:
+  - "protocol/CHANGELOG.md: one row for this transition (after the row of 2026-11-16 of the E05 START)"
+  - "manifests/study-manifest.yaml: the E05 status line FROZEN with the transition clock reading, and a note of the operation"
+  - "status lines that the freeze makes out of date, edited with counted replacements: README.md, experiments/README.md, raw-data/README.md, the E05 README (current status)"
+  - "manifests/README.md: the row of this record"
+not_authorized_by_this_record:
+  - any dispatch, re-run, or run appended after the freeze
+  - any export or push, and the publication of raw-data/E05-determinism/ (a separate decision, made through the export that carries it, version 64)
+  - any change to a workflow, a protocol document other than the change log, a prompt, a SUT, or a raw file
+  - any analysis: the H3 analysis is a separate step under protocol/statistical-analysis-plan-v1.md, section 4, and starts only on its own instruction; H3 is NOT_ANALYZED
+  - any edit of the agent-instructions file beyond the one the human research lead approved in the same dialog (a separate commit)
+resulting_freeze_commit: null   # a commit cannot name its own id; the commit that adds this file is the freeze commit
+next_steps:
+  - the export that publishes raw-data/E05-determinism/, the dispatch records, this freeze and the status lines (version 64), which needs the human research lead's yes to its exact push line
+  - the export-log entry and the post-push audit in PUBLIC-EXPORT-MANIFEST.yaml
+  - the refresh of the dashboard research-status.html (standing rule), when asked
+  - the H3 analysis under protocol/statistical-analysis-plan-v1.md, on a separate instruction
+notes: |
+  The freeze closes the set of E05 runs of this campaign version. It introduces no sample size, exclusion rule, attribution rule, or comparison that was not already in the locked configuration.
+  No E05 result is analyzed or summarized by this record.

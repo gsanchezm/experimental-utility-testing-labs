@@ -1,0 +1,198 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E05-SUT01-WEB-01__EX0006__A1",
+  "condition": "E05-SUT01-WEB-01",
+  "execution_id": "EX0006",
+  "attempt": 1,
+  "scenario": "CS-001",
+  "outcome_category": "S_ORDER_CONFIRMED",
+  "observed": "order-success route reached; order post answered 200",
+  "cause": null,
+  "attribution": "SUT",
+  "stimulus_request_sent": true,
+  "last_phase": "classification",
+  "duration_s": 2.62,
+  "steps": [
+    {
+      "phase": "reset",
+      "description": "restart the backend process (SIGTERM to the process group, port refused, start in a new session and group, readiness)",
+      "mechanisms": [
+        "ENVIRONMENT_RESTART"
+      ],
+      "started_at": "2026-11-17T03:40:07.930Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "stop_signal": "SIGTERM to process group 3454",
+        "stop_sent_at": "2026-11-17T03:40:07.951Z",
+        "port_refused_at": "2026-11-17T03:40:08.452Z",
+        "port_polls": 2,
+        "start_at": "2026-11-17T03:40:08.474Z",
+        "new_pid": 3467,
+        "new_pgid": 3467,
+        "ready_at": "2026-11-17T03:40:09.505Z",
+        "readiness_polls": 2,
+        "last_readiness_status": 200
+      },
+      "evidence": [
+        "evidence/002-process-tree-before-stop.txt",
+        "evidence/003-process-tree-after-stop.txt",
+        "evidence/004-process-tree-after-restart.txt"
+      ],
+      "finished_at": "2026-11-17T03:40:09.527Z"
+    },
+    {
+      "phase": "reset",
+      "description": "POST /api/auth/login after the restart (the restart clears the in-memory session store)",
+      "mechanisms": [
+        "PREDEFINED_ACCOUNT"
+      ],
+      "started_at": "2026-11-17T03:40:09.528Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "login_status": 200,
+        "token_received": true,
+        "behavior": "standard"
+      },
+      "evidence": [
+        "evidence/005-sut01-login.json"
+      ],
+      "finished_at": "2026-11-17T03:40:09.531Z"
+    },
+    {
+      "phase": "reset",
+      "description": "first load of {web}/ and one injection of client state (session, market, empty client cart)",
+      "mechanisms": [
+        "PREDEFINED_ACCOUNT"
+      ],
+      "started_at": "2026-11-17T03:40:09.531Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "first_load_status": 200,
+        "omnipizza-release (read, not written)": "dev",
+        "keys_injected": [
+          "countryCode",
+          "omnipizza-auth",
+          "omnipizza-cart",
+          "omnipizza-country",
+          "token",
+          "username"
+        ]
+      },
+      "evidence": [
+        "evidence/006-sut01-web-storage-after-injection.json"
+      ],
+      "finished_at": "2026-11-17T03:40:09.581Z"
+    },
+    {
+      "phase": "starting-state",
+      "description": "GET /api/session: the cart is empty",
+      "mechanisms": [],
+      "started_at": "2026-11-17T03:40:09.581Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "cart_items": [],
+        "country_code": "MX"
+      },
+      "evidence": [
+        "evidence/007-sut01-session-start.json"
+      ],
+      "finished_at": "2026-11-17T03:40:09.583Z"
+    },
+    {
+      "phase": "starting-state",
+      "description": "the client cart omnipizza-cart holds no item",
+      "mechanisms": [],
+      "started_at": "2026-11-17T03:40:09.583Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "client_cart_items": []
+      },
+      "evidence": [],
+      "finished_at": "2026-11-17T03:40:09.585Z"
+    },
+    {
+      "phase": "establishment",
+      "description": "POST /api/cart with one p02 line",
+      "mechanisms": [
+        "API_SEED"
+      ],
+      "started_at": "2026-11-17T03:40:09.585Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200
+      },
+      "evidence": [
+        "evidence/008-sut01-seed-cart.json"
+      ],
+      "finished_at": "2026-11-17T03:40:09.587Z"
+    },
+    {
+      "phase": "establishment",
+      "description": "navigation to {web}/checkout (Checkout hydrates from GET /api/cart when the local cart is empty)",
+      "mechanisms": [
+        "DIRECT_ROUTE"
+      ],
+      "started_at": "2026-11-17T03:40:09.587Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "url": "http://127.0.0.1:3000/checkout"
+      },
+      "evidence": [],
+      "finished_at": "2026-11-17T03:40:09.611Z"
+    },
+    {
+      "phase": "verification",
+      "description": "[data-testid=\"order-item-p02\"] visible on the Checkout view",
+      "mechanisms": [],
+      "started_at": "2026-11-17T03:40:09.611Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "order_item_p02_visible": true
+      },
+      "evidence": [
+        "evidence/009-sut01-web-pre-stimulus.png"
+      ],
+      "finished_at": "2026-11-17T03:40:09.747Z"
+    },
+    {
+      "phase": "stimulus",
+      "description": "fill the Checkout form (market MX), activate the place-order control, confirm in the modal",
+      "mechanisms": [],
+      "started_at": "2026-11-17T03:40:09.747Z",
+      "outcome": "OBSERVED",
+      "observation": {
+        "modal_shown": true,
+        "invalid_fields": 0,
+        "post_status": 200,
+        "url": "http://127.0.0.1:3000/order-success",
+        "settle": {
+          "network_quiet": true,
+          "quiet_ms": 500,
+          "elapsed_s": 0.511
+        },
+        "order_success_route": true
+      },
+      "evidence": [
+        "evidence/010-sut01-web-after-stimulus.png",
+        "evidence/011-sut01-web-stimulus-text.txt"
+      ],
+      "finished_at": "2026-11-17T03:40:10.548Z"
+    },
+    {
+      "phase": "classification",
+      "description": "classify the stimulus observation",
+      "mechanisms": [],
+      "started_at": "2026-11-17T03:40:10.548Z",
+      "outcome": "OBSERVED",
+      "observation": {
+        "category": "S_ORDER_CONFIRMED"
+      },
+      "evidence": [],
+      "finished_at": "2026-11-17T03:40:10.548Z"
+    }
+  ],
+  "notes": [],
+  "note": "attribution is mechanical (D-16, D-16b): TOOLING only for an exception before the stimulus request was sent; the label is carried in outcome.outcome_category of run-manifest.json and never changes a rate"
+}

@@ -1,0 +1,131 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E05-SUT05-API-02__EX0015__A1",
+  "condition": "E05-SUT05-API-02",
+  "execution_id": "EX0015",
+  "attempt": 1,
+  "scenario": "CS-001",
+  "outcome_category": "S_CAPTCHA_ISSUED",
+  "observed": "HTTP 200 with the keys ['answer', 'captcha', 'captchaId']",
+  "cause": null,
+  "attribution": "SUT",
+  "stimulus_request_sent": true,
+  "last_phase": "classification",
+  "duration_s": 2.668,
+  "steps": [
+    {
+      "phase": "reset",
+      "description": "restart the SUT process (SIGTERM to the process group, port refused, start in a new session and group, readiness)",
+      "mechanisms": [
+        "ENVIRONMENT_RESTART"
+      ],
+      "started_at": "2026-11-17T03:21:02.875Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "stop_signal": "SIGTERM to process group 3538",
+        "stop_sent_at": "2026-11-17T03:21:02.890Z",
+        "port_refused_at": "2026-11-17T03:21:03.390Z",
+        "port_polls": 2,
+        "start_at": "2026-11-17T03:21:03.405Z",
+        "new_pid": 3568,
+        "new_pgid": 3568,
+        "ready_at": "2026-11-17T03:21:05.458Z",
+        "readiness_polls": 3,
+        "last_readiness_status": 200
+      },
+      "evidence": [
+        "evidence/002-process-tree-before-stop.txt",
+        "evidence/003-process-tree-after-stop.txt",
+        "evidence/004-process-tree-after-restart.txt"
+      ],
+      "finished_at": "2026-11-17T03:21:05.474Z"
+    },
+    {
+      "phase": "starting-state",
+      "description": "POST /rest/user/login (documented account), then GET /rest/basket/{bid}: the basket holds no item",
+      "mechanisms": [],
+      "started_at": "2026-11-17T03:21:05.474Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "login_status": 200,
+        "token_received": true,
+        "bid": 6,
+        "basket_status": 200,
+        "product_ids": []
+      },
+      "evidence": [
+        "evidence/005-sut05-login.json",
+        "evidence/006-sut05-basket-start.json"
+      ],
+      "finished_at": "2026-11-17T03:21:05.515Z"
+    },
+    {
+      "phase": "establishment",
+      "description": "POST /api/BasketItems {ProductId 1, BasketId <bid>, quantity 1}",
+      "mechanisms": [
+        "API_SEED"
+      ],
+      "started_at": "2026-11-17T03:21:05.515Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200
+      },
+      "evidence": [
+        "evidence/007-sut05-add-item.json"
+      ],
+      "finished_at": "2026-11-17T03:21:05.522Z"
+    },
+    {
+      "phase": "verification",
+      "description": "GET /rest/basket/{bid} shows ProductId 1",
+      "mechanisms": [],
+      "started_at": "2026-11-17T03:21:05.522Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "product_ids": [
+          1
+        ]
+      },
+      "evidence": [
+        "evidence/008-sut05-basket-pre-stimulus.json"
+      ],
+      "finished_at": "2026-11-17T03:21:05.533Z"
+    },
+    {
+      "phase": "stimulus",
+      "description": "GET /rest/captcha",
+      "mechanisms": [],
+      "started_at": "2026-11-17T03:21:05.533Z",
+      "outcome": "OBSERVED",
+      "observation": {
+        "status": 200,
+        "error": null,
+        "parsed": true,
+        "keys": [
+          "answer",
+          "captcha",
+          "captchaId"
+        ]
+      },
+      "evidence": [
+        "evidence/009-sut05-stimulus-captcha.json"
+      ],
+      "finished_at": "2026-11-17T03:21:05.543Z"
+    },
+    {
+      "phase": "classification",
+      "description": "classify the stimulus observation",
+      "mechanisms": [],
+      "started_at": "2026-11-17T03:21:05.543Z",
+      "outcome": "OBSERVED",
+      "observation": {
+        "category": "S_CAPTCHA_ISSUED"
+      },
+      "evidence": [],
+      "finished_at": "2026-11-17T03:21:05.543Z"
+    }
+  ],
+  "notes": [],
+  "note": "attribution is mechanical (D-16, D-16b): TOOLING only for an exception before the stimulus request was sent; the label is carried in outcome.outcome_category of run-manifest.json and never changes a rate"
+}
