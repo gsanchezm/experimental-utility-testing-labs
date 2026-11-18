@@ -1,14 +1,20 @@
-# E04 Measured Execution -- DRAFT (operation OP-PREP-E04). Not frozen, not locked, not dispatched.
+# E04 Measured Execution -- DRAFT (operation OP-PREP-E04). Not frozen and not dispatched. Locked by reference: the START binds
+# this file by its sha256 in the Campaign configuration of experiments/E04-repeatability/README.md.
 # Study EUS-2026-001 (Experimental Utility of Software-Testing Laboratory Ecosystems).
 # Authored by the ORCHESTRATOR under CAMPAIGN-CI-WRITE-AUTH-01 (the agent-instructions file, "Campaign CI/CD infrastructure
 # for E02 and E04-E12"), for E04-repeatability only.
 #
 # The ONLY path through which an E04-repeatability MEASURED_EXPERIMENT may run. It is dispatched by the ORCHESTRATOR within a dispatch
 # authorization of the human research lead, per SUT (protocol/agent-governance-v6.md, Section 3.7). One dispatch runs one condition:
-# its fifty executions EX0001 to EX0050, sequentially, on one shared instance (the model B of E05, decision D-02, carried over as a working default pending the START). It FAILS CLOSED: the gate job
+# its fifty executions EX0001 to EX0050, sequentially, on one shared instance (the model B of E05, decision D-02, as set by the Campaign configuration). It FAILS CLOSED: the gate job
 # verifies every frozen input and campaign gate against the checked-out repository before the measured job may start. As of its creation
-# E04 is NOT_STARTED, has no START record, no locked configuration, no dispatch authorization, no controlled-instance verification, and no
-# frozen dispatch prompt, so this workflow cannot execute a measured condition. That is the intended state.
+# The gates refuse every run until the START of E04-repeatability (protocol/change-control-v1.md, section 7, moment 1) has written the
+# records they read: the campaign IN_PROGRESS (manifests/study-manifest.yaml), the START record (manifests/e04-campaign-start-v1.yaml), the
+# locked Campaign configuration, the controlled-instance record (experiments/E04-repeatability/controlled-instance-status.yaml, every condition
+# CONTROLLED and VERIFIED on the non-measured DRY_RUN round 1, run 44331428884) and the frozen dispatch procedure prompt. After the START a run
+# still needs, for its assigned SUT, a dispatch authorization ISSUED, VALID and ELIGIBLE by the human research lead, naming the condition, N = 50
+# and attempt 1 (manifests/e04-dispatch-authorization-sut0N-v1.yaml; protocol/agent-governance-v6.md, Section 3.7). No such record exists in the
+# repository until the human research lead issues it, so every dispatch is refused until then.
 #
 # Attempt model: one dispatch, one job, fifty executions. Attempt 1 runs EX0001 to EX0050 under the dispatch authorization; GitHub-native
 # re-runs are refused (github.run_attempt must be 1). A further attempt (attempt 2 or more, executions first_execution to EX0050) is admitted

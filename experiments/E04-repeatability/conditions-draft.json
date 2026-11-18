@@ -36,7 +36,11 @@
       "expected_category": "TARGET_STATE_VERIFIED",
       "n": 50,
       "reset_between_attempts": "process_restart",
-      "pending": []
+      "pending": [],
+      "block_group": "SUT01-process_restart-group",
+      "identical_blocks_with": [
+        "E04-SUT01-API-06"
+      ]
     },
     {
       "condition_id": "E04-SUT01-API-02",
@@ -49,7 +53,13 @@
       "n": 50,
       "reset_between_attempts": "api_reset",
       "pending": [
-        "START package: E04-SUT01-API-02 and E04-SUT01-API-03 have the same reset, establishment and verification (they differ only in account and in their E05 stimulus); confirm that both are kept, as the one-to-one mirror requires."
+        "START package: E04-SUT01-API-02, -03, -04 and -05 run the same blocks (session clear through the API, cart line; see identical_blocks_with) and differ in account only (standard_user, standard_user, performance_glitch_user, a11y_glitch_user); confirm that all four are kept as separate conditions, as the one-to-one mirror requires."
+      ],
+      "block_group": "SUT01-api_reset-group",
+      "identical_blocks_with": [
+        "E04-SUT01-API-03",
+        "E04-SUT01-API-04",
+        "E04-SUT01-API-05"
       ]
     },
     {
@@ -63,7 +73,13 @@
       "n": 50,
       "reset_between_attempts": "api_reset",
       "pending": [
-        "START package: same blocks as E04-SUT01-API-02; decide whether both condition ids are kept."
+        "START package: same blocks as E04-SUT01-API-02, -04 and -05 (see identical_blocks_with); decide together with API-02 whether the four condition ids are kept."
+      ],
+      "block_group": "SUT01-api_reset-group",
+      "identical_blocks_with": [
+        "E04-SUT01-API-02",
+        "E04-SUT01-API-04",
+        "E04-SUT01-API-05"
       ]
     },
     {
@@ -76,7 +92,13 @@
       "expected_category": "TARGET_STATE_VERIFIED",
       "n": 50,
       "reset_between_attempts": "api_reset",
-      "pending": []
+      "pending": [],
+      "block_group": "SUT01-api_reset-group",
+      "identical_blocks_with": [
+        "E04-SUT01-API-02",
+        "E04-SUT01-API-03",
+        "E04-SUT01-API-05"
+      ]
     },
     {
       "condition_id": "E04-SUT01-API-05",
@@ -88,7 +110,13 @@
       "expected_category": "TARGET_STATE_VERIFIED",
       "n": 50,
       "reset_between_attempts": "api_reset",
-      "pending": []
+      "pending": [],
+      "block_group": "SUT01-api_reset-group",
+      "identical_blocks_with": [
+        "E04-SUT01-API-02",
+        "E04-SUT01-API-03",
+        "E04-SUT01-API-04"
+      ]
     },
     {
       "condition_id": "E04-SUT01-API-06",
@@ -100,7 +128,11 @@
       "expected_category": "TARGET_STATE_VERIFIED",
       "n": 50,
       "reset_between_attempts": "process_restart",
-      "pending": []
+      "pending": [],
+      "block_group": "SUT01-process_restart-group",
+      "identical_blocks_with": [
+        "E04-SUT01-API-01"
+      ]
     },
     {
       "condition_id": "E04-SUT01-WEB-01",
@@ -112,7 +144,9 @@
       "expected_category": "TARGET_STATE_VERIFIED",
       "n": 50,
       "reset_between_attempts": "process_restart",
-      "pending": []
+      "pending": [],
+      "block_group": null,
+      "identical_blocks_with": []
     },
     {
       "condition_id": "E04-SUT02-WEB-01",
@@ -124,7 +158,9 @@
       "expected_category": "TARGET_STATE_VERIFIED",
       "n": 50,
       "reset_between_attempts": "app_data_clear",
-      "pending": []
+      "pending": [],
+      "block_group": null,
+      "identical_blocks_with": []
     },
     {
       "condition_id": "E04-SUT04-WEB-01",
@@ -136,7 +172,9 @@
       "expected_category": "TARGET_STATE_VERIFIED",
       "n": 50,
       "reset_between_attempts": "delete_control",
-      "pending": []
+      "pending": [],
+      "block_group": null,
+      "identical_blocks_with": []
     },
     {
       "condition_id": "E04-SUT04-API-01",
@@ -148,7 +186,9 @@
       "expected_category": "TARGET_STATE_VERIFIED",
       "n": 50,
       "reset_between_attempts": "api_delete",
-      "pending": []
+      "pending": [],
+      "block_group": null,
+      "identical_blocks_with": []
     },
     {
       "condition_id": "E04-SUT04-API-02",
@@ -162,7 +202,9 @@
       "reset_between_attempts": "api_delete_with_stimulus_booking",
       "pending": [
         "START package: the message-count baseline read in verification (the baseline of the E05 stimulus) is kept as part of the verification block; confirm it or remove it."
-      ]
+      ],
+      "block_group": null,
+      "identical_blocks_with": []
     },
     {
       "condition_id": "E04-SUT05-API-01",
@@ -175,7 +217,11 @@
       "n": 50,
       "reset_between_attempts": "environment_restart",
       "pending": [
-        "START package: same blocks as E04-SUT05-API-02 once the stimuli are removed; decide whether both condition ids are kept."
+        "START package: E04-SUT05-API-01 and -02 run the same blocks (restart of the SUT process, basket line) with the same documented account (see identical_blocks_with); decide whether both condition ids are kept."
+      ],
+      "block_group": "SUT05-environment_restart-group",
+      "identical_blocks_with": [
+        "E04-SUT05-API-02"
       ]
     },
     {
@@ -189,7 +235,11 @@
       "n": 50,
       "reset_between_attempts": "environment_restart",
       "pending": [
-        "START package: same blocks as E04-SUT05-API-01 once the stimuli are removed; decide whether both condition ids are kept."
+        "START package: same blocks as E04-SUT05-API-01 (see identical_blocks_with); decide together with API-01 whether both condition ids are kept."
+      ],
+      "block_group": "SUT05-environment_restart-group",
+      "identical_blocks_with": [
+        "E04-SUT05-API-01"
       ]
     }
   ]

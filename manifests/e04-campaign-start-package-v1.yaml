@@ -1,0 +1,443 @@
+# manifests/e04-campaign-start-package-v1.yaml -- E04-repeatability campaign START package (lock package), version 1, PREPARED.
+# ORCHESTRATOR record of operation OP-PREP-E04-START (2026-11-18). It holds the lock values, the prepared edit set and the prepared texts of the E04 START,
+# computed from the files at base commit 1af7bb23 and from the round 1 record. It binds nothing before the human research lead approves the START; it authorizes nothing.
+record_class: E04_CAMPAIGN_START_PACKAGE
+record_id: E04-START-PACKAGE-01
+study_id: EUS-2026-001
+campaign_id: E04-repeatability
+operation_id: OP-PREP-E04-START
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-18'
+status: PREPARED
+base_commit: 1af7bb23
+binding_moment: the E04 campaign START (protocol/change-control-v1.md, section 7, moment 1), on the explicit human approval of that exact action; nothing in this record binds before
+  that approval
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+authorizes: 'nothing: not the START, not the lock, not the freeze of the prompt, not a dispatch authorization, not a dispatch, not an export, not the analysis'
+nature: prepared edit set, lock values and texts of the E04 START; the values are computed by a script from the files at base commit 1af7bb23 and from the round 1 record (manifests/e04-environment-verification-rounds-v1.yaml);
+  none is typed by hand
+lock_values:
+  implementation_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d
+  implementation_file: experiments/E04-repeatability/executor/run-condition.sh
+  conditions_file:
+    path: experiments/E04-repeatability/conditions-draft.json
+    sha256: 8f1bb35322255be7a5cf37a44d04bedfecb739ce94490b6ca33b806b32f6ec07
+    conditions: 13
+  measured_workflow:
+    path: .github/workflows/e04-measured-execution.yml
+    sha256: 975b98caa29ad7fef0cb38fe40e94a0449e6adfe153e10759869a2ae649d493c
+    note: gate G-9 reads this hash from the configuration text
+  verification_workflow:
+    path: .github/workflows/e04-environment-verification.yml
+    sha256: 84c6ac01713171cc93b3f0b5ad4aab63f93ba5534ccc0bf274c58a7c81bcc5e1
+    note: provenance only; the verification workflow has no START gate (decided 2026-11-17)
+  dispatch_prompt:
+    id: ORCHESTRATOR-E04-repeatability-v1
+    working_copy: prompts/working/ORCHESTRATOR-E04-repeatability-v1.md
+    working_copy_sha256: 65a1a818e87b0ad95587b5c2d2f5a2af6e958cff0692d941c09f0b895b7928e9
+    frozen_copy_to_write: prompts/frozen/ORCHESTRATOR-E04-repeatability-v1.md
+    frozen_copy_written_at_the_start_only: true
+  governance_v6:
+    path: protocol/agent-governance-v6.md
+    sha256: c890a9d004b2989aa9ae33a54bc68b000c47fc9e3f79d60ad0051de78b3f2a4a
+  run_manifest_schema:
+    path: schemas/run-manifest.schema.v2.json
+    sha256: 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757
+  scenario_mapping:
+    path: experiments/scenario-mappings/CS-001.yaml
+    sha256: e251e3825ebbbe3aa1a0f3fee8a30131fa1e0910161ae583a09cb34d9f1cc583
+    status: FROZEN
+  requirements:
+    path: experiments/E04-repeatability/executor/requirements.txt
+    sha256: 35b65ea4c57a3bc1ddccaab846bab0b986ff76de8b09ac69d2455fedf04dfb4b
+  sut_manifest:
+    path: manifests/sut-manifest.yaml
+    sha256: 7f954c958f5558729ff9be23b9bea1471d205e43baf0f461ccb08f7984cf2d58
+  pinned_suts:
+    SUT-01-api:
+      repository: https://github.com/gsanchezm/OmniPizza
+      commit_sha: 9ca37674d374e9303912e259641ee86baf3aabe1
+      release: null
+    SUT-01-web:
+      repository: https://github.com/gsanchezm/OmniPizza
+      commit_sha: 9ca37674d374e9303912e259641ee86baf3aabe1
+      release: null
+    SUT-02-web:
+      repository: https://github.com/saucelabs/sample-app-web
+      commit_sha: 60fdd634bb111c092282fa07977513a0a7765593
+      release: null
+    SUT-04-api:
+      repository: https://github.com/mwinteringham/restful-booker-platform
+      commit_sha: d36bd3f8647a091d406e53bad463c5e3e5d2ece1
+      release: '2.2'
+    SUT-04-web:
+      repository: https://github.com/mwinteringham/restful-booker-platform
+      commit_sha: d36bd3f8647a091d406e53bad463c5e3e5d2ece1
+      release: '2.2'
+    SUT-05-api:
+      repository: https://github.com/juice-shop/juice-shop
+      commit_sha: 1618a611b173b4bf114028e6e02549950606e29d
+      release: v20.2.0
+  configuration_text:
+    path: experiments/E04-repeatability/campaign-configuration-start-text-draft.md
+    sha256: eb45fa3368331f3569e44bdad55a0be448f965d2beb508cd8c5a82097c0be4e1
+    destination: 'the section ''## Campaign configuration'' of experiments/E04-repeatability/README.md: the heading line, one blank line, then the file content verbatim'
+    note: the file ends with one newline; the section must hold no line that starts with a level-2 heading
+  controlled_instance_status:
+    path: experiments/E04-repeatability/controlled-instance-status.yaml
+    prepared_text_sha256: 9ef73c29b108e4a1b32bb5fd8238e1d956ca3a0fe57e743cece25027c7fa83e6
+    prepared_text_bytes: 10590
+    prepared_text: see controlled_instance_prepared_text below
+  environment_verification_record:
+    path: manifests/e04-environment-verification-rounds-v1.yaml
+    sha256: 7c25a6db09a64c47cbcb11e60438655d70e5cf29a0947562dddda1c8b0b1ff93
+    governing_run: 44331428884
+  web_runner: Playwright for Python 1.63.0 with the hashed requirements of the executor
+  start_authorization_id_proposed: E04-START-AUTH-01
+prepared_edit_set:
+- n: 1
+  file: experiments/E04-repeatability/README.md
+  edit: add the section '## Campaign configuration' after the last section (Warning) with the configuration text verbatim (lock_values.configuration_text); replace the body of '## Current
+    status' (NOT STARTED) with the IN_PROGRESS statement of the START date and the START authorization id
+- n: 2
+  file: protocol/CHANGELOG.md
+  edit: 'append one row to the change-log table (the measured workflow requires exactly one START row for this README): | 2026-11-18 (date of the START) | experiments/E04-repeatability/README.md
+    | none | none | campaign NOT_STARTED -> IN_PROGRESS | E04 campaign start under protocol/change-control-v1.md, section 7, moment 1, by explicit human approval, authorization E04-START-AUTH-01.
+    Campaign configuration record added to experiments/E04-repeatability/README.md (thirteen web/api conditions on SUT-01 (7), SUT-02 (1), SUT-04 (3) and SUT-05 (2), N = 50 each, 650
+    executions, attempt 1; target scenario CS-001; primary metric TSRR; pinned SUT versions: manifests/sut-manifest.yaml; executor implementation hash e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d;
+    conditions file sha256 8f1bb35322255be7a5cf37a44d04bedfecb739ce94490b6ca33b806b32f6ec07; measured workflow file sha256 975b98caa29ad7fef0cb38fe40e94a0449e6adfe153e10759869a2ae649d493c;
+    dispatch procedure prompt ORCHESTRATOR-E04-repeatability-v1, sha256 65a1a818e87b0ad95587b5c2d2f5a2af6e958cff0692d941c09f0b895b7928e9, frozen as a byte-identical copy; controlled-instance
+    status experiments/E04-repeatability/controlled-instance-status.yaml, all thirteen conditions VERIFIED on GitHub Actions by DRY_RUN round 1 of run 44331428884). Effect: the measured-execution
+    workflow may be dispatched only within a dispatch authorization issued separately by the human research lead under protocol/agent-governance-v6.md, Section 3.7; the START authorizes
+    no dispatch. Record: manifests/e04-campaign-start-v1.yaml. | E04-repeatability | gilbertosanchez |'
+- n: 3
+  file: manifests/study-manifest.yaml
+  edit: 'the campaigns entry id E04-repeatability: status NOT_STARTED -> IN_PROGRESS, with a comment naming the START date, protocol/CHANGELOG.md and manifests/e04-campaign-start-v1.yaml'
+- n: 4
+  file: experiments/README.md
+  edit: 'the E04 row: the status text changes from NOT STARTED to IN PROGRESS since the START date (authorization E04-START-AUTH-01); no other column changes'
+- n: 5
+  file: prompts/frozen/ORCHESTRATOR-E04-repeatability-v1.md
+  edit: 'new file: a byte-identical copy of prompts/working/ORCHESTRATOR-E04-repeatability-v1.md (sha256 in lock_values); written once, never edited afterwards'
+- n: 6
+  file: manifests/e04-campaign-start-v1.yaml
+  edit: 'new file: the START record (start_record_prepared) with the human research lead approval verbatim and its sha256; the approval fields stay null until the approval exists'
+- n: 7
+  file: experiments/E04-repeatability/controlled-instance-status.yaml
+  edit: 'new file: the controlled-instance content (controlled_instance_prepared_text); updated and campaign_status as the START writes them'
+- n: 8
+  file: none other
+  edit: no dispatch authorization file, no dispatch record, no raw-data file, no workflow, executor, conditions file, protocol document, schema or agent-instructions file is written
+    by the START
+controlled_instance_prepared_text: "'# note': experiments/E04-repeatability/controlled-instance-status.yaml -- PREPARED CONTENT, written at the START only\nstudy_id: EUS-2026-001\ncampaign_id:\
+  \ E04-repeatability\nupdated: null\ncampaign_status: IN_PROGRESS\nverification_record: manifests/e04-environment-verification-rounds-v1.yaml\nverification_record_sha256: 7c25a6db09a64c47cbcb11e60438655d70e5cf29a0947562dddda1c8b0b1ff93\n\
+  basis: 'status VERIFIED of every condition: the non-measured DRY_RUN round 1 of .github/workflows/e04-environment-verification.yml (run 44331428884), 2 executions per condition (DR0001\
+  \ and DR0002), all\n  26 TARGET_STATE_VERIFIED; environment_type is the value the verification workflow writes into its provenance record (SELF_HOSTED); no further round exists at\
+  \ the time of this content'\nmeasured_execution_prerequisites_common:\n- campaign START\n- locked campaign configuration\n- agent-governance-v6 in force (Section 3.7)\n- a dispatch\
+  \ authorization for the assigned SUT\n- the frozen dispatch procedure prompt ORCHESTRATOR-E04-repeatability-v1\n- the implementation hash equal to the locked value\n- CS-001 mapping\
+  \ FROZEN\nconditions:\n  E04-SUT01-API-01:\n    status: CONTROLLED\n    reverification_required: false\n    github_actions_verification:\n      status: VERIFIED\n      environment_type:\
+  \ SELF_HOSTED\n      run_id: 44331428884\n      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44331428884\n      execution_ids:\n      - DR0001\n\
+  \      - DR0002\n      record_class: DRY_RUN\n      implementation_run_condition_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d\n      account: standard_user\n\
+  \      instance: SUT-01 web and api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED\
+  \ instance\n  E04-SUT01-API-02:\n    status: CONTROLLED\n    reverification_required: false\n    github_actions_verification:\n      status: VERIFIED\n      environment_type: SELF_HOSTED\n\
+  \      run_id: 44331428884\n      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44331428884\n      execution_ids:\n      - DR0001\n      - DR0002\n\
+  \      record_class: DRY_RUN\n      implementation_run_condition_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d\n      account: standard_user\n      instance:\
+  \ SUT-01 web and api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance\n\
+  \  E04-SUT01-API-03:\n    status: CONTROLLED\n    reverification_required: false\n    github_actions_verification:\n      status: VERIFIED\n      environment_type: SELF_HOSTED\n  \
+  \    run_id: 44331428884\n      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44331428884\n      execution_ids:\n      - DR0001\n      - DR0002\n\
+  \      record_class: DRY_RUN\n      implementation_run_condition_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d\n      account: standard_user\n      instance:\
+  \ SUT-01 web and api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance\n\
+  \  E04-SUT01-API-04:\n    status: CONTROLLED\n    reverification_required: false\n    github_actions_verification:\n      status: VERIFIED\n      environment_type: SELF_HOSTED\n  \
+  \    run_id: 44331428884\n      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44331428884\n      execution_ids:\n      - DR0001\n      - DR0002\n\
+  \      record_class: DRY_RUN\n      implementation_run_condition_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d\n      account: performance_glitch_user\n\
+  \      instance: SUT-01 web and api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED\
+  \ instance\n  E04-SUT01-API-05:\n    status: CONTROLLED\n    reverification_required: false\n    github_actions_verification:\n      status: VERIFIED\n      environment_type: SELF_HOSTED\n\
+  \      run_id: 44331428884\n      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44331428884\n      execution_ids:\n      - DR0001\n      - DR0002\n\
+  \      record_class: DRY_RUN\n      implementation_run_condition_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d\n      account: a11y_glitch_user\n      instance:\
+  \ SUT-01 web and api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance\n\
+  \  E04-SUT01-API-06:\n    status: CONTROLLED\n    reverification_required: false\n    github_actions_verification:\n      status: VERIFIED\n      environment_type: SELF_HOSTED\n  \
+  \    run_id: 44331428884\n      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44331428884\n      execution_ids:\n      - DR0001\n      - DR0002\n\
+  \      record_class: DRY_RUN\n      implementation_run_condition_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d\n      account: error_user\n      instance:\
+  \ SUT-01 web and api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance\n\
+  \  E04-SUT01-WEB-01:\n    status: CONTROLLED\n    reverification_required: false\n    github_actions_verification:\n      status: VERIFIED\n      environment_type: SELF_HOSTED\n  \
+  \    run_id: 44331428884\n      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44331428884\n      execution_ids:\n      - DR0001\n      - DR0002\n\
+  \      record_class: DRY_RUN\n      implementation_run_condition_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d\n      account: standard_user\n      instance:\
+  \ SUT-01 web and api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance\n\
+  \  E04-SUT02-WEB-01:\n    status: CONTROLLED\n    reverification_required: false\n    github_actions_verification:\n      status: VERIFIED\n      environment_type: SELF_HOSTED\n  \
+  \    run_id: 44331428884\n      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44331428884\n      execution_ids:\n      - DR0001\n      - DR0002\n\
+  \      record_class: DRY_RUN\n      implementation_run_condition_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d\n      account: standard_user\n      instance:\
+  \ SUT-02 web provisioned in the job from the pinned commit 60fdd634bb111c092282fa07977513a0a7765593 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance\n  E04-SUT04-WEB-01:\n\
+  \    status: CONTROLLED\n    reverification_required: false\n    github_actions_verification:\n      status: VERIFIED\n      environment_type: SELF_HOSTED\n      run_id: 44331428884\n\
+  \      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44331428884\n      execution_ids:\n      - DR0001\n      - DR0002\n      record_class: DRY_RUN\n\
+  \      implementation_run_condition_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d\n      account: admin\n      instance: SUT-04 web, booking api, auth and\
+  \ message services provisioned in the job from the pinned commit d36bd3f8647a091d406e53bad463c5e3e5d2ece1 (release 2.2) on a GitHub-hosted runner (ubuntu-24.04);\n        never a PUBLIC_HOSTED\
+  \ instance\n  E04-SUT04-API-01:\n    status: CONTROLLED\n    reverification_required: false\n    github_actions_verification:\n      status: VERIFIED\n      environment_type: SELF_HOSTED\n\
+  \      run_id: 44331428884\n      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44331428884\n      execution_ids:\n      - DR0001\n      - DR0002\n\
+  \      record_class: DRY_RUN\n      implementation_run_condition_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d\n      account: admin\n      instance: SUT-04\
+  \ web, booking api, auth and message services provisioned in the job from the pinned commit d36bd3f8647a091d406e53bad463c5e3e5d2ece1 (release 2.2) on a GitHub-hosted runner (ubuntu-24.04);\n\
+  \        never a PUBLIC_HOSTED instance\n  E04-SUT04-API-02:\n    status: CONTROLLED\n    reverification_required: false\n    github_actions_verification:\n      status: VERIFIED\n\
+  \      environment_type: SELF_HOSTED\n      run_id: 44331428884\n      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44331428884\n      execution_ids:\n\
+  \      - DR0001\n      - DR0002\n      record_class: DRY_RUN\n      implementation_run_condition_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d\n      account:\
+  \ admin\n      instance: SUT-04 web, booking api, auth and message services provisioned in the job from the pinned commit d36bd3f8647a091d406e53bad463c5e3e5d2ece1 (release 2.2) on\
+  \ a GitHub-hosted runner (ubuntu-24.04);\n        never a PUBLIC_HOSTED instance\n  E04-SUT05-API-01:\n    status: CONTROLLED\n    reverification_required: false\n    github_actions_verification:\n\
+  \      status: VERIFIED\n      environment_type: SELF_HOSTED\n      run_id: 44331428884\n      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44331428884\n\
+  \      execution_ids:\n      - DR0001\n      - DR0002\n      record_class: DRY_RUN\n      implementation_run_condition_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d\n\
+  \      account: documented_account\n      instance: SUT-05 api provisioned in the job from the packaged distribution of the pinned release v20.2.0 (commit 1618a611b173b4bf114028e6e02549950606e29d)\
+  \ on a GitHub-hosted runner (ubuntu-24.04);\n        never a PUBLIC_HOSTED instance\n  E04-SUT05-API-02:\n    status: CONTROLLED\n    reverification_required: false\n    github_actions_verification:\n\
+  \      status: VERIFIED\n      environment_type: SELF_HOSTED\n      run_id: 44331428884\n      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44331428884\n\
+  \      execution_ids:\n      - DR0001\n      - DR0002\n      record_class: DRY_RUN\n      implementation_run_condition_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d\n\
+  \      account: documented_account\n      instance: SUT-05 api provisioned in the job from the packaged distribution of the pinned release v20.2.0 (commit 1618a611b173b4bf114028e6e02549950606e29d)\
+  \ on a GitHub-hosted runner (ubuntu-24.04);\n        never a PUBLIC_HOSTED instance\n"
+dispatch_authorizations_prepared:
+- authorization_id: E04-DISPATCH-SUT01-AUTH-01
+  record_class: E04_DISPATCH_AUTHORIZATION
+  record_file_when_issued: manifests/e04-dispatch-authorization-sut01-v1.yaml
+  status: PREPARED_NOT_ISSUED
+  record_validity: null
+  dispatch_eligibility: null
+  revoked: false
+  issued_by: null
+  authorization_date: null
+  attempt: 1
+  n_executions: 50
+  assigned_sut: SUT-01
+  conditions: &id001
+  - E04-SUT01-API-01
+  - E04-SUT01-API-02
+  - E04-SUT01-API-03
+  - E04-SUT01-API-04
+  - E04-SUT01-API-05
+  - E04-SUT01-API-06
+  - E04-SUT01-WEB-01
+  executions_in_all: 350
+  dispatches: 7
+  campaign_start_authorization_id: E04-START-AUTH-01
+  governing_protocol: protocol/agent-governance-v6.md, Section 3.7
+  frozen_inputs:
+    workflow: .github/workflows/e04-measured-execution.yml
+    executor_implementation_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d
+    executor_prompt_version: ORCHESTRATOR-E04-repeatability-v1
+    executor_prompt_sha256: 65a1a818e87b0ad95587b5c2d2f5a2af6e958cff0692d941c09f0b895b7928e9
+  order_of_dispatch: *id001
+  scope_note: one dispatch per condition; each dispatch runs the 50 executions EX0001 to EX0050 in one job; attempt 1 only; a further attempt only under the further-attempt approval
+    (gate G-E04-A2); no GitHub re-run
+- authorization_id: E04-DISPATCH-SUT02-AUTH-01
+  record_class: E04_DISPATCH_AUTHORIZATION
+  record_file_when_issued: manifests/e04-dispatch-authorization-sut02-v1.yaml
+  status: PREPARED_NOT_ISSUED
+  record_validity: null
+  dispatch_eligibility: null
+  revoked: false
+  issued_by: null
+  authorization_date: null
+  attempt: 1
+  n_executions: 50
+  assigned_sut: SUT-02
+  conditions: &id002
+  - E04-SUT02-WEB-01
+  executions_in_all: 50
+  dispatches: 1
+  campaign_start_authorization_id: E04-START-AUTH-01
+  governing_protocol: protocol/agent-governance-v6.md, Section 3.7
+  frozen_inputs:
+    workflow: .github/workflows/e04-measured-execution.yml
+    executor_implementation_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d
+    executor_prompt_version: ORCHESTRATOR-E04-repeatability-v1
+    executor_prompt_sha256: 65a1a818e87b0ad95587b5c2d2f5a2af6e958cff0692d941c09f0b895b7928e9
+  order_of_dispatch: *id002
+  scope_note: one dispatch per condition; each dispatch runs the 50 executions EX0001 to EX0050 in one job; attempt 1 only; a further attempt only under the further-attempt approval
+    (gate G-E04-A2); no GitHub re-run
+- authorization_id: E04-DISPATCH-SUT04-AUTH-01
+  record_class: E04_DISPATCH_AUTHORIZATION
+  record_file_when_issued: manifests/e04-dispatch-authorization-sut04-v1.yaml
+  status: PREPARED_NOT_ISSUED
+  record_validity: null
+  dispatch_eligibility: null
+  revoked: false
+  issued_by: null
+  authorization_date: null
+  attempt: 1
+  n_executions: 50
+  assigned_sut: SUT-04
+  conditions: &id003
+  - E04-SUT04-WEB-01
+  - E04-SUT04-API-01
+  - E04-SUT04-API-02
+  executions_in_all: 150
+  dispatches: 3
+  campaign_start_authorization_id: E04-START-AUTH-01
+  governing_protocol: protocol/agent-governance-v6.md, Section 3.7
+  frozen_inputs:
+    workflow: .github/workflows/e04-measured-execution.yml
+    executor_implementation_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d
+    executor_prompt_version: ORCHESTRATOR-E04-repeatability-v1
+    executor_prompt_sha256: 65a1a818e87b0ad95587b5c2d2f5a2af6e958cff0692d941c09f0b895b7928e9
+  order_of_dispatch: *id003
+  scope_note: one dispatch per condition; each dispatch runs the 50 executions EX0001 to EX0050 in one job; attempt 1 only; a further attempt only under the further-attempt approval
+    (gate G-E04-A2); no GitHub re-run
+- authorization_id: E04-DISPATCH-SUT05-AUTH-01
+  record_class: E04_DISPATCH_AUTHORIZATION
+  record_file_when_issued: manifests/e04-dispatch-authorization-sut05-v1.yaml
+  status: PREPARED_NOT_ISSUED
+  record_validity: null
+  dispatch_eligibility: null
+  revoked: false
+  issued_by: null
+  authorization_date: null
+  attempt: 1
+  n_executions: 50
+  assigned_sut: SUT-05
+  conditions: &id004
+  - E04-SUT05-API-01
+  - E04-SUT05-API-02
+  executions_in_all: 100
+  dispatches: 2
+  campaign_start_authorization_id: E04-START-AUTH-01
+  governing_protocol: protocol/agent-governance-v6.md, Section 3.7
+  frozen_inputs:
+    workflow: .github/workflows/e04-measured-execution.yml
+    executor_implementation_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d
+    executor_prompt_version: ORCHESTRATOR-E04-repeatability-v1
+    executor_prompt_sha256: 65a1a818e87b0ad95587b5c2d2f5a2af6e958cff0692d941c09f0b895b7928e9
+  order_of_dispatch: *id004
+  scope_note: one dispatch per condition; each dispatch runs the 50 executions EX0001 to EX0050 in one job; attempt 1 only; a further attempt only under the further-attempt approval
+    (gate G-E04-A2); no GitHub re-run
+dispatch_authorization_common_fields: record_class E04_DISPATCH_AUTHORIZATION; status ISSUED, record_validity VALID, dispatch_eligibility ELIGIBLE, revoked false, issued_by human research
+  lead and authorization_date are filled only at issuance by the human research lead; attempt 1; n_executions 50; frozen_inputs as listed (the two hashes are the values of lock_values);
+  the file is named manifests/e04-dispatch-authorization-sut0N-v1.yaml (the measured gate globs that name)
+further_attempt_approval_template:
+  note: not a record; a file manifests/e04-further-attempt-approval-sut0N-v1.yaml is a record and is created only when the human research lead approves a further attempt
+  record_class: E04_FURTHER_ATTEMPT_APPROVAL
+  status: ISSUED at approval
+  revoked: false
+  issued_by: human research lead
+  assigned_sut: SUT-0N
+  dispatch_authorization_id: the id of the dispatch authorization of the SUT
+  campaign_start_authorization_id: E04-START-AUTH-01
+  governing_protocol: protocol/agent-governance-v6.md, Sections 3.6 and 3.7 (Further attempts)
+  executor_implementation_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d
+  executor_prompt_version: ORCHESTRATOR-E04-repeatability-v1
+  executor_prompt_sha256: 65a1a818e87b0ad95587b5c2d2f5a2af6e958cff0692d941c09f0b895b7928e9
+  attempts:
+  - condition_id: E04-SUTNN-...
+    first_execution: the first execution named
+    attempt: the attempt number (2 or more)
+    previous_attempt: attempt minus one
+  gate: G-E04-A2 of .github/workflows/e04-measured-execution.yml reads condition_id, first_execution, attempt and previous_attempt
+start_record_prepared:
+  record_class: CAMPAIGN_START
+  record_id: E04-CAMPAIGN-START-01
+  study_id: EUS-2026-001
+  campaign_id: E04-repeatability
+  operation_id: OP-START-E04
+  recorded_by_role: ORCHESTRATOR
+  start_date: null
+  start_timestamp_utc: null
+  authorization_id: E04-START-AUTH-01
+  authorization_id_status: proposed; the human research lead confirms the id at the START
+  binding: protocol/change-control-v1.md, section 7, moment 1 (campaign NOT_STARTED -> IN_PROGRESS)
+  approval:
+    given_by: the human research lead
+    channel: null
+    question_stamp: null
+    answer_stamp: null
+    answer_text_bytes: null
+    answer_text_sha256: null
+    answer_text: null
+  locked:
+    implementation_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d
+    configuration_text_sha256: eb45fa3368331f3569e44bdad55a0be448f965d2beb508cd8c5a82097c0be4e1
+    conditions_file_sha256: 8f1bb35322255be7a5cf37a44d04bedfecb739ce94490b6ca33b806b32f6ec07
+    measured_workflow_sha256: 975b98caa29ad7fef0cb38fe40e94a0449e6adfe153e10759869a2ae649d493c
+    prompt_version: ORCHESTRATOR-E04-repeatability-v1
+    prompt_sha256: 65a1a818e87b0ad95587b5c2d2f5a2af6e958cff0692d941c09f0b895b7928e9
+    run_manifest_schema_sha256: 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757
+    scenario_mapping_sha256: e251e3825ebbbe3aa1a0f3fee8a30131fa1e0910161ae583a09cb34d9f1cc583
+  files_written_by_the_start:
+  - experiments/E04-repeatability/README.md
+  - protocol/CHANGELOG.md
+  - manifests/study-manifest.yaml
+  - prompts/frozen/ORCHESTRATOR-E04-repeatability-v1.md
+  - manifests/e04-campaign-start-v1.yaml
+  - experiments/E04-repeatability/controlled-instance-status.yaml
+  - experiments/README.md
+  does_not:
+  - issue any dispatch authorization
+  - dispatch anything or run any workflow
+  - export or push anything
+  - edit any workflow, executor file, conditions file or protocol document
+rehearsal:
+  summary_file: manifests/e04-campaign-start-package-rehearsal-summary-v1.yaml
+  scope: the prepared edit set applied to a scratch copy of the tree at base commit 1af7bb23, outside the repository; synthetic dispatch authorizations per SUT that were never committed;
+    the gate step of the measured workflow extracted from the file and run for each of the thirteen conditions, plus one control without the edits and one mutation
+  result: counts only, in the summary file; the scratch tree and the synthetic records were deleted after the run
+open_items_for_the_human_research_lead:
+- id: Q1
+  question: Approve the START of E04-repeatability and the lock of its Campaign configuration (the text file named in lock_values, sha256 in lock_values), under the authorization id
+    E04-START-AUTH-01 (proposed id).
+  recommendation: Approve after Q2 to Q13 are decided; the START applies only the prepared edit set.
+- id: Q2
+  question: 'Confirm or change the working defaults of design-notes-draft.md section 2 that the configuration text fixes: the thirteen mirrors of E05 (2.1), the categories (2.2), the
+    attempt rule and gate G-E04-A2 (2.4), and no comparison or pooled rate (2.5).'
+  recommendation: Confirm all four.
+- id: Q3
+  question: 'Attribution: TOOLING for every interruption of a block (confirmed 2026-11-17). Decide the response-boundary clause of design default 3 (an exception after a response of
+    the SUT is SUT).'
+  recommendation: Do not adopt the clause in this configuration. Adopting it makes TOOLING almost unreachable, because each realization gets a response before its first block that can
+    raise; the executor implements the TOOLING rule without it.
+- id: Q4
+  question: Keep the thirteen conditions as one-to-one mirrors of E05 although several share blocks (E04-SUT01-API-01 with API-06; API-02, -03, -04 and -05; E04-SUT05-API-01 with -02).
+    Merging would change the conditions file (new hash) and the number of executions.
+  recommendation: Keep the thirteen conditions as written.
+- id: Q5
+  question: 'E04-SUT04-API-02: keep the message-count read of the E05 verification block (the baseline of the E05 stimulus), or remove it.'
+  recommendation: Keep it, as stated in the configuration text; removing it changes the target-state check of that condition.
+- id: Q6
+  question: Guest-name derivation salt E04| (names differ from E05) and the retained stimulus names in the SUT-04 reset (kept so that the reset is unchanged).
+  recommendation: Confirm both.
+- id: Q7
+  question: 'Confirm the order of dispatch in the configuration: SUT-01 API-01 to API-06 then WEB-01; SUT-02 WEB-01; SUT-04 API-01, API-02, WEB-01; SUT-05 API-01, API-02; one condition
+    at a time per SUT, the SUT chains concurrent.'
+  recommendation: Confirm.
+- id: Q8
+  question: Freeze the dispatch procedure prompt ORCHESTRATOR-E04-repeatability-v1 at the same moment (its working copy sha256 in lock_values; the frozen copy is written byte-identical).
+  recommendation: Approve.
+- id: Q9
+  question: 'Measured timeout: the 60-minute ceiling is inherited from E05 and is TBD for E04. Round 1 records no job durations.'
+  recommendation: Keep 60 minutes. Before the START, a read-only look at the durations of run 44331428884 is advisable; the value is not raised.
+- id: Q10
+  question: 'Controlled-instance basis: the status VERIFIED rests on one DRY_RUN round (round 1, two executions per condition). E05 used three rounds.'
+  recommendation: Accept round 1 if one round is judged adequate; otherwise run one more round (three executions) on an exact-line approval before the START.
+- id: Q11
+  question: environment_type SELF_HOSTED in the prepared controlled-instance content comes from the verification workflow provenance step; the round record does not state it.
+  recommendation: Confirm it from one ci-provenance.json of the round 1 artifacts (a read-only download) before the START.
+- id: Q12
+  question: 'Reference values of the runner image, Python, Node.js and the browser build: not recorded in round 1.'
+  recommendation: Leave them TBD, recorded per job and never gated, as E05 did.
+- id: Q13
+  question: The four dispatch authorizations and the further-attempt approval are issued only after the START state is exported, each by an explicit yes; the approval texts in this package
+    are prepared, not issued.
+  recommendation: Issue them later, one per SUT, after the START export.
+findings_in_the_draft:
+- id: F1
+  finding: design-notes-draft.md section 2.1 and conditions-draft.json (pending field) name only E04-SUT01-API-02 and -03 and E04-SUT05-API-01 and -02 as identical-block conditions.
+    The E05 conditions show E04-SUT01-API-01 and -06 (restart, cart line) and API-02, -03, -04 and -05 (session clear, cart line) as identical blocks, the accounts differing.
+  action: Not changed here (the draft is an input to the START). The configuration text states the groups; the draft pending notes need the same correction before the START.
+- id: F2
+  finding: The measured workflow header comment says E04 is NOT_STARTED and has no controlled-instance verification. After the START this comment is stale.
+  action: 'Not changed: the workflow hash is locked in the configuration text; a change would require a new text and hash.'
+- id: F3
+  finding: The measured gate reads experiments/E04-repeatability/controlled-instance-status.yaml, which does not exist before the START; the gate fails closed on it, as designed.
+  action: None; the file is created at the START from the prepared content.
+- id: F4
+  finding: The round 1 record does not state environment_type, the runner reference values or the job durations.
+  action: Open items Q9 to Q12.
+- id: F5
+  finding: The design notes (section 2.3) and the executor implement the TOOLING rule without the response clause; the configuration text follows the implementation.
+  action: Open item Q3.
+not_part_of_the_start:
+- the four dispatch authorizations (issued separately, one per SUT, each by an explicit yes, after the START export)
+- the export of the START state and of the authorizations (each with its own exact-line approval)
+- any dispatch, any import of measured data, the freeze of the campaign and the analysis (each with its own approval)

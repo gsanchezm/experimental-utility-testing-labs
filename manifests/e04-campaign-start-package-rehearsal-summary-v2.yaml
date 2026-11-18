@@ -1,0 +1,154 @@
+# manifests/e04-campaign-start-package-rehearsal-summary-v2.yaml -- counts only of the gate rehearsal of the E04 START package version 2 (OP-PREP-E04-START).
+record_class: E04_START_REHEARSAL_SUMMARY
+record_id: E04-START-REHEARSAL-02
+package: manifests/e04-campaign-start-package-v2.yaml
+study_id: EUS-2026-001
+campaign_id: E04-repeatability
+operation_id: OP-PREP-E04-START
+recorded_on: '2026-11-18'
+status: REHEARSAL RESULT, NOT A START, NOT AN AUTHORIZATION
+measured_experiment: false
+executes_anything: false
+scope: the prepared START edit set applied to a scratch copy of the files at base commit 1af7bb23, outside the repository; the gate step of .github/workflows/e04-measured-execution.yml
+  extracted from the file (the heredoc between the python step header and its PY terminator) and run with cwd at the scratch copy, once per condition; synthetic dispatch authorizations
+  for SUT-01, SUT-02, SUT-04 and SUT-05 written in the scratch copy only (status ISSUED, synthetic dates, never committed)
+inputs_hashes:
+  implementation_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d
+  conditions_file_sha256: 5964b23592174ce4fe3dea76c446db7eb3239afa1fef04875cb8dcfb3939d562
+  measured_workflow_sha256: 17a526f14c21d7c1b0491373763962f749748fbc37aa26fc6cf1be3c8e215ad2
+  configuration_text_sha256: 1957465984955d39260d96949b0becc7d0c912fb3f2e5672ce284a354003b677
+  controlled_instance_prepared_text_sha256: 9ef73c29b108e4a1b32bb5fd8238e1d956ca3a0fe57e743cece25027c7fa83e6
+  working_prompt_sha256: 65a1a818e87b0ad95587b5c2d2f5a2af6e958cff0692d941c09f0b895b7928e9
+attempt: 1
+first_execution: 1
+main_rehearsal:
+  conditions: 13
+  all_gates_passed_for: 13
+  per_condition:
+  - condition_id: E04-SUT01-API-01
+    sut_id: SUT-01
+    exit_status: 0
+    checks_pass: 46
+    checks_fail: 0
+    failing_checks: []
+  - condition_id: E04-SUT01-API-02
+    sut_id: SUT-01
+    exit_status: 0
+    checks_pass: 46
+    checks_fail: 0
+    failing_checks: []
+  - condition_id: E04-SUT01-API-03
+    sut_id: SUT-01
+    exit_status: 0
+    checks_pass: 46
+    checks_fail: 0
+    failing_checks: []
+  - condition_id: E04-SUT01-API-04
+    sut_id: SUT-01
+    exit_status: 0
+    checks_pass: 46
+    checks_fail: 0
+    failing_checks: []
+  - condition_id: E04-SUT01-API-05
+    sut_id: SUT-01
+    exit_status: 0
+    checks_pass: 46
+    checks_fail: 0
+    failing_checks: []
+  - condition_id: E04-SUT01-API-06
+    sut_id: SUT-01
+    exit_status: 0
+    checks_pass: 46
+    checks_fail: 0
+    failing_checks: []
+  - condition_id: E04-SUT01-WEB-01
+    sut_id: SUT-01
+    exit_status: 0
+    checks_pass: 46
+    checks_fail: 0
+    failing_checks: []
+  - condition_id: E04-SUT02-WEB-01
+    sut_id: SUT-02
+    exit_status: 0
+    checks_pass: 46
+    checks_fail: 0
+    failing_checks: []
+  - condition_id: E04-SUT04-WEB-01
+    sut_id: SUT-04
+    exit_status: 0
+    checks_pass: 46
+    checks_fail: 0
+    failing_checks: []
+  - condition_id: E04-SUT04-API-01
+    sut_id: SUT-04
+    exit_status: 0
+    checks_pass: 46
+    checks_fail: 0
+    failing_checks: []
+  - condition_id: E04-SUT04-API-02
+    sut_id: SUT-04
+    exit_status: 0
+    checks_pass: 46
+    checks_fail: 0
+    failing_checks: []
+  - condition_id: E04-SUT05-API-01
+    sut_id: SUT-05
+    exit_status: 0
+    checks_pass: 46
+    checks_fail: 0
+    failing_checks: []
+  - condition_id: E04-SUT05-API-02
+    sut_id: SUT-05
+    exit_status: 0
+    checks_pass: 46
+    checks_fail: 0
+    failing_checks: []
+control_a_no_start_edits:
+  conditions: 13
+  all_gates_passed_for: 0
+  checks_fail_per_condition:
+  - 21
+  - 21
+  - 21
+  - 21
+  - 21
+  - 21
+  - 21
+  - 21
+  - 22
+  - 22
+  - 22
+  - 22
+  - 22
+  failing_checks_first_condition:
+  - E04 campaign status IN_PROGRESS
+  - exactly one E04 campaign START change-log row
+  - the START row carries the campaign START authorization id
+  - START record exists and names the campaign and the authorization id
+  - locked "Campaign configuration" record exists
+  - configuration names the condition
+  - configuration names run-manifest schema v2
+  - configuration names the executor prompt version
+  - configuration names the executor implementation hash
+  - configuration names N = 50 executions of the condition
+  - configuration names the target scenario CS-001
+  - configuration names the primary metric TSRR (proposed; the START package decides the metric names)
+  - configuration names the sha256 of the conditions file
+  - configuration names the pinned commit of every E04 surface component of the assigned SUT
+  - dispatch authorization records the executor prompt SHA-256 equal to the frozen prompt file
+  - executor prompt frozen file exists
+  - controlled instance status CONTROLLED
+  - GitHub Actions environment verification VERIFIED
+  - no provisioning change awaiting re-verification
+  - environment_type SELF_HOSTED (never PUBLIC_HOSTED for an E04 condition)
+  - configuration names the sha256 of the measured workflow file (workflow revision)
+control_b_wrong_implementation_hash_in_sut01_record:
+  condition_id: E04-SUT01-API-01
+  exit_status: 1
+  checks_fail: 1
+  failing_checks:
+  - dispatch authorization records the executor implementation SHA-256 equal to the input
+notes:
+- the scratch copy and the synthetic records were deleted after this summary was written; none is in the repository
+- the gate was extracted from the measured workflow as written; the start-of-job steps of the workflow (the checkout and the pip step) are not part of the gate and were not run
+- the rehearsal proves that the prepared text and values satisfy the gate; it is not an authorization and does not start the campaign

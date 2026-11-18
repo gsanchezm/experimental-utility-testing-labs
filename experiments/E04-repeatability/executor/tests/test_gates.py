@@ -44,7 +44,7 @@ SUT_TAGS = {'SUT-01': 'sut01', 'SUT-02': 'sut02', 'SUT-04': 'sut04', 'SUT-05': '
 AUTH_START = 'TEST-FIXTURE-E04-START'
 AUTH_DISPATCH = 'TEST-FIXTURE-E04-DISPATCH'
 PV = 'TEST-FIXTURE-PROMPT-v1'
-REAL_PROMPT = 'ORCHESTRATOR-E04-repeatability-v1'  # the working copy's id; no frozen copy exists before the E04 START
+REAL_PROMPT = 'ORCHESTRATOR-E04-repeatability-v1'  # the frozen dispatch prompt of the campaign START (2026-11-18)
 PROMPT_TEXT = b'DRAFT fixture prompt text for the E04 gate tests only.\n'
 IMPL_TEXT = b'DRAFT fixture implementation text for the E04 gate tests only.\n'
 PROMPT_SHA = hashlib.sha256(PROMPT_TEXT).hexdigest()
@@ -470,9 +470,9 @@ class MeasuredGateTests(unittest.TestCase):
                     lambda s: s['files'].__setitem__(README, s['files'][README].replace(SUT05_RELEASE, 'x')), cond=COND_SUT05)
 
     def test_as_is_repository_state_fails_closed(self):
-        """The files of this repository as they are now (copied where present) must not pass the gate. E04 is NOT_STARTED here: there is no
-        campaign START row, no START record, no locked "Campaign configuration" and no dispatch authorization, so each of these checks must
-        fail (the frozen-status check fails as well, by design: a campaign that is not IN_PROGRESS refuses every dispatch)."""
+        """The files of this repository as they are now (copied where present) must not pass the gate. Since the campaign START the START
+        record, the locked configuration, the controlled-instance status and the frozen prompt are present, so the only checks that may fail
+        are those about the dispatch authorization of the assigned SUT, which the human research lead issues separately (Section 3.7)."""
         files = {}
         for rel in (STUDY, CHANGELOG, GOV, README, CONDITIONS_REL, SUT_MANIFEST, MAPPING, SCHEMA, IMPL, WORKFLOW_REL, START_RECORD, CONTROLLED,
                     f'prompts/frozen/{REAL_PROMPT}.md'):
@@ -483,13 +483,12 @@ class MeasuredGateTests(unittest.TestCase):
         inputs = measured_inputs(COND_SUT01, 'SUT-01')
         inputs['GATE_EXECUTOR_PROMPT_VERSION'] = REAL_PROMPT
         inputs['GATE_EXECUTOR_IMPLEMENTATION_SHA256'] = hashlib.sha256(open(os.path.join(REPO, IMPL), 'rb').read()).hexdigest()
-        inputs['GATE_CAMPAIGN_START_AUTHORIZATION_ID'] = AUTH_START
+        inputs['GATE_CAMPAIGN_START_AUTHORIZATION_ID'] = 'E04-START-AUTH-01'  # the real START authorization id
         code, out = run_script({'files': files, 'inputs': inputs}, self.script, os.path.join(self.work, 'as-is'), self.work)
         self.assertNotEqual(code, 0, out)
         fails = [l for l in out.splitlines() if l.startswith('FAIL ')]
-        for needle in ('E04 campaign status IN_PROGRESS', 'exactly one E04 campaign START change-log row', 'START record exists',
-                       'locked "Campaign configuration" record exists', 'exactly one dispatch authorization record of the assigned SUT'):
-            self.assertTrue(any(needle in l for l in fails), (needle, out))
+        self.assertTrue(any('exactly one dispatch authorization record of the assigned SUT' in l for l in fails), out)
+        self.assertTrue(all('dispatch authorization' in l for l in fails), [l for l in fails if 'dispatch authorization' not in l])
 
 
 class VerificationGateTests(unittest.TestCase):

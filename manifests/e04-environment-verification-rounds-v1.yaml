@@ -1,0 +1,25 @@
+# manifests/e04-environment-verification-rounds-v1.yaml -- record of the non-measured environment-verification DRY_RUN rounds of E04-repeatability (operation OP-PREP-E04).
+# ORCHESTRATOR record. The runs are DRY_RUN runs of .github/workflows/e04-environment-verification.yml, dispatched by the ORCHESTRATOR on the human research lead's yes to each exact line; their bundles were reviewed and never imported; they are never measured data and never enter raw-data/. E04 stays NOT_STARTED. Rounds are appended as new rounds of this file until a round is superseded by a new version file; a correction is a new version file.
+record_class: "E04_ENVIRONMENT_VERIFICATION_ROUNDS"
+record_id: "E04-ENVIRONMENT-VERIFICATION-ROUNDS-01"
+study_id: "EUS-2026-001"
+campaign_id: "E04-repeatability"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-18"
+measured_experiment: false
+executes_anything: false
+authorizes: "nothing: not the START, not a dispatch authorization, not a measured dispatch, not an export"
+rounds:
+- round: 1
+  run_id: 44331428884
+  run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44331428884
+  dispatched_utc: "2026-11-18T15:04:47Z"   # clock before the dispatch command 15:04:45Z, after it 15:04:47Z; run created 15:04:47Z
+  approval: "the human research lead's answer 'Si, despacha esta linea' to a question dialog that showed the exact line (file DISPATCH-LINE-E04-R1.txt of the operator records, 1328 bytes, sha256 9591c279e1db804f06ffc05e6c54f0e99b7c7229ce4d28d567a11359ea8bde22); the line was run once"
+  inputs: {target: all, executions: 2, executor_prompt_version: ORCHESTRATOR-E04-repeatability-v1, executor_implementation_sha256: e7a8986fe2e5f8b5f3a55131b13eaf0411085aca224b45e12e4772e14e39dc4d, dry_run: true}
+  head_sha: ff7a8a6ba5c5c287e892512cea7ef90e85f7dcb4   # public main at the dispatch, export v66
+  executions_per_condition: 2
+  conclusion: success
+  finished_utc: "2026-11-18T15:25:08Z"   # updated_at of the run
+  result: "all 15 jobs concluded success (the gate and plan jobs and the 13 condition jobs); 26 executions recorded (DR0001 and DR0002 of each of the 13 conditions); every one of the 26 carries the outcome category TARGET_STATE_VERIFIED, the status SUCCESS, matches_expected true and the attribution label SUT; no defect of the draft was found by this round"
+  bundles: "the 13 artifacts were downloaded with gh run download into the operator scratch area and reviewed (the 26 run manifests read); they were never imported into the repository, and no archive digest was compared with the digest that GitHub lists"
+  next: "a further round only on the human research lead's yes to its exact line; the START package of E04 is prepared after the rounds that the human research lead approves"
