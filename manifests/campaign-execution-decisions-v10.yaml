@@ -1,0 +1,45 @@
+# manifests/campaign-execution-decisions-v10.yaml -- decisions of 2026-11-18, round 7 (operation OP-PREP-E07-01; CAMPAIGN-EXECUTION-DECISIONS-10): the choice of the next campaign to prepare, E07-cross-layer-continuity, and three decisions of its design brief.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing. Immutable once committed; a correction is a new version file. Earlier rounds: -v4 to -v9 (unchanged).
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-10"
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E07-01"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-18"
+recorded_at_utc: "2026-11-19T03:57:29Z"
+executes_anything: false
+protocol_change: false
+supersedes: null
+earlier_rounds: [manifests/campaign-execution-decisions-v4.yaml, manifests/campaign-execution-decisions-v5.yaml, manifests/campaign-execution-decisions-v6.yaml, manifests/campaign-execution-decisions-v7.yaml, manifests/campaign-execution-decisions-v8.yaml, manifests/campaign-execution-decisions-v9.yaml]
+evidence_basis: "experiments/E07-cross-layer-continuity/design-brief-draft.md, sections 1 and 17 (the findings and the consolidated human decisions; the ORCHESTRATOR decided none of them); manifests/campaign-resumption-v1.yaml (E07 resumed by the decision of 2026-11-02; preparation may begin, START needs its own authorization)."
+human_decision:
+  given_by: the human research lead
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), after the human research lead's selection, in a first dialog of the same day, of the options 'Preparar siguiente campaña' (among four options, all selected)"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_e07:
+    transcript_stamp: null
+    transcript_stamp_note: "the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_at_utc above is the system clock when this file was written, after the answer"
+    bytes: 934
+    exact_text_sha256: 77fbe950769781f936209eb81a3529728974c8e1bee510389e2e4ef7062e772d
+    note: the answer of the question dialog, whole; the chosen option is the decision
+    exact_text: "Your questions have been answered: \"¿Qué campaña preparo primero antes del DATA FREEZE (2027-01-05, faltan 48 días)? E07 es la más avanzada (brief de diseño, borrador de configuración y CS-005 ya escritos) y la única, junto con E06, que puede dar H4; E08, E10, E11 y E12 solo tienen el README esqueleto; E06 necesita antes el smoke móvil AUTH-04.\"=\"E07 (Recomendada)\", \"(Si E07) DP-4, el estándar de estado establecido, que decide qué puede mostrar H4. ¿Cuál adoptas?\"=\"(a) Estricto (Recomendada)\", \"(Si E07) Fuente de diseño: el brief no abrió la matriz adjudicada de E01 (regla estricta) y usó los valores de los auditores. ¿Permites leerla para el diseño de E07?\"=\"(b) Sí, leerla (Recomendada)\", \"(Si E07) DP-7, tres celdas sin registro E01: SUT-01 Web a API, listado admin de SUT-04 y cesta web de SUT-05. ¿Cómo se cierran?\"=\"(c) NOT_COMPARABLE (Recomendada)\". You can now continue with these answers in mind."
+decisions:
+  - id: D-E07-0
+    subject: next campaign to prepare
+    decision: "E07-cross-layer-continuity (the first option, marked as the recommendation). The other options (E12, E10 or E11, E06 mobile first) are not chosen in this round and stay as they were."
+    effect: "Preparation of E07 may proceed (design brief, canonical scenario drafts, configuration draft); no START, configuration lock, dispatch authorization or workflow is authorized by this decision."
+  - id: D-E07-1
+    subject: "DP-4, the established-state standard (design brief, section 17, item 2)"
+    decision: "(a) strict: the actor establishes the unit through the programmatic interface, as CS-001 and CS-003 do."
+    consequence_recorded_in_the_brief: "SUT-03 is NOT_COMPARABLE in both directions (its API has no write path that persists state, evidence SUT03-EV-0031 and SUT03-EV-0032), so no CONFIRMATORY H4 continuity comparison is evaluable in either direction; this is reported as NOT_COMPARABLE with its reason, never as a zero or a failure (protocol/statistical-analysis-plan-v1.md, section 5; protocol/equivalent-scenario-mapping-v1.md, section 5). The decision is not itself a finding; it fixes the standard before data."
+  - id: D-E07-2
+    subject: "source limitation: the adjudicated E01 matrix (design brief, section 17, item 1)"
+    decision: "(b) the ORCHESTRATOR may read derived-data/e01-adjudicated-matrix/E01-adjudicated-matrix.json for the design of E07; read-only, no change to it."
+    effect: "The confirmed_score values quoted in the E07 design brief, which come from the submitted audit branches, are to be checked against the adjudicated matrix before any freeze."
+  - id: D-E07-3
+    subject: "DP-7, the three cells without an E01 record (design brief, section 17, item 8)"
+    decision: "(c) NOT_COMPARABLE with the reason OTHER until the gap is closed, as the dialog described it for SUT-05 (the web basket); the dialog stated that the remaining cells are decided cell by cell."
+    cells_decided: ["SUT-05 web basket: NOT_COMPARABLE, reason OTHER, until a gap-closing record exists"]
+    cells_not_decided: ["SUT-01 Web to API (an architectural inference only in the audit)", "SUT-04 admin booking listing"]
+    effect: "No change to the frozen E01 campaign. The two undecided cells stay open for a later round."
+not_decided_in_this_round: "Items 3 to 7, 9 to 16 of section 17 of the design brief (DP-1, DP-2, DP-3, latency, the category set, the continuity denominator and interval method, the identity keys, the minimum detectable difference, the Holm family, the scope note, the dispatch authorization and governance, START, CS-006 drafting). The recommendations in the brief are not adopted by this record."

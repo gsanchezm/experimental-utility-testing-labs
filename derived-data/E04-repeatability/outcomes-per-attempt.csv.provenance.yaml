@@ -1,0 +1,29 @@
+# derived-data/E04-repeatability/outcomes-per-attempt.csv.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (a CSV cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/E04-repeatability/outcomes-per-attempt.csv
+dataset_sha256: aac03d81d175bc12aad3b989a245f2c62925303d3cac11e70f856ddfcd3f8894
+campaign_id: E04-repeatability
+hypothesis_id: null
+part: "one row per attempt of the 650 imported bundles (50 per condition, 13 conditions), with the recorded outcome category, the expected category, the recorded match flag, the attribution, the workflow outcome status, the last phase and the cause of the attempt record"
+raw_inputs:
+  tree:
+    path: raw-data/E04-repeatability
+    git_tree: 47dbb1dde7b0c429239517f174a698c3844f36a6
+    pinned_at_commit: 37fa93681e143f7ed575715727179b5e2749a338
+    campaign_state: FROZEN
+  bundles: 650
+  files_read: run-manifest.json and attempt-record.json of each bundle (the attempt record is checked against the sha256 that the run manifest lists)
+transformation_script:
+  path: analysis/e04-tsrr-analysis/compute-tsrr-e04.js
+  version: git-blob-sha 2075a5ffd48588b5f85712ed1295004b6a042ba2
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only)
+date_generated: "2026-11-18"
+date_note: local date (America/Mexico_City)
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: experiments/E04-repeatability/README.md, "Campaign configuration" (sha256 8ebeb056e3c3fefc1e4d24252cd7bc6306d5880e552b9dec3171628d56b88344); protocol/repeatability-determinism-v1.md, section 4
+notes: >
+  Written by the same script as derived-data/E04-repeatability/TSRR-e04-result.json, from the same bundles. Every column is a
+  recorded field of a bundle; none is interpreted, and no label is re-mapped. Rows follow the order of the conditions file and
+  the execution identifier.

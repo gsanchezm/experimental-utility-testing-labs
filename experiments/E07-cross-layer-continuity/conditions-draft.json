@@ -1,0 +1,102 @@
+{
+  "record": "E07-cross-layer-continuity conditions (DRAFT, operation OP-PREP-E07-03)",
+  "state": "DRAFT. Machine-readable; read by the E07 executor. Not locked, not hashed, not an authorization; no E07 START exists. When the configuration is locked, this file is hashed with it.",
+  "decisions_applied": [
+    "manifests/campaign-execution-decisions-v10.yaml",
+    "manifests/campaign-execution-decisions-v11.yaml",
+    "manifests/campaign-execution-decisions-v12.yaml (D-E07-8 shape and reset, D-E07-9 identity keys, D-E07-10 categories, denominator and attribution)"
+  ],
+  "primary_metric": "continuity success proportion per condition: VERIFIED / all valid measured attempts (option A), with the conditional VERIFIED / attempts whose establishment succeeded (option B) reported apart; Wilson 95% interval for both (D-E07-10); descriptive",
+  "success_category": "VERIFIED",
+  "categories": [
+    "VERIFIED",
+    "NOT_VERIFIED",
+    "ESTABLISHMENT_FAILED",
+    "INTERRUPTED",
+    "RUNNER_ERROR"
+  ],
+  "interrupted_causes": [
+    "RESET_FAILED",
+    "STARTING_STATE_NOT_REACHED",
+    "WATCHDOG"
+  ],
+  "attribution_labels": [
+    "TOOLING",
+    "SUT"
+  ],
+  "n_per_condition": 50,
+  "model": "one job runs the 50 executions of ONE condition sequentially on one shared instance (model B of E04 and E05); 4 jobs, 200 executions; attempt 1 only",
+  "conditions": [
+    {
+      "condition_id": "E07-CS005-SUT01-API-WEB",
+      "canonical_scenario_id": "CS-005",
+      "sut_id": "SUT-01",
+      "source_layer": "api",
+      "verification_layer": "web",
+      "account": "standard_user",
+      "expected_category": "VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "session clear through the API (API_RESET, SESSION_RESET) and a new browser context per execution",
+      "identity_keys": [
+        "JWT claim sid",
+        "cart line: pizza_id p02, quantity 1"
+      ],
+      "comparability_state": "COMPARABLE_RECOMMENDED"
+    },
+    {
+      "condition_id": "E07-CS005-SUT04-API-WEB",
+      "canonical_scenario_id": "CS-005",
+      "sut_id": "SUT-04",
+      "source_layer": "api",
+      "verification_layer": "web",
+      "account": "admin",
+      "expected_category": "VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "deletion through the booking API of the room 1 bookings that carry the condition's guest names (API_RESET) and a new browser context per execution",
+      "identity_keys": [
+        "run-unique guest names",
+        "check-in and check-out dates of room 1"
+      ],
+      "comparability_state": "OPEN_CELL_D-E07-6"
+    },
+    {
+      "condition_id": "E07-CS006-SUT01-WEB-API",
+      "canonical_scenario_id": "CS-006",
+      "sut_id": "SUT-01",
+      "source_layer": "web",
+      "verification_layer": "api",
+      "account": "standard_user",
+      "expected_category": "VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "session clear through the API (API_RESET, SESSION_RESET) and a new browser context per execution",
+      "identity_keys": [
+        "JWT claim sid",
+        "cart line: pizza_id p02, quantity 1"
+      ],
+      "comparability_state": "OPEN_CELL_D-E07-6"
+    },
+    {
+      "condition_id": "E07-CS006-SUT04-WEB-API",
+      "canonical_scenario_id": "CS-006",
+      "sut_id": "SUT-04",
+      "source_layer": "web",
+      "verification_layer": "api",
+      "account": "admin",
+      "expected_category": "VERIFIED",
+      "n": 50,
+      "reset_between_attempts": "deletion through the booking API of the room 1 bookings that carry the condition's guest names (API_RESET) and a new browser context per execution",
+      "identity_keys": [
+        "run-unique guest names",
+        "check-in and check-out dates of room 1"
+      ],
+      "comparability_state": "COMPARABLE_RECOMMENDED"
+    }
+  ],
+  "no_condition": {
+    "SUT-02": "NOT_COMPARABLE (NO_APPLICABLE_SURFACE: no API)",
+    "SUT-03": "NOT_COMPARABLE (DP-4 strict, D-E07-1)",
+    "SUT-05": "NOT_COMPARABLE (OTHER, evidence gap, D-E07-3)",
+    "SUT-06": "NOT_COMPARABLE (NO_APPLICABLE_SURFACE)"
+  },
+  "comparability_state_note": "COMPARABLE_RECOMMENDED is the recommendation of the mapping draft, decided at the freeze of the record; OPEN_CELL_D-E07-6 is decided by the human research lead after the DRY_RUN rounds and before the mapping record is frozen"
+}

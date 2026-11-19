@@ -1,0 +1,53 @@
+# derived-data/E04-repeatability/TSRR-e04-result.json.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (JSON cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/E04-repeatability/TSRR-e04-result.json
+dataset_sha256: 3c8f589a0527829969b4c5a633ccbbdc9a9c2bed99b1e033272cc8ddca3b50f3
+campaign_id: E04-repeatability
+hypothesis_id: null
+part: TSRR per condition of the frozen campaign; no hypothesis label applies (the E04 configuration attaches none; the H3 variable of the plan spans E04 and E05, and this dataset evaluates no hypothesis)
+sut_ids: [SUT-01, SUT-02, SUT-04, SUT-05]
+sut_ids_without_condition: [SUT-03, SUT-06]
+per_run_table:
+  path: derived-data/E04-repeatability/outcomes-per-attempt.csv
+  sha256: aac03d81d175bc12aad3b989a245f2c62925303d3cac11e70f856ddfcd3f8894
+  note: written by the same script run from the same bundles; the result is not computed from it
+raw_inputs:
+  tree:
+    path: raw-data/E04-repeatability
+    git_tree: 47dbb1dde7b0c429239517f174a698c3844f36a6
+    pinned_at_commit: 37fa93681e143f7ed575715727179b5e2749a338
+    campaign_state: FROZEN
+  bundles: 650
+  job_directories_ignored: 13
+  files_read: run-manifest.json and attempt-record.json of each of the 650 bundles (1300 files); the attempt record is checked against the sha256 that its run manifest lists, and the outcome category and the expected category of the run manifest are checked against the attempt record and the conditions file
+transformation_script:
+  path: analysis/e04-tsrr-analysis/compute-tsrr-e04.js
+  version: git-blob-sha 2075a5ffd48588b5f85712ed1295004b6a042ba2
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only)
+pure_core:
+  path: analysis/h3-analysis/h3-metrics.js
+  version: git-blob-sha 72b1f74949cc76ce907ca2a162e5d5fbd28ef6a0
+  note: required for rate() (Wilson interval) and distinctToolchain() only; not modified (the blob sha equals the one recorded for the E05 analysis)
+tests:
+  path: analysis/e04-tsrr-analysis/test/tsrr-e04.test.js
+  note: six unit tests on synthetic attempt records (node --test analysis/e04-tsrr-analysis/test/tsrr-e04.test.js), 0 failures
+date_generated: "2026-11-18"
+date_note: local date (America/Mexico_City)
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: protocol/repeatability-determinism-v1.md, sections 4 and 5; experiments/E04-repeatability/README.md, "Campaign configuration" (sha256 8ebeb056e3c3fefc1e4d24252cd7bc6306d5880e552b9dec3171628d56b88344, equal at the START commit 432b249688e177c95195593392a5e355e5b17002 and at HEAD), "Analysis (TSRR) and what is not computed"; conditions file experiments/E04-repeatability/conditions-draft.json (sha256 5964b23592174ce4fe3dea76c446db7eb3239afa1fef04875cb8dcfb3939d562)
+instruction: >
+  the human research lead selected "Análisis TSRR de E04" among the options of a question dialog of 2026-11-18 (the option
+  text: descriptive analysis of the E04 part of the H3 variable, with a loader over the unchanged core, only on the instruction
+  of the human research lead, without touching raw data), together with three other options, all four selected
+notes: >
+  Deterministic, non-interpretive computation. Implements the descriptive procedure pre-registered in the E04 campaign
+  configuration: per condition T (valid measured attempts), S (executions with the category TARGET_STATE_VERIFIED) and
+  TSRR = S / T with the Wilson 95% interval without continuity correction (z = 1.959963984540054), the counts per declared
+  category and the attributed counts (TOOLING and SUT per category) beside the raw rate; the raw rate is never recomputed on
+  the attributed counts. No attempt is excluded; no label is re-mapped. Not computed: any between-ecosystem comparison, pooled
+  rate, composite score, CEOR, E2E-ROR, Outcome Entropy, H3 evaluation, test, p-value, effect size or ranking. The consistency
+  checks returned no violation and the toolchain drift report is empty. The script was run and its --check recomputation
+  equals the files on disk, and an independent recomputation in a second language (Python) from the same 650 bundles gave
+  the same T, S, rate and Wilson bounds for each of the 13 conditions.

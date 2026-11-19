@@ -38,6 +38,10 @@ NOT STARTED
 
 Resumed by the human research lead's decision of 2026-11-02 (manifests/campaign-resumption-v1.yaml); the deferral of scope A (manifests/campaign-disposition-v1.yaml) no longer governs the schedule: the status above is unchanged, preparation may begin, and the campaign START needs its own explicit human authorization (protocol/change-control-v1.md, section 7).
 
+## Scope note (2026-11-18)
+
+Preparation covers the web and API layers only (the human research lead's decision of 2026-11-05, restated by decision D-E07-7 of 2026-11-18, manifests/campaign-execution-decisions-v11.yaml): the pairs API->Web and Web->API are drafted as the canonical scenario records experiments/scenario-mappings/CS-005.yaml and CS-006.yaml (DRAFT, not frozen). The mobile pairs listed in the Objective (API->Android and API->iOS) are outside this preparation; a mobile record would need the compatibility smoke of its exact SUT x platform x runner and an admissible runner under protocol/mobile-runner-policy-v3.md. The design brief (design-brief-draft.md, sections 17 and 18) and the configuration draft (campaign-configuration-draft.md) hold the decisions taken and those still open. This note changes no definition above and authorizes nothing: the status stays NOT STARTED.
+
 ## Warning
 
 Protocol must be finalized (FROZEN-PRE-DATA) before execution. Do not execute without explicit instruction.

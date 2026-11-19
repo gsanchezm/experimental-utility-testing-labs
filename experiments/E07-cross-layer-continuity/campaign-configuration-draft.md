@@ -6,18 +6,18 @@
 | Campaign | E07-cross-layer-continuity (experiments/E07-cross-layer-continuity/README.md) |
 | Campaign status | NOT_STARTED (experiments/E07-cross-layer-continuity/README.md, "Current status") |
 | Scope | Web and API layers only (human research lead decision of 2026-11-05). Mobile layers are not configured. |
-| Prepared | 2026-11-05, as a design draft for the orchestrator, accompanying design-brief-draft.md |
+| Prepared | 2026-11-05, as a design draft for the orchestrator, accompanying design-brief-draft.md. Updated 2026-11-18 with the decisions of manifests/campaign-execution-decisions-v10.yaml and -v11.yaml (D-E07-0 to D-E07-7; design-brief-draft.md, section 18); still a DRAFT that authorizes nothing |
 | Order | Follows the "Campaign configuration" bullet of experiments/README.md ("Common rules for all campaigns"): mapping records, pinned SUT versions, toolchain versions, prompt version(s), conditions and environment types, sample size, exclusion and attribution rules, CONFIRMATORY comparisons. Sections 9 to 13 are added because E03 and the campaign rules require them. |
-| Convention | Every unknown is marked HUMAN DECISION. Candidate identifiers are "candidate, not frozen". |
+| Convention | Every unknown is marked HUMAN DECISION. Candidate identifiers are "candidate, not frozen". A value decided on 2026-11-18 is marked DECIDED with its decision id. |
 
 ## 1. Frozen scenario mapping records
 
-| canonical_scenario_id | File (proposed) | Mapping status | Directions | Used by |
+| canonical_scenario_id | File | Mapping status | Directions | Used by |
 |---|---|---|---|---|
-| CS-005 | experiments/scenario-mappings/CS-005.yaml (DRAFT drafted as CS-006.yaml) | DRAFT. Must be FROZEN before START (experiments/README.md; protocol/equivalent-scenario-mapping-v1.md, section 6). | API -> WEB | E07 |
-| CS-006 | not drafted | Proposed (design-brief-draft.md, section 5). HUMAN DECISION whether to draft it. | WEB -> API | E07 |
+| CS-005 | experiments/scenario-mappings/CS-005.yaml | DRAFT, decisions of 2026-11-18 applied. Must be FROZEN before START (experiments/README.md; protocol/equivalent-scenario-mapping-v1.md, section 6). | API -> WEB | E07 |
+| CS-006 | experiments/scenario-mappings/CS-006.yaml | DRAFT, drafted 2026-11-18 (D-E07-4, DP-3: one record per direction). Must be FROZEN before START. | WEB -> API | E07 |
 
-Gate: every canonical scenario the campaign uses is FROZEN and approved by an explicit human decision, one change-log row per record (protocol/change-control-v1.md, section 5). Human decision on DP-1 to DP-9 (CS-006.yaml, notes) is a precondition of the freeze.
+Gate: every canonical scenario the campaign uses is FROZEN and approved by an explicit human decision, one change-log row per record (protocol/change-control-v1.md, section 5). DP-1 to DP-4 are DECIDED (D-E07-1, D-E07-4); DP-5 (identity keys), DP-6 and DP-8 remain HUMAN DECISIONS and the two open cells of D-E07-6 are decided after the execution verification; all of them precede the freeze. A cell that still lacks its E01 evidence when its record is frozen is recorded NOT_COMPARABLE with reason OTHER.
 
 ## 2. Pinned SUT versions
 
@@ -50,7 +50,7 @@ Source: manifests/toolchain-manifest.yaml. Every entry is a pin for this campaig
 
 | Item | Value |
 |---|---|
-| Executor role | None. Under protocol/agent-governance-v5.md (Section 3.6) and CAMPAIGN-CI-WRITE-AUTH-01, the ORCHESTRATOR performs E07 coordination. No executor role exists for E07. |
+| Executor role | None. Under protocol/agent-governance-v6.md (Sections 3.6 and 3.7) and CAMPAIGN-CI-WRITE-AUTH-01, the ORCHESTRATOR performs E07 coordination. No executor role exists for E07. |
 | Dispatch procedure prompt | HUMAN DECISION: to be written and frozen before START. E03 precedent: prompts/frozen/ORCHESTRATOR-E03-resetability-v1.md. |
 | Prompt version | HUMAN DECISION (value not assigned). |
 | Implementation | Not written. Recommended: a new implementation under experiments/E07-cross-layer-continuity/ (its own hash, not the E03 hash). Reuse by copy, not by import at run time (design-brief-draft.md, section 12). |
@@ -61,18 +61,20 @@ A condition is (sut_id, canonical_scenario_id, direction). Condition IDs are can
 
 | condition_id (candidate) | canonical_scenario_id | sut_id | source_layer -> verification_layer | Mapping comparability | environment_type (proposed) | N | Status |
 |---|---|---|---|---|---|---|---|
-| E07-CS004-SUT01-API-WEB | CS-005 | SUT-01 | api -> web | COMPARABLE (recommended; HUMAN DECISION at freeze) | SELF_HOSTED per component (E03 precedent for GitHub Actions instances; HUMAN DECISION to confirm) | 50 | NOT_STARTED |
-| E07-CS004-SUT04-API-WEB | CS-005 | SUT-04 | api -> web | HUMAN DECISION (DP-7) | SELF_HOSTED per component (proposed) | 50 | NOT_STARTED; blocked on DP-7 |
-| E07-CS004-SUT05-API-WEB | CS-005 | SUT-05 | api -> web | HUMAN DECISION (DP-7); recommended NOT_COMPARABLE | SELF_HOSTED per component (proposed) | 50 | NOT_STARTED; blocked on DP-7 |
-| E07-CS004-SUT03-API-WEB | CS-005 | SUT-03 | api -> web | NOT_COMPARABLE (proposed; DP-4) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
-| E07-CS004-SUT02-API-WEB | CS-005 | SUT-02 | api -> web | NOT_COMPARABLE (NO_APPLICABLE_SURFACE) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
-| E07-CS004-SUT06-API-WEB | CS-005 | SUT-06 | api -> web | NOT_COMPARABLE (NO_APPLICABLE_SURFACE) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
-| E07-CS005-SUT04-WEB-API | CS-006 (not drafted) | SUT-04 | web -> api | Candidate; needs CS-006 record | SELF_HOSTED per component (proposed) | 50 | Candidate, only if CS-006 is drafted and frozen |
-| E07-CS005-SUT01-WEB-API | CS-006 (not drafted) | SUT-01 | web -> api | Evidence gap: no E01 row for web-established state read through the API | SELF_HOSTED per component (proposed) | 50 | Blocked on evidence (HUMAN DECISION) |
-| E07-CS005-SUT05-WEB-API | CS-006 (not drafted) | SUT-05 | web -> api | Evidence gap: no E01 row for web add-to-basket | SELF_HOSTED per component (proposed) | 50 | Blocked on evidence (HUMAN DECISION) |
-| E07-CS005-SUT03-WEB-API | CS-006 (not drafted) | SUT-03 | web -> api | NOT_COMPARABLE (cart client-side; SUT03-EV-0032) | not applicable | 0 | NO DATA: NOT_COMPARABLE |
+| E07-CS005-SUT01-API-WEB | CS-005 | SUT-01 | api -> web | COMPARABLE (recommended; HUMAN DECISION at freeze) | SELF_HOSTED per component (E03 precedent for GitHub Actions instances; HUMAN DECISION to confirm) | 50 | NOT_STARTED |
+| E07-CS005-SUT04-API-WEB | CS-005 | SUT-04 | api -> web | OPEN CELL (D-E07-6): the admin booking listing has no E01 row; execution verification first, comparability set at the freeze of CS-005 | SELF_HOSTED per component (proposed) | 50 | NOT_STARTED; candidate until the open cell is decided |
+| E07-CS005-SUT05-API-WEB | CS-005 | SUT-05 | api -> web | NOT_COMPARABLE, reason OTHER (DECIDED, D-E07-3) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
+| E07-CS005-SUT03-API-WEB | CS-005 | SUT-03 | api -> web | NOT_COMPARABLE (DECIDED, D-E07-1, DP-4 strict) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
+| E07-CS005-SUT02-API-WEB | CS-005 | SUT-02 | api -> web | NOT_COMPARABLE (NO_APPLICABLE_SURFACE) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
+| E07-CS005-SUT06-API-WEB | CS-005 | SUT-06 | api -> web | NOT_COMPARABLE (NO_APPLICABLE_SURFACE) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
+| E07-CS006-SUT04-WEB-API | CS-006 | SUT-04 | web -> api | COMPARABLE (recommended; SUT04-EV-0028, SUT04-EV-0006; HUMAN DECISION at freeze) | SELF_HOSTED per component (proposed) | 50 | NOT_STARTED |
+| E07-CS006-SUT01-WEB-API | CS-006 | SUT-01 | web -> api | OPEN CELL (D-E07-6): no E01 row states that the UI add-to-cart reaches the server cart; execution verification first, comparability set at the freeze of CS-006 | SELF_HOSTED per component (proposed) | 50 | NOT_STARTED; candidate until the open cell is decided |
+| E07-CS006-SUT05-WEB-API | CS-006 | SUT-05 | web -> api | NOT_COMPARABLE, reason OTHER (DECIDED, D-E07-3) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
+| E07-CS006-SUT03-WEB-API | CS-006 | SUT-03 | web -> api | NOT_COMPARABLE (DECIDED, D-E07-1; cart client-side, SUT03-EV-0032) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
 
-Note on SUT-03 and CONFIRMATORY evaluability: under DP-4 option (a) (strict), no SUT-03 condition exists in CS-005 or CS-006; see section 13.
+The candidate identifiers of the 2026-11-05 text carried the identifiers CS004 and CS005 of an earlier numbering; they now name CS-005 and CS-006, the records that exist (still candidate, not frozen).
+
+Note on SUT-03 and CONFIRMATORY evaluability: DP-4 is decided strict (D-E07-1), so no SUT-03 condition exists in CS-005 or CS-006; see section 13.
 
 ## 6. Sample size
 
@@ -81,7 +83,7 @@ Note on SUT-03 and CONFIRMATORY evaluability: under DP-4 option (a) (strict), no
 | N per condition | 50 | protocol/repeatability-determinism-v1.md, section 3 (standard target); protocol/statistical-analysis-plan-v1.md, section 4.1 |
 | Reduced N = 30 | not applicable | Reserved for expensive mobile conditions (repeatability section 3). E07 has no mobile condition in scope. |
 | Justification of N | Standard target; no reduction. | |
-| Power or minimum detectable difference | not stated in the SAP. HUMAN DECISION: pre-register a minimum detectable difference, or accept descriptive interpretation only. Arithmetic for orientation only, not a protocol value: at N = 50 per arm, a 95% Wald half-width for one proportion near 0.5 is about 0.14, and for a risk difference between two arms of 50 it is about 0.20. | arithmetic on section 6 values |
+| Power or minimum detectable difference | None is pre-registered. Under DP-4 strict (D-E07-1) no CONFIRMATORY comparison is evaluable, so the continuity proportions are descriptive with Wilson intervals (D-E07-5). Arithmetic for orientation only, not a protocol value: at N = 50 per condition, a 95% Wald half-width for one proportion near 0.5 is about 0.14. | D-E07-5; arithmetic on section 6 values |
 | Restart rule | No attempt is re-run to replace another. A further attempt needs an explicit dispatch instruction (CAMPAIGN-CI-WRITE-AUTH-01; repeatability section 5, rule 5). | |
 
 ## 7. Exclusion and attribution rules (proposal for freeze)
@@ -94,9 +96,9 @@ Common base: protocol/repeatability-determinism-v1.md, section 5, rules 4 to 6 (
 | X-2 | Each attempt has exactly one outcome category, fixed before START: VERIFIED, NOT_VERIFIED, ESTABLISHMENT_FAILED, INTERRUPTED, RUNNER_ERROR. | Proposed. HUMAN DECISION on the category set. |
 | X-3 | VERIFIED: every declared identity key and attribute is observed on the verification layer and matches the establishment record. NOT_VERIFIED: the verification completed and at least one key or attribute is absent or different. ESTABLISHMENT_FAILED: the establishment check on the source layer did not confirm the unit. | Proposed |
 | X-4 | A failed declared-starting-state check is recorded as INTERRUPTED with its cause. The reset is repeated before the next attempt. The attempt is kept. | Proposed (follows the E03 ABORTED convention, not its exclusion) |
-| X-5 | RUNNER_ERROR (tool, browser, or infrastructure fault inside a run) is counted in every primary rate. A sensitivity table without RUNNER_ERROR is reported as EXPLORATORY. | HUMAN DECISION (alternative: exclude with an attribution record, which needs a frozen attribution criterion) |
+| X-5 | RUNNER_ERROR (tool, browser, or infrastructure fault inside a run) is counted in every primary rate. A sensitivity table without RUNNER_ERROR is reported as EXPLORATORY. | DECIDED 2026-11-18 (D-E07-5) |
 | X-6 | Cell-level no-data states are not attempts: NOT_COMPARABLE (mapping decision), NOT_APPLICABLE_STRUCTURAL (a surface absent in the evaluated version), NOT_EXECUTABLE_WITHOUT_CONTROLLED_INSTANCE (environment). Each is reported as "no data" with its reason, never as a zero or as a failure (protocol/study-design-v1.md, section 11, rule 9; protocol/statistical-analysis-plan-v1.md, section 5). | Proposed |
-| X-7 | Continuity proportion denominator. Option A: VERIFIED / all valid measured attempts (recommended for H4). Option B: VERIFIED / attempts whose establishment succeeded (reported descriptively). Both are fixed here before START. | HUMAN DECISION (DP-8) |
+| X-7 | Continuity proportion denominator. Option A: VERIFIED / all valid measured attempts (recommended). Option B: VERIFIED / attempts whose establishment succeeded (reported descriptively). Both are fixed here before START; the proportion is descriptive with a Wilson interval (D-E07-5). | HUMAN DECISION (DP-8) |
 
 ## 8. Run manifest and identifiers
 
@@ -115,11 +117,12 @@ Required by experiments/E07-cross-layer-continuity/README.md ("Explicit record f
 |---|---|---|---|---|---|---|
 | A-1 | CS-005 | SUT-02 | api -> web | NOT_COMPARABLE | NO_APPLICABLE_SURFACE (API absent) | SUT02-EV-0004 to SUT02-EV-0006 |
 | A-2 | CS-005 | SUT-06 | api -> web | NOT_COMPARABLE | NO_APPLICABLE_SURFACE (WEB and API absent) | manifests/sut-manifest.yaml, SUT-06 notes |
-| A-3 | CS-005 | SUT-03 | api -> web | NOT_COMPARABLE (proposed; DP-4) | OTHER: no API-established persistent state | SUT03-EV-0006 to -0008, -0031 |
+| A-3 | CS-005 | SUT-03 | api -> web | NOT_COMPARABLE (DECIDED, D-E07-1) | OTHER: no API-established persistent state | SUT03-EV-0006 to -0008, -0031 |
 | A-4 | CS-006 | SUT-02 | web -> api | NOT_COMPARABLE | NO_APPLICABLE_SURFACE (API absent) | SUT02-EV-0004 to SUT02-EV-0006 |
 | A-5 | CS-006 | SUT-06 | web -> api | NOT_COMPARABLE | NO_APPLICABLE_SURFACE | manifests/sut-manifest.yaml |
-| A-6 | CS-006 | SUT-03 | web -> api | NOT_COMPARABLE (proposed) | ORACLE_CLASS_UNOBSERVABLE (client-side cart never reaches the API) | SUT03-EV-0032 |
-| A-7 | CS-005 | SUT-05 | api -> web | Pending DP-7 | evidence gap (web basket) | not applicable yet |
+| A-6 | CS-006 | SUT-03 | web -> api | NOT_COMPARABLE (DECIDED, D-E07-1) | OTHER: client-side cart never reaches the API | SUT03-EV-0032 |
+| A-7 | CS-005 | SUT-05 | api -> web | NOT_COMPARABLE (DECIDED, D-E07-3) | OTHER: evidence gap (no E01 record of the web basket) | SUT05-EV-0002, -0003, -0006, -0008, -0027 |
+| A-8 | CS-006 | SUT-05 | web -> api | NOT_COMPARABLE (DECIDED, D-E07-3) | OTHER: evidence gap (no E01 record of add-to-basket on the web) | SUT05-EV-0002, -0003, -0006, -0008, -0027 |
 
 Each absence record keeps the E01 structural_scope_note of its cell (protocol/capability-rubric-v1.md; protocol/study-design-v1.md, section 11, rule 2). No absence record changes a capability score.
 
@@ -129,12 +132,12 @@ Source: experiments/E03-resetability/controlled-instance-status.yaml (latest-run
 
 | Surface | E03 status (as recorded) | E07 requirement |
 |---|---|---|
-| SUT-01 web and api | VERIFIED on GitHub Actions (E03-CS001-SUT01-WEB, -SUT01-API) | Realization check of the CS-005 steps (token injection, Checkout read-through) |
-| SUT-04 web and api | VERIFIED on GitHub Actions (E03-CS001-SUT04-WEB, -SUT04-API) | Realization check, including the admin listing (not verified by E03) and the cookie decision (DP-7) |
-| SUT-05 api | VERIFIED on GitHub Actions (run 37354458611, manifest note) | Realization check of the basket steps |
-| SUT-05 web | NO RECORD (E03 mapped SUT-05 on the API surface only) | Required only if SUT-05 is COMPARABLE on CS-005 or CS-006 |
-| SUT-03 web | VERIFIED (E03-CS001-SUT03-WEB) | Not required while SUT-03 is NOT_COMPARABLE |
-| SUT-03 api | NO RECORD (E03 mapped SUT-03 on the WEB surface only: CS-001.yaml, SUT-03 surfaces_used [WEB]) | Required only if SUT-03 is reopened under DP-4 option (b) |
+| SUT-01 web and api | VERIFIED on GitHub Actions (E03-CS001-SUT01-WEB, -SUT01-API) | Realization check of the CS-005 steps (token injection, Checkout read-through) and of the CS-006 steps, including whether the UI add-to-cart reaches the server cart (the open cell, D-E07-6) |
+| SUT-04 web and api | VERIFIED on GitHub Actions (E03-CS001-SUT04-WEB, -SUT04-API) | Realization check, including the admin listing (not verified by E03, the open cell of D-E07-6) and the reservation-form flow of CS-006 |
+| SUT-05 api | VERIFIED on GitHub Actions (run 37354458611, manifest note) | Not required while SUT-05 is NOT_COMPARABLE (D-E07-3) |
+| SUT-05 web | NO RECORD (E03 mapped SUT-05 on the API surface only) | Not required while SUT-05 is NOT_COMPARABLE (D-E07-3) |
+| SUT-03 web | VERIFIED (E03-CS001-SUT03-WEB) | Not required: SUT-03 is NOT_COMPARABLE (D-E07-1) |
+| SUT-03 api | NO RECORD (E03 mapped SUT-03 on the WEB surface only: CS-001.yaml, SUT-03 surfaces_used [WEB]) | Not required: DP-4 is decided strict (D-E07-1) and SUT-03 is NOT_COMPARABLE |
 
 ## 11. Execution substrate and workflow gates (names only)
 
@@ -144,7 +147,7 @@ Execution: GitHub Actions under ORCHESTRATOR coordination (CAMPAIGN-CI-WRITE-AUT
 |---|---|---|
 | E07-G-01 | campaign START record present with its human authorization id | E03 G-1 |
 | E07-G-02 | configuration locked (this file, once approved) | E03 G-2 |
-| E07-G-03 | every canonical scenario used is FROZEN and active (CS-005; CS-006 if used) | E03 G-3 (and G-4 for excluded scenarios) |
+| E07-G-03 | every canonical scenario used is FROZEN and active (CS-005 and CS-006) | E03 G-3 (and G-4 for excluded scenarios) |
 | E07-G-04 | pair-level absence records (section 9) present for every NOT_COMPARABLE cell | new |
 | E07-G-05 | run-manifest schema validation with source_layer and verification_layer | E03 G-5 |
 | E07-G-06 | frozen agent governance in force | E03 G-6 |
@@ -153,7 +156,7 @@ Execution: GitHub Actions under ORCHESTRATOR coordination (CAMPAIGN-CI-WRITE-AUT
 | E07-G-09 | frozen dispatch prompt | E03 G-9 |
 | E07-G-10 | frozen implementation hash | E03 G-10 |
 | E07-G-11 | pinned repository commit, workflow revision, and toolchain | E03 G-11 |
-| E07-G-12 | per-SUT dispatch authorization (HUMAN DECISION; the governance successor that gives this per-SUT authorization is not yet written) | new |
+| E07-G-12 | per-SUT dispatch authorization issued by the human research lead under protocol/agent-governance-v6.md, Section 3.7 (FROZEN-PRE-DATA 2026-11-06; no governance successor is needed) | new |
 | E07-G-13 | isolation: the job checks out only its own SUT's raw-data subtree | CAMPAIGN-CI-WRITE-AUTH-01 |
 | E07-G-14 | first attempt only; default branch only | CAMPAIGN-CI-WRITE-AUTH-01 |
 
@@ -166,34 +169,39 @@ Raw data: raw-data/E07-cross-layer-continuity/<SUT>/** for MEASURED_EXPERIMENT a
 | Campaign START | Not issued. HUMAN DECISION (protocol/change-control-v1.md, section 7). |
 | Configuration freeze | Not proposed yet. |
 | Dispatch | Each dispatch needs its own explicit human approval, recorded before the run (CAMPAIGN-CI-WRITE-AUTH-01). |
-| Schedule | DATA FREEZE 2027-01-05 (task brief of 2026-11-05; not re-verified against manifests/planning-deadlines-v2.yaml). The E07 evidence decisions (DP-4, DP-7) are on the critical path. |
+| Schedule | DATA FREEZE 2027-01-05 (manifests/planning-deadlines-v2.yaml). DP-4 is decided; the open cells of D-E07-6, the identity keys (DP-5) and the freeze of CS-005 and CS-006 are on the critical path. |
 
 ## 13. CONFIRMATORY comparisons
 
 Source: protocol/statistical-analysis-plan-v1.md, section 4.2 and section 4.3 (H4 row: variable "continuity success proportion per layer pair (E07)"; pairs SUT-01 vs SUT-02 and SUT-01 vs SUT-03; method "risk difference with interval; Fisher's exact test where applicable"). Each comparison must be pre-registered in this configuration before START, with its exact specification (SAP, section 4.2, classification rule 3).
 
-| Comparison id (candidate — not frozen) | Hypothesis | Ecosystem pair | Scenario and direction | Evaluability today |
+| Comparison id (candidate — not frozen) | Hypothesis | Ecosystem pair | Scenario and direction | Evaluability |
 |---|---|---|---|---|
 | CONFIRMATORY (H4), E07-A | H4 | SUT-01 vs SUT-02 | CS-005, API -> WEB | NOT EVALUABLE: SUT-02 is NOT_COMPARABLE (A-1). Report side by side with reason. |
-| CONFIRMATORY (H4), E07-B | H4 | SUT-01 vs SUT-03 | CS-005, API -> WEB | NOT EVALUABLE under DP-4 option (a): SUT-03 is NOT_COMPARABLE (A-3). |
+| CONFIRMATORY (H4), E07-B | H4 | SUT-01 vs SUT-03 | CS-005, API -> WEB | NOT EVALUABLE: DP-4 is decided strict (D-E07-1), SUT-03 is NOT_COMPARABLE (A-3). |
 | CONFIRMATORY (H4), E07-C | H4 | SUT-01 vs SUT-02 | CS-006, WEB -> API | NOT EVALUABLE: SUT-02 has no API (A-4). |
-| CONFIRMATORY (H4), E07-D | H4 | SUT-01 vs SUT-03 | CS-006, WEB -> API | NOT EVALUABLE under DP-4 option (a) (A-6). |
+| CONFIRMATORY (H4), E07-D | H4 | SUT-01 vs SUT-03 | CS-006, WEB -> API | NOT EVALUABLE: DP-4 strict (A-6). |
 
-Open items for this section (HUMAN DECISIONS):
+Consequence of D-E07-1: no CONFIRMATORY H4 continuity comparison is evaluable in E07, and the pre-registered list of this campaign has no evaluable comparison. The continuity proportions of the comparable conditions (SUT-01, and SUT-04 as a specialist reference) are descriptive with Wilson intervals (D-E07-5); the non-evaluable comparisons are listed here with their reasons, never as a zero or a failure.
+
+Open items for this section (HUMAN DECISIONS; with no evaluable comparison they have no confirmatory use in E07 under D-E07-5, and are kept for the E06 and E07 family if one becomes evaluable):
 - Whether E07-A to E07-D are registered as four comparisons, or as H4 with two directions (the SAP does not number them).
-- Holm family: SAP section 4.2 applies Holm across the CONFIRMATORY comparisons of one research question. RQ4 also contains the E06 H4 parity comparisons, so the family must be defined across E06 and E07. Recommendation: list only evaluable comparisons in the family, and state the non-evaluable ones explicitly.
-- Interval method for the risk difference: SAP section 3 specifies a risk difference "with its 95% confidence interval" but does not name the method (Wilson is named only for single proportions). Recommendation: a Newcombe-type hybrid score interval built from the Wilson intervals, fixed here. HUMAN DECISION.
+- Holm family: SAP section 4.2 applies Holm across the CONFIRMATORY comparisons of one research question. RQ4 also contains the E06 H4 parity comparisons, so the family would be defined across E06 and E07 and list only evaluable comparisons.
+- Interval method for the risk difference: SAP section 3 specifies a risk difference "with its 95% confidence interval" but does not name the method. Needed only if a comparison becomes evaluable.
 - Specialists: any SUT-04 or SUT-05 comparison is EXPLORATORY unless pre-registered (SAP section 4.2, rules 1 and 3; the E03 README's CONFIRMATORY section takes the same position for E03).
 
-## 14. Summary of HUMAN DECISIONS in this file
+## 14. Summary of decisions in this file
 
-1. Section 1: approval of CS-005 (after DP-1 to DP-9), and whether to draft CS-006.
+Decided on 2026-11-18 (manifests/campaign-execution-decisions-v10.yaml and -v11.yaml): E07 is the next campaign to prepare (D-E07-0); DP-4 strict (D-E07-1); the adjudicated matrix may be read for the design (D-E07-2); SUT-05 NOT_COMPARABLE, reason OTHER (D-E07-3); DP-1, DP-2 and DP-3 as recommended (D-E07-4); no latency, descriptive verification counts, RUNNER_ERROR in the primary rates with an EXPLORATORY sensitivity table (D-E07-5); the SUT-01 Web to API and SUT-04 admin listing cells measured and decided afterwards (D-E07-6); this draft, CS-006 and the README scope note (D-E07-7).
+
+Still HUMAN DECISIONS:
+
+1. Section 1: the freeze of CS-005 and CS-006, with DP-5 (identity keys), DP-6 and DP-8, and the outcome of the open cells of D-E07-6.
 2. Section 3: Ajv version and format handling before the first validation.
 3. Section 4: dispatch procedure prompt, its version, and the implementation hash.
-4. Section 5: comparability of SUT-01, SUT-04 and SUT-05 on CS-005 (DP-7); environment type of the conditions.
-5. Section 6: whether to pre-register a minimum detectable difference.
-6. Section 7: X-2 category set, X-5 treatment of RUNNER_ERROR, X-7 continuity denominator (DP-8).
-7. Section 8: identity keys per ecosystem (DP-5).
-8. Section 11: the per-SUT dispatch authorization mechanism (governance successor, not yet written).
-9. Section 12: campaign START.
-10. Section 13: comparison identifiers, Holm family across E06 and E07, risk-difference interval method.
+4. Section 5: comparability of SUT-01 and SUT-04 on CS-005 and CS-006 at the freeze; environment type of the conditions.
+5. Section 7: X-2 category set and X-7 continuity denominator (DP-8).
+6. Section 8: identity keys per ecosystem (DP-5).
+7. Section 11: the per-SUT dispatch authorizations under protocol/agent-governance-v6.md, Section 3.7.
+8. Section 12: campaign START.
+9. Section 13: comparison identifiers, Holm family and risk-difference interval method (only if a comparison becomes evaluable).

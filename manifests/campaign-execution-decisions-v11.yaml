@@ -1,0 +1,40 @@
+# manifests/campaign-execution-decisions-v11.yaml -- decisions of 2026-11-18, round 8 (operation OP-PREP-E07-02; CAMPAIGN-EXECUTION-DECISIONS-11): the design points of the E07 canonical scenarios, the measurement items, the two open DP-7 cells, and the next preparation step.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing. Immutable once committed; a correction is a new version file. Earlier rounds: -v4 to -v10 (unchanged).
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-11"
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E07-02"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-18"
+recorded_at_utc: "2026-11-19T04:05:31Z"
+executes_anything: false
+protocol_change: false
+supersedes: null
+earlier_rounds: [manifests/campaign-execution-decisions-v4.yaml, manifests/campaign-execution-decisions-v5.yaml, manifests/campaign-execution-decisions-v6.yaml, manifests/campaign-execution-decisions-v7.yaml, manifests/campaign-execution-decisions-v8.yaml, manifests/campaign-execution-decisions-v9.yaml, manifests/campaign-execution-decisions-v10.yaml]
+evidence_basis: "experiments/E07-cross-layer-continuity/design-brief-draft.md, sections 17 and 18; manifests/campaign-execution-decisions-v10.yaml (round 7: E07 chosen, DP-4 strict, matrix read permitted, SUT-05 web basket NOT_COMPARABLE)."
+human_decision:
+  given_by: the human research lead
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), the second of the same day for E07"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_e07_round_8:
+    transcript_stamp: null
+    transcript_stamp_note: "the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_at_utc above is the system clock when this file was written, after the answer"
+    bytes: 1704
+    exact_text_sha256: 816c5a05919835da32b24bfff18289a9401d6328b0aea6fa204e20f69a65059e
+    note: the answer of the question dialog, whole; the chosen option is the decision
+    exact_text: "Your questions have been answered: \"E07, escenarios canónicos (brief, sección 17, ítems 3, 4 y 5): DP-1 precondición = CLEAN_SESSION (el login ocurre dentro del escenario, como CS-003); DP-2 estado del actor = AUTHENTICATED_STANDARD (incluye el administrador de SUT-04); DP-3 un registro separado por dirección (CS-005 API a Web y CS-006 Web a API) en lugar de uno solo con la dirección como variable. ¿Adoptas los tres?\"=\"Adoptar los tres (Recomendada)\", \"E07, medición (ítems 6 y 7): sin latencia en la primera campaña, conteos de verificación solo descriptivos (no cuentan como Setup Effort); y los RUNNER_ERROR cuentan en las tasas primarias, con una tabla de sensibilidad EXPLORATORIA aparte. Con DP-4 estricto los ítems 9, 11 y 12 (diferencia de riesgo, diferencia mínima detectable, familia Holm) no tienen uso confirmatorio y las proporciones por condición quedan descriptivas con intervalo de Wilson. ¿Confirmas?\"=\"Confirmar (Recomendada)\", \"E07, DP-7, las dos celdas abiertas: SUT-01 Web a API (el audit solo da una inferencia arquitectónica; E03 registra un carrito web persistido en el cliente, así que no consta si el add-to-cart de la UI llega al carrito del servidor) y el listado admin de reservas de SUT-04. ¿Cómo las trato?\"=\"Medir en E07 y decidir después (Recomendada)\", \"E07, siguiente paso de preparación: redacto CS-006 (Web a API) y reescribo el borrador de configuración con estas decisiones, más la nota de alcance del README (el ítem 13: los pares móviles quedan fuera de este borrador y requieren la política móvil), todo como borrador sin START ni workflow. ¿Procedo?\"=\"Sí, procede (Recomendada)\". You can now continue with these answers in mind."
+decisions:
+  - id: D-E07-4
+    subject: "DP-1, DP-2 and DP-3 (design brief, section 17, items 3, 4 and 5)"
+    decision: "All three adopted as recommended: precondition_class CLEAN_SESSION (the login happens inside the scenario, as CS-003); actor_state AUTHENTICATED_STANDARD (including the SUT-04 administrator); one canonical record per direction, CS-005 (API to WEB) and CS-006 (WEB to API), without a template change."
+  - id: D-E07-5
+    subject: "measurement items 6 and 7 (design brief, section 17)"
+    decision: "Confirmed as recommended: no latency in the first campaign; verification counts descriptive only and not Setup Effort; RUNNER_ERROR counts in the primary rates, with a separate EXPLORATORY sensitivity table. The dialog stated that, with DP-4 strict, items 9, 11 and 12 (risk-difference interval, minimum detectable difference, Holm family) have no confirmatory use, and that the per-condition proportions stay descriptive with Wilson intervals."
+  - id: D-E07-6
+    subject: "DP-7, the two open cells (design brief, section 17, item 8; completes D-E07-3 of round 7)"
+    decision: "Measure in E07 and decide afterwards: SUT-01 Web to API and the SUT-04 admin booking listing stay candidate cells of the mapping records and are not declared NOT_COMPARABLE now; their comparability is established with the execution verification of the configuration, in a following round, without touching the frozen E01 campaign."
+    note_by_the_orchestrator: "protocol/equivalent-scenario-mapping-v1.md requires a FROZEN mapping record before execution and E01 evidence for a comparable cell; the mapping drafts therefore keep these two cells with comparability null and a marked open item, and a cell that still lacks its evidence when the mapping is frozen is recorded NOT_COMPARABLE with the reason OTHER. This note records how the decision is applied; it is not a further decision."
+  - id: D-E07-7
+    subject: "next preparation step"
+    decision: "Proceed: draft CS-006 (WEB to API), rewrite the E07 campaign configuration draft with these decisions, and add the scope note of item 13 to the E07 README (mobile pairs outside this draft; a mobile record needs the mobile policy); all as drafts, with no START, workflow, authorization or dispatch."
+not_decided_in_this_round: "Item 10 (identity keys, declared per ecosystem in the configuration before the first attempt), item 15 (START and configuration freeze), the condition list, the sample size, and the CONFIRMATORY list (empty under DP-4 strict). The recommendations of section 17 not named above are not adopted by this record."

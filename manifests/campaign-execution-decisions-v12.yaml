@@ -1,0 +1,36 @@
+# manifests/campaign-execution-decisions-v12.yaml -- decisions of 2026-11-18, round 9 (operation OP-PREP-E07-03; CAMPAIGN-EXECUTION-DECISIONS-12): the shape of E07-cross-layer-continuity, its identity keys (DP-5), reset (DP-6), outcome categories (X-2, X-3), denominator (DP-8) and attribution.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing. Immutable once committed; a correction is a new version file. Earlier rounds: -v4 to -v11 (unchanged).
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-12"
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E07-03"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-18"
+recorded_at_utc: "2026-11-19T04:39:49Z"
+executes_anything: false
+protocol_change: false
+supersedes: null
+earlier_rounds: [manifests/campaign-execution-decisions-v4.yaml, manifests/campaign-execution-decisions-v5.yaml, manifests/campaign-execution-decisions-v6.yaml, manifests/campaign-execution-decisions-v7.yaml, manifests/campaign-execution-decisions-v8.yaml, manifests/campaign-execution-decisions-v9.yaml, manifests/campaign-execution-decisions-v10.yaml, manifests/campaign-execution-decisions-v11.yaml]
+evidence_basis: "experiments/E07-cross-layer-continuity/design-brief-draft.md, sections 17 and 18; experiments/E07-cross-layer-continuity/campaign-configuration-draft.md; manifests/campaign-execution-decisions-v10.yaml and -v11.yaml; the human research lead's instruction of 2026-11-18 to complete E07 (the goal), which authorizes preparation and no START, authorization, dispatch, freeze or push by itself."
+human_decision:
+  given_by: the human research lead
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), the third of the same day for E07"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_e07_round_9:
+    transcript_stamp: null
+    transcript_stamp_note: "the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_at_utc above is the system clock when this file was written, after the answer"
+    bytes: 1684
+    exact_text_sha256: b56603506b479c28e2dcbad024db2497e2e6253b365a5949ac90ad1b9fd549a1
+    note: the answer of the question dialog, whole; the chosen option is the decision
+    exact_text: "Your questions have been answered: \"E07, ronda 9, forma de la campaña (copia el modelo de E04): 4 condiciones web/API, cada una con 50 ejecuciones secuenciales en una instancia compartida (200 ejecuciones, un job por condición, intento 1): SUT-01 API a Web, SUT-01 Web a API, SUT-04 API a Web, SUT-04 Web a API. Reset entre intentos fuera del escenario (DP-6): SUT-01 limpia la sesión por la API y usa un contexto de navegador nuevo por ejecución; SUT-04 borra por la API las reservas con los nombres de la condición. SUT-03, SUT-05, SUT-02 y SUT-06 no tienen condición (NOT_COMPARABLE). ¿Apruebas esta forma?\"=\"Aprobar (Recomendada)\", \"E07, DP-5, claves de identidad que debe coincidir en la capa de verificación (VERIFIED exige todas las claves y atributos): SUT-01 = sid del JWT más la línea del carrito (pizza_id p02, cantidad 1); SUT-04 = nombres de huésped únicos por ejecución más fecha de entrada y salida de la habitación 1 (no el bookingid, que la web no muestra). ¿Las fijas?\"=\"Fijarlas (Recomendada)\", \"E07, categorías y atribución (X-2, X-3, DP-8): categorías VERIFIED, NOT_VERIFIED, ESTABLISHMENT_FAILED, INTERRUPTED (incluye reset fallido o estado inicial no alcanzado, con su causa) y RUNNER_ERROR; la proporción primaria es VERIFIED / todos los intentos válidos (opción A) y la condicional VERIFIED / intentos con establecimiento exitoso (opción B) se reporta aparte, ambas con intervalo de Wilson; atribución igual que E04 (TOOLING para interrupciones de bloque y excepciones del ejecutor, SUT para fallos registrados y lo no asignable mecánicamente). ¿Lo apruebas?\"=\"Aprobar (Recomendada)\". You can now continue with these answers in mind."
+decisions:
+  - id: D-E07-8
+    subject: "shape of the campaign and DP-6 (reset)"
+    decision: "Approved as proposed: four web/API conditions, N = 50 executions each, run sequentially on one shared instance per condition (one job per condition, attempt 1; 200 executions in all): SUT-01 API to WEB, SUT-01 WEB to API, SUT-04 API to WEB, SUT-04 WEB to API (the model B of E04 and E05). Reset between attempts, outside the scenario and not counted (DATA_RESET): SUT-01 clears the session through the API and uses a new browser context per execution; SUT-04 deletes through the API the bookings that carry the condition's guest names. SUT-03, SUT-05, SUT-02 and SUT-06 have no condition (NOT_COMPARABLE). The two open cells of D-E07-6 are measured in the non-measured DRY_RUN rounds and their comparability is decided by the human research lead before CS-005 and CS-006 are frozen."
+  - id: D-E07-9
+    subject: "DP-5, the identity keys"
+    decision: "Fixed as proposed: SUT-01 = the sid claim of the JWT and the cart line (pizza_id p02, quantity 1); SUT-04 = the run-unique guest names and the check-in and check-out dates of room 1 (not the bookingid, which the web does not show). VERIFIED requires every declared key and attribute to match; a key that is not observable on the verification layer is not used. The keys are declared in the campaign configuration before the first attempt."
+  - id: D-E07-10
+    subject: "X-2, X-3, DP-8 and the attribution rule"
+    decision: "Approved as proposed: the outcome categories are VERIFIED, NOT_VERIFIED, ESTABLISHMENT_FAILED, INTERRUPTED (it includes a failed reset or a starting state not reached, each with its cause) and RUNNER_ERROR; the primary proportion is VERIFIED / all valid measured attempts (option A); the conditional proportion VERIFIED / attempts whose establishment succeeded (option B) is reported apart; both with a Wilson interval; attribution as in E04 (TOOLING for an interruption of a block and for an exception of the executor, SUT for a recorded failure and for what cannot be assigned mechanically; the attributed counts are reported beside the raw rate and never recompute it)."
+not_decided_in_this_round: "The freeze of CS-005 and CS-006 and the comparability of the two open cells (after the DRY_RUN rounds), the campaign START, the dispatch authorizations, the dispatches, the freeze of the campaign and every public export: each needs its own explicit human approval."

@@ -30,7 +30,7 @@ Reproduce a target state repeatedly under a fixed condition in each evaluated ec
 
 ## Current status
 
-FROZEN since the campaign freeze of 2026-11-18 (human authorization E04-FREEZE-AUTH-01; protocol/change-control-v1.md, section 7, moment 2; record manifests/e04-campaign-freeze-v1.yaml), after IN PROGRESS from the campaign START of 2026-11-18 (E04-START-AUTH-01; record manifests/e04-campaign-start-v1.yaml). The 650 executions (thirteen web/api conditions, N = 50 each, all attempt 1) were imported unchanged under raw-data/E04-repeatability/ on 2026-11-18 within the four dispatch authorizations E04-DISPATCH-SUT01-AUTH-01, -SUT02-, -SUT04- and -SUT05-AUTH-01 (dispatch records manifests/e04-measured-dispatch/e04-sut0N.jsonl); raw-data/E04-repeatability/ is append-only and the "Campaign configuration" section below is immutable. The raw data are not yet published and the TSRR is not analyzed.
+FROZEN since the campaign freeze of 2026-11-18 (human authorization E04-FREEZE-AUTH-01; protocol/change-control-v1.md, section 7, moment 2; record manifests/e04-campaign-freeze-v1.yaml), after IN PROGRESS from the campaign START of 2026-11-18 (E04-START-AUTH-01; record manifests/e04-campaign-start-v1.yaml). The 650 executions (thirteen web/api conditions, N = 50 each, all attempt 1) were imported unchanged under raw-data/E04-repeatability/ on 2026-11-18 within the four dispatch authorizations E04-DISPATCH-SUT01-AUTH-01, -SUT02-, -SUT04- and -SUT05-AUTH-01 (dispatch records manifests/e04-measured-dispatch/e04-sut0N.jsonl); raw-data/E04-repeatability/ is append-only and the "Campaign configuration" section below is immutable. The raw data are published (export v69, 2026-11-19, public main 6ffbbcf) and the TSRR is not analyzed.
 
 ## Warning
 
