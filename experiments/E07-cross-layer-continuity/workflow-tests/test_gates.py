@@ -4,8 +4,8 @@ DRAFT (operation OP-PREP-E07-05). Each gate script is extracted from its workflo
 measured or verification gate job, and the heredoc of the job "plan" for the matrix), written to a temporary file, and run with the working
 directory set to a fake tree and the GATE_* inputs set in its environment. The must-pass trees are complete and fictitious (TEST-FIXTURE
 identifiers, not issued authorizations); every must-fail case changes exactly one thing and must fail on the gate it names. The "as-is"
-cases run against the files of this repository as they are and must fail closed, because E07 is NOT_STARTED: it has no START, no locked
-configuration, no dispatch authorization, no verified controlled instance, no FROZEN scenario record and no frozen prompt.
+cases run against the files of this repository as they are and must fail closed: since the campaign START (2026-11-19) the START record, the locked
+configuration, the verified controlled instance, the FROZEN scenario records and the frozen prompt are present, and no dispatch authorization exists.
 
 The gate scripts import PyYAML, which this environment may lack. When a subprocess cannot import yaml, the tests place a stand-in module
 next to the script: it parses JSON directly and any other text through the Ruby YAML library, so that the gates read the repository's
@@ -45,7 +45,7 @@ SUT_TAGS = {'SUT-01': 'sut01', 'SUT-04': 'sut04'}
 AUTH_START = 'TEST-FIXTURE-E07-START'
 AUTH_DISPATCH = 'TEST-FIXTURE-E07-DISPATCH'
 PV = 'TEST-FIXTURE-PROMPT-v1'
-REAL_PROMPT = 'ORCHESTRATOR-E07-cross-layer-continuity-v1'  # the working copy of the dispatch prompt (frozen at the campaign START)
+REAL_PROMPT = 'ORCHESTRATOR-E07-cross-layer-continuity-v1'  # the frozen dispatch prompt of the campaign START (2026-11-19)
 PROMPT_TEXT = b'DRAFT fixture prompt text for the E07 gate tests only.\n'
 IMPL_TEXT = b'DRAFT fixture implementation text for the E07 gate tests only.\n'
 PROMPT_SHA = hashlib.sha256(PROMPT_TEXT).hexdigest()
@@ -518,10 +518,9 @@ class MeasuredGateTests(unittest.TestCase):
                 self.assertEqual(fail_lines(out), ['FAIL E07 campaign status IN_PROGRESS: ' + status], out)
 
     def test_as_is_repository_state_fails_closed(self):
-        """The files of this repository as they are now (copied where present) must not pass the gate: E07 is NOT_STARTED, so the status check
-        of G-1 fails, and so do the checks about the START record, the locked configuration, the dispatch authorization, the controlled-instance
-        status (every condition NOT_VERIFIED), the scenario records (DRAFT) and the frozen prompt. Once the campaign START and the freeze of the
-        scenario records have written those records, this test is adapted as the E04 one was (the checks that may still fail are named)."""
+        """The files of this repository as they are now (copied where present) must not pass the gate. Since the campaign START the START
+        record, the locked configuration, the controlled-instance status, the FROZEN scenario records and the frozen prompt are present, so the only
+        checks that may fail are those about the dispatch authorization of the assigned SUT, which the human research lead issues separately (Section 3.7)."""
         files = {}
         for rel in (STUDY, CHANGELOG, GOV, README, CONDITIONS_REL, SUT_MANIFEST, SCHEMA, IMPL, WORKFLOW_REL, START_RECORD, CONTROLLED,
                     MAPPINGS['CS-005'], MAPPINGS['CS-006'], f'prompts/frozen/{REAL_PROMPT}.md'):
@@ -533,12 +532,12 @@ class MeasuredGateTests(unittest.TestCase):
         inputs['GATE_EXECUTOR_PROMPT_VERSION'] = REAL_PROMPT
         impl_path = os.path.join(REPO, IMPL)
         inputs['GATE_EXECUTOR_IMPLEMENTATION_SHA256'] = hashlib.sha256(open(impl_path, 'rb').read()).hexdigest() if os.path.isfile(impl_path) else '0' * 64
-        inputs['GATE_CAMPAIGN_START_AUTHORIZATION_ID'] = 'E07-START-AUTH-01'  # the proposed START authorization id
+        inputs['GATE_CAMPAIGN_START_AUTHORIZATION_ID'] = 'E07-START-AUTH-01'  # the real START authorization id
         code, out = run_script({'files': files, 'inputs': inputs}, self.script, os.path.join(self.work, 'as-is'), self.work)
         self.assertNotEqual(code, 0, out)
         fails = fail_lines(out)
-        self.assertTrue(any('E07 campaign status IN_PROGRESS' in l for l in fails), out)
         self.assertTrue(any('exactly one dispatch authorization record of the assigned SUT' in l for l in fails), out)
+        self.assertTrue(all('dispatch authorization' in l for l in fails), [l for l in fails if 'dispatch authorization' not in l])
         self.assertIn('PASS run-manifest schema v2 present with the v2 id', out)
 
 

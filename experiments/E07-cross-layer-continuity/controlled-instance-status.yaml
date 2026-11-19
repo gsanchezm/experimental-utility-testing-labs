@@ -1,15 +1,17 @@
-# experiments/E07-cross-layer-continuity/controlled-instance-status.yaml -- controlled-instance status of the E07 conditions (DRAFT, operation OP-PREP-E07-05)
-# DRAFT. Not an input to any run. Every condition is NOT_VERIFIED: no non-measured DRY_RUN of .github/workflows/e07-environment-verification.yml has
-# been dispatched, so no run identifier, run URL, execution identifier, implementation hash or date is recorded (null, never a guess). The record is
-# rewritten at the campaign START from the DRY_RUN rounds that verify the four conditions (the gate G-6 of .github/workflows/e07-measured-execution.yml
-# reads the fields below: status CONTROLLED, github_actions_verification.status VERIFIED, reverification_required false, environment_type SELF_HOSTED).
+# experiments/E07-cross-layer-continuity/controlled-instance-status.yaml -- controlled-instance status of the E07 conditions, written at the campaign START (operation OP-START-E07) from DRY_RUN rounds 2 and 3 (manifests/e07-environment-verification-rounds-v1.yaml)
 study_id: EUS-2026-001
 campaign_id: E07-cross-layer-continuity
-updated: null
-campaign_status: NOT_STARTED
-verification_record: null
-verification_record_sha256: null
-basis: 'no verification exists at the time of this draft: the four conditions of experiments/E07-cross-layer-continuity/conditions-draft.json have not been verified on GitHub Actions. The environment type that the verification workflow will write into its provenance record is SELF_HOSTED (a controlled instance provisioned in the job from the pinned commit on a GitHub-hosted runner, never PUBLIC_HOSTED). The DRY_RUN rounds also measure the two open cells of decision D-E07-6 (SUT-01 WEB to API and the SUT-04 admin booking listing, manifests/campaign-execution-decisions-v11.yaml); their comparability is decided by the human research lead before CS-005 and CS-006 are frozen.'
+updated: '2026-11-19'
+campaign_status: IN_PROGRESS
+verification_record: manifests/e07-environment-verification-rounds-v1.yaml
+verification_record_sha256: 1dbb8b9f0cc989d346a15b3a25f0b2f4087e7dadff31f138a147f77a73ff6c03
+basis: 'status VERIFIED of every condition: the non-measured DRY_RUN rounds 2 and 3 of .github/workflows/e07-environment-verification.yml, both under the executor implementation hash 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59,
+  3 executions per condition (DR0001 to DR0003), 12 executions in all: round 2 (run 44564694778) for E07-CS005-SUT01-API-WEB, E07-CS006-SUT01-WEB-API and E07-CS006-SUT04-WEB-API, and round 3 (run 44567888786,
+  limited to its condition) for E07-CS005-SUT04-API-WEB, whose job of round 2 failed in the Maven build step before the executor ran (no execution; recorded in the verification record); round 1 (run 44529314764)
+  ran the previous implementation and is a historical reference. environment_type is the value the verification workflow writes into its provenance record (SUT-01 and SUT-04 controlled instances provisioned
+  in the job, SELF_HOSTED). The status is the status of the instance: three conditions recorded VERIFIED in every DRY_RUN execution, and E07-CS006-SUT01-WEB-API recorded NOT_VERIFIED in every DRY_RUN execution,
+  which is an observation of the continuity variable (the verification read answered 200 with the server cart empty after every block before it had held) and not a failure of the environment; no further
+  round exists at the time of this content'
 measured_execution_prerequisites_common:
 - campaign START
 - locked campaign configuration
@@ -20,54 +22,68 @@ measured_execution_prerequisites_common:
 - CS-005 and CS-006 mappings FROZEN, with the assigned SUT COMPARABLE in the scenario of the condition
 conditions:
   E07-CS005-SUT01-API-WEB:
-    status: NOT_VERIFIED
-    reverification_required: true
+    status: CONTROLLED
+    reverification_required: false
     github_actions_verification:
-      status: NOT_VERIFIED
+      status: VERIFIED
       environment_type: SELF_HOSTED
-      run_id: null
-      run_url: null
-      execution_ids: []
-      record_class: null
-      implementation_run_condition_sha256: null
+      run_id: 44564694778
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44564694778
+      execution_ids:
+      - DR0001
+      - DR0002
+      - DR0003
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
       account: standard_user
-      instance: 'SUT-01 web and api to be provisioned in the job from the pinned commit of manifests/sut-manifest.yaml on a GitHub-hosted runner; never a PUBLIC_HOSTED instance'
+      instance: SUT-01 web and api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance
   E07-CS005-SUT04-API-WEB:
-    status: NOT_VERIFIED
-    reverification_required: true
+    status: CONTROLLED
+    reverification_required: false
     github_actions_verification:
-      status: NOT_VERIFIED
+      status: VERIFIED
       environment_type: SELF_HOSTED
-      run_id: null
-      run_url: null
-      execution_ids: []
-      record_class: null
-      implementation_run_condition_sha256: null
+      run_id: 44567888786
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44567888786
+      execution_ids:
+      - DR0001
+      - DR0002
+      - DR0003
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
       account: admin
-      instance: 'SUT-04 services (booking, auth, room, report, branding, message) and the web app to be provisioned in the job from the pinned commit of manifests/sut-manifest.yaml on a GitHub-hosted runner; never a PUBLIC_HOSTED instance'
+      instance: SUT-04 services (booking, auth, room, report, branding, message) and the web app provisioned in the job from the pinned commit d36bd3f8647a091d406e53bad463c5e3e5d2ece1 (release 2.2) on a
+        GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance
   E07-CS006-SUT01-WEB-API:
-    status: NOT_VERIFIED
-    reverification_required: true
+    status: CONTROLLED
+    reverification_required: false
     github_actions_verification:
-      status: NOT_VERIFIED
+      status: VERIFIED
       environment_type: SELF_HOSTED
-      run_id: null
-      run_url: null
-      execution_ids: []
-      record_class: null
-      implementation_run_condition_sha256: null
+      run_id: 44564694778
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44564694778
+      execution_ids:
+      - DR0001
+      - DR0002
+      - DR0003
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
       account: standard_user
-      instance: 'SUT-01 web and api to be provisioned in the job from the pinned commit of manifests/sut-manifest.yaml on a GitHub-hosted runner; never a PUBLIC_HOSTED instance'
+      instance: SUT-01 web and api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance
   E07-CS006-SUT04-WEB-API:
-    status: NOT_VERIFIED
-    reverification_required: true
+    status: CONTROLLED
+    reverification_required: false
     github_actions_verification:
-      status: NOT_VERIFIED
+      status: VERIFIED
       environment_type: SELF_HOSTED
-      run_id: null
-      run_url: null
-      execution_ids: []
-      record_class: null
-      implementation_run_condition_sha256: null
+      run_id: 44564694778
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44564694778
+      execution_ids:
+      - DR0001
+      - DR0002
+      - DR0003
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
       account: admin
-      instance: 'SUT-04 services (booking, auth, room, report, branding, message) and the web app to be provisioned in the job from the pinned commit of manifests/sut-manifest.yaml on a GitHub-hosted runner; never a PUBLIC_HOSTED instance'
+      instance: SUT-04 services (booking, auth, room, report, branding, message) and the web app provisioned in the job from the pinned commit d36bd3f8647a091d406e53bad463c5e3e5d2ece1 (release 2.2) on a
+        GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance

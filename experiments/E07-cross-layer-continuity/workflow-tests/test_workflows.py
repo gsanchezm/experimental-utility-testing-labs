@@ -410,18 +410,18 @@ class HygieneTests(unittest.TestCase):
         self.assertIn('.github/workflows/e07-measured-execution.yml', text)
         self.assertNotIn('CS-001', text)
 
-    def test_the_controlled_instance_draft_lists_the_four_conditions_not_verified(self):
+    def test_the_controlled_instance_status_lists_the_four_conditions_verified_by_the_dry_run(self):
         script = 'require "yaml"; require "json"; print JSON.generate(YAML.load(File.read(ARGV[0], encoding: "UTF-8")))'
         proc = subprocess.run(['ruby', '-ryaml', '-rjson', '-e', script, CONTROLLED], capture_output=True, text=True, timeout=120)
         self.assertEqual(proc.returncode, 0, proc.stderr)
         doc = json.loads(proc.stdout)
         self.assertEqual(sorted(doc['conditions']), sorted(c['condition_id'] for c in conditions()))
         for cid, entry in doc['conditions'].items():
-            self.assertNotEqual(entry['status'], 'CONTROLLED', cid)
-            self.assertEqual(entry['github_actions_verification']['status'], 'NOT_VERIFIED', cid)
-            self.assertIs(entry['reverification_required'], True, cid)
+            self.assertEqual(entry['status'], 'CONTROLLED', cid)
+            self.assertEqual(entry['github_actions_verification']['status'], 'VERIFIED', cid)
+            self.assertIs(entry['reverification_required'], False, cid)
             self.assertEqual(entry['github_actions_verification']['environment_type'], 'SELF_HOSTED', cid)
-            self.assertIsNone(entry['github_actions_verification']['run_id'], cid)
+            self.assertEqual(entry['github_actions_verification']['run_id'], {'E07-CS005-SUT01-API-WEB': 44564694778, 'E07-CS005-SUT04-API-WEB': 44567888786, 'E07-CS006-SUT01-WEB-API': 44564694778, 'E07-CS006-SUT04-WEB-API': 44564694778}[cid], cid)
 
 
 class MeasuredStepRuntimeTests(unittest.TestCase):

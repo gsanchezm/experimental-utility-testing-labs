@@ -1,0 +1,111 @@
+# manifests/e07-campaign-start-v1.yaml -- provenance record of the E07-cross-layer-continuity campaign START (operation OP-START-E07; protocol/change-control-v1.md, section 7, moment 1; modeled on manifests/e04-campaign-start-v1.yaml). Immutable once committed.
+record_class: CAMPAIGN_START
+record_id: E07-CAMPAIGN-START-01
+study_id: EUS-2026-001
+campaign_id: E07-cross-layer-continuity
+operation_id: OP-START-E07
+recorded_by_role: ORCHESTRATOR
+authorization_id: E07-START-AUTH-01
+binding: protocol/change-control-v1.md, section 7, moment 1 (campaign NOT_STARTED -> IN_PROGRESS)
+package:
+  path: manifests/e07-campaign-start-package-v1.yaml
+  record_id: E07-START-PACKAGE-01
+start_date: '2026-11-19'
+start_timestamp_utc: '2026-11-19T17:43:55Z'
+approval:
+  given_by: the human research lead
+  channel: given directly to the ORCHESTRATOR in its conversation, as the answers of one question dialog (single-agent operating model of 2026-10-24 and 2026-10-25)
+  question_stamp: '2026-11-19T17:20:07Z'
+  answer_stamp: '2026-11-19T17:43:52Z'
+  chosen_options:
+  - Adoptar los tres (Recomendada)
+  - Adoptar los tres (Recomendada)
+  - Adoptar los cuatro (Recomendada)
+  - Sí, aplica el START (Recomendada)
+  answer_text_bytes: 5527
+  answer_text_sha256: ee704faf1d1251df6389882128635c0d130e6e5e9a361591960ac348cb69bcf0
+  answer_text: 'Your questions have been answered: "START de E07, bloque 1 (autorización y atribución). Q1: id de autorización del START = E07-START-AUTH-01 (lo asigno a tu aprobación, como en las otras
+    campañas). Q2: una ejecución cuyo runner el workflow cancela o pierde se registra al importar como TOOLING de esa ejecución (el ejecutor no lo implementa; es la propuesta de E04). Q3: reglas de atribución
+    como las implementa el ejecutor: (a) un fallo de transporte HTTP sin respuesta es un fallo registrado del bloque, atribuido a SUT; (b) una excepción del navegador o del ejecutor es RUNNER_ERROR, TOOLING;
+    (c) un bundle que no se puede escribir es RUNNER_ERROR, TOOLING, causa BUNDLE_NOT_WRITTEN (las cinco categorías son el conjunto completo; no se arrastra STUB_NO_BUNDLE de E04); (d) el claim sid de la
+    clave de SUT-01 confirma el vínculo de sesión (las rondas 1 a 3 lo mostraron igual en ambas capas). ¿Los adoptas?"="Adoptar los tres (Recomendada)", "START de E07, bloque 2 (convenciones de ejecución).
+    Q5: la plataforma y la modalidad de los run manifests de un registro cross-layer siguen la capa de origen (el esquema deja abierta la convención; queda fijada en el START). Q6: orden y concurrencia:
+    SUT-01: E07-CS005-SUT01-API-WEB y luego E07-CS006-SUT01-WEB-API; SUT-04: E07-CS005-SUT04-API-WEB y luego E07-CS006-SUT04-WEB-API; una condición a la vez por SUT, cada despacho solo cuando la corrida
+    anterior de su autorización terminó y se importó; las cadenas de SUT-01 y SUT-04 son independientes y concurrentes. Q7: mantener 60 min por job y 600 s de watchdog por ejecución. Datos: por ejecución
+    0.9 a 3.6 s en los DRY_RUN; por job 72 a 681 s en las tres rondas, dominados por la instalación del venv y Chromium (26 a 484 s, una dispersión de 19 veces entre jobs del mismo workflow); el job más
+    lento extendido a 50 ejecuciones serían unos 14 min, así que el techo es unas cuatro veces eso. La cota es empírica: un DRY_RUN de 3 ejecuciones no mide 50 seguidas en una misma instancia, y bajar el
+    techo exigiría cambiar el workflow y su hash. ¿Los adoptas?"="Adoptar los tres (Recomendada)", "START de E07, bloque 3 (base de verificación y texto). Q8: la base de instancia controlada son las rondas
+    DRY_RUN 2 y 3 bajo el hash bloqueado 55a352aa…ef59, tres ejecuciones por condición. El job E07-CS005-SUT04-API-WEB de la ronda 2 falló en la compilación Maven (POM padre no resuelto desde Maven Central,
+    sin ejecución; causa no establecida más allá del log) y consta así en el texto; la ronda 3 lo repitió: 3 de 3 VERIFIED con el check-out comparado (decisión D-E07-15, que no se vuelve a preguntar). La
+    ronda 1 corrió el hash anterior y queda como historia. Aviso: E07-CS006-SUT01-WEB-API salió NOT_VERIFIED 3 de 3 en las rondas 1 y 2; es una celda COMPARABLE por D-E07-11, así que se espera 0 de 50 medido,
+    una observación de la variable y no un error. Q9: dejar sin editar los enunciados obsoletos del README fuera de la sección bloqueada (encabezados ''Future… (candidate)'' y ''form TBD''), como en el
+    START de E04. Q10: aceptar la corrección del marcador @@E07@@ del prompt de trabajo (commit 88e70361, ya en main y público desde v71) y dejar su texto de estado tal cual; la copia congelada repite el
+    de trabajo byte a byte, como en E04. Q11: mantener el login de admin web en el bloque de reset de ambas condiciones de SUT-04 (las rondas 1 a 3 corrieron así). ¿Los adoptas?"="Adoptar los cuatro (Recomendada)",
+    "START de E07, aprobación. ¿Apruebas y aplico el START de E07-cross-layer-continuity (campaña NOT_STARTED -> IN_PROGRESS; protocol/change-control-v1.md, sección 7, momento 1) con la autorización E07-START-AUTH-01
+    y los textos del paquete manifests/e07-campaign-start-package-v1.yaml (en main, commit 0a785ee3)? Valores que quedan bloqueados: texto de la sección Campaign configuration, sha256 2198bf71a747691fbc4f6639955cf6110edad32ac2f09a21a56d48b19a00bf12;
+    implementación del ejecutor (run-condition.sh), sha256 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59; archivo de condiciones, sha256 0baf2497948562f35c5236df460cf497497b571ec4024ef7a27ecc13ff5f2151;
+    workflow de ejecución medida, sha256 b4888425c06dd735eab87250a3dbbf9ba7bb4ef709c1fbdc7384a6ba932ded89; prompt de despacho congelado ORCHESTRATOR-E07-cross-layer-continuity-v1, sha256 60c0cc08e3b8fc2b7aa2b8d8d6e45f5d6eafaabebd55d69e5336de1dd6201895
+    (copia byte a byte del prompt de trabajo). Cuatro condiciones web/api en SUT-01 y SUT-04 (ambas direcciones), N = 50 cada una, 200 ejecuciones, intento 1. Escribe: README de E07 (estado y sección Campaign
+    configuration al final), una fila en protocol/CHANGELOG.md, study-manifest (IN_PROGRESS), fila de experiments/README.md, controlled-instance-status.yaml (cuatro condiciones VERIFIED), prompts/frozen/,
+    manifests/e07-campaign-start-v1.yaml, dos filas de manifests/README.md y el test as-is de workflow-tests; el ensayo previo sobre main pasó 11 de 11 comprobaciones (65 pruebas de workflows y 78 del ejecutor).
+    El START NO autoriza ningún despacho, ninguna autorización de despacho (E07-DISPATCH-SUT01-AUTH-01 y E07-DISPATCH-SUT04-AUTH-01 son nombres, no emitidas) ni ningún export; no toca AGENT-INSTRUCTIONS.md ni el dashboard.
+    Si cambias alguna decisión de los tres bloques anteriores, no aplico y te vuelvo a preguntar. Después del START hago un commit local; el export v72 y las autorizaciones de despacho son pasos aparte
+    con su propio sí."="Sí, aplica el START (Recomendada)". You can now continue with these answers in mind.'
+locked:
+  implementation_sha256: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
+  executable_conditions:
+  - E07-CS005-SUT01-API-WEB
+  - E07-CS005-SUT04-API-WEB
+  - E07-CS006-SUT01-WEB-API
+  - E07-CS006-SUT04-WEB-API
+  sample_size: N = 50 per condition, EX0001 to EX0050, attempt 1 each (200 executions)
+  prompt_version: ORCHESTRATOR-E07-cross-layer-continuity-v1
+  prompt_sha256: 60c0cc08e3b8fc2b7aa2b8d8d6e45f5d6eafaabebd55d69e5336de1dd6201895
+  configuration_text_sha256: 2198bf71a747691fbc4f6639955cf6110edad32ac2f09a21a56d48b19a00bf12
+  section_inserted_sha256: 94a85733f8b88ea4046cfdda9c1407bf0b6387763d3b772624764651fa237ad2
+  conditions_file_sha256: 0baf2497948562f35c5236df460cf497497b571ec4024ef7a27ecc13ff5f2151
+  measured_workflow_sha256: b4888425c06dd735eab87250a3dbbf9ba7bb4ef709c1fbdc7384a6ba932ded89
+  verification_workflow_sha256: 3bfba625eaef22083543cb2cd09cd45cf5bd84763c64d29266b35e10b33a6206
+  run_manifest_schema_sha256: 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757
+  scenario_mapping_sha256:
+    CS-005: 3721efba476137a3b3893fae2a123c4bd72cb7c09d7ab0966d4aea869bda5069
+    CS-006: b5764b776b447c5055f1288a54a7739e0651a30353bf999dde4d34a88b791986
+  scenario_freeze_authorization_ids:
+    CS-005: E07-CS005-FREEZE-AUTH-01
+    CS-006: E07-CS006-FREEZE-AUTH-01
+  start_authorization_id: E07-START-AUTH-01
+  controlled_instance_basis:
+    record: manifests/e07-environment-verification-rounds-v1.yaml
+    record_sha256: 1dbb8b9f0cc989d346a15b3a25f0b2f4087e7dadff31f138a147f77a73ff6c03
+    basis_rounds:
+    - 2
+    - 3
+    run_ids:
+      round_2: 44564694778
+      round_3: 44567888786
+  tokens_bound:
+    START_DATE: '2026-11-19'
+    START_TIMESTAMP: '2026-11-19T17:43:55Z'
+files_written:
+- experiments/E07-cross-layer-continuity/README.md
+- experiments/E07-cross-layer-continuity/README.md
+- experiments/E07-cross-layer-continuity/README.md
+- protocol/CHANGELOG.md
+- manifests/study-manifest.yaml
+- manifests/study-manifest.yaml
+- experiments/README.md
+- experiments/E07-cross-layer-continuity/controlled-instance-status.yaml
+- prompts/frozen/ORCHESTRATOR-E07-cross-layer-continuity-v1.md
+- manifests/e07-campaign-start-v1.yaml
+- manifests/README.md
+- experiments/E07-cross-layer-continuity/workflow-tests/test_workflows.py
+- experiments/E07-cross-layer-continuity/workflow-tests/test_gates.py
+does_not:
+- issue any dispatch authorization (E07-DISPATCH-SUT01-AUTH-01, E07-DISPATCH-SUT04-AUTH-01 are names, not issued)
+- dispatch anything or run any workflow
+- export or push anything
+- edit any workflow, executor file, conditions file, scenario record, or protocol document other than the change-log row
+- edit the agent-instructions file or the dashboard (their update needs the human research lead's yes)
+next: the export of the START state (on the human research lead's yes to its exact line), the gate step re-run on the exported tree, then the two dispatch authorizations (E07-DISPATCH-SUT01-AUTH-01 and
+  E07-DISPATCH-SUT04-AUTH-01) that the human research lead issues under Section 3.7 (one record per SUT, N = 50, attempt 1, with the implementation and prompt SHA-256 values above), their export, and then
+  the dispatches under the frozen procedure.

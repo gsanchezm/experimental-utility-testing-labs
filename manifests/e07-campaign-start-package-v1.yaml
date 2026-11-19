@@ -1,0 +1,820 @@
+# manifests/e07-campaign-start-package-v1.yaml -- E07-cross-layer-continuity campaign START package (lock package), version 1, PREPARED.
+# ORCHESTRATOR record of operation OP-PREP-E07-START (2026-11-19). It holds the lock values, the prepared edit set and the prepared texts of the E07 START, computed by a script from the files of the commit named in base_commit,
+# from the records of the DRY_RUN rounds 2 and 3 and from their artifacts. It binds nothing before the human research lead approves the START; it authorizes nothing.
+record_class: E07_CAMPAIGN_START_PACKAGE
+record_id: E07-START-PACKAGE-01
+version: 1
+study_id: EUS-2026-001
+campaign_id: E07-cross-layer-continuity
+operation_id: OP-PREP-E07-START
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-19'
+status: PREPARED
+base_commit: 89b6397de9551dbf120d612b08d2a37c5f4ae6c0
+binding_moment: the E07 campaign START (protocol/change-control-v1.md, section 7, moment 1), on the explicit human approval of that exact action; nothing in this record binds before that approval
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+authorizes: 'nothing: not the START, not the lock, not the freeze of the prompt, not a dispatch authorization, not a dispatch, not an export, not the analysis'
+nature: prepared edit set, lock values and texts of the E07 START, computed by build_package_e07.py from the files of the commit named in base_commit and from the records and artifacts of the DRY_RUN rounds
+  2 and 3; none is typed by hand (the data of question Q7 are read from the job records of runs 44529314764, 44564694778 and 44567888786 and typed there)
+earlier_build: a first build of this package (commit 4b38a468 of the branch e07-start, made on 2026-11-19 before decision D-E07-15, on one DRY_RUN round and on the executor implementation d1c48df5..., never
+  merged into main) is superseded by this build; it binds nothing
+lock_values:
+  implementation:
+    path: experiments/E07-cross-layer-continuity/executor/run-condition.sh
+    sha256: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
+    bytes: 3895
+  conditions_file:
+    path: experiments/E07-cross-layer-continuity/conditions-draft.json
+    sha256: 0baf2497948562f35c5236df460cf497497b571ec4024ef7a27ecc13ff5f2151
+    conditions:
+    - E07-CS005-SUT01-API-WEB
+    - E07-CS005-SUT04-API-WEB
+    - E07-CS006-SUT01-WEB-API
+    - E07-CS006-SUT04-WEB-API
+    n_per_condition: 50
+  measured_workflow:
+    path: .github/workflows/e07-measured-execution.yml
+    sha256: b4888425c06dd735eab87250a3dbbf9ba7bb4ef709c1fbdc7384a6ba932ded89
+    note: gate G-9 reads this hash from the configuration text
+  verification_workflow:
+    path: .github/workflows/e07-environment-verification.yml
+    sha256: 3bfba625eaef22083543cb2cd09cd45cf5bd84763c64d29266b35e10b33a6206
+    note: provenance only; the verification workflow has no START gate
+  dispatch_prompt:
+    id: ORCHESTRATOR-E07-cross-layer-continuity-v1
+    working_copy: prompts/working/ORCHESTRATOR-E07-cross-layer-continuity-v1.md
+    working_copy_sha256: 60c0cc08e3b8fc2b7aa2b8d8d6e45f5d6eafaabebd55d69e5336de1dd6201895
+    frozen_copy_to_write: prompts/frozen/ORCHESTRATOR-E07-cross-layer-continuity-v1.md
+    frozen_copy_written_at_the_start_only: true
+  governance_v6:
+    path: protocol/agent-governance-v6.md
+    sha256: c890a9d004b2989aa9ae33a54bc68b000c47fc9e3f79d60ad0051de78b3f2a4a
+  run_manifest_schema:
+    path: schemas/run-manifest.schema.v2.json
+    sha256: 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757
+  requirements:
+    path: experiments/E07-cross-layer-continuity/executor/requirements.txt
+    sha256: 407de978842f6c6326ff773741c666b4c49ce8223f473de3b99f9636f24a0aa1
+  sut_manifest:
+    path: manifests/sut-manifest.yaml
+    sha256: 7f954c958f5558729ff9be23b9bea1471d205e43baf0f461ccb08f7984cf2d58
+  pinned_suts:
+    SUT-01-api:
+      repository: https://github.com/gsanchezm/OmniPizza
+      commit_sha: 9ca37674d374e9303912e259641ee86baf3aabe1
+      release: null
+    SUT-01-web:
+      repository: https://github.com/gsanchezm/OmniPizza
+      commit_sha: 9ca37674d374e9303912e259641ee86baf3aabe1
+      release: null
+    SUT-04-api:
+      repository: https://github.com/mwinteringham/restful-booker-platform
+      commit_sha: d36bd3f8647a091d406e53bad463c5e3e5d2ece1
+      release: '2.2'
+    SUT-04-web:
+      repository: https://github.com/mwinteringham/restful-booker-platform
+      commit_sha: d36bd3f8647a091d406e53bad463c5e3e5d2ece1
+      release: '2.2'
+  scenario_mappings:
+    CS-005:
+      path: experiments/scenario-mappings/CS-005.yaml
+      sha256: 3721efba476137a3b3893fae2a123c4bd72cb7c09d7ab0966d4aea869bda5069
+      mapping_status: FROZEN
+      frozen_at: '2026-11-19'
+      freeze_record: manifests/cs-005-freeze-v1.yaml
+      freeze_record_sha256: 6770c36618038068d3d88584f03bfea35f8ca92f761ef317f186ddffc1144fa8
+      freeze_authorization_id: E07-CS005-FREEZE-AUTH-01
+      comparability:
+        SUT-01: COMPARABLE
+        SUT-02: NOT_COMPARABLE
+        SUT-03: NOT_COMPARABLE
+        SUT-04: COMPARABLE
+        SUT-05: NOT_COMPARABLE
+        SUT-06: NOT_COMPARABLE
+    CS-006:
+      path: experiments/scenario-mappings/CS-006.yaml
+      sha256: b5764b776b447c5055f1288a54a7739e0651a30353bf999dde4d34a88b791986
+      mapping_status: FROZEN
+      frozen_at: '2026-11-19'
+      freeze_record: manifests/cs-006-freeze-v1.yaml
+      freeze_record_sha256: 7b84fa786aac16ad035a27d18817d5c914775f6eeb1d42151a2f5e41a82e4caf
+      freeze_authorization_id: E07-CS006-FREEZE-AUTH-01
+      comparability:
+        SUT-01: COMPARABLE
+        SUT-02: NOT_COMPARABLE
+        SUT-03: NOT_COMPARABLE
+        SUT-04: COMPARABLE
+        SUT-05: NOT_COMPARABLE
+        SUT-06: NOT_COMPARABLE
+  controlled_instance_basis:
+    record: manifests/e07-environment-verification-rounds-v1.yaml
+    record_sha256: 1dbb8b9f0cc989d346a15b3a25f0b2f4087e7dadff31f138a147f77a73ff6c03
+    basis_rounds:
+    - 2
+    - 3
+    executor_implementation_sha256: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
+    per_condition:
+      E07-CS005-SUT01-API-WEB:
+        round: 2
+        run_id: 44564694778
+        run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44564694778
+        head_sha: 4992205ba9988d3b4553054b96514c9ae1430236
+        dispatched_utc: '2026-11-19T16:18:59Z'
+        finished_utc: '2026-11-19T16:27:50Z'
+        executions_per_condition: 3
+      E07-CS005-SUT04-API-WEB:
+        round: 3
+        run_id: 44567888786
+        run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44567888786
+        head_sha: 4992205ba9988d3b4553054b96514c9ae1430236
+        dispatched_utc: '2026-11-19T16:35:53Z'
+        finished_utc: '2026-11-19T16:47:52Z'
+        executions_per_condition: 3
+      E07-CS006-SUT01-WEB-API:
+        round: 2
+        run_id: 44564694778
+        run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44564694778
+        head_sha: 4992205ba9988d3b4553054b96514c9ae1430236
+        dispatched_utc: '2026-11-19T16:18:59Z'
+        finished_utc: '2026-11-19T16:27:50Z'
+        executions_per_condition: 3
+      E07-CS006-SUT04-WEB-API:
+        round: 2
+        run_id: 44564694778
+        run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44564694778
+        head_sha: 4992205ba9988d3b4553054b96514c9ae1430236
+        dispatched_utc: '2026-11-19T16:18:59Z'
+        finished_utc: '2026-11-19T16:27:50Z'
+        executions_per_condition: 3
+    rounds:
+      round_2:
+        run_id: 44564694778
+        run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44564694778
+        head_sha: 4992205ba9988d3b4553054b96514c9ae1430236
+        dispatched_utc: '2026-11-19T16:18:59Z'
+        finished_utc: '2026-11-19T16:27:50Z'
+        conclusion: failure
+        target: all
+        conditions_with_executions:
+        - E07-CS005-SUT01-API-WEB
+        - E07-CS006-SUT01-WEB-API
+        - E07-CS006-SUT04-WEB-API
+        executions_per_condition: 3
+      round_3:
+        run_id: 44567888786
+        run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44567888786
+        head_sha: 4992205ba9988d3b4553054b96514c9ae1430236
+        dispatched_utc: '2026-11-19T16:35:53Z'
+        finished_utc: '2026-11-19T16:47:52Z'
+        conclusion: success
+        target: E07-CS005-SUT04-API-WEB
+        conditions_with_executions:
+        - E07-CS005-SUT04-API-WEB
+        executions_per_condition: 3
+    failed_job_recorded:
+      round: 2
+      condition: E07-CS005-SUT04-API-WEB
+      record_text: 'E07-CS005-SUT04-API-WEB failed in the step that builds the SUT-04 service jars with Maven 3.9.14 (mvn -B -q clean install -DskipTests): Maven could not resolve the parent POM org.springframework.boot:spring-boot-starter-parent,
+        version 4.1.0 for the auth module and 4.1.0-M4 for the booking, room, report, branding and message modules, from central (https://repo.maven.apache.org/maven2) (''Could not find artifact''; for
+        the later modules the failure was cached from the first attempt). The executor never ran: the DRY_RUN check step then reported ''executor exit status absent; 0 run manifests, expected 3'', and the
+        job left no artifact. The same build step of the same condition concluded success in round 1 (run 44529314764, 13:01Z) with the same pinned SUT source. The cause of the resolution failure is not
+        established beyond the job log; it is read as a toolchain or network item of the hosted runner, not as a SUT or executor finding, and the SUT was not modified.'
+    historical_round_1:
+      run_id: 44529314764
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44529314764
+      head_sha: 8aab4dce013814c996c18be3e8f824f29f790610
+      conclusion: success
+      dispatched_utc: '2026-11-19T13:01:12Z'
+      finished_utc: '2026-11-19T13:07:07Z'
+      executor_implementation_sha256: d1c48df5ced86bf0b972c555e3d060d3065f2e8ccebb8a4f49cd0cce01a89f00
+      note: ran the previous implementation (the check-out date was not compared on the SUT-04 admin web row); a historical reference, not a basis
+reference_values_of_rounds_2_and_3:
+  executions_read: 12
+  tool_versions:
+    python3:
+    - 3.12.16
+    python3 urllib.request:
+    - 3.12.16
+    bash:
+    - 5.2.21(1)-release
+    Playwright for Python:
+    - 1.63.0
+    Chromium:
+    - 153.0.8010.12
+  runtime:
+    runner_image:
+    - ubuntu24 20261111.127.1
+    - ubuntu24 20261111.370.1
+    - ubuntu24 20261116.133.1
+    python:
+    - Python 3.12.3
+    node:
+    - v22.23.4
+    - v22.23.5
+    npm:
+    - 10.9.9
+    git:
+    - git version 2.56.1
+  artifacts_checked_against_the_rounds_record:
+    directories:
+    - E07-DRY_RUN-E07-CS005-SUT01-API-WEB-2
+    - E07-DRY_RUN-E07-CS005-SUT04-API-WEB-3
+    - E07-DRY_RUN-E07-CS006-SUT01-WEB-API-2
+    - E07-DRY_RUN-E07-CS006-SUT04-WEB-API-2
+    executions_per_condition: 3
+    implementation_hash_in_every_execution_provenance: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
+  outcome_categories_per_condition:
+    E07-CS005-SUT01-API-WEB:
+      VERIFIED: 3
+    E07-CS005-SUT04-API-WEB:
+      VERIFIED: 3
+    E07-CS006-SUT01-WEB-API:
+      NOT_VERIFIED: 3
+    E07-CS006-SUT04-WEB-API:
+      VERIFIED: 3
+  attribution_labels:
+    SUT: 12
+  last_phases:
+    verification: 12
+  execution_duration_s:
+    min: 0.916
+    max: 3.562
+configuration_text_sha256: 2198bf71a747691fbc4f6639955cf6110edad32ac2f09a21a56d48b19a00bf12
+section_inserted_sha256: 94a85733f8b88ea4046cfdda9c1407bf0b6387763d3b772624764651fa237ad2
+candidate_configuration_text_source: experiments/E07-cross-layer-continuity/campaign-configuration-start-text-draft.md (the draft text, with the values filled and the amendments listed under discrepancies_found)
+candidate_configuration_section: |
+  ## Campaign configuration
+
+  This record is the "Campaign configuration" of E07-cross-layer-continuity. It is locked at the campaign START (protocol/change-control-v1.md, section 7, moment 1) under the human authorization named below, and it is immutable from then on; a change after the START is a change-control row recorded before the affected execution. It authorizes no dispatch: each dispatch authorization (protocol/agent-governance-v6.md, Section 3.7) is issued separately by the human research lead. The design records are experiments/E07-cross-layer-continuity/design-brief-draft.md (sections 17 and 18) and campaign-configuration-draft.md; the executor is experiments/E07-cross-layer-continuity/executor/. The values of this text are those decided on 2026-11-18 and 2026-11-19 (manifests/campaign-execution-decisions-v10.yaml to -v14.yaml); every hash below was computed from the recorded file at the START and not typed. A system under test (SUT) is one of the evaluated ecosystems of README.md.
+
+  ### Identity and START
+
+  - Campaign: E07-cross-layer-continuity. Scope: web and API layers only (decisions of 2026-11-05 and D-E07-7). Design: cross-layer continuity in two directions, API to WEB (canonical scenario CS-005) and WEB to API (canonical scenario CS-006): an actor establishes one unit of business state through the source layer and a read-only observation on the other layer is compared with the establishment record. The primary variable is the continuity success proportion (see "Blocks, outcome categories and the continuity proportion"). Hypothesis label: H4, continuity part, but no CONFIRMATORY comparison is evaluable under DP-4 strict (D-E07-1; see "Analysis and what is not computed"); every result is descriptive. The continuity success proportion is the variable that protocol/statistical-analysis-plan-v1.md, section 4.3 (H4 row), names for E07.
+  - START authorization id: E07-START-AUTH-01 (the id of the human research lead's approval of this START). The START row of protocol/CHANGELOG.md names it.
+  - Protocol: v1 FROZEN-PRE-DATA (protocol/study-design-v1.md, section 6; protocol/statistical-analysis-plan-v1.md, sections 4 and 5; protocol/equivalent-scenario-mapping-v1.md; protocol/repeatability-determinism-v1.md, section 5, applied for the rules of valid measured attempts). Agent governance: protocol/agent-governance-v6.md, sha256 c890a9d004b2989aa9ae33a54bc68b000c47fc9e3f79d60ad0051de78b3f2a4a, FROZEN-PRE-DATA since 2026-11-06, Sections 3.6 and 3.7.
+  - Execution: GitHub Actions only (CAMPAIGN-CI-WRITE-AUTH-01), through .github/workflows/e07-measured-execution.yml, dispatched by the ORCHESTRATOR under dispatch authorizations. Attempt 1 only under the authorization; a further attempt only under a recorded further-attempt approval (gate G-E07-A2); default branch only; no GitHub re-run.
+  - Measured workflow file sha256 b4888425c06dd735eab87250a3dbbf9ba7bb4ef709c1fbdc7384a6ba932ded89 (gate G-9 reads this hash from this record). Verification workflow file sha256 3bfba625eaef22083543cb2cd09cd45cf5bd84763c64d29266b35e10b33a6206 (provenance only; the verification workflow has no START gate, as in E04 and E05).
+
+  ### Scenario mapping
+
+  - Canonical scenario CS-005 (API to WEB): experiments/scenario-mappings/CS-005.yaml, sha256 3721efba476137a3b3893fae2a123c4bd72cb7c09d7ab0966d4aea869bda5069, mapping_status FROZEN on 2026-11-19, authorization id E07-CS005-FREEZE-AUTH-01 (record manifests/cs-005-freeze-v1.yaml; the two open cells of D-E07-6 were decided COMPARABLE, D-E07-11 and D-E07-12, after round 1 of the DRY_RUN). Canonical scenario CS-006 (WEB to API): experiments/scenario-mappings/CS-006.yaml, sha256 b5764b776b447c5055f1288a54a7739e0651a30353bf999dde4d34a88b791986, mapping_status FROZEN on 2026-11-19, authorization id E07-CS006-FREEZE-AUTH-01 (record manifests/cs-006-freeze-v1.yaml).
+  - The comparability recorded in the frozen mapping records is the one used: SUT-01 and SUT-04 are COMPARABLE in both records, so each of the four conditions below has a COMPARABLE entry; SUT-02, SUT-03, SUT-05 and SUT-06 are NOT_COMPARABLE in both records and have no condition (they are reported as no data with their reasons, never as a zero or a failure; protocol/statistical-analysis-plan-v1.md, section 5). No cross-ecosystem comparison is made by this campaign.
+
+  ### Pinned versions
+
+  - SUT-01 web and api: OmniPizza at commit 9ca37674d374e9303912e259641ee86baf3aabe1 (no release). SUT-04 web and api: restful-booker-platform at commit d36bd3f8647a091d406e53bad463c5e3e5d2ece1 (release 2.2). Source: manifests/sut-manifest.yaml, sha256 7f954c958f5558729ff9be23b9bea1471d205e43baf0f461ccb08f7984cf2d58.
+  - Web runner: Playwright for Python 1.63.0 with the hashed requirements of experiments/E07-cross-layer-continuity/executor/requirements.txt, sha256 35b65ea4c57a3bc1ddccaab846bab0b986ff76de8b09ac69d2455fedf04dfb4b (a copy of the requirements of E04). API client: the Python 3 standard library (urllib.request). Browser: the Chromium build named by Playwright 1.63.0, not hash-pinned by the study.
+  - Run-manifest schema: schemas/run-manifest.schema.v2.json, sha256 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757. source_layer and verification_layer are mandatory on every E07 record by campaign convention.
+  - Reference values of the runner, Python, Node.js and browser versions, as recorded by the DRY_RUN rounds 2 and 3 (recorded per job in tool-versions.json and runtime-environment.json, and never a gate): executor Python 3.12.16, bash 5.2.21(1)-release, Playwright for Python 1.63.0, Chromium 153.0.8010.12; runner image ubuntu24 20261111.127.1 and ubuntu24 20261111.370.1 and ubuntu24 20261116.133.1; system Python 3.12.3, Node.js v22.23.4 and v22.23.5, npm 10.9.9, git version 2.56.1. The runner image version differs between jobs of the same dispatch; the drift is recorded per job and is not a gate.
+
+  ### Prompt version and implementation
+
+  - Dispatch procedure prompt: ORCHESTRATOR-E07-cross-layer-continuity-v1. Working copy: prompts/working/ORCHESTRATOR-E07-cross-layer-continuity-v1.md, sha256 60c0cc08e3b8fc2b7aa2b8d8d6e45f5d6eafaabebd55d69e5336de1dd6201895. The frozen copy prompts/frozen/ORCHESTRATOR-E07-cross-layer-continuity-v1.md is written once at the START as a byte-identical copy of the working copy (prompts/README.md, rules 1 to 3); it is not written by this text.
+  - Implementation hash (sha256 of experiments/E07-cross-layer-continuity/executor/run-condition.sh, which embeds the digests of the executor Python files and of requirements.txt and refuses an unlisted file): 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59. This is the implementation that ran in the non-measured environment-verification rounds 2 and 3 (runs 44564694778 and 44567888786); round 1 (run 44529314764) ran the previous implementation d1c48df5ced86bf0b972c555e3d060d3065f2e8ccebb8a4f49cd0cce01a89f00, which did not compare the check-out date on the SUT-04 admin web row (decision D-E07-15).
+  - Conditions file: experiments/E07-cross-layer-continuity/conditions-draft.json, sha256 0baf2497948562f35c5236df460cf497497b571ec4024ef7a27ecc13ff5f2151 (four conditions; read by the executor; hashed here at the START).
+
+  ### Conditions
+
+  All conditions: N = 50 executions, EX0001 to EX0050, attempt 1, environment_type SELF_HOSTED (a controlled instance provisioned in the job from the pinned commit on a GitHub-hosted runner, never PUBLIC_HOSTED), expected category VERIFIED. The condition list below is the one of the decision D-E07-8; the four cells are COMPARABLE in the frozen mapping records (CS-005: SUT-01 and SUT-04; CS-006: SUT-01 and SUT-04), and the cells of SUT-02, SUT-03, SUT-05 and SUT-06 are recorded as no data with their reasons.
+
+  | Condition | Scenario and direction | Account | Reset between attempts (outside the scenario, not counted) | Identity keys and attributes compared |
+  |---|---|---|---|---|
+  | E07-CS005-SUT01-API-WEB | CS-005, API to WEB | standard_user | session clear through the API (API_RESET, SESSION_RESET) and a new browser context per execution | JWT claim sid; cart line pizza_id p02, quantity 1 |
+  | E07-CS005-SUT04-API-WEB | CS-005, API to WEB | admin | deletion through the booking API of the room 1 bookings that carry the run's guest names (API_RESET) and a new browser context per execution | run-unique guest names; check-in and check-out dates of room 1 |
+  | E07-CS006-SUT01-WEB-API | CS-006, WEB to API | standard_user | as E07-CS005-SUT01-API-WEB | as E07-CS005-SUT01-API-WEB |
+  | E07-CS006-SUT04-WEB-API | CS-006, WEB to API | admin | as E07-CS005-SUT04-API-WEB | as E07-CS005-SUT04-API-WEB |
+
+  The per-step realizations (login, establishment, read-back, verification) are those of the entries of CS-005 and CS-006 for the SUT and of the executor README (experiments/E07-cross-layer-continuity/executor/README.md); the keys are declared here before the first attempt and a key that is not observable on the verification layer is not used (D-E07-9).
+
+  ### Blocks, outcome categories and the continuity proportion
+
+  - Block order of every execution: reset; starting-state check; establishment (source layer); establishment check (source layer, read-only); verification (the other layer, read-only); record. Verification changes no state; timing is not part of the criterion.
+  - A block that does not hold stops that execution with its category; the job goes on with the next execution. Only a failure of the job itself stops the job.
+  - Outcome categories (declared before any execution, in experiments/E07-cross-layer-continuity/conditions-draft.json; D-E07-10): VERIFIED (status SUCCESS; every declared key and attribute is observed on the verification layer and matches the establishment record); NOT_VERIFIED (the observation completed and at least one key or attribute is absent or different, including an HTTP error answer of the verification read); ESTABLISHMENT_FAILED (the establishment or its source-side check did not confirm the unit); INTERRUPTED (a failed reset, RESET_FAILED, a starting state not reached, STARTING_STATE_NOT_REACHED, or the per-execution watchdog, WATCHDOG; each with its cause); RUNNER_ERROR (an exception of the executor, browser, client or infrastructure inside a block, with the last phase recorded). The mapping of each category to the run-manifest outcome status is the one of the executor README. The expected category of every condition is VERIFIED.
+  - Primary variable: the continuity success proportion per condition = VERIFIED / all valid measured attempts (option A; the denominator includes every attempt, also the ones that ended in ESTABLISHMENT_FAILED, INTERRUPTED or RUNNER_ERROR), with the Wilson 95 percent interval without continuity correction. Secondary, reported apart: the conditional proportion = VERIFIED / attempts whose establishment succeeded (option B), with its Wilson interval, and NOT_ESTIMABLE (never 0) when no attempt established the unit. If no valid measured attempt exists the proportion is not estimable and is reported as such.
+
+  ### Attribution and exclusion rules
+
+  - No attempt is excluded from any denominator (protocol/repeatability-determinism-v1.md, section 5, rules 4 and 5). A failed starting-state check is recorded as INTERRUPTED with its cause, is counted, and the job goes on.
+  - Attribution (decision D-E07-10, as in E04): TOOLING for an interruption of a block (the per-execution watchdog) and for every exception of the executor, browser, client or infrastructure (RUNNER_ERROR); SUT for every recorded failure of a block (a failed reset or establishment, an HTTP error answer, a state that did not hold, NOT_VERIFIED) and for every attempt whose cause cannot be assigned mechanically. Attribution is mechanical and fixed here; it is never applied after seeing a result pattern. Attributed counts (TOOLING and SUT per category) are reported beside the raw proportion; the raw proportion is never recomputed on the attributed counts.
+  - As implemented by the executor (experiments/E07-cross-layer-continuity/executor/IMPLEMENTATION-NOTES.md, section 3, items 5 to 7; confirmed by the human research lead's approval of this text at the START): a transport failure of an HTTP call (no answer) is recorded as an observation of that call and counts as a recorded failure of the block (SUT), as in E04; an exception of the browser or of the executor is RUNNER_ERROR (TOOLING); a bundle that cannot be written is recorded as RUNNER_ERROR (TOOLING) with the cause BUNDLE_NOT_WRITTEN (the category STUB_NO_BUNDLE of E04 is not carried: the five categories of D-E07-10 are the whole set). The check-out date is compared on both layers (D-E07-15: DRY_RUN round 1 showed that the SUT-04 admin web row lists it); the sid claim of the SUT-01 key confirms the session binding, since both layers hold the same login token.
+  - A runner cancelled or lost by the workflow leaves an incomplete bundle; the ORCHESTRATOR records such an execution at import as TOOLING of that execution (not implemented by the executor; confirmed by the human research lead's approval of this text at the START).
+  - The executor scrubs host paths and private network addresses from every kept text file (the executor's scrubber); no secret is recorded.
+
+  ### Sample size, order and dispatch model
+
+  - N = 50 executions per condition (protocol/repeatability-determinism-v1.md, section 3, standard target; no reduction): 50 times the number of conditions (200 for the four conditions above); one dispatch per condition, one job per dispatch, attempt 1.
+  - Model: one job runs the 50 executions of one condition sequentially on one shared instance (the model B of E04 and E05, decision D-E07-8); the reset of the condition runs at the start of every execution and the starting-state check follows it in every execution.
+  - Dispatch order (fixed here before the first dispatch): SUT-01: E07-CS005-SUT01-API-WEB, E07-CS006-SUT01-WEB-API; SUT-04: E07-CS005-SUT04-API-WEB, E07-CS006-SUT04-WEB-API. The conditions of one SUT run one at a time, a dispatch only after the previous run of its authorization has concluded and been imported; the chains of the two SUTs are independent and may run concurrently.
+  - Dispatch records (append-only, committed before each dispatch; the run identity is appended after it starts): manifests/e07-measured-dispatch/e07-sut01.jsonl and e07-sut04.jsonl, created at the first dispatch of each SUT, not at the START.
+  - Identifiers: execution_id EX0001 to EX0050; attempt A1; run_id <condition_id>__<execution_id>__A<attempt>.
+  - Import: byte-exact under raw-data/E07-cross-layer-continuity/<SUT>/ after the verification of every archive against its GitHub digest: each executions/<run_id>/ directory becomes raw-data/E07-cross-layer-continuity/<SUT>/<run_id>/; the job files are kept in raw-data/E07-cross-layer-continuity/<SUT>/<condition_id>__job__A<attempt>/.
+  - Stop conditions: the frozen dispatch procedure (prompts/frozen/ORCHESTRATOR-E07-cross-layer-continuity-v1.md, section 4) applies: the gate job of a run fails; a run's conclusion is other than success or a failure of the measured job; an artifact does not hold exactly the 50 run manifests of its condition; an input differs from this text, the authorization or the public repository; a boundary of the procedure would be crossed; the authorization is revoked or the human research lead stops the campaign. On a stop nothing further is dispatched in this campaign under any authorization until the human research lead instructs otherwise.
+
+  ### Dispatch authorization and further attempts
+
+  - One dispatch authorization per SUT, issued separately by the human research lead under protocol/agent-governance-v6.md, Section 3.7: E07-DISPATCH-SUT01-AUTH-01 (SUT-01) and E07-DISPATCH-SUT04-AUTH-01 (SUT-04). Each names the conditions of its SUT, N = 50, attempt 1, the implementation hash and the prompt hash above, and the authorization id of this START. The START authorizes no dispatch authorization.
+  - Further attempt (attempt 2 or more, from a first execution named by the approval): only under a further-attempt approval of the human research lead that names the condition, the first execution and the attempt (gate G-E07-A2; the approval record is manifests/e07-further-attempt-approval-sut0N-v1.yaml, created only when approved). Nothing is re-run; the failed or interrupted executions of the first attempt keep their recorded outcomes.
+
+  ### Controlled instances
+
+  - Controlled-instance record: experiments/E07-cross-layer-continuity/controlled-instance-status.yaml, written at the START from the prepared content. Every condition is CONTROLLED only when its status is VERIFIED on GitHub Actions by a non-measured DRY_RUN round of .github/workflows/e07-environment-verification.yml. All four conditions are VERIFIED by rounds 2 and 3, both run under the executor implementation locked here, 3 executions per condition DR0001 to DR0003 (12 executions read; record manifests/e07-environment-verification-rounds-v1.yaml, sha256 1dbb8b9f0cc989d346a15b3a25f0b2f4087e7dadff31f138a147f77a73ff6c03): round 2 (run 44564694778, dispatched 2026-11-19T16:18:59Z on public main 4992205ba9988d3b4553054b96514c9ae1430236) holds the three conditions E07-CS005-SUT01-API-WEB, E07-CS006-SUT01-WEB-API and E07-CS006-SUT04-WEB-API; its fourth job, E07-CS005-SUT04-API-WEB, failed in its Maven build step before the executor ran (no execution; it stays recorded), and round 3 (run 44567888786, dispatched 2026-11-19T16:35:53Z on public main 4992205ba9988d3b4553054b96514c9ae1430236, limited to that condition) repeated it. Round 1 (run 44529314764) ran the previous implementation d1c48df5ced86bf0b972c555e3d060d3065f2e8ccebb8a4f49cd0cce01a89f00 and is a historical reference, not a basis. In the three conditions SUT-01 API to WEB, SUT-04 API to WEB and SUT-04 WEB to API every execution recorded VERIFIED, and in SUT-01 WEB to API every execution recorded NOT_VERIFIED; the verified controlled instance is the environment status of the condition, and the continuity category of a DRY_RUN execution is neither an environment status nor a measurement. DRY_RUN bundles are never measured and never imported.
+
+  ### Analysis and what is not computed
+
+  - Per condition: T (valid measured attempts), V (VERIFIED executions), the continuity success proportion V / T with its Wilson 95 percent interval, the conditional proportion with its interval, the category counts and the attributed counts beside the raw proportion. Descriptive only.
+  - Under DP-4 strict (D-E07-1) SUT-03 is NOT_COMPARABLE in both records, so no CONFIRMATORY H4 continuity comparison is evaluable: the four candidate comparisons of campaign-configuration-draft.md, section 13, are reported with their reasons (SUT-02 and SUT-03 no data), never as a zero or a failure. The SUT-04 conditions are a specialist reference and EXPLORATORY (protocol/statistical-analysis-plan-v1.md, section 4.2).
+  - Not computed, not compared, not pooled: no between-ecosystem comparison; no pooled rate across conditions, directions or ecosystems; no composite score; no latency (D-E07-5); no test, p-value, risk difference or effect size; no Holm family.
+  - The analysis is run only on a separate instruction of the human research lead, after the campaign is frozen, with its own derived dataset (derived-data/README.md; analysis/README.md).
+
+  ### Gates the measured workflow enforces
+
+  The measured job starts only if the gate step of .github/workflows/e07-measured-execution.yml passes: the campaign status is IN_PROGRESS in manifests/study-manifest.yaml; exactly one START row of protocol/CHANGELOG.md names this campaign README and the START authorization id; the START record manifests/e07-campaign-start-v1.yaml names the campaign and the authorization id; this section names the condition, the schema, the prompt version, the implementation hash, the conditions-file hash, the measured workflow hash (G-9), N = 50, CS-005 and CS-006, the continuity success proportion, and the pinned commits of the assigned SUT and, for a release, the release; the dispatch authorization of the assigned SUT is ISSUED, VALID, ELIGIBLE, not revoked, issued by the human research lead, and names the condition, N = 50, attempt 1, the START id and the two hashes; the frozen prompt file exists and matches its hash; the further-attempt approval (G-E07-A2) when the attempt is above 1; agent-governance-v6 is in force with Section 3.7; the run-manifest schema v2 is present; the controlled-instance status of the condition is CONTROLLED, its GitHub Actions verification is VERIFIED, no reverification is required, and the environment type is SELF_HOSTED; the mapping records of the condition's canonical scenario are FROZEN with a COMPARABLE entry for the assigned SUT; the executor implementation equals the locked hash. The job also refuses a GitHub re-run (github.run_attempt must be 1) and any branch other than the default branch.
+
+  ### Change log
+
+  - None at the time of this text. Any change after the START is a change-control row (protocol/change-control-v1.md) recorded before the affected execution; results collected before a change are analyzed under the configuration in force when they were collected.
+candidate_change_log_row_sha256_unbound: b3298862bf0fbcacf3c327f4a2d4c2d940675282c33ab3ccd192868d26bad5b0
+candidate_change_log_row: |
+  | {START_DATE} | experiments/E07-cross-layer-continuity/README.md | none | none | campaign NOT_STARTED -> IN_PROGRESS | E07 campaign start under protocol/change-control-v1.md, section 7, moment 1, by explicit human approval, authorization E07-START-AUTH-01. Campaign configuration record added to experiments/E07-cross-layer-continuity/README.md (four web/api conditions on SUT-01 (2) and SUT-04 (2), N = 50 each, 200 executions, attempt 1; canonical scenarios CS-005 (API to WEB, FROZEN 2026-11-19, authorization E07-CS005-FREEZE-AUTH-01) and CS-006 (WEB to API, FROZEN 2026-11-19, authorization E07-CS006-FREEZE-AUTH-01), sha256 3721efba... and b5764b77...; primary variable the continuity success proportion (VERIFIED over all valid measured attempts, with the conditional proportion reported apart); pinned SUT versions: manifests/sut-manifest.yaml; executor implementation hash 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59; conditions file sha256 0baf2497948562f35c5236df460cf497497b571ec4024ef7a27ecc13ff5f2151; measured workflow file sha256 b4888425c06dd735eab87250a3dbbf9ba7bb4ef709c1fbdc7384a6ba932ded89; dispatch procedure prompt ORCHESTRATOR-E07-cross-layer-continuity-v1, sha256 60c0cc08e3b8fc2b7aa2b8d8d6e45f5d6eafaabebd55d69e5336de1dd6201895, frozen as a byte-identical copy; controlled-instance status experiments/E07-cross-layer-continuity/controlled-instance-status.yaml, all four conditions VERIFIED on GitHub Actions by the DRY_RUN rounds 2 and 3, runs 44564694778 and 44567888786). Effect: the measured-execution workflow may be dispatched only within a dispatch authorization issued separately by the human research lead under protocol/agent-governance-v6.md, Section 3.7; the START authorizes no dispatch. Record: manifests/e07-campaign-start-v1.yaml. | E07-cross-layer-continuity | gilbertosanchez |
+candidate_controlled_instance_status_sha256_unbound: 305bdd717f8b0c550b44f53d399fe38a3c46cfaf1955bb0859e4f3a304374f49
+candidate_controlled_instance_status: |
+  # experiments/E07-cross-layer-continuity/controlled-instance-status.yaml -- controlled-instance status of the E07 conditions, written at the campaign START (operation OP-START-E07) from DRY_RUN rounds 2 and 3 (manifests/e07-environment-verification-rounds-v1.yaml)
+  study_id: EUS-2026-001
+  campaign_id: E07-cross-layer-continuity
+  updated: START_DATE_TOKEN
+  campaign_status: IN_PROGRESS
+  verification_record: manifests/e07-environment-verification-rounds-v1.yaml
+  verification_record_sha256: 1dbb8b9f0cc989d346a15b3a25f0b2f4087e7dadff31f138a147f77a73ff6c03
+  basis: 'status VERIFIED of every condition: the non-measured DRY_RUN rounds 2 and 3 of .github/workflows/e07-environment-verification.yml, both under the executor implementation hash 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59,
+    3 executions per condition (DR0001 to DR0003), 12 executions in all: round 2 (run 44564694778) for E07-CS005-SUT01-API-WEB, E07-CS006-SUT01-WEB-API and E07-CS006-SUT04-WEB-API, and round 3 (run 44567888786,
+    limited to its condition) for E07-CS005-SUT04-API-WEB, whose job of round 2 failed in the Maven build step before the executor ran (no execution; recorded in the verification record); round 1 (run 44529314764)
+    ran the previous implementation and is a historical reference. environment_type is the value the verification workflow writes into its provenance record (SUT-01 and SUT-04 controlled instances provisioned
+    in the job, SELF_HOSTED). The status is the status of the instance: three conditions recorded VERIFIED in every DRY_RUN execution, and E07-CS006-SUT01-WEB-API recorded NOT_VERIFIED in every DRY_RUN execution,
+    which is an observation of the continuity variable (the verification read answered 200 with the server cart empty after every block before it had held) and not a failure of the environment; no further
+    round exists at the time of this content'
+  measured_execution_prerequisites_common:
+  - campaign START
+  - locked campaign configuration
+  - agent-governance-v6 in force (Section 3.7)
+  - a dispatch authorization for the assigned SUT
+  - the frozen dispatch procedure prompt ORCHESTRATOR-E07-cross-layer-continuity-v1
+  - the implementation hash equal to the locked value
+  - CS-005 and CS-006 mappings FROZEN, with the assigned SUT COMPARABLE in the scenario of the condition
+  conditions:
+    E07-CS005-SUT01-API-WEB:
+      status: CONTROLLED
+      reverification_required: false
+      github_actions_verification:
+        status: VERIFIED
+        environment_type: SELF_HOSTED
+        run_id: 44564694778
+        run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44564694778
+        execution_ids:
+        - DR0001
+        - DR0002
+        - DR0003
+        record_class: DRY_RUN
+        implementation_run_condition_sha256: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
+        account: standard_user
+        instance: SUT-01 web and api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance
+    E07-CS005-SUT04-API-WEB:
+      status: CONTROLLED
+      reverification_required: false
+      github_actions_verification:
+        status: VERIFIED
+        environment_type: SELF_HOSTED
+        run_id: 44567888786
+        run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44567888786
+        execution_ids:
+        - DR0001
+        - DR0002
+        - DR0003
+        record_class: DRY_RUN
+        implementation_run_condition_sha256: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
+        account: admin
+        instance: SUT-04 services (booking, auth, room, report, branding, message) and the web app provisioned in the job from the pinned commit d36bd3f8647a091d406e53bad463c5e3e5d2ece1 (release 2.2) on a
+          GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance
+    E07-CS006-SUT01-WEB-API:
+      status: CONTROLLED
+      reverification_required: false
+      github_actions_verification:
+        status: VERIFIED
+        environment_type: SELF_HOSTED
+        run_id: 44564694778
+        run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44564694778
+        execution_ids:
+        - DR0001
+        - DR0002
+        - DR0003
+        record_class: DRY_RUN
+        implementation_run_condition_sha256: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
+        account: standard_user
+        instance: SUT-01 web and api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance
+    E07-CS006-SUT04-WEB-API:
+      status: CONTROLLED
+      reverification_required: false
+      github_actions_verification:
+        status: VERIFIED
+        environment_type: SELF_HOSTED
+        run_id: 44564694778
+        run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44564694778
+        execution_ids:
+        - DR0001
+        - DR0002
+        - DR0003
+        record_class: DRY_RUN
+        implementation_run_condition_sha256: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
+        account: admin
+        instance: SUT-04 services (booking, auth, room, report, branding, message) and the web app provisioned in the job from the pinned commit d36bd3f8647a091d406e53bad463c5e3e5d2ece1 (release 2.2) on a
+          GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance
+tokens_bound_at_the_start:
+  START_DATE: the date of the START in America/Mexico_City
+  START_TIMESTAMP: the UTC time at which the START is applied
+  START_DATE_TOKEN: the same date, in the controlled-instance status (quoted)
+start_record_template:
+  record_class: CAMPAIGN_START
+  record_id: E07-CAMPAIGN-START-01
+  study_id: EUS-2026-001
+  campaign_id: E07-cross-layer-continuity
+  operation_id: OP-START-E07
+  recorded_by_role: ORCHESTRATOR
+  authorization_id: E07-START-AUTH-01
+  binding: protocol/change-control-v1.md, section 7, moment 1 (campaign NOT_STARTED -> IN_PROGRESS)
+  package:
+    path: manifests/e07-campaign-start-package-v1.yaml
+    record_id: E07-START-PACKAGE-01
+start_edit_set:
+- file: experiments/E07-cross-layer-continuity/README.md
+  kind: replace_exact
+  what: the Current status section (NOT STARTED to IN PROGRESS, with a pointer to the START record; the scope note is kept)
+  before: |+
+    ## Current status
+
+    NOT STARTED
+
+    Resumed by the human research lead's decision of 2026-11-02 (manifests/campaign-resumption-v1.yaml); the deferral of scope A (manifests/campaign-disposition-v1.yaml) no longer governs the schedule: the status above is unchanged, preparation may begin, and the campaign START needs its own explicit human authorization (protocol/change-control-v1.md, section 7).
+
+    The canonical scenario records CS-005 (API to WEB) and CS-006 (WEB to API) were FROZEN on 2026-11-19 (manifests/cs-005-freeze-v1.yaml, manifests/cs-006-freeze-v1.yaml); the campaign stays NOT STARTED, and its START needs its own explicit human authorization.
+
+  after_template: |+
+    ## Current status
+
+    IN PROGRESS since the campaign START of {START_DATE} (human authorization E07-START-AUTH-01; protocol/change-control-v1.md, section 7, moment 1; record manifests/e07-campaign-start-v1.yaml). The "Campaign configuration" section below is locked and immutable. The START authorized no dispatch and no dispatch authorization; each dispatch authorization (protocol/agent-governance-v6.md, Section 3.7) is issued separately by the human research lead.
+
+    Resumed by the human research lead's decision of 2026-11-02 (manifests/campaign-resumption-v1.yaml); the deferral of scope A (manifests/campaign-disposition-v1.yaml) no longer governs the schedule. The canonical scenario records CS-005 (API to WEB) and CS-006 (WEB to API) were FROZEN on 2026-11-19 (manifests/cs-005-freeze-v1.yaml, manifests/cs-006-freeze-v1.yaml). All four conditions are VERIFIED on GitHub Actions by the non-measured DRY_RUN rounds 2 and 3 (manifests/e07-environment-verification-rounds-v1.yaml; experiments/E07-cross-layer-continuity/controlled-instance-status.yaml).
+
+- file: experiments/E07-cross-layer-continuity/README.md
+  kind: replace_exact
+  what: one stale word of the scope note (the scenario records are frozen)
+  before: (DRAFT, not frozen)
+  after_template: (FROZEN on 2026-11-19)
+- file: experiments/E07-cross-layer-continuity/README.md
+  kind: append_section
+  what: the Campaign configuration section, appended as the last section of the README (the analysis digests the README from its heading to the end of the file)
+  source: candidate_configuration_section
+- file: protocol/CHANGELOG.md
+  kind: append_row
+  what: one START row (campaign NOT_STARTED -> IN_PROGRESS)
+  source: candidate_change_log_row
+- file: manifests/study-manifest.yaml
+  kind: replace_exact
+  what: the E07 status line
+  before: "  - id: E07-cross-layer-continuity\n    status: NOT_STARTED  # resumed by the decision of 2026-11-02 (manifests/campaign-resumption-v1.yaml); value unchanged; START needs its own authorization"
+  after_template: "  - id: E07-cross-layer-continuity\n    status: IN_PROGRESS  # transitioned {START_TIMESTAMP} (protocol/change-control-v1.md, section 7, moment 1; protocol/CHANGELOG.md; manifests/e07-campaign-start-v1.yaml;\
+    \ human authorization E07-START-AUTH-01); the START authorized no dispatch"
+- file: manifests/study-manifest.yaml
+  kind: append_text
+  what: one dated note at the end of the file
+  after_template: '  {START_DATE} (E07 CAMPAIGN START, operation OP-START-E07; applied by the ORCHESTRATOR on the human research lead''s explicit approval of that exact action, authorization E07-START-AUTH-01):
+    E07-cross-layer-continuity is IN_PROGRESS. The Campaign configuration of experiments/E07-cross-layer-continuity/README.md locks four web/api conditions (SUT-01 2, SUT-04 2; N = 50 each, 200 executions,
+    attempt 1; the two directions API to WEB and WEB to API; canonical scenarios CS-005 and CS-006, FROZEN on 2026-11-19), the executor implementation hash 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59,
+    the conditions file sha256 0baf2497948562f35c5236df460cf497497b571ec4024ef7a27ecc13ff5f2151 and the measured workflow sha256 b4888425c06dd735eab87250a3dbbf9ba7bb4ef709c1fbdc7384a6ba932ded89; the dispatch
+    procedure prompt ORCHESTRATOR-E07-cross-layer-continuity-v1 is frozen as a byte-identical copy (sha256 60c0cc08e3b8fc2b7aa2b8d8d6e45f5d6eafaabebd55d69e5336de1dd6201895); the START package is manifests/e07-campaign-start-package-v1.yaml
+    and the START record is manifests/e07-campaign-start-v1.yaml. The START authorizes no dispatch, no dispatch authorization and no export: each dispatch authorization is issued separately by the human
+    research lead (protocol/agent-governance-v6.md, Section 3.7), and the START state reaches the public repository only with an export on that exact line approval.
+
+    '
+- file: experiments/README.md
+  kind: replace_exact
+  what: the E07 row of the campaign table
+  before: '| E07 | Cross-layer Continuity | RQ4 Cross-platform and Cross-layer Integration | 4 Cross-platform and Cross-layer Integration | NOT STARTED (resumed by the decision of 2026-11-02, preparation
+    may begin, START needs its own authorization; manifests/campaign-resumption-v1.yaml); the DRAFT preparation (executor, two dispatch-only workflows, conditions, configuration drafts) is public since
+    export v70 (public main 8aab4dc, 2026-11-19), and the scenarios CS-005 and CS-006 are FROZEN (2026-11-19) and public since export v71 (public main 4992205, 2026-11-19); no START, dispatch authorization
+    or dispatch |'
+  after_template: '| E07 | Cross-layer Continuity | RQ4 Cross-platform and Cross-layer Integration | 4 Cross-platform and Cross-layer Integration | IN PROGRESS since the campaign START of {START_DATE} (human
+    authorization E07-START-AUTH-01; record manifests/e07-campaign-start-v1.yaml): the Campaign configuration of its README locks four web/api conditions on SUT-01 and SUT-04 (both directions), N = 50 each
+    (200 executions), and the executor implementation 55a352aa...; CS-005 and CS-006 FROZEN on 2026-11-19; the START authorizes no dispatch and no dispatch authorization; the preparation (the executor,
+    the workflows and the FROZEN scenario records) is public since export v71 (public main 4992205) and the START state is not yet published |'
+- file: experiments/E07-cross-layer-continuity/controlled-instance-status.yaml
+  kind: write_file
+  what: the controlled-instance status of the four conditions, from DRY_RUN rounds 2 and 3 (replaces the DRAFT in which every condition is NOT_VERIFIED)
+  source: candidate_controlled_instance_status
+  replaces_sha256: ff6a99ac90dda4ef7ad54f3af6452b1f4db0c279ef88b773481f6d43e7b0f385
+- file: prompts/frozen/ORCHESTRATOR-E07-cross-layer-continuity-v1.md
+  kind: copy_file
+  what: the frozen dispatch prompt, a byte-identical copy of the working copy
+  from: prompts/working/ORCHESTRATOR-E07-cross-layer-continuity-v1.md
+  sha256: 60c0cc08e3b8fc2b7aa2b8d8d6e45f5d6eafaabebd55d69e5336de1dd6201895
+- file: manifests/e07-campaign-start-v1.yaml
+  kind: generated
+  what: the START record, with the human research lead's answer verbatim and its hash (built by apply_start_e07.py from start_record_template)
+- file: manifests/README.md
+  kind: insert_after_row
+  what: two rows (the package and the START record)
+  anchor_row_starts_with: '| `cs-006-freeze-v1.yaml`'
+  rows_template: |
+    | `e07-campaign-start-package-v1.yaml` | E07 campaign START package version 1 of operation OP-PREP-E07-START, PREPARED on 2026-11-19 and bound at the START of {START_DATE} (see `e07-campaign-start-v1.yaml`): the lock values after the freeze of CS-005 and CS-006 and DRY_RUN rounds 2 and 3, the candidate "Campaign configuration" section and change-log row, the controlled-instance status, the edit set, the rehearsal of the gates, the questions for the human research lead and the open items. |
+    | `e07-campaign-start-v1.yaml` | Provenance record of the E07-cross-layer-continuity campaign START (operation OP-START-E07, {START_DATE}; protocol/change-control-v1.md, section 7, moment 1): the human research lead's approval text with its hash, the locked values, and what the START does not do. |
+- file: experiments/E07-cross-layer-continuity/workflow-tests/test_workflows.py
+  kind: replace_exact_multi
+  what: 'the test of the controlled-instance file of the workflow tests: it asserted the DRAFT (every condition NOT_VERIFIED) and now asserts the status written at the START (VERIFIED by rounds 2 and 3,
+    with the run id of the round that holds each condition)'
+  edits:
+  - before: '    def test_the_controlled_instance_draft_lists_the_four_conditions_not_verified(self):'
+    after_template: '    def test_the_controlled_instance_status_lists_the_four_conditions_verified_by_the_dry_run(self):'
+  - before: "            self.assertNotEqual(entry['status'], 'CONTROLLED', cid)\n            self.assertEqual(entry['github_actions_verification']['status'], 'NOT_VERIFIED', cid)\n            self.assertIs(entry['reverification_required'],\
+      \ True, cid)\n            self.assertEqual(entry['github_actions_verification']['environment_type'], 'SELF_HOSTED', cid)\n            self.assertIsNone(entry['github_actions_verification']['run_id'],\
+      \ cid)"
+    after_template: "            self.assertEqual(entry['status'], 'CONTROLLED', cid)\n            self.assertEqual(entry['github_actions_verification']['status'], 'VERIFIED', cid)\n            self.assertIs(entry['reverification_required'],\
+      \ False, cid)\n            self.assertEqual(entry['github_actions_verification']['environment_type'], 'SELF_HOSTED', cid)\n            self.assertEqual(entry['github_actions_verification']['run_id'],\
+      \ {'E07-CS005-SUT01-API-WEB': 44564694778, 'E07-CS005-SUT04-API-WEB': 44567888786, 'E07-CS006-SUT01-WEB-API': 44564694778, 'E07-CS006-SUT04-WEB-API': 44564694778}[cid], cid)"
+- file: experiments/E07-cross-layer-continuity/workflow-tests/test_gates.py
+  kind: replace_exact_multi
+  what: the as-is gate test of the E07 workflows, adapted as the E04 one was at its START (after the START only the checks about the dispatch authorization may fail)
+  edits:
+  - before: |-
+      The "as-is"
+      cases run against the files of this repository as they are and must fail closed, because E07 is NOT_STARTED: it has no START, no locked
+      configuration, no dispatch authorization, no verified controlled instance, no FROZEN scenario record and no frozen prompt.
+    after_template: |-
+      The "as-is"
+      cases run against the files of this repository as they are and must fail closed: since the campaign START ({START_DATE}) the START record, the locked
+      configuration, the verified controlled instance, the FROZEN scenario records and the frozen prompt are present, and no dispatch authorization exists.
+  - before: 'REAL_PROMPT = ''ORCHESTRATOR-E07-cross-layer-continuity-v1''  # the working copy of the dispatch prompt (frozen at the campaign START)'
+    after_template: 'REAL_PROMPT = ''ORCHESTRATOR-E07-cross-layer-continuity-v1''  # the frozen dispatch prompt of the campaign START ({START_DATE})'
+  - before: "        \"\"\"The files of this repository as they are now (copied where present) must not pass the gate: E07 is NOT_STARTED, so the status check\n        of G-1 fails, and so do the checks\
+      \ about the START record, the locked configuration, the dispatch authorization, the controlled-instance\n        status (every condition NOT_VERIFIED), the scenario records (DRAFT) and the frozen\
+      \ prompt. Once the campaign START and the freeze of the\n        scenario records have written those records, this test is adapted as the E04 one was (the checks that may still fail are named).\"\"\
+      \""
+    after_template: "        \"\"\"The files of this repository as they are now (copied where present) must not pass the gate. Since the campaign START the START\n        record, the locked configuration,\
+      \ the controlled-instance status, the FROZEN scenario records and the frozen prompt are present, so the only\n        checks that may fail are those about the dispatch authorization of the assigned\
+      \ SUT, which the human research lead issues separately (Section 3.7).\"\"\""
+  - before: '        inputs[''GATE_CAMPAIGN_START_AUTHORIZATION_ID''] = ''E07-START-AUTH-01''  # the proposed START authorization id'
+    after_template: '        inputs[''GATE_CAMPAIGN_START_AUTHORIZATION_ID''] = ''E07-START-AUTH-01''  # the real START authorization id'
+  - before: "        self.assertTrue(any('E07 campaign status IN_PROGRESS' in l for l in fails), out)\n        self.assertTrue(any('exactly one dispatch authorization record of the assigned SUT' in l for\
+      \ l in fails), out)\n"
+    after_template: "        self.assertTrue(any('exactly one dispatch authorization record of the assigned SUT' in l for l in fails), out)\n        self.assertTrue(all('dispatch authorization' in l for\
+      \ l in fails), [l for l in fails if 'dispatch authorization' not in l])\n"
+does_not:
+- issue any dispatch authorization (E07-DISPATCH-SUT01-AUTH-01, E07-DISPATCH-SUT04-AUTH-01 are names, not issued)
+- dispatch anything or run any workflow
+- export or push anything
+- edit any workflow, executor file, conditions file, scenario record, or protocol document other than the change-log row
+- edit the agent-instructions file or the dashboard (their update needs the human research lead's yes)
+dispatch_authorization_facts_for_later:
+  SUT-01:
+    authorization_id: E07-DISPATCH-SUT01-AUTH-01
+    record_path: manifests/e07-dispatch-authorization-sut01-v1.yaml
+    conditions_in_dispatch_order:
+    - E07-CS005-SUT01-API-WEB
+    - E07-CS006-SUT01-WEB-API
+    n_executions: 50
+    attempt: 1
+    executions_in_all: 100
+    campaign_start_authorization_id: E07-START-AUTH-01
+    frozen_inputs:
+      executor_implementation_sha256: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
+      executor_prompt_version: ORCHESTRATOR-E07-cross-layer-continuity-v1
+      executor_prompt_sha256: 60c0cc08e3b8fc2b7aa2b8d8d6e45f5d6eafaabebd55d69e5336de1dd6201895
+    modeled_on: manifests/e04-dispatch-authorization-sut02-v1.yaml; the fields the gate G-3 reads are in the synthetic record of the rehearsal
+  SUT-04:
+    authorization_id: E07-DISPATCH-SUT04-AUTH-01
+    record_path: manifests/e07-dispatch-authorization-sut04-v1.yaml
+    conditions_in_dispatch_order:
+    - E07-CS005-SUT04-API-WEB
+    - E07-CS006-SUT04-WEB-API
+    n_executions: 50
+    attempt: 1
+    executions_in_all: 100
+    campaign_start_authorization_id: E07-START-AUTH-01
+    frozen_inputs:
+      executor_implementation_sha256: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
+      executor_prompt_version: ORCHESTRATOR-E07-cross-layer-continuity-v1
+      executor_prompt_sha256: 60c0cc08e3b8fc2b7aa2b8d8d6e45f5d6eafaabebd55d69e5336de1dd6201895
+    modeled_on: manifests/e04-dispatch-authorization-sut02-v1.yaml; the fields the gate G-3 reads are in the synthetic record of the rehearsal
+analysis_pins:
+  campaign_configuration_sha256: section_inserted_sha256 of this package
+  conditions_file_sha256: 0baf2497948562f35c5236df460cf497497b571ec4024ef7a27ecc13ff5f2151
+  start_commit: the commit that applies the START
+  script: 'analysis/e07-continuity-analysis/compute-continuity-e07.js (on main since commit cd2056d4): pins filled at the campaign freeze'
+questions_for_the_human_research_lead:
+- id: Q1
+  topic: the START authorization id
+  text_says: E07-START-AUTH-01, the id of the human research lead's approval of the START
+  recommendation: adopt
+  note: the id is assigned by the ORCHESTRATOR to the approval, as for the earlier campaigns; the START row of protocol/CHANGELOG.md and the START record carry it
+- id: Q2
+  topic: the attribution of a runner cancelled or lost by the workflow, at import
+  text_says: the ORCHESTRATOR records such an execution at import as TOOLING of that execution; the executor does not implement it
+  recommendation: adopt (the E04 proposal, carried over)
+  note: IMPLEMENTATION-NOTES item 11
+- id: Q3
+  topic: the attribution rules as implemented by the executor
+  recommendation: confirm all four
+  text_says:
+  - a transport failure of an HTTP call (no answer) is a recorded failure of the block, attributed SUT, as in E04
+  - an exception of the browser or of the executor is RUNNER_ERROR, attributed TOOLING
+  - a bundle that cannot be written is RUNNER_ERROR, TOOLING, cause BUNDLE_NOT_WRITTEN (STUB_NO_BUNDLE of E04 is not carried; five categories are the whole set)
+  - the sid claim of the SUT-01 key confirms the session binding (both layers hold the same login token); rounds 1 to 3 showed the sid equal on both layers in every SUT-01 execution
+  note: IMPLEMENTATION-NOTES items 5 to 7; the transport-failure rule treats a read with no answer as NOT_VERIFIED (SUT), where the wording "the observation completed" would also admit RUNNER_ERROR
+- id: Q5
+  topic: platform and modality of the run manifests of a cross-layer record
+  text_says: both follow the source layer (IMPLEMENTATION-NOTES item 8); the schema leaves the cross-layer convention open
+  recommendation: adopt, and fix at the START
+  note: the convention is not written in the configuration text; the executor README states it
+- id: Q6
+  topic: dispatch order and concurrency
+  text_says: 'SUT-01: E07-CS005-SUT01-API-WEB then E07-CS006-SUT01-WEB-API; SUT-04: E07-CS005-SUT04-API-WEB then E07-CS006-SUT04-WEB-API; one condition at a time per SUT, a dispatch only after the previous
+    run of its authorization has concluded and been imported; the two SUT chains independent and concurrent'
+  recommendation: adopt
+- id: Q7
+  topic: the job timeout and the per-execution watchdog
+  recommendation: keep 60 minutes and 600 seconds
+  data: 'per execution, in the DRY_RUN executions read: 0.916 s to 3.562 s over rounds 2 and 3 (12 executions, read from the artifacts) and 0.961 s to 2.864 s in round 1 (record). Per job (gh api, runs
+    44529314764, 44564694778 and 44567888786): the seven jobs of a condition that finished took 72, 79, 257, 259, 288, 315, 490 and 681 s (the failed job of round 2, 84 s, stopped in its Maven build); the
+    step that installs the executor venv and Chromium took 26 s to 484 s (a 19-fold spread between jobs of the same workflow; 417 s in the round 2 job of SUT-01 API to WEB and 484 s in the round 3 job of
+    SUT-04 API to WEB), the Maven install 18 to 70 s and build 86 to 122 s, the SUT start 11 to 34 s, and the executor step for three executions 8 to 13 s. A measured job repeats that set-up and then runs
+    50 sequential executions: at the worst per-execution time seen (3.6 s) that is about 180 s, so the slowest job seen (681 s) extended to 50 executions is about 850 s, about 14 minutes, and the ceiling
+    of 60 minutes is about four times that. The bound is empirical: the install step depends on the network and its spread is large; a DRY_RUN of three executions does not measure the per-execution time
+    over 50 sequential executions on one instance (E04 and E05 ran 50 per condition under the same ceiling); the watchdog bounds a stuck execution at 600 s'
+  note: the 60-minute ceiling is inherited from E04 and E05 and is hashed inside the locked measured workflow (gate G-9); lowering it needs a workflow change and a new hash; the watchdog (common.WATCHDOG_S)
+    is inside the executor hash
+- id: Q8
+  topic: the controlled-instance basis
+  recommendation: accept rounds 2 and 3 as the basis; round 1 is historical
+  text_says: the four conditions are VERIFIED by the DRY_RUN rounds 2 and 3, both under the locked implementation hash, three executions each (E04 used one round); the failed job of round 2 is stated in
+    the text
+  finding: 'round 2 (run 44564694778, public main 4992205) holds three conditions; its job E07-CS005-SUT04-API-WEB failed in the Maven build step before the executor ran (parent POM not resolved from Maven
+    Central; no execution; cause not established beyond the job log, read as a toolchain or network item of the hosted runner; the same step passed in rounds 1 and 3), so round 3 (run 44567888786, limited
+    to that condition) repeated it: 3 of 3 VERIFIED with the check-out compared. Round 1 ran the previous implementation d1c48df5 and is not a basis. The controlled-instance status VERIFIED is the status
+    of the instance; E07-CS006-SUT01-WEB-API recorded NOT_VERIFIED in every DRY_RUN execution of rounds 1 and 2 (a continuity observation, decision D-E07-11: a measured 0 of 50 is expected for that cell)
+    and the status file and the text say so'
+- id: Q9
+  topic: stale statements of the E07 README outside the locked section
+  recommendation: leave as in the E04 START (not edited)
+  finding: the README still carries "Future ... (candidate - not frozen)" headings and the sentence "form TBD before freeze"; the E02 START corrected twelve such statements, the E04 START none; the Current
+    status section and one word of the scope note are updated by this START
+  note: correcting them would change the E07 README beyond the START edit set
+- id: Q10
+  topic: the working dispatch prompt before it is frozen
+  recommendation: accept the correction of commit 88e70361 (already on main and public since export v71) and leave the status wording
+  finding: the working prompt carried a stray placeholder @@E07@@ where it names the E04 prompt it was derived from (corrected on main in commit 88e70361, sha256 0d893ae5... to 60c0cc08..., published by
+    export v71); its header describes the pre-START state (NOT_STARTED, the scenario records DRAFT, WORKING / NOT DISPATCHABLE) and the frozen copy repeats it byte for byte, as the frozen E04 prompt does
+- id: Q11
+  topic: the admin web session in both SUT-04 conditions
+  text_says: both SUT-04 conditions log in to the admin web app in the reset block (IMPLEMENTATION-NOTES item 10); rounds 1 to 3 ran both that way
+  recommendation: keep
+questions_already_resolved:
+- id: Q4
+  topic: the check-out date on the SUT-04 admin web row (E07-CS005-SUT04-API-WEB)
+  status: RESOLVED, not asked again
+  resolution: 'decision D-E07-15 (manifests/campaign-execution-decisions-v15.yaml, round 12, the human research lead chose option B): the executor compares the check-out date on the admin web row (commit
+    bedca4fb; implementation hash 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59); verified on GitHub Actions in round 3 (run 44567888786): 3 of 3 VERIFIED with the five declared keys
+    compared and matched, identity.not_compared empty'
+facts_for_the_dialog:
+- the executor implementation hash 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59 ran in rounds 2 and 3; round 1 ran d1c48df5ced86bf0b972c555e3d060d3065f2e8ccebb8a4f49cd0cce01a89f00 (the
+  previous implementation)
+- E07-CS006-SUT01-WEB-API recorded NOT_VERIFIED 3 of 3 in rounds 1 and 2 (SUT-01 holds the session cart on the server and the web client state is not carried to it); it is a COMPARABLE cell by decision
+  D-E07-11, so the measured proportion is expected to be 0 of 50, a recorded observation of the continuity variable and not an error
+- the failed job of round 2 (E07-CS005-SUT04-API-WEB, Maven build step, no execution) is recorded as such in manifests/e07-environment-verification-rounds-v1.yaml and repeated by round 3
+- the START authorizes no dispatch, no dispatch authorization and no export
+discrepancies_found:
+- id: F1
+  where: the START text draft
+  finding: it did not contain the phrase "continuity success proportion", which the configuration gate requires (it used "continuity proportion")
+  resolution: the phrase is used for the primary variable in four sentences of the candidate text (the headings keep their wording); no workflow file is changed
+- id: F2
+  where: prompts/working/ORCHESTRATOR-E07-cross-layer-continuity-v1.md
+  finding: a stray placeholder @@E07@@ in three places of line 3, where the prompt names the E04 prompt it was derived from
+  resolution: replaced by E04 on main in commit 88e70361 (working copy sha256 0d893ae5... to 60c0cc08...), before any hash of this package; the copy published in export v70 had the placeholder, the copy
+    published in export v71 is the corrected one; the frozen copy is the corrected one
+- id: F3
+  where: the check-out date on the SUT-04 admin web row
+  finding: the row displays the date and decision D-E07-9 names it as a key, while the first implementation did not compare it
+  resolution: RESOLVED by decision D-E07-15 (commit bedca4fb, implementation hash 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59) and verified in round 3; the candidate text states the
+    comparison on both layers (see questions_already_resolved, Q4)
+- id: F4
+  where: the runner image
+  finding: the runner image version differs between jobs of rounds 2 and 3 (ubuntu24 20261111.127.1 and ubuntu24 20261111.370.1 and ubuntu24 20261116.133.1)
+  resolution: recorded in the text as drift, never a gate (E04 and E05 treat it the same way)
+- id: F5
+  where: the START text draft
+  finding: it called the START id "proposed" and several attribution items "to be confirmed at the START" or "proposal"
+  resolution: reworded so that the human research lead's approval of the text is the confirmation; no value changed
+- id: F6
+  where: the E07 README
+  finding: the scope note still said the scenario records are "(DRAFT, not frozen)" after the freeze of 2026-11-19
+  resolution: one word edit in the START edit set
+- id: F7
+  where: the analysis script analysis/e07-continuity-analysis/compute-continuity-e07.js (on main since commit cd2056d4)
+  finding: its pins are null until the freeze; CONFIG_SHA256 is the sha256 of the README from its Campaign configuration heading to the end of the file, which is section_inserted_sha256 of this package;
+    START_COMMIT is the commit of the START
+  resolution: nothing to change now; the values are listed under analysis_pins
+- id: F8
+  where: experiments/E07-cross-layer-continuity/executor/IMPLEMENTATION-NOTES.md, section 3, item 3
+  finding: it says that DRY_RUN round 2 verifies the check-out change on GitHub Actions before the START; the round-2 job of that condition failed in its Maven build before the executor ran, and the verification
+    was completed by round 3
+  resolution: not edited (the file belongs to the locked executor directory and is outside the START edit set; the rounds record states the facts)
+what_the_start_question_must_show:
+- the START authorization id E07-START-AUTH-01
+- configuration_text_sha256 2198bf71a747691fbc4f6639955cf6110edad32ac2f09a21a56d48b19a00bf12
+- the executor implementation hash 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59
+- the conditions file sha256 0baf2497948562f35c5236df460cf497497b571ec4024ef7a27ecc13ff5f2151
+- the measured workflow sha256 b4888425c06dd735eab87250a3dbbf9ba7bb4ef709c1fbdc7384a6ba932ded89
+- the frozen prompt id ORCHESTRATOR-E07-cross-layer-continuity-v1 and sha256 60c0cc08e3b8fc2b7aa2b8d8d6e45f5d6eafaabebd55d69e5336de1dd6201895
+- that the START authorizes no dispatch, no dispatch authorization and no export
+rehearsal:
+  date: '2026-11-19'
+  method: apply_start_e07.py --rehearsal on a scratch checkout (a detached worktree at the base commit, with the package committed there), then a real-mode run with a synthetic answer text on a scratch
+    clone on a branch named main, with the package committed there; both scratch copies were discarded; nothing of them is in the repository
+  checkout_base: 89b6397de9551dbf120d612b08d2a37c5f4ae6c0
+  start_applied_in_scratch: true
+  files_written_in_scratch:
+  - experiments/E07-cross-layer-continuity/README.md
+  - protocol/CHANGELOG.md
+  - manifests/study-manifest.yaml
+  - experiments/README.md
+  - experiments/E07-cross-layer-continuity/controlled-instance-status.yaml
+  - prompts/frozen/ORCHESTRATOR-E07-cross-layer-continuity-v1.md
+  - manifests/e07-campaign-start-v1.yaml
+  - manifests/README.md
+  - experiments/E07-cross-layer-continuity/workflow-tests/test_gates.py
+  - experiments/E07-cross-layer-continuity/workflow-tests/test_workflows.py
+  gate_step_without_a_dispatch_authorization:
+    per_condition:
+      E07-CS005-SUT01-API-WEB:
+        exit: 1
+        pass: 43
+        fail: 9
+        result: OK
+      E07-CS005-SUT04-API-WEB:
+        exit: 1
+        pass: 43
+        fail: 9
+        result: OK
+      E07-CS006-SUT01-WEB-API:
+        exit: 1
+        pass: 43
+        fail: 9
+        result: OK
+      E07-CS006-SUT04-WEB-API:
+        exit: 1
+        pass: 43
+        fail: 9
+        result: OK
+    reading: every condition refused; the 9 failing checks of each are the checks about the dispatch authorization of the assigned SUT; the 43 other checks pass
+  gate_step_with_a_synthetic_dispatch_authorization_in_a_scratch_copy_only:
+    per_condition:
+      E07-CS005-SUT01-API-WEB:
+        exit: 0
+        pass: 52
+        fail: 0
+        result: OK
+      E07-CS005-SUT04-API-WEB:
+        exit: 0
+        pass: 52
+        fail: 0
+        result: OK
+      E07-CS006-SUT01-WEB-API:
+        exit: 0
+        pass: 52
+        fail: 0
+        result: OK
+      E07-CS006-SUT04-WEB-API:
+        exit: 0
+        pass: 52
+        fail: 0
+        result: OK
+    reading: every one of the 52 checks passes for each of the four conditions (exit 0, ALL GATES PASSED)
+  tests_after_the_start_edit_set:
+    'workflow_tests (test_gates and test_workflows; 1 skipped: the lint test)': 65
+    executor: 78
+    analysis (node --test):
+      e04 tsrr: 6
+      h3 core: 15
+      e07 continuity: 7
+  refusals_tested:
+  - 'real mode off main is refused (AssertionError: not on main)'
+  - 'a second run on the applied tree is refused (AssertionError: the tracked tree is dirty), and after a commit of the START it is refused (AssertionError: E07 is not NOT_STARTED)'
+  - 'real mode with an answer text that lacks the START id and the lock values is refused (AssertionError: the answer text does not show: E07-START-AUTH-01)'
+  - 'real mode with an answer text that contains a No is refused (AssertionError: the answer contains a No)'
+  - 'a rehearsal answer must start with REHEARSAL (AssertionError: a rehearsal answer must start with REHEARSAL)'
+  real_mode_with_a_complete_synthetic_answer: applied on the scratch clone; 52 of 52 checks of the gate step with the synthetic authorization; every check of the run PASS (11 checks listed); START record
+    written with the answer verbatim and its sha256
+  defects_found_by_the_rehearsal_and_corrected_in_the_package: []
+  carried_over_from_the_first_build_of_the_package:
+  - the study-manifest status line is the same text for six campaigns; the edit includes the id line of E07 so that it is unique
+  - the workflow test of the controlled-instance file asserted the DRAFT; the edit set updates it to assert the status written at the START (now with the run id of the round that holds each condition)
