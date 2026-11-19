@@ -1,21 +1,25 @@
-# DRAFT - NOT FROZEN - NOT AN INPUT TO ANY CAMPAIGN - AUTHORIZES NOTHING
-# Proposed repository path when promoted: experiments/scenario-mappings/CS-006.yaml
+# STATUS: FROZEN 2026-11-19, approved by gilbertosanchez (authorization id E07-CS006-FREEZE-AUTH-01, assigned by the ORCHESTRATOR to the approval recorded in
+# manifests/cs-006-freeze-v1.yaml). Its design points DP-1 to DP-9 were decided by the human research lead (manifests/campaign-execution-decisions-v10.yaml to -v14.yaml). A frozen mapping
+# record is never edited (protocol/equivalent-scenario-mapping-v1.md, section 6); a change is a new version file, CS-006-v2.yaml, with its own mapping-record row of protocol/CHANGELOG.md.
+# Freeze history: created as a DRAFT on 2026-11-18; at the freeze only the status fields, this block, the header lines that described the record as a draft, the comparability of the entry decided on 2026-11-19 (D-E07-13), and the wording of `notes`
+# (recommended or draft to decided or record) changed. It is not an input to any campaign configuration, workflow, or run until the campaign configuration of E07 names it.
+# Repository path: experiments/scenario-mappings/CS-006.yaml
 # Prepared 2026-11-18 for the E07-cross-layer-continuity campaign (web and API layers only); the second direction proposed in
 #   experiments/E07-cross-layer-continuity/design-brief-draft.md, section 5, and decided as a separate record by D-E07-4
 #   (manifests/campaign-execution-decisions-v11.yaml, DP-3).
 # Structure: protocol/equivalent-scenario-mapping-v1.md, sections 3, 4 and 7.
 # Order (section 6): the canonical intent below is ecosystem-neutral and is written first; the six mapping entries follow.
 # Scope of this record: direction WEB -> API only (establishment through the WEB layer, verification through the API layer). The
-#   direction API -> WEB is CS-005 (DRAFT). CS-006 is the identifier reserved for this record: CS-001 FROZEN, CS-002 EXCLUDED_FROM_CAMPAIGN
-#   and preserved, CS-003 FROZEN (E02), CS-004 FROZEN, CS-005 DRAFT (E07, API -> WEB), CS-007 (E09).
+#   direction API -> WEB is CS-005 (frozen together with this record on 2026-11-19). CS-006 is the identifier reserved for this record: CS-001 FROZEN, CS-002 EXCLUDED_FROM_CAMPAIGN
+#   and preserved, CS-003 FROZEN (E02), CS-004 FROZEN, CS-005 FROZEN 2026-11-19 (E07, API -> WEB), CS-007 (E09).
 # Evidence: E01 rows are read from the SUBMITTED audit branches audit/e01-sut0N-* (the audits/ directories on the main branch are
 #   templates, as stated in the header of experiments/scenario-mappings/CS-001.yaml, PROTO-U07). The E01 adjudicated matrix was
 #   consulted on 2026-11-18, read-only, under decision D-E07-2 (manifests/campaign-execution-decisions-v10.yaml): the Web and API
 #   confirmed scores equal the auditors' values (design-brief-draft.md, section 18).
 # Decisions applied (manifests/campaign-execution-decisions-v10.yaml and -v11.yaml): DP-1 CLEAN_SESSION, DP-2 AUTHENTICATED_STANDARD,
 #   DP-3 one record per direction, DP-4 strict (the actor establishes the unit; SUT-03 NOT_COMPARABLE), DP-7 option (c) for SUT-05
-#   (D-E07-3), and the open cells of D-E07-6. Values marked HUMAN DECISION are null in this DRAFT; the comment beside each gives the
-#   recommendation.
+#   (D-E07-3), and the two open cells of D-E07-6, decided COMPARABLE on 2026-11-19 (D-E07-11 and D-E07-12). The values that were marked HUMAN DECISION are decided at the freeze
+#   (manifests/cs-006-freeze-v1.yaml).
 
 version: 1
 canonical_scenario_id: CS-006
@@ -41,7 +45,7 @@ observable_oracle_class_text: >
   keys and declared attributes recorded from the WEB establishment are observed unchanged on the API layer. The check passes only
   when every declared key and attribute is observed and matches.
 reset_requirement: DATA_RESET  # Restored between attempts by the campaign harness, outside the measured scenario (as CS-003 DP-2 and CS-005).
-applicable_surfaces: [WEB, API]  # ANDROID and IOS are outside the web/API scope of this draft (see notes, DP-9).
+applicable_surfaces: [WEB, API]  # ANDROID and IOS are outside the web/API scope of this record (see notes, DP-9).
 allowed_domain_mapping: >
   The business object may vary (cart, basket, booking). Vocabulary, endpoint names, selectors, identifier formats and the number
   of steps may vary. The establishment layer (WEB) and the verification layer (API) are fixed for this record. May NOT vary:
@@ -51,12 +55,12 @@ allowed_domain_mapping: >
   (4) the clean starting state must be checked before establishment and restored between attempts. Scenario-specific constraint:
   the identity keys and the declared attributes of each ecosystem are fixed in the campaign configuration before the first attempt.
 campaigns_using: [E07-cross-layer-continuity]
-mapping_status: DRAFT
-frozen_at: null
-approved_by: null
+mapping_status: FROZEN
+frozen_at: "2026-11-19"
+approved_by: gilbertosanchez
 mappings:
   - sut_id: SUT-01
-    comparability: null  # OPEN CELL (D-E07-6, 2026-11-18): measured in E07 and decided afterwards, without touching E01. If the E07 execution verification shows that the user-interface add-to-cart does not reach the server cart, the entry is recorded NOT_COMPARABLE with reason OTHER when this record is frozen.
+    comparability: COMPARABLE  # DECIDED 2026-11-19 (D-E07-11, manifests/campaign-execution-decisions-v13.yaml): COMPARABLE, to be measured. The six conditions of protocol/equivalent-scenario-mapping-v1.md, section 5, rest on the E01 rows listed in evidence_ids; whether the state crosses from the web layer to the API layer is the dependent variable of E07, not a comparability condition, and no result of a DRY_RUN round is an input to this entry.
     surfaces_used: [WEB, API]
     domain_object: "cart (pizza order items)"
     precondition_realization: "Clean session of the declared controlled instance; the session cart is checked empty on the API layer before establishment and the web client's persisted cart is empty. Session identity: the JWT claim sid of the login token (SUT01-EV-0002, SUT01-EV-0007)."
@@ -66,7 +70,7 @@ mappings:
       - "[WEB, precondition] inject the token and the username into client storage before the first authenticated load (documented 'Web atomic entry', SUT01-EV-0001, SUT01-EV-0002)."
       - "[WEB, establishment] on the catalog, click the add-to-cart control of one catalog line, selected by its data-testid (SUT01-EV-0003); record the line shown in the UI."
       - "[API, verification] GET /api/session with the same token reads the server cart; read-only (SUT01-EV-0006). The check passes only if the line of the establishment is present with the declared keys and attributes."
-    oracle_realization: "On the API layer: GET /api/session (SUT01-EV-0006) shows the line established through the UI. OPEN: no E01 row states that the user-interface add-to-cart writes the server cart. The audit's cross-layer text is an architectural inference (audit section 4, Cross-layer State Continuity), and the E03 realization records a client-persisted web cart (experiments/E03-resetability/executor/README.md, section 4.2: the cart is persisted in the client and the README of the SUT states a fallback to the client-side cart)."
+    oracle_realization: "On the API layer: GET /api/session (SUT01-EV-0006) shows the line established through the UI. No E01 row states whether the user-interface add-to-cart writes the server cart: that is what E07 measures (D-E07-11). The audit's cross-layer text is an architectural inference (audit section 4, Cross-layer State Continuity), and the E03 realization records a client-persisted web cart (experiments/E03-resetability/executor/README.md, section 4.2: the cart is persisted in the client and the README of the SUT states a fallback to the client-side cart)."
     reset_realization: "POST /api/session/reset clears the caller's session cart and resets the profile to its empty default between attempts, outside the scenario (SUT01-EV-0006; as the SUT-01 entry of CS-001.yaml); the web client's persisted cart is cleared by the harness as in the E03 realization. The reset is partial: it does not clear order history (SUT01-EV-0006 notes)."
     environment_type: "PENDING (campaign configuration). For the same ecosystem E03 used SELF_HOSTED instances on GitHub Actions (experiments/E03-resetability/controlled-instance-status.yaml). Not a freeze prerequisite."
     not_comparable_reason: null
@@ -115,7 +119,7 @@ mappings:
       audit's own cross-layer description says the consistency holds only "within the fixed account mechanism" (audit/e01-sut03-browserstack,
       audits/SUT-03-browserstack/audit.md, section 4, Cross-layer State Continuity).
   - sut_id: SUT-04
-    comparability: null  # HUMAN DECISION at the freeze of this record. Recommendation: COMPARABLE. The web proxy routes and the read-back through the booking API are SOURCE_VERIFIED (SUT04-EV-0028, SUT04-EV-0006); the reservation form is an E01 row for its inputs only (SUT04-EV-0018), and the form flow is cited from the E03 realization (not an E01 row).
+    comparability: COMPARABLE  # DECIDED 2026-11-19 (D-E07-13, manifests/campaign-execution-decisions-v14.yaml): SUT04-EV-0028 (a record created through the Web UI is visible through a direct API call), SUT04-EV-0006 and SUT04-EV-0018 support the conditions; the reservation form flow is cited from the E03 realization, not as an E01 row.
     surfaces_used: [WEB, API]
     domain_object: "booking (room reservation)"
     precondition_realization: "Clean session of the declared controlled instance; room 1 holds no booking with the run's guest names; the actor authenticates through the admin login form (SUT04-EV-0002) with the seeded account (SUT04-EV-0003)."
@@ -171,23 +175,22 @@ mappings:
     evidence_ids: [SUT06-EV-0001, SUT06-EV-0002, SUT06-EV-0003, SUT06-EV-0004]
     justification: "No web or API surface exists to realize either layer of the scenario."
 notes: >
-  DRAFT. This record is the WEB -> API direction of the E07 pair; CS-005.yaml is the API -> WEB direction. It authorizes nothing.
-  Design points and their state (manifests/campaign-execution-decisions-v10.yaml and -v11.yaml):
+  FROZEN 2026-11-19 (E07-CS006-FREEZE-AUTH-01). This record is the WEB -> API direction of the E07 pair; CS-005.yaml is the API -> WEB direction. Design points DP-1 to DP-9, each decided by the human research lead before the freeze as recorded in
+  manifests/campaign-execution-decisions-v10.yaml to -v14.yaml and manifests/cs-006-freeze-v1.yaml (a frozen record is never edited; a change after the freeze is a new version file).
   DP-1 CLEAN_SESSION, DP-2 AUTHENTICATED_STANDARD, DP-3 one record per direction, DP-4 strict: DECIDED 2026-11-18.
-  DP-5 identity keys and oracle. Not decided here: each ecosystem declares, before the first attempt, the identity keys (for example
-    the session sid, the run-unique guest names and check-in date) and the attributes that the API check must match; VERIFIED
-    requires every declared key and attribute to match. The oracle stays OTHER, with the free text above. HUMAN DECISION.
-  DP-6 reset. Recommendation: DATA_RESET between attempts, outside the measured scenario and not counted, as CS-003 DP-2. The reset
-    realizations are those of CS-001.yaml. HUMAN DECISION.
+  DP-5 identity keys and oracle. DECIDED 2026-11-18 (D-E07-9): SUT-01 = the sid claim of the login token and the cart line (pizza_id p02, quantity 1); SUT-04 = the run-unique guest names and the check-in and check-out dates
+    of room 1; declared in the campaign configuration before the first attempt; a key that is not observable on the API layer is not used. VERIFIED requires every declared key and attribute to match. The oracle stays OTHER, with the free text above.
+  DP-6 reset. DECIDED 2026-11-18 (D-E07-8): DATA_RESET between attempts, outside the measured scenario and not counted, as CS-003 DP-2. The reset
+    realizations are those of the entries above (SUT-01: session clear through the API and a new browser context per execution; SUT-04: deletion through the booking API of the bookings that carry the condition's guest names).
   DP-7 evidence sufficiency for the establishment surface. SUT-05: decided NOT_COMPARABLE (D-E07-3). SUT-01 (the add-to-cart reaching
-    the server cart) is an open cell, measured in E07 and decided afterwards (D-E07-6). SUT-04 is not a gap in this direction (SUT04-EV-0028).
-  DP-8 continuity proportion. The denominator is not defined in the SAP. Recommendation: VERIFIED / all valid measured attempts as the
-    variable, with the conditional version reported descriptively; fixed in the campaign configuration before the first attempt. With DP-4
+    the server cart) was an open cell; it is decided COMPARABLE, to be measured (D-E07-11, 2026-11-19). SUT-04 is not a gap in this direction (SUT04-EV-0028).
+  DP-8 continuity proportion. The denominator is not defined in the SAP. DECIDED 2026-11-18 (D-E07-10): VERIFIED / all valid measured attempts is the
+    primary proportion, with the conditional version reported apart, both with a Wilson interval; fixed in the campaign configuration before the first attempt. With DP-4
     strict no CONFIRMATORY H4 continuity comparison is evaluable, so the proportions are descriptive with Wilson intervals (D-E07-5).
-  DP-9 scope. The E07 README lists API -> Android, API -> iOS and Web -> API. This draft covers WEB and API only, as the human research
+  DP-9 scope. The E07 README lists API -> Android, API -> iOS and Web -> API. This record covers WEB and API only, as the human research
     lead decided on 2026-11-05 for the minimum campaign set; a later mobile record needs the compatibility smoke and the mobile policy
     (protocol/mobile-runner-policy-v3.md). The scope note is added to the E07 README (decision D-E07-7).
-  Not decided here: the identity key list per ecosystem, the condition list, the sample size, the exclusion and attribution rules, and
-    the CONFIRMATORY list (empty under DP-4 strict). These belong to the E07 campaign configuration (campaign-configuration-draft.md).
+  Not decided here: the condition list, the sample size, the exclusion and attribution rules, and the CONFIRMATORY list (empty under DP-4 strict).
+    These belong to the campaign configuration of E07 (experiments/E07-cross-layer-continuity/README.md, "Campaign configuration", once the campaign starts).
   Lifecycle: a frozen mapping record is never edited; a change is a new version file and one mapping-record row in the change log
     (protocol/equivalent-scenario-mapping-v1.md, section 6).

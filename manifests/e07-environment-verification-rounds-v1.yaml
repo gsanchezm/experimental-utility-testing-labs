@@ -1,0 +1,27 @@
+# manifests/e07-environment-verification-rounds-v1.yaml -- record of the non-measured environment-verification DRY_RUN rounds of E07-cross-layer-continuity (operation OP-DRYRUN-E07).
+# ORCHESTRATOR record. The runs are DRY_RUN runs of .github/workflows/e07-environment-verification.yml, dispatched by the ORCHESTRATOR on the human research lead's yes to each exact line; their bundles were reviewed and never imported; they are never measured data and never enter raw-data/. E07 stays NOT_STARTED. Rounds are appended as new rounds of this file until a round is superseded by a new version file; a correction is a new version file.
+record_class: "E07_ENVIRONMENT_VERIFICATION_ROUNDS"
+record_id: "E07-ENVIRONMENT-VERIFICATION-ROUNDS-01"
+study_id: "EUS-2026-001"
+campaign_id: "E07-cross-layer-continuity"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-19"
+measured_experiment: false
+executes_anything: false
+authorizes: "nothing: not the START, not a dispatch authorization, not a measured dispatch, not an export, not a comparability decision (protocol/equivalent-scenario-mapping-v1.md, section 5: the comparability of a cell is decided from the canonical record and the E01 evidence, never from a campaign result)"
+rounds:
+- round: 1
+  run_id: 44529314764
+  run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44529314764
+  dispatched_utc: "2026-11-19T13:01:12Z"   # clock before the dispatch command 13:01:10Z, after it 13:01:12Z; run created 13:01:12Z
+  approval: "the human research lead's answer 'Si, despacha esta linea (Recomendada)' to a question dialog that showed the exact line (file DISPATCH-LINE-E07-R1.txt of the operator records, 1337 bytes, sha256 aaad6d939de645f0f133bdc58fec59e909a982c4044063ff9ea72546fceea225); the line was run once"
+  inputs: {target: all, executions: 3, executor_prompt_version: ORCHESTRATOR-E07-cross-layer-continuity-v1, executor_implementation_sha256: d1c48df5ced86bf0b972c555e3d060d3065f2e8ccebb8a4f49cd0cce01a89f00, dry_run: true}
+  head_sha: 8aab4dce013814c996c18be3e8f824f29f790610   # public main at the dispatch, export v70
+  executions_per_condition: 3
+  conclusion: success
+  finished_utc: "2026-11-19T13:07:07Z"   # updated_at of the run
+  jobs: "all 6 jobs concluded success (the gate, the plan and the 4 condition jobs)"
+  result: "12 executions recorded (DR0001 to DR0003 of each of the 4 conditions), all with the attribution label SUT and the last phase verification: E07-CS005-SUT01-API-WEB VERIFIED 3 of 3; E07-CS005-SUT04-API-WEB VERIFIED 3 of 3; E07-CS006-SUT04-WEB-API VERIFIED 3 of 3; E07-CS006-SUT01-WEB-API NOT_VERIFIED 3 of 3 (status FAILURE). In the NOT_VERIFIED executions every block before the verification held: the control of the p02 pizza was visible and confirmed in the web catalog, the persisted client cart held exactly that line, the sid of the session was the same on both layers, and the read of the server cart with the session token answered 200 with no line (cart_line.count established 1, observed 0). In the VERIFIED executions of SUT-04 the admin room page of the web layer listed one row with the guest names and the check-in date of the execution (API to WEB), and the booking listing of the API layer held the booking created through the reservation form (WEB to API). The check-out date is not compared on the SUT-04 admin web row (declared in identity.not_compared). Execution durations 0.96 to 2.86 s. No defect of the draft was found by this round."
+  scope_of_the_result: "ENVIRONMENT_VERIFICATION of the realizations on GitHub Actions; DRY_RUN executions are not EXECUTION_VERIFIED evidence under protocol/evidence-rules-v1.md and are not E01 evidence. They verify that each realization runs end to end; they decide no comparability (protocol/equivalent-scenario-mapping-v1.md, section 5) and no rate."
+  bundles: "the 4 artifacts were downloaded with gh run download into the operator scratch area and the 12 attempt records and run manifests were read; they were never imported into the repository, and no archive digest was compared with the digest that GitHub lists"
+  next: "the human research lead decides the two open cells of D-E07-6 (SUT-01 WEB to API and the SUT-04 admin booking listing) from the canonical record and the E01 evidence; a further round only on the human research lead's yes to its exact line; the START package of E07 is prepared after those decisions and the freeze of CS-005 and CS-006"

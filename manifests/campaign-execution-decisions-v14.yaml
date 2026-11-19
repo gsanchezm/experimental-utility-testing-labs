@@ -1,0 +1,33 @@
+# manifests/campaign-execution-decisions-v14.yaml -- decisions of 2026-11-19, round 11 (operation OP-FREEZE-08; CAMPAIGN-EXECUTION-DECISIONS-14): the comparability of the last two E07 conditions and the freeze of the canonical scenarios CS-005 and CS-006.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, and exports nothing; the freezes it approves are recorded by manifests/cs-005-freeze-v1.yaml and manifests/cs-006-freeze-v1.yaml. Immutable once committed; a correction is a new version file. Earlier rounds: -v4 to -v13 (unchanged).
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-14"
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+study_id: "EUS-2026-001"
+operation_id: "OP-FREEZE-08"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-19"
+recorded_at_utc: "2026-11-19T13:46:27Z"
+executes_anything: false
+protocol_change: false
+supersedes: null
+earlier_rounds: [manifests/campaign-execution-decisions-v4.yaml, manifests/campaign-execution-decisions-v5.yaml, manifests/campaign-execution-decisions-v6.yaml, manifests/campaign-execution-decisions-v7.yaml, manifests/campaign-execution-decisions-v8.yaml, manifests/campaign-execution-decisions-v9.yaml, manifests/campaign-execution-decisions-v10.yaml, manifests/campaign-execution-decisions-v11.yaml, manifests/campaign-execution-decisions-v12.yaml, manifests/campaign-execution-decisions-v13.yaml]
+evidence_basis: "experiments/scenario-mappings/CS-005.yaml and CS-006.yaml (DRAFT at canonical 2303f150); the E01 audit branches (the 28 evidence_id cited by each record, all resolved, none EXECUTION_VERIFIED or INFERRED); protocol/equivalent-scenario-mapping-v1.md, sections 5 and 6; manifests/campaign-execution-decisions-v13.yaml (the two open cells decided COMPARABLE)."
+human_decision:
+  given_by: the human research lead
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), the fifth of the E07 preparation"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_e07_round_11:
+    transcript_stamp: null
+    transcript_stamp_note: "the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_at_utc above is the system clock when this file was written, after the answer"
+    bytes: 1633
+    exact_text_sha256: 97b65c595337228cd3a200c3347af532871c04de811caa11a66597d2c375c31b
+    note: the answer of the question dialog, whole; the chosen option of each question is the decision
+    exact_text: "Your questions have been answered: \"E07, comparabilidad de las dos condiciones que faltan por decidir, desde el registro canónico y la evidencia E01 (no desde el DRY_RUN): (1) SUT-01 API a Web (CS-005): las seis condiciones del protocolo tienen filas E01 (SUT01-EV-0001, -0002, -0004, -0005, -0006, -0007, SOURCE_VERIFIED salvo -0001 que es DOCUMENTED); (2) SUT-04 Web a API (CS-006): SUT04-EV-0028 (un registro creado por la Web UI es visible por una llamada directa a la API), SUT04-EV-0018 (inputs del formulario de reserva), SUT04-EV-0006 (lectura por la API) y SUT04-EV-0002/-0003/-0008 (login admin), todo SOURCE_VERIFIED. Ambas figuran COMPARABLE como recomendación en los borradores. ¿Qué decides?\"=\"Las dos COMPARABLE (Recomendada)\", \"E07, congelamiento de los registros canónicos CS-005 (API a Web) y CS-006 (Web a API), DRAFT a FROZEN. Comprobación previa hecha: los 28 evidence_id citados por cada registro resuelven en las ramas de auditoría de E01 (CS-005: 24 SOURCE_VERIFIED y 4 DOCUMENTED; CS-006: 25 y 3; ninguno EXECUTION_VERIFIED ni INFERRED). El congelamiento cambia solo los campos de estado, la cabecera y las anotaciones DECIDED; no cambia entradas, comparabilidad, evidence_id ni pasos. Cada uno genera una fila de mapeo en protocol/CHANGELOG.md, un registro manifests/cs-00N-freeze-v1.yaml y los ids de autorización E07-CS005-FREEZE-AUTH-01 y E07-CS006-FREEZE-AUTH-01 (asignados por mí, como en CS-003). No inicia la campaña, no despacha ni exporta nada. ¿Los congelo, con las comparabilidades decididas arriba?\"=\"Sí, congela ambos (Recomendada)\". You can now continue with these answers in mind."
+decisions:
+  - id: D-E07-13
+    subject: "comparability of SUT-01 API to WEB (CS-005) and SUT-04 WEB to API (CS-006)"
+    decision: "Both COMPARABLE, decided from the canonical records and the E01 evidence (SUT-01: SUT01-EV-0001, -0002, -0004, -0005, -0006, -0007; SUT-04: SUT04-EV-0028, -0018, -0006, -0002, -0003, -0008). With D-E07-11 and D-E07-12 the four conditions of E07 (SUT-01 and SUT-04, both directions) have a COMPARABLE entry in CS-005 or CS-006."
+  - id: D-E07-14
+    subject: "freeze of CS-005 and CS-006 (DRAFT to FROZEN)"
+    decision: "Both records are frozen: authorization ids E07-CS005-FREEZE-AUTH-01 and E07-CS006-FREEZE-AUTH-01 (assigned by the ORCHESTRATOR to the approval, as for CS-003). The freeze changes only the status fields, the header block, the wording of the notes from recommended or draft to decided or record, and the comparability of the two entries decided here; no other entry, evidence_id or step changes. One mapping-record row of protocol/CHANGELOG.md and one record manifests/cs-00N-freeze-v1.yaml per scenario. The freeze starts no campaign, authorizes no dispatch and exports nothing."
+not_decided_in_this_round: "The campaign START (its configuration text, the frozen dispatch prompt and the START authorization id), the dispatch authorizations, the dispatches, the campaign freeze and every public export: each needs its own explicit human approval."

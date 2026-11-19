@@ -1,0 +1,55 @@
+# Mapping-record freeze record v1 -- CS-005 (EUS-2026-001, Experimental Utility of Software-Testing Laboratory Ecosystems)
+# The human research lead's decision of 2026-11-19 that froze the canonical scenario CS-005 (API -> WEB of the E07 layer pair; DRAFT -> FROZEN). ORCHESTRATOR record,
+# written once and never edited afterwards (a correction is a new version file). It starts, configures, dispatches, exports, and executes nothing; it changes no protocol document:
+# the freeze of a mapping record is recorded by one mapping-record row of protocol/CHANGELOG.md (protocol/change-control-v1.md, section 5; protocol/equivalent-scenario-mapping-v1.md, section 6).
+record_class: MAPPING_RECORD_FREEZE
+record_id: CS-005-FREEZE-01
+authorization_id: E07-CS005-FREEZE-AUTH-01  # assigned by the ORCHESTRATOR to the approval below, on the pattern of E02-CS003-FREEZE-AUTH-01; the human text carries no id
+study_id: EUS-2026-001
+operation_id: OP-FREEZE-09
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-19'  # America/Mexico_City
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+nature: "a mapping-record freeze: experiments/scenario-mappings/CS-005.yaml moves from DRAFT to FROZEN; no campaign status, protocol document, campaign configuration, workflow, result, or raw-data file changes"
+record_frozen:
+  path: experiments/scenario-mappings/CS-005.yaml
+  canonical_scenario_id: CS-005
+  version: 1
+  campaigns_using: [E07-cross-layer-continuity]
+  state_change: "mapping DRAFT -> FROZEN"
+  frozen_at: '2026-11-19'
+  approved_by: gilbertosanchez
+  sha256_of_the_draft: bf2e883ab39bafc9e560d26f5b363806a49814fd22b64134889d1f1945063513  # the committed DRAFT at canonical 2303f150
+  sha256_of_the_frozen_record: 3721efba476137a3b3893fae2a123c4bd72cb7c09d7ab0966d4aea869bda5069
+  changes_at_freeze: "the header status block and the header lines that described the record as a draft, the three status fields (mapping_status, frozen_at, approved_by), the comparability of one entry (decided on 2026-11-19, D-E07-13), and the wording of `notes` from recommended or draft to decided or record; no other mapping entry, evidence_id, or step changed"
+  change_log_row: "protocol/CHANGELOG.md, one mapping-record row of 2026-11-19"
+human_decision:
+  given_by: gilbertosanchez (human research lead)
+  decision_date: '2026-11-19'  # America/Mexico_City
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), recorded verbatim in manifests/campaign-execution-decisions-v14.yaml"
+  basis:
+    - id: round_11_answer
+      verbatim_in: manifests/campaign-execution-decisions-v14.yaml
+      exact_text_sha256: 97b65c595337228cd3a200c3347af532871c04de811caa11a66597d2c375c31b
+      decisions: [D-E07-13, D-E07-14]
+      effect: "the comparability of SUT-01 API to WEB and SUT-04 WEB to API decided COMPARABLE and the freeze of CS-005 and CS-006 approved, with the pre-freeze check that the dialog reported"
+design_point_decisions:
+  DP-1: {field: precondition_class, decision: CLEAN_SESSION, decision_id: D-E07-4}
+  DP-2: {field: actor_state, decision: AUTHENTICATED_STANDARD, decision_id: D-E07-4}
+  DP-3: {field: direction, decision: "one record per direction (CS-005 API to WEB, CS-006 WEB to API)", decision_id: D-E07-4}
+  DP-4: {field: established-state standard, decision: "strict: the unit is established by the actor through the programmatic or user interface of the ecosystem; SUT-03 NOT_COMPARABLE", decision_id: D-E07-1}
+  DP-5: {field: identity keys and oracle, decision: "SUT-01 sid claim and cart line (pizza_id p02, quantity 1); SUT-04 run-unique guest names and check-in and check-out dates of room 1", decision_id: D-E07-9}
+  DP-6: {field: reset, decision: DATA_RESET, decision_id: D-E07-8}
+  DP-7: {field: evidence sufficiency, decision: "SUT-05 NOT_COMPARABLE (D-E07-3); the SUT-04 admin booking listing COMPARABLE (D-E07-12); SUT-01 WEB to API COMPARABLE (D-E07-11)", decision_id: "D-E07-3, D-E07-11, D-E07-12"}
+  DP-8: {field: continuity proportion, decision: "VERIFIED / all valid measured attempts is the primary proportion; VERIFIED / attempts whose establishment succeeded is reported apart; Wilson intervals", decision_id: D-E07-10}
+  DP-9: {field: scope, decision: "web and API only; mobile pairs outside this record", decision_id: D-E07-7}
+pre_freeze_check:
+  by: ORCHESTRATOR
+  evidence_ids: "the 28 distinct evidence_id cited by the record each resolve in the evidence.csv of the audit branch of their own SUT (audit/e01-sut0N-*); 24 are SOURCE_VERIFIED and 4 DOCUMENTED; none is EXECUTION_VERIFIED or INFERRED"
+  comparability: "SUT-01 and SUT-04 COMPARABLE (SUT-04 decided in D-E07-12, SUT-01 in D-E07-13); SUT-02, SUT-03, SUT-05 and SUT-06 NOT_COMPARABLE (NO_APPLICABLE_SURFACE for SUT-02 and SUT-06; OTHER for SUT-03 under DP-4 strict, D-E07-1, and for SUT-05, an evidence gap, D-E07-3)"
+  nothing_inferred: "no vendor product feature is used as evidence about a demo ecosystem (rule 4 of the agent-instructions file); no result of a DRY_RUN round is an input to any comparability decision (protocol/equivalent-scenario-mapping-v1.md, section 5)"
+state_after_this_record:
+  e07: "campaign E07-cross-layer-continuity stays NOT_STARTED; the conditions E07-CS005-SUT01-API-WEB and E07-CS005-SUT04-API-WEB may name this record in a campaign configuration once the campaign starts; the pair record CS-006 is frozen by its own record; no campaign configuration, START, authorization, workflow dispatch, or export exists for it"
+  other_campaigns: "every campaign keeps its status"

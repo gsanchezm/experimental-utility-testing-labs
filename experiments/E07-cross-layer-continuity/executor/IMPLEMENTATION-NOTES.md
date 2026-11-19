@@ -54,9 +54,9 @@ point: `run-condition.sh`, which verifies the embedded digests and then runs `py
    On the WEB layer the pizza_id is the order line `order-item-<pizza_id>` of the Checkout view, the quantity is the integer at the start of the text of
    `order-item-details-<pizza_id>` (`{quantity}x • {size}`), and the sid is the claim of the token held by the web client (`omnipizza-auth`); on the API layer they are
    `cart_items` of GET /api/session and the claim of the token presented. SUT-04: the number of bookings with the run's names, the first name, the last name and the
-   check-in date on both layers; the check-out date on the API layer only. A key that the verification layer does not show is not used (D-E07-9) and is listed under
-   `identity.not_compared` with the reason: no text or record documents that the admin web row shows the check-out date (the E03 module reads the names and the check-in
-   date), so it is not compared in the API to WEB condition (open item 3). The bookingid is not a key.
+   check-in date and the check-out date on both layers (D-E07-15: DRY_RUN round 1 showed that the admin web row lists both dates, so the check-out date is observable on the WEB
+   layer and is compared there). A key that a verification layer does not show is not used (D-E07-9) and would be listed under `identity.not_compared` with the reason; no
+   key is listed there at present. The bookingid is not a key.
 9. **Run-unique values.** The first name of the SUT-04 guest is derived from the condition id (stable across the executions of the condition: the marker that the
    reset and the starting-state check use); the last name, the check-in date (2031-01-01 plus fewer than 3000 days; check-out one day later) and the email are derived
    from the run id, so they are unique per execution and attempt (letters only, 8 and 9 characters, as E04). The phone value is the E04 value.
@@ -81,7 +81,7 @@ point: `run-condition.sh`, which verifies the embedded digests and then runs `py
    references in the docstring of executor/sut01.py), read in a local clone, not from a CS record, an E01 row or an E03 or E04 text. They are unverified until the DRY_RUN rounds run them on GitHub Actions.
 2. **The open cell E07-CS006-SUT01-WEB-API (D-E07-6).** The source says the UI add writes only the persisted client store and makes no request, so the server cart is expected to lack the line and the condition is expected to record NOT_VERIFIED.
    The executor records the observation and adjusts nothing. Whether the cell stays COMPARABLE, becomes NOT_COMPARABLE, or is measured as it is, is the human research lead's decision after the DRY_RUN rounds.
-3. **The check-out date on the admin web row (E07-CS005-SUT04-API-WEB).** Not compared on the WEB layer (point 8). The DRY_RUN rows are kept as evidence (`sut04-web-admin-rows`); if the row shows the date, comparing it is a change of the configuration before the START.
+3. **The check-out date on the admin web row (E07-CS005-SUT04-API-WEB).** Resolved (D-E07-15, manifests/campaign-execution-decisions-v15.yaml): the row shows the date (DRY_RUN round 1, evidence `sut04-web-admin-rows`), the executor compares it on the WEB layer, and DRY_RUN round 2 verifies the change on GitHub Actions before the START.
 4. **The quantity locator of the Checkout view.** The locator comes from open item 1; if it is absent, the quantity is not observed and the execution is NOT_VERIFIED on that key.
 5. **The sid key is partly circular.** The web client holds the token that the executor injected, and the API verification presents the token of the login, so the key confirms that the session binding survived the layer (the web client's token still carries the sid of the establishment),
    not an independent derivation of the session. If a DRY_RUN shows the SUT rewriting the token on a page load, the key would differ and be recorded; whether the key stays in D-E07-9 is for the human research lead.

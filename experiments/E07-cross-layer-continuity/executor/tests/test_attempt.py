@@ -139,7 +139,7 @@ class FakeSut01Ui(FakeUi):
 
 
 class FakeSut04Ui(FakeUi):
-    """Flags: hide_rows (the admin room page lists no row), omit_checkin (the row text has no check-in date), submit_checkin_shift (the form
+    """Flags: hide_rows (the admin room page lists no row), omit_checkin and omit_checkout (the row text has no check-in or check-out date), submit_checkin_shift (the form
     is submitted with a check-in date one day later), no_confirmation, login_fails."""
 
     def admin_login(self):
@@ -167,7 +167,8 @@ class FakeSut04Ui(FakeUi):
         _, body, _ = self.call('GET', '/booking/?roomid=1')
         rows = []
         for b in (body or {}).get('bookings') or []:
-            rows.append(f'{b["firstname"]} {b["lastname"]}' + ('' if self.flags.get('omit_checkin') else f' {b["bookingdates"]["checkin"]}'))
+            rows.append(f'{b["firstname"]} {b["lastname"]}' + ('' if self.flags.get('omit_checkin') else f' {b["bookingdates"]["checkin"]}')
+                        + ('' if self.flags.get('omit_checkout') else f' {b["bookingdates"]["checkout"]}'))
         return 200, rows
 
 
@@ -363,13 +364,13 @@ class Sut01Tests(AttemptCase):
 
 
 class Sut04Tests(AttemptCase):
-    def test_api_to_web_is_verified_and_the_checkout_date_is_not_compared_on_the_web(self):
+    def test_api_to_web_is_verified_with_every_key_including_both_dates_on_the_web(self):
         job, results, ui = self.run_condition(C5_S4, 3)
         self.assertEqual(self.categories(results), [V] * 3)
         self.check_bundles(job, results)
         ident = self.record(job, 1)['identity']
-        self.assertEqual(ident['compared_keys'], ['booking_count', 'firstname', 'lastname', 'checkin'])
-        self.assertIn('checkout', ident['not_compared'])
+        self.assertEqual(ident['compared_keys'], ['booking_count', 'firstname', 'lastname', 'checkin', 'checkout'])
+        self.assertEqual(ident['not_compared'], {})
         self.assertTrue(all(e['match'] for e in ident['comparison']))
         self.assertEqual(set(self.verification_writes(job, 1, ui)), {'GET'})
 
@@ -399,6 +400,12 @@ class Sut04Tests(AttemptCase):
         job, results, _ = self.run_condition(C5_S4, 1, omit_checkin=True)
         self.assertEqual(self.categories(results), ['NOT_VERIFIED'])
         self.assertEqual([e['key'] for e in self.record(job, 1)['identity']['comparison'] if not e['match']], ['checkin'])
+
+    def test_a_row_without_the_check_out_date_names_that_key(self):
+        job, results, _ = self.run_condition(C5_S4, 1, omit_checkout=True)
+        self.assertEqual(self.categories(results), ['NOT_VERIFIED'])
+        self.assertEqual([e['key'] for e in self.record(job, 1)['identity']['comparison'] if not e['match']], ['checkout'])
+        self.assertIn('checkout: established', self.record(job, 1)['cause'])
 
     def test_a_booking_with_other_dates_is_not_verified_on_the_api(self):
         job, results, _ = self.run_condition(C6_S4, 1, submit_checkin_shift=True)

@@ -15,10 +15,10 @@ executions of the condition, so that a booking left by an earlier execution is f
 starting-state check), then the admin login in the new browser context; starting-state check = room 1 holds no booking with that first name. The last
 name, the dates and the contact values of an execution are derived from its run id (unique per execution and attempt).
 
-Admin room page (API to WEB): the E03 module reads the rows and matches the guest names and the check-in date in the row text (sut04_web.py); no
-text or record documents that the row shows the check-out date, so the check-out date is NOT compared on the WEB layer (D-E07-9: a key that is not
-observable on the verification layer is not used) and is listed under identity.not_compared. It is compared on the API layer (WEB to API). The number
-of bookings that carry the names is compared on both layers.
+Admin room page (API to WEB): the E03 module reads the rows and matches the guest names and the check-in date in the row text (sut04_web.py). DRY_RUN
+round 1 (run 44529314764, evidence sut04-web-admin-rows) showed that the row also lists the check-out date, so the check-out date is observable on the
+WEB layer and is compared there as well (D-E07-15: the identity keys of D-E07-9 are compared in both directions). The number of bookings that carry the
+names is compared on both layers.
 """
 import datetime
 import hashlib
@@ -30,8 +30,7 @@ ROOM = 1
 PHONE = '01234567890'  # 11 characters: the message service accepts 11 to 21 (manifests/source-reads-v2.yaml, F15)
 DECLARED = ['run-unique guest names', 'check-in and check-out dates of room 1']
 KEYS_API = ['booking_count', 'firstname', 'lastname', 'checkin', 'checkout']
-KEYS_WEB = ['booking_count', 'firstname', 'lastname', 'checkin']
-NOT_COMPARED_WEB = {'checkout': 'the admin booking row is not documented to show the check-out date (experiments/E03-resetability/executor/README.md, section 4.6 reads the names and the check-in date)'}
+KEYS_WEB = list(KEYS_API)
 SPEC_API_WEB = common.Spec('API', 'api', ['API_RESET'], ['PREDEFINED_ACCOUNT', 'API_SEED'], [('web', 'web'), ('api', 'api'), ('auth', 'auth')], True)
 SPEC_WEB_API = common.Spec('Web UI Functional', 'web', ['API_RESET'], ['PREDEFINED_ACCOUNT', 'DIRECT_ROUTE', 'UI_FLOW'],
                            [('web', 'web'), ('api', 'api'), ('auth', 'auth')], True)
@@ -225,7 +224,6 @@ class ApiWeb(Sut04):
     """E07-CS005-SUT04-API-WEB: establishment through the booking API (POST /booking/), verification on the admin room page of the web app."""
     SPEC = SPEC_API_WEB
     KEYS = KEYS_WEB
-    NOT_COMPARED = NOT_COMPARED_WEB
 
     def establish(self, run):
         u = self.u
@@ -262,12 +260,13 @@ class ApiWeb(Sut04):
 
     def verify(self, run):
         u = self.u
-        with run.step('verification', '{web}/admin/room/1 lists one row with the guest names and the check-in date of the execution (WEB layer, read-only)') as rec:
+        with run.step('verification', '{web}/admin/room/1 lists one row with the guest names and the check-in and check-out dates of the execution (WEB layer, read-only)') as rec:
             status, texts = self.ui.admin_room_rows()
             hits = [t for t in texts if u['firstname'] in t and u['lastname'] in t]
             first = hits[0] if hits else ''
             observed = {'booking_count': len(hits), 'firstname': u['firstname'] if hits else None, 'lastname': u['lastname'] if hits else None,
-                        'checkin': u['checkin'] if hits and u['checkin'] in first else None}
+                        'checkin': u['checkin'] if hits and u['checkin'] in first else None,
+                        'checkout': u['checkout'] if hits and u['checkout'] in first else None}
             rec['evidence'].append(run.text('sut04-web-admin-rows', '\n---\n'.join(texts)))
             self.ui.picture(run, rec, 'sut04-web-admin-room')
             self.conclude(run, rec, observed, page_status=status, rows=len(texts))

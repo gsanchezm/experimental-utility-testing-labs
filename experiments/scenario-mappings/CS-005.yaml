@@ -1,20 +1,24 @@
-# DRAFT - NOT FROZEN - NOT AN INPUT TO ANY CAMPAIGN - AUTHORIZES NOTHING
-# Proposed repository path when promoted: experiments/scenario-mappings/CS-005.yaml
+# STATUS: FROZEN 2026-11-19, approved by gilbertosanchez (authorization id E07-CS005-FREEZE-AUTH-01, assigned by the ORCHESTRATOR to the approval recorded in
+# manifests/cs-005-freeze-v1.yaml). Its design points DP-1 to DP-9 were decided by the human research lead (manifests/campaign-execution-decisions-v10.yaml to -v14.yaml). A frozen mapping
+# record is never edited (protocol/equivalent-scenario-mapping-v1.md, section 6); a change is a new version file, CS-005-v2.yaml, with its own mapping-record row of protocol/CHANGELOG.md.
+# Freeze history: created as a DRAFT on 2026-11-05; at the freeze only the status fields, this block, the header lines that described the record as a draft, the comparability of the entry decided on 2026-11-19 (D-E07-13), and the wording of `notes`
+# (recommended or draft to decided or record) changed. It is not an input to any campaign configuration, workflow, or run until the campaign configuration of E07 names it.
+# Repository path: experiments/scenario-mappings/CS-005.yaml
 # Prepared 2026-11-05 for the E07-cross-layer-continuity design brief (web and API layers only).
 # Structure: protocol/equivalent-scenario-mapping-v1.md, sections 3, 4 and 7.
 # Order (section 6): the canonical intent below is ecosystem-neutral and is written first; the six mapping entries follow.
 # Scope of this record: direction API -> WEB only (establishment through the API layer, verification through the WEB layer).
-#   The reverse direction (WEB -> API) is proposed as CS-006 in design-brief-draft.md, section 5, and is not drafted here.
+#   The reverse direction (WEB -> API) is CS-006.yaml, frozen together with this record on 2026-11-19.
 # CS-005 is the next unused identifier: CS-001 FROZEN, CS-002 EXCLUDED_FROM_CAMPAIGN and preserved, CS-003 FROZEN (E02).
 # Evidence: E01 rows are read from the SUBMITTED audit branches audit/e01-sut0N-* (the audits/ directories on the main branch
 #   are templates, as stated in the header of experiments/scenario-mappings/CS-001.yaml, PROTO-U07).
 #   The E01 adjudicated matrix was consulted on 2026-11-18, read-only, under decision D-E07-2 (manifests/campaign-execution-decisions-v10.yaml):
 #   the Web and API confirmed scores equal the auditors' SUBMITTED values quoted in design-brief-draft.md (section 18); the evidence
 #   identifiers below still come from the audit branches.
-# Updated 2026-11-18 (still a DRAFT): the decisions of manifests/campaign-execution-decisions-v10.yaml and -v11.yaml are applied:
+# Updated 2026-11-18 (then still a DRAFT): the decisions of manifests/campaign-execution-decisions-v10.yaml and -v11.yaml are applied:
 #   DP-1 CLEAN_SESSION, DP-2 AUTHENTICATED_STANDARD, DP-3 one record per direction, DP-4 strict (D-E07-1, D-E07-4), and, for DP-7,
-#   the SUT-05 web basket NOT_COMPARABLE (D-E07-3); the SUT-04 admin booking listing is an open cell decided after the execution
-#   verification (D-E07-6). Values marked HUMAN DECISION are null in this DRAFT; the comment beside each one gives the recommendation.
+#   the SUT-05 web basket NOT_COMPARABLE (D-E07-3); the SUT-04 admin booking listing, an open cell of D-E07-6, is decided
+#   COMPARABLE on 2026-11-19 (D-E07-12). The values that were marked HUMAN DECISION are decided at the freeze (manifests/cs-005-freeze-v1.yaml).
 
 version: 1
 canonical_scenario_id: CS-005
@@ -40,7 +44,7 @@ observable_oracle_class_text: >
   keys and declared attributes recorded from the establishment response or read-back on the API layer are observed unchanged
   on the WEB layer. The check passes only when every declared key and attribute is observed and matches.
 reset_requirement: DATA_RESET  # Restored between attempts by the campaign harness, outside the measured scenario (as CS-003 DP-2).
-applicable_surfaces: [WEB, API]  # ANDROID and IOS are outside the web/API scope of this draft (see notes, DP-9).
+applicable_surfaces: [WEB, API]  # ANDROID and IOS are outside the web/API scope of this record (see notes, DP-9).
 allowed_domain_mapping: >
   The business object may vary (cart, basket, booking). Vocabulary, endpoint names, selectors, identifier formats and the number
   of steps may vary. The establishment layer (API) and the verification layer (WEB) are fixed for this record. May NOT vary:
@@ -50,12 +54,12 @@ allowed_domain_mapping: >
   checked before establishment and restored between attempts. Scenario-specific constraint: the identity keys and the declared
   attributes of each ecosystem are fixed in the campaign configuration before the first attempt.
 campaigns_using: [E07-cross-layer-continuity]
-mapping_status: DRAFT
-frozen_at: null
-approved_by: null
+mapping_status: FROZEN
+frozen_at: "2026-11-19"
+approved_by: gilbertosanchez
 mappings:
   - sut_id: SUT-01
-    comparability: null  # HUMAN DECISION at the freeze of this record (the evidence basis of this direction is not a DP-7 gap). Recommendation: COMPARABLE. All six conditions of protocol/equivalent-scenario-mapping-v1.md, section 5, are supported by SOURCE_VERIFIED rows listed in evidence_ids.
+    comparability: COMPARABLE  # DECIDED 2026-11-19 (D-E07-13, manifests/campaign-execution-decisions-v14.yaml): the six conditions of protocol/equivalent-scenario-mapping-v1.md, section 5, are supported by SOURCE_VERIFIED rows listed in evidence_ids (SUT01-EV-0001 is DOCUMENTED).
     surfaces_used: [API, WEB]
     domain_object: "cart (pizza order items in the session cart)"
     precondition_realization: "Clean session of the declared controlled instance; the session cart is checked empty before establishment. Session identity: the JWT claim sid of the login token, which the API calls and the browser client both use (SUT01-EV-0002, SUT01-EV-0007)."
@@ -115,7 +119,7 @@ mappings:
       audit's own cross-layer description says the consistency holds only "within the fixed account mechanism" (audit/e01-sut03-browserstack,
       audits/SUT-03-browserstack/audit.md, section 4, Cross-layer State Continuity).
   - sut_id: SUT-04
-    comparability: null  # OPEN CELL (D-E07-6, 2026-11-18): measured in E07 and decided afterwards, without touching E01. Recommendation: COMPARABLE once the admin booking listing is cited by an E01 evidence_id. Until then the listing rests on source lines only (see the gap note). If the gap is still open when this record is frozen, the entry is recorded NOT_COMPARABLE with reason OTHER.
+    comparability: COMPARABLE  # DECIDED 2026-11-19 (D-E07-12, manifests/campaign-execution-decisions-v13.yaml): COMPARABLE. SUT04-EV-0028 (a record created through a direct API call is visible through the Web UI) and SUT04-EV-0002 (the admin login reveals the admin listings) support the condition 5; the admin room page that lists the bookings is a realization detail cited from the pinned source (see the gap note), not an E01 row.
     surfaces_used: [API, WEB]
     domain_object: "booking (room reservation)"
     precondition_realization: "Clean session; the seeded admin account authenticates through POST /auth/login, which issues the token cookie (SUT04-EV-0003, SUT04-EV-0008)."
@@ -171,39 +175,38 @@ mappings:
     evidence_ids: [SUT06-EV-0001, SUT06-EV-0002, SUT06-EV-0003, SUT06-EV-0004]
     justification: "No web or API surface exists to realize either layer of the scenario."
 notes: >
-  DRAFT. Design points DP-1 to DP-9 are decided by the human research lead, not by this draft. The recommended answers are
-  given so that the decision can be taken quickly.
+  FROZEN 2026-11-19 (E07-CS005-FREEZE-AUTH-01). Design points DP-1 to DP-9, each decided by the human research lead before the freeze as recorded in manifests/campaign-execution-decisions-v10.yaml to -v14.yaml and manifests/cs-005-freeze-v1.yaml (a frozen record is never edited; a change after the freeze is a new version file).
   DP-1 precondition_class. DECIDED 2026-11-18 (D-E07-4): CLEAN_SESSION (login inside the measured scenario, as CS-003). Continuity
     depends on the session identity that the login creates, so the login belongs to the scenario.
   DP-2 actor_state. DECIDED 2026-11-18 (D-E07-4): AUTHENTICATED_STANDARD, the CS-003 DP-5 choice, which keeps the SUT-04 administrator account.
   DP-3 direction. Options: (a) one record per direction (CS-005 API -> WEB, CS-006 WEB -> API); (b) one record with the direction
     as an independent variable. Option (b) needs a per-direction field that the mapping template (section 7) does not have.
-    DECIDED 2026-11-18 (D-E07-4): (a); CS-006.yaml is the WEB -> API record (DRAFT).
+    DECIDED 2026-11-18 (D-E07-4): (a); CS-006.yaml is the WEB -> API record (FROZEN together with this record).
   DP-4 established-state standard (decisive for SUT-03). Options: (a) strict: the unit must be created by the actor through the
     programmatic interface, as CS-001 and CS-003 require for the business object; (b) referenced: a pre-existing entity
     selected by a fixed identifier also counts as established state. The E07 README (Required evidence, "created or referenced
     during establishment") reads toward (b). Under (b), SUT-03 would be decided by the fixed-account identifiers of SUT03-EV-0006
     to SUT03-EV-0008, and any "continuity" would hold by construction. DECIDED 2026-11-18 (D-E07-1): (a). Under (a), SUT-03 is NOT_COMPARABLE
     for this record and for CS-006, so no CONFIRMATORY continuity comparison of SUT-01 against SUT-03 is evaluable.
-  DP-5 identity keys and oracle. Recommendation: each ecosystem declares, before the first attempt, the identity keys (for example
-    the session sid, the run-unique guest names and check-in date, the basket id) and the attributes that the WEB check must
-    match. VERIFIED requires every declared key and attribute to match. The oracle stays OTHER, with the free text above. HUMAN DECISION.
-  DP-6 reset. Recommendation: DATA_RESET between attempts, outside the measured scenario and not counted, as CS-003 DP-2.
-    The reset realizations are those of CS-001.yaml. HUMAN DECISION.
+  DP-5 identity keys and oracle. DECIDED 2026-11-18 (D-E07-9): SUT-01 = the sid claim of the login token and the cart line (pizza_id p02, quantity 1); SUT-04 = the run-unique guest names and the check-in and check-out dates
+    of room 1 (not the bookingid, which the web does not show); declared in the campaign configuration before the first attempt; a key that is not observable on the WEB layer is not used. VERIFIED requires every declared key and attribute to
+    match. The oracle stays OTHER, with the free text above.
+  DP-6 reset. DECIDED 2026-11-18 (D-E07-8): DATA_RESET between attempts, outside the measured scenario and not counted, as CS-003 DP-2.
+    The reset realizations are those of the entries above (SUT-01: session clear through the API and a new browser context per execution; SUT-04: deletion through the booking API of the bookings that carry the condition's guest names).
   DP-7 evidence sufficiency for the verification surfaces. Gaps: SUT-04 has no E01 row for the admin booking listing; the cookie
     injection of option (b) of the SUT-04 precondition is not evidenced; SUT-05 has no E01 row for the web basket. Options:
     (a) a new E01 evidence supplement under protocol/change-control-v1.md; (b) source-line citations in the campaign configuration (not E01 evidence,
     and a departure from the mapping rule's "E01 evidence" wording); (c) leave the entry NOT_COMPARABLE with reason OTHER until
     the gap closes. Recommendation: (a) for SUT-04 only if the human research lead wants the specialist's continuity profile,
     otherwise (c); (c) for SUT-05. DECIDED in part on 2026-11-18: SUT-05 option (c) (D-E07-3, recorded in its entry); the SUT-04 admin
-    booking listing (this record) and the SUT-01 Web to API cell (CS-006.yaml) are open cells, measured in E07 and decided afterwards (D-E07-6).
+    booking listing (this record) and the SUT-01 Web to API cell (CS-006.yaml) were open cells; both are decided COMPARABLE (D-E07-12 and D-E07-11, 2026-11-19).
   DP-8 continuity proportion. The denominator is not defined in the SAP. Options: (A) VERIFIED / all valid measured attempts
-    (establishment failures count as not verified); (B) VERIFIED / attempts whose establishment succeeded. Recommendation: A as
-    the H4 variable, with B reported descriptively. Both are fixed in the campaign configuration before the first attempt. HUMAN DECISION.
-  DP-9 scope. The E07 README lists API -> Android, API -> iOS and Web -> API. This draft covers WEB and API only, as the human research
-    lead decided on 2026-11-05 for the minimum campaign set. A later mobile record needs the compatibility smoke and the mobile policy
-    (protocol/mobile-runner-policy-v3.md). The README's candidate pair list needs a scope note; this draft does not edit it. HUMAN DECISION.
-  Not decided here: the identity key list per ecosystem, the condition list, the sample size, the exclusion and attribution rules,
-    and the CONFIRMATORY list. These belong to the E07 campaign configuration (campaign-configuration-draft.md).
+    (establishment failures count as not verified); (B) VERIFIED / attempts whose establishment succeeded. DECIDED 2026-11-18 (D-E07-10): A is the primary
+    proportion, with B reported apart, both with a Wilson interval; both are fixed in the campaign configuration before the first attempt.
+  DP-9 scope. The E07 README lists API -> Android, API -> iOS and Web -> API. This record covers WEB and API only, as the human research
+    lead decided on 2026-11-05 for the minimum campaign set (D-E07-7). A later mobile record needs the compatibility smoke and the mobile policy
+    (protocol/mobile-runner-policy-v3.md). The scope note is in the E07 README.
+  Not decided here: the condition list, the sample size, the exclusion and attribution rules, and the CONFIRMATORY list. These belong to the
+    campaign configuration of E07 (experiments/E07-cross-layer-continuity/README.md, "Campaign configuration", once the campaign starts).
   Lifecycle: a frozen mapping record is never edited; a change is a new version file and one mapping-record row in the change log
     (protocol/equivalent-scenario-mapping-v1.md, section 6).

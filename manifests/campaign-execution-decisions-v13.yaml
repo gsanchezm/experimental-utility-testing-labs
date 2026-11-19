@@ -1,0 +1,33 @@
+# manifests/campaign-execution-decisions-v13.yaml -- decisions of 2026-11-19, round 10 (operation OP-PREP-E07-06; CAMPAIGN-EXECUTION-DECISIONS-13): the two open cells of E07 (D-E07-6), after round 1 of the non-measured DRY_RUN.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing. Immutable once committed; a correction is a new version file. Earlier rounds: -v4 to -v12 (unchanged).
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-13"
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E07-06"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-19"
+recorded_at_utc: "2026-11-19T13:13:37Z"
+executes_anything: false
+protocol_change: false
+supersedes: null
+earlier_rounds: [manifests/campaign-execution-decisions-v4.yaml, manifests/campaign-execution-decisions-v5.yaml, manifests/campaign-execution-decisions-v6.yaml, manifests/campaign-execution-decisions-v7.yaml, manifests/campaign-execution-decisions-v8.yaml, manifests/campaign-execution-decisions-v9.yaml, manifests/campaign-execution-decisions-v10.yaml, manifests/campaign-execution-decisions-v11.yaml, manifests/campaign-execution-decisions-v12.yaml]
+evidence_basis: "manifests/e07-environment-verification-rounds-v1.yaml (round 1, run 44529314764: SUT-01 WEB to API NOT_VERIFIED 3 of 3; the other three conditions VERIFIED 3 of 3; ENVIRONMENT_VERIFICATION, not E01 evidence); protocol/equivalent-scenario-mapping-v1.md, section 5 (the comparability of a cell is decided from the canonical record and the E01 evidence, never from a campaign result); experiments/scenario-mappings/CS-005.yaml and CS-006.yaml (DRAFT); manifests/campaign-execution-decisions-v11.yaml, D-E07-6."
+human_decision:
+  given_by: the human research lead
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), the fourth of the E07 preparation"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_e07_round_10:
+    transcript_stamp: null
+    transcript_stamp_note: "the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_at_utc above is the system clock when this file was written, after the answer"
+    bytes: 1880
+    exact_text_sha256: 8040a444eec4c0804f809c42a4f155b13359a7fe8adc518f839383e614a5bd4c
+    note: the answer of the question dialog, whole; the chosen option is the decision
+    exact_text: "Your questions have been answered: \"E07, celda abierta 1: SUT-01 Web a API (CS-006). Resultado de la ronda DRY_RUN (no medida, no es evidencia E01): las 3 ejecuciones dieron NOT_VERIFIED; el control de la UI se confirmó, el carrito persistido del cliente quedó con la línea p02, el sid coincide en ambas capas y el carrito del servidor devolvió 0 líneas. El protocolo (equivalent-scenario-mapping, sección 5) exige decidir la comparabilidad desde el registro canónico y la evidencia E01, nunca desde un resultado, y no revisar un mapeo porque un ecosistema leó bien o mal. Las seis condiciones de comparabilidad tienen filas E01 para SUT-01: superficies web y API (SUT01-EV-0001, -0006), precondición y actor (-0002, -0007), objeto de negocio y estado alcanzable por la UI (-0003, -0004), observación del oráculo por GET /api/session (-0006) y reset (-0006). Lo que ninguna fila establece es si el estado cruza de capa, y eso es la variable dependiente de E07, no un requisito de comparabilidad. ¿Cómo queda la celda?\"=\"COMPARABLE, medirla (Recomendada)\", \"E07, celda abierta 2: SUT-04, listado admin de reservas (CS-005, API a Web). El DRY_RUN lo ejecutó 3 de 3 en VERIFIED (la fila del admin coincide en nombres y fecha de entrada), pero eso tampoco decide comparabilidad. Evidencia E01 para la condición 5 (observación del oráculo en la capa web): SUT04-EV-0028 (SOURCE_VERIFIED) dice que un registro creado por una llamada directa a la API es visible en la Web UI, y SUT04-EV-0002 que el login admin muestra los listados admin; ninguna fila nombra la página concreta del listado de reservas, que se cita del código en el texto de E03 (sección 4.6) y no como fila E01. Es distinto del caso de SUT-05, donde ninguna fila E01 cubre el flujo web de la cesta. ¿Cómo queda la celda?\"=\"COMPARABLE (Recomendada)\". You can now continue with these answers in mind."
+decisions:
+  - id: D-E07-11
+    subject: "open cell 1: SUT-01 WEB to API (CS-006), decision D-E07-6"
+    decision: "COMPARABLE, to be measured. The condition E07-CS006-SUT01-WEB-API stays in the draft of CS-006 with the E01 rows that support the six comparability conditions (SUT01-EV-0001, SUT01-EV-0002, SUT01-EV-0003, SUT01-EV-0004, SUT01-EV-0006, SUT01-EV-0007). Whether the state crosses from the web layer to the API layer is the dependent variable of E07, not a comparability condition. The result of the DRY_RUN round is not an input to this decision. If the measured proportion is low, it is reported as a measurement (counts and Wilson interval), never as NO_DATA, and the mapping is not revised."
+  - id: D-E07-12
+    subject: "open cell 2: SUT-04 admin booking listing (CS-005), decision D-E07-6"
+    decision: "COMPARABLE. The condition E07-CS005-SUT04-API-WEB stays in the draft of CS-005, citing SUT04-EV-0028 (a record created through a direct API call is visible through the Web UI) and SUT04-EV-0002 (the admin login reveals the admin listings) for the comparability condition 5; the admin room page that lists the bookings is a detail of the realization, cited from the pinned source in experiments/E03-resetability/executor/README.md, section 4.6, and not as an E01 row. The check-out date is not compared on the admin web row (declared by the executor in identity.not_compared)."
+not_decided_in_this_round: "The comparability of the other two conditions (SUT-01 API to WEB and SUT-04 WEB to API: recommended COMPARABLE in the drafts), the freeze of CS-005 and CS-006, the campaign START, the dispatch authorizations, the dispatches, the campaign freeze and every public export: each needs its own explicit human approval."

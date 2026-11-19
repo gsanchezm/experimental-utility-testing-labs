@@ -17,7 +17,7 @@
 | CS-005 | experiments/scenario-mappings/CS-005.yaml | DRAFT, decisions of 2026-11-18 applied. Must be FROZEN before START (experiments/README.md; protocol/equivalent-scenario-mapping-v1.md, section 6). | API -> WEB | E07 |
 | CS-006 | experiments/scenario-mappings/CS-006.yaml | DRAFT, drafted 2026-11-18 (D-E07-4, DP-3: one record per direction). Must be FROZEN before START. | WEB -> API | E07 |
 
-Gate: every canonical scenario the campaign uses is FROZEN and approved by an explicit human decision, one change-log row per record (protocol/change-control-v1.md, section 5). DP-1 to DP-4 are DECIDED (D-E07-1, D-E07-4); DP-5 (identity keys), DP-6 and DP-8 remain HUMAN DECISIONS and the two open cells of D-E07-6 are decided after the execution verification; all of them precede the freeze. A cell that still lacks its E01 evidence when its record is frozen is recorded NOT_COMPARABLE with reason OTHER.
+Gate: every canonical scenario the campaign uses is FROZEN and approved by an explicit human decision, one change-log row per record (protocol/change-control-v1.md, section 5). DP-1 to DP-6, DP-5 and DP-8 are DECIDED (D-E07-1, D-E07-4, D-E07-8 to D-E07-10) and the two open cells of D-E07-6 are decided COMPARABLE (D-E07-11 and D-E07-12, 2026-11-19, after round 1 of the DRY_RUN: manifests/e07-environment-verification-rounds-v1.yaml); what remains before the freeze is the human decision on the comparability of the other two conditions (SUT-01 API to WEB and SUT-04 WEB to API; recommended COMPARABLE) and the approval of the freeze itself.
 
 ## 2. Pinned SUT versions
 
@@ -62,13 +62,13 @@ A condition is (sut_id, canonical_scenario_id, direction). Condition IDs are can
 | condition_id (candidate) | canonical_scenario_id | sut_id | source_layer -> verification_layer | Mapping comparability | environment_type (proposed) | N | Status |
 |---|---|---|---|---|---|---|---|
 | E07-CS005-SUT01-API-WEB | CS-005 | SUT-01 | api -> web | COMPARABLE (recommended; HUMAN DECISION at freeze) | SELF_HOSTED per component (E03 precedent for GitHub Actions instances; HUMAN DECISION to confirm) | 50 | NOT_STARTED |
-| E07-CS005-SUT04-API-WEB | CS-005 | SUT-04 | api -> web | OPEN CELL (D-E07-6): the admin booking listing has no E01 row; execution verification first, comparability set at the freeze of CS-005 | SELF_HOSTED per component (proposed) | 50 | NOT_STARTED; candidate until the open cell is decided |
+| E07-CS005-SUT04-API-WEB | CS-005 | SUT-04 | api -> web | COMPARABLE (DECIDED 2026-11-19, D-E07-12; SUT04-EV-0028 and SUT04-EV-0002 support the condition 5) | SELF_HOSTED per component (proposed) | 50 | NOT_STARTED |
 | E07-CS005-SUT05-API-WEB | CS-005 | SUT-05 | api -> web | NOT_COMPARABLE, reason OTHER (DECIDED, D-E07-3) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
 | E07-CS005-SUT03-API-WEB | CS-005 | SUT-03 | api -> web | NOT_COMPARABLE (DECIDED, D-E07-1, DP-4 strict) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
 | E07-CS005-SUT02-API-WEB | CS-005 | SUT-02 | api -> web | NOT_COMPARABLE (NO_APPLICABLE_SURFACE) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
 | E07-CS005-SUT06-API-WEB | CS-005 | SUT-06 | api -> web | NOT_COMPARABLE (NO_APPLICABLE_SURFACE) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
 | E07-CS006-SUT04-WEB-API | CS-006 | SUT-04 | web -> api | COMPARABLE (recommended; SUT04-EV-0028, SUT04-EV-0006; HUMAN DECISION at freeze) | SELF_HOSTED per component (proposed) | 50 | NOT_STARTED |
-| E07-CS006-SUT01-WEB-API | CS-006 | SUT-01 | web -> api | OPEN CELL (D-E07-6): no E01 row states that the UI add-to-cart reaches the server cart; execution verification first, comparability set at the freeze of CS-006 | SELF_HOSTED per component (proposed) | 50 | NOT_STARTED; candidate until the open cell is decided |
+| E07-CS006-SUT01-WEB-API | CS-006 | SUT-01 | web -> api | COMPARABLE (DECIDED 2026-11-19, D-E07-11; the cross-layer outcome is the dependent variable, not a comparability condition) | SELF_HOSTED per component (proposed) | 50 | NOT_STARTED |
 | E07-CS006-SUT05-WEB-API | CS-006 | SUT-05 | web -> api | NOT_COMPARABLE, reason OTHER (DECIDED, D-E07-3) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
 | E07-CS006-SUT03-WEB-API | CS-006 | SUT-03 | web -> api | NOT_COMPARABLE (DECIDED, D-E07-1; cart client-side, SUT03-EV-0032) | not applicable | 0 | NO DATA: NOT_COMPARABLE (section 9) |
 
@@ -132,8 +132,8 @@ Source: experiments/E03-resetability/controlled-instance-status.yaml (latest-run
 
 | Surface | E03 status (as recorded) | E07 requirement |
 |---|---|---|
-| SUT-01 web and api | VERIFIED on GitHub Actions (E03-CS001-SUT01-WEB, -SUT01-API) | Realization check of the CS-005 steps (token injection, Checkout read-through) and of the CS-006 steps, including whether the UI add-to-cart reaches the server cart (the open cell, D-E07-6) |
-| SUT-04 web and api | VERIFIED on GitHub Actions (E03-CS001-SUT04-WEB, -SUT04-API) | Realization check, including the admin listing (not verified by E03, the open cell of D-E07-6) and the reservation-form flow of CS-006 |
+| SUT-01 web and api | VERIFIED on GitHub Actions (E03-CS001-SUT01-WEB, -SUT01-API) | Realization check of the CS-005 steps (token injection, Checkout read-through) and of the CS-006 steps, with the UI add-to-cart step; round 1 of the DRY_RUN (run 44529314764) ran all four conditions end to end, manifests/e07-environment-verification-rounds-v1.yaml |
+| SUT-04 web and api | VERIFIED on GitHub Actions (E03-CS001-SUT04-WEB, -SUT04-API) | Realization check, including the admin listing (not verified by E03; round 1 of the DRY_RUN ran it, 3 of 3) and the reservation-form flow of CS-006 |
 | SUT-05 api | VERIFIED on GitHub Actions (run 37354458611, manifest note) | Not required while SUT-05 is NOT_COMPARABLE (D-E07-3) |
 | SUT-05 web | NO RECORD (E03 mapped SUT-05 on the API surface only) | Not required while SUT-05 is NOT_COMPARABLE (D-E07-3) |
 | SUT-03 web | VERIFIED (E03-CS001-SUT03-WEB) | Not required: SUT-03 is NOT_COMPARABLE (D-E07-1) |
@@ -169,7 +169,7 @@ Raw data: raw-data/E07-cross-layer-continuity/<SUT>/** for MEASURED_EXPERIMENT a
 | Campaign START | Not issued. HUMAN DECISION (protocol/change-control-v1.md, section 7). |
 | Configuration freeze | Not proposed yet. |
 | Dispatch | Each dispatch needs its own explicit human approval, recorded before the run (CAMPAIGN-CI-WRITE-AUTH-01). |
-| Schedule | DATA FREEZE 2027-01-05 (manifests/planning-deadlines-v2.yaml). DP-4 is decided; the open cells of D-E07-6, the identity keys (DP-5) and the freeze of CS-005 and CS-006 are on the critical path. |
+| Schedule | DATA FREEZE 2027-01-05 (manifests/planning-deadlines-v2.yaml). DP-4, the identity keys and the two open cells are decided; the comparability of the other two conditions and the freeze of CS-005 and CS-006, then the START, are on the critical path. |
 
 ## 13. CONFIRMATORY comparisons
 
@@ -196,7 +196,7 @@ Decided on 2026-11-18 (manifests/campaign-execution-decisions-v10.yaml and -v11.
 
 Still HUMAN DECISIONS:
 
-1. Section 1: the freeze of CS-005 and CS-006, with DP-5 (identity keys), DP-6 and DP-8, and the outcome of the open cells of D-E07-6.
+1. Section 1: the comparability of SUT-01 API to WEB and SUT-04 WEB to API and the freeze of CS-005 and CS-006 (the open cells are decided COMPARABLE, D-E07-11 and D-E07-12).
 2. Section 3: Ajv version and format handling before the first validation.
 3. Section 4: dispatch procedure prompt, its version, and the implementation hash.
 4. Section 5: comparability of SUT-01 and SUT-04 on CS-005 and CS-006 at the freeze; environment type of the conditions.
