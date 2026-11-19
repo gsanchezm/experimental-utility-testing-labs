@@ -1,0 +1,61 @@
+# manifests/e07-dispatch-authorization-sut01-v1.yaml -- record of the dispatch authorization E07-DISPATCH-SUT01-AUTH-01 (protocol/agent-governance-v6.md, Section 3.7).
+# The human research lead's issuance, for the assigned system under test (SUT) SUT-01, of the authorization under which the ORCHESTRATOR dispatches the frozen measured-execution workflow of E07-cross-layer-continuity for its conditions. ORCHESTRATOR record of operation OP-DISPATCH-E07-01, written from the verbatim answer of the human research lead (never from memory); nothing in it is a protocol change.
+# The record itself is not a measured experiment and executes nothing; the dispatches it covers are recorded one by one in manifests/e07-measured-dispatch/e07-sut01.jsonl.
+record_id: "E07-DISPATCH-AUTHORIZATION-SUT01-01"
+record_class: "E07_DISPATCH_AUTHORIZATION"
+authorization_id: "E07-DISPATCH-SUT01-AUTH-01"
+version: 1
+study_id: "EUS-2026-001"
+campaign_id: "E07-cross-layer-continuity"
+operation_id: "OP-DISPATCH-E07-01"
+assigned_sut: "SUT-01"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-19"
+recorded_utc: "2026-11-19T21:26:31Z"
+status: "ISSUED"
+record_validity: "VALID"
+dispatch_eligibility: "ELIGIBLE"
+revoked: false
+attempt: 1
+authorization_date: "2026-11-19"
+issued_by: "human research lead"
+authorizes_dispatches: true  # of exactly the conditions listed under conditions, within the limits below
+measured_experiment: false  # this record; the executions it covers are MEASURED_EXPERIMENT runs of the frozen GitHub Actions path
+executes_anything: false
+revocable_by_the_human_research_lead: true  # at any time; no revocation exists at the time of this record
+campaign_start_authorization_id: E07-START-AUTH-01
+governing_protocol: protocol/agent-governance-v6.md, Section 3.7
+n_executions: 50  # per condition
+conditions:  # in the order of the dispatch fixed by the locked campaign configuration (experiments/E07-cross-layer-continuity/README.md)
+  - E07-CS005-SUT01-API-WEB
+  - E07-CS006-SUT01-WEB-API
+scope:
+  assigned_sut: SUT-01
+  conditions_in_all: 2
+  executions_in_all: 100
+  dispatches: 2  # one per condition; each dispatch runs the 50 sequential executions EX0001 to EX0050 of its condition in one job on one shared instance
+  order: "the order of conditions above, one condition at a time; a condition's dispatch only after the previous run of this authorization has concluded and been imported; never a second run of a condition while one is in progress; the chains of the two SUTs of E07 run independently and concurrently (START decision Q6)"
+  attempt: 1  # a further attempt only under a further-attempt approval record of the human research lead (gate G-E07-A2)
+  record_of_dispatches: manifests/e07-measured-dispatch/e07-sut01.jsonl  # append-only, committed before each dispatch; the run identity is appended after it
+  no_adaptation: "no decision whether, when, or how to dispatch depends on a measured output of any SUT (Sections 3.5 and 3.7)"
+  not_authorized: [any further attempt, any other condition or SUT, any change of workflow or executor, the freeze of the campaign]
+  disclosed: "for E07-CS006-SUT01-WEB-API the disclosed expectation: the condition recorded NOT_VERIFIED 3 of 3 in the DRY_RUN rounds 1 and 2, it is a COMPARABLE cell by decision D-E07-11 and a measured proportion of 0 of 50 is expected; a NOT_VERIFIED outcome is a recorded datum, not a stop condition, and changes no dispatch"
+frozen_inputs:
+  public_repository: gsanchezm/experimental-utility-testing-labs
+  ref: main
+  workflow: .github/workflows/e07-measured-execution.yml
+  executor_prompt_version: ORCHESTRATOR-E07-cross-layer-continuity-v1
+  executor_implementation_sha256: 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59  # experiments/E07-cross-layer-continuity/executor/run-condition.sh
+  executor_prompt_sha256: 60c0cc08e3b8fc2b7aa2b8d8d6e45f5d6eafaabebd55d69e5336de1dd6201895  # prompts/frozen/ORCHESTRATOR-E07-cross-layer-continuity-v1.md
+  campaign_start_authorization_id: E07-START-AUTH-01
+human_approval:
+  text_verbatim: "Your questions have been answered: \"¿Emites la autorización de despacho E07-DISPATCH-SUT01-AUTH-01 para SUT-01? Solo tú puedes emitirla (gobernanza v6, Sección 3.7). Alcance exacto: SUT-01; las 2 condiciones E07-CS005-SUT01-API-WEB y luego E07-CS006-SUT01-WEB-API, 50 ejecuciones cada una (EX0001 a EX0050), 100 en total, intento 1, un despacho por condición (2 despachos; cada despacho corre las 50 ejecuciones secuenciales en un solo job sobre una instancia compartida); orden fijado en la configuración que bloqueaste: ese mismo orden, una condición a la vez, cada una solo después de que la anterior concluyó y se importó; la cadena de SUT-01 corre independiente y concurrente con la de SUT-04; bajo E07-START-AUTH-01, con la implementación de hash 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59 y el prompt congelado ORCHESTRATOR-E07-cross-layer-continuity-v1 de hash 60c0cc08e3b8fc2b7aa2b8d8d6e45f5d6eafaabebd55d69e5336de1dd6201895. Qué permite: que yo despache esas 2 condiciones con el workflow de medición congelado (e07-measured-execution.yml), sin pedirte aprobación de cada despacho, registrando cada despacho antes de hacerlo y la identidad de la corrida después, e importando cada paquete byte a byte tras verificar su digest. Diferencia que debes saber: ninguna condición espera a que veas el resultado de la anterior; los controles son la configuración bloqueada, la compuerta del workflow, el orden fijo y las condiciones de parada del prompt (paro y te reporto si falla la compuerta, si una corrida termina distinto de éxito o de falla del job de medición, si un paquete no trae los 50 run-manifest, si un insumo difiere de lo bloqueado, o si me ordenas parar). Dato esperado que debes saber: E07-CS006-SUT01-WEB-API (WEB a API) dio NOT_VERIFIED 3 de 3 en los DRY_RUN, es una celda COMPARABLE por D-E07-11 y se espera 0 de 50 medido; un NOT_VERIFIED es un dato registrado, no una parada, y no cambia ningún despacho. Qué NO permite: ningún intento adicional (un intento 2 requiere un registro de aprobación tuyo), ninguna otra condición ni SUT, ningún cambio de workflow o ejecutor, ni congelar la campaña. Es revocable por ti en cualquier momento. No empieza hasta que esta autorización esté publicada por un export (que construyo y te muestro con su línea exacta de push) y la compuerta pase sobre el árbol público.\"=\"APRUEBO E07-DISPATCH-SUT01-AUTH-01 (Recomendado)\", \"¿Emites la autorización de despacho E07-DISPATCH-SUT04-AUTH-01 para SUT-04? Solo tú puedes emitirla (gobernanza v6, Sección 3.7). Alcance exacto: SUT-04; las 2 condiciones E07-CS005-SUT04-API-WEB y luego E07-CS006-SUT04-WEB-API, 50 ejecuciones cada una (EX0001 a EX0050), 100 en total, intento 1, un despacho por condición (2 despachos; cada despacho corre las 50 ejecuciones secuenciales en un solo job sobre una instancia compartida), una a la vez y cada una solo después de que la anterior concluyó y se importó; la cadena de SUT-04 corre independiente y concurrente con la de SUT-01; bajo E07-START-AUTH-01, implementación 55a352aaabb37c64ead88b235dbe9fe7e10e167d45d39162dd6ea63c17f0ef59, prompt congelado ORCHESTRATOR-E07-cross-layer-continuity-v1 60c0cc08e3b8fc2b7aa2b8d8d6e45f5d6eafaabebd55d69e5336de1dd6201895. Permite que yo despache esas 2 condiciones con el workflow de medición congelado, sin pedirte aprobación de cada despacho, registrando cada despacho antes y la identidad de cada corrida después, e importando cada paquete byte a byte tras verificar su digest, con las mismas condiciones de parada del prompt (ninguna condición espera a que veas el resultado de la anterior). Datos de contexto: en los DRY_RUN bajo este hash las dos condiciones de SUT-04 dieron VERIFIED 3 de 3 (el check-out ya se compara en ambas capas, D-E07-15); los jobs tardaron entre 4 y 11 minutos, dominados por la compilación Maven y la instalación del entorno, y un fallo transitorio de resolución en Maven Central en la ronda 2 consta en el registro; si algo así ocurre en un job medido, paro y te reporto sin re-ejecutar. NO permite: intento adicional, otra condición u otro SUT, cambios de workflow o ejecutor, ni congelar la campaña. Revocable por ti en cualquier momento; no empieza hasta que esté publicada por un export con tu sí a su línea exacta de push y la compuerta pase sobre el árbol público.\"=\"APRUEBO E07-DISPATCH-SUT04-AUTH-01 (Recomendado)\". You can now continue with these answers in mind."
+  bytes: 4465
+  sha256: 2bf9bc8047f4af219e834038bfd8bd44c01cd78bc61bf2f8d0cbfe3f86af2e76
+  note: "the answer of the question dialog of two questions, whole (one per SUT); this authorization is the one named SUT01 in it. The text was extracted byte for byte from the stored conversation entry (the tool result of the answer), not retyped"
+  received_utc: "2026-11-19T21:20:37.982Z"  # stamp of the stored conversation entry (the tool result of the answer)
+  question_stamp: "2026-11-19T20:27:24.280Z"  # stamp of the stored conversation entry that holds the question
+  chosen_option: "APRUEBO E07-DISPATCH-SUT01-AUTH-01 (Recomendado)"
+  entry_kind: "the answer of the human research lead to a question that offered the approval line APRUEBO E07-DISPATCH-SUT01-AUTH-01 (Recomendado) together with the scope restated above, the exclusions, the disclosed expectation or context and the revocability (the disclosed difference: no condition waits for the human research lead to see the previous outcome; the controls are the locked configuration, the gate, the fixed order and the stop conditions of the frozen prompt)"
+limits_and_stops: "the stop conditions of the frozen dispatch procedure prompts/frozen/ORCHESTRATOR-E07-cross-layer-continuity-v1.md, section 4; on a stop nothing further is dispatched in this campaign under any authorization until the human research lead instructs a resumption"
+not_in_force_until: "this record is published by an export and the gate step of the measured workflow passes on the public tree; the first dispatch is recorded before it is made"
