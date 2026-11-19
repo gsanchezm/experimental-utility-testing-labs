@@ -1,0 +1,16 @@
+{"t": "2026-11-18T22:18:11.757Z", "event": "run-start", "condition": "E04-SUT01-API-06", "run_id": "E04-SUT01-API-06__EX0037__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-18T22:18:11.758Z", "event": "step-start", "phase": "reset", "description": "restart the backend process (SIGTERM to the process group, port refused, start in a new session and group, readiness)"}
+{"t": "2026-11-18T22:18:13.365Z", "event": "step-end", "phase": "reset", "outcome": "SUCCESS"}
+{"t": "2026-11-18T22:18:13.365Z", "event": "step-start", "phase": "reset", "description": "POST /api/auth/login after the restart (the restart clears the in-memory session store)"}
+{"t": "2026-11-18T22:18:13.368Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/auth/login", "status": 200, "error": null, "elapsed_s": 0.003, "evidence": "evidence/005-sut01-login.json"}
+{"t": "2026-11-18T22:18:13.368Z", "event": "step-end", "phase": "reset", "outcome": null}
+{"t": "2026-11-18T22:18:13.368Z", "event": "step-start", "phase": "starting-state", "description": "GET /api/session: the cart is empty"}
+{"t": "2026-11-18T22:18:13.370Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:8000/api/session", "status": 200, "error": null, "elapsed_s": 0.002, "evidence": "evidence/006-sut01-session-start.json"}
+{"t": "2026-11-18T22:18:13.370Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-18T22:18:13.371Z", "event": "step-start", "phase": "establishment", "description": "POST /api/cart with one p02 line"}
+{"t": "2026-11-18T22:18:13.372Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/cart", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/007-sut01-seed-cart.json"}
+{"t": "2026-11-18T22:18:13.372Z", "event": "step-end", "phase": "establishment", "outcome": null}
+{"t": "2026-11-18T22:18:13.372Z", "event": "step-start", "phase": "verification", "description": "GET /api/session shows exactly the p02 line"}
+{"t": "2026-11-18T22:18:13.377Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:8000/api/session", "status": 200, "error": null, "elapsed_s": 0.004, "evidence": "evidence/008-sut01-session-target-state.json"}
+{"t": "2026-11-18T22:18:13.377Z", "event": "step-end", "phase": "verification", "outcome": null}
+{"t": "2026-11-18T22:18:13.378Z", "event": "run-end", "category": "TARGET_STATE_VERIFIED", "attribution": "SUT"}

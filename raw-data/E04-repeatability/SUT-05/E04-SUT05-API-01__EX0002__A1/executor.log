@@ -1,0 +1,14 @@
+{"t": "2026-11-18T21:54:51.331Z", "event": "run-start", "condition": "E04-SUT05-API-01", "run_id": "E04-SUT05-API-01__EX0002__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-18T21:54:51.331Z", "event": "step-start", "phase": "reset", "description": "restart the SUT process (SIGTERM to the process group, port refused, start in a new session and group, readiness)"}
+{"t": "2026-11-18T21:54:53.932Z", "event": "step-end", "phase": "reset", "outcome": "SUCCESS"}
+{"t": "2026-11-18T21:54:53.932Z", "event": "step-start", "phase": "starting-state", "description": "POST /rest/user/login (documented account), then GET /rest/basket/{bid}: the basket holds no item"}
+{"t": "2026-11-18T21:54:53.949Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3000/rest/user/login", "status": 200, "error": null, "elapsed_s": 0.017, "evidence": "evidence/005-sut05-login.json"}
+{"t": "2026-11-18T21:54:53.972Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/rest/basket/6", "status": 200, "error": null, "elapsed_s": 0.022, "evidence": "evidence/006-sut05-basket-start.json"}
+{"t": "2026-11-18T21:54:53.972Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-18T21:54:53.972Z", "event": "step-start", "phase": "establishment", "description": "POST /api/BasketItems {ProductId 1, BasketId <bid>, quantity 1}"}
+{"t": "2026-11-18T21:54:53.978Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3000/api/BasketItems", "status": 200, "error": null, "elapsed_s": 0.006, "evidence": "evidence/007-sut05-add-item.json"}
+{"t": "2026-11-18T21:54:53.978Z", "event": "step-end", "phase": "establishment", "outcome": null}
+{"t": "2026-11-18T21:54:53.978Z", "event": "step-start", "phase": "verification", "description": "GET /rest/basket/{bid} shows ProductId 1"}
+{"t": "2026-11-18T21:54:53.988Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/rest/basket/6", "status": 200, "error": null, "elapsed_s": 0.01, "evidence": "evidence/008-sut05-basket-target-state.json"}
+{"t": "2026-11-18T21:54:53.989Z", "event": "step-end", "phase": "verification", "outcome": null}
+{"t": "2026-11-18T21:54:53.989Z", "event": "run-end", "category": "TARGET_STATE_VERIFIED", "attribution": "SUT"}

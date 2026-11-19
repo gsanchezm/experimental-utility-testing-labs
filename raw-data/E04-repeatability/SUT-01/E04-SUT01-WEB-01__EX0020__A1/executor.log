@@ -1,0 +1,22 @@
+{"t": "2026-11-18T22:32:19.499Z", "event": "run-start", "condition": "E04-SUT01-WEB-01", "run_id": "E04-SUT01-WEB-01__EX0020__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-18T22:32:19.499Z", "event": "browser", "version": "153.0.8010.12", "viewport": {"width": 1280, "height": 800}, "context_number": 1}
+{"t": "2026-11-18T22:32:19.500Z", "event": "step-start", "phase": "reset", "description": "restart the backend process (SIGTERM to the process group, port refused, start in a new session and group, readiness)"}
+{"t": "2026-11-18T22:32:21.080Z", "event": "step-end", "phase": "reset", "outcome": "SUCCESS"}
+{"t": "2026-11-18T22:32:21.080Z", "event": "step-start", "phase": "reset", "description": "POST /api/auth/login after the restart (the restart clears the in-memory session store)"}
+{"t": "2026-11-18T22:32:21.083Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/auth/login", "status": 200, "error": null, "elapsed_s": 0.003, "evidence": "evidence/005-sut01-login.json"}
+{"t": "2026-11-18T22:32:21.083Z", "event": "step-end", "phase": "reset", "outcome": null}
+{"t": "2026-11-18T22:32:21.083Z", "event": "step-start", "phase": "reset", "description": "first load of {web}/ and one injection of client state (session, market, empty client cart)"}
+{"t": "2026-11-18T22:32:21.121Z", "event": "step-end", "phase": "reset", "outcome": null}
+{"t": "2026-11-18T22:32:21.121Z", "event": "step-start", "phase": "starting-state", "description": "GET /api/session: the cart is empty"}
+{"t": "2026-11-18T22:32:21.123Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:8000/api/session", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/007-sut01-session-start.json"}
+{"t": "2026-11-18T22:32:21.123Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-18T22:32:21.123Z", "event": "step-start", "phase": "starting-state", "description": "the client cart omnipizza-cart holds no item"}
+{"t": "2026-11-18T22:32:21.131Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-18T22:32:21.131Z", "event": "step-start", "phase": "establishment", "description": "POST /api/cart with one p02 line"}
+{"t": "2026-11-18T22:32:21.132Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/cart", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/008-sut01-seed-cart.json"}
+{"t": "2026-11-18T22:32:21.133Z", "event": "step-end", "phase": "establishment", "outcome": null}
+{"t": "2026-11-18T22:32:21.133Z", "event": "step-start", "phase": "establishment", "description": "navigation to {web}/checkout (Checkout hydrates from GET /api/cart when the local cart is empty)"}
+{"t": "2026-11-18T22:32:21.148Z", "event": "step-end", "phase": "establishment", "outcome": null}
+{"t": "2026-11-18T22:32:21.148Z", "event": "step-start", "phase": "verification", "description": "[data-testid=\"order-item-p02\"] visible on the Checkout view"}
+{"t": "2026-11-18T22:32:21.278Z", "event": "step-end", "phase": "verification", "outcome": null}
+{"t": "2026-11-18T22:32:21.280Z", "event": "run-end", "category": "TARGET_STATE_VERIFIED", "attribution": "SUT"}

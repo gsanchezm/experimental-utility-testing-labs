@@ -1,0 +1,94 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E04-SUT01-API-05__EX0001__A1",
+  "condition": "E04-SUT01-API-05",
+  "execution_id": "EX0001",
+  "attempt": 1,
+  "scenario": "CS-001",
+  "outcome_category": "TARGET_STATE_VERIFIED",
+  "observed": "target state verified: every block of the execution held",
+  "cause": null,
+  "attribution": "SUT",
+  "last_phase": "verification",
+  "duration_s": 0.01,
+  "steps": [
+    {
+      "phase": "reset",
+      "description": "POST /api/auth/login, then POST /api/session/reset with the session token",
+      "mechanisms": [
+        "API_RESET",
+        "SESSION_RESET"
+      ],
+      "started_at": "2026-11-18T22:14:19.322Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "login_status": 200,
+        "token_received": true,
+        "behavior": "a11y_glitch",
+        "reset_status": 200
+      },
+      "evidence": [
+        "evidence/002-sut01-login.json",
+        "evidence/003-sut01-reset.json"
+      ],
+      "finished_at": "2026-11-18T22:14:19.328Z"
+    },
+    {
+      "phase": "starting-state",
+      "description": "GET /api/session: the cart is empty",
+      "mechanisms": [],
+      "started_at": "2026-11-18T22:14:19.328Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "cart_items": [],
+        "country_code": "MX"
+      },
+      "evidence": [
+        "evidence/004-sut01-session-start.json"
+      ],
+      "finished_at": "2026-11-18T22:14:19.330Z"
+    },
+    {
+      "phase": "establishment",
+      "description": "POST /api/cart with one p02 line",
+      "mechanisms": [
+        "API_SEED"
+      ],
+      "started_at": "2026-11-18T22:14:19.330Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200
+      },
+      "evidence": [
+        "evidence/005-sut01-seed-cart.json"
+      ],
+      "finished_at": "2026-11-18T22:14:19.331Z"
+    },
+    {
+      "phase": "verification",
+      "description": "GET /api/session shows exactly the p02 line",
+      "mechanisms": [],
+      "started_at": "2026-11-18T22:14:19.331Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "cart_items": [
+          {
+            "pizza_id": "p02",
+            "quantity": 1,
+            "size": "small",
+            "toppings": [],
+            "item_id": "ITEM-2B8C9FCF"
+          }
+        ]
+      },
+      "evidence": [
+        "evidence/006-sut01-session-target-state.json"
+      ],
+      "finished_at": "2026-11-18T22:14:19.332Z"
+    }
+  ],
+  "notes": [],
+  "note": "attribution is mechanical (IMPLEMENTATION-NOTES.md, point 3): TOOLING for a harness or client exception (an interruption), SUT for a recorded failure; the label is carried in outcome.outcome_category of run-manifest.json and never changes a rate"
+}

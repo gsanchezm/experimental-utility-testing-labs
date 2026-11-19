@@ -1,0 +1,97 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E04-SUT05-API-01__EX0017__A1",
+  "condition": "E04-SUT05-API-01",
+  "execution_id": "EX0017",
+  "attempt": 1,
+  "scenario": "CS-001",
+  "outcome_category": "TARGET_STATE_VERIFIED",
+  "observed": "target state verified: every block of the execution held",
+  "cause": null,
+  "attribution": "SUT",
+  "last_phase": "verification",
+  "duration_s": 2.656,
+  "steps": [
+    {
+      "phase": "reset",
+      "description": "restart the SUT process (SIGTERM to the process group, port refused, start in a new session and group, readiness)",
+      "mechanisms": [
+        "ENVIRONMENT_RESTART"
+      ],
+      "started_at": "2026-11-18T21:55:28.194Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "stop_signal": "SIGTERM to process group 3784",
+        "stop_sent_at": "2026-11-18T21:55:28.208Z",
+        "port_refused_at": "2026-11-18T21:55:28.709Z",
+        "port_polls": 2,
+        "start_at": "2026-11-18T21:55:28.724Z",
+        "new_pid": 3814,
+        "new_pgid": 3814,
+        "ready_at": "2026-11-18T21:55:30.778Z",
+        "readiness_polls": 3,
+        "last_readiness_status": 200
+      },
+      "evidence": [
+        "evidence/002-process-tree-before-stop.txt",
+        "evidence/003-process-tree-after-stop.txt",
+        "evidence/004-process-tree-after-restart.txt"
+      ],
+      "finished_at": "2026-11-18T21:55:30.794Z"
+    },
+    {
+      "phase": "starting-state",
+      "description": "POST /rest/user/login (documented account), then GET /rest/basket/{bid}: the basket holds no item",
+      "mechanisms": [],
+      "started_at": "2026-11-18T21:55:30.794Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "login_status": 200,
+        "token_received": true,
+        "bid": 6,
+        "basket_status": 200,
+        "product_ids": []
+      },
+      "evidence": [
+        "evidence/005-sut05-login.json",
+        "evidence/006-sut05-basket-start.json"
+      ],
+      "finished_at": "2026-11-18T21:55:30.833Z"
+    },
+    {
+      "phase": "establishment",
+      "description": "POST /api/BasketItems {ProductId 1, BasketId <bid>, quantity 1}",
+      "mechanisms": [
+        "API_SEED"
+      ],
+      "started_at": "2026-11-18T21:55:30.833Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200
+      },
+      "evidence": [
+        "evidence/007-sut05-add-item.json"
+      ],
+      "finished_at": "2026-11-18T21:55:30.839Z"
+    },
+    {
+      "phase": "verification",
+      "description": "GET /rest/basket/{bid} shows ProductId 1",
+      "mechanisms": [],
+      "started_at": "2026-11-18T21:55:30.839Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "product_ids": [
+          1
+        ]
+      },
+      "evidence": [
+        "evidence/008-sut05-basket-target-state.json"
+      ],
+      "finished_at": "2026-11-18T21:55:30.850Z"
+    }
+  ],
+  "notes": [],
+  "note": "attribution is mechanical (IMPLEMENTATION-NOTES.md, point 3): TOOLING for a harness or client exception (an interruption), SUT for a recorded failure; the label is carried in outcome.outcome_category of run-manifest.json and never changes a rate"
+}

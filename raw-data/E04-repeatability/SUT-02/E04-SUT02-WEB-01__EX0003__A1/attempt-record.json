@@ -1,0 +1,93 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E04-SUT02-WEB-01__EX0003__A1",
+  "condition": "E04-SUT02-WEB-01",
+  "execution_id": "EX0003",
+  "attempt": 1,
+  "scenario": "CS-001",
+  "outcome_category": "TARGET_STATE_VERIFIED",
+  "observed": "target state verified: every block of the execution held",
+  "cause": null,
+  "attribution": "SUT",
+  "last_phase": "verification",
+  "duration_s": 1.796,
+  "steps": [
+    {
+      "phase": "reset",
+      "description": "ensure the logged-in session, open the side drawer, click 'Reset App State'",
+      "mechanisms": [
+        "APP_DATA_CLEAR"
+      ],
+      "started_at": "2026-11-18T21:53:05.178Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "url": "http://127.0.0.1:3000/inventory.html",
+        "login_form_was_shown": false,
+        "reset_control_visible": true,
+        "settle": {
+          "network_quiet": true,
+          "quiet_ms": 500,
+          "elapsed_s": 0.511
+        },
+        "cart-contents after the click": null
+      },
+      "evidence": [
+        "evidence/002-sut02-storage-after-reset.json"
+      ],
+      "finished_at": "2026-11-18T21:53:06.690Z"
+    },
+    {
+      "phase": "starting-state",
+      "description": "the cart link reads 'Cart, empty' with no badge",
+      "mechanisms": [],
+      "started_at": "2026-11-18T21:53:06.690Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "aria_label": "Cart, empty",
+        "badge_count": 0,
+        "badge_text": null,
+        "cart-contents": null
+      },
+      "evidence": [
+        "evidence/003-sut02-start.png"
+      ],
+      "finished_at": "2026-11-18T21:53:06.803Z"
+    },
+    {
+      "phase": "establishment",
+      "description": "load {web}/inventory.html, then click [data-test=\"add-to-cart-sauce-labs-backpack\"]",
+      "mechanisms": [
+        "DIRECT_ROUTE",
+        "UI_FLOW"
+      ],
+      "started_at": "2026-11-18T21:53:06.803Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "cart-contents": "[4]"
+      },
+      "evidence": [],
+      "finished_at": "2026-11-18T21:53:06.875Z"
+    },
+    {
+      "phase": "verification",
+      "description": "[data-test=\"shopping-cart-badge\"] text 1",
+      "mechanisms": [],
+      "started_at": "2026-11-18T21:53:06.875Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "aria_label": "Cart, 1 items",
+        "badge_count": 1,
+        "badge_text": "1",
+        "cart-contents": "[4]"
+      },
+      "evidence": [
+        "evidence/004-sut02-target-state.png"
+      ],
+      "finished_at": "2026-11-18T21:53:06.973Z"
+    }
+  ],
+  "notes": [],
+  "note": "attribution is mechanical (IMPLEMENTATION-NOTES.md, point 3): TOOLING for a harness or client exception (an interruption), SUT for a recorded failure; the label is carried in outcome.outcome_category of run-manifest.json and never changes a rate"
+}

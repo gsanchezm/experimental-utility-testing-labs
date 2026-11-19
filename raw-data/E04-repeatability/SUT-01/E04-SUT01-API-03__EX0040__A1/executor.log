@@ -1,0 +1,15 @@
+{"t": "2026-11-18T22:03:17.209Z", "event": "run-start", "condition": "E04-SUT01-API-03", "run_id": "E04-SUT01-API-03__EX0040__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-18T22:03:17.209Z", "event": "step-start", "phase": "reset", "description": "POST /api/auth/login, then POST /api/session/reset with the session token"}
+{"t": "2026-11-18T22:03:17.210Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/auth/login", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/002-sut01-login.json"}
+{"t": "2026-11-18T22:03:17.211Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/session/reset", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/003-sut01-reset.json"}
+{"t": "2026-11-18T22:03:17.211Z", "event": "step-end", "phase": "reset", "outcome": null}
+{"t": "2026-11-18T22:03:17.211Z", "event": "step-start", "phase": "starting-state", "description": "GET /api/session: the cart is empty"}
+{"t": "2026-11-18T22:03:17.213Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:8000/api/session", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/004-sut01-session-start.json"}
+{"t": "2026-11-18T22:03:17.213Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-18T22:03:17.213Z", "event": "step-start", "phase": "establishment", "description": "POST /api/cart with one p02 line"}
+{"t": "2026-11-18T22:03:17.215Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/cart", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/005-sut01-seed-cart.json"}
+{"t": "2026-11-18T22:03:17.215Z", "event": "step-end", "phase": "establishment", "outcome": null}
+{"t": "2026-11-18T22:03:17.215Z", "event": "step-start", "phase": "verification", "description": "GET /api/session shows exactly the p02 line"}
+{"t": "2026-11-18T22:03:17.216Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:8000/api/session", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/006-sut01-session-target-state.json"}
+{"t": "2026-11-18T22:03:17.217Z", "event": "step-end", "phase": "verification", "outcome": null}
+{"t": "2026-11-18T22:03:17.217Z", "event": "run-end", "category": "TARGET_STATE_VERIFIED", "attribution": "SUT"}
