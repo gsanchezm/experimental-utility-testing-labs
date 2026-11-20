@@ -1,0 +1,29 @@
+# derived-data/E07-cross-layer-continuity/outcomes-per-attempt.csv.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (a CSV cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/E07-cross-layer-continuity/outcomes-per-attempt.csv
+dataset_sha256: 140e951760a7e2089ee2fd3ae338d1999b4ce08ae9e7cecb700dd060debd63dd
+campaign_id: E07-cross-layer-continuity
+hypothesis_id: null
+part: "one row per attempt of the 200 imported bundles (50 per condition, 4 conditions), with the recorded outcome category, the interrupted cause, the expected category, the recorded match flag, the attribution, the workflow outcome status, the last phase and the cause of the attempt record"
+raw_inputs:
+  tree:
+    path: raw-data/E07-cross-layer-continuity
+    git_tree: 420f34472909e419a5836b4f2cba12c3cfe2e6fe
+    pinned_at_commit: dd3d75ae101db46d2cdae7cd40c823c0e741f03b
+    campaign_state: FROZEN
+  bundles: 200
+  files_read: run-manifest.json and attempt-record.json of each bundle (the attempt record is checked against the sha256 that the run manifest lists)
+transformation_script:
+  path: analysis/e07-continuity-analysis/compute-continuity-e07.js
+  version: git-blob-sha 6b316d940136a365a8c0605a40f415bde08822ba
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only)
+date_generated: "2026-11-19"
+date_note: local date (America/Mexico_City); the UTC date at the time of writing was 2026-11-20
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: experiments/E07-cross-layer-continuity/README.md, "Campaign configuration" (sha256 94a85733f8b88ea4046cfdda9c1407bf0b6387763d3b772624764651fa237ad2)
+notes: >
+  Written by the same script as derived-data/E07-cross-layer-continuity/continuity-e07-result.json, from the same bundles. Every column is a
+  recorded field of a bundle; none is interpreted, and no label is re-mapped. Rows follow the order of the conditions file and
+  the execution identifier.

@@ -1,0 +1,21 @@
+{"t": "2026-11-20T00:27:39.815Z", "event": "run-start", "condition": "E07-CS005-SUT04-API-WEB", "run_id": "E07-CS005-SUT04-API-WEB__EX0037__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-20T00:27:39.842Z", "event": "browser", "version": "153.0.8010.12", "viewport": {"width": 1280, "height": 800}, "context_number": 37}
+{"t": "2026-11-20T00:27:39.842Z", "event": "step-start", "phase": "reset", "description": "DELETE /booking/{id} for every booking of room 1 with this condition's first name"}
+{"t": "2026-11-20T00:27:39.846Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3004/auth/login", "status": 200, "error": null, "elapsed_s": 0.004, "evidence": "evidence/002-sut04-login.json"}
+{"t": "2026-11-20T00:27:39.854Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/booking/?roomid=1", "status": 200, "error": null, "elapsed_s": 0.008, "evidence": "evidence/003-sut04-bookings-before-reset.json"}
+{"t": "2026-11-20T00:27:39.861Z", "event": "http", "method": "DELETE", "url": "http://127.0.0.1:3000/booking/39", "status": 202, "error": null, "elapsed_s": 0.006, "evidence": "evidence/004-sut04-delete-39.json"}
+{"t": "2026-11-20T00:27:39.861Z", "event": "step-end", "phase": "reset", "outcome": null}
+{"t": "2026-11-20T00:27:39.861Z", "event": "step-start", "phase": "reset", "description": "admin login in the new browser context (the admin web session of the web layer)"}
+{"t": "2026-11-20T00:27:40.590Z", "event": "step-end", "phase": "reset", "outcome": null}
+{"t": "2026-11-20T00:27:40.590Z", "event": "step-start", "phase": "starting-state", "description": "GET /booking/?roomid=1: no booking with this condition's first name"}
+{"t": "2026-11-20T00:27:40.610Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/booking/?roomid=1", "status": 200, "error": null, "elapsed_s": 0.019, "evidence": "evidence/005-sut04-bookings-start.json"}
+{"t": "2026-11-20T00:27:40.610Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-20T00:27:40.610Z", "event": "step-start", "phase": "establishment", "description": "POST /booking/ for room 1 with the guest names and dates of the execution, without email and phone (API layer)"}
+{"t": "2026-11-20T00:27:40.621Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3000/booking/", "status": 201, "error": null, "elapsed_s": 0.011, "evidence": "evidence/006-sut04-create.json"}
+{"t": "2026-11-20T00:27:40.621Z", "event": "step-end", "phase": "establishment", "outcome": null}
+{"t": "2026-11-20T00:27:40.622Z", "event": "step-start", "phase": "establishment-check", "description": "GET /booking/{id} answers 200 with the guest names and dates of the execution (API layer, read-only)"}
+{"t": "2026-11-20T00:27:40.632Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/booking/40", "status": 200, "error": null, "elapsed_s": 0.01, "evidence": "evidence/007-sut04-get-established.json"}
+{"t": "2026-11-20T00:27:40.632Z", "event": "step-end", "phase": "establishment-check", "outcome": null}
+{"t": "2026-11-20T00:27:40.633Z", "event": "step-start", "phase": "verification", "description": "{web}/admin/room/1 lists one row with the guest names and the check-in and check-out dates of the execution (WEB layer, read-only)"}
+{"t": "2026-11-20T00:27:42.010Z", "event": "step-end", "phase": "verification", "outcome": null}
+{"t": "2026-11-20T00:27:42.012Z", "event": "run-end", "category": "VERIFIED", "interrupted_cause": null, "attribution": "SUT"}

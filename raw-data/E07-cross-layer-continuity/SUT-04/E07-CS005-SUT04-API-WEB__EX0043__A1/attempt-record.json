@@ -1,0 +1,194 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E07-CS005-SUT04-API-WEB__EX0043__A1",
+  "condition": "E07-CS005-SUT04-API-WEB",
+  "execution_id": "EX0043",
+  "attempt": 1,
+  "scenario": "CS-005",
+  "source_layer": "api",
+  "verification_layer": "web",
+  "outcome_category": "VERIFIED",
+  "interrupted_cause": null,
+  "observed": "continuity verified: every declared identity key and attribute matched on the verification layer",
+  "cause": null,
+  "attribution": "SUT",
+  "last_phase": "verification",
+  "duration_s": 2.215,
+  "identity": {
+    "declared_keys": [
+      "run-unique guest names",
+      "check-in and check-out dates of room 1"
+    ],
+    "compared_keys": [
+      "booking_count",
+      "firstname",
+      "lastname",
+      "checkin",
+      "checkout"
+    ],
+    "not_compared": {},
+    "established": {
+      "booking_count": 1,
+      "firstname": "Erwmcrhw",
+      "lastname": "Rsootqmcq",
+      "checkin": "2033-06-28",
+      "checkout": "2033-06-29"
+    },
+    "observed": {
+      "booking_count": 1,
+      "firstname": "Erwmcrhw",
+      "lastname": "Rsootqmcq",
+      "checkin": "2033-06-28",
+      "checkout": "2033-06-29"
+    },
+    "comparison": [
+      {
+        "key": "booking_count",
+        "established": 1,
+        "observed": 1,
+        "match": true
+      },
+      {
+        "key": "firstname",
+        "established": "Erwmcrhw",
+        "observed": "Erwmcrhw",
+        "match": true
+      },
+      {
+        "key": "lastname",
+        "established": "Rsootqmcq",
+        "observed": "Rsootqmcq",
+        "match": true
+      },
+      {
+        "key": "checkin",
+        "established": "2033-06-28",
+        "observed": "2033-06-28",
+        "match": true
+      },
+      {
+        "key": "checkout",
+        "established": "2033-06-29",
+        "observed": "2033-06-29",
+        "match": true
+      }
+    ]
+  },
+  "steps": [
+    {
+      "phase": "reset",
+      "description": "DELETE /booking/{id} for every booking of room 1 with this condition's first name",
+      "mechanisms": [
+        "API_RESET"
+      ],
+      "started_at": "2026-11-20T00:27:53.031Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "login_status": 200,
+        "token_cookie_received": true,
+        "bookings_in_room_1": 2,
+        "bookings_to_delete": [
+          45
+        ],
+        "delete_statuses": {
+          "45": 202
+        }
+      },
+      "evidence": [
+        "evidence/002-sut04-login.json",
+        "evidence/003-sut04-bookings-before-reset.json",
+        "evidence/004-sut04-delete-45.json"
+      ],
+      "finished_at": "2026-11-20T00:27:53.050Z"
+    },
+    {
+      "phase": "reset",
+      "description": "admin login in the new browser context (the admin web session of the web layer)",
+      "mechanisms": [
+        "PREDEFINED_ACCOUNT"
+      ],
+      "started_at": "2026-11-20T00:27:53.050Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "token_cookie_present": true
+      },
+      "evidence": [],
+      "finished_at": "2026-11-20T00:27:53.790Z"
+    },
+    {
+      "phase": "starting-state",
+      "description": "GET /booking/?roomid=1: no booking with this condition's first name",
+      "mechanisms": [],
+      "started_at": "2026-11-20T00:27:53.790Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "bookings_in_room_1": 1,
+        "bookings_with_the_condition_first_name": 0,
+        "names_and_dates_of_the_execution": {
+          "firstname": "Erwmcrhw",
+          "lastname": "Rsootqmcq",
+          "checkin": "2033-06-28",
+          "checkout": "2033-06-29",
+          "email": "e07.sootqmcq@example.com",
+          "phone": "01234567890"
+        }
+      },
+      "evidence": [
+        "evidence/005-sut04-bookings-start.json"
+      ],
+      "finished_at": "2026-11-20T00:27:53.807Z"
+    },
+    {
+      "phase": "establishment",
+      "description": "POST /booking/ for room 1 with the guest names and dates of the execution, without email and phone (API layer)",
+      "mechanisms": [
+        "API_SEED"
+      ],
+      "started_at": "2026-11-20T00:27:53.808Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 201,
+        "booking_id": 46
+      },
+      "evidence": [
+        "evidence/006-sut04-create.json"
+      ],
+      "finished_at": "2026-11-20T00:27:53.818Z"
+    },
+    {
+      "phase": "establishment-check",
+      "description": "GET /booking/{id} answers 200 with the guest names and dates of the execution (API layer, read-only)",
+      "mechanisms": [],
+      "started_at": "2026-11-20T00:27:53.818Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200
+      },
+      "evidence": [
+        "evidence/007-sut04-get-established.json"
+      ],
+      "finished_at": "2026-11-20T00:27:53.828Z"
+    },
+    {
+      "phase": "verification",
+      "description": "{web}/admin/room/1 lists one row with the guest names and the check-in and check-out dates of the execution (WEB layer, read-only)",
+      "mechanisms": [],
+      "started_at": "2026-11-20T00:27:53.828Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "differs": null,
+        "page_status": 200,
+        "rows": 2
+      },
+      "evidence": [
+        "evidence/008-sut04-web-admin-rows.txt",
+        "evidence/009-sut04-web-admin-room.png"
+      ],
+      "finished_at": "2026-11-20T00:27:55.217Z"
+    }
+  ],
+  "notes": [],
+  "note": "attribution is mechanical (IMPLEMENTATION-NOTES.md, point 3): TOOLING for a harness, browser or client exception and for the watchdog, SUT for a recorded failure; the label is carried in outcome.outcome_category of run-manifest.json and never changes a rate"
+}

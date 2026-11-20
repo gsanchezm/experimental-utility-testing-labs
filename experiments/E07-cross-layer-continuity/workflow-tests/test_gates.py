@@ -520,7 +520,7 @@ class MeasuredGateTests(unittest.TestCase):
     def test_as_is_repository_state_fails_closed(self):
         """The files of this repository as they are now (copied where present) must not pass the gate. Since the campaign START the START
         record, the locked configuration, the controlled-instance status, the FROZEN scenario records and the frozen prompt are present, so the only
-        checks that may fail are those about the dispatch authorization of the assigned SUT, which the human research lead issues separately (Section 3.7)."""
+        checks that may fail are those about the dispatch authorization of the assigned SUT, which the human research lead issues separately (Section 3.7), and, since the campaign freeze (E07-FREEZE-AUTH-01), the status check (gate G-1: a FROZEN campaign refuses every dispatch)."""
         files = {}
         for rel in (STUDY, CHANGELOG, GOV, README, CONDITIONS_REL, SUT_MANIFEST, SCHEMA, IMPL, WORKFLOW_REL, START_RECORD, CONTROLLED,
                     MAPPINGS['CS-005'], MAPPINGS['CS-006'], f'prompts/frozen/{REAL_PROMPT}.md'):
@@ -537,7 +537,9 @@ class MeasuredGateTests(unittest.TestCase):
         self.assertNotEqual(code, 0, out)
         fails = fail_lines(out)
         self.assertTrue(any('exactly one dispatch authorization record of the assigned SUT' in l for l in fails), out)
-        self.assertTrue(all('dispatch authorization' in l for l in fails), [l for l in fails if 'dispatch authorization' not in l])
+        allowed = ('dispatch authorization', 'E07 campaign status IN_PROGRESS')   # the campaign is FROZEN: gate G-1 refuses every dispatch
+        self.assertTrue(all(any(x in l for x in allowed) for l in fails), [l for l in fails if not any(x in l for x in allowed)])
+        self.assertTrue(any('E07 campaign status IN_PROGRESS' in l for l in fails), out)
         self.assertIn('PASS run-manifest schema v2 present with the v2 id', out)
 
 

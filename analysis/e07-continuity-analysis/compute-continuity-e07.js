@@ -48,11 +48,11 @@ const OUT_CSV = 'derived-data/E07-cross-layer-continuity/outcomes-per-attempt.cs
 const README = 'experiments/E07-cross-layer-continuity/README.md';
 const CONDITIONS = 'experiments/E07-cross-layer-continuity/conditions-draft.json';
 // Pins: filled at the campaign freeze from the recorded START and freeze records (manifests/e07-campaign-start-v1.yaml, manifests/e07-campaign-freeze-v1.yaml).
-const START_COMMIT = null;        // the E07 campaign START commit (E07-START-AUTH-01)
-const FREEZE_COMMIT = null;       // the E07 campaign freeze commit (E07-FREEZE-AUTH-01)
-const RAW_TREE = null;            // git tree of raw-data/E07-cross-layer-continuity at the freeze commit
-const CONFIG_SHA256 = null;       // sha256 of the Campaign configuration section of the E07 README, equal at the START commit and at HEAD
-const CONDITIONS_SHA256 = null;   // sha256 of the conditions file
+const START_COMMIT = '52ec7dd15e5bfb314cd549fdbeb351e728321869';                  // the E07 campaign START commit (E07-START-AUTH-01)
+const FREEZE_COMMIT = 'dd3d75ae101db46d2cdae7cd40c823c0e741f03b';                 // the E07 campaign freeze commit (E07-FREEZE-AUTH-01)
+const RAW_TREE = '420f34472909e419a5836b4f2cba12c3cfe2e6fe';                      // git tree of raw-data/E07-cross-layer-continuity at the freeze commit
+const CONFIG_SHA256 = '94a85733f8b88ea4046cfdda9c1407bf0b6387763d3b772624764651fa237ad2';   // sha256 of the Campaign configuration section of the E07 README, equal at the START commit and at HEAD
+const CONDITIONS_SHA256 = '0baf2497948562f35c5236df460cf497497b571ec4024ef7a27ecc13ff5f2151';   // sha256 of the conditions file
 const WILSON_Z = 1.959963984540054;   // 95 percent, the repository convention (experiments/E05-determinism/README.md, "Metrics")
 const N = 50;
 

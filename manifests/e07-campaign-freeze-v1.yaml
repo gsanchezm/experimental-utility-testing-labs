@@ -1,0 +1,101 @@
+# manifests/e07-campaign-freeze-v1.yaml -- provenance record of the E07-cross-layer-continuity campaign freeze (protocol/change-control-v1.md, section 7, moment 2: IN_PROGRESS -> FROZEN).
+# Modeled on manifests/e04-campaign-freeze-v1.yaml. A provenance record, not a second campaign-configuration record: the configuration itself stays authoritative and locked in
+# experiments/E07-cross-layer-continuity/README.md, section "Campaign configuration" (unchanged by this freeze). ORCHESTRATOR record of operation OP-FREEZE-11 (2026-11-19 local, the UTC date at the time of writing was 2026-11-20).
+# Immutable once committed; a correction is a new version file.
+record_class: E07_CAMPAIGN_FREEZE
+record_id: E07-FREEZE-01
+study_id: EUS-2026-001
+campaign_id: E07-cross-layer-continuity
+operation_id: OP-FREEZE-11
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-19'
+recorded_on_timezone: America/Mexico_City (the UTC date at the time of writing was 2026-11-20)
+status: RECORDED
+transition: IN_PROGRESS -> FROZEN
+previous_status: IN_PROGRESS
+new_status: FROZEN
+freeze_timestamp: "2026-11-20T01:27:20Z"  # one UTC clock reading taken when the edits were written; the commit that carries them follows it
+authorization_id: E07-FREEZE-AUTH-01
+freeze_approved_by: gilbertosanchez
+frozen_by: ORCHESTRATOR
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+human_approval:
+  text_verbatim: "Your questions have been answered: \"Las 200 ejecuciones de E07-cross-layer-continuity (4 condiciones, N = 50 cada una: E07-CS005-SUT01-API-WEB, E07-CS006-SUT01-WEB-API, E07-CS005-SUT04-API-WEB, E07-CS006-SUT04-WEB-API) están importadas byte a byte bajo raw-data/E07-cross-layer-continuity/ y fusionadas en main (merge 303fb8c3): todas intento 1, sin paro, 4 corridas de GitHub en success (44644364998, 44644876024, 44644459260 y 44646265496; el workflow medido tiene exactamente esas 4 corridas, sin re-corrida), 4 despachos dentro de E07-DISPATCH-SUT01-AUTH-01 y E07-DISPATCH-SUT04-AUTH-01, una auditoría mía de 20/20 comprobaciones sobre 6254 archivos con 0 defectos y una verificación independiente de que los archivos importados son idénticos byte a byte a los artefactos de GitHub. ¿Congelo la campaña E07 ahora (protocol/change-control-v1.md, sección 7, momento 2, con id E07-FREEZE-AUTH-01 y tu respuesta literal en el registro manifests/e07-campaign-freeze-v1.yaml)? El freeze vuelve append-only raw-data/E07-cross-layer-continuity/ (un run posterior solo con una fila 'run appended after campaign freeze' en el change-log que diga el motivo) y vuelve inmutable el registro de configuración de la campaña (sección Campaign configuration del README de E07, sha256 94a85733f8b88ea4046cfdda9c1407bf0b6387763d3b772624764651fa237ad2); el workflow medido exige el estado IN_PROGRESS (compuerta G-1), así que rechaza todo despacho desde ese momento. Qué NO autoriza: ningún despacho, re-corrida ni run agregado; ningún export ni push (publicar los datos crudos es otra decisión, con tu sí a su línea exacta); ningún cambio de workflow, protocolo (salvo la fila del change-log), prompt, SUT o archivo crudo; ningún análisis (el análisis de continuidad necesita sus pines llenos y tu instrucción aparte). Edita: el registro de freeze, la fila del change-log, el estado de E07 en study-manifest, las líneas de estado de README.md, experiments/README.md, raw-data/README.md y del README de E07, 4 filas de manifests/README.md y la prueba as-is de los gates (que pasa a admitir el rechazo por G-1), en dos commits locales; ensayo previo 12/12.\"=\"APRUEBO EL FREEZE DE E07 (Recomendado)\", \"¿Qué declara el registro de freeze sobre los resultados? El prompt de despacho congelado (sección 5) me prohíbe resumir entre corridas o condiciones, calcular tasas, comparar o explicar un resultado; en el freeze de E04 elegiste que el registro declare solo las conclusiones de workflow.\"=\"Solo conclusiones de workflow (Recomendado)\", \"El bloque 'Current phase' de AGENT-INSTRUCTIONS.md sigue sin describir los exports v70 a v73 ni el avance de E07 (preparación, CS-005/CS-006 FROZEN, DRY_RUN, START, autorizaciones, despachos y este freeze). ¿Actualizo AGENT-INSTRUCTIONS.md ahora, en un commit local aparte (sin tocar reglas, solo el estado vivo, como en las actualizaciones anteriores)?\"=\"Sí, actualiza AGENT-INSTRUCTIONS.md (Recomendado)\". You can now continue with these answers in mind."
+  bytes: 2972
+  sha256: a733f80e98e4b46f834c8e24b5a59e3303075589c88c961db33f58ca57b42d68
+  received_utc: "2026-11-20T01:26:01.554Z"  # stamp of the stored conversation entry
+  received_local: "2026-11-19T19:26:01-06:00 (America/Mexico_City)"
+  question_stamp: "2026-11-20T01:07:03.038Z"
+  chosen_options: ["APRUEBO EL FREEZE DE E07 (Recomendado)", "Solo conclusiones de workflow (Recomendado)", "Sí, actualiza AGENT-INSTRUCTIONS.md (Recomendado)"]
+  entry_kind: >
+    the answer of the human research lead to a question dialog about the freeze of E07 (the options chosen are listed above); the text above is the whole stored answer, which also holds the answers to
+    the other questions of the same dialog, if any
+  scope: the freeze of the E07 campaign with its four executable web/api conditions on SUT-01 and SUT-04 (both directions), 200 executions, N = 50 per condition, attempt 1, under the authorization id above
+trigger: >
+  protocol/change-control-v1.md, section 7, moment 2: every planned run of the campaign (all ecosystems, all conditions, the recorded N) has been executed. The locked configuration plans four executable
+  web/api conditions, two on SUT-01 (E07-CS005-SUT01-API-WEB and E07-CS006-SUT01-WEB-API) and two on SUT-04 (E07-CS005-SUT04-API-WEB and E07-CS006-SUT04-WEB-API), with N = 50 each (EX0001 to EX0050); no other
+  SUT has a condition in the configuration (SUT-02, SUT-03, SUT-05 and SUT-06 are NOT_COMPARABLE on CS-005 and CS-006).
+pre_freeze_state:
+  canonical_head: 303fb8c316aff8ad7e649c6b805c194c8dc026b6  # the head before the freeze commit
+  merge_commit: 303fb8c316aff8ad7e649c6b805c194c8dc026b6  # the merge of the dispatch branch into main
+  dispatch_branch_head: 8b7a512a920a9dad32cf42b141ff1c890921a1f9
+  public_main: 413d0522c01af209029c9eca3abf69654bf1c742   # export v73; nothing is pushed by the freeze
+  e07_status_before: IN_PROGRESS
+  configuration_section: {path: experiments/E07-cross-layer-continuity/README.md, heading: Campaign configuration, sha256: 94a85733f8b88ea4046cfdda9c1407bf0b6387763d3b772624764651fa237ad2, unchanged_since_the_start: true}   # slice from the heading to the end of file, read at the START (section_inserted_sha256 of the START package) and now: byte-identical
+  start_record: manifests/e07-campaign-start-v1.yaml
+executions:
+  conditions: [E07-CS005-SUT01-API-WEB, E07-CS006-SUT01-WEB-API, E07-CS005-SUT04-API-WEB, E07-CS006-SUT04-WEB-API]
+  n_per_condition: 50
+  executions_imported: 200   # all attempt 1; SUT-01 100, SUT-04 100
+  dispatches: 4   # one dispatch per condition, 50 executions in each job (the unit of dispatch that the frozen prompt fixes)
+  first_dispatch_recorded_utc: "2026-11-20T00:15:13Z"   # clock of the first DISPATCH_RECORDED entry (E07-CS005-SUT01-API-WEB)
+  last_import_recorded_utc: "2026-11-20T00:36:22Z"   # dispatch-record event RUN_CONCLUDED_AND_IMPORTED of the last condition (E07-CS006-SUT04-WEB-API)
+  local_date_of_the_imports: '2026-11-19'   # America/Mexico_City
+  dispatch_authorizations: [E07-DISPATCH-SUT01-AUTH-01, E07-DISPATCH-SUT04-AUTH-01]
+  dispatch_records: manifests/e07-measured-dispatch/e07-sut0N.jsonl   # two records, append-only, complete (each: 1 RECORD_OPENED, then one DISPATCH_RECORDED, one RUN_IDENTITY_RECORDED and one RUN_CONCLUDED_AND_IMPORTED per condition: 2 conditions for SUT-01 and 2 for SUT-04)
+  imports: raw-data/E07-cross-layer-continuity/<SUT>/<condition id>__<execution id>__A1/   # each with run-manifest.json, the bundle members unchanged and the executor records; the job-level files of each condition and its import-record.yaml in <condition id>__job__A1/
+  consumed_attempts_without_bundle: []   # none: no attempt left without a bundle, no attempt 2
+  github_measured_execution_runs: {total: 4, success: 4, event: workflow_dispatch for all, branch: main, run_attempt: 1}   # read from the workflow's run list at the freeze; no run is in progress or queued
+  run_ids: {E07-CS005-SUT01-API-WEB: 44644364998, E07-CS006-SUT01-WEB-API: 44644876024, E07-CS005-SUT04-API-WEB: 44644459260, E07-CS006-SUT04-WEB-API: 44646265496}
+  workflow_revisions_of_the_imported_runs: {'b4888425c06dd735eab87250a3dbbf9ba7bb4ef709c1fbdc7384a6ba932ded89 (public main 413d0522)': 4}   # ci-provenance.json workflow.file_sha256 (the locked measured-workflow hash of the START record) and the head of each run
+  configuration_hash_stamped_by_the_gates: "f5534e487dca6e0c448ce3bc7e30909f9e1e32a960a6dbc21c766b10026ed380"   # frozen_input_hashes.e07_configuration_sha256 of the ci-provenance of every run directory (one value)
+audit_of_the_imports:
+  method: a read-only script (untracked scratch, not part of the repository; audit_imports_e07.py of the operator records) over the 200 run directories, the 4 job directories, the two dispatch records, the import records and the GitHub run list, run on the canonical tree at the head above, before any edit of the freeze
+  checks: >
+    tracked tree clean and no stray file under the raw-data directory and the dispatch-record directory; the merge commit with the dispatch branch head as its second parent and the 10 commits of the dispatch branch
+    (two record openings, four run identities, four imports); nothing changed under the raw-data directory and the dispatch records between the merge and the head; the directories of each condition equal the expected
+    set of 50 run directories plus the job directory, all attempt 1; every run manifest names its campaign, run id, condition, SUT, attempt 1 and environment, lists its attempt record once, and every file it lists
+    (except itself) exists under its own run directory with the listed sha256; every import record is consistent (workflow success, head sha, 50 manifests, executor exit status 0, no hash mismatch, both archives
+    verified against the digest GitHub reports at the import, the files it lists equal the bytes on disk); the workflow hash and the head recorded by the ci-provenance of every run directory; each dispatch record has
+    one RECORD_OPENED and one DISPATCH_RECORDED, RUN_IDENTITY_RECORDED and RUN_CONCLUDED_AND_IMPORTED per condition in the locked order under its authorization; the run ids are four distinct runs; GitHub lists exactly
+    those 4 runs of the measured workflow, all success, none queued or in progress; the Campaign configuration equals the one locked at the START. The byte equality of the imported members with the GitHub archives is
+    not downloaded again here: it is the archive_sha256_verified field of each import record, checked above, and the independent audit that the ORCHESTRATOR ran before asking for the freeze.
+  result: {checks: 20, passed: 20, run_directories: 200, job_directories: 4, files_listed_and_verified: 6254, defects: 0}
+  observed_outcomes: "workflow conclusion success in 4 of 4 runs (200 of 200 executions imported), stated as recorded; no tally of the run-manifest outcome or category fields is recorded here, because the frozen dispatch prompt (section 5) forbids summarizing across runs or conditions and as in the E04 freeze; the outcomes stay in the run manifests, the attempt records and the condition summaries of the import records, unanalyzed"
+effect: >
+  From this moment raw-data/E07-cross-layer-continuity/ is append-only in the sense of raw-data/README.md: every existing raw file is immutable, and a further run may be appended only with a "run appended after campaign
+  freeze" row in protocol/CHANGELOG.md stating the reason (raw-data/README.md, rule 1). The campaign configuration record is immutable. The measured-execution workflow requires the campaign status IN_PROGRESS (gate G-1),
+  so it refuses every dispatch from the freeze on; a run appended after the freeze would need its own change-log row and a CI correction. Reopening the campaign follows protocol/change-control-v1.md, section 5 in full.
+other_edits_of_the_freeze_commit:
+  - "protocol/CHANGELOG.md: one row for this transition (after the row of 2026-11-19 of the E07 START)"
+  - "manifests/study-manifest.yaml: the E07 status line FROZEN with the transition clock reading, and a note of the operation"
+  - "status lines that the freeze makes out of date, edited with counted replacements: README.md, experiments/README.md, raw-data/README.md, the E07 README (current status)"
+  - "manifests/README.md: the rows of the E07 environment-verification rounds, the authorizations, the dispatch records and this freeze (the rows of the START package and of the START record exist)"
+  - "experiments/E07-cross-layer-continuity/workflow-tests/test_gates.py: the as-is gate test allows the status check of gate G-1 beside the dispatch-authorization checks (a FROZEN campaign refuses every dispatch), as in the E04 test adaptation (cea197c1); no executor, workflow or prompt file changes, so the implementation hash stays 55a352aa"
+not_authorized_by_this_record:
+  - any dispatch, re-run, or run appended after the freeze
+  - any export or push, and the publication of raw-data/E07-cross-layer-continuity/ (a separate decision, made through the export that carries it)
+  - any change to a workflow, a protocol document other than the change log, a prompt, a SUT, or a raw file
+  - "any analysis: the continuity analysis (analysis/e07-continuity-analysis/compute-continuity-e07.js) is a separate step under protocol/statistical-analysis-plan-v1.md, section 4; its pins (START_COMMIT 52ec7dd1, FREEZE_COMMIT = the commit that adds this file, RAW_TREE, CONFIG_SHA256 94a85733f8b88ea4046cfdda9c1407bf0b6387763d3b772624764651fa237ad2, CONDITIONS_SHA256) are filled and the script is run only on its own instruction"
+  - any edit of the agent-instructions file or of the dashboard beyond what the human research lead approves in the same dialog (a separate commit)
+resulting_freeze_commit: null   # a commit cannot name its own id; the commit that adds this file is the freeze commit
+next_steps:
+  - the export that publishes raw-data/E07-cross-layer-continuity/, the dispatch records, this freeze and the status lines, which needs the human research lead's yes to its exact push line
+  - the export-log entry and the post-push audit in PUBLIC-EXPORT-MANIFEST.yaml
+  - the refresh of the dashboard research-status.html (standing rule), when asked
+  - the continuity analysis (continuity success proportion per condition, descriptive only; no confirmatory H4 comparison is evaluable, decision DP-4), on a separate instruction
+notes: |
+  The freeze closes the set of E07 runs of this campaign version. It introduces no sample size, exclusion rule, attribution rule, or comparison that was not already in the locked configuration.
+  No E07 result is analyzed or summarized by this record.

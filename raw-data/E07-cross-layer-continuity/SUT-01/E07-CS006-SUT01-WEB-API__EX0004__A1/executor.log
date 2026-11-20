@@ -1,0 +1,21 @@
+{"t": "2026-11-20T00:20:49.475Z", "event": "run-start", "condition": "E07-CS006-SUT01-WEB-API", "run_id": "E07-CS006-SUT01-WEB-API__EX0004__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-20T00:20:49.514Z", "event": "browser", "version": "153.0.8010.12", "viewport": {"width": 1280, "height": 800}, "context_number": 4}
+{"t": "2026-11-20T00:20:49.514Z", "event": "step-start", "phase": "reset", "description": "POST /api/auth/login, then POST /api/session/reset with the session token"}
+{"t": "2026-11-20T00:20:49.516Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/auth/login", "status": 200, "error": null, "elapsed_s": 0.002, "evidence": "evidence/002-sut01-login.json"}
+{"t": "2026-11-20T00:20:49.518Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/session/reset", "status": 200, "error": null, "elapsed_s": 0.002, "evidence": "evidence/003-sut01-reset.json"}
+{"t": "2026-11-20T00:20:49.518Z", "event": "step-end", "phase": "reset", "outcome": null}
+{"t": "2026-11-20T00:20:49.518Z", "event": "step-start", "phase": "reset", "description": "new browser context: first load of {web}/ and one injection of client state (session, market, empty client cart)"}
+{"t": "2026-11-20T00:20:49.648Z", "event": "step-end", "phase": "reset", "outcome": null}
+{"t": "2026-11-20T00:20:49.648Z", "event": "step-start", "phase": "starting-state", "description": "GET /api/session: the server cart is empty"}
+{"t": "2026-11-20T00:20:49.650Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:8000/api/session", "status": 200, "error": null, "elapsed_s": 0.002, "evidence": "evidence/005-sut01-session-start.json"}
+{"t": "2026-11-20T00:20:49.650Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-20T00:20:49.650Z", "event": "step-start", "phase": "starting-state", "description": "the client cart omnipizza-cart holds no item"}
+{"t": "2026-11-20T00:20:49.652Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-20T00:20:49.652Z", "event": "step-start", "phase": "establishment", "description": "catalog, the add control of the p02 pizza, the confirm control of the customizer modal (WEB layer)"}
+{"t": "2026-11-20T00:20:50.766Z", "event": "step-end", "phase": "establishment", "outcome": null}
+{"t": "2026-11-20T00:20:50.766Z", "event": "step-start", "phase": "establishment-check", "description": "the persisted client cart omnipizza-cart holds exactly the p02 line, quantity 1 (read-only, WEB layer)"}
+{"t": "2026-11-20T00:20:50.772Z", "event": "step-end", "phase": "establishment-check", "outcome": null}
+{"t": "2026-11-20T00:20:50.772Z", "event": "step-start", "phase": "verification", "description": "GET /api/session with the session token (API layer, read-only)"}
+{"t": "2026-11-20T00:20:50.776Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:8000/api/session", "status": 200, "error": null, "elapsed_s": 0.003, "evidence": "evidence/007-sut01-session-verification.json"}
+{"t": "2026-11-20T00:20:50.776Z", "event": "step-end", "phase": "verification", "outcome": "FAILURE"}
+{"t": "2026-11-20T00:20:50.778Z", "event": "run-end", "category": "NOT_VERIFIED", "interrupted_cause": null, "attribution": "SUT"}

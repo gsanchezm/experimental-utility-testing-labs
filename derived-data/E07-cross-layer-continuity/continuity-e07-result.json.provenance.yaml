@@ -1,0 +1,57 @@
+# derived-data/E07-cross-layer-continuity/continuity-e07-result.json.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (JSON cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/E07-cross-layer-continuity/continuity-e07-result.json
+dataset_sha256: 2b9a32021405d5e9324e9fc864700973e5356867f5086bd4f0f45d1b4fc1f732
+campaign_id: E07-cross-layer-continuity
+hypothesis_id: null
+part: "continuity proportions per condition of the frozen campaign (A = V / T primary, B = V / E reported apart); the continuity variable belongs to the cross-layer part of H4, but no CONFIRMATORY (H4) comparison is evaluable (decision DP-4 strict: SUT-02 and SUT-03 are NOT_COMPARABLE in the frozen mapping records), so no hypothesis label applies and this dataset evaluates no hypothesis"
+sut_ids: [SUT-01, SUT-04]
+sut_ids_without_condition: [SUT-02, SUT-03, SUT-05, SUT-06]
+per_run_table:
+  path: derived-data/E07-cross-layer-continuity/outcomes-per-attempt.csv
+  sha256: 140e951760a7e2089ee2fd3ae338d1999b4ce08ae9e7cecb700dd060debd63dd
+  note: written by the same script run from the same bundles; the result is not computed from it
+raw_inputs:
+  tree:
+    path: raw-data/E07-cross-layer-continuity
+    git_tree: 420f34472909e419a5836b4f2cba12c3cfe2e6fe
+    pinned_at_commit: dd3d75ae101db46d2cdae7cd40c823c0e741f03b
+    campaign_state: FROZEN
+  bundles: 200
+  job_directories_ignored: 4
+  files_read: run-manifest.json and attempt-record.json of each of the 200 bundles (400 files); the attempt record is checked against the sha256 that its run manifest lists, and the outcome category and the expected category of the run manifest are checked against the attempt record and the conditions file
+transformation_script:
+  path: analysis/e07-continuity-analysis/compute-continuity-e07.js
+  version: git-blob-sha 6b316d940136a365a8c0605a40f415bde08822ba
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only)
+pure_core:
+  path: analysis/h3-analysis/h3-metrics.js
+  version: git-blob-sha 72b1f74949cc76ce907ca2a162e5d5fbd28ef6a0
+  note: required for rate() (Wilson interval) and distinctToolchain() only; not modified (the blob sha equals the one recorded for the E05 and E04 analyses)
+tests:
+  path: analysis/e07-continuity-analysis/test/continuity-e07.test.js
+  note: seven unit tests on synthetic attempt records (node --test analysis/e07-continuity-analysis/test/continuity-e07.test.js), 0 failures
+date_generated: "2026-11-19"
+date_note: local date (America/Mexico_City); the UTC date at the time of writing was 2026-11-20
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: experiments/E07-cross-layer-continuity/README.md, "Campaign configuration" (sha256 94a85733f8b88ea4046cfdda9c1407bf0b6387763d3b772624764651fa237ad2, equal at the START commit 52ec7dd15e5bfb314cd549fdbeb351e728321869 and at HEAD), "Blocks, outcome categories and the continuity proportion" and "Analysis and what is not computed"; manifests/campaign-execution-decisions-v12.yaml (decision D-E07-10); conditions file experiments/E07-cross-layer-continuity/conditions-draft.json (sha256 0baf2497948562f35c5236df460cf497497b571ec4024ef7a27ecc13ff5f2151); protocol/statistical-analysis-plan-v1.md, section 4
+instruction: >
+  the human research lead selected the option "Sí, corre el análisis de E07 (Recomendada)" in a question dialog of 2026-11-19 local time
+  (question 2026-11-20T01:28:53Z, answer 2026-11-20T01:33:53Z, UTC): fill the pins of the analysis script, run it over the 200 attempts and
+  write the two derived datasets with provenance sidecars, descriptive only, with no confirmatory H4 contrast, test, p-value, effect size,
+  ranking, comparison between ecosystems or composite score
+notes: >
+  Deterministic, non-interpretive computation. Implements the descriptive procedure pre-registered in the E07 campaign configuration: per
+  condition T (valid measured attempts), V (executions with the category VERIFIED), E (attempts that reached the verification block, last phase
+  verification), the continuity proportion A = V / T (primary) and the conditional proportion B = V / E (reported apart), each with the Wilson 95%
+  interval without continuity correction (z = 1.959963984540054), the counts per declared category, the interrupted-cause counts and the
+  attributed counts (TOOLING and SUT per category) beside the raw rates; the raw rates are never recomputed on the attributed counts. A
+  rate over an empty denominator would be NOT_ESTIMABLE, never 0. No attempt is excluded; no label is re-mapped. Not computed: any
+  between-ecosystem comparison, pooled rate, composite score, latency, H4 confirmatory comparison, test, p-value, risk difference, effect size
+  or ranking. The consistency checks returned no violation and the toolchain drift report is empty. The script was run and its --check
+  recomputation equals the files on disk, and an independent recomputation in a second language (Python) from the same 200 bundles gave the
+  same T, V, E, A, B, Wilson bounds and counts per category, interrupted cause and attribution for each of the 4 conditions. The unchanged core
+  writes the Wilson lower bound of a rate of 0 of 50 as 6.938893903907228e-18 (floating-point arithmetic); the independent recomputation
+  clamps it at 0 and agrees within 1e-12.
