@@ -1,0 +1,41 @@
+# manifests/campaign-execution-decisions-v16.yaml -- decisions of 2026-11-20, round 1 of the E06 preparation (operation OP-PREP-E06-01; CAMPAIGN-EXECUTION-DECISIONS-16): the four open decisions of the SUT-01 Android compatibility smoke (HD-3, HD-15, HD-16) and the order of work of E06.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing. Immutable once committed; a correction is a new version file. Earlier rounds: -v2 to -v15 (unchanged).
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-16"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E06-01"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-20"
+recorded_at_utc: "2026-11-20T14:50:00Z"
+executes_anything: false
+protocol_change: false
+supersedes: null
+earlier_rounds: ["manifests/campaign-execution-decisions-v2.yaml", "manifests/campaign-execution-decisions-v3.yaml", "manifests/campaign-execution-decisions-v4.yaml", "manifests/campaign-execution-decisions-v5.yaml", "manifests/campaign-execution-decisions-v6.yaml", "manifests/campaign-execution-decisions-v7.yaml", "manifests/campaign-execution-decisions-v8.yaml", "manifests/campaign-execution-decisions-v9.yaml", "manifests/campaign-execution-decisions-v10.yaml", "manifests/campaign-execution-decisions-v11.yaml", "manifests/campaign-execution-decisions-v12.yaml", "manifests/campaign-execution-decisions-v13.yaml", "manifests/campaign-execution-decisions-v14.yaml", "manifests/campaign-execution-decisions-v15.yaml"]
+evidence_basis: "qualification/compatibility-smoke-sut01/README.md and IMPLEMENTATION-NOTES.md (source finding: the backend origin of the pinned release APK is a compile-time constant, client.ts line 27 at commit 3cdbe6596a1ab5ef2058ba4259c44da96a0fa03a; the launch activity is not in the pinned tree), manifests/sut01-compatibility-smoke-execution-auth-v4-prepared.draft.yaml (open_before_issuance), manifests/campaign-execution-decisions-v2.yaml (HD-2, HD-7, tier-2 working defaults HD-17 and HD-18 of 2026-11-06), experiments/E06-cross-platform-parity/mobile-path-brief-draft.md (HD-1 to HD-14)."
+human_decision:
+  given_by: the human research lead
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), the first of the E06 preparation"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_e06_round_1:
+    transcript_stamp: "2026-11-20T14:42:26.818Z"
+    bytes: 1497
+    exact_text_sha256: 886fd218fa144402ca156d51dd5b40bb026194f79b0b447f898389681324f4a5
+    note: the answer of the question dialog, whole; the chosen option is the decision
+    exact_text: "Your questions have been answered: \"HD-16 (smoke SUT-01 Android, lock v5): el APK pinned v1.1.8 no trae en el repo la actividad de lanzamiento (el proyecto Android se genera por prebuild) y el gate del workflow rechaza todo dispatch mientras la realización diga TBD. ¿Cómo la resuelvo?\"=\"Resuelta por el driver (Recomendada)\", \"HD-3 (backend de SUT-01 móvil): el endpoint https://omnipizza-backend.onrender.com está fijado en tiempo de compilación en el APK (client.ts línea 27), así que un backend controlado exigiría cambiar el build o interceptar la red (viola la regla 3). ¿Clasifico el smoke como sign-in de solo lectura contra el backend hospedado, PUBLIC_HOSTED, con HOSTED_MAPPING_UNVERIFIED divulgado?\"=\"Hospedado, solo lectura (Recomendada)\", \"HD-15 (atribución de un rechazo del backend hospedado, p. ej. 429 users_limit o 5xx DESPUÉS de abrir la sesión): la política v3 no tiene categoría de backend y su regla 9.4 da FAIL_RUNNER ante atribución incierta. ¿Mantengo el default del borrador?\"=\"Default: FAIL_RUNNER propuesto (Recomendada)\", \"Orden de trabajo de E06 (decisión de secuencia; HD-13 queda con su default: AUTH-04, lock v5, registro con prefijo sut01-, salvo veto tuyo). El smoke es el cuello de botella y puede dar FAIL_RUNNER (devuelve el estudio a UNRESOLVED_AFTER_FALLBACK_FAILURE y deja las celdas móviles de E06 sin datos). ¿Cómo avanzo?\"=\"Smoke primero; E06 completa solo tras PASS (Recomendada)\". You can now continue with these answers in mind."
+decisions:
+  - id: D-E06-1
+    subject: "HD-16, launch activity of the SUT-01 Android smoke"
+    decision: "Resolved by the driver (the recommended option). The realization sets no appium:appActivity and no appium:appWaitActivity; the UiAutomator2 driver resolves the launchable activity from the manifest of the APK given in appium:app, which is verified by SHA-256 before any runner action; the harness records appPackage and appActivity from the session capabilities when the session response returns them. The study does not read the APK manifest. Effect: the concrete-realization section of qualification/compatibility-smoke-sut01/README.md and REALIZATION.android of harness/smoke.mjs no longer carry TBD, the draft lock v5 and the draft authorization APPIUM3-COMPAT-SMOKE-AUTH-04 are regenerated by tests/make_draft_records.py with the new hashes, and the readiness-gate matrix passes 24 of 24 (tests/OUTPUT-gate-matrix.txt). Nothing is issued."
+  - id: D-E06-2
+    subject: "HD-3, backend of the SUT-01 mobile smoke"
+    decision: "Hosted, read-only sign-in against https://omnipizza-backend.onrender.com, environment_type PUBLIC_HOSTED, HOSTED_MAPPING_UNVERIFIED disclosed (the recommended option); the pre-runner probe GET /health must answer 200. No controlled backend, no modified build, no DNS or TLS redirect (rule 3)."
+  - id: D-E06-3
+    subject: "HD-15, attribution of a refusal of the hosted backend"
+    decision: "The default of the draft stands (the recommended option): a probe failure before the runner is NOT_EXECUTED with cause INFRASTRUCTURE, demonstrated by environment/backend-probe.json; a refusal after the session request is proposed FAIL_RUNNER with its basis, and the final attribution is recorded with the human research lead after review of the preserved artifacts under policy v3, 9.3 and 9.4, as in APPIUM3-COMPAT-SMOKE-AUTH-02. The frozen policy is not interpreted further and no successor is drafted."
+  - id: D-E06-4
+    subject: "order of work of E06"
+    decision: "The smoke first, and the full E06 only after a PASS (the recommended option): now, correct and validate the smoke package, bring the human research lead the exact issuance dialog of APPIUM3-COMPAT-SMOKE-AUTH-04, the export and the single dispatch, each on its own approval; in parallel only cheap documents (the review of CS-007 and a draft of the E06 configuration). The E06 executor and its workflows are built only after a smoke PASS, so that no work is spent if the runner fails."
+unchanged_working_defaults:
+  - "HD-13: authorization id APPIUM3-COMPAT-SMOKE-AUTH-04, lock v5, record file prefix sut01-; vetoable by the human research lead."
+  - "HD-17 and HD-18 of the smoke: as recorded in manifests/campaign-execution-decisions-v2.yaml (2026-11-06)."
+not_decided_in_this_round: "The issuance of APPIUM3-COMPAT-SMOKE-AUTH-04, any public export or push, the dispatch of the smoke, the freeze of CS-007, the E06 START and configuration, any E06 dispatch authorization, and the E06 freeze: each needs its own explicit human approval."

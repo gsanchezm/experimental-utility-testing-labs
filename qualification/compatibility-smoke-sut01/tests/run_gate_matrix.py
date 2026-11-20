@@ -114,8 +114,7 @@ def make_pass_base():
     base = os.path.join(SCRATCH, 'base')
     os.makedirs(base)
     copy_tree(REPO, base)
-    # the must-pass fixture resolves the one documented open item (launch activity) and issues the record in the fixture only
-    rewrite(base, S1 + '/README.md', lambda s: s.replace('TBD', 'not fixed'))  # fixture only: resolves every open TBD of the realization
+    # the must-pass fixture issues the record in the fixture only (the launch activity, HD-16, is resolved in the realization since 2026-11-20)
     regen(base)
     auth = load_yaml(base, AUTH)
     prompt_rel = 'prompts/frozen/' + PV + '.md'
@@ -198,7 +197,7 @@ MUTATIONS = [
     ('the Android APK digest changed in the build pin', 1, 'Android build pin',
      lambda t: (rewrite(t, S1 + '/smoke-common.sh', lambda s: s.replace('1059e9468145761710c9884b37e9fbc76da8e75eb9666dc0867d82a546cda6a4', '0' * 64)), set_artifact_sha(t, S1 + '/smoke-common.sh', sha_of(t, S1 + '/smoke-common.sh')))),
     ('the TBD launch activity reintroduced into the realization', 1, 'no null and no TBD',
-     lambda t: (rewrite(t, S1 + '/README.md', lambda s: s.replace('Launch activity: not fixed', 'Launch activity: TBD')), dump_yaml(t, LOCK, {**load_yaml(t, LOCK), 'realization_section': {**load_yaml(t, LOCK)['realization_section'], 'sha256': hashlib_sha(sec_of(t))}}), refresh_auth_lock_hash(t))),
+     lambda t: (rewrite(t, S1 + '/README.md', lambda s: s.replace('Launch activity (HUMAN DECISION HD-16, resolved 2026-11-20): not set', 'Launch activity: TBD, not set')), dump_yaml(t, LOCK, {**load_yaml(t, LOCK), 'realization_section': {**load_yaml(t, LOCK)['realization_section'], 'sha256': hashlib_sha(sec_of(t))}}), refresh_auth_lock_hash(t))),
     ('the historical AUTH-02 lineage record removed (the retained FAIL_RUNNER is then unverified)', 1, 'remediation lineage record',
      lambda t: os.remove(os.path.join(t, 'manifests', 'mobile-runner-remediation-v1.yaml'))),
     ('study-level status UNRESOLVED_AFTER_FALLBACK_FAILURE', 1, 'study-level mobile-runner status is SELECTED',

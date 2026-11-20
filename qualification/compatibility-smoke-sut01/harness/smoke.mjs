@@ -37,8 +37,9 @@ export const REALIZATION = {
       'appium:newCommandTimeout': 300,
     },
     // No appActivity and no appWaitActivity: the launch activity is not in the pinned tree (frontend-mobile/android is generated
-    // by prebuild) and has not been read from the APK (HUMAN DECISION HD-16). The driver resolves the launcher activity.
-    launch_activity: 'TBD (driver-resolved launcher activity; not in the pinned source tree)',
+    // by prebuild) and was not read from the APK by the study (HUMAN DECISION HD-16, resolved 2026-11-20). The driver resolves
+    // the launchable activity from the manifest of the verified APK given in appium:app.
+    launch_activity: 'resolved by the driver from the manifest of the verified APK (no appActivity set)',
     session_timeout_ms: 600000,
     screen_timeout_ms: 90000,
     assertion_timeout_ms: 30000,
@@ -174,7 +175,7 @@ export async function runSmoke({ platform, client, appPath, udid, outDir, contex
     await step('install and launch the pinned build (MC-01)', ['MC-01'], async () => {
       runnerActionStarted = true;
       const caps = await client.newSession(capsUsed, R.session_timeout_ms);
-      return { session_capabilities: pick(caps, ['platformName', 'appium:automationName', 'appium:platformVersion', 'appium:deviceName', 'appium:udid']) };
+      return { session_capabilities: pick(caps, ['platformName', 'appium:automationName', 'appium:platformVersion', 'appium:deviceName', 'appium:udid', 'appium:appPackage', 'appium:appActivity', 'appPackage', 'appActivity']) };
     });
     await step(`locate "${T.mc02.value}" by stable identifier and read it displayed (MC-02, MC-08)`, ['MC-02', 'MC-08'], async () => {
       await waitFor(client, { using: T.mc02.using, value: T.mc02.value, timeoutMs: R.screen_timeout_ms, until: async (id) => (await client.displayed(id)) === true });

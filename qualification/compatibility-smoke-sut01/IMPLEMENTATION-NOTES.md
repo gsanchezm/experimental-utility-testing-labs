@@ -46,7 +46,7 @@ Realization (DRAFT, locked by hash when issued). Sign-in path on the emulator: a
 ## 4. Blocked
 
 - On the source finding and the endpoint (HD-3): the default is a hosted read-only sign-in. A controlled backend is blocked by rule 3 unless a human decides otherwise.
-- On the launch activity (HD-16): `frontend-mobile/android/` is not in the pinned tree, so no `appActivity` can be read from source. The realization keeps `TBD` in that row, and the gate refuses on the TBD check until resolved (that refusal is intended).
+- On the launch activity (HD-16): resolved on 2026-11-20 (manifests/campaign-execution-decisions-v16.yaml, D-E06-1). `frontend-mobile/android/` is not in the pinned tree, so no `appActivity` can be read from source; the realization sets none and the driver resolves the launchable activity from the manifest of the verified APK. The harness records `appPackage` and `appActivity` from the session capabilities when the session response returns them. The draft lock v5 and AUTH-04 were regenerated and the gate matrix passes 24 of 24.
 - On the CI grant (HD-7): neither E03-CI-WRITE-AUTH-01 nor CAMPAIGN-CI-WRITE-AUTH-01 names a compatibility smoke or this workflow. The file must not be merged until the human research lead confirms a grant that names it.
 - On the lock and the authorization: the lock is a draft (`active_execution_baseline: false`), the record is PREPARED, and the frozen prompt and the mirror patch are owed at issuance. Issuance needs an explicit human instruction.
 - On the public export: GitHub Actions evaluates only the public repository. The issued files must be exported UNCHANGED. The export run is not performed here (the human research lead approves and pushes; HD-14). The validation workflow's export manifest must list the new files.
@@ -64,7 +64,7 @@ Items of the existing repository that name the SUT-02-only smoke scope (to be ch
 Each step is one approval; precedent for issuance, publication, dispatch, and recording is about one day (AUTH-01 to AUTH-03; publication-to-run 1 h to 7 h 20 min). A new realization has no precedent duration.
 
 1. Human decisions HD-2, HD-3, HD-7, HD-13 to HD-18 (same day if taken on receipt).
-2. HD-16 resolved (driver-resolved launcher, or a human-approved static APK manifest read). ORCHESTRATOR: correct the realization and rerun `make_draft_records.py` and the matrix.
+2. HD-16 resolved on 2026-11-20 (driver-resolved launcher, manifests/campaign-execution-decisions-v16.yaml). Done: the realization corrected, `make_draft_records.py` and the matrix rerun (24 of 24). HD-3 and HD-15 were decided the same day as recommended.
 3. HD-7: explicit CI grant naming the SUT-01 smoke workflow. Then the ORCHESTRATOR merges the draft workflow, the lock, and the record into the tracked tree (canonical repository), with its validation run.
 4. Explicit issuance of APPIUM3-COMPAT-SMOKE-AUTH-04: the frozen prompt is written, the mirror patch is applied, and the record is promoted in place (ISSUED, VALID, ELIGIBLE). Nothing dispatched.
 5. Export (human approval; the human research lead pushes), so GitHub can read the workflow. Post-push verification.
@@ -91,7 +91,7 @@ Each step is one approval; precedent for issuance, publication, dispatch, and re
 | HD-13 | Authorization id and namespace (brief HD-13) | APPIUM3-COMPAT-SMOKE-AUTH-04 (next free id); record file prefix `sut01-` so the SUT-02 glob-based checks are not changed; lock v5 (next free lock number, not a successor of v4) |
 | HD-14 | Public export before dispatch (brief HD-14) | yes; the human research lead pushes |
 | HD-15 (added by the ORCHESTRATOR; not in the brief) | Attribution of a hosted-backend refusal (a 429 `users_limit`, a 5xx) observed after the session request: policy 9.4 gives FAIL_RUNNER, and 9.3 has no backend category | a probe failure before the runner is NOT_EXECUTED / INFRASTRUCTURE (demonstrated by backend-probe.json); a refusal after the session request is FAIL_RUNNER by default. A protocol gap: a decision is needed on whether a hosted-backend refusal is INFRASTRUCTURE |
-| HD-16 (added by the ORCHESTRATOR; not in the brief) | Launch activity (not in the pinned tree) | none set; driver-resolved; the realization keeps TBD so the gate refuses until resolved |
+| HD-16 (added by the ORCHESTRATOR; not in the brief) | Launch activity (not in the pinned tree) | RESOLVED 2026-11-20 (D-E06-1): none set; the driver resolves the launchable activity from the manifest of the verified APK; the session capabilities are recorded when returned |
 | HD-17 (added by the ORCHESTRATOR; not in the brief) | Locator match rule for labels shared by a pill and its text node (`Standard`, `Sign In`) | first match in driver hierarchy order, match count recorded in the record |
 | HD-18 (added by the ORCHESTRATOR; not in the brief) | E06 NOT_STARTED as a precondition of the smoke | yes (the smoke precedes the E06 START); the E03 NOT_STARTED check of the SUT-02 workflow is not copied because E03 is FROZEN |
 
