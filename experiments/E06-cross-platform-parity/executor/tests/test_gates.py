@@ -107,6 +107,20 @@ def dispatch_record(cond, **over):
     return yaml.safe_dump(d)
 
 
+def further_approval_path(cond):
+    return f"manifests/e06-further-attempt-approval-sut{'01' if 'SUT01' in cond else '02'}-v1.yaml"
+
+
+def further_approval(cond, attempt=2, first=17, **over):
+    d = {'record_class': 'E06_FURTHER_ATTEMPT_APPROVAL', 'status': 'ISSUED', 'revoked': False, 'issued_by': 'human research lead',
+         'assigned_sut': 'SUT-01' if 'SUT01' in cond else 'SUT-02', 'governing_protocol': 'protocol/agent-governance-v6.md, Section 3.7',
+         'dispatch_authorization_id': AUTH_DISPATCH, 'campaign_start_authorization_id': AUTH_START,
+         'executor_implementation_sha256': IMPL_SHA, 'executor_prompt_version': PV, 'executor_prompt_sha256': PROMPT_SHA,
+         'attempts': [{'condition_id': cond, 'first_execution': first, 'attempt': attempt, 'previous_attempt': attempt - 1}]}
+    d.update(over)
+    return yaml.safe_dump(d)
+
+
 def configuration(cond, **drop):
     """A README with the locked "Campaign configuration" section naming everything the gate looks for; a keyword names one item to leave out."""
     conditions = {c['condition_id']: c for c in json.loads(read_bytes(CONDITIONS_REL))['conditions']}
@@ -174,6 +188,7 @@ def gate_env(cond, out, **overrides):
     env = {'PATH': os.environ.get('PATH', ''), 'GATE_CONDITION_ID': cond, 'GATE_CONFIRM': 'EXECUTE-' + cond,
            'GATE_DISPATCH_AUTHORIZATION_ID': AUTH_DISPATCH, 'GATE_CAMPAIGN_START_AUTHORIZATION_ID': AUTH_START,
            'GATE_EXECUTOR_PROMPT_VERSION': PV, 'GATE_EXECUTOR_IMPLEMENTATION_SHA256': IMPL_SHA, 'GATE_RUN_ATTEMPT': '1',
+           'GATE_ATTEMPT': '1', 'GATE_FIRST_EXECUTION': '1',
            'GATE_REF': 'refs/heads/main', 'GATE_SHA': 'a' * 40, 'GITHUB_OUTPUT': out}
     env.update(overrides)
     return env
@@ -247,7 +262,73 @@ class GateTests(unittest.TestCase):
         self.assert_fails_on('E06-CS007-SUT01-WEB', 'explicit confirmation token', GATE_CONFIRM='EXECUTE-E06-CS007-SUT01-ANDROID')
 
     def test_a_re_run_fails_on_the_attempt_gate(self):
-        self.assert_fails_on('E06-CS007-SUT01-WEB', 'first attempt only', GATE_RUN_ATTEMPT='2')
+        self.assert_fails_on('E06-CS007-SUT01-WEB', 'no GitHub-native re-run', GATE_RUN_ATTEMPT='2')
+
+    # ---- the attempt (gate G-E06-A2, decision D-E06-14)
+    def test_a_non_integer_attempt_fails(self):
+        for bad in ('0', 'x', '1.5', ''):
+            with self.subTest(attempt=bad):
+                self.assert_fails_on('E06-CS007-SUT01-WEB', 'attempt is a positive integer', GATE_ATTEMPT=bad)
+
+    def test_a_first_execution_outside_one_to_fifty_fails(self):
+        for bad in ('0', '51', 'x'):
+            with self.subTest(first=bad):
+                self.assert_fails_on('E06-CS007-SUT01-WEB', 'first execution is an integer from 1 to 50', GATE_FIRST_EXECUTION=bad)
+
+    def test_attempt_one_from_a_later_execution_fails(self):
+        self.assert_fails_on('E06-CS007-SUT01-WEB', 'and 1 for attempt 1', GATE_FIRST_EXECUTION='17')
+
+    def test_a_further_attempt_without_an_approval_record_fails(self):
+        self.assert_fails_on('E06-CS007-SUT01-WEB', 'exactly one further-attempt approval entry', GATE_ATTEMPT='2', GATE_FIRST_EXECUTION='17')
+
+    def test_a_further_attempt_under_its_approval_passes_and_records_the_hash(self):
+        cond = 'E06-CS007-SUT01-WEB'
+        root = self.tree(cond, lambda f: f.__setitem__(further_approval_path(cond), further_approval(cond)))
+        status, log, outputs = self.run_gate(root, cond, GATE_ATTEMPT='2', GATE_FIRST_EXECUTION='17')
+        self.assertEqual(status, 0, log)
+        self.assertEqual(outputs.get('ready'), 'true')
+        with open(os.path.join(root, further_approval_path(cond)), 'rb') as f:
+            self.assertEqual(outputs['further_attempt_approval_sha256'], hashlib.sha256(f.read()).hexdigest())
+
+    def test_attempt_one_records_that_no_approval_applies(self):
+        outputs = self.assert_passes('E06-CS007-SUT01-WEB')
+        self.assertEqual(outputs['further_attempt_approval_sha256'], 'not applicable (attempt 1)')
+
+    def test_each_defect_of_a_further_attempt_approval_fails_on_the_gate_that_names_it(self):
+        cond = 'E06-CS007-SUT02-WEB'
+        cases = {
+            'the approval is an ISSUED, unrevoked': dict(status='DRAFT'),
+            'the approval is an ISSUED, unrevoked (revoked)': dict(revoked=True),
+            'the approval is an ISSUED, unrevoked (issuer)': dict(issued_by='ORCHESTRATOR'),
+            'the approval is an ISSUED, unrevoked (record class)': dict(record_class='E07_FURTHER_ATTEMPT_APPROVAL'),
+            'the approval is an ISSUED, unrevoked (SUT)': dict(assigned_sut='SUT-01'),
+            'the approval cites the dispatch authorization': dict(dispatch_authorization_id='OTHER-DISPATCH'),
+            'the approval cites the dispatch authorization (START)': dict(campaign_start_authorization_id='OTHER-START'),
+            'the approval cites the dispatch authorization (implementation)': dict(executor_implementation_sha256='0' * 64),
+            'the approval cites the dispatch authorization (prompt version)': dict(executor_prompt_version='ORCHESTRATOR-E06-cross-platform-parity-v9'),
+            'the approval names the executor prompt SHA-256': dict(executor_prompt_sha256='0' * 64),
+            'the approval cites governance v6, Section 3.7': dict(governing_protocol='protocol/agent-governance-v5.md'),
+        }
+        for label, over in cases.items():
+            marker = label.split(' (')[0]
+            with self.subTest(defect=label):
+                self.assert_fails_on(cond, marker, lambda f, o=over: f.__setitem__(further_approval_path(cond), further_approval(cond, **o)),
+                                     GATE_ATTEMPT='2', GATE_FIRST_EXECUTION='17')
+
+    def test_an_approval_for_another_first_execution_attempt_or_condition_fails(self):
+        cond = 'E06-CS007-SUT01-WEB'
+        for label, record in {'first execution': further_approval(cond, first=18), 'attempt': further_approval(cond, attempt=3, first=17),
+                              'condition': further_approval('E06-CS007-SUT01-ANDROID')}.items():
+            with self.subTest(differs=label):
+                self.assert_fails_on(cond, 'exactly one further-attempt approval entry', lambda f, r=record: f.__setitem__(further_approval_path(cond), r),
+                                     GATE_ATTEMPT='2', GATE_FIRST_EXECUTION='17')
+
+    def test_an_approval_that_names_a_wrong_previous_attempt_fails(self):
+        cond = 'E06-CS007-SUT01-WEB'
+        record = further_approval(cond)
+        record = record.replace('previous_attempt: 1', 'previous_attempt: 3')
+        self.assert_fails_on(cond, 'names the attempt before this one', lambda f: f.__setitem__(further_approval_path(cond), record),
+                             GATE_ATTEMPT='2', GATE_FIRST_EXECUTION='17')
 
     def test_a_non_default_branch_fails_on_the_branch_gate(self):
         self.assert_fails_on('E06-CS007-SUT01-WEB', 'default branch only', GATE_REF='refs/heads/feature')

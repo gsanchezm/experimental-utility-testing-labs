@@ -9,7 +9,8 @@
   "canonical_scenario_mapping": "experiments/scenario-mappings/CS-007.yaml (mapping_status FROZEN; freeze record manifests/cs-007-freeze-v1.yaml)",
   "decision_records": [
     "manifests/campaign-execution-decisions-v16.yaml (D-E06-1 to D-E06-4)",
-    "manifests/campaign-execution-decisions-v17.yaml (D-E06-5 to D-E06-11)"
+    "manifests/campaign-execution-decisions-v17.yaml (D-E06-5 to D-E06-11)",
+    "manifests/campaign-execution-decisions-v18.yaml (D-E06-12 to D-E06-15)"
   ],
   "n_per_condition": 50,
   "attempt": 1,
@@ -42,7 +43,7 @@
     "scope": "per condition (per surface); the value is fixed in the locked configuration before the START; the executor refuses to start a condition whose value differs from the value named in the configuration passed to it (environment variable EXPECTED_IDENTITY_ORACLE). arrival_only is the DP-3 fallback recorded before the START when a non-measured DRY_RUN shows that the identity cannot be read on that surface."
   },
   "pairing_rule": "Paired per index: execution k of the WEB condition of an ecosystem is paired with execution k of its ANDROID condition (same account, same market, same index), k = 1 to 50.",
-  "parity_rule": "Parity is present for pair k when both executions reach the authenticated catalogue AND the identity of the first catalogue position is the same on both surfaces. An execution that did not arrive is recorded with its reason and is a non-parity; it is never excluded after the fact and never retried inside the same execution record.",
+  "parity_rule": "Parity is present for pair k when both executions reach the authenticated catalogue AND the identity of the first catalogue position is the same on both surfaces. An execution that did not arrive is recorded with its reason and is a non-parity; it is never excluded after the fact and never retried inside the same execution record. An execution that arrived but whose identity could not be read (ARRIVED_IDENTITY_UNREADABLE) is a non-parity as this rule is written, and the analysis reports it as its own category beside the parity counts, never merged silently and never excluded (decision D-E06-15).",
   "estimand": "Parity proportion per ecosystem = pairs with parity over 50, with a Wilson 95% interval; effect SUT-01 versus SUT-02 by risk difference with an interval and Fisher's exact test (protocol/statistical-analysis-plan-v1.md, section 4.3). SUT-01 versus SUT-03 has no mobile data and is not estimable. The analysis is not part of this executor.",
   "viewport_policy": {
     "web": {"width": 1280, "height": 800, "time_zone": "UTC", "browser_locale": "en-US"},
@@ -187,8 +188,8 @@
       "market": null,
       "language": null,
       "market_source": "no market parameter was found in the sources read (open item 6)",
-      "account": {"candidate": "bod@example.com", "password": "10203040", "status": "candidate - not frozen"},
-      "account_source": "the quick-pick pills of the pinned login layout: username1TV, text @string/bod_example_com (bod@example.com; strings.xml line 92) and password1TV, text 10203040 (fragment_login.xml, lines 238 to 258 at the pinned commit). The app accepts any non-empty pair except alice@example.com (SUT02-EV-0007), so the web account standard_user with secret_sauce would also be accepted; the choice is an open item (open item 1)",
+      "account": {"candidate": "standard_user", "password": "secret_sauce", "status": "decided 2026-11-21 (D-E06-12): the account of SUT-02 web, the same on both surfaces; locked at the START"},
+      "account_source": "decision D-E06-12 of 2026-11-21: the account is standard_user with secret_sauce, the documented standard account of SUT-02 web (SUT02-EV-0001), so that the pairing rule (same account on both surfaces) holds; the Android application accepts any non-empty pair except alice@example.com (SUT02-EV-0007) and the login fields of the pinned layout are filled by the harness (nameET, passwordET). The first documented quick-pick pair of the layout (bod@example.com / 10203040) was the account of the DRY_RUN round 1 and is not the account of the measured condition",
       "reset": "clean install per execution: adb uninstall com.saucelabs.mydemoapp.android, then a new Appium session that installs the APK verified by SHA-256 (the app state is cleared at session start by the driver, appium noReset not set)",
       "identity_key": "product_title",
       "identity_oracle": "item_identity",
@@ -209,17 +210,17 @@
     }
   ],
   "open_items": [
-    "1. SUT-02 Android account: the candidate is the first documented quick-pick pair of the pinned layout (bod@example.com / 10203040). The pairing rule asks for the same account on both surfaces; the alternative is standard_user / secret_sauce, which the app accepts (SUT02-EV-0007). The human research lead decides before the lock.",
+    "1. SUT-02 Android account: decided (D-E06-12, 2026-11-21): standard_user / secret_sauce on both surfaces, the same account as SUT-02 web. The DRY_RUN round 1 ran the harness with the first quick-pick pair of the layout, so SUT-02 Android is verified again with this account before the START.",
     "2. SUT-01 web application: the API origin of the hosted web build is not recorded in an E01 row; DRY_RUN must show which backend the web surface uses (D-E06-8 assumes the same hosted backend for both surfaces).",
     "3. SUT-01 web root route and the test identifiers of the sign-in form are taken from the pinned source; every web selector is to be verified by a non-measured DRY_RUN against the hosted deployment (which is unpinned).",
     "4. environment_type of SUT-02 web (PUBLIC_HOSTED proposed by analogy with D-E06-8) and of SUT-02 Android (EMULATED proposed) are not decided.",
     "5. The SUT-01 Android testID of a React Native view may map to the resource id or to the accessibility label on the emulator; the accessibility-label strategy is used because the source sets it (qa.ts), and a DRY_RUN must show that the card labels are exposed with the expected count.",
     "6. SUT-02 has no market or language parameter in the sources read; market and language are recorded as null for both SUT-02 conditions.",
-    "7. identity_oracle per surface is item_identity for all four conditions (default). arrival_only is the DP-3 fallback, to be recorded before the START only if a DRY_RUN shows that the item identity cannot be read on a surface.",
-    "8. The Android drawer row Log In is at position 10 of the drawer list (MainActivity.java lines 256 to 259); whether it is on screen without a scroll is a DRY_RUN question.",
-    "9. Whether the arrival of SUT-02 Android should also read the Logout Menu Item row (MainActivity.java line 257) as a second signal of the authenticated state is a choice for the human research lead.",
-    "10. Analysis rule for ARRIVED_IDENTITY_UNREADABLE: the parity rule counts an unreadable identity as not equal; whether it stays a non-parity or is a separate category in the analysis is a decision for the analysis plan (not decided here).",
-    "11. Duration: 50 sequential clean installs per Android condition may not fit a single GitHub job; the measured workflow sets the job budget at the maximum allowed, and the real duration is a DRY_RUN observation.",
+    "7. identity_oracle per surface is item_identity for all four conditions (default). The DRY_RUN round 1 (run 44931436092) read an identity on all four conditions in 3 of 3 executions, so no surface needs the arrival_only fallback of DP-3.",
+    "8. The Android drawer row Log In is at position 10 of the drawer list (MainActivity.java lines 256 to 259): the DRY_RUN round 1 found and tapped it in every execution of SUT-02 Android (direct locator or the scroll fallback of the harness).",
+    "9. Second signal of the authenticated state on SUT-02 Android: decided (D-E06-13, 2026-11-21). The catalogue landing screen is displayed before any sign-in, so the arrival of SUT-02 Android also needs the drawer row Logout Menu Item after the titles are read; when the row is absent the execution is NOT_ARRIVED_SUT with the reason SUT_SIGN_IN_REFUSED. The selector is verified by a DRY_RUN before the START.",
+    "10. Analysis rule for ARRIVED_IDENTITY_UNREADABLE: decided (D-E06-15, 2026-11-21): a non-parity as the parity rule is written, reported as its own category beside the parity counts, never excluded.",
+    "11. Duration: the DRY_RUN round 1 took 18.0 to 42.5 s per Android execution (first execution the longest) and 1.6 to 15.7 s per web execution, which gives about 17 minutes for 50 Android executions and 2 to 13 minutes for 50 web executions, before the job setup; the budget of the Android jobs is far above it.",
     "12. executor_implementation_sha256, executor_prompt_version and the dispatch authorization identifiers are null until the configuration is locked and the authorizations are issued (protocol/agent-governance-v6.md, Section 3.7).",
     "13. The documented test password pizza123 and the SUT-02 password secret_sauce appear in this draft because they are documented in the pinned sources; the executor scrubs them from every kept file."
   ]

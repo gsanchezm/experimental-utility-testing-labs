@@ -115,6 +115,24 @@ class WorkflowTests(unittest.TestCase):
             self.assertNotIn('raw-data/E06', text, f'{name}: no output path under raw-data/')
             self.assertIn('"RECORD_CLASS": "MEASURED_EXPERIMENT"', text, name)
 
+    def test_the_attempt_and_the_first_execution_are_dispatch_inputs_that_every_measured_job_passes_to_the_executor(self):
+        wf = load(MEASURED)
+        inputs = wf[True]['workflow_dispatch']['inputs'] if True in wf else wf['on']['workflow_dispatch']['inputs']
+        for name in ('attempt', 'first_execution'):
+            self.assertEqual(inputs[name]['default'], '1', name)
+            self.assertEqual(inputs[name]['required'], False, name)
+        gates = wf['jobs']['gates']
+        self.assertEqual(gates['env']['GATE_ATTEMPT'], '${{ inputs.attempt }}')
+        self.assertEqual(gates['env']['GATE_FIRST_EXECUTION'], '${{ inputs.first_execution }}')
+        self.assertIn('further_attempt_approval_sha256', gates['outputs'])
+        for name, job in wf['jobs'].items():
+            if name in ('gates', 'provenance'):
+                continue
+            execute = [s for s in job['steps'] if isinstance(s.get('env'), dict) and s['env'].get('RECORD_CLASS') == 'MEASURED_EXPERIMENT']
+            self.assertEqual(len(execute), 1, name)
+            self.assertEqual(execute[0]['env']['ATTEMPT'], '${{ inputs.attempt }}', name)
+            self.assertEqual(execute[0]['env']['FIRST_EXECUTION'], '${{ inputs.first_execution }}', name)
+
     def test_the_provenance_job_records_the_frozen_inputs_and_writes_no_raw_data(self):
         job = load(MEASURED)['jobs']['provenance']
         self.assertEqual(job['needs'], 'gates')
@@ -123,7 +141,7 @@ class WorkflowTests(unittest.TestCase):
         self.assertNotIn('raw-data', text)
         for key in ('e06_configuration_sha256', 'conditions_file_sha256', 'run_manifest_schema_v2_sha256', 'executor_prompt_sha256',
                     'executor_implementation_sha256', 'agent_governance_v6_sha256', 'dispatch_authorization_sha256', 'timeout_policy', 'retry_policy',
-                    'concurrency_policy', 'sut_version', 'environment_type', 'secrets'):
+                    'concurrency_policy', 'sut_version', 'environment_type', 'secrets', 'further_attempt_approval_sha256', 'first_execution'):
             self.assertIn(key, text, key)
         self.assertIn('E06-MEASURED_EXPERIMENT-${{ inputs.condition }}-provenance', text)
         # every output of the gate that the provenance reads is declared by the gates job

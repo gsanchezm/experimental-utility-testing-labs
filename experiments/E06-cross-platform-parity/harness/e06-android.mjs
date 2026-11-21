@@ -50,6 +50,10 @@ const SUT02 = {
   name_error: { using: 'id', value: `${SUT02_PACKAGE_ID}nameErrorTV` },
   password_error: { using: 'id', value: `${SUT02_PACKAGE_ID}passwordErrorTV` },
   titles: { using: 'id', value: `${SUT02_PACKAGE_ID}titleTV` },
+  // The second signal of the authenticated state (decision D-E06-13): the drawer row Logout Menu Item (MainActivity.java, MenuAdapter.java), which the
+  // application shows only once a session exists; read by the same accessibility-id route as the Login Menu Item row, with the same scroll fallback.
+  logout_row: { using: 'accessibility id', value: 'Logout Menu Item' },
+  logout_row_scroll: { using: '-android uiautomator', value: 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().description("Logout Menu Item"))' },
 };
 
 export function capabilitiesFor(input) {
@@ -126,6 +130,8 @@ function emptyRecord(input) {
     sign_in_submitted: false,
     arrived: false,
     arrival_detail: null,
+    authenticated_signal: null,
+    session_not_established: false,
     error_text: null,
     card_labels: [],
     titles: [],
@@ -268,9 +274,12 @@ async function runSut02(client, input, record, sleep, now) {
   if (state === 'ERROR') {
     record.error_text = (await textOf(client, SUT02.name_error)) || (await textOf(client, SUT02.password_error));
   }
-  record.arrived = state === 'CATALOGUE';
-  record.arrival_detail = record.arrived ? 'login screen gone and the catalogue landing screen displayed' : (state === 'ERROR' ? 'a validation error is displayed on the login screen' : 'the login screen did not give way to the catalogue within the sign-in budget');
-  if (record.arrived) {
+  // Arrival on SUT-02 Android needs two signals (decision D-E06-13): the login screen gone with the catalogue landing displayed (the catalogue is
+  // displayed before any sign-in, so this alone does not show a session) and the drawer row Logout Menu Item, read after the titles. The record
+  // keeps arrived false until the second signal holds, so a fault of the second step is a harness fault of an execution that did not arrive.
+  record.arrived = false;
+  record.arrival_detail = state === 'CATALOGUE' ? 'login screen gone and the catalogue landing screen displayed' : (state === 'ERROR' ? 'a validation error is displayed on the login screen' : 'the login screen did not give way to the catalogue within the sign-in budget');
+  if (state === 'CATALOGUE') {
     const titles = await step(record, 'read the titles of the catalogue in document order', () => pollUntil(async () => {
       const ids = await client.findElements(SUT02.titles.using, SUT02.titles.value);
       if (!ids.length) return null;
@@ -280,6 +289,29 @@ async function runSut02(client, input, record, sleep, now) {
     }, IDENTITY_BUDGET_MS, sleep, now));
     record.titles = titles || [];
     record.page_source = await client.source();
+    const signal = await step(record, 'open the menu and read the drawer row Logout Menu Item (second signal of the authenticated state)', async () => {
+      const menu = await waitFor(client, { sleep, now, ...SUT02.menu_icon, timeoutMs: 30000 });
+      await client.click(menu);
+      for (const locator of [SUT02.logout_row, SUT02.logout_row_scroll]) {
+        try {
+          await waitFor(client, { sleep, now, ...locator, timeoutMs: locator === SUT02.logout_row ? 10000 : 30000 });
+          return true;
+        } catch (e) {
+          if (!(e instanceof WebDriverError && e.kind === 'not_reached')) throw e;
+        }
+      }
+      // absent: a session that is gone (a transport or protocol fault) must not read as an absent row
+      await client.source();
+      return false;
+    });
+    record.authenticated_signal = signal === true;
+    record.arrived = record.authenticated_signal;
+    if (!record.authenticated_signal) {
+      record.session_not_established = true;
+      record.arrival_detail = 'the catalogue landing screen is displayed after the sign-in but the drawer row Logout Menu Item is absent: no authenticated session';
+    } else {
+      record.arrival_detail = 'login screen gone, the catalogue landing screen displayed and the drawer row Logout Menu Item present';
+    }
   }
 }
 

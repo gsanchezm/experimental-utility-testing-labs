@@ -34,7 +34,7 @@ const noSleep = async () => {};
 function input(sut, url, overrides = {}) {
   const base = sut === 'SUT-01'
     ? { sut_id: 'SUT-01', app_package: 'com.omnipizza.app', username: 'standard_user', password: 'pizza123', launch: {} }
-    : { sut_id: 'SUT-02', app_package: 'com.saucelabs.mydemoapp.android', username: 'bod@example.com', password: '10203040',
+    : { sut_id: 'SUT-02', app_package: 'com.saucelabs.mydemoapp.android', username: 'standard_user', password: 'secret_sauce',
         launch: { appActivity: 'com.saucelabs.mydemoapp.android.view.activities.SplashActivity', appWaitActivity: 'com.saucelabs.mydemoapp.android.view.activities.MainActivity' } };
   return { ...base, index: 1, apk_path: '/fixture/app.apk', udid: 'emulator-5554', appium_url: url, budget_ms: 180000, ...overrides };
 }
@@ -108,8 +108,40 @@ test('SUT-02: the menu, the Log In row, and the credentials reach the catalogue 
     assert.equal(record.arrived, true);
     assert.deepEqual(record.titles, ['Sauce Labs Backpack', 'Sauce Labs Bike Light']);
     const typed = server.requests.filter((r) => r.method === 'POST' && r.path.endsWith('/value')).map((r) => r.body.text);
-    assert.deepEqual(typed, ['bod@example.com', '10203040']);
+    assert.deepEqual(typed, ['standard_user', 'secret_sauce']);
     assert.equal(record.error_text, null);
+    assert.equal(record.authenticated_signal, true);
+    assert.equal(record.session_not_established, false);
+    assert.ok(record.steps.some((s) => s.name.includes('Logout Menu Item') && s.status === 'OK'), 'the second signal is a recorded step');
+    assert.equal(record.arrival_detail, 'login screen gone, the catalogue landing screen displayed and the drawer row Logout Menu Item present');
+  } finally {
+    await server.close();
+  }
+});
+
+test('SUT-02: the catalogue after the sign-in without the Logout Menu Item row is not an arrival (no authenticated session), and the titles are still kept', async () => {
+  const server = await startFakeAppium({ sut: 'SUT-02', signIn: 'ok', logout: 'absent' });
+  try {
+    const record = await execute('SUT-02', server);
+    assert.equal(record.fault, null, JSON.stringify(record.steps));
+    assert.equal(record.arrived, false);
+    assert.equal(record.authenticated_signal, false);
+    assert.equal(record.session_not_established, true);
+    assert.deepEqual(record.titles, ['Sauce Labs Backpack', 'Sauce Labs Bike Light']);
+    assert.match(record.arrival_detail, /Logout Menu Item is absent: no authenticated session/);
+  } finally {
+    await server.close();
+  }
+});
+
+test('SUT-02: a session that is lost while the Logout Menu Item is searched is a fault of the record, never an absent row', async () => {
+  const server = await startFakeAppium({ sut: 'SUT-02', signIn: 'ok', logout: 'absent', sourceFailsWhenMenuOpen: true });
+  try {
+    const record = await execute('SUT-02', server);
+    assert.ok(record.fault, 'a fault is recorded');
+    assert.equal(record.arrived, false);
+    assert.equal(record.session_not_established, false);
+    assert.equal(record.authenticated_signal, null);
   } finally {
     await server.close();
   }
@@ -122,6 +154,8 @@ test('SUT-02: a validation error on the login screen is recorded as the error te
     assert.equal(record.arrived, false);
     assert.equal(record.error_text, 'Username is required');
     assert.equal(record.arrival_detail, 'a validation error is displayed on the login screen');
+    assert.equal(record.authenticated_signal, null);
+    assert.equal(record.steps.some((s) => s.name.includes('Logout Menu Item')), false, 'the second signal is read only when the catalogue is shown after the sign-in');
   } finally {
     await server.close();
   }
@@ -144,7 +178,7 @@ test('the password typed into the application never appears in the record the ha
   const server = await startFakeAppium({ sut: 'SUT-02', signIn: 'ok' });
   try {
     const record = await execute('SUT-02', server);
-    assert.equal(JSON.stringify(record).includes('10203040'), false);
+    assert.equal(JSON.stringify(record).includes('secret_sauce'), false);
   } finally {
     await server.close();
   }

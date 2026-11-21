@@ -58,10 +58,24 @@ class RunConditionTests(unittest.TestCase):
                               timeout=120)
         return proc.returncode, proc.stderr
 
-    def test_an_attempt_other_than_one_is_refused_before_anything_runs(self):
-        status, err = self.run_script(ATTEMPT='2')
+    def test_an_attempt_or_first_execution_that_is_not_a_positive_integer_is_refused_before_anything_runs(self):
+        for kw in ({'ATTEMPT': '0'}, {'ATTEMPT': 'two'}, {'ATTEMPT': '02'}, {'FIRST_EXECUTION': '0'}, {'FIRST_EXECUTION': 'x'}):
+            with self.subTest(**kw):
+                status, err = self.run_script(**kw)
+                self.assertNotEqual(status, 0)
+                self.assertIn('must be a positive integer', err)
+
+    def test_attempt_one_from_a_later_execution_is_refused_before_anything_runs(self):
+        status, err = self.run_script(FIRST_EXECUTION='17')
         self.assertNotEqual(status, 0)
-        self.assertIn('attempt 2 refused', err)
+        self.assertIn('attempt 1 starts at execution 1', err)
+
+    def test_a_non_measured_record_of_a_further_attempt_is_refused_by_the_executor(self):
+        for kw in ({'ATTEMPT': '2', 'FIRST_EXECUTION': '17'}, {'ATTEMPT': '2'}):
+            with self.subTest(**kw):
+                status, err = self.run_script(**kw)
+                self.assertEqual(status, 2)
+                self.assertIn('a non-measured record is attempt 1 from execution 1 only', err)
 
     def test_an_unknown_record_class_is_refused(self):
         status, err = self.run_script(RECORD_CLASS='LOCAL')

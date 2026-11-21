@@ -52,6 +52,15 @@ class ReasonPrecedenceTests(unittest.TestCase):
         self.assertEqual(classify.not_arrived_reason(facts(login_status=200)), 'INFRA_CATALOGUE_TIMEOUT')
         self.assertEqual(classify.not_arrived_reason(facts(login_status=None, backend_observed=False)), 'INFRA_CATALOGUE_TIMEOUT')
 
+    def test_a_catalogue_without_the_second_signal_of_a_session_is_a_refusal_of_the_system(self):
+        # SUT-02 Android (decision D-E06-13): the application showed the catalogue after the sign-in but not the drawer row Logout Menu Item
+        self.assertEqual(classify.not_arrived_reason(facts(session_not_established=True, backend_observed=False)), 'SUT_SIGN_IN_REFUSED')
+        self.assertEqual(classify.reason_category('SUT_SIGN_IN_REFUSED'), 'NOT_ARRIVED_SUT')
+
+    def test_the_infrastructure_signals_win_over_a_missing_second_signal(self):
+        self.assertEqual(classify.not_arrived_reason(facts(session_not_established=True, login_status=503)), 'INFRA_BACKEND_5XX')
+        self.assertEqual(classify.not_arrived_reason(facts(session_not_established=True, error_text='Too many users')), 'INFRA_USER_LIMIT_429')
+
     def test_a_sign_in_that_was_never_submitted_is_a_runner_fault(self):
         self.assertEqual(classify.not_arrived_reason(facts(sign_in_submitted=False)), 'RUNNER_FAULT')
 

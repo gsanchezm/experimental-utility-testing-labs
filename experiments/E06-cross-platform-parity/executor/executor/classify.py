@@ -49,13 +49,16 @@ def not_arrived_reason(facts):
       catalogue_status    HTTP status of the catalogue request, or None
       catalogue_seen      bool, a catalogue request left the browser
       error_text          the text of the sign-in error message shown by the application, or None
+      session_not_established  bool, the application showed the catalogue after the sign-in but not the second signal of the authenticated
+                          state (SUT-02 Android: the drawer row Logout Menu Item; decision D-E06-13); the system answered and did not admit the actor
       backend_observed    bool, whether the driver can see the backend answers at all (the browser can; the Android app cannot)
     Precedence (first match wins):
       1 the backend refused the sign-in with the user limit (HTTP 429, or the message Too many users) -> INFRA_USER_LIMIT_429
       2 a backend answer with status 5xx (sign-in or catalogue) -> INFRA_BACKEND_5XX
       3 a sign-in or catalogue request left the browser and no answer came within the budget, or the sign-in page was never
         shown (page_loaded False: a cold start of the hosted front end) -> INFRA_BACKEND_NO_RESPONSE
-      4 the sign-in was refused (HTTP 401 or 403, or an error message is shown) -> SUT_SIGN_IN_REFUSED
+      4 the sign-in was refused (HTTP 401 or 403, or an error message is shown), or the application did not establish a session
+        (the second signal of the authenticated state is absent) -> SUT_SIGN_IN_REFUSED
       5 the sign-in was accepted (HTTP 200), the catalogue answered with a status below 500, and it was not shown
         -> SUT_CATALOGUE_NOT_REACHED_AFTER_SIGN_IN
       6 the sign-in was accepted but the catalogue never answered, or the sign-in was submitted and no refusal was shown within the
@@ -72,7 +75,7 @@ def not_arrived_reason(facts):
         return 'INFRA_BACKEND_NO_RESPONSE'
     if facts.get('page_loaded') is False:
         return 'INFRA_BACKEND_NO_RESPONSE'
-    if login in (401, 403) or text:
+    if login in (401, 403) or text or facts.get('session_not_established'):
         return 'SUT_SIGN_IN_REFUSED'
     if login == 200 and cat is not None and cat < 500:
         return 'SUT_CATALOGUE_NOT_REACHED_AFTER_SIGN_IN'

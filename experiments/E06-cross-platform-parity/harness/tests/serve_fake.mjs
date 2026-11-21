@@ -12,6 +12,8 @@ const server = await startFakeAppium({
   cards: args.cards ? args.cards.split(',') : undefined,
   titles: args.titles ? args.titles.split('|') : undefined,
   failSession: args['fail-session'] === '1',
+  logout: args.logout ?? 'shown',
+  sourceFailsWhenMenuOpen: args['source-fails-when-menu-open'] === '1',
 });
 process.stdout.write(`URL ${server.url}\n`);
 process.stdin.resume();

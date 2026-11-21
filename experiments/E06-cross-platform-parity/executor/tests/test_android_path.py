@@ -135,6 +135,30 @@ class AndroidPathTests(unittest.TestCase):
         self.assert_schema(manifest)
         self.assertEqual(manifest['environment_type'], 'EMULATED')
 
+    def test_sut02_android_without_the_logout_row_after_the_sign_in_is_a_non_arrival_of_the_system(self):
+        # decision D-E06-13: the catalogue is displayed before any sign-in, so the drawer row Logout Menu Item is the second signal of a session
+        server = self.server(sut='SUT-02', **{'sign-in': 'ok', 'logout': 'absent', 'titles': 'Sauce Labs Backpack|Sauce Labs Bike Light'})
+        out = os.path.join(self.tmp, 'out-nosession')
+        summary, manifest, _bundle = self.run_one('E06-CS007-SUT02-ANDROID', server, out)
+        self.assertEqual(summary['categories'], {'NOT_ARRIVED_SUT': 1})
+        self.assertEqual(summary['reasons'], {'SUT_SIGN_IN_REFUSED': 1})
+        self.assertEqual(summary['category_by_attribution'], {'NOT_ARRIVED_SUT|SUT': 1})
+        self.assertEqual(summary['executions'][0]['identity'], None)
+        self.assertEqual(manifest['outcome']['status'], 'FAILURE')
+        self.assert_schema(manifest)
+
+    def test_sut02_android_that_loses_its_session_while_the_logout_row_is_searched_is_a_runner_fault(self):
+        server = self.server(sut='SUT-02', **{'sign-in': 'ok', 'logout': 'absent', 'source-fails-when-menu-open': '1'})
+        out = os.path.join(self.tmp, 'out-lost')
+        summary, manifest, _bundle = self.run_one('E06-CS007-SUT02-ANDROID', server, out)
+        self.assertEqual(summary['categories'], {'NOT_ARRIVED_RUNNER': 1})
+        self.assertEqual(manifest['outcome']['status'], 'ERROR')
+
+    def test_the_sut02_android_account_is_the_account_of_sut02_web(self):
+        conditions = {c['condition_id']: c for c in json.load(open(config.CONDITIONS_FILE, encoding='utf-8'))['conditions']}
+        self.assertEqual(config.credentials(conditions['E06-CS007-SUT02-ANDROID']), config.credentials(conditions['E06-CS007-SUT02-WEB']))
+        self.assertEqual(config.credentials(conditions['E06-CS007-SUT02-ANDROID'])[0], 'standard_user')
+
     def test_a_backend_user_limit_is_an_infrastructure_non_arrival_with_its_message(self):
         server = self.server(sut='SUT-01', **{'sign-in': 'error', 'error-text': 'Too many users'})
         out = os.path.join(self.tmp, 'out-limit')

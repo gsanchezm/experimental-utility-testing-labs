@@ -155,7 +155,12 @@ class LoopTests(unittest.TestCase):
 
     def test_the_configuration_refusals_write_nothing(self):
         cases = [
-            self.environ(ATTEMPT='2'),
+            self.environ(ATTEMPT='2'),  # a non-measured record is attempt 1 only
+            self.environ(ATTEMPT='0'),
+            self.environ(FIRST_EXECUTION='0'),
+            self.environ(FIRST_EXECUTION='51'),
+            self.environ(FIRST_EXECUTION='17'),  # attempt 1 starts at execution 1
+            self.environ(RECORD_CLASS='MEASURED_EXPERIMENT', EXECUTOR_PROMPT_VERSION='ORCHESTRATOR-E06-cross-platform-parity-v1', FIRST_EXECUTION='17'),
             self.environ(RECORD_CLASS='LOCAL'),
             self.environ(EXPECTED_IDENTITY_ORACLE='visual'),
             self.environ(EXPECTED_IDENTITY_ORACLE='arrival_only'),  # the configuration names item_identity for this condition
@@ -177,6 +182,27 @@ class LoopTests(unittest.TestCase):
     def test_measured_planned_count_is_fifty_with_a_frozen_prompt_version(self):
         env, cfg, c, planned = run.prepare(self.environ(RECORD_CLASS='MEASURED_EXPERIMENT', EXECUTOR_PROMPT_VERSION='ORCHESTRATOR-E06-cross-platform-parity-v1'))
         self.assertEqual(planned, 50)
+
+    def test_a_further_attempt_runs_the_executions_from_the_first_one_it_names_and_its_bundles_carry_the_attempt(self):
+        # the measured workflow admits attempt 2 only under a recorded approval (gate G-E06-A2); the executor runs executions FIRST_EXECUTION to N
+        env_map = self.environ(RECORD_CLASS='MEASURED_EXPERIMENT', EXECUTOR_PROMPT_VERSION='ORCHESTRATOR-E06-cross-platform-parity-v1',
+                               ATTEMPT='2', FIRST_EXECUTION='48')
+        env, cfg, c, planned = run.prepare(env_map)
+        self.assertEqual((env.attempt, env.first, planned), (2, 48, 50))
+        scrub = common.Scrubber(env)
+        driver = ScriptedDriver(env, c, [arrived_facts() for _ in range(3)])
+        summary = run.execute_condition(env, scrub, cfg, c, driver, planned)
+        self.assertEqual(summary['first_execution'], 48)
+        self.assertEqual(summary['executions_planned'], 3)
+        self.assertEqual(summary['executions_run'], 3)
+        self.assertEqual(summary['attempt'], 2)
+        self.assertEqual([e['execution_index'] for e in summary['executions']], [48, 49, 50])
+        names = sorted(n for n in os.listdir(env.output_dir) if '__EX' in n)
+        self.assertEqual(names, [f'E06-CS007-SUT01-WEB__EX00{i}__A2' for i in (48, 49, 50)])
+        manifest = read_json(os.path.join(env.output_dir, names[0], 'run-manifest.json'))
+        self.assertEqual(manifest['attempt'], 2)
+        self.assertEqual(manifest['run_id'], names[0])
+        self.assertEqual(mini_jsonschema.validate(manifest, self.schema), [])
 
     def test_a_measured_execution_without_a_prompt_version_is_refused(self):
         # repository rule 9: a null prompt version is allowed only for a human-executed run

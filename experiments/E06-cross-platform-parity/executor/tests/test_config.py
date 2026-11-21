@@ -36,7 +36,9 @@ class LoadTests(unittest.TestCase):
         web1 = config.condition(cfg, 'E06-CS007-SUT01-WEB')
         self.assertEqual(config.credentials(web1), ('standard_user', 'pizza123'))
         android2 = config.condition(cfg, 'E06-CS007-SUT02-ANDROID')
-        self.assertEqual(config.credentials(android2), ('bod@example.com', '10203040'))
+        # decision D-E06-12: the account of SUT-02 Android is the account of SUT-02 web (the pairing rule: the same account on both surfaces)
+        self.assertEqual(config.credentials(android2), ('standard_user', 'secret_sauce'))
+        self.assertEqual(config.credentials(android2), config.credentials(config.condition(cfg, 'E06-CS007-SUT02-WEB')))
 
     def test_an_unknown_condition_is_refused(self):
         with self.assertRaises(config.ConfigError):

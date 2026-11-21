@@ -54,6 +54,7 @@ class Env:
         e = dict(os.environ if environ is None else environ)
         self.condition = e['CONDITION_ID']
         self.attempt = int(e['ATTEMPT'])
+        self.first = int(e.get('FIRST_EXECUTION') or 1)
         self.record_class = e['RECORD_CLASS']
         self.expected_identity_oracle = e['EXPECTED_IDENTITY_ORACLE']
         self.prompt_version = e.get('EXECUTOR_PROMPT_VERSION') or None

@@ -6,9 +6,9 @@ import http from 'node:http';
 const ELEMENT_KEY = 'element-6066-11e4-a52e-4f735466cecf';
 const PKG = 'com.saucelabs.mydemoapp.android:id/';
 
-export function startFakeAppium({ sut, signIn = 'ok', errorText = null, cards = ['p07', 'p02'], titles = ['Sauce Labs Backpack', 'Sauce Labs Bike Light'], failSession = false } = {}) {
+export function startFakeAppium({ sut, signIn = 'ok', errorText = null, cards = ['p07', 'p02'], titles = ['Sauce Labs Backpack', 'Sauce Labs Bike Light'], failSession = false, logout = 'shown', sourceFailsWhenMenuOpen = false } = {}) {
   const requests = [];
-  const st = { screen: sut === 'SUT-01' ? 'login' : 'landing', menuOpen: false, error: null, typed: {}, session: null, ids: new Map(), next: 1 };
+  const st = { screen: sut === 'SUT-01' ? 'login' : 'landing', menuOpen: false, signedIn: false, error: null, typed: {}, session: null, ids: new Map(), next: 1 };
 
   function elementsNow() {
     if (sut === 'SUT-01') {
@@ -25,7 +25,7 @@ export function startFakeAppium({ sut, signIn = 'ok', errorText = null, cards = 
       return list;
     }
     const list = [{ rid: `${PKG}productRV` }, { rid: `${PKG}menuIV`, desc: 'tap to view menu' }, ...titles.map((t) => ({ rid: `${PKG}titleTV`, text: t }))];
-    if (st.menuOpen) list.push({ desc: 'Login Menu Item' });
+    if (st.menuOpen) list.push({ desc: st.signedIn && logout === 'shown' ? 'Logout Menu Item' : 'Login Menu Item' });
     return list;
   }
 
@@ -38,7 +38,7 @@ export function startFakeAppium({ sut, signIn = 'ok', errorText = null, cards = 
         return typeof el.desc === 'string' && el.desc.startsWith(prefix);
       }
       if (value.includes('resourceIdMatches')) return typeof el.rid === 'string' && /text-login-error/.test(el.rid);
-      if (value.includes('new UiScrollable')) return el.desc === 'Login Menu Item';
+      if (value.includes('new UiScrollable')) return el.desc === (value.match(/description\("([^"]+)"\)/) || [])[1];
     }
     return false;
   }
@@ -62,7 +62,7 @@ export function startFakeAppium({ sut, signIn = 'ok', errorText = null, cards = 
     if (el.rid === `${PKG}menuIV`) st.menuOpen = true;
     if (el.desc === 'Login Menu Item') { st.menuOpen = false; st.screen = 'login'; }
     if (el.rid === `${PKG}loginBtn`) {
-      if (signIn === 'ok') { st.screen = 'landing'; st.error = null; }
+      if (signIn === 'ok') { st.screen = 'landing'; st.error = null; st.signedIn = true; }
       else if (signIn === 'error') st.error = 'Username is required';
     }
     void action;
@@ -91,6 +91,7 @@ export function startFakeAppium({ sut, signIn = 'ok', errorText = null, cards = 
         st.screen = sut === 'SUT-01' ? 'login' : 'landing';
         st.error = null;
         st.menuOpen = false;
+        st.signedIn = false;
         st.typed = {};
         return send(200, { sessionId: st.session, capabilities: { platformName: 'Android', 'appium:deviceApiLevel': 35, 'appium:appPackage': json.capabilities?.alwaysMatch?.['appium:appPackage'] } });
       }
@@ -119,7 +120,10 @@ export function startFakeAppium({ sut, signIn = 'ok', errorText = null, cards = 
         if (req.method === 'GET' && attr) return send(200, attr === 'content-desc' ? (el.desc ?? null) : attr === 'resource-id' ? (el.rid ?? null) : null);
         if (req.method === 'GET' && op === 'text') return send(200, el.text ?? '');
       }
-      if (req.method === 'GET' && rest === '/source') return send(200, source());
+      if (req.method === 'GET' && rest === '/source') {
+        if (sourceFailsWhenMenuOpen && st.menuOpen) return fail(500, 'unknown error', 'simulated loss of the session');
+        return send(200, source());
+      }
       if (req.method === 'GET' && rest === '/screenshot') return send(200, Buffer.from('fake-png').toString('base64'));
       return fail(404, 'unknown command', `${req.method} ${path}`);
     });

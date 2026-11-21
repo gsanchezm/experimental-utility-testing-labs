@@ -97,7 +97,9 @@ class AndroidExecutor:
         facts = {'surface': 'android', 'sut_id': self.c['sut_id'], 'sign_in_submitted': record.get('sign_in_submitted'),
                  'page_loaded': record.get('app_started'), 'backend_observed': False, 'error_text': record.get('error_text'),
                  'login_request_seen': False, 'catalogue_seen': False, 'login_status': None, 'catalogue_status': None,
-                 'arrived': bool(record.get('arrived')), 'steps': record.get('steps') or [], 'harness_fault': record.get('fault'),
+                 'arrived': bool(record.get('arrived')), 'authenticated_signal': record.get('authenticated_signal'),
+                 'session_not_established': bool(record.get('session_not_established')),
+                 'steps': record.get('steps') or [], 'harness_fault': record.get('fault'),
                  'uninstall': removal}
         source = record.get('page_source')
         facts['page_source_kept'] = bool(source)
@@ -211,7 +213,7 @@ def summarize(env, cfg, c, planned, results):
     return {'record': 'condition summary (counts only; no interpretation; parity is not computed here)', 'condition': c['condition_id'],
             'sut_id': c['sut_id'], 'surface': c['surface'], 'record_class': env.record_class, 'attempt': env.attempt,
             'canonical_scenario_id': c['canonical_scenario_id'], 'identity_oracle': env.expected_identity_oracle,
-            'executions_planned': planned, 'executions_run': len(results), 'categories': counts, 'reasons': reasons,
+            'first_execution': env.first, 'executions_planned': planned - env.first + 1, 'executions_run': len(results), 'categories': counts, 'reasons': reasons,
             'category_by_attribution': attributions, 'executions': results}
 
 
@@ -219,7 +221,7 @@ def execute_condition(env, scrub, cfg, c, driver, planned):
     """Runs the executions 1 to planned of one condition with the given driver; writes the condition summary last."""
     results = []
     try:
-        for index in range(1, planned + 1):
+        for index in range(env.first, planned + 1):
             result = execute_one(env, scrub, cfg, c, index, driver)
             results.append(result)
             print(f"{result['run_id']}: {result['category']}" + (f" ({result['reason']})" if result['reason'] else ''), flush=True)
@@ -235,8 +237,15 @@ def prepare(environ=None):
     """Checks the configuration and returns (env, cfg, condition, planned). Raises ConfigurationRefused or config.ConfigError."""
     env = common.Env(environ)
     cfg = config.load(env.conditions_file)
-    if env.attempt != config.ATTEMPT:
-        raise ConfigurationRefused('only attempt 1 is executed (protocol/repeatability-determinism-v1.md; D-E06-6)')
+    last = cfg['n_per_condition']
+    if env.attempt < 1 or not 1 <= env.first <= last:
+        raise ConfigurationRefused(f'ATTEMPT {env.attempt} or FIRST_EXECUTION {env.first} is not valid (attempt from 1, first execution from 1 to {last})')
+    if env.attempt == 1 and env.first != 1:
+        raise ConfigurationRefused('attempt 1 runs the executions from the first (FIRST_EXECUTION 1); a later first execution belongs to a further attempt')
+    if env.record_class != 'MEASURED_EXPERIMENT' and (env.attempt != 1 or env.first != 1):
+        raise ConfigurationRefused('a non-measured record is attempt 1 from execution 1 only')
+    # A further attempt (attempt 2 or more, executions FIRST_EXECUTION to N) is admitted here only as an executor input; the measured workflow admits it
+    # only under a further-attempt approval record of the human research lead (gate G-E06-A2; protocol/agent-governance-v6.md, Section 3.7).
     if env.record_class not in config.RECORD_CLASSES:
         raise ConfigurationRefused(f'record class {env.record_class!r} is not allowed')
     if env.record_class == 'MEASURED_EXPERIMENT' and not env.prompt_version:

@@ -26,9 +26,12 @@ and the 46 public-snapshot commits it left out remain in the reflog and on origi
    through the driver, and the Python side parses the kept page source again; a disagreement is noted in the record.
 6. Identity of SUT-02: the text of the first titleTV in document order (default sort NAME_ASC, MainActivity.java line 101). On the web: the text
    of the first inventory-item-name in document order (default sort az, sample-app-web src/pages/Inventory.jsx line 22).
-7. Arrival on SUT-02 Android: the login screen gives way to the landing screen (productRV) with nameET absent. The catalogue is also visible
-   before any sign-in (the smoke realization starts there), so the catalogue alone is not an arrival signal. The Logout Menu Item is not read
-   (open item 9).
+7. Arrival on SUT-02 Android needs two signals (decision D-E06-13): the login screen gives way to the landing screen (productRV) with nameET
+   absent, and, after the titles are read, the drawer row Logout Menu Item is present (menu opened, the row read by accessibility id with the
+   scroll fallback of the Log In row). The catalogue is also visible before any sign-in (the smoke realization starts there), so the catalogue
+   alone is not an arrival signal. An absent row is NOT_ARRIVED_SUT with the reason SUT_SIGN_IN_REFUSED (the fact `session_not_established`); a
+   session that is lost while the row is searched is a harness fault, hence NOT_ARRIVED_RUNNER. The record keeps `arrived` false until the second
+   signal holds. The terminal screenshot of that condition shows the open drawer.
 8. Non-arrival reasons and their precedence are declared in `classify.not_arrived_reason` (the first matching rule wins). The Android app cannot
    report backend answers, so a sign-in with no refusal shown within the budget is INFRA_CATALOGUE_TIMEOUT there, and disclosed as such.
 9. Attribution has four values (SUT, INFRASTRUCTURE, TOOLING, UNDETERMINED) and NONE for an arrival. E07 used two (SUT, TOOLING). The added values
@@ -132,8 +135,9 @@ SUT-02 Android credential: the candidate bod@example.com with the password 10203
 
 ## 5. Open items for the human research lead (none decided here)
 
-1. The SUT-02 Android account: the candidate bod@example.com / 10203040 (the layout pair) or standard_user / secret_sauce (the web account,
-   which gives the same account on both surfaces, the pairing rule's wording).
+1. Decided (D-E06-12, manifests/campaign-execution-decisions-v18.yaml): the SUT-02 Android account is standard_user / secret_sauce, the account of
+   SUT-02 web. The DRY_RUN round 1 used the first quick-pick pair of the layout (bod@example.com), so SUT-02 Android is verified again with the
+   decided account (and the second signal of item 9) before the START.
 2. The web application's API origin on SUT-01 (not recorded in an E01 row); a DRY_RUN must show it. D-E06-8 assumes the same hosted backend.
 3. Every web selector and the root route of both web applications: verified by a DRY_RUN only.
 4. environment_type of SUT-02 web (PUBLIC_HOSTED proposed by analogy with D-E06-8) and of SUT-02 Android (EMULATED proposed).
@@ -142,9 +146,12 @@ SUT-02 Android credential: the candidate bod@example.com with the password 10203
 7. identity_oracle is item_identity for all four conditions. arrival_only is the DP-3 fallback, recorded before the START only after a DRY_RUN.
 8. The Android drawer row Log In is at position 10 of the drawer; whether a scroll is needed is a DRY_RUN question (the harness scrolls when the
    row is not found within 10 s).
-9. Whether SUT-02 Android also reads the Logout Menu Item as a second signal of the authenticated state.
-10. Analysis rule for ARRIVED_IDENTITY_UNREADABLE (counted as a non-parity in the parity rule as written, or a separate category).
-11. Duration: the Android jobs may not fit 50 executions each within 360 minutes; a DRY_RUN observation decides.
+9. Decided (D-E06-13): SUT-02 Android also reads the Logout Menu Item as a second signal of the authenticated state (item 7 of section 2). The
+   selector is verified by a DRY_RUN before the START.
+10. Decided (D-E06-15): ARRIVED_IDENTITY_UNREADABLE is a non-parity as the parity rule is written, reported as its own category beside the parity
+    counts, never excluded; the rule is in the parity_rule of the conditions file.
+11. Duration: the DRY_RUN round 1 (run 44931436092) took 18.0 to 42.5 s per Android execution and 1.6 to 15.7 s per web execution, about 17 minutes
+    for 50 Android executions and 2 to 13 minutes for 50 web executions, before the job setup; the 360-minute budget is far above it.
 12. Resolved in this draft: the locked hash covers the harness, the Android job script, and the conditions file (section 4.8). A new lock of
     the digests is still needed when the campaign configuration is locked.
 13. Resolved in this draft: the Android jobs run npm ci from the lockfile of the SUT-01 smoke (section 4.6).
@@ -152,10 +159,14 @@ SUT-02 Android credential: the candidate bod@example.com with the password 10203
     rehearsed on the exported bytes of the public tree, with PUBLIC-EXPORT-MANIFEST.yaml present, before the START.
 15. Dispatch authorization identifiers, the executor prompt version, the implementation hash, and the campaign configuration are null until
     the human research lead issues or locks them (governance v6, Section 3.7; the START).
-16. A further-attempt path is not implemented: the workflow admits attempt 1 of executions 1 to 50 in one job per condition. An interrupted
-    job (as the three HTTP 502 cases of E02) leaves no bundle and cannot be completed under this workflow. Whether to add the E07 mechanism
-    (a first-execution input and a further-attempt approval record) before the START, or to correct the workflow if the case arises (the
-    OP-CI-18 precedent), is a decision for the START package. The executor digest is locked at the START, so adding it later changes the lock.
+16. Decided (D-E06-14): the further-attempt path of the E07 gate is implemented before the START. The dispatch has the inputs `attempt` and
+    `first_execution` (default 1); gate G-E06-A2 admits attempt 2 or more, with executions first_execution to 50, only under a further-attempt
+    approval record of the human research lead (manifests/e06-further-attempt-approval-sut0N-v1.yaml, record_class E06_FURTHER_ATTEMPT_APPROVAL,
+    with an `attempts` list of condition_id, first_execution, attempt and previous_attempt, and the dispatch authorization id, the START id, the
+    implementation hash and the prompt version and its SHA-256 of the dispatch). The executor takes ATTEMPT and FIRST_EXECUTION from the
+    environment, names the bundles `<condition>__EX<NNNN>__A<attempt>`, refuses attempt 1 from a later execution and every non-measured record
+    that is not attempt 1 from execution 1, and the provenance records the attempt, the first execution and the SHA-256 of the approval. A
+    GitHub-native re-run stays refused. Each further attempt still needs its own approval.
 17. Pairing and time. The design brief (risk 2) says both surfaces are read within the same cycle. The workflow runs one dispatch per condition
     (50 sequential executions), so execution k of the WEB condition and execution k of the ANDROID condition of an ecosystem are paired by index,
     not read at the same time; the decisions of 2026-11-21 and the frozen CS-007 say paired per index and do not say simultaneous. To limit
@@ -167,7 +178,8 @@ SUT-02 Android credential: the candidate bod@example.com with the password 10203
     (record_class CAMPAIGN_START, campaign_id, authorization_id) and one protocol/CHANGELOG.md START row; and each dispatch authorization
     (manifests/e06-dispatch-authorization-sut0N-v1.yaml) the fields of the E07 records (issued_by `human research lead`, assigned_sut,
     conditions, n_executions 50, attempt 1, authorization_date, campaign_start_authorization_id, frozen_inputs with the implementation and prompt
-    SHA-256). Those names are proposals taken from the E07 gate; the START package may rename them before the workflow hash is locked.
+    SHA-256); and each further-attempt approval (manifests/e06-further-attempt-approval-sut0N-v1.yaml) the fields of item 16. Those names are
+    proposals taken from the E07 gate; the START package may rename them before the workflow hash is locked.
 
 ## 6. What only a non-measured DRY_RUN can establish
 
@@ -180,7 +192,9 @@ SUT-02 Android credential: the candidate bod@example.com with the password 10203
 
 ## 7. Not done and why
 
-- No DRY_RUN, no environment verification, no dispatch, no START, no freeze, and no push: each needs its own explicit approval.
+- Made since the first version: the non-measured DRY_RUN round 1 (run 44931436092, manifests/e06-environment-verification-rounds-v1.yaml), on the
+  human research lead's approval of its exact line. Not made: the second round with the decided account and the second signal, any environment
+  verification beyond it, any dispatch, the START, the freeze, and any export: each needs its own explicit approval.
 - No browser was installed and no Playwright run was made; the web flows are tested through a fake page only.
 - No emulator, no Appium server, and no device was used; the Android flow is tested against a fake W3C server only.
 - No hosted system under test was called.
@@ -217,6 +231,16 @@ shellcheck 0.10.0: 128 tests passed, none skipped, before these corrections):
    revision) and the measured provenance was five fields: both completed (section 4.5).
 9. The Appium install floated its transitive tree: replaced by npm ci from the smoke lockfile (section 4.6).
 10. The Python suite ran its unclosed-file warnings as ignored exceptions: the tests that opened files without closing them were corrected.
+
+Changes made after the DRY_RUN round 1 and the decisions of 2026-11-21, round 3 (manifests/campaign-execution-decisions-v18.yaml):
+
+11. SUT-02 Android account: standard_user / secret_sauce (D-E06-12). The conditions file records it; the harness test and the config test follow.
+12. SUT-02 Android second signal: the drawer row Logout Menu Item (D-E06-13): two harness tests (row absent; session lost during the search), two
+    tests through the real harness (NOT_ARRIVED_SUT with SUT_SIGN_IN_REFUSED; NOT_ARRIVED_RUNNER), two classification tests.
+13. The further-attempt mechanism (D-E06-14): workflow inputs, gate G-E06-A2 with its must-fail cases, provenance fields, executor attempt and first
+    execution (run-loop, run-condition and workflow tests).
+14. The analysis rule for an unreadable identity is written into the parity_rule of the conditions file (D-E06-15).
+The implementation hash and the digests changed with these edits, and the DIGESTS block was embedded again.
 
 Precedent files read for this review:
 
