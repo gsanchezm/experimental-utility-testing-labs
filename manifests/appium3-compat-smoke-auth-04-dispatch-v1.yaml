@@ -1,0 +1,61 @@
+# manifests/appium3-compat-smoke-auth-04-dispatch-v1.yaml
+# Dispatch record of APPIUM3-COMPAT-SMOKE-AUTH-04 (the SUT-01 x Android compatibility smoke under Appium 3.7.0, policy v3 section 9), recorded by the ORCHESTRATOR BEFORE the single
+# dispatch and committed locally (not exported yet). The dispatch is made by the ORCHESTRATOR with the line of the file DISPATCH-LINE-AUTH04.txt (a local, untracked file of the operator records;
+# its sha256 is below), after the human research lead's yes to that exact line; the observed run identity is recorded afterwards in a separate record.
+# This record does not modify the AUTH-04 authorization record (which the readiness gate reads and which stays byte-identical to the published copy; its lifecycle closure waits for the
+# post-run recording), is not qualification evidence, records no result, and authorizes nothing beyond the one dispatch.
+record_id: APPIUM3-COMPAT-SMOKE-AUTH-04-DISPATCH-01  # ORCHESTRATOR bookkeeping identifier; not an -AUTH- id
+record_class: AUTHORIZATION_DISPATCH_INSTRUCTION_RECORD
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-11-21T03:33:42Z"  # UTC, before the dispatch
+qualification_evidence: false
+measured_experiment: false
+status: PRE_DISPATCH_RECORDED
+
+authorization:
+  authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-04
+  record: manifests/sut01-compatibility-smoke-execution-auth-v4-prepared.draft.yaml  # COMPATIBILITY_SMOKE_EXECUTION_AUTHORIZATION, ISSUED, VALID, authorizes_execution true, dispatch_eligibility ELIGIBLE, dispatch_performed false, issued_by gilbertosanchez, issued_at 2026-11-20; sha256 59667a53762318723618c9c6baa14814a7c7aaa9ffaa805753ed63f53175f000 (the filename suffix is historical)
+  frozen_launch_prompt: prompts/frozen/orchestrator-compat-smoke-sut01-v1.md  # sha256 e74296f823452ce591b5206b24d96a9cb6caca916c38ffa283a1d7bf7883ddeb
+  prompt_version_id: orchestrator-compat-smoke-sut01-v1
+  implementation_lock: manifests/compatibility-smoke-implementation-lock-v5.draft.yaml  # ISSUED_BASELINE_NOT_EXECUTED; sha256 d2f519dcee51314e0c33a62ddd48ef7ad6b48705e19b4b31156c52a417bffa8a
+  governing_policy: protocol/mobile-runner-policy-v3.md  # section 9; FROZEN-PRE-DATA
+  workflow: .github/workflows/e06-compatibility-smoke-sut01.yml  # sha256 cb8d07aca781ee38a8bd60761204d7f12a8e5e1ea62f1bd36ca847038e07d89a; byte-identical in the canonical and the public tree
+  system_under_test: SUT-01 (OmniPizza release v1.1.8, pinned APK omnipizza-release.apk), platform android, runner Appium 3.7.0 with appium-uiautomator2-driver 8.7.0
+  attempts_allowed: 1  # one execution; a FAIL_RUNNER or NOT_EXECUTED of this attempt is final for this authorization (no second remediation; policy v3, 9.5 and 9.7.11)
+
+dispatch_instruction:
+  given_by: gilbertosanchez  # human research lead
+  given_on: "2026-11-21"
+  how_the_instruction_arrived: "answer to a question dialog (AskUserQuestion) in the ORCHESTRATOR's conversation that offered the exact dispatch line in its preview, stated the snapshot, the checks passed, the single attempt and the accepted risk; the selected option was 'Sí, despacha AUTH-04 una vez'"
+  message_exact_text: "Sí, despacha AUTH-04 una vez"
+  message_exact_text_sha256: 2528f40e7630f4f3c7063edd87e13ab5d88abf9b018768dc1b20f8ce37d21a23  # 29 bytes UTF-8, without a trailing line feed
+  effect: "the single dispatch is approved: the ORCHESTRATOR records it before it runs (this record), runs the line once, and records the run identity afterwards"
+  the_act_of_dispatching: "the ORCHESTRATOR runs the line once (remote session arrangement of 2026-11-08: each push and dispatch is run by the ORCHESTRATOR only after the human research lead's yes to its exact line)"
+  dispatch_count_authorized: 1
+  one_dispatch_only: "exactly one workflow_dispatch action; no double submission; no other workflow dispatched"
+  no_rerun: "no GitHub re-run, no re-run of failed jobs or of a single job, no second workflow_dispatch, no new authorization for a second attempt, whatever the workflow conclusion or harness proposal; the single run is preserved as it is"
+  no_intervention: "no change to code, locators, timeouts, Appium or driver versions, builds, or attribution; no manual emulator restart; no SUT repair or build substitution; no step retry"
+  not_authorized: "the post-run recording (import into qualification/compatibility-smoke-sut01/formal/, attribution, mirror transcription, result record, lifecycle closure of the authorization record), any E06 START, CS-007 freeze, DRY_RUN or measured execution, and any export; each needs its own explicit human approval."
+
+dispatch_inputs:  # exact workflow_dispatch inputs; no additional inputs
+  repository: gsanchezm/experimental-utility-testing-labs  # PUBLIC; GitHub Actions runs only there
+  ref: main
+  instruction_id: APPIUM3-COMPAT-SMOKE-AUTH-04
+  confirm: EXECUTE-COMPATIBILITY-SMOKE-SUT01
+  command_file: DISPATCH-LINE-AUTH04.txt  # local, untracked, in the resume folder of the local orchestration layer; 1220 bytes, sha256 1e64228b96f6a0ac385a282ab4b84d13f6997a65c78235f24cb195817874f0df; the hook (rtk rewrite) leaves the command unchanged (rc 1, empty output)
+
+expected_public_snapshot:  # public export v75; the dispatch runs only on this snapshot
+  public_head: 71143894f1592becf332e2d6d5440e2c27f43b53
+  public_root_tree: 5c56f1b83e061ed83835a3a2f41c52821e28644d
+  export_manifest_sha256: 17231d5a432405655e9bb8dad48b49398c5e6cd5b1324f308c2337f549174814
+  export_version: 75
+  canonical_source: 8dbf9a228297cf0201f6052d4fc9c59a61814f89
+
+pre_dispatch_verification:  # performed by the ORCHESTRATOR immediately before this record
+  public_snapshot: "public main 71143894 (pushed 2026-11-21T02:31:34Z), validation run 44856376647 succeeded in all four jobs, the post-push audit of a fresh clone passed 72 of 72 checks, repository PUBLIC, 7 branches, 0 tags, 1110 runs, no run queued or in progress, the workflow E06 Compatibility Smoke SUT-01 Android registered and active"
+  readiness: "the readiness gate of the smoke workflow run on the bytes of the fresh clone of the public repository for APPIUM3-COMPAT-SMOKE-AUTH-04: exit 0, no FAIL line, 69 PASS lines; the hosted gate job re-evaluates it on the runner"
+  authorization_state: "exactly one record carries APPIUM3-COMPAT-SMOKE-AUTH-04: ISSUED, VALID, authorizes_execution true, dispatch_eligibility ELIGIBLE, dispatch_performed false, issued_by gilbertosanchez, issued_at 2026-11-20"
+  study_state: "mobile_runner_status SELECTED (restored 2026-11-02; the retained AUTH-02 FAIL_RUNNER admitted by the verified remediation lineage); the mirror holds SUT-02 android PASS, SUT-02 ios PASS and SUT-01 android NOT_STARTED; E06-cross-platform-parity NOT_STARTED; no measured bundle of a mobile condition"
+  accepted_risk: "recorded in manifests/campaign-execution-decisions-v2.yaml, approval line E, and restated in the question that carried the instruction: a FAIL_RUNNER of this smoke returns the study to UNRESOLVED_AFTER_FALLBACK_FAILURE and blocks every mobile condition, SUT-02 included, with no second remediation; a failure before the runner that is demonstrated as infrastructure is NOT_EXECUTED (decision D-E06-3 of manifests/campaign-execution-decisions-v16.yaml, HD-15)"
+  known_limit: "the backend of the release APK is the hosted deployment (a compile-time constant of the APK), classified PUBLIC_HOSTED with HOSTED_MAPPING_UNVERIFIED (decision D-E06-2); a cold start or a user-limit refusal of that backend may occur"

@@ -36,6 +36,8 @@ NOT STARTED
 
 Resumed by the human research lead's decision of 2026-11-02 (manifests/campaign-resumption-v1.yaml); the deferral of scope A (manifests/campaign-disposition-v1.yaml) no longer governs the schedule: the status above is unchanged, preparation may begin, and the campaign START needs its own explicit human authorization (protocol/change-control-v1.md, section 7).
 
+The SUT-01 x Android compatibility smoke (APPIUM3-COMPAT-SMOKE-AUTH-04) was recorded PASS on 2026-11-21 (qualification/compatibility-smoke-sut01/README.md), and the canonical scenario CS-007 was FROZEN on 2026-11-21 (manifests/cs-007-freeze-v1.yaml; the design decisions are in manifests/campaign-execution-decisions-v17.yaml); the campaign stays NOT STARTED, no campaign configuration, executor or workflow exists, and its START needs its own explicit human authorization.
+
 ## Warning
 
 Protocol must be finalized (FROZEN-PRE-DATA) before execution. Do not execute without explicit instruction.

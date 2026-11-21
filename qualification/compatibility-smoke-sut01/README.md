@@ -2,7 +2,7 @@
 
 ## Status
 
-ISSUED on 2026-11-20 (APPIUM3-COMPAT-SMOKE-AUTH-04), not dispatched, not executed. The authorization record `manifests/sut01-compatibility-smoke-execution-auth-v4-prepared.draft.yaml` is ISSUED / VALID / ELIGIBLE with dispatch_performed false; the implementation lock `manifests/compatibility-smoke-implementation-lock-v5.draft.yaml` is the issued baseline; the frozen launch prompt is `prompts/frozen/orchestrator-compat-smoke-sut01-v1.md`. A dispatch needs the publication of this state (a public export) and a separate explicit human dispatch instruction. No row of the Smoke records table below is filled. Open items and decisions are in `IMPLEMENTATION-NOTES.md` and in manifests/campaign-execution-decisions-v16.yaml.
+ISSUED on 2026-11-20 (APPIUM3-COMPAT-SMOKE-AUTH-04), dispatched once on 2026-11-21 (run 44861779872, attempt 1, public export v75) and recorded on 2026-11-21: SUT-01 x Android PASS (see Smoke records and Outcome). The authorization record `manifests/sut01-compatibility-smoke-execution-auth-v4-prepared.draft.yaml` stays VALID / ISSUED and is CLOSED IN PLACE as CONSUMED_AFTER_DISPATCH (dispatch_performed true), so the readiness gate refuses any further dispatch; the implementation lock `manifests/compatibility-smoke-implementation-lock-v5.draft.yaml` is unchanged and is now the historical execution provenance of this smoke. The artifact is imported byte-exact under `formal/APPIUM3-COMPAT-SMOKE-AUTH-04/` (IMPORT-RECORD.yaml). The PASS is a tool-qualification observation about the runner for this ecosystem and platform; it is not evidence about the system under test and says nothing about parity. Open items and decisions are in `IMPLEMENTATION-NOTES.md` and in manifests/campaign-execution-decisions-v16.yaml.
 
 Scenario and governance references. The scenario reference is CS-007 (DRAFT; reference only). The governance route is protocol/agent-governance-v6.md, Section 3.4 (FROZEN-PRE-DATA 2026-11-06, carried from v5): the ORCHESTRATOR performs the qualifier tasks, and every dispatch needs the human research lead's explicit approval of that exact dispatch. Section 3.7 of v6 does not cover this smoke. The sentence of Section 3.4 that called the compatibility smoke closed by the exhausted fallback, stale after the 2026-11-02 restoration, was updated as representation only at the freeze of v6 (open decision HD-8, approved 2026-11-06); protocol/mobile-runner-policy-v3.md, section 9, applies to SUT-01 as well (IMPLEMENTATION-NOTES.md, section 8, conflicts A and C: resolved).
 
@@ -71,19 +71,26 @@ Pins and substrate (unchanged from the SUT-02 smoke of lock v4): appium 3.7.0 (n
 
 ## Smoke records
 
-One row per ecosystem × platform. No row exists: this draft is not executed. A row is appended only after an execution under an issued authorization, and the mirror entry is transcribed only from that row (manifests/compatibility-smoke-status.yaml, transcription rule).
+One row per ecosystem × platform. A row is appended only after an execution under an issued authorization, and the mirror entry is transcribed only from that row (manifests/compatibility-smoke-status.yaml, transcription rule).
 
 | sut_id | platform (android / ios) | environment_type (EMULATED / SIMULATED) | pinned build identity | timestamp | runner version | steps executed (MC ids) | result | artifacts | notes / reason |
 |---|---|---|---|---|---|---|---|---|---|
+| SUT-01 | android | EMULATED | omnipizza-release.apk (release v1.1.8 of OmniPizza at commit 3cdbe6596a1ab5ef2058ba4259c44da96a0fa03a; com.omnipizza.app version 1.1.8), SHA-256 1059e9468145761710c9884b37e9fbc76da8e75eb9666dc0867d82a546cda6a4 (digest match) | 2026-11-21T03:37:28.418Z to 2026-11-21T03:38:04.355Z (run 44861779872, attempt 1; APPIUM3-COMPAT-SMOKE-AUTH-04) | Appium 3.7.0 + appium-uiautomator2-driver 8.7.0 (observed) | MC-01 completed (session created, application installed and launched on the API 35 emulator; the session capabilities returned by the driver name appActivity com.omnipizza.app.MainActivity, resolved by the driver, none was set); MC-02 and MC-08 completed (screen-login located by accessibility id and read displayed); MC-04 completed (the quick-login control Standard and the sign-in control Sign In tapped); MC-06 and MC-08 completed (screen-catalog displayed after sign-in); MC-10 completed (terminal.png and source-terminal.xml captured) | PASS | formal/APPIUM3-COMPAT-SMOKE-AUTH-04/SUT-01-android/ (record.json, appium-server.log, harness.log, source-terminal.xml, terminal.png, environment/); formal/APPIUM3-COMPAT-SMOKE-AUTH-04/IMPORT-RECORD.yaml | One clean execution completed all six capabilities (policy v3, 9.1, carried unchanged) and read the expected final state (screen-catalog displayed after the quick login of standard_user and the sign-in; source-terminal.xml carries the node and terminal.png shows the authenticated catalogue). The pre-runner reachability probe of the hosted backend, the fixed origin of the APK, answered HTTP 200 on /health and /api/version (PUBLIC_HOSTED, HOSTED_MAPPING_UNVERIFIED; the body was recorded, not evaluated). Harness proposal PASS (outcome SUCCESS) preserved in record.json; no attribution row is required for a PASS; no preserved evidence contradicts PASS. The catalogue item-identity oracle of CS-007 was not exercised (DP-3). This PASS is a tool-qualification observation and says nothing about parity or about any system under test; the study-level mobile-runner status stays SELECTED |
 
 ## Attribution records
 
-No row exists (no execution).
+No row exists: attribution rows exist only for NOT_EXECUTED and FAIL_RUNNER results (protocol/mobile-runner-policy-v3.md, 9.3 and 9.4); the one execution is a PASS.
 
 ## Outcome
 
-Not executed. The draft is not an outcome. Recorded by no one.
+| Field | Value |
+|---|---|
+| Date | 2026-11-21 (run 44861779872, attempt 1; APPIUM3-COMPAT-SMOKE-AUTH-04) |
+| Result (SUT-01 android) | PASS (single attempt; the authorization is consumed and never reused) |
+| Runner-caused failures (sut_id, platform, capability) | none (PASS) |
+| Study-level mobile-runner status after this smoke (SELECTED / UNRESOLVED_AFTER_FALLBACK_FAILURE) | SELECTED (unchanged: no FAIL_RUNNER of the selected runner was added; the retained AUTH-02 FAIL_RUNNER stays exempt through the verified remediation lineage) |
+| Recorded by | ORCHESTRATOR (protocol/agent-governance-v6.md, Section 3.4), 2026-11-21 (the recording approved by the human research lead; manifests/appium3-compat-smoke-auth-04-postrun-recording-v1.yaml) |
 
 ## Warning
 
-Do not execute until an explicit human authorization of this smoke has been issued, published, and followed by a separate explicit dispatch instruction. Do not fill any result field before an execution has actually occurred. Record NOT_EXECUTED only with positively demonstrating artifacts; record FAIL_RUNNER when in doubt. Never repair and continue; never re-run. Nothing recorded here is evidence about any system under test.
+APPIUM3-COMPAT-SMOKE-AUTH-04 is consumed: never re-run it, never dispatch it again, never repair and continue. A further execution for this ecosystem and platform would need a new authorization id under a new explicit human decision. Record NOT_EXECUTED only with positively demonstrating artifacts; record FAIL_RUNNER when in doubt. Nothing recorded here is evidence about any system under test.

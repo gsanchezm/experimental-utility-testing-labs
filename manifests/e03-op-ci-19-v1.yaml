@@ -1,0 +1,35 @@
+# manifests/e03-op-ci-19-v1.yaml -- record of operation OP-CI-19 (2026-11-21).
+# ORCHESTRATOR record. CI correction of the non-measured validation workflow .github/workflows/e03-validate.yml so that the mirror check of the per-SUT
+# compatibility smoke accepts the QUALIFIER records of both assigned SUTs. Immutable once committed. It dispatches, publishes and exports nothing.
+record_id: E03-OP-CI-19-01
+record_class: CI_CORRECTION_RECORD
+study_id: EUS-2026-001
+operation_ids: [OP-CI-19]
+recorded_by_role: ORCHESTRATOR
+recorded_on: "2026-11-21"
+governing_authorization: E03-CI-WRITE-AUTH-01
+human_approval:
+  question: "approve the CI correction of the step 'Assert the compatibility-smoke workflow stays dispatch-only and fail-closed' of e03-validate.yml (an exact allowlist of the two QUALIFIER records instead of the prefix qualification/compatibility-smoke/), found while preparing public export v76"
+  answer_label: "Sí, aprueba la corrección de CI (Recomendada)"
+  answer_label_sha256: d3c478dbe196efc05296d4a7196b9e333445dd11e59650bf26d3c91934144e53
+  answer_sha256_convention: "UTF-8 text of the selected label exactly as stored, without a trailing line feed; the answer stamp was not available to the ORCHESTRATOR"
+  answer_stamp_utc: null
+changed_files:
+  - {path: .github/workflows/e03-validate.yml, sha256_before: 8e1213b06be0040842f28bdb0fbf8a117b17f58e957e1fe6e3cbf52373f3ca57, sha256_after: ffd94e262c363ea4b4f5e3706997f42b2d2bb5c64ddf67dcafc51f2417b14b74}
+reason: >-
+  The step required every mirror entry of manifests/compatibility-smoke-status.yaml whose result is not NOT_STARTED to name a qualifier_record that starts with
+  qualification/compatibility-smoke/. The SUT-01 x android entry (PASS of APPIUM3-COMPAT-SMOKE-AUTH-04, recorded 2026-11-21) correctly names
+  qualification/compatibility-smoke-sut01/README.md, the QUALIFIER record of its own package. The prefix test failed that entry on the exported bytes, which would have made the
+  first public validation run after export v76 red.
+design:
+  change: "a constant QRS holds the two QUALIFIER records (qualification/compatibility-smoke/README.md and qualification/compatibility-smoke-sut01/README.md); the two prefix tests of the mirror transcription check become membership tests of QRS"
+  unchanged: "every other check of the step and of the workflow: the mirror result must still equal the Smoke records row of the same SUT and platform in the named record, the study-level status rule, the dispatch-only and fail-closed assertions of the smoke workflows"
+checks_before_the_install:
+  step_on_the_canonical_bytes_before: "rc 1; the two SUT-01 android mirror checks fail ('transcribed from an existing QUALIFIER record' and 'result equals the QUALIFIER row (PASS)'); 23 checks PASS"
+  step_on_the_canonical_bytes_after: "rc 0; no check fails"
+  step_on_the_exported_bytes_of_the_dry_build: "rc 0; 21 PASS (the fork's rehearsal of 2026-11-21, recorded in the export work area, not in this repository)"
+  lint: "actionlint 1.7.7 with shellcheck 0.10.0 (pinned binaries) exit 0 on the corrected workflow"
+does_not:
+  - dispatch, cancel, re-run or import anything
+  - publish or export anything (the export that carries this correction needs its own approval of its exact push line)
+  - change a measured output, a gate of a measured-execution workflow, a locked configuration or an authorization

@@ -458,12 +458,14 @@ jobs:
                   checks.append((f + ': an ELIGIBLE record is ISSUED, VALID, human-issued, with its frozen prompt', a.get('status') == 'ISSUED' and a.get('record_validity') == 'VALID' and a.get('authorizes_execution') is True and bool(a.get('issued_by')) and bool(fc) and os.path.isfile(fc)))
           # Mirror transcription rule: a value other than NOT_STARTED needs its QUALIFIER source record and must equal that
           # record's result for the same SUT and platform (a NOT_EXECUTED or FAIL_RUNNER row never becomes PASS here).
+          # the QUALIFIER records of the two assigned SUTs: an exact allowlist (the SUT-01 package keeps its own README beside the SUT-02 one)
+          QRS = ('qualification/compatibility-smoke/README.md', 'qualification/compatibility-smoke-sut01/README.md')
           m = yaml.safe_load(open('manifests/compatibility-smoke-status.yaml')) or {}
           for e in m.get('entries') or []:
               if e.get('result') != 'NOT_STARTED':
                   qr = str(e.get('qualifier_record') or '')
                   rows = []
-                  if qr.startswith('qualification/compatibility-smoke/') and os.path.isfile(qr):
+                  if qr in QRS and os.path.isfile(qr):
                       text = open(qr).read()
                       if '## Smoke records' in text:  # the "Attribution records" table has another column order
                           text = text[text.index('## Smoke records'):]
@@ -472,7 +474,7 @@ jobs:
                           cells = [c.strip() for c in line.strip().strip('|').split('|')]
                           if line.startswith('|') and len(cells) >= 8 and cells[0] == e.get('sut_id') and cells[1] == e.get('platform'):
                               rows.append(cells)
-                  checks.append((f"mirror {e.get('sut_id')} {e.get('platform')}: transcribed from an existing QUALIFIER record", qr.startswith('qualification/compatibility-smoke/') and os.path.isfile(qr) and bool(e.get('runner_version')) and bool(e.get('authorization_id'))))
+                  checks.append((f"mirror {e.get('sut_id')} {e.get('platform')}: transcribed from an existing QUALIFIER record", qr in QRS and os.path.isfile(qr) and bool(e.get('runner_version')) and bool(e.get('authorization_id'))))
                   checks.append((f"mirror {e.get('sut_id')} {e.get('platform')}: result equals the QUALIFIER row ({e.get('result')})", len(rows) >= 1 and rows[-1][7] == e.get('result')))
           # Study-level status (policy v2, 9.5): a recorded FAIL_RUNNER of the selected runner exhausts the fallback.
           tm = (yaml.safe_load(open('manifests/toolchain-manifest.yaml')) or {}).get('tools') or {}

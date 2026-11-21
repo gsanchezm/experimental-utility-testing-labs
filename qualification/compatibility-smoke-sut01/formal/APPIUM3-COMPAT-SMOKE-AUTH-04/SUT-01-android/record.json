@@ -1,0 +1,159 @@
+{
+  "record_class": "COMPATIBILITY_SMOKE",
+  "study_id": "EUS-2026-001",
+  "policy": "protocol/mobile-runner-policy-v3.md, section 9 (9.1-9.4 as carried from v2; no remediation qualification is authorized under this record)",
+  "instruction_id": "APPIUM3-COMPAT-SMOKE-AUTH-04",
+  "prompt_version_id": "orchestrator-compat-smoke-sut01-v1",
+  "sut_id": "SUT-01",
+  "component": "SUT-01-android",
+  "platform": "android",
+  "environment_type": "EMULATED",
+  "app_identity": "com.omnipizza.app (frontend-mobile app.json, version 1.1.8, android.package com.omnipizza.app; release asset omnipizza-release.apk)",
+  "build": {
+    "asset": "omnipizza-release.apk",
+    "sha256": "1059e9468145761710c9884b37e9fbc76da8e75eb9666dc0867d82a546cda6a4",
+    "source": "https://github.com/gsanchezm/OmniPizza/releases/download/v1.1.8/omnipizza-release.apk"
+  },
+  "runner": {
+    "name": "Appium",
+    "core_pin": "3.7.0",
+    "core_observed": "3.7.0",
+    "driver": "uiautomator2",
+    "driver_pin": "8.7.0",
+    "driver_observed": "8.7.0"
+  },
+  "device": {
+    "kind": "Android emulator",
+    "environment_type": "EMULATED",
+    "serial": "emulator-5554",
+    "android_release": "15",
+    "api_level": "35",
+    "model": "sdk_gphone64_x86_64",
+    "abi": "x86_64",
+    "avd_name": "eus-compat-smoke-sut01-pixel7-api35",
+    "build_fingerprint": "google/sdk_gphone64_x86_64/emu64xa:15/AE3A.240806.043/12960925:userdebug/dev-keys",
+    "java": "openjdk version \"17.0.21\" 2026-10-20",
+    "pinned_identity": "system-images;android-35;google_apis;x86_64, API 35, profile pixel_7 (manifests/toolchain-manifest.yaml environments.android_emulator)"
+  },
+  "realization_sha256": "eae2d5a61bd189a0c3c6dca6c60f76032df36498c0b016c20759d785fb5a1711",
+  "capabilities_requested": {
+    "platformName": "Android",
+    "appium:automationName": "UiAutomator2",
+    "appium:appPackage": "com.omnipizza.app",
+    "appium:autoGrantPermissions": true,
+    "appium:disableWindowAnimation": true,
+    "appium:androidInstallTimeout": 300000,
+    "appium:uiautomator2ServerInstallTimeout": 120000,
+    "appium:uiautomator2ServerLaunchTimeout": 120000,
+    "appium:adbExecTimeout": 120000,
+    "appium:newCommandTimeout": 300,
+    "appium:app": "<host-path>/omnipizza-release.apk",
+    "appium:udid": "emulator-5554"
+  },
+  "transport": {
+    "kind": "node:http",
+    "agent": "one connection per request (agent: false)",
+    "http_layer_timeouts": "none: no socket, header, or body timeout is set; the explicit per-request budget is the only limit"
+  },
+  "steps": [
+    {
+      "name": "install and launch the pinned build (MC-01)",
+      "capabilities": [
+        "MC-01"
+      ],
+      "started_at": "2026-11-21T03:37:28.418Z",
+      "status": "OK",
+      "detail": {
+        "session_capabilities": {
+          "platformName": "Android",
+          "appPackage": "com.omnipizza.app",
+          "appActivity": "com.omnipizza.app.MainActivity"
+        }
+      },
+      "ended_at": "2026-11-21T03:37:53.731Z"
+    },
+    {
+      "name": "locate \"screen-login\" by stable identifier and read it displayed (MC-02, MC-08)",
+      "capabilities": [
+        "MC-02",
+        "MC-08"
+      ],
+      "started_at": "2026-11-21T03:37:53.731Z",
+      "status": "OK",
+      "detail": null,
+      "ended_at": "2026-11-21T03:37:56.601Z"
+    },
+    {
+      "name": "tap the quick-login control \"Standard\" (MC-04)",
+      "capabilities": [
+        "MC-04"
+      ],
+      "started_at": "2026-11-21T03:37:56.601Z",
+      "status": "OK",
+      "detail": null,
+      "ended_at": "2026-11-21T03:37:57.011Z"
+    },
+    {
+      "name": "tap the sign-in control \"Sign In\" (MC-04)",
+      "capabilities": [
+        "MC-04"
+      ],
+      "started_at": "2026-11-21T03:37:57.011Z",
+      "status": "OK",
+      "detail": null,
+      "ended_at": "2026-11-21T03:37:57.533Z"
+    },
+    {
+      "name": "catalogue screen \"screen-catalog\" displayed after sign-in (MC-06, MC-08)",
+      "capabilities": [
+        "MC-06",
+        "MC-08"
+      ],
+      "started_at": "2026-11-21T03:37:57.533Z",
+      "status": "OK",
+      "detail": null,
+      "ended_at": "2026-11-21T03:38:01.341Z"
+    },
+    {
+      "name": "capture the terminal artifacts (MC-10)",
+      "capabilities": [
+        "MC-10"
+      ],
+      "started_at": "2026-11-21T03:38:01.341Z",
+      "status": "OK",
+      "detail": null,
+      "ended_at": "2026-11-21T03:38:02.658Z"
+    }
+  ],
+  "capabilities_exercised": [
+    "MC-01",
+    "MC-02",
+    "MC-04",
+    "MC-06",
+    "MC-08",
+    "MC-10"
+  ],
+  "expected_final_state": "screen-catalog displayed after the quick login of standard_user (\"Standard\") and the sign-in control (\"Sign In\")",
+  "outcome": "SUCCESS",
+  "failed_step": null,
+  "proposed_result": "PASS",
+  "attribution": null,
+  "recording_role": "proposal by the harness; the ORCHESTRATOR records the result under protocol/agent-governance-v6.md, Section 3.4 (policy v3, section 9: NOT_EXECUTED only on a positively demonstrated cause outside the runner; uncertain attribution is FAIL_RUNNER)",
+  "automatic_repeat": "none (policy v3, 9.5)",
+  "started_at": "2026-11-21T03:37:28.418Z",
+  "ended_at": "2026-11-21T03:38:04.355Z",
+  "duration_ms": 35937,
+  "duration_note": "information only; not a criterion (policy section 9)",
+  "artifacts": [
+    "terminal.png",
+    "source-terminal.xml"
+  ],
+  "github": {
+    "run_id": "44861779872",
+    "run_attempt": "1",
+    "sha": "71143894f1592becf332e2d6d5440e2c27f43b53",
+    "workflow_ref": "gsanchezm/experimental-utility-testing-labs/.github/workflows/e06-compatibility-smoke-sut01.yml@refs/heads/main",
+    "image_os": "ubuntu24",
+    "image_version": "20261116.376.1"
+  }
+}

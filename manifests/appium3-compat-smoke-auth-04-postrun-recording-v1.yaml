@@ -1,0 +1,48 @@
+# manifests/appium3-compat-smoke-auth-04-postrun-recording-v1.yaml
+# Operation record of the POST-RUN RECORDING of APPIUM3-COMPAT-SMOKE-AUTH-04 (the SUT-01 x Android compatibility smoke under Appium 3.7.0, protocol/mobile-runner-policy-v3.md, section 9), written by the ORCHESTRATOR under
+# protocol/agent-governance-v6.md, Section 3.4, after the explicit approval of the human research lead (text below). It lists what was verified, recorded, and transcribed, and what was deliberately not done.
+# It is not qualification evidence, records no result of its own (the README "Smoke records" row of qualification/compatibility-smoke-sut01/README.md is the source of truth), and authorizes nothing beyond the recording
+# it describes. Local commits; not exported.
+record_id: APPIUM3-COMPAT-SMOKE-AUTH-04-POSTRUN-RECORDING-01
+record_class: POST_RUN_RECORDING_OPERATION_RECORD
+operation_id: OP-E06-SMOKE-01
+study_id: EUS-2026-001
+recorded_by: ORCHESTRATOR
+recorded_at: "2026-11-21T04:51:54Z"  # UTC
+authorization_id: APPIUM3-COMPAT-SMOKE-AUTH-04
+run: {run_id: 44861779872, run_number: 1, run_attempt: 1, event: workflow_dispatch, head_sha: 71143894f1592becf332e2d6d5440e2c27f43b53, conclusion: success, jobs: "gate 136716556828 success; android 136716733370 success"}
+instruction:
+  given_by: gilbertosanchez  # human research lead
+  given_on: "2026-11-21"
+  exact_text: "Sí: importa y registra PASS (Recomendada)"
+  exact_text_sha256: 0d5e6fbe8ace8370900c786129d6c7d5349ce5baf35791d34e444f86cb32810c
+  byte_count_utf8: 42
+  how_the_instruction_arrived: "the selected option of a question dialog (AskUserQuestion) after the run finished: the question stated the proposed PASS with the facts verified by the ORCHESTRATOR (artifact digest, build digest, backend probe, observed versions, the six steps, the screenshot, the scan of the 12 files) and asked whether to import the artifact byte for byte and record the result PASS; the option text above is the verbatim answer"
+  effect: "approves exactly this recording step (import, README row and outcome, mirror transcription, closure of the authorization lifecycle, this record); it is not an approval of any export, push, E06 START, CS-007 freeze, DRY_RUN, dispatch authorization or measured execution"
+determination:  # the ORCHESTRATOR's, against the PASS definition of protocol/mobile-runner-policy-v3.md, section 9.1 (carried from v2)
+  result: PASS
+  basis: "one clean execution using the selected runner (Appium 3.7.0 with appium-uiautomator2-driver 8.7.0, both observed equal to their pins) completed all six smoke capabilities MC-01, MC-02, MC-04, MC-06, MC-08, MC-10 on the pinned substrate (GitHub-hosted ubuntu-24.04, Android emulator API 35 google_apis x86_64, profile pixel_7) and the pinned build"
+  facts_read_from_the_artifact: "record.json outcome SUCCESS and proposed_result PASS, failed_step null, attribution null; six steps OK in 35937 ms; the build sha256 observed equals the pin (digest match, omnipizza-release.apk, release v1.1.8); the pre-runner reachability probe of the hosted backend answered HTTP 200 on /health and /api/version; the session capabilities returned by the driver name appActivity com.omnipizza.app.MainActivity (resolved by the driver, none was set: decision D-E06-1 of manifests/campaign-execution-decisions-v16.yaml); screen-catalog displayed after the quick login Standard and Sign In (source-terminal.xml carries the node; terminal.png shows the authenticated catalogue with its first entries)"
+  attribution_record: "none: attribution rows exist only for NOT_EXECUTED and FAIL_RUNNER results (policy v3, 9.3 and 9.4)"
+  contradicting_evidence: "none found"
+  not_established: "anything about parity or about any system under test: the smoke is a tool prerequisite (policy section 3), and it did not exercise the catalogue item-identity oracle of the draft scenario CS-007 (DP-3)"
+verification_before_recording:
+  run_identity: "run 44861779872, run number 1, attempt 1 (attempts/2 HTTP 404), workflow_dispatch, head 71143894f1592becf332e2d6d5440e2c27f43b53 (public export v75), conclusion success; jobs gate and android success; identical to manifests/appium3-compat-smoke-auth-04-run-v1.yaml"
+  run_inventory: "the workflow e06-compatibility-smoke-sut01.yml has 1 run (this one); no other workflow_dispatch of it; no GitHub re-run"
+  manual_intervention: "none: dispatch-only workflow, attempt 1 only; the job steps are exactly the scripted ones (gate: set up, checkout, pinned Node.js, prerequisites; android: first-attempt refusal check, checkout, pinned Node.js, KVM, execution, result read, upload); no retry"
+  artifact: "id 14689793739, 731234 bytes, GitHub digest sha256:51aad610eb671c75e611f8cc8c356ffdf541a4dae335475d799e2de3f373a166, downloaded through the API and equal; expires 2027-02-19T03:34:00Z"
+  import_integrity: "12 of 12 members equal their archive member as written (compared in the import script and recorded with their sha256 in IMPORT-RECORD.yaml); the archive is kept byte for byte; formal/.gitattributes keeps every file byte-exact"
+  hygiene_scan: "no private host path, secret-like token, private network address or attribution term in any of the 12 files"
+results:
+  sut01_android: PASS  # AUTH-04, policy v3, section 9
+  sut02_android: PASS  # AUTH-02, unchanged
+  sut02_ios: "PASS (AUTH-03); the AUTH-02 FAIL_RUNNER is retained and exempt through the verified remediation lineage, unchanged"
+state_after:
+  auth_04: "VALID, ISSUED, CONSUMED_AFTER_DISPATCH (dispatch_performed true); never reusable; the readiness gate refuses any further dispatch"
+  mirror: {SUT-01 android: PASS (AUTH-04), SUT-02 android: PASS (AUTH-02), SUT-02 ios: PASS (AUTH-03)}
+  mobile_runner_status: SELECTED  # manifests/toolchain-manifest.yaml, unchanged: this smoke added no FAIL_RUNNER
+  e06: "NOT_STARTED; the smoke precondition of the decision D-E06-4 (smoke first, the full E06 only after a PASS) is met; the CS-007 decisions and freeze (E06-CS007-FREEZE-AUTH-01), the executor, the workflows, the DRY_RUN rounds, the START, the dispatch authorizations and the dispatches each need their own approval"
+  evidence_status: "the PASS is a tool-qualification observation about runner suitability for this ecosystem and platform only, never evidence about SUT-01 or about any ecosystem, and says nothing about parity"
+  public_repository: "holds the issued, undispatched copy of the AUTH-04 record and none of the imported artifact, the result row, the mirror transcription or the closure until a public export, which needs its own approval"
+  next_required_human_action: DECIDE_THE_E06_CS007_DESIGN_POINTS_AND_THE_FREEZE_OF_CS007
+not_done: [E06 START, CS-007 freeze, any DRY_RUN, any dispatch authorization, any measured execution, re-run, second dispatch, any harness change, public export, push, change of the study-level mobile-runner status, edit of the agent-instructions file, new validation-workflow step for the SUT-01 import]
