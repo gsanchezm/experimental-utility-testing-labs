@@ -1,0 +1,68 @@
+# manifests/e06-further-attempt-approval-sut01-v1.yaml -- record of the further-attempt approval E06-FURTHER-ATTEMPT-SUT01-APPROVAL-01 (protocol/agent-governance-v6.md, Sections 3.6 and 3.7, "Further attempts").
+# The human research lead's explicit approval of attempt 2 of the condition E06-CS007-SUT01-ANDROID of the assigned system under test (SUT) SUT-01 (all its executions, first execution 1), after its attempt 1 ended without a bundle.
+# It is not a dispatch authorization and extends none: E06-DISPATCH-SUT01-AUTH-01 admits attempt 1 only and stays as it is. ORCHESTRATOR record of operation OP-ATTEMPT2-E06-01. Immutable once committed; a revocation or a change is a new version file.
+# The record itself is not a measured experiment and executes nothing; the dispatch it covers is recorded in manifests/e06-measured-dispatch/e06-sut01.jsonl.
+record_id: E06-FURTHER-ATTEMPT-APPROVAL-SUT01-01  # ORCHESTRATOR bookkeeping identifier; the approval id is the next key
+record_class: E06_FURTHER_ATTEMPT_APPROVAL
+approval_id: E06-FURTHER-ATTEMPT-SUT01-APPROVAL-01
+version: 1
+study_id: EUS-2026-001
+campaign_id: E06-cross-platform-parity
+operation_id: OP-ATTEMPT2-E06-01
+assigned_sut: SUT-01
+recorded_by_role: ORCHESTRATOR
+recorded_on: "2026-11-21"  # the America/Mexico_City date
+recorded_utc: "2026-11-22T04:50:52Z"
+status: ISSUED
+revoked: false
+issued_by: human research lead
+authorizes_dispatches: true  # of exactly the attempt listed under attempts, once
+measured_experiment: false  # this record; the attempt it covers is a MEASURED_EXPERIMENT run of the frozen GitHub Actions path
+executes_anything: false
+revocable_by_the_human_research_lead: true  # at any time; no revocation exists at the time of this record
+dispatch_authorization_id: E06-DISPATCH-SUT01-AUTH-01  # the authorization of the chain this attempt belongs to; this record extends none of its limits
+campaign_start_authorization_id: E06-START-AUTH-01
+governing_protocol: protocol/agent-governance-v6.md, Sections 3.6 and 3.7 ("Further attempts")
+executor_implementation_sha256: 632f3ba400263c3d8e448cd4f3f3d633cf293a1d8a7163cb94253ef14e02a2bd
+executor_prompt_version: ORCHESTRATOR-E06-cross-platform-parity-v1
+executor_prompt_sha256: ed5c08561856f657c8bc310d361c05f5e359c4d1560b91cbb8093abfe39128ee
+workflow: .github/workflows/e06-measured-execution.yml  # the revision in force through the CI correction record manifests/e06-op-ci-20-v1.yaml (operation OP-CI-20), 1f3f90a090945a7b5ca6543a77637a143bc7dddb88f44c04b41ef421a7aa99c0
+attempts:
+  - condition_id: E06-CS007-SUT01-ANDROID
+    first_execution: 1
+    attempt: 2
+    previous_attempt: 1
+    previous_attempt_record:
+      github_run_id: 44984064912
+      workflow_conclusion: failure
+      frozen_executor_ran: false
+      bundle: "none; nothing was imported under raw-data/ for the attempt"
+      observed: "the gate job and the provenance job succeeded; the measured job failed at its step 7 (Install the pinned Appium stack), before the APK, the emulator and the executor, so the SUT was not touched by this attempt and no execution of attempt 1 exists"
+      recorded_in: "manifests/e06-measured-dispatch/e06-sut01.jsonl, events RUN_IDENTITY_RECORDED (commit 559294ec) and RUN_CONCLUDED_WITHOUT_BUNDLE_NOT_IMPORTED"
+      cause: "a stale check of the workflow, corrected by operation OP-CI-20 (manifests/e06-op-ci-20-v1.yaml); not a SUT, runner or executor outcome"
+      treatment_in_the_campaign: "attempt 1 keeps its recorded outcome and is reported beside attempt 2; it is never rewritten, replaced or deleted"
+scope:
+  assigned_sut: SUT-01
+  condition_id: E06-CS007-SUT01-ANDROID
+  first_execution: 1
+  executions: 50  # EX0001 to EX0050 of attempt 2, in one job
+  attempt: 2
+  dispatches: 1  # one dispatch of attempt 2; no attempt 3 and no second dispatch of attempt 2
+  record_of_dispatches: "manifests/e06-measured-dispatch/e06-sut01.jsonl, append-only: the dispatch entry of attempt 2 is committed before the dispatch, the run identity after it starts"
+  import: "byte-exact and digest-verified under raw-data/E06-cross-platform-parity/SUT-01/E06-CS007-SUT01-ANDROID__EXnnnn__A2/ and E06-CS007-SUT01-ANDROID__job__A2/, as for attempt 1; the directories of attempt 1 never exist"
+human_approval:
+  text_verbatim: "Your questions have been answered: \"OP-CI-20: corrección CI del workflow medido de E06, intento 2 de SUT-01 ANDROID y reanudación. Todo está preparado en la rama e06-ci20 (commit c57de545: workflow y pruebas); los registros se escriben con el texto literal de tu respuesta; nada llega a main ni al repositorio público hasta tu «sí». QUÉ SE APLICA. (1) Workflow medido: se borra, en los dos jobs Android, la línea `test \"$(node -p \"require('$RUNNER_TEMP/appium/node_modules/appium-uiautomator2-driver/package.json').version\")\" = \"8.7.0\"` (revisa una ruta que nunca existe; las dos comprobaciones del directorio del harness antes de ella se quedan). sha256 del archivo antes 41cbba741e05d519e2af61f2841a30ca853f8d3dc0c4bc8efa8e95bfeec6f3b6, después 1f3f90a090945a7b5ca6543a77637a143bc7dddb88f44c04b41ef421a7aa99c0. (2) Gate G-9: sigue aceptando el archivo si el README bloqueado nombra su hash (la sección Campaign configuration NO se edita); además lo acepta si exactamente un registro manifests/e06-op-ci-20-v1.yaml (E06_CI_CORRECTION, ISSUED, sin revocar, emitido por ti bajo CAMPAIGN-CI-WRITE-AUTH-01) nombra como locked_workflow_sha256 el hash que el README bloquea y como effective_workflow_sha256 el del archivo del runner. (3) Registros nuevos: manifests/e06-op-ci-20-v1.yaml (la corrección; el intento 1 fallido de SUT-01 ANDROID con sus hechos verificados en GitHub: run 44984064912, falló en el paso 7 antes del ejecutor, sin bundle; SUT-02 ANDROID no despachado, intento 1 sin gastar; archivos antes y después con sha256; la diferencia divulgada; tu respuesta literal con su sha256) y manifests/e06-further-attempt-approval-sut01-v1.yaml (E06-FURTHER-ATTEMPT-SUT01-APPROVAL-01: intento 2 de E06-CS007-SUT01-ANDROID, primera ejecución 1, las 50 ejecuciones, una sola vez; no amplía ninguna autorización de despacho); una fila en protocol/CHANGELOG.md y dos filas en manifests/README.md. (4) Reanudación: después del export v79 (con tu «sí» a su línea exacta, porque GitHub corre el workflow del repositorio público) y con el gate pasando en el árbol público, despacho una vez SUT-01 ANDROID intento 2 y una vez SUT-02 ANDROID intento 1 (E06-DISPATCH-SUT02-AUTH-01 sin cambios), sin pedirte aprobación de cada uno y con las condiciones de parada del prompt congelado sin cambios; si alguno falla, se detiene y te reporto: no hay intento 3 ni otro despacho sin tu nueva aprobación. VERIFICACIONES PREVIAS. Suite Python de E06 177 pruebas OK (171 más 6 nuevas del registro de corrección); actionlint 1.7.7 con shellcheck 0.10.0 sin hallazgos; ensayo del gate en un árbol con la forma del runner y registros de prueba, 36 de 36 comprobaciones: los 4 conditions pasan todos los gates en intento 1 (48 en web y 80 en Android: los 46 y 78 de antes más 2 del registro de corrección), el intento 2 de SUT-01 ANDROID pasa (85), y 15 controles negativos fallan solo en el gate que los nombra (sin registro, revocado, emisor distinto, hash efectivo o bloqueado distinto, intento 2 sin aprobación, intento 2 de SUT-02 ANDROID o de SUT-01 WEB, intento 3, primera ejecución 2, otro SUT, re-run de GitHub). Comparé los pasos Android medidos con los verificados en los DRY_RUN: las únicas diferencias son esa línea, los valores del tipo de registro medido, el nombre del perfil del emulador y los pasos de procedencia y subida, que ya corrieron bien en los jobs web. DIVULGADO. Las dos condiciones web corrieron con el workflow 41cbba74… y las Android correrán con 1f3f90a0…: difieren en esa comprobación (sin efecto sobre la medición) y en el gate G-9, y la procedencia de cada ejecución registra su archivo. El intento 1 de SUT-01 ANDROID no tiene ninguna ejecución ni bundle; se reporta junto al intento 2 y no se reescribe ni se sustituye. Riesgo residual: el paso del emulador en modo medido con N = 50 nunca ha corrido en GitHub (en DRY_RUN fueron 3 ejecuciones); esta aprobación no cubre un intento 3. NO AUTORIZA: ningún intento 3, ninguna otra condición, ningún cambio de workflow o de configuración más allá de estos dos, el congelamiento de la campaña, ningún análisis, ni el export (su línea exacta va aparte). Mientras tanto un fork extiende la herramienta de despacho (modo intento 2) y no despacha nada.\"=\"APRUEBO OP-CI-20, EL INTENTO 2 DE SUT-01 ANDROID Y LA REANUDACIÓN (Recomendado)\". You can now continue with these answers in mind."
+  bytes: 4403
+  sha256: 86bb3341c8017e3b43de4fce4b576cb1e7a74c84950c9f02caf46f01e4e65128
+  received_utc: "2026-11-22T04:50:32.032Z"  # stamp of the stored conversation entry (an entry of origin human)
+  question_stamp: "2026-11-22T04:42:05.503Z"
+  chosen_option: "APRUEBO OP-CI-20, EL INTENTO 2 DE SUT-01 ANDROID Y LA REANUDACIÓN (Recomendado)"
+does_not_authorize:
+  - any attempt other than attempt 2 of the condition named here, and any attempt 3 of it
+  - any other execution, condition or SUT (each needs its own explicit approval naming the condition and the first execution)
+  - any retry, re-run, cancellation or second dispatch of a run, and any GitHub-native re-run
+  - any change to a workflow, a pinned input, a setting or the locked configuration beyond the CI correction of operation OP-CI-20, approved by the same answer
+  - the exclusion of attempt 1 from the campaign report, or its replacement by attempt 2
+  - any analysis of E06 measured data, any comparison, any statement about H4 (no result before the campaign freeze)
+  - the publication of any measured output (a separate export, under its own approval)
+disclosed_difference: "protocol/agent-governance-v6.md, Section 3.7, Disclosed difference: the chains run without an approval of each dispatch; this record is an exception that the human research lead gave for the one named attempt after attempt 1 ended without a bundle. A bundle that never existed cannot be recovered; attempt 2 is a new measurement of the same condition on the same frozen inputs, run under the corrected workflow file (see the correction record), and both attempts are reported."

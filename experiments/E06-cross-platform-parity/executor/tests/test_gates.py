@@ -121,6 +121,28 @@ def further_approval(cond, attempt=2, first=17, **over):
     return yaml.safe_dump(d)
 
 
+CI_RECORD = 'manifests/e06-op-ci-20-v1.yaml'
+OLD_WORKFLOW_SHA = '4' * 64   # the revision that a fixture configuration locks, when the tests exercise a CI correction made after the START
+
+
+def ci_correction(effective, **over):
+    d = {'record_class': 'E06_CI_CORRECTION', 'status': 'ISSUED', 'revoked': False, 'issued_by': 'human research lead',
+         'campaign_id': 'E06-cross-platform-parity', 'governing_authorization': 'CAMPAIGN-CI-WRITE-AUTH-01',
+         'locked_workflow_sha256': OLD_WORKFLOW_SHA, 'effective_workflow_sha256': effective}
+    d.update(over)
+    return yaml.safe_dump(d)
+
+
+def corrected(**over):
+    """Mutation: the fixture configuration locks an older revision of the measured workflow, and one CI correction record names the file in the tree
+    as the effective revision; a keyword changes one field of the record."""
+    real = hashlib.sha256(read_bytes(WORKFLOW_REL)).hexdigest()
+
+    def mutate(files):
+        edit(files, README, lambda text: text.replace(real, OLD_WORKFLOW_SHA))
+        files[CI_RECORD] = ci_correction(real, **over)
+    return mutate
+
 def configuration(cond, **drop):
     """A README with the locked "Campaign configuration" section naming everything the gate looks for; a keyword names one item to leave out."""
     conditions = {c['condition_id']: c for c in json.loads(read_bytes(CONDITIONS_REL))['conditions']}
@@ -372,6 +394,56 @@ class GateTests(unittest.TestCase):
 
     def test_a_changed_workflow_fails_on_its_locked_revision(self):
         self.assert_fails_on('E06-CS007-SUT01-WEB', 'configuration names the sha256 of the measured workflow file', lambda f: edit(f, WORKFLOW_REL, lambda s: s + '\n# changed\n'))
+
+    def test_a_workflow_corrected_after_the_start_passes_under_its_issued_correction_record(self):
+        # OP-CI-20: the locked section is never edited; exactly one issued correction record names the file as the effective revision of the locked one
+        real = hashlib.sha256(read_bytes(WORKFLOW_REL)).hexdigest()
+        for cond in ('E06-CS007-SUT01-WEB', 'E06-CS007-SUT02-WEB', 'E06-CS007-SUT01-ANDROID', 'E06-CS007-SUT02-ANDROID'):
+            with self.subTest(condition=cond):
+                root = self.tree(cond, corrected())
+                status, log, outputs = self.run_gate(root, cond)
+                self.assertEqual(status, 0, log)
+                self.assertEqual(outputs.get('ready'), 'true')
+                self.assertEqual(outputs['workflow_sha256'], real)
+                self.assertNotIn('FAIL ', log)
+
+    def test_the_correction_record_is_not_read_when_the_configuration_names_the_file(self):
+        cond = 'E06-CS007-SUT01-WEB'
+        root = self.tree(cond, lambda f: f.__setitem__(CI_RECORD, 'record_class: E06_CI_CORRECTION\nstatus: DRAFT\n'))
+        status, log, outputs = self.run_gate(root, cond)
+        self.assertEqual(status, 0, log)
+
+    def test_a_changed_workflow_without_a_correction_record_fails(self):
+        self.assert_fails_on('E06-CS007-SUT01-WEB', 'exactly one E06 CI correction record', lambda f: edit(f, README, lambda s: s.replace(hashlib.sha256(read_bytes(WORKFLOW_REL)).hexdigest(), OLD_WORKFLOW_SHA)))
+
+    def test_two_correction_records_fail(self):
+        def mutate(f):
+            corrected()(f)
+            f['manifests/e06-op-ci-21-v1.yaml'] = f[CI_RECORD]
+        self.assert_fails_on('E06-CS007-SUT01-WEB', 'exactly one E06 CI correction record', mutate)
+
+    def test_a_record_of_another_class_is_not_a_correction_record(self):
+        self.assert_fails_on('E06-CS007-SUT01-WEB', 'exactly one E06 CI correction record',
+                             lambda f: (corrected(record_class='E02_CI_CORRECTION_RECORD')(f)))
+
+    def test_each_defect_of_a_correction_record_fails_on_the_gate_that_names_it(self):
+        real = hashlib.sha256(read_bytes(WORKFLOW_REL)).hexdigest()
+        cases = {
+            'the correction is an ISSUED, unrevoked (status)': dict(status='DRAFT'),
+            'the correction is an ISSUED, unrevoked (revoked)': dict(revoked=True),
+            'the correction is an ISSUED, unrevoked (issuer)': dict(issued_by='ORCHESTRATOR'),
+            'the correction is an ISSUED, unrevoked (campaign)': dict(campaign_id='E07-cross-layer-continuity'),
+            'the correction is an ISSUED, unrevoked (authorization)': dict(governing_authorization='E03-CI-WRITE-AUTH-01'),
+            'the correction names a locked revision (not locked by the configuration)': dict(locked_workflow_sha256='0' * 64),
+            'the correction names a locked revision (not a hash)': dict(locked_workflow_sha256='not-a-hash'),
+            'the correction names a locked revision (another effective file)': dict(effective_workflow_sha256='1' * 64),
+            'the correction names a locked revision (effective is the locked one)': dict(effective_workflow_sha256=OLD_WORKFLOW_SHA),
+        }
+        for label, over in cases.items():
+            marker = label.split(' (')[0]
+            with self.subTest(defect=label):
+                self.assert_fails_on('E06-CS007-SUT01-WEB', marker, corrected(**over))
+        self.assertNotEqual(real, OLD_WORKFLOW_SHA)
 
     # ---- frozen inputs
     def test_a_draft_scenario_fails(self):

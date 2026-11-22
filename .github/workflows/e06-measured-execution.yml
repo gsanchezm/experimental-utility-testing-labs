@@ -297,8 +297,27 @@ jobs:
           # G-8 frozen implementation at the locked hash (run-condition.sh embeds the digest of every implementation file)
           gate('executor implementation exists and equals the locked hash', sha(IMPL) != 'absent' and sha(IMPL) == impl, sha(IMPL))
 
-          # G-9 workflow revision: the locked configuration names the measured workflow file it was locked with
-          gate('configuration names the sha256 of the measured workflow file (workflow revision)', sha(MEASURED) != 'absent' and sha(MEASURED) in cfg, sha(MEASURED))
+          # G-9 workflow revision: the locked configuration names the measured workflow file it was locked with. A CI correction made after the START (operation OP-CI-20,
+          # manifests/e06-op-ci-20-v1.yaml, issued on the approval of the human research lead) changes that file without touching the locked section: the revision in force is then
+          # the one that exactly one issued correction record names as effective, for a locked revision that the configuration names. The locked section is never edited.
+          wf_revision = sha(MEASURED)
+          if wf_revision != 'absent' and wf_revision not in cfg:
+              ci_recs = []
+              for ci_path in sorted(glob.glob('manifests/e06-op-ci-*-v*.yaml')):
+                  ci_rec = load(ci_path)
+                  if isinstance(ci_rec, dict) and ci_rec.get('record_class') == 'E06_CI_CORRECTION':
+                      ci_recs.append((ci_path, ci_rec))
+              gate('configuration names the sha256 of the measured workflow file (workflow revision), or exactly one E06 CI correction record names this file as the effective revision', len(ci_recs) == 1, [x for x, _ in ci_recs])
+              if len(ci_recs) == 1:
+                  ci_rec = ci_recs[0][1]
+                  gate('the correction is an ISSUED, unrevoked E06 CI correction of the human research lead under CAMPAIGN-CI-WRITE-AUTH-01',
+                       ci_rec.get('status') == 'ISSUED' and ci_rec.get('revoked') is False and ci_rec.get('issued_by') == 'human research lead'
+                       and ci_rec.get('campaign_id') == CAMPAIGN and ci_rec.get('governing_authorization') == 'CAMPAIGN-CI-WRITE-AUTH-01', str(ci_rec.get('status')))
+                  gate('the correction names a locked revision that the configuration names and this file as the effective revision',
+                       re.fullmatch(r'[0-9a-f]{64}', str(ci_rec.get('locked_workflow_sha256'))) is not None and str(ci_rec.get('locked_workflow_sha256')) in cfg
+                       and ci_rec.get('effective_workflow_sha256') == wf_revision, wf_revision)
+          else:
+              gate('configuration names the sha256 of the measured workflow file (workflow revision)', wf_revision != 'absent' and wf_revision in cfg, wf_revision)
 
           # The outputs of the gate (the provenance capture reads them). They are computed here, before the lifted block below, which reuses some short names.
           out = {
@@ -847,7 +866,6 @@ jobs:
           test "$(node -p "require('./qualification/compatibility-smoke-sut01/harness/node_modules/appium/package.json').version")" = "3.7.0"
           test "$(node -p "require('./qualification/compatibility-smoke-sut01/harness/node_modules/appium-uiautomator2-driver/package.json').version")" = "8.7.0"
           echo "APPIUM_HOME=$GITHUB_WORKSPACE/qualification/compatibility-smoke-sut01/harness" >> "$GITHUB_ENV"
-          test "$(node -p "require('$RUNNER_TEMP/appium/node_modules/appium-uiautomator2-driver/package.json').version")" = "8.7.0"
       - name: Download the pinned APK and verify its SHA-256 before any device action
         run: |
           set -euo pipefail
@@ -962,7 +980,6 @@ jobs:
           test "$(node -p "require('./qualification/compatibility-smoke-sut01/harness/node_modules/appium/package.json').version")" = "3.7.0"
           test "$(node -p "require('./qualification/compatibility-smoke-sut01/harness/node_modules/appium-uiautomator2-driver/package.json').version")" = "8.7.0"
           echo "APPIUM_HOME=$GITHUB_WORKSPACE/qualification/compatibility-smoke-sut01/harness" >> "$GITHUB_ENV"
-          test "$(node -p "require('$RUNNER_TEMP/appium/node_modules/appium-uiautomator2-driver/package.json').version")" = "8.7.0"
       - name: Download the pinned APK and verify its SHA-256 before any device action
         run: |
           set -euo pipefail
