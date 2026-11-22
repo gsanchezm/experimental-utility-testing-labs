@@ -80,6 +80,7 @@ env:
     qualification/compatibility-smoke
     qualification/compatibility-smoke-sut01
     schemas
+    .github/workflows
 
 jobs:
   gates:
@@ -701,6 +702,14 @@ jobs:
         run: |
           set -euo pipefail
           bash "$E06_EXECUTOR/run-condition.sh"
+      - name: Place the provenance records in every run directory (byte-identical copies of the files whose sha256 the run manifests record)
+        if: always()
+        run: |
+          set -euo pipefail
+          for d in "$OUTPUT_DIR"/*/; do
+            test -d "$d" || continue
+            cp "$PROVENANCE_JSON" "$RUNTIME_ENVIRONMENT_JSON" "$d"
+          done
       - name: Upload the bundle (imported by the ORCHESTRATOR after the digest check)
         if: always()
         uses: actions/upload-artifact@v4
@@ -776,6 +785,14 @@ jobs:
         run: |
           set -euo pipefail
           bash "$E06_EXECUTOR/run-condition.sh"
+      - name: Place the provenance records in every run directory (byte-identical copies of the files whose sha256 the run manifests record)
+        if: always()
+        run: |
+          set -euo pipefail
+          for d in "$OUTPUT_DIR"/*/; do
+            test -d "$d" || continue
+            cp "$PROVENANCE_JSON" "$RUNTIME_ENVIRONMENT_JSON" "$d"
+          done
       - name: Upload the bundle (imported by the ORCHESTRATOR after the digest check)
         if: always()
         uses: actions/upload-artifact@v4
@@ -884,6 +901,14 @@ jobs:
           ATTEMPT: ${{ inputs.attempt }}
           FIRST_EXECUTION: ${{ inputs.first_execution }}
           APPIUM_BIN: ${{ github.workspace }}/qualification/compatibility-smoke-sut01/harness/node_modules/.bin/appium
+      - name: Place the provenance records in every run directory (byte-identical copies of the files whose sha256 the run manifests record)
+        if: always()
+        run: |
+          set -euo pipefail
+          for d in "$OUTPUT_DIR"/*/; do
+            test -d "$d" || continue
+            cp "$PROVENANCE_JSON" "$RUNTIME_ENVIRONMENT_JSON" "$d"
+          done
       - name: Upload the bundle (imported by the ORCHESTRATOR after the digest check)
         if: always()
         uses: actions/upload-artifact@v4
@@ -990,6 +1015,14 @@ jobs:
           ATTEMPT: ${{ inputs.attempt }}
           FIRST_EXECUTION: ${{ inputs.first_execution }}
           APPIUM_BIN: ${{ github.workspace }}/qualification/compatibility-smoke-sut01/harness/node_modules/.bin/appium
+      - name: Place the provenance records in every run directory (byte-identical copies of the files whose sha256 the run manifests record)
+        if: always()
+        run: |
+          set -euo pipefail
+          for d in "$OUTPUT_DIR"/*/; do
+            test -d "$d" || continue
+            cp "$PROVENANCE_JSON" "$RUNTIME_ENVIRONMENT_JSON" "$d"
+          done
       - name: Upload the bundle (imported by the ORCHESTRATOR after the digest check)
         if: always()
         uses: actions/upload-artifact@v4

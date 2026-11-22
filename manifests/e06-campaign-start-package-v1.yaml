@@ -1,0 +1,675 @@
+# manifests/e06-campaign-start-package-v1.yaml -- E06-cross-platform-parity campaign START package, version 1 (operation OP-PREP-E06-START). ORCHESTRATOR record; PREPARED; authorizes nothing. Computed by an untracked builder from the files named in base_commit.
+# The apply script of the operator records performs the whole edit set in one step after the human research lead's explicit approval of the exact START; it refuses any lock value that differs from this package.
+record_class: E06_CAMPAIGN_START_PACKAGE
+record_id: E06-START-PACKAGE-01
+version: 1
+study_id: EUS-2026-001
+campaign_id: E06-cross-platform-parity
+operation_id: OP-PREP-E06-START
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-21'
+status: PREPARED
+base_commit: d2d8364c8e80871cb32b8f40a49361bcf9859bb0
+binding_moment: the E06 campaign START (protocol/change-control-v1.md, section 7, moment 1), on the explicit human approval of that exact action; nothing in this record binds before that approval
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+authorizes: 'nothing: not the START, not the lock, not the freeze of the prompt, not a dispatch authorization, not a dispatch, not an export, not the analysis'
+nature: 'prepared edit set, lock values and texts of the E06 START, computed by build_package_e06.py from the files of the commit named in base_commit and from the record of the DRY_RUN rounds; none is
+  typed by hand (the numbers of the questions Q6 and Q7 are read from the rounds record and typed there). A change of any locked file (the executor, the harness, the conditions file, a workflow, the working
+  prompt) after this build makes the package stale: the apply script refuses a lock value that differs from the package.'
+lock_values:
+  implementation:
+    path: experiments/E06-cross-platform-parity/executor/run-condition.sh
+    sha256: 632f3ba400263c3d8e448cd4f3f3d633cf293a1d8a7163cb94253ef14e02a2bd
+    bytes: 5446
+    embedded_digests:
+    - path: experiments/E06-cross-platform-parity/executor/executor/__init__.py
+      sha256: 892bc6b2579e39e5c32defd115aea900634b3aa4605fae70b04348a760dc657c
+    - path: experiments/E06-cross-platform-parity/executor/executor/android.py
+      sha256: 24760ecf052d8ac9247b0ee4bc2737583387139f545b352404f9c5ea7baeac8e
+    - path: experiments/E06-cross-platform-parity/executor/executor/classify.py
+      sha256: f86917d1071de55dfa14f5b9bd2c2c9d9c69806129b668e11f1c2f81c74251b3
+    - path: experiments/E06-cross-platform-parity/executor/executor/common.py
+      sha256: 308a539ff01e628ca69722badaf996b8741465375002352715b5dbeafd1f7c9d
+    - path: experiments/E06-cross-platform-parity/executor/executor/config.py
+      sha256: 8bece1447b9549c88d593a5c25bd33bdcd4b0b581a5c0a5eb9b6c9cf3322faab
+    - path: experiments/E06-cross-platform-parity/executor/executor/identity.py
+      sha256: 4cd9b9b84ed564c560d9448c3500814ecd9e0a45cf4fc6bb6cd4c144a1f40c7c
+    - path: experiments/E06-cross-platform-parity/executor/executor/run.py
+      sha256: b0b1e1de395e831df3231e3b00b0f4cee5b7305282c28c1d014a42b3640b7cdf
+    - path: experiments/E06-cross-platform-parity/executor/executor/web.py
+      sha256: 197ce02d746879304f6cf67281ea813485527726d21170f053c5a80f0bf451be
+    - path: experiments/E06-cross-platform-parity/executor/requirements.txt
+      sha256: 589b920c552fae45dbc4c9507e42a21344d250abb2573c5412e2aea8cca62de2
+    - path: experiments/E06-cross-platform-parity/executor/android-job.sh
+      sha256: 31e6b25c2fa63d98242b92280c804bb902720439ce03b3c26387299a884e0d0b
+    - path: experiments/E06-cross-platform-parity/harness/e06-android.mjs
+      sha256: 46eadda02e2fae0756492e06b78be834396e71bfedbbf79a0963a965b93ae790
+    - path: experiments/E06-cross-platform-parity/harness/wd.mjs
+      sha256: cf1b286f79585c654c631038194170e1f5a32840b15a446384bcc79d30a7ffeb
+    - path: experiments/E06-cross-platform-parity/conditions-draft.json
+      sha256: b97c492af7c9be1f5716b05cf29666b7b7dff6588f9788b63499203dfa3a1fcd
+    - path: qualification/compatibility-smoke-sut01/harness/package.json
+      sha256: 0c7807598f7b5a2e80aed27a8bdf7aed71b23d0ab3a21a48a764c8b347770242
+    - path: qualification/compatibility-smoke-sut01/harness/package-lock.json
+      sha256: 8a4a02cafa1edec0e8eb7704cec107ab6a2c398dd1e0c8e8a9df3dcb9ac3b3f5
+  conditions_file:
+    path: experiments/E06-cross-platform-parity/conditions-draft.json
+    sha256: b97c492af7c9be1f5716b05cf29666b7b7dff6588f9788b63499203dfa3a1fcd
+    conditions:
+    - E06-CS007-SUT01-WEB
+    - E06-CS007-SUT01-ANDROID
+    - E06-CS007-SUT02-WEB
+    - E06-CS007-SUT02-ANDROID
+    n_per_condition: 50
+    environment_type:
+      E06-CS007-SUT01-WEB: PUBLIC_HOSTED
+      E06-CS007-SUT01-ANDROID: PUBLIC_HOSTED
+      E06-CS007-SUT02-WEB: PUBLIC_HOSTED
+      E06-CS007-SUT02-ANDROID: EMULATED
+  measured_workflow:
+    path: .github/workflows/e06-measured-execution.yml
+    sha256: 41cbba741e05d519e2af61f2841a30ca853f8d3dc0c4bc8efa8e95bfeec6f3b6
+    note: gate G-9 reads this hash from the configuration text
+    sparse_checkout_paths_of_the_workflow:
+    - experiments/E06-cross-platform-parity
+    - experiments/scenario-mappings
+    - manifests
+    - protocol
+    - prompts/frozen
+    - qualification/compatibility-smoke
+    - qualification/compatibility-smoke-sut01
+    - schemas
+    - .github/workflows
+  verification_workflow:
+    path: .github/workflows/e06-environment-verification.yml
+    sha256: b3b39582fc97e2465b12ded468e7999b8ccbb44b785098460860446dcd6eaada
+    note: provenance only; the verification workflow has no START gate
+  dispatch_prompt:
+    id: ORCHESTRATOR-E06-cross-platform-parity-v1
+    working_copy: prompts/working/ORCHESTRATOR-E06-cross-platform-parity-v1.md
+    working_copy_sha256: ed5c08561856f657c8bc310d361c05f5e359c4d1560b91cbb8093abfe39128ee
+    frozen_copy_to_write: prompts/frozen/ORCHESTRATOR-E06-cross-platform-parity-v1.md
+    frozen_copy_written_at_the_start_only: true
+  governance_v6:
+    path: protocol/agent-governance-v6.md
+    sha256: c890a9d004b2989aa9ae33a54bc68b000c47fc9e3f79d60ad0051de78b3f2a4a
+  run_manifest_schema:
+    path: schemas/run-manifest.schema.v2.json
+    sha256: 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757
+  requirements:
+    path: experiments/E06-cross-platform-parity/executor/requirements.txt
+    sha256: 589b920c552fae45dbc4c9507e42a21344d250abb2573c5412e2aea8cca62de2
+  sut_manifest:
+    path: manifests/sut-manifest.yaml
+    sha256: 7f954c958f5558729ff9be23b9bea1471d205e43baf0f461ccb08f7984cf2d58
+  pinned_components:
+    E06-CS007-SUT01-WEB:
+      component_id: SUT-01-web
+      repository: https://github.com/gsanchezm/OmniPizza
+      commit_sha: 9ca37674d374e9303912e259641ee86baf3aabe1
+      release: null
+      endpoint: https://omnipizza-frontend.onrender.com
+    E06-CS007-SUT01-ANDROID:
+      component_id: SUT-01-android
+      repository: https://github.com/gsanchezm/OmniPizza
+      commit_sha: 3cdbe6596a1ab5ef2058ba4259c44da96a0fa03a
+      release: v1.1.8
+      endpoint: null
+    E06-CS007-SUT02-WEB:
+      component_id: SUT-02-web
+      repository: https://github.com/saucelabs/sample-app-web
+      commit_sha: 60fdd634bb111c092282fa07977513a0a7765593
+      release: null
+      endpoint: https://www.saucedemo.com/
+    E06-CS007-SUT02-ANDROID:
+      component_id: SUT-02-android
+      repository: https://github.com/saucelabs/my-demo-app-android
+      commit_sha: 36b012eecdf6a2b488b9504e16b3d0c3ca9a0e7b
+      release: 2.2.0
+      endpoint: null
+  android_apks:
+    E06-CS007-SUT01-ANDROID:
+      url: https://github.com/gsanchezm/OmniPizza/releases/download/v1.1.8/omnipizza-release.apk
+      sha256: 1059e9468145761710c9884b37e9fbc76da8e75eb9666dc0867d82a546cda6a4
+    E06-CS007-SUT02-ANDROID:
+      url: https://github.com/saucelabs/my-demo-app-android/releases/download/2.2.0/mda-2.2.0-25.apk
+      sha256: 318ef64bdcaff18e576d962ab1f557e0a2683b9b5210a6bb6b25cb0caeef62b4
+  scenario_mapping:
+    CS-007:
+      path: experiments/scenario-mappings/CS-007.yaml
+      sha256: bc07f153e702bc969d5ae3653bb31d308e3a859555dbb01c1e184fb14377e85d
+      freeze_record: manifests/cs-007-freeze-v1.yaml
+      freeze_record_sha256: b22eb7706ec6a22ac627a444126665f7e4b8ab8e74cdcc8a00eabf5f24ee9307
+      freeze_authorization_id: E06-CS007-FREEZE-AUTH-01
+      comparability:
+        SUT-01: COMPARABLE
+        SUT-02: COMPARABLE
+        SUT-03: COMPARABLE
+        SUT-04: COMPARABLE
+        SUT-05: NOT_COMPARABLE
+        SUT-06: NOT_COMPARABLE
+  verification_basis:
+    record: manifests/e06-environment-verification-rounds-v1.yaml
+    record_sha256: ba01e49c7957dd2fa3101621fabe9bf381774b7b97a011aa9aa6a287b6b43af1
+    basis_round: 2
+    basis:
+      run_id: 44961904993
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/44961904993
+      dispatched_utc: '2026-11-21T23:27:45Z'
+      finished_utc: '2026-11-21T23:31:24Z'
+      head_sha: becd70d0ba0e9713f71a8873b0551bdfc6fc71ff
+      conclusion: success
+    basis_inputs:
+      condition: all
+      dry_run: true
+    executions_per_condition: 3
+    conditions:
+    - E06-CS007-SUT01-WEB
+    - E06-CS007-SUT01-ANDROID
+    - E06-CS007-SUT02-WEB
+    - E06-CS007-SUT02-ANDROID
+    history_rounds:
+    - round: 1
+      run_id: 44931436092
+      head_sha: 12d587d591f190224d2050403ddfbc96b34a87aa
+      conclusion: success
+configuration_text_sha256: 8e5288b4b0ceaf2c0d9458f0553a708533ac918ce8a17b17124141f3543e8dda
+section_inserted_sha256: 93ce98847a2c949be7baea80d6425fa17c3b2304a567de9ab71aa3c30e1feab2
+candidate_configuration_section: |
+  ## Campaign configuration
+
+  This record is the "Campaign configuration" of E06-cross-platform-parity. It is locked at the campaign START (protocol/change-control-v1.md, section 7, moment 1) under the human authorization named below, and it is immutable from then on; a change after the START is a change-control row recorded before the affected execution. It authorizes no dispatch: each dispatch authorization (protocol/agent-governance-v6.md, Section 3.7) is issued separately by the human research lead. The design records are experiments/E06-cross-platform-parity/design-brief-draft.md and the decisions records manifests/campaign-execution-decisions-v16.yaml to -v18.yaml (D-E06-1 to D-E06-15); the executor is experiments/E06-cross-platform-parity/executor/. Every hash below was computed from the recorded file at the START and not typed. A system under test (SUT) is one of the evaluated ecosystems of README.md. The statements of this file outside this section that name variables or categories as candidate, not frozen, or TBD before freeze are the text of the preparation and are left unedited; this section supersedes them for the four executable conditions.
+
+  ### Identity and START
+
+  - Campaign: E06-cross-platform-parity. Scope: the WEB and the ANDROID surface of SUT-01 and of SUT-02 (four conditions). SUT-03 and SUT-04 are COMPARABLE on WEB only in the frozen mapping record and have no mobile surface, so they have no condition; SUT-05 and SUT-06 are NOT_COMPARABLE and have none; iOS is deferred and recorded untested (decision D-E06-5, DP-8). Design: one canonical scenario, CS-007: from a clean session an actor signs in through the user interface, arrives at the authenticated catalogue, and the identity of the first catalogue position is read; the scenario is read-only in business state and its reset is SESSION_RESET. Hypothesis label: H4, cross-platform part (protocol/statistical-analysis-plan-v1.md, section 4.3); one canonical scenario gives one scenario pair per comparison, so every result is descriptive in weight (D-E06-7). See "Outcome categories, pairing and the parity proportion".
+  - START authorization id: E06-START-AUTH-01 (the id of the human research lead's approval of this START). The START row of protocol/CHANGELOG.md names it.
+  - Protocol: v1 FROZEN-PRE-DATA (protocol/study-design-v1.md; protocol/statistical-analysis-plan-v1.md, sections 4 and 5; protocol/equivalent-scenario-mapping-v1.md; protocol/repeatability-determinism-v1.md; protocol/mobile-runner-policy-v3.md for the Android conditions). Agent governance: protocol/agent-governance-v6.md, sha256 c890a9d004b2989aa9ae33a54bc68b000c47fc9e3f79d60ad0051de78b3f2a4a, FROZEN-PRE-DATA since 2026-11-06, Sections 3.6 and 3.7.
+  - Execution: GitHub Actions only (CAMPAIGN-CI-WRITE-AUTH-01), through .github/workflows/e06-measured-execution.yml, dispatched by the ORCHESTRATOR under dispatch authorizations. Attempt 1 only under the authorization; a further attempt only under a recorded further-attempt approval (gate G-E06-A2, decision D-E06-14); default branch only; no GitHub re-run.
+  - Measured workflow file sha256 41cbba741e05d519e2af61f2841a30ca853f8d3dc0c4bc8efa8e95bfeec6f3b6 (gate G-9 reads this hash from this record). Verification workflow file sha256 b3b39582fc97e2465b12ded468e7999b8ccbb44b785098460860446dcd6eaada (provenance only; the verification workflow has no START gate, as in E04, E05 and E07).
+
+  ### Scenario mapping
+
+  - Canonical scenario CS-007: experiments/scenario-mappings/CS-007.yaml, sha256 bc07f153e702bc969d5ae3653bb31d308e3a859555dbb01c1e184fb14377e85d, mapping_status FROZEN on 2026-11-21, authorization id E06-CS007-FREEZE-AUTH-01 (record manifests/cs-007-freeze-v1.yaml, sha256 b22eb7706ec6a22ac627a444126665f7e4b8ab8e74cdcc8a00eabf5f24ee9307). Comparability in the frozen record: SUT-01 COMPARABLE and SUT-02 COMPARABLE (WEB and ANDROID, the surfaces of the four conditions), SUT-03 COMPARABLE and SUT-04 COMPARABLE (WEB only), SUT-05 NOT_COMPARABLE and SUT-06 NOT_COMPARABLE.
+  - The comparability recorded in the frozen mapping record is the one used: each of the four conditions below has a COMPARABLE entry. SUT-03 and SUT-04 (no mobile surface), SUT-05 and SUT-06 have no condition and are reported as no data with their reasons, never as a zero or a failure (protocol/statistical-analysis-plan-v1.md, section 5). SUT-01 versus SUT-03 has no mobile data and is not estimable.
+
+  ### Conditions
+
+  All conditions: N = 50 executions, EX0001 to EX0050, attempt 1, identity oracle item_identity (the DP-3 fallback arrival_only is recorded and not used: the identity was read on all four conditions in both DRY_RUN rounds), one clean state for each execution. The conditions, their order within a SUT and their environment types are fixed here; the per-step realizations are those of the conditions file and of the executor README (experiments/E06-cross-platform-parity/executor/README.md).
+
+  | Condition | Surface | Account | Environment type | Identity key | Market and language | Clean state of each execution (not counted) |
+  |---|---|---|---|---|---|---|
+  | E06-CS007-SUT01-WEB | WEB (Playwright, Chromium, viewport 1280 x 800) | standard_user | PUBLIC_HOSTED | pizza_id (the card heading; the -desktop suffix is stripped and the raw identifier is recorded) | US, en | a new browser context (SESSION_RESET); the sign-in is inside the scenario, no token is injected |
+  | E06-CS007-SUT01-ANDROID | ANDROID (Appium 3.7.0, emulator) | standard_user | PUBLIC_HOSTED | pizza_id (the card label card-pizza-<id>) | US, en | adb uninstall, then a new Appium session that installs the SHA-256 verified APK |
+  | E06-CS007-SUT02-WEB | WEB (Playwright, Chromium, viewport 1280 x 800) | standard_user | PUBLIC_HOSTED | product_title (the first inventory item name, default sort az) | none (the sources define none) | a new browser context (SESSION_RESET) |
+  | E06-CS007-SUT02-ANDROID | ANDROID (Appium 3.7.0, emulator) | standard_user (decision D-E06-12: the account of SUT-02 web, the same on both surfaces) | EMULATED | product_title (the first titleTV, default sort NAME_ASC) | none (the sources define none) | adb uninstall, then a new Appium session that installs the SHA-256 verified APK |
+
+  The credentials of every condition are those recorded in the conditions file (the documented standard accounts of the pinned sources). On SUT-02 Android the arrival needs two signals (decision D-E06-13): the login screen gives way to the catalogue landing screen, and, after the titles are read, the drawer row Logout Menu Item is present; an absent row is NOT_ARRIVED_SUT with the reason SUT_SIGN_IN_REFUSED, and a session lost while the row is searched is a runner fault (NOT_ARRIVED_RUNNER).
+
+  ### Pinned versions
+
+  - E06-CS007-SUT01-WEB, surface component SUT-01-web: https://github.com/gsanchezm/OmniPizza at commit 9ca37674d374e9303912e259641ee86baf3aabe1 (no release) (hosted endpoint https://omnipizza-frontend.onrender.com)
+  - E06-CS007-SUT01-ANDROID, surface component SUT-01-android: https://github.com/gsanchezm/OmniPizza at commit 3cdbe6596a1ab5ef2058ba4259c44da96a0fa03a (release v1.1.8)
+  - E06-CS007-SUT02-WEB, surface component SUT-02-web: https://github.com/saucelabs/sample-app-web at commit 60fdd634bb111c092282fa07977513a0a7765593 (no release) (hosted endpoint https://www.saucedemo.com/)
+  - E06-CS007-SUT02-ANDROID, surface component SUT-02-android: https://github.com/saucelabs/my-demo-app-android at commit 36b012eecdf6a2b488b9504e16b3d0c3ca9a0e7b (release 2.2.0)
+  - Source: manifests/sut-manifest.yaml, sha256 7f954c958f5558729ff9be23b9bea1471d205e43baf0f461ccb08f7984cf2d58. The hosted deployments of SUT-01 web, SUT-01 Android (its backend) and SUT-02 web are not independently mapped to the pinned commits (HOSTED_MAPPING_UNVERIFIED, disclosed in the conditions file and in every run manifest). The SUT-01 web surface calls the same hosted backend as the release APK (DRY_RUN round 2: https://omnipizza-backend.onrender.com).
+  - Android builds: SUT-01 omnipizza-release.apk of release v1.1.8, sha256 1059e9468145761710c9884b37e9fbc76da8e75eb9666dc0867d82a546cda6a4 (https://github.com/gsanchezm/OmniPizza/releases/download/v1.1.8/omnipizza-release.apk); SUT-02 mda-2.2.0-25.apk of release 2.2.0, sha256 318ef64bdcaff18e576d962ab1f557e0a2683b9b5210a6bb6b25cb0caeef62b4 (https://github.com/saucelabs/my-demo-app-android/releases/download/2.2.0/mda-2.2.0-25.apk). Each is downloaded by the job and verified by SHA-256 before any device action.
+  - Android runner: Appium 3.7.0 with appium-uiautomator2-driver 8.7.0 (the stack that passed the SUT-01 and SUT-02 compatibility smokes), installed by npm ci from the lockfile of qualification/compatibility-smoke-sut01/harness (package.json sha256 0c7807598f7b5a2e80aed27a8bdf7aed71b23d0ab3a21a48a764c8b347770242, package-lock.json sha256 8a4a02cafa1edec0e8eb7704cec107ab6a2c398dd1e0c8e8a9df3dcb9ac3b3f5), Node.js 22.23.2, on the emulator API 35 google_apis x86_64 pixel_7 started by ReactiveCircus/android-emulator-runner at commit a421e43855164a8197daf9d8d40fe71c6996bb0d. The study mobile-runner status and the compatibility smoke PASS of the exact SUT x android x Appium 3 are checked by gate G-10 at every dispatch (protocol/mobile-runner-policy-v3.md, sections 9.5 and 9.7.9 to 9.7.11).
+  - Web runner: Playwright for Python 1.63.0 with the hashed requirements of experiments/E06-cross-platform-parity/executor/requirements.txt, sha256 589b920c552fae45dbc4c9507e42a21344d250abb2573c5412e2aea8cca62de2; executor Python 3.12 (GitHub setup-python). Browser: the Chromium build named by Playwright 1.63.0, not hash-pinned by the study; web viewport 1280 x 800, time zone UTC, locale en-US.
+  - Run-manifest schema: schemas/run-manifest.schema.v2.json, sha256 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757. The schema enum has no E06 modality: each execution takes the enum value of its platform (Web UI Functional or Android Native) and records the scenario CS-007 in the scenario field; the reset mechanism is SESSION_RESET, the establishment mechanism UI_FLOW, and the actions list is empty (no Required Actions class names the sign-in steps of this scenario).
+
+  ### Prompt version and implementation
+
+  - Dispatch procedure prompt: ORCHESTRATOR-E06-cross-platform-parity-v1. Working copy: prompts/working/ORCHESTRATOR-E06-cross-platform-parity-v1.md, sha256 ed5c08561856f657c8bc310d361c05f5e359c4d1560b91cbb8093abfe39128ee. The frozen copy prompts/frozen/ORCHESTRATOR-E06-cross-platform-parity-v1.md is written once at the START as a byte-identical copy of the working copy (prompts/README.md, rules 1 to 3); it is not written by this text.
+  - Implementation hash (sha256 of experiments/E06-cross-platform-parity/executor/run-condition.sh, which embeds the digests of the 15 implementation files and refuses an unlisted executor file): 632f3ba400263c3d8e448cd4f3f3d633cf293a1d8a7163cb94253ef14e02a2bd. The files are the executor modules and requirements.txt of the executor, the Android job script, the Node harness (e06-android.mjs and wd.mjs), the conditions file, and the package.json and package-lock.json of the locked Appium stack.
+  - Conditions file: experiments/E06-cross-platform-parity/conditions-draft.json, sha256 b97c492af7c9be1f5716b05cf29666b7b7dff6588f9788b63499203dfa3a1fcd (four conditions; read by the executor and part of the implementation digests; hashed here at the START). The fields status, note, open_items, executor_implementation_sha256 and executor_prompt_version inside it are the text of its preparation (DRAFT_NOT_LOCKED, null values, open items now decided or verified); the hash locks its bytes, and this section supersedes those statements.
+
+  ### Outcome categories, pairing and the parity proportion
+
+  - Outcome categories (declared before any execution in the conditions file; D-E06-5 to D-E06-9 and D-E06-12 to D-E06-15): ARRIVED_IDENTITY_READ (status SUCCESS: the authenticated catalogue was reached and the identity of the first position was read); ARRIVED_ARRIVAL_ONLY (SUCCESS: reached, identity oracle arrival_only; not used); ARRIVED_IDENTITY_UNREADABLE (INCONCLUSIVE: reached, identity not readable, recorded with its reason); NOT_ARRIVED_INFRASTRUCTURE (ABORTED: the backend refused or did not answer, or the device did not answer in time; reasons INFRA_USER_LIMIT_429, INFRA_BACKEND_5XX, INFRA_BACKEND_NO_RESPONSE, INFRA_CATALOGUE_TIMEOUT); NOT_ARRIVED_SUT (FAILURE: the system answered and did not let the actor through; reasons SUT_SIGN_IN_REFUSED, SUT_CATALOGUE_NOT_REACHED_AFTER_SIGN_IN); NOT_ARRIVED_RUNNER (ERROR: a fault of the executor, the browser, the WebDriver client or the Appium session; reason RUNNER_FAULT). The expected outcome of every condition is ARRIVED_IDENTITY_READ.
+  - Pairing and parity (decisions D-E06-7 and D-E06-15; computed only by the analysis, never by an execution, a dispatch or the condition summary): execution k of the WEB condition of an ecosystem is paired with execution k of its ANDROID condition (same account, same market, same index), k = 1 to 50. Parity is present for pair k when both executions reach the authenticated catalogue and the identity of the first catalogue position is the same on both surfaces. An execution that did not arrive is recorded with its category and reason and is a non-parity, never excluded after the fact and never retried inside the same execution record. An execution that arrived with an unreadable identity is a non-parity as this rule is written, and the analysis reports it as its own category beside the parity counts, never merged silently and never excluded. The pairing is by index, not simultaneous: the two conditions of an ecosystem are separate dispatches (see "Sample size, order and dispatch model").
+  - Primary variable and estimand: the parity proportion per ecosystem, pairs with parity over 50, with a Wilson 95 percent interval; the effect SUT-01 versus SUT-02 by risk difference with an interval and Fisher's exact test (protocol/statistical-analysis-plan-v1.md, section 4.3). Descriptive in weight, because one canonical scenario gives one scenario pair per comparison.
+
+  ### Attribution and exclusion rules
+
+  - No attempt is excluded from any denominator. A non-arrival is data: a backend refusal such as the user limit answer HTTP 429 (INFRA_USER_LIMIT_429) is recorded with its message, never repaired and never excluded (D-E06-8).
+  - Attribution is mechanical, declared before the run and never applied after seeing a result pattern (as implemented in experiments/E06-cross-platform-parity/executor/executor/classify.py; confirmed by the human research lead's approval of this text at the START): NONE for an execution that arrived; SUT for NOT_ARRIVED_SUT; INFRASTRUCTURE for NOT_ARRIVED_INFRASTRUCTURE; TOOLING for NOT_ARRIVED_RUNNER; UNDETERMINED for ARRIVED_IDENTITY_UNREADABLE (the cause is not assigned mechanically, and the record says so). The reason of a non-arrival is decided by a fixed precedence (the first matching rule wins): the user limit, a 5xx answer, no answer within the budget or the sign-in page never shown, a refused sign-in or an unestablished session, a catalogue that was reachable and not shown, a catalogue that never answered, and, last, a sign-in that was never submitted (RUNNER_FAULT). The Android applications cannot report backend answers, so a sign-in with no refusal shown within the budget is INFRA_CATALOGUE_TIMEOUT there, and is disclosed as such.
+  - Any exception inside an execution (browser, executor, WebDriver client, Appium session) is NOT_ARRIVED_RUNNER with attribution TOOLING and the message recorded, and the job goes on with the next execution; an exception that leaves the loop ends the condition with the summary of the executions already run and a non-zero exit, which is a failure of the measured job and a stop of the procedure. A runner cancelled or lost by the workflow leaves an incomplete bundle; the ORCHESTRATOR records such an execution at import as TOOLING of that execution (not implemented by the executor; confirmed by the human research lead's approval of this text at the START).
+  - The executor scrubs host paths and private network addresses from every kept text file; no secret is recorded.
+
+  ### Sample size, order and dispatch model
+
+  - N = 50 executions per condition (protocol/repeatability-determinism-v1.md, section 3, standard target; no reduction): 50 times the number of conditions (200 for the four conditions above); one dispatch per condition, one job per dispatch, attempt 1; one clean state for each execution.
+  - Dispatch order (fixed here before the first dispatch): SUT-01: E06-CS007-SUT01-WEB, then E06-CS007-SUT01-ANDROID; SUT-02: E06-CS007-SUT02-WEB, then E06-CS007-SUT02-ANDROID. The conditions of one SUT run one at a time, a dispatch only after the previous run of its authorization has concluded and been imported, so the WEB and the ANDROID condition of an ecosystem are dispatched back to back; the chains of SUT-01 and SUT-02 are independent and may run concurrently. The pairing of execution k of the two conditions is made by the analysis; the two conditions of an ecosystem are not read at the same time: the second condition starts only after the run of the first has concluded and been imported, so the two members of a pair are executed minutes apart (disclosed; a drift of the item data of a hosted deployment between the two dispatches would appear as a non-parity that the record explains, D-E06-8).
+  - Dispatch records (append-only, committed before each dispatch; the run identity is appended after it starts): manifests/e06-measured-dispatch/e06-sut01.jsonl and e06-sut02.jsonl, created at the first dispatch of each SUT, not at the START.
+  - Identifiers: execution_id EX0001 to EX0050; attempt A1; run_id <condition_id>__<execution_id>__A<attempt>.
+  - Bundle and import: the measured job uploads one bundle E06-MEASURED_EXPERIMENT-<condition_id>-run<run id>-a<run attempt>, and the provenance job one artifact E06-MEASURED_EXPERIMENT-<condition_id>-provenance. Import is byte-exact under raw-data/E06-cross-platform-parity/<SUT>/ after the verification of every archive against its GitHub digest: each <run_id>/ directory of the bundle becomes raw-data/E06-cross-platform-parity/<SUT>/<run_id>/ (the path its run manifest lists); the job-level files of the bundle (condition-summary.json; for an Android condition appium-server.log; for E06-CS007-SUT01-ANDROID backend-probe.json and backend-health.body) and the provenance artifact are kept in raw-data/E06-cross-platform-parity/<SUT>/<condition_id>__job__A<attempt>/.
+  - Time budgets (the timeout policy of the workflow is recorded in every provenance record, with the wording of its preparation): gate job 15 minutes; provenance job 10 minutes; each measured job 360 minutes (the GitHub maximum); per execution: web navigation 90 s, screen 90 s, sign-in 60 s, catalogue 60 s; Android a budget of 180 s inside the harness, a harness process limit of 900 s and an adb command limit of 120 s. There is no other per-execution watchdog.
+  - Stop conditions: the frozen dispatch procedure (prompts/frozen/ORCHESTRATOR-E06-cross-platform-parity-v1.md, section 4) applies: the gate job of a run fails; a run's conclusion is other than success or a failure of the measured job; an artifact does not hold exactly the 50 run manifests of its condition and its condition summary; an input differs from this text, the authorization or the public repository; a boundary of the procedure would be crossed; the authorization is revoked or the human research lead stops the campaign. On a stop nothing further is dispatched in this campaign under any authorization until the human research lead instructs otherwise.
+
+  ### Dispatch authorization and further attempts
+
+  - One dispatch authorization per SUT, issued separately by the human research lead under protocol/agent-governance-v6.md, Section 3.7: E06-DISPATCH-SUT01-AUTH-01 (SUT-01: the two conditions in the order above) and E06-DISPATCH-SUT02-AUTH-01 (SUT-02: the same). Each names its conditions, N = 50, attempt 1, the implementation hash and the prompt hash above, and the authorization id of this START (records manifests/e06-dispatch-authorization-sut01-v1.yaml and manifests/e06-dispatch-authorization-sut02-v1.yaml, record class E06_DISPATCH_AUTHORIZATION). The START authorizes no dispatch authorization.
+  - Further attempt (attempt 2 or more, executions from a first execution named by the approval to 50): only under a further-attempt approval of the human research lead that names the condition, the first execution and the attempt (gate G-E06-A2, decision D-E06-14; the approval record is manifests/e06-further-attempt-approval-sut0N-v1.yaml, record class E06_FURTHER_ATTEMPT_APPROVAL, created only when approved). Nothing is re-run; the failed or interrupted executions of the first attempt keep their recorded outcomes.
+
+  ### Environments and verification basis
+
+  - CS-007 is read-only in business state (the sign-in creates a session and no business state), so it is outside the list of protocol/study-design-v1.md, section 10.3, that requires a controlled instance (deterministic reset, fault activation, active security testing, significant load, state-changing operations); the environment type of each condition is fixed here, per condition and by the same rule for every ecosystem, as that section requires: PUBLIC_HOSTED for E06-CS007-SUT01-WEB, E06-CS007-SUT01-ANDROID and E06-CS007-SUT02-WEB, EMULATED for E06-CS007-SUT02-ANDROID (the pinned build on the GitHub-hosted emulator with the local database of the build). Shared-instance interference on the hosted deployments is a limitation of the affected measurements. The environment_type is recorded in every run manifest. No controlled-instance status record exists for E06 and no gate reads one.
+  - Verification basis: the non-measured DRY_RUN round 2 of .github/workflows/e06-environment-verification.yml (run 44961904993, dispatched 2026-11-21T23:27:45Z on public main becd70d0ba0e9713f71a8873b0551bdfc6fc71ff, 3 executions per condition, every one of the 12 executions recorded ARRIVED_IDENTITY_READ; record manifests/e06-environment-verification-rounds-v1.yaml, sha256 ba01e49c7957dd2fa3101621fabe9bf381774b7b97a011aa9aa6a287b6b43af1). It ran after the decisions D-E06-12 to D-E06-15 were implemented. Round 1 (run 44931436092, head 12d587d591f190224d2050403ddfbc96b34a87aa) ran before them and is history, not a basis. The DRY_RUN bundles are never measured and never imported.
+
+  ### Analysis and what is not computed
+
+  - Per ecosystem: the counts of the six categories per condition, the pairs with parity over 50 with the Wilson 95 percent interval, the non-arrival and unreadable-identity counts beside the parity counts, and the attributed counts beside the raw proportion. SUT-01 versus SUT-02 by risk difference with an interval and Fisher's exact test. Descriptive in weight. SUT-03 and SUT-04 have no mobile data and SUT-05 and SUT-06 no condition: not estimable, reported with their reasons.
+  - Not computed, not compared, not pooled: no pooled rate across ecosystems or surfaces; no composite score; no latency; no result for iOS.
+  - The analysis is run only on a separate instruction of the human research lead, after the campaign is frozen, with its own derived dataset (derived-data/README.md; analysis/README.md).
+
+  ### Gates the measured workflow enforces
+
+  The measured job starts only if the gate step of .github/workflows/e06-measured-execution.yml passes: the inputs agree with the conditions file; the campaign status is IN_PROGRESS in manifests/study-manifest.yaml; exactly one START row of protocol/CHANGELOG.md names this campaign README and the START authorization id; the START record manifests/e06-campaign-start-v1.yaml names the campaign and the authorization id; this section names the condition, the schema, the prompt version, the implementation hash, the conditions-file hash, the measured workflow hash (G-9), N = 50, CS-007, and the pinned commit and release of the surface component of the condition; the dispatch authorization of the assigned SUT is ISSUED, VALID, ELIGIBLE, not revoked, issued by the human research lead, and names the condition, N = 50, attempt 1, the START id and the two hashes; the frozen prompt file exists and matches its hash; the further-attempt approval (G-E06-A2) when the attempt is above 1; agent-governance-v6 is in force with Section 3.7; the run-manifest schema v2 is present; CS-007 is FROZEN with its freeze record and a COMPARABLE entry for the assigned SUT; the executor implementation equals the locked hash; for an Android condition, the mobile-runner admissibility and the compatibility smoke PASS of its exact SUT x android x Appium 3 (gate G-10). The job also refuses a GitHub re-run (github.run_attempt must be 1) and any branch other than the default branch.
+
+  ### Change log
+
+  - None at the time of this text. Any change after the START is a change-control row (protocol/change-control-v1.md) recorded before the affected execution; results collected before a change are analyzed under the configuration in force when they were collected.
+candidate_change_log_row_sha256_unbound: 28e4d57c03ded30ae6ec4c93983dd80a11ead8cd3a28cf1543d2ea04f99605f6
+candidate_change_log_row: |
+  | {START_DATE} | experiments/E06-cross-platform-parity/README.md | none | none | campaign NOT_STARTED -> IN_PROGRESS | E06 campaign start under protocol/change-control-v1.md, section 7, moment 1, by explicit human approval, authorization E06-START-AUTH-01. Campaign configuration record added to experiments/E06-cross-platform-parity/README.md (four web and Android conditions on SUT-01 (2) and SUT-02 (2), N = 50 each, 200 executions, attempt 1; canonical scenario CS-007 (FROZEN 2026-11-21, authorization E06-CS007-FREEZE-AUTH-01), sha256 bc07f153e702bc969d5ae3653bb31d308e3a859555dbb01c1e184fb14377e85d; primary variable the parity proportion per ecosystem, pairs by index with the Wilson 95 percent interval, descriptive in weight; pinned SUT versions: manifests/sut-manifest.yaml; executor implementation hash 632f3ba400263c3d8e448cd4f3f3d633cf293a1d8a7163cb94253ef14e02a2bd; conditions file sha256 b97c492af7c9be1f5716b05cf29666b7b7dff6588f9788b63499203dfa3a1fcd; measured workflow file sha256 41cbba741e05d519e2af61f2841a30ca853f8d3dc0c4bc8efa8e95bfeec6f3b6; dispatch procedure prompt ORCHESTRATOR-E06-cross-platform-parity-v1, sha256 ed5c08561856f657c8bc310d361c05f5e359c4d1560b91cbb8093abfe39128ee, frozen as a byte-identical copy; environment types fixed per condition (PUBLIC_HOSTED for SUT-01 web, SUT-01 Android and SUT-02 web, EMULATED for SUT-02 Android; no controlled instance, CS-007 being read-only); verification basis: the non-measured DRY_RUN round 2, run 44961904993). Effect: the measured-execution workflow may be dispatched only within a dispatch authorization issued separately by the human research lead under protocol/agent-governance-v6.md, Section 3.7; the START authorizes no dispatch. Record: manifests/e06-campaign-start-v1.yaml. | E06-cross-platform-parity | gilbertosanchez |
+tokens_bound_at_the_start:
+  START_DATE: the date of the START in America/Mexico_City
+  START_TIMESTAMP: the UTC time at which the START is applied
+start_record_template:
+  record_class: CAMPAIGN_START
+  record_id: E06-CAMPAIGN-START-01
+  study_id: EUS-2026-001
+  campaign_id: E06-cross-platform-parity
+  operation_id: OP-START-E06
+  recorded_by_role: ORCHESTRATOR
+  authorization_id: E06-START-AUTH-01
+  binding: protocol/change-control-v1.md, section 7, moment 1 (campaign NOT_STARTED -> IN_PROGRESS)
+  package:
+    path: manifests/e06-campaign-start-package-v1.yaml
+    record_id: E06-START-PACKAGE-01
+start_edit_set:
+- file: experiments/E06-cross-platform-parity/README.md
+  kind: replace_exact
+  what: the Current status block of the E06 README (NOT STARTED -> IN PROGRESS)
+  before: |
+    ## Current status
+
+    NOT STARTED
+
+    Resumed by the human research lead's decision of 2026-11-02 (manifests/campaign-resumption-v1.yaml); the deferral of scope A (manifests/campaign-disposition-v1.yaml) no longer governs the schedule: the status above is unchanged, preparation may begin, and the campaign START needs its own explicit human authorization (protocol/change-control-v1.md, section 7).
+
+    The SUT-01 x Android compatibility smoke (APPIUM3-COMPAT-SMOKE-AUTH-04) was recorded PASS on 2026-11-21 (qualification/compatibility-smoke-sut01/README.md), and the canonical scenario CS-007 was FROZEN on 2026-11-21 (manifests/cs-007-freeze-v1.yaml; the design decisions are in manifests/campaign-execution-decisions-v17.yaml); the campaign stays NOT STARTED, no campaign configuration, executor or workflow exists, and its START needs its own explicit human authorization.
+  after_template: |
+    ## Current status
+
+    IN PROGRESS since the campaign START of {START_DATE} (human authorization E06-START-AUTH-01; protocol/change-control-v1.md, section 7, moment 1; record manifests/e06-campaign-start-v1.yaml). The "Campaign configuration" section at the end of this file is locked at that START and is immutable; it authorizes no dispatch: each dispatch authorization (protocol/agent-governance-v6.md, Section 3.7) is issued separately by the human research lead. The canonical scenario CS-007 was FROZEN on 2026-11-21 (manifests/cs-007-freeze-v1.yaml); the SUT-01 x Android compatibility smoke (APPIUM3-COMPAT-SMOKE-AUTH-04) was recorded PASS on 2026-11-21 (qualification/compatibility-smoke-sut01/README.md) and the SUT-02 x Android smoke PASS is recorded in qualification/compatibility-smoke/README.md; the four conditions were verified on GitHub Actions by the non-measured DRY_RUN round 2 (manifests/e06-environment-verification-rounds-v1.yaml). No dispatch authorization and no measured execution exists.
+- file: experiments/E06-cross-platform-parity/README.md
+  kind: append_section
+  what: the Campaign configuration section appended last (the candidate text of this package)
+  source: candidate_configuration_section
+- file: protocol/CHANGELOG.md
+  kind: append_row
+  what: the START row of the change log (eight cells)
+  source: candidate_change_log_row
+- file: manifests/study-manifest.yaml
+  kind: replace_exact
+  what: the E06 campaign status line
+  before: "  - id: E06-cross-platform-parity\n    status: NOT_STARTED  # resumed by the decision of 2026-11-02 (manifests/campaign-resumption-v1.yaml); value unchanged; START needs its own authorization"
+  after_template: "  - id: E06-cross-platform-parity\n    status: IN_PROGRESS  # transitioned {START_TIMESTAMP} (protocol/change-control-v1.md, section 7, moment 1; protocol/CHANGELOG.md; manifests/e06-campaign-start-v1.yaml;\
+    \ human authorization E06-START-AUTH-01); the START authorized no dispatch"
+- file: manifests/study-manifest.yaml
+  kind: append_text
+  what: the dated START note appended to the notes block
+  after_template: '  {START_DATE} (E06 CAMPAIGN START, operation OP-START-E06; applied by the ORCHESTRATOR on the human research lead''s explicit approval of that exact action, authorization E06-START-AUTH-01):
+    E06-cross-platform-parity is IN_PROGRESS. The Campaign configuration of experiments/E06-cross-platform-parity/README.md locks four web and Android conditions (SUT-01 2, SUT-02 2; N = 50 each, 200 executions,
+    attempt 1; canonical scenario CS-007, FROZEN on 2026-11-21), the executor implementation hash 632f3ba400263c3d8e448cd4f3f3d633cf293a1d8a7163cb94253ef14e02a2bd, the conditions file sha256 b97c492af7c9be1f5716b05cf29666b7b7dff6588f9788b63499203dfa3a1fcd
+    and the measured workflow sha256 41cbba741e05d519e2af61f2841a30ca853f8d3dc0c4bc8efa8e95bfeec6f3b6; the dispatch procedure prompt ORCHESTRATOR-E06-cross-platform-parity-v1 is frozen as a byte-identical
+    copy (sha256 ed5c08561856f657c8bc310d361c05f5e359c4d1560b91cbb8093abfe39128ee); the START package is manifests/e06-campaign-start-package-v1.yaml and the START record is manifests/e06-campaign-start-v1.yaml.
+    The START authorizes no dispatch, no dispatch authorization and no export: each dispatch authorization is issued separately by the human research lead (protocol/agent-governance-v6.md, Section 3.7),
+    and the START state reaches the public repository only with an export on that exact line approval.
+
+    '
+- file: experiments/README.md
+  kind: replace_exact
+  what: the E06 row of the campaign table
+  before: '| E06 | Cross-platform Parity | RQ4 Cross-platform and Cross-layer Integration | 4 Cross-platform and Cross-layer Integration | NOT STARTED (resumed by the decision of 2026-11-02, preparation
+    may begin, START needs its own authorization; manifests/campaign-resumption-v1.yaml) |'
+  after_template: '| E06 | Cross-platform Parity | RQ4 Cross-platform and Cross-layer Integration | 4 Cross-platform and Cross-layer Integration | IN PROGRESS since the campaign START of {START_DATE} (human
+    authorization E06-START-AUTH-01; record manifests/e06-campaign-start-v1.yaml): the Campaign configuration of its README locks four web and Android conditions on SUT-01 and SUT-02, N = 50 each (200 executions),
+    and the executor implementation 632f3ba4...; CS-007 FROZEN on 2026-11-21; the START authorizes no dispatch and no dispatch authorization |'
+- file: prompts/frozen/ORCHESTRATOR-E06-cross-platform-parity-v1.md
+  kind: copy_file
+  what: the frozen dispatch procedure prompt, a byte-identical copy of the working copy
+  from: prompts/working/ORCHESTRATOR-E06-cross-platform-parity-v1.md
+  sha256: ed5c08561856f657c8bc310d361c05f5e359c4d1560b91cbb8093abfe39128ee
+- file: manifests/e06-campaign-start-v1.yaml
+  kind: generated
+  what: the START record (record_class CAMPAIGN_START) with the verbatim approval text, its sha256 and the locked values
+- file: manifests/README.md
+  kind: insert_after_row
+  what: the two rows of the START package and the START record
+  anchor_row_starts_with: '| `e06-environment-verification-rounds-v1.yaml` |'
+  rows_template: |
+    | `e06-campaign-start-package-v1.yaml` | E06 campaign START package version 1 of operation OP-PREP-E06-START, PREPARED on 2026-11-21 and bound at the START of {START_DATE} (see `e06-campaign-start-v1.yaml`): the lock values after the freeze of CS-007 and DRY_RUN round 2, the candidate "Campaign configuration" section and change-log row, the edit set, the questions for the human research lead and the open items. |
+    | `e06-campaign-start-v1.yaml` | Provenance record of the E06-cross-platform-parity campaign START (operation OP-START-E06, {START_DATE}; protocol/change-control-v1.md, section 7, moment 1): the human research lead's approval text with its hash, the locked values, and what the START does not do. |
+- file: experiments/E06-cross-platform-parity/executor/tests/test_gates.py
+  kind: replace_exact_multi
+  what: 'the as-is case of the gate tests: after the START it fails closed on the dispatch authorization only (the E07 precedent); the file is not part of the implementation digests'
+  edits:
+  - before: |-
+      as-is case runs against the files of this repository and must fail closed, because E06 has no START, no locked configuration, no dispatch
+      authorization, and no frozen prompt.
+    after_template: |-
+      as-is case runs against the files of this repository and must fail closed: since the campaign START ({START_DATE}) the START record, the locked configuration and the frozen
+      prompt are present, and no dispatch authorization exists, so only the gates about the dispatch authorization fail.
+  - before: "    def test_the_repository_as_it_is_fails_closed(self):\n        status, log, outputs = self.run_gate(REPO, 'E06-CS007-SUT01-ANDROID')\n        self.assertNotEqual(status, 0, log)\n      \
+      \  self.assertEqual(outputs.get('ready'), 'false')\n        self.assertTrue(any(l.startswith('FAIL E06 campaign status IN_PROGRESS') for l in log.splitlines()), 'E06 has no START: that gate must be\
+      \ closed')\n"
+    after_template: "    def test_the_repository_as_it_is_fails_closed(self):\n        # since the campaign START the START record, the locked configuration and the frozen prompt are present; no dispatch\
+      \ authorization exists (the human research\n        # lead issues it, Section 3.7): the gate fails closed on that authorization and on nothing else, for each of the four conditions (the Android ones\
+      \ through the lifted block)\n        impl = hashlib.sha256(read_bytes('experiments/E06-cross-platform-parity/executor/run-condition.sh')).hexdigest()\n        for cond in ('E06-CS007-SUT01-WEB', 'E06-CS007-SUT01-ANDROID',\
+      \ 'E06-CS007-SUT02-WEB', 'E06-CS007-SUT02-ANDROID'):\n            with self.subTest(condition=cond):\n                status, log, outputs = self.run_gate(REPO, cond, GATE_CAMPAIGN_START_AUTHORIZATION_ID='E06-START-AUTH-01',\
+      \ GATE_EXECUTOR_IMPLEMENTATION_SHA256=impl)\n                self.assertNotEqual(status, 0, log)\n                self.assertEqual(outputs.get('ready'), 'false')\n                fails = [l for l\
+      \ in log.splitlines() if l.startswith('FAIL ')]\n                self.assertTrue(any('exactly one dispatch authorization record of the SUT' in l for l in fails), log)\n                self.assertEqual([l\
+      \ for l in fails if 'dispatch authorization' not in l], [], log)\n"
+does_not:
+- issue any dispatch authorization (E06-DISPATCH-SUT01-AUTH-01 and E06-DISPATCH-SUT02-AUTH-01 are names, not issued)
+- issue any further-attempt approval
+- dispatch anything or run any workflow
+- export or push anything
+- edit any workflow, executor file, harness file, conditions file, scenario record, the working prompt or any protocol document other than the change-log row
+- edit the agent-instructions file or the dashboard (their update needs the human research lead's yes)
+dispatch_authorization_facts_for_later:
+  SUT-01:
+    authorization_id: E06-DISPATCH-SUT01-AUTH-01
+    record_path: manifests/e06-dispatch-authorization-sut01-v1.yaml
+    record_class: E06_DISPATCH_AUTHORIZATION
+    conditions_in_dispatch_order:
+    - E06-CS007-SUT01-WEB
+    - E06-CS007-SUT01-ANDROID
+    n_executions: 50
+    attempt: 1
+    executions_in_all: 100
+    campaign_start_authorization_id: E06-START-AUTH-01
+    frozen_inputs:
+      executor_implementation_sha256: 632f3ba400263c3d8e448cd4f3f3d633cf293a1d8a7163cb94253ef14e02a2bd
+      executor_prompt_sha256: ed5c08561856f657c8bc310d361c05f5e359c4d1560b91cbb8093abfe39128ee
+    fields_read_by_the_gate:
+    - authorization_id
+    - status ISSUED
+    - record_validity VALID
+    - dispatch_eligibility ELIGIBLE
+    - revoked false
+    - issued_by human research lead
+    - assigned_sut
+    - conditions
+    - n_executions 50
+    - attempt 1
+    - authorization_date
+    - campaign_start_authorization_id
+    - frozen_inputs.executor_implementation_sha256
+    - frozen_inputs.executor_prompt_sha256
+    modeled_on: manifests/e07-dispatch-authorization-sut01-v1.yaml
+  SUT-02:
+    authorization_id: E06-DISPATCH-SUT02-AUTH-01
+    record_path: manifests/e06-dispatch-authorization-sut02-v1.yaml
+    record_class: E06_DISPATCH_AUTHORIZATION
+    conditions_in_dispatch_order:
+    - E06-CS007-SUT02-WEB
+    - E06-CS007-SUT02-ANDROID
+    n_executions: 50
+    attempt: 1
+    executions_in_all: 100
+    campaign_start_authorization_id: E06-START-AUTH-01
+    frozen_inputs:
+      executor_implementation_sha256: 632f3ba400263c3d8e448cd4f3f3d633cf293a1d8a7163cb94253ef14e02a2bd
+      executor_prompt_sha256: ed5c08561856f657c8bc310d361c05f5e359c4d1560b91cbb8093abfe39128ee
+    fields_read_by_the_gate:
+    - authorization_id
+    - status ISSUED
+    - record_validity VALID
+    - dispatch_eligibility ELIGIBLE
+    - revoked false
+    - issued_by human research lead
+    - assigned_sut
+    - conditions
+    - n_executions 50
+    - attempt 1
+    - authorization_date
+    - campaign_start_authorization_id
+    - frozen_inputs.executor_implementation_sha256
+    - frozen_inputs.executor_prompt_sha256
+    modeled_on: manifests/e07-dispatch-authorization-sut01-v1.yaml
+further_attempt_approval_facts_for_later:
+  record_class: E06_FURTHER_ATTEMPT_APPROVAL
+  path: manifests/e06-further-attempt-approval-sut0N-v1.yaml
+  gate: G-E06-A2
+  decision: D-E06-14
+  fields_read_by_the_gate:
+  - record_class
+  - status ISSUED
+  - revoked false
+  - assigned_sut
+  - issued_by human research lead
+  - governing_protocol naming protocol/agent-governance-v6.md and 3.7
+  - dispatch_authorization_id
+  - campaign_start_authorization_id
+  - executor_implementation_sha256
+  - executor_prompt_version
+  - executor_prompt_sha256
+  - attempts[].condition_id, first_execution, attempt, previous_attempt
+analysis_pins:
+  campaign_configuration_sha256: section_inserted_sha256 of this package
+  conditions_file_sha256: b97c492af7c9be1f5716b05cf29666b7b7dff6588f9788b63499203dfa3a1fcd
+  start_commit: the commit that applies the START
+  script: to be written; pins filled at the campaign freeze
+questions_for_the_human_research_lead:
+- block: 1
+  title: START de E06, bloque 1 (autorización y atribución)
+  questions:
+  - id: Q1
+    header: START id
+    question: 'Q1: id de autorización del START = E06-START-AUTH-01 (lo asigno a tu aprobación, como en las otras campañas). Es el id que el workflow de ejecución medida exige en el gate, en la fila del
+      change log y en el registro del START.'
+    options:
+    - label: Usar E06-START-AUTH-01 (Recomendada)
+      description: El id propuesto, con el formato de E02 a E09.
+    - label: Otro id
+      description: Lo escribes y reconstruyo el paquete.
+  - id: Q2
+    header: Runner perdido
+    question: 'Q2: una ejecución cuyo runner el workflow cancela o pierde se registra al importar como TOOLING de esa ejecución (el ejecutor no lo implementa; es la propuesta de E04 y E07). Una ejecución
+      perdida con su runner no tiene registro: su reposición es un intento adicional bajo tu aprobación (G-E06-A2). ¿La adoptas?'
+    options:
+    - label: Adoptar TOOLING al importar (Recomendada)
+      description: Misma regla que E04, E05 y E07.
+    - label: No registrar atribución
+      description: La ejecución perdida queda sin atribución.
+  - id: Q3
+    header: Atribución
+    question: 'Q3: reglas de atribución como las implementa el ejecutor (classify.py): NONE para una ejecución que llegó; SUT para NOT_ARRIVED_SUT (el sistema respondió y no dejó pasar: sign-in rechazado,
+      sesión no establecida, catálogo no alcanzado); INFRASTRUCTURE para NOT_ARRIVED_INFRASTRUCTURE (rechazo o falta de respuesta del backend, incluido el límite de usuarios HTTP 429, que se registra y
+      nunca se repara ni se excluye); TOOLING para NOT_ARRIVED_RUNNER (excepción del ejecutor, del navegador, del cliente WebDriver o de la sesión Appium; el job sigue con la siguiente ejecución); UNDETERMINED
+      para ARRIVED_IDENTITY_UNREADABLE (la causa no se asigna mecánicamente). En Android la aplicación no ve las respuestas del backend, así que un sign-in sin rechazo dentro del presupuesto es INFRA_CATALOGUE_TIMEOUT.
+      Una excepción que sale del bucle termina la condición con el resumen parcial y un fallo del job (parada del procedimiento). ¿Las adoptas?'
+    options:
+    - label: Adoptar las reglas (Recomendada)
+      description: Son las del ejecutor verificado en las rondas DRY_RUN 1 y 2; no cambian ningún archivo bloqueado.
+    - label: Cambiar alguna
+      description: 'Requiere cambiar el ejecutor y su hash: no se aplica el START.'
+  - id: Q4
+    header: Manifests
+    question: 'Q4: convenciones de los run manifests: plataforma y modalidad siguen la superficie (Web UI Functional, Android Native; el esquema no tiene un valor E06) y el escenario CS-007 va en el campo
+      scenario; mecanismo de reset SESSION_RESET y de establecimiento UI_FLOW; la lista actions queda vacía porque ninguna clase de Required Actions nombra los pasos de sign-in de este escenario; environment_type
+      según la condición. ¿Las fijas en el START?'
+    options:
+    - label: Adoptar las convenciones (Recomendada)
+      description: Son las del ejecutor (notas de implementación, secciones 2.10 a 2.12).
+    - label: Cambiar alguna
+      description: 'Requiere cambiar el ejecutor: no se aplica el START.'
+- block: 2
+  title: START de E06, bloque 2 (convenciones de ejecución y verificación)
+  questions:
+  - id: Q5
+    header: Orden
+    question: 'Q5: orden y concurrencia: SUT-01: E06-CS007-SUT01-WEB y luego E06-CS007-SUT01-ANDROID; SUT-02: E06-CS007-SUT02-WEB y luego E06-CS007-SUT02-ANDROID; una condición a la vez por SUT (sección
+      3.7), cada despacho solo cuando la corrida anterior de su autorización terminó y se importó, de modo que las dos condiciones de un ecosistema se despachan una tras otra; las cadenas de SUT-01 y SUT-02
+      son independientes y pueden correr a la vez. Divulgación del pareo: la pareja k (ejecución k de WEB con ejecución k de ANDROID) se forma por índice en el análisis, no se lee al mismo tiempo; los dos
+      miembros de una pareja se ejecutan con minutos de diferencia, porque la segunda condición empieza solo cuando la corrida de la primera terminó y se importó (con los datos de la ronda 2, la condición
+      web dura de unos 2 a unos 13 minutos y la Android de unos 14 a unos 20). Un cambio de los datos del despliegue alojado entre ambos despachos aparecería como no paridad que el registro explica (D-E06-8).
+      ¿Los adoptas?'
+    options:
+    - label: Adoptar orden, concurrencia y divulgación (Recomendada)
+      description: WEB primero y luego ANDROID en cada ecosistema, sin cambiar el workflow.
+    - label: Otro orden
+      description: Lo indicas y reconstruyo el paquete y el prompt de despacho (su hash cambia).
+  - id: Q6
+    header: Límites
+    question: 'Q6: límites de tiempo del workflow, juzgados con DRY_RUN ronda 2 (run 44961904993, head becd70d0): 12 de 12 ejecuciones ARRIVED_IDENTITY_READ; duraciones por ejecución: SUT-01 web 1.7 a 28.7
+      s (la primera 28.7 s), SUT-02 web 15.6 a 15.7 s, SUT-01 Android 16.3 a 31.0 s, SUT-02 Android 23.0 a 37.2 s. Con N = 50 la ejecución de la condición más lenta, SUT-02 Android, sale en unos 19.5 minutos
+      (37.2 s la primera y 23.2 s las demás) más unos 2 minutos de montaje del job: unos 22 minutos contra el límite de 360 minutos por job, un margen de unas 16 veces. SUT-01 web unos 2 minutos, SUT-02
+      web unos 13 y SUT-01 Android unos 14. No hay vigilante por ejecución como el de 600 s de E07: el límite del job es el único techo global; cada ejecución Android tiene un presupuesto de 180 s en el
+      arnés y un límite de proceso de 900 s, y la web 90, 90, 60 y 60 s. En el peor caso (24 ejecuciones seguidas en el límite de 900 s) el job llegaría a los 360 minutos, sería cancelado por GitHub y quedaría
+      un bundle incompleto, que es una parada del procedimiento. ¿Mantienes 360 minutos por job y estos presupuestos?'
+    options:
+    - label: Mantener los límites actuales (Recomendada)
+      description: Bajar el límite exigiría cambiar el workflow y su hash; los datos dan unos 22 minutos.
+    - label: Pedir un límite menor
+      description: 'Requiere cambiar el workflow: no se aplica el START.'
+  - id: Q7
+    header: Entornos
+    question: 'Q7: tipo de entorno por condición: PUBLIC_HOSTED para E06-CS007-SUT01-WEB, E06-CS007-SUT01-ANDROID (su backend alojado https://omnipizza-backend.onrender.com, el mismo que usa la web de SUT-01
+      según la ronda 2) y E06-CS007-SUT02-WEB; EMULATED para E06-CS007-SUT02-ANDROID (el build fijado con la base local sobre el emulador de GitHub). CS-007 es de solo lectura en estado de negocio, así
+      que queda fuera de la lista de la sección 10.3 que exige instancia controlada; no se crea registro de instancia controlada de E06 (ningún gate lo lee). La base de verificación es la ronda 2 de DRY_RUN
+      (DRY_RUN ronda 2 (run 44961904993, head becd70d0): 12 de 12 ejecuciones ARRIVED_IDENTITY_READ; duraciones por ejecución: SUT-01 web 1.7 a 28.7 s (la primera 28.7 s), SUT-02 web 15.6 a 15.7 s, SUT-01
+      Android 16.3 a 31.0 s, SUT-02 Android 23.0 a 37.2 s); la ronda 1 es historia. ¿Lo fijas así?'
+    options:
+    - label: Adoptar entornos y base de verificación (Recomendada)
+      description: Coincide con lo registrado en los run manifests de las rondas 1 y 2 y con D-E06-2 y D-E06-8.
+    - label: Pedir otra base
+      description: Otra ronda DRY_RUN, con tu sí a su línea exacta.
+  - id: Q8
+    header: Texto
+    question: 'Q8: (a) el fallback arrival_only de DP-3 no se usa: la identidad se leyó en las cuatro condiciones en las dos rondas; (b) dejar sin editar los enunciados obsoletos del README fuera de la
+      sección bloqueada (los encabezados "Future ... (candidate - not frozen)" y "taxonomy TBD before freeze"), como en E04 y E07: la sección bloqueada los reemplaza y lo dice; (c) el archivo de condiciones
+      queda bloqueado por su hash con su texto de preparación (status DRAFT_NOT_LOCKED, valores null, open_items ya resueltos), que la sección bloqueada declara reemplazado; (d) la cuenta de SUT-02 Android
+      y la segunda señal Logout Menu Item ya están decididas (D-E06-12 y D-E06-13) y no se vuelven a preguntar. ¿Los adoptas?'
+    options:
+    - label: Adoptar los cuatro (Recomendada)
+      description: No cambia ningún archivo bloqueado.
+    - label: Cambiar alguno
+      description: Lo indicas; si exige cambiar un archivo bloqueado no se aplica el START.
+- block: 3
+  title: START de E06, aprobación
+  questions:
+  - id: Q9
+    header: START E06
+    question: 'START de E06, aprobación. ¿Apruebas y aplico el START de E06-cross-platform-parity (campaña NOT_STARTED -> IN_PROGRESS; protocol/change-control-v1.md, sección 7, momento 1) con la autorización
+      E06-START-AUTH-01 y los textos del paquete manifests/e06-campaign-start-package-v1.yaml (en main, commit {PACKAGE_COMMIT})? Valores que quedan bloqueados: texto de la sección Campaign configuration,
+      sha256 8e5288b4b0ceaf2c0d9458f0553a708533ac918ce8a17b17124141f3543e8dda; implementación del ejecutor (run-condition.sh), sha256 632f3ba400263c3d8e448cd4f3f3d633cf293a1d8a7163cb94253ef14e02a2bd; archivo
+      de condiciones, sha256 b97c492af7c9be1f5716b05cf29666b7b7dff6588f9788b63499203dfa3a1fcd; workflow de ejecución medida, sha256 41cbba741e05d519e2af61f2841a30ca853f8d3dc0c4bc8efa8e95bfeec6f3b6; prompt
+      de despacho congelado ORCHESTRATOR-E06-cross-platform-parity-v1, sha256 ed5c08561856f657c8bc310d361c05f5e359c4d1560b91cbb8093abfe39128ee (copia byte a byte del prompt de trabajo). Cuatro condiciones
+      web y Android en SUT-01 y SUT-02 (escenario CS-007), N = 50 cada una, 200 ejecuciones, intento 1. Escribe: README de E06 (estado y sección Campaign configuration al final), una fila en protocol/CHANGELOG.md,
+      study-manifest (IN_PROGRESS), fila de experiments/README.md, prompts/frozen/, manifests/e06-campaign-start-v1.yaml, dos filas de manifests/README.md y el caso as-is de las pruebas del gate. El START
+      NO autoriza ningún despacho, ninguna autorización de despacho (E06-DISPATCH-SUT01-AUTH-01 y E06-DISPATCH-SUT02-AUTH-01 son nombres, no emitidas) ni ningún export; no toca el archivo de instrucciones
+      de agentes ni el dashboard. Si cambias alguna decisión de los bloques anteriores, no aplico y te vuelvo a preguntar. Después del START hago un commit local; el export y las autorizaciones de despacho
+      son pasos aparte con su propio sí.'
+    options:
+    - label: Sí, aplica el START (Recomendada)
+      description: Aplica el conjunto de ediciones del paquete con el id del START.
+    - label: No, todavía no
+      description: No aplica nada.
+questions_already_resolved:
+- id: D-E06-12
+  topic: the SUT-02 Android account
+  status: RESOLVED, not asked again
+  resolution: 'standard_user with the documented password on both surfaces (manifests/campaign-execution-decisions-v18.yaml); verified by DRY_RUN round 2: sign-in accepted in 3 of 3 executions'
+- id: D-E06-13
+  topic: the Logout Menu Item as the second signal of the authenticated state on SUT-02 Android
+  status: RESOLVED, not asked again
+  resolution: 'decision D-E06-13; the selector exists after a sign-in (DRY_RUN round 2: authenticated_signal true, session_not_established false in 3 of 3); the refused branch is not observed by the round'
+- id: D-E06-14
+  topic: the further-attempt mechanism
+  status: RESOLVED, not asked again
+  resolution: implemented as gate G-E06-A2 and the inputs attempt and first_execution; each further attempt still needs its own approval
+- id: D-E06-15
+  topic: the unreadable identity
+  status: RESOLVED, not asked again
+  resolution: a non-parity with its own category
+what_the_start_question_must_show:
+- the START authorization id E06-START-AUTH-01
+- configuration_text_sha256 8e5288b4b0ceaf2c0d9458f0553a708533ac918ce8a17b17124141f3543e8dda
+- the executor implementation hash 632f3ba400263c3d8e448cd4f3f3d633cf293a1d8a7163cb94253ef14e02a2bd
+- the conditions file sha256 b97c492af7c9be1f5716b05cf29666b7b7dff6588f9788b63499203dfa3a1fcd
+- the measured workflow sha256 41cbba741e05d519e2af61f2841a30ca853f8d3dc0c4bc8efa8e95bfeec6f3b6
+- the frozen prompt id ORCHESTRATOR-E06-cross-platform-parity-v1 and sha256 ed5c08561856f657c8bc310d361c05f5e359c4d1560b91cbb8093abfe39128ee
+- that the START authorizes no dispatch, no dispatch authorization and no export
+findings_before_the_start_question:
+- id: F1
+  severity: BLOCKING for the START question (the first dispatch would be refused by gate G-9)
+  status: RESOLVED
+  resolution: 'corrected on canonical main in commit 63d4b1f4 (workflow only: .github/workflows added to E06_CHECKOUT_PATHS; implementation hash and conditions file unchanged); the lock values of this package
+    are those of the corrected workflow file; it reaches the public repository with the next export'
+  what: The gate job of .github/workflows/e06-measured-execution.yml checks out only the sparse paths of its env E06_CHECKOUT_PATHS in cone mode (experiments/E06-cross-platform-parity, experiments/scenario-mappings,
+    manifests, protocol, prompts/frozen, qualification/compatibility-smoke, qualification/compatibility-smoke-sut01, schemas) and the files at the root; .github/workflows is not among them. Gate G-9 and
+    the output workflow_sha256 read sha256(.github/workflows/e06-measured-execution.yml), which is "absent" on the runner, so "configuration names the sha256 of the measured workflow file" fails on every
+    dispatch of every condition. The E04, E05 and E07 workflows list .github/workflows among their sparse paths.
+  evidence: 'the apply script rehearsal of the gate on a scratch tree shaped like the runner checkout (the sparse paths of the workflow plus the root files): workflow_sha256 = absent and G-9 FAIL, with
+    the same tree plus .github/workflows the gate reads the real hash; the tests and the v77 export rehearsal run the gate on full trees (a git clone or fixture trees with the workflow file), so they cannot
+    see it'
+  proposed_fix: 'workflow only: add the line .github/workflows to E06_CHECKOUT_PATHS (the E04, E05 and E07 precedent); the executor implementation hash, the conditions file and the digests do not change;
+    the measured workflow sha256 changes, so the package is rebuilt (build_package_e06.py), the fix is published by an export, and the gate is rehearsed again on the sparse tree'
+  files:
+  - .github/workflows/e06-measured-execution.yml
+  verified_fix_on_a_scratch_copy: true
+- id: F2
+  severity: RECOMMENDED before the START (data provenance of the raw data; not a gate)
+  status: RESOLVED
+  resolution: 'corrected on canonical main in commit 63d4b1f4 (workflow only: a step in each of the four measured jobs copies the two provenance records into every run directory; implementation hash unchanged);
+    it reaches the public repository with the next export, and the first measured dispatch is its first execution on GitHub Actions'
+  what: 'The run manifests of the executor list, for every execution, the files ci-provenance.json and runtime-environment.json under the run directory (artifacts entries with the sha256 of the source files),
+    and the executor note says the workflow copies them; the measured workflow copies nothing: the provenance job uploads ci-provenance.json as its own artifact, and the runtime-environment.json of each
+    measured job is written in the job workspace outside the uploaded directory, so it is never uploaded. The E07 and E05 executors copy both files into every run directory, and the E07 workflow also copies
+    them to the output directory. The DRY_RUN bundles of rounds 1 and 2 hold neither file.'
+  effect: after an import, every run manifest would reference two files that are not in its run directory; runtime-environment.json (runner image, tool versions) would not be preserved at all, only its
+    sha256
+  proposed_fix: 'workflow only (no executor change, so the implementation hash is unchanged): in each of the four measured jobs, before the upload step, copy ci-provenance.json and runtime-environment.json
+    from the provenance directory into every run directory of the output directory (a loop over the directories of OUTPUT_DIR); the copies are byte-identical to the files whose sha256 the manifests record.
+    Alternative: accept the gap and have the import place the provenance artifact beside the job files, with the two per-run references disclosed as unresolved'
+  files:
+  - .github/workflows/e06-measured-execution.yml
+  verified_fix_on_a_scratch_copy: true
+- id: F3
+  severity: INFORMATION (asked as Q6)
+  status: OPEN
+  what: The measured job limit is 360 minutes and there is no per-execution watchdog (E07 has 600 s); the per-execution bounds are the budgets of the executor (web 90, 90, 60 and 60 s; Android 180 s in
+    the harness, 900 s process limit, 120 s adb limit). The workflow text TIMEOUT_POLICY still reads "the DRY_RUN durations decide the value before the START" and is recorded in every provenance record
+    with that wording.
+  evidence: 'DRY_RUN round 2 durations per execution: SUT-01 web 1.7 to 28.7 s, SUT-02 web 15.6 to 15.7 s, SUT-01 Android 16.3 to 31.0 s, SUT-02 Android 23.0 to 37.2 s; the job of SUT-02 Android took 198
+    s for 3 executions (about 115 s of setup)'
+  files: []
+- id: F4
+  severity: INFORMATION (asked as Q8)
+  status: OPEN
+  what: 'The conditions file is locked by its hash with its preparation text: status DRAFT_NOT_LOCKED, executor_implementation_sha256 and executor_prompt_version null, open_items 2 to 4 and 7 to 11 now
+    decided or verified (the SUT-01 web surface calls https://omnipizza-backend.onrender.com, the same backend as the release APK). Changing the file changes the implementation digests and the implementation
+    hash, so the Campaign configuration states that the section supersedes those statements.'
+  files: []
+- id: F5
+  severity: SUGGESTION
+  status: OPEN
+  what: A workflow test that every path the gate script reads lies under the sparse paths of the same workflow (or the root) would have caught F1; the E07, E05 and E04 workflow tests do not have it either.
+  files: []
+approval_question_text_template: 'START de E06, aprobación. ¿Apruebas y aplico el START de E06-cross-platform-parity (campaña NOT_STARTED -> IN_PROGRESS; protocol/change-control-v1.md, sección 7, momento
+  1) con la autorización E06-START-AUTH-01 y los textos del paquete manifests/e06-campaign-start-package-v1.yaml (en main, commit {PACKAGE_COMMIT})? Valores que quedan bloqueados: texto de la sección Campaign
+  configuration, sha256 8e5288b4b0ceaf2c0d9458f0553a708533ac918ce8a17b17124141f3543e8dda; implementación del ejecutor (run-condition.sh), sha256 632f3ba400263c3d8e448cd4f3f3d633cf293a1d8a7163cb94253ef14e02a2bd;
+  archivo de condiciones, sha256 b97c492af7c9be1f5716b05cf29666b7b7dff6588f9788b63499203dfa3a1fcd; workflow de ejecución medida, sha256 41cbba741e05d519e2af61f2841a30ca853f8d3dc0c4bc8efa8e95bfeec6f3b6;
+  prompt de despacho congelado ORCHESTRATOR-E06-cross-platform-parity-v1, sha256 ed5c08561856f657c8bc310d361c05f5e359c4d1560b91cbb8093abfe39128ee (copia byte a byte del prompt de trabajo). Cuatro condiciones
+  web y Android en SUT-01 y SUT-02 (escenario CS-007), N = 50 cada una, 200 ejecuciones, intento 1. Escribe: README de E06 (estado y sección Campaign configuration al final), una fila en protocol/CHANGELOG.md,
+  study-manifest (IN_PROGRESS), fila de experiments/README.md, prompts/frozen/, manifests/e06-campaign-start-v1.yaml, dos filas de manifests/README.md y el caso as-is de las pruebas del gate. El START NO
+  autoriza ningún despacho, ninguna autorización de despacho (E06-DISPATCH-SUT01-AUTH-01 y E06-DISPATCH-SUT02-AUTH-01 son nombres, no emitidas) ni ningún export; no toca el archivo de instrucciones de agentes
+  ni el dashboard. Si cambias alguna decisión de los bloques anteriores, no aplico y te vuelvo a preguntar. Después del START hago un commit local; el export y las autorizaciones de despacho son pasos aparte
+  con su propio sí.'

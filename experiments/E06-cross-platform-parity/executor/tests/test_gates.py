@@ -5,8 +5,8 @@ working directory set to a prepared tree and the GATE_* inputs in its environmen
 authorization, frozen prompt, governance, mapping) are fictitious: fixture identifiers, not issued authorizations. The conditions file, the SUT
 manifest, the measured workflow itself, and, for the Android conditions, the real mobile records (the toolchain, the mirror, both QUALIFIER records, and
 the remediation lineage) are the real files of this repository. Every must-fail case changes exactly one thing and must fail on the gate it names. The
-as-is case runs against the files of this repository and must fail closed, because E06 has no START, no locked configuration, no dispatch
-authorization, and no frozen prompt. The Android admissibility block is the lift of the G-7 block of e03-measured-execution.yml (tests/lift_g7.py);
+as-is case runs against the files of this repository and must fail closed: since the campaign START (2026-11-21) the START record, the locked configuration and the frozen
+prompt are present, and no dispatch authorization exists, so only the gates about the dispatch authorization fail. The Android admissibility block is the lift of the G-7 block of e03-measured-execution.yml (tests/lift_g7.py);
 LiftTests fails when it drifts. Requires PyYAML (the gate tests are skipped without it).
 """
 import hashlib
@@ -499,10 +499,17 @@ class GateTests(unittest.TestCase):
 
     # ---- the repository as it is
     def test_the_repository_as_it_is_fails_closed(self):
-        status, log, outputs = self.run_gate(REPO, 'E06-CS007-SUT01-ANDROID')
-        self.assertNotEqual(status, 0, log)
-        self.assertEqual(outputs.get('ready'), 'false')
-        self.assertTrue(any(l.startswith('FAIL E06 campaign status IN_PROGRESS') for l in log.splitlines()), 'E06 has no START: that gate must be closed')
+        # since the campaign START the START record, the locked configuration and the frozen prompt are present; no dispatch authorization exists (the human research
+        # lead issues it, Section 3.7): the gate fails closed on that authorization and on nothing else, for each of the four conditions (the Android ones through the lifted block)
+        impl = hashlib.sha256(read_bytes('experiments/E06-cross-platform-parity/executor/run-condition.sh')).hexdigest()
+        for cond in ('E06-CS007-SUT01-WEB', 'E06-CS007-SUT01-ANDROID', 'E06-CS007-SUT02-WEB', 'E06-CS007-SUT02-ANDROID'):
+            with self.subTest(condition=cond):
+                status, log, outputs = self.run_gate(REPO, cond, GATE_CAMPAIGN_START_AUTHORIZATION_ID='E06-START-AUTH-01', GATE_EXECUTOR_IMPLEMENTATION_SHA256=impl)
+                self.assertNotEqual(status, 0, log)
+                self.assertEqual(outputs.get('ready'), 'false')
+                fails = [l for l in log.splitlines() if l.startswith('FAIL ')]
+                self.assertTrue(any('exactly one dispatch authorization record of the SUT' in l for l in fails), log)
+                self.assertEqual([l for l in fails if 'dispatch authorization' not in l], [], log)
 
 
 class LiftTests(unittest.TestCase):

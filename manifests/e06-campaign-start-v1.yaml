@@ -1,0 +1,96 @@
+# manifests/e06-campaign-start-v1.yaml -- provenance record of the E06-cross-platform-parity campaign START (operation OP-START-E06; protocol/change-control-v1.md, section 7, moment 1; modeled on manifests/e07-campaign-start-v1.yaml). Immutable once committed.
+record_class: CAMPAIGN_START
+record_id: E06-CAMPAIGN-START-01
+study_id: EUS-2026-001
+campaign_id: E06-cross-platform-parity
+operation_id: OP-START-E06
+recorded_by_role: ORCHESTRATOR
+authorization_id: E06-START-AUTH-01
+binding: protocol/change-control-v1.md, section 7, moment 1 (campaign NOT_STARTED -> IN_PROGRESS)
+package:
+  path: manifests/e06-campaign-start-package-v1.yaml
+  record_id: E06-START-PACKAGE-01
+start_date: '2026-11-21'
+start_timestamp_utc: '2026-11-22T00:38:04Z'
+approval:
+  given_by: the human research lead
+  channel: given directly to the ORCHESTRATOR in its conversation, as the answers of one question dialog (single-agent operating model of 2026-10-24 and 2026-10-25)
+  question_stamp: null
+  answer_stamp: null
+  chosen_options:
+  - Usar E06-START-AUTH-01 (Recomendada)
+  - Adoptar TOOLING al importar (Recomendada)
+  - Adoptar las reglas (Recomendada)
+  - Adoptar las convenciones (Recomendada)
+  - Adoptar orden, concurrencia y divulgación (Recomendada)
+  - Mantener los límites actuales (Recomendada)
+  - Adoptar entornos y base de verificación (Recomendada)
+  - Adoptar los cuatro (Recomendada)
+  - Sí, aplica el START (Recomendada)
+  answer_text_bytes: 8214
+  answer_text_sha256: 0a816aced0daa6f7eb7d77ad3ff0cf5ad406a6e1d8f92f0d3956315d2cab2323
+  answer_text: |
+    Your questions have been answered: "Q1: id de autorización del START = E06-START-AUTH-01 (lo asigno a tu aprobación, como en las otras campañas). Es el id que el workflow de ejecución medida exige en el gate, en la fila del change log y en el registro del START."="Usar E06-START-AUTH-01 (Recomendada)", "Q2: una ejecución cuyo runner el workflow cancela o pierde se registra al importar como TOOLING de esa ejecución (el ejecutor no lo implementa; es la propuesta de E04 y E07). Una ejecución perdida con su runner no tiene registro: su reposición es un intento adicional bajo tu aprobación (G-E06-A2). ¿La adoptas?"="Adoptar TOOLING al importar (Recomendada)", "Q3: reglas de atribución como las implementa el ejecutor (classify.py): NONE para una ejecución que llegó; SUT para NOT_ARRIVED_SUT (el sistema respondió y no dejó pasar: sign-in rechazado, sesión no establecida, catálogo no alcanzado); INFRASTRUCTURE para NOT_ARRIVED_INFRASTRUCTURE (rechazo o falta de respuesta del backend, incluido el límite de usuarios HTTP 429, que se registra y nunca se repara ni se excluye); TOOLING para NOT_ARRIVED_RUNNER (excepción del ejecutor, del navegador, del cliente WebDriver o de la sesión Appium; el job sigue con la siguiente ejecución); UNDETERMINED para ARRIVED_IDENTITY_UNREADABLE (la causa no se asigna mecánicamente). En Android la aplicación no ve las respuestas del backend, así que un sign-in sin rechazo dentro del presupuesto es INFRA_CATALOGUE_TIMEOUT. Una excepción que sale del bucle termina la condición con el resumen parcial y un fallo del job (parada del procedimiento). ¿Las adoptas?"="Adoptar las reglas (Recomendada)", "Q4: convenciones de los run manifests: plataforma y modalidad siguen la superficie (Web UI Functional, Android Native; el esquema no tiene un valor E06) y el escenario CS-007 va en el campo scenario; mecanismo de reset SESSION_RESET y de establecimiento UI_FLOW; la lista actions queda vacía porque ninguna clase de Required Actions nombra los pasos de sign-in de este escenario; environment_type según la condición. ¿Las fijas en el START?"="Adoptar las convenciones (Recomendada)". You can now continue with these answers in mind.
+    Your questions have been answered: "Q5: orden y concurrencia: SUT-01: E06-CS007-SUT01-WEB y luego E06-CS007-SUT01-ANDROID; SUT-02: E06-CS007-SUT02-WEB y luego E06-CS007-SUT02-ANDROID; una condición a la vez por SUT (sección 3.7), cada despacho solo cuando la corrida anterior de su autorización terminó y se importó, de modo que las dos condiciones de un ecosistema se despachan una tras otra; las cadenas de SUT-01 y SUT-02 son independientes y pueden correr a la vez. Divulgación del pareo: la pareja k (ejecución k de WEB con ejecución k de ANDROID) se forma por índice en el análisis, no se lee al mismo tiempo; los dos miembros de una pareja se ejecutan con minutos de diferencia, porque la segunda condición empieza solo cuando la corrida de la primera terminó y se importó (con los datos de la ronda 2, la condición web dura de unos 2 a unos 13 minutos y la Android de unos 14 a unos 20). Un cambio de los datos del despliegue alojado entre ambos despachos aparecería como no paridad que el registro explica (D-E06-8). ¿Los adoptas?"="Adoptar orden, concurrencia y divulgación (Recomendada)", "Q6: límites de tiempo del workflow, juzgados con DRY_RUN ronda 2 (run 44961904993, head becd70d0): 12 de 12 ejecuciones ARRIVED_IDENTITY_READ; duraciones por ejecución: SUT-01 web 1.7 a 28.7 s (la primera 28.7 s), SUT-02 web 15.6 a 15.7 s, SUT-01 Android 16.3 a 31.0 s, SUT-02 Android 23.0 a 37.2 s. Con N = 50 la ejecución de la condición más lenta, SUT-02 Android, sale en unos 19.5 minutos (37.2 s la primera y 23.2 s las demás) más unos 2 minutos de montaje del job: unos 22 minutos contra el límite de 360 minutos por job, un margen de unas 16 veces. SUT-01 web unos 2 minutos, SUT-02 web unos 13 y SUT-01 Android unos 14. No hay vigilante por ejecución como el de 600 s de E07: el límite del job es el único techo global; cada ejecución Android tiene un presupuesto de 180 s en el arnés y un límite de proceso de 900 s, y la web 90, 90, 60 y 60 s. En el peor caso (24 ejecuciones seguidas en el límite de 900 s) el job llegaría a los 360 minutos, sería cancelado por GitHub y quedaría un bundle incompleto, que es una parada del procedimiento. ¿Mantienes 360 minutos por job y estos presupuestos?"="Mantener los límites actuales (Recomendada)", "Q7: tipo de entorno por condición: PUBLIC_HOSTED para E06-CS007-SUT01-WEB, E06-CS007-SUT01-ANDROID (su backend alojado https://omnipizza-backend.onrender.com, el mismo que usa la web de SUT-01 según la ronda 2) y E06-CS007-SUT02-WEB; EMULATED para E06-CS007-SUT02-ANDROID (el build fijado con la base local sobre el emulador de GitHub). CS-007 es de solo lectura en estado de negocio, así que queda fuera de la lista de la sección 10.3 que exige instancia controlada; no se crea registro de instancia controlada de E06 (ningún gate lo lee). La base de verificación es la ronda 2 de DRY_RUN (DRY_RUN ronda 2 (run 44961904993, head becd70d0): 12 de 12 ejecuciones ARRIVED_IDENTITY_READ; duraciones por ejecución: SUT-01 web 1.7 a 28.7 s (la primera 28.7 s), SUT-02 web 15.6 a 15.7 s, SUT-01 Android 16.3 a 31.0 s, SUT-02 Android 23.0 a 37.2 s); la ronda 1 es historia. ¿Lo fijas así?"="Adoptar entornos y base de verificación (Recomendada)", "Q8: (a) el fallback arrival_only de DP-3 no se usa: la identidad se leyó en las cuatro condiciones en las dos rondas; (b) dejar sin editar los enunciados obsoletos del README fuera de la sección bloqueada (los encabezados "Future ... (candidate - not frozen)" y "taxonomy TBD before freeze"), como en E04 y E07: la sección bloqueada los reemplaza y lo dice; (c) el archivo de condiciones queda bloqueado por su hash con su texto de preparación (status DRAFT_NOT_LOCKED, valores null, open_items ya resueltos), que la sección bloqueada declara reemplazado; (d) la cuenta de SUT-02 Android y la segunda señal Logout Menu Item ya están decididas (D-E06-12 y D-E06-13) y no se vuelven a preguntar. ¿Los adoptas?"="Adoptar los cuatro (Recomendada)". You can now continue with these answers in mind.
+    Your questions have been answered: "START de E06, aprobación. ¿Apruebas y aplico el START de E06-cross-platform-parity (campaña NOT_STARTED -> IN_PROGRESS; protocol/change-control-v1.md, sección 7, momento 1) con la autorización E06-START-AUTH-01 y los textos del paquete manifests/e06-campaign-start-package-v1.yaml (en main, commit 0d421342)? Valores que quedan bloqueados: texto de la sección Campaign configuration, sha256 8e5288b4b0ceaf2c0d9458f0553a708533ac918ce8a17b17124141f3543e8dda; implementación del ejecutor (run-condition.sh), sha256 632f3ba400263c3d8e448cd4f3f3d633cf293a1d8a7163cb94253ef14e02a2bd; archivo de condiciones, sha256 b97c492af7c9be1f5716b05cf29666b7b7dff6588f9788b63499203dfa3a1fcd; workflow de ejecución medida, sha256 41cbba741e05d519e2af61f2841a30ca853f8d3dc0c4bc8efa8e95bfeec6f3b6; prompt de despacho congelado ORCHESTRATOR-E06-cross-platform-parity-v1, sha256 ed5c08561856f657c8bc310d361c05f5e359c4d1560b91cbb8093abfe39128ee (copia byte a byte del prompt de trabajo). Cuatro condiciones web y Android en SUT-01 y SUT-02 (escenario CS-007), N = 50 cada una, 200 ejecuciones, intento 1. Escribe: README de E06 (estado y sección Campaign configuration al final), una fila en protocol/CHANGELOG.md, study-manifest (IN_PROGRESS), fila de experiments/README.md, prompts/frozen/, manifests/e06-campaign-start-v1.yaml, dos filas de manifests/README.md y el caso as-is de las pruebas del gate. El START NO autoriza ningún despacho, ninguna autorización de despacho (E06-DISPATCH-SUT01-AUTH-01 y E06-DISPATCH-SUT02-AUTH-01 son nombres, no emitidas) ni ningún export; no toca el archivo de instrucciones de agentes ni el dashboard. Si cambias alguna decisión de los bloques anteriores, no aplico y te vuelvo a preguntar. Después del START hago un commit local; el export y las autorizaciones de despacho son pasos aparte con su propio sí."="Sí, aplica el START (Recomendada)". You can now continue with these answers in mind.
+locked:
+  implementation_sha256: 632f3ba400263c3d8e448cd4f3f3d633cf293a1d8a7163cb94253ef14e02a2bd
+  executable_conditions:
+  - E06-CS007-SUT01-WEB
+  - E06-CS007-SUT01-ANDROID
+  - E06-CS007-SUT02-WEB
+  - E06-CS007-SUT02-ANDROID
+  sample_size: N = 50 per condition, EX0001 to EX0050, attempt 1 each (200 executions)
+  prompt_version: ORCHESTRATOR-E06-cross-platform-parity-v1
+  prompt_sha256: ed5c08561856f657c8bc310d361c05f5e359c4d1560b91cbb8093abfe39128ee
+  configuration_text_sha256: 8e5288b4b0ceaf2c0d9458f0553a708533ac918ce8a17b17124141f3543e8dda
+  section_inserted_sha256: 93ce98847a2c949be7baea80d6425fa17c3b2304a567de9ab71aa3c30e1feab2
+  conditions_file_sha256: b97c492af7c9be1f5716b05cf29666b7b7dff6588f9788b63499203dfa3a1fcd
+  measured_workflow_sha256: 41cbba741e05d519e2af61f2841a30ca853f8d3dc0c4bc8efa8e95bfeec6f3b6
+  verification_workflow_sha256: b3b39582fc97e2465b12ded468e7999b8ccbb44b785098460860446dcd6eaada
+  run_manifest_schema_sha256: 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757
+  scenario_mapping_sha256:
+    CS-007: bc07f153e702bc969d5ae3653bb31d308e3a859555dbb01c1e184fb14377e85d
+  scenario_freeze_authorization_ids:
+    CS-007: E06-CS007-FREEZE-AUTH-01
+  start_authorization_id: E06-START-AUTH-01
+  environment_type:
+    E06-CS007-SUT01-WEB: PUBLIC_HOSTED
+    E06-CS007-SUT01-ANDROID: PUBLIC_HOSTED
+    E06-CS007-SUT02-WEB: PUBLIC_HOSTED
+    E06-CS007-SUT02-ANDROID: EMULATED
+  verification_basis:
+    record: manifests/e06-environment-verification-rounds-v1.yaml
+    record_sha256: ba01e49c7957dd2fa3101621fabe9bf381774b7b97a011aa9aa6a287b6b43af1
+    basis_round: 2
+    run_id: 44961904993
+    head_sha: becd70d0ba0e9713f71a8873b0551bdfc6fc71ff
+    history_rounds:
+    - round: 1
+      run_id: 44931436092
+      head_sha: 12d587d591f190224d2050403ddfbc96b34a87aa
+      conclusion: success
+  tokens_bound:
+    START_DATE: '2026-11-21'
+    START_TIMESTAMP: '2026-11-22T00:38:04Z'
+files_written:
+- experiments/E06-cross-platform-parity/README.md
+- experiments/E06-cross-platform-parity/README.md
+- protocol/CHANGELOG.md
+- manifests/study-manifest.yaml
+- manifests/study-manifest.yaml
+- experiments/README.md
+- prompts/frozen/ORCHESTRATOR-E06-cross-platform-parity-v1.md
+- manifests/e06-campaign-start-v1.yaml
+- manifests/README.md
+- experiments/E06-cross-platform-parity/executor/tests/test_gates.py
+does_not:
+- issue any dispatch authorization (E06-DISPATCH-SUT01-AUTH-01 and E06-DISPATCH-SUT02-AUTH-01 are names, not issued)
+- issue any further-attempt approval
+- dispatch anything or run any workflow
+- export or push anything
+- edit any workflow, executor file, harness file, conditions file, scenario record, the working prompt or any protocol document other than the change-log row
+- edit the agent-instructions file or the dashboard (their update needs the human research lead's yes)
+next: the export of the START state (on the human research lead's yes to its exact line), the gate step re-run on the exported tree, then the two dispatch authorizations (E06-DISPATCH-SUT01-AUTH-01 and
+  E06-DISPATCH-SUT02-AUTH-01) that the human research lead issues under Section 3.7 (one record per SUT, N = 50, attempt 1, with the implementation and prompt SHA-256 values above), their export, and then
+  the dispatches under the frozen procedure.
