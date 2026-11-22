@@ -1,0 +1,109 @@
+# manifests/e06-campaign-freeze-v1.yaml -- provenance record of the E06-cross-platform-parity campaign freeze (protocol/change-control-v1.md, section 7, moment 2: IN_PROGRESS -> FROZEN).
+# Modeled on manifests/e07-campaign-freeze-v1.yaml. A provenance record, not a second campaign-configuration record: the configuration itself stays authoritative and locked in
+# experiments/E06-cross-platform-parity/README.md, section "Campaign configuration" (unchanged by this freeze). ORCHESTRATOR record of operation OP-FREEZE-13 (2026-11-22 local, America/Mexico_City; the UTC date at the time of writing was 2026-11-22).
+# Immutable once committed; a correction is a new version file.
+record_class: E06_CAMPAIGN_FREEZE
+record_id: E06-FREEZE-01
+study_id: EUS-2026-001
+campaign_id: E06-cross-platform-parity
+operation_id: OP-FREEZE-13
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-22'
+recorded_on_timezone: America/Mexico_City (the UTC date at the time of writing was 2026-11-22)
+status: RECORDED
+transition: IN_PROGRESS -> FROZEN
+previous_status: IN_PROGRESS
+new_status: FROZEN
+freeze_timestamp: "2026-11-22T15:15:50Z"  # one UTC clock reading taken when the edits were written; the commit that carries them follows it
+authorization_id: E06-FREEZE-AUTH-01
+freeze_approved_by: gilbertosanchez
+frozen_by: ORCHESTRATOR
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+human_approval:
+  text_verbatim: "Your questions have been answered: \"Las 200 ejecuciones de E06-cross-platform-parity (4 condiciones, N = 50 cada una: E06-CS007-SUT01-WEB, E06-CS007-SUT01-ANDROID, E06-CS007-SUT02-WEB, E06-CS007-SUT02-ANDROID) están importadas byte a byte bajo raw-data/E06-cross-platform-parity/ y fusionadas en main (merge 35cfcfaf): 5 despachos dentro de E06-DISPATCH-SUT01-AUTH-01 y E06-DISPATCH-SUT02-AUTH-01; 3 condiciones en intento 1 y E06-CS007-SUT01-ANDROID en intento 2 bajo tu aprobación E06-FURTHER-ATTEMPT-SUT01-APPROVAL-01, porque su intento 1 (corrida 44984064912, failure en el paso de instalación, el ejecutor nunca corrió, sin bundle, nada importado) sigue registrado en el registro de despacho; el workflow medido tiene exactamente 5 corridas (4 success y esa failure), sin ninguna re-corrida; el workflow de las dos condiciones Android es la revisión efectiva 1f3f90a0 que nombra el registro OP-CI-20 (la configuración bloqueada sigue nombrando 41cbba74); mi auditoría de la importación pasó 69 de 69 comprobaciones sobre 200 directorios de ejecución y re-descargó los archivos de GitHub: los digests coinciden y cada archivo importado es idéntico al de GitHub. ¿Congelo la campaña E06 ahora (protocol/change-control-v1.md, sección 7, momento 2, con id E06-FREEZE-AUTH-01 y tu respuesta literal en manifests/e06-campaign-freeze-v1.yaml)? El freeze vuelve append-only raw-data/E06-cross-platform-parity/ (un run posterior solo con una fila 'run appended after campaign freeze' en el change-log que diga el motivo) y vuelve inmutable el registro de configuración de la campaña (sección Campaign configuration del README de E06, sha256 93ce98847a2c…); el workflow medido exige el estado IN_PROGRESS (compuerta G-1), así que rechaza todo despacho desde ese momento. Qué NO autoriza: ningún despacho, re-corrida ni run agregado; ningún export ni push (publicar los datos crudos es otra decisión, con tu sí a su línea exacta); ningún cambio de workflow, protocolo (salvo la fila del change-log), prompt, SUT o archivo crudo; ningún análisis (el análisis de la parte cross-platform de H4 necesita tu instrucción aparte). Edita: el registro de freeze, la fila del change-log, el estado de E06 en study-manifest, las líneas de estado de README.md, experiments/README.md, raw-data/README.md y del README de E06, las filas de manifests/README.md y la prueba as-is de los gates (que pasa a admitir el rechazo por G-1), en commits locales.\"=\"APRUEBO EL FREEZE DE E06 (Recomendado)\", \"El prompt de despacho congelado (sección 5) me prohíbe resumir entre corridas o condiciones, calcular tasas, comparar o explicar un resultado; en los freezes de E04 y E07 elegiste que el registro declare solo las conclusiones de workflow. ¿Qué declara el registro de freeze de E06 sobre los resultados?\"=\"Solo conclusiones de workflow (Recomendado)\", \"El bloque 'Current phase' de AGENT-INSTRUCTIONS.md sigue sin describir los exports v74 a v79 ni el avance de E06 (preparación, CS-007 FROZEN, DRY_RUN, START, autorizaciones, los despachos, la corrección OP-CI-20 y este freeze). ¿Actualizo AGENT-INSTRUCTIONS.md ahora, en un commit local aparte (sin tocar reglas, solo el estado vivo, como en las actualizaciones anteriores)?\"=\"Sí, actualiza AGENT-INSTRUCTIONS.md (Recomendado)\". You can now continue with these answers in mind."
+  bytes: 3309
+  sha256: cdd2a68920b354e08c015118dc48cd0cf13864b58528eab7144ff49b6c8bc7a8
+  received_utc: "2026-11-22T15:10:36.576Z"  # stamp of the stored conversation entry
+  received_local: "2026-11-22T09:10:36-06:00 (America/Mexico_City)"
+  question_stamp: "2026-11-22T11:34:06.707Z"
+  chosen_options: ["APRUEBO EL FREEZE DE E06 (Recomendado)", "Solo conclusiones de workflow (Recomendado)", "Sí, actualiza AGENT-INSTRUCTIONS.md (Recomendado)"]
+  entry_kind: >
+    the answer of the human research lead to a question dialog about the freeze of E06 (the options chosen are listed above); the text above is the whole stored answer, which also holds the answers to
+    the other questions of the same dialog (what the freeze record declares about the results, and the update of the live status of the agent-instructions file)
+  scope: the freeze of the E06 campaign with its four executable web and Android conditions on SUT-01 and SUT-02, 200 executions, N = 50 per condition, under the authorization id above
+trigger: >
+  protocol/change-control-v1.md, section 7, moment 2: every planned run of the campaign (all ecosystems, all conditions, the recorded N) has been executed. The locked configuration plans four executable
+  web and Android conditions, two on SUT-01 (E06-CS007-SUT01-WEB and E06-CS007-SUT01-ANDROID) and two on SUT-02 (E06-CS007-SUT02-WEB and E06-CS007-SUT02-ANDROID), with N = 50 each (EX0001 to EX0050);
+  no other SUT has a condition in the configuration (SUT-03 and SUT-04 are COMPARABLE on web only and SUT-05 and SUT-06 are NOT_COMPARABLE on CS-007).
+pre_freeze_state:
+  canonical_head: 35cfcfaf640128b72343f0ae433f65b5f7d1bbdd  # the head before the freeze commit
+  merge_commit: 35cfcfaf640128b72343f0ae433f65b5f7d1bbdd  # the merge of the dispatch branch into main
+  dispatch_branch_head: 69801d8954272b2850c272d745699b9dc599b4a6
+  public_main: 8bddca19600edc5d508d543c221d86722a9a4cba   # export v79; nothing is pushed by the freeze
+  e06_status_before: IN_PROGRESS
+  raw_tree_of_main_equals_raw_tree_of_the_dispatch_branch: {path: raw-data/E06-cross-platform-parity, tree: 61b282b866c7d478a2725295a91f7fa26ba0b687}
+  dispatch_records_tree_equals_the_dispatch_branch: {path: manifests/e06-measured-dispatch, tree: 1ea50cbb045b8c946e925e9fe8b577ff7f5299b8}
+  configuration_section: {path: experiments/E06-cross-platform-parity/README.md, heading: Campaign configuration, sha256: 93ce98847a2c949be7baea80d6425fa17c3b2304a567de9ab71aa3c30e1feab2, unchanged_since_the_start: true}   # slice from the heading to the end of file, read at the START and now: byte-identical
+  start_record: manifests/e06-campaign-start-v1.yaml
+executions:
+  conditions: [E06-CS007-SUT01-WEB, E06-CS007-SUT01-ANDROID, E06-CS007-SUT02-WEB, E06-CS007-SUT02-ANDROID]
+  n_per_condition: 50
+  executions_imported: 200   # SUT-01 100, SUT-02 100; attempt 1 for three conditions and attempt 2 for E06-CS007-SUT01-ANDROID
+  dispatches: 5   # one dispatch per condition attempt (the unit of dispatch that the frozen prompt fixes): four conditions, one of them dispatched twice
+  first_dispatch_recorded_utc: "2026-11-22T04:09:12Z"   # clock of the first DISPATCH_RECORDED entry (E06-CS007-SUT01-WEB)
+  last_import_recorded_utc: "2026-11-22T11:30:44Z"   # dispatch-record event RUN_CONCLUDED_AND_IMPORTED of the last condition (E06-CS007-SUT02-ANDROID)
+  local_dates_of_the_imports: ['2026-11-21', '2026-11-22']   # America/Mexico_City: the two web conditions at 2026-11-21 22:12 and 22:18 local, the two Android conditions at 2026-11-22 05:28 and 05:30 local
+  dispatch_authorizations: [E06-DISPATCH-SUT01-AUTH-01, E06-DISPATCH-SUT02-AUTH-01]
+  dispatch_records: manifests/e06-measured-dispatch/e06-sut0N.jsonl   # two records, append-only, complete (see dispatch_record_events)
+  dispatch_record_events: >
+    each record opens with RECORD_OPENED and then has, per condition attempt, DISPATCH_RECORDED (committed before the dispatch), RUN_IDENTITY_RECORDED and RUN_CONCLUDED_AND_IMPORTED, except the attempt 1 of E06-CS007-SUT01-ANDROID,
+    which closes with RUN_CONCLUDED_WITHOUT_BUNDLE_NOT_IMPORTED (written when the chain was resumed), and the SUT-02 record, which holds two DISPATCH_RECORDED entries of E06-CS007-SUT02-ANDROID attempt 1: the first (2026-11-22T04:18:09Z, public main 8b32de74, the original workflow) was
+    never followed by a dispatch, because the stop of the SUT-01 chain set STOP_ALL; the second (2026-11-22T11:13:36Z, public main 8bddca19, the corrected workflow) cites it, supersedes it, and was followed by the dispatch
+  imports: raw-data/E06-cross-platform-parity/<SUT>/<condition id>__<execution id>__A<attempt>/   # each with run-manifest.json, the bundle members unchanged and the executor records; the job-level files of each condition and its import-record.yaml in <condition id>__job__A<attempt>/
+  consumed_attempts_without_bundle:
+    - {condition_id: E06-CS007-SUT01-ANDROID, attempt: 1, run_id: 44984064912, recorded_in: "manifests/e06-measured-dispatch/e06-sut01.jsonl, events RUN_IDENTITY_RECORDED and RUN_CONCLUDED_WITHOUT_BUNDLE_NOT_IMPORTED", ended: "failure at the step that installs the pinned Appium stack, before the frozen executor ran; no bundle; nothing imported"}
+  further_attempts:
+    - {condition_id: E06-CS007-SUT01-ANDROID, first_execution: 1, attempt: 2, previous_attempt: 1, approval_record: manifests/e06-further-attempt-approval-sut01-v1.yaml, approval_id: E06-FURTHER-ATTEMPT-SUT01-APPROVAL-01, approval_record_sha256: be7c61fe34abaa16b5c60b882f03f858a9895ac8b0a818b0fdf923af8effe724}
+  ci_correction: {record: manifests/e06-op-ci-20-v1.yaml, record_sha256: a9c2d190678f09f71ac48473bf5241ba4b7b06db297de1cd76bb0a45f5ac0be4, operation: OP-CI-20, locked_workflow_sha256: 41cbba741e05d519e2af61f2841a30ca853f8d3dc0c4bc8efa8e95bfeec6f3b6, effective_workflow_sha256: 1f3f90a090945a7b5ca6543a77637a143bc7dddb88f44c04b41ef421a7aa99c0}   # made while the campaign was IN_PROGRESS, on the human research lead's approval, before the second attempt
+  github_measured_execution_runs: {total: 5, success: 4, failure: 1, event: workflow_dispatch for all, branch: main, run_attempt: 1 for all}   # read from the workflow's run list at the freeze; no run is in progress or queued; the failure is the run of the attempt 1 of E06-CS007-SUT01-ANDROID
+  run_ids: {E06-CS007-SUT01-WEB: 44983781384, E06-CS007-SUT01-ANDROID: {attempt_1: 44984064912, attempt_2: 45016202301}, E06-CS007-SUT02-WEB: 44983826384, E06-CS007-SUT02-ANDROID: 45016273705}
+  workflow_revisions_of_the_imported_runs: {'41cbba741e05d519e2af61f2841a30ca853f8d3dc0c4bc8efa8e95bfeec6f3b6 (the locked revision; public main 8b32de74)': 2, '1f3f90a090945a7b5ca6543a77637a143bc7dddb88f44c04b41ef421a7aa99c0 (the effective revision named by the CI correction record; public main 8bddca19)': 2}   # ci-provenance.json workflow.file_sha256 and repository.sha of each run directory; the two web conditions and the two Android ones respectively
+  configuration_hash_stamped_by_the_gates: "46e36ee8d9889b4bc833a01b4f5129928c97031c474b95630b45b32a1f714f36"   # frozen_input_hashes.e06_configuration_sha256 of the ci-provenance of every run directory (one value)
+audit_of_the_imports:
+  method: a read-only script (untracked scratch, not part of the repository; audit_import_e06.py of the operator records) over the 200 run directories, the 4 job directories, the two dispatch records, the import records and the GitHub run list, run on the dispatch worktree (branch head 69801d8954272b2850c272d745699b9dc599b4a6) with the option that re-downloads the archives from GitHub (GET only), before any edit of the freeze
+  checks: >
+    the dispatch worktree on its branch with a clean tree; the branch shape (the seven commits of the first dispatch run unchanged, one normal merge of main, later commits only); nothing outside the raw-data directory of E06 and the two dispatch records changed against the merged-in main;
+    no derived-data or analysis path changed; the CI-correction record ISSUED, unrevoked and replacing the locked revision by the revision of the workflow file; for each condition the directories equal the expected set of 50 run directories plus the job directory;
+    every run manifest names its campaign, run id, condition, SUT, attempt and environment and every file it lists exists with the listed sha256; every import record is consistent (workflow success, 50 manifests, both archives verified against
+    the digest GitHub reports at the import, the files it lists equal the bytes on disk); the workflow hash in the provenance is the one expected for the condition (the locked revision for the web conditions, the effective revision for the Android ones); the provenance records the attempt, the first execution,
+    the further-attempt approval hash (the file hash for the attempt 2, not applicable for the others), the implementation, the prompt, the conditions file and the authorization hashes; each dispatch record has the events in the locked order under its authorization;
+    GitHub still serves the archives with the recorded digests and every member equals the committed file (re-downloaded). The merge into main changed no raw file: the raw tree and the dispatch-record tree of main equal those of the dispatch branch (see pre_freeze_state).
+  result: {checks: 69, passed: 69, run_directories: 200, job_directories: 4, files_listed_and_verified: 1612, defects: 0}
+  observed_outcomes: "workflow conclusion success in 4 of 5 runs (the four imported attempts: 200 of 200 executions imported) and failure in 1 run (the attempt 1 of E06-CS007-SUT01-ANDROID, which left no bundle), stated as recorded; no tally of the run-manifest outcome or category fields is recorded here, because the frozen dispatch prompt (section 5) forbids summarizing across runs or conditions and as in the E04 and E07 freezes; the outcomes stay in the run manifests, the attempt records and the condition summaries of the import records, unanalyzed"
+effect: >
+  From this moment raw-data/E06-cross-platform-parity/ is append-only in the sense of raw-data/README.md: every existing raw file is immutable, and a further run may be appended only with a "run appended after campaign
+  freeze" row in protocol/CHANGELOG.md stating the reason (raw-data/README.md, rule 1). The campaign configuration record is immutable. The measured-execution workflow requires the campaign status IN_PROGRESS (gate G-1),
+  so it refuses every dispatch from the freeze on; a run appended after the freeze would need its own change-log row and a CI correction. Reopening the campaign follows protocol/change-control-v1.md, section 5 in full.
+other_edits_of_the_freeze_commit:
+  - "protocol/CHANGELOG.md: one row for this transition (after the row of the CI correction OP-CI-20)"
+  - "manifests/study-manifest.yaml: the E06 status line FROZEN with the transition clock reading, and a note of the operation"
+  - "status lines that the freeze makes out of date, edited with counted replacements: README.md, experiments/README.md, raw-data/README.md, the E06 README (current status, outside the Campaign configuration section)"
+  - "manifests/README.md: the rows of the E06 dispatch records and of this freeze (the rows of the START, the authorizations, the CI correction and the approval exist)"
+  - "experiments/E06-cross-platform-parity/executor/tests/test_gates.py (a second commit): the as-is gate test allows the status check of gate G-1 beside the dispatch-authorization checks (a FROZEN campaign refuses every dispatch), as in the E07 test adaptation (e16ad5da); no executor, workflow or prompt file changes, so the implementation hash stays 632f3ba4"
+not_authorized_by_this_record:
+  - any dispatch, re-run, or run appended after the freeze
+  - any export or push, and the publication of raw-data/E06-cross-platform-parity/ (a separate decision, made through the export that carries it, which needs the human research lead's yes to its exact line)
+  - any change to a workflow, a protocol document other than the change log, a prompt, a SUT, or a raw file
+  - "any analysis: the cross-platform part of H4 (the parity proportion per ecosystem over the index pairs, with its Wilson 95 percent interval, descriptive in weight) is a separate step under protocol/statistical-analysis-plan-v1.md, section 4, and starts only on its own instruction"
+  - any edit of the dashboard; the live status of the agent-instructions file is edited only in a separate commit, on the approval given in the same dialog
+resulting_freeze_commit: null   # a commit cannot name its own id; the commit that adds this file is the freeze commit
+next_steps:
+  - the export that publishes raw-data/E06-cross-platform-parity/, the dispatch records, this freeze and the status lines, which needs the human research lead's yes to its exact push line (the bundles carry no host path: checked before the freeze)
+  - the export-log entry and the post-push audit in PUBLIC-EXPORT-MANIFEST.yaml
+  - the refresh of the dashboard research-status.html (standing rule), when asked
+  - the cross-platform part of the H4 analysis (descriptive), on a separate instruction
+notes: |
+  The freeze closes the set of E06 runs of this campaign version. It introduces no sample size, exclusion rule, attribution rule, or comparison that was not already in the locked configuration.
+  No E06 result is analyzed or summarized by this record.
