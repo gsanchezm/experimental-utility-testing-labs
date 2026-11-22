@@ -1,0 +1,61 @@
+# derived-data/E06-cross-platform-parity/parity-e06-result.json.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (JSON cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/E06-cross-platform-parity/parity-e06-result.json
+dataset_sha256: 38cbc323d926c8e28f00ec2da06f6b99ee9a309358d1b83efbc4d72a7ab1c46c
+campaign_id: E06-cross-platform-parity
+hypothesis_id: H4
+part: "H4, cross-platform part: the parity proportion per ecosystem (pairs with parity over 50, Wilson 95% interval) and the one comparison of the campaign configuration, SUT-01 versus SUT-02 on CS-007, by risk difference with its interval and Fisher exact test; descriptive in weight (one canonical scenario gives one scenario pair per comparison, D-E06-7); no support or non-support criterion is frozen for H4, so the dataset states no verdict"
+sut_ids: [SUT-01, SUT-02]
+sut_ids_without_condition: [SUT-03, SUT-04, SUT-05, SUT-06]
+per_run_tables:
+  - path: derived-data/E06-cross-platform-parity/outcomes-per-execution.csv
+    sha256: 0f8d1cc7217eec6c1d2f1e2411ae55e6bc21bf088dd64770ed14ed8d32e718d6
+  - path: derived-data/E06-cross-platform-parity/parity-pairs.csv
+    sha256: 13bc617fb757d01501f0094dc011b0a47819fb0deb8b94756fcb8b7f30a3f27d
+per_run_tables_note: written by the same script run from the same bundles; the result is not computed from them
+raw_inputs:
+  tree:
+    path: raw-data/E06-cross-platform-parity
+    git_tree: 61b282b866c7d478a2725295a91f7fa26ba0b687
+    pinned_at_commit: cbe33b2a818f8c475ff5a8042d7c9065ea08909f
+    campaign_state: FROZEN
+  bundles: 200
+  imported_attempts: attempt 1 for E06-CS007-SUT01-WEB, E06-CS007-SUT02-WEB and E06-CS007-SUT02-ANDROID; attempt 2 for E06-CS007-SUT01-ANDROID (its attempt 1, GitHub run 44984064912, ended at the install step before the executor ran and left no execution record)
+  job_directories: 4 (the condition summary and the job provenance of each condition are read; their sha256 are in the result)
+  files_read: the run manifest of each of the 200 bundles, its evidence facts file (004-facts.json) where it exists, and the condition summary and job provenance of each of the 4 conditions (408 files); the outcome category of each run manifest is checked against the condition summary, and the identity of each evidence facts file against the condition summary
+transformation_script:
+  path: analysis/e06-parity-analysis/compute-parity-e06.js
+  version: git-blob-sha acfe9fb5e31164496323b076d7bf8a5475b8a7f7
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only)
+pure_core:
+  path: analysis/h3-analysis/h3-metrics.js
+  version: git-blob-sha 72b1f74949cc76ce907ca2a162e5d5fbd28ef6a0
+  note: required for rate(), wilson() and distinctToolchain() only; not modified (the blob sha equals the one recorded for the E05, E04 and E07 analyses)
+tests:
+  path: analysis/e06-parity-analysis/test/parity-e06.test.js
+  note: nine unit tests on synthetic execution records and on known tables (node --test analysis/e06-parity-analysis/test/parity-e06.test.js), 0 failures
+date_generated: "2026-11-22"
+date_note: local date (America/Mexico_City); the UTC time of the run was 2026-11-22, after 20:14Z
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: experiments/E06-cross-platform-parity/README.md, "Campaign configuration" (sha256 93ce98847a2c949be7baea80d6425fa17c3b2304a567de9ab71aa3c30e1feab2, equal at the START commit 16ff3a6813ec8762fd19224e3c900c3ef009db98 and at HEAD), "Outcome categories, pairing and the parity proportion" and "Analysis and what is not computed"; manifests/campaign-execution-decisions-v17.yaml and -v18.yaml (D-E06-7, D-E06-8, D-E06-15); conditions file experiments/E06-cross-platform-parity/conditions-draft.json (sha256 b97c492af7c9be1f5716b05cf29666b7b7dff6588f9788b63499203dfa3a1fcd); protocol/statistical-analysis-plan-v1.md, sections 3 and 4.3
+instruction: >
+  the human research lead selected the option "Sí, analiza H4 entre plataformas (Recomendado)" in a question dialog of 2026-11-22 local time
+  (question 2026-11-22T20:12:51Z, answer 2026-11-22T20:14:16Z, UTC): write the analysis script and its unit tests, run it over the 200 frozen
+  executions of E06 and write the derived datasets with provenance sidecars, descriptive only (the parity proportion per ecosystem with its
+  Wilson interval, and SUT-01 versus SUT-02 by risk difference with an interval and Fisher exact test, as the campaign configuration names them)
+notes: >
+  Deterministic, non-interpretive computation. Implements the descriptive procedure pre-registered in the E06 campaign configuration: execution k
+  of the WEB condition of an ecosystem is paired with execution k of its ANDROID condition (k = 1 to 50); a pair is in parity when both
+  executions have the category ARRIVED_IDENTITY_READ and the same normalized identity of the first catalogue position (string equality; the raw
+  identifier is recorded beside it); every other pair is a non-parity, with exactly one class (NOT_ARRIVED, IDENTITY_UNREADABLE, ARRIVAL_ONLY,
+  IDENTITY_DIFFERENT, by that precedence); no execution or pair is excluded; the parity proportion has the Wilson 95% interval without continuity
+  correction (z = 1.959963984540054); the risk difference SUT-01 minus SUT-02 has the Newcombe hybrid score interval (method 10; the interval
+  method is not named in the configuration and was fixed in the script before the data were read, from the Wilson convention of the repository)
+  and the Fisher exact p-value is two-sided. The category counts of each surface, the non-arrival and unreadable counts, the attributed counts and
+  the cross-tabulation of the two categories of each pair are reported beside the parity counts. Not computed: any pooled rate across ecosystems
+  or surfaces, composite score, latency, ranking or result for iOS; SUT-01 versus SUT-03 is not estimable (no mobile data). The consistency checks
+  returned no violation and the toolchain drift report is empty. The script was run and its --check recomputation equals the files on disk, and
+  an independent recomputation in Python from the run manifests and evidence facts files of the same 200 bundles gave the same parity counts and
+  category counts for each ecosystem.

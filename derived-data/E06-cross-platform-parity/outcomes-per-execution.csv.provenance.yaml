@@ -1,0 +1,29 @@
+# derived-data/E06-cross-platform-parity/outcomes-per-execution.csv.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (a CSV cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/E06-cross-platform-parity/outcomes-per-execution.csv
+dataset_sha256: 0f8d1cc7217eec6c1d2f1e2411ae55e6bc21bf088dd64770ed14ed8d32e718d6
+campaign_id: E06-cross-platform-parity
+hypothesis_id: H4
+part: "one row per execution of the 200 imported bundles (50 per condition, 4 conditions), with the recorded outcome category, the reason, the attribution, whether the execution arrived, the raw and the normalized identity of the first catalogue position, the workflow outcome status and the recorded match flag"
+raw_inputs:
+  tree:
+    path: raw-data/E06-cross-platform-parity
+    git_tree: 61b282b866c7d478a2725295a91f7fa26ba0b687
+    pinned_at_commit: cbe33b2a818f8c475ff5a8042d7c9065ea08909f
+    campaign_state: FROZEN
+  bundles: 200
+  imported_attempts: attempt 1 for E06-CS007-SUT01-WEB, E06-CS007-SUT02-WEB and E06-CS007-SUT02-ANDROID; attempt 2 for E06-CS007-SUT01-ANDROID (its attempt 1, GitHub run 44984064912, ended at the install step before the executor ran and left no execution record)
+  files_read: the run manifest and the evidence facts file of each bundle and the condition summary of each condition (the category and identity of each run are checked against the condition summary)
+transformation_script:
+  path: analysis/e06-parity-analysis/compute-parity-e06.js
+  version: git-blob-sha acfe9fb5e31164496323b076d7bf8a5475b8a7f7
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only)
+date_generated: "2026-11-22"
+date_note: local date (America/Mexico_City); the UTC time of the run was 2026-11-22, after 20:14Z
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: experiments/E06-cross-platform-parity/README.md, "Campaign configuration" (sha256 93ce98847a2c949be7baea80d6425fa17c3b2304a567de9ab71aa3c30e1feab2)
+notes: >
+  Written by the same script as derived-data/E06-cross-platform-parity/parity-e06-result.json, from the same bundles. Every column is a recorded field of a bundle or of its
+  condition summary; none is interpreted, and no label is re-mapped. Rows follow the order of the conditions file and the execution identifier.

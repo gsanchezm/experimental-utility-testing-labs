@@ -1,0 +1,311 @@
+{
+  "record": "Parity analysis, E06-cross-platform-parity (derived dataset; descriptive; produced by analysis/e06-parity-analysis/compute-parity-e06.js from the frozen raw-data/E06-cross-platform-parity)",
+  "campaign_id": "E06-cross-platform-parity",
+  "hypothesis_note": "H4, cross-platform part: the one comparison of the configuration, SUT-01 versus SUT-02 on CS-007, is computed with the risk difference and Fisher exact test the configuration names; it is descriptive in weight (one canonical scenario gives one scenario pair per comparison, D-E06-7) and no support or non-support criterion is frozen for H4, so this dataset states no verdict; SUT-01 versus SUT-03 is not estimable (no mobile data).",
+  "metric_source": "experiments/E06-cross-platform-parity/README.md, \"Campaign configuration\", \"Outcome categories, pairing and the parity proportion\" and \"Analysis and what is not computed\"; conditions file, pairing_rule, parity_rule and estimand; manifests/campaign-execution-decisions-v17.yaml and -v18.yaml (D-E06-7, D-E06-8, D-E06-15); protocol/statistical-analysis-plan-v1.md, sections 3 and 4.3",
+  "estimators": {
+    "parity_proportion": "pairs with parity over the 50 pairs of the ecosystem (execution k of the WEB condition with execution k of the ANDROID condition); parity: both ARRIVED_IDENTITY_READ and the same normalized identity",
+    "interval": "Wilson score interval without continuity correction, z = 1.959963984540054",
+    "risk_difference": "parity proportion of SUT-01 minus that of SUT-02, with the Newcombe hybrid score interval (method 10) built from the two Wilson intervals",
+    "fisher_exact": "two-sided, the sum of the hypergeometric probabilities of the tables with the same margins that are not above that of the observed table",
+    "pair_class_precedence": "NOT_ARRIVED, IDENTITY_UNREADABLE, ARRIVAL_ONLY, IDENTITY_DIFFERENT, PARITY",
+    "NOT_ESTIMABLE": "the rate of an empty denominator; never reported as 0"
+  },
+  "inputs": {
+    "raw_tree": "raw-data/E06-cross-platform-parity",
+    "raw_git_tree": "61b282b866c7d478a2725295a91f7fa26ba0b687",
+    "pinned_at_commit": "cbe33b2a818f8c475ff5a8042d7c9065ea08909f",
+    "campaign_state": "FROZEN",
+    "run_bundles": 200,
+    "job_directories": 4,
+    "imported_attempts": {
+      "E06-CS007-SUT01-WEB": 1,
+      "E06-CS007-SUT01-ANDROID": 2,
+      "E06-CS007-SUT02-WEB": 1,
+      "E06-CS007-SUT02-ANDROID": 1
+    },
+    "attempts_without_bundle": [
+      {
+        "condition_id": "E06-CS007-SUT01-ANDROID",
+        "attempt": 1,
+        "github_run_id": "44984064912",
+        "note": "ended in failure at the install step of its measured job, before the executor ran; no execution record exists; its dispatch record (manifests/e06-measured-dispatch/e06-sut01.jsonl) keeps the event; the executions of this condition are those of its attempt 2"
+      }
+    ],
+    "job_records": {
+      "E06-CS007-SUT01-WEB": {
+        "attempt": 1,
+        "github_run_id": "44983781384",
+        "workflow_file_sha256": "41cbba741e05d519e2af61f2841a30ca853f8d3dc0c4bc8efa8e95bfeec6f3b6",
+        "further_attempt_approval_sha256": "not applicable (attempt 1)",
+        "condition_summary_sha256": "e6cc0f53a65175f91d9b6affd1181198f3be4e19d901578322c77e68e41133b3"
+      },
+      "E06-CS007-SUT01-ANDROID": {
+        "attempt": 2,
+        "github_run_id": "45016202301",
+        "workflow_file_sha256": "1f3f90a090945a7b5ca6543a77637a143bc7dddb88f44c04b41ef421a7aa99c0",
+        "further_attempt_approval_sha256": "be7c61fe34abaa16b5c60b882f03f858a9895ac8b0a818b0fdf923af8effe724",
+        "condition_summary_sha256": "5a89cfe299477ef81b435e84168cc84ac4f2e732bb6167c6355db68de5fc3a7b"
+      },
+      "E06-CS007-SUT02-WEB": {
+        "attempt": 1,
+        "github_run_id": "44983826384",
+        "workflow_file_sha256": "41cbba741e05d519e2af61f2841a30ca853f8d3dc0c4bc8efa8e95bfeec6f3b6",
+        "further_attempt_approval_sha256": "not applicable (attempt 1)",
+        "condition_summary_sha256": "52860792a99bdf8aadbf8c023bb0e198d2061b0b7a48f777df5cc44aaccc2490"
+      },
+      "E06-CS007-SUT02-ANDROID": {
+        "attempt": 1,
+        "github_run_id": "45016273705",
+        "workflow_file_sha256": "1f3f90a090945a7b5ca6543a77637a143bc7dddb88f44c04b41ef421a7aa99c0",
+        "further_attempt_approval_sha256": "not applicable (attempt 1)",
+        "condition_summary_sha256": "8b8867ce654b67d7df252b380592509c1f1bbdbe46d89563c0b612ef8712f20b"
+      }
+    },
+    "conditions_file": "experiments/E06-cross-platform-parity/conditions-draft.json",
+    "conditions_file_sha256": "b97c492af7c9be1f5716b05cf29666b7b7dff6588f9788b63499203dfa3a1fcd",
+    "campaign_configuration_sha256": "93ce98847a2c949be7baea80d6425fa17c3b2304a567de9ab71aa3c30e1feab2"
+  },
+  "totals": {
+    "ecosystems": 2,
+    "executions": 200,
+    "pairs": 100,
+    "parity_pairs": 100,
+    "note": "counts only; no pooling of rates across ecosystems or surfaces is computed"
+  },
+  "ecosystems": [
+    {
+      "sut_id": "SUT-01",
+      "web_condition_id": "E06-CS007-SUT01-WEB",
+      "android_condition_id": "E06-CS007-SUT01-ANDROID",
+      "pairs": 50,
+      "parity_pairs": 50,
+      "parity_proportion": {
+        "value": 1,
+        "x": 50,
+        "n": 50,
+        "interval": {
+          "lower": 0.9286524008666414,
+          "upper": 1
+        }
+      },
+      "pair_class_counts": {
+        "PARITY": 50,
+        "IDENTITY_DIFFERENT": 0,
+        "IDENTITY_UNREADABLE": 0,
+        "NOT_ARRIVED": 0,
+        "ARRIVAL_ONLY": 0
+      },
+      "non_parity_pairs_by_class_and_attribution": {},
+      "category_pairs_crosstab": {
+        "ARRIVED_IDENTITY_READ | ARRIVED_IDENTITY_READ": 50
+      },
+      "identity_counts_among_read": {
+        "WEB": {
+          "p01": 50
+        },
+        "ANDROID": {
+          "p01": 50
+        }
+      },
+      "web_surface": {
+        "condition_id": "E06-CS007-SUT01-WEB",
+        "sut_id": "SUT-01",
+        "surface": "WEB",
+        "n_planned": 50,
+        "executions": 50,
+        "arrived": 50,
+        "not_arrived": 0,
+        "identity_unreadable": 0,
+        "category_counts": {
+          "ARRIVED_IDENTITY_READ": 50,
+          "ARRIVED_ARRIVAL_ONLY": 0,
+          "ARRIVED_IDENTITY_UNREADABLE": 0,
+          "NOT_ARRIVED_INFRASTRUCTURE": 0,
+          "NOT_ARRIVED_SUT": 0,
+          "NOT_ARRIVED_RUNNER": 0
+        },
+        "not_arrived_reason_counts": {},
+        "attribution_by_category": {
+          "ARRIVED_IDENTITY_READ": {
+            "NONE": 50
+          }
+        }
+      },
+      "android_surface": {
+        "condition_id": "E06-CS007-SUT01-ANDROID",
+        "sut_id": "SUT-01",
+        "surface": "ANDROID",
+        "n_planned": 50,
+        "executions": 50,
+        "arrived": 50,
+        "not_arrived": 0,
+        "identity_unreadable": 0,
+        "category_counts": {
+          "ARRIVED_IDENTITY_READ": 50,
+          "ARRIVED_ARRIVAL_ONLY": 0,
+          "ARRIVED_IDENTITY_UNREADABLE": 0,
+          "NOT_ARRIVED_INFRASTRUCTURE": 0,
+          "NOT_ARRIVED_SUT": 0,
+          "NOT_ARRIVED_RUNNER": 0
+        },
+        "not_arrived_reason_counts": {},
+        "attribution_by_category": {
+          "ARRIVED_IDENTITY_READ": {
+            "NONE": 50
+          }
+        }
+      }
+    },
+    {
+      "sut_id": "SUT-02",
+      "web_condition_id": "E06-CS007-SUT02-WEB",
+      "android_condition_id": "E06-CS007-SUT02-ANDROID",
+      "pairs": 50,
+      "parity_pairs": 50,
+      "parity_proportion": {
+        "value": 1,
+        "x": 50,
+        "n": 50,
+        "interval": {
+          "lower": 0.9286524008666414,
+          "upper": 1
+        }
+      },
+      "pair_class_counts": {
+        "PARITY": 50,
+        "IDENTITY_DIFFERENT": 0,
+        "IDENTITY_UNREADABLE": 0,
+        "NOT_ARRIVED": 0,
+        "ARRIVAL_ONLY": 0
+      },
+      "non_parity_pairs_by_class_and_attribution": {},
+      "category_pairs_crosstab": {
+        "ARRIVED_IDENTITY_READ | ARRIVED_IDENTITY_READ": 50
+      },
+      "identity_counts_among_read": {
+        "WEB": {
+          "Sauce Labs Backpack": 50
+        },
+        "ANDROID": {
+          "Sauce Labs Backpack": 50
+        }
+      },
+      "web_surface": {
+        "condition_id": "E06-CS007-SUT02-WEB",
+        "sut_id": "SUT-02",
+        "surface": "WEB",
+        "n_planned": 50,
+        "executions": 50,
+        "arrived": 50,
+        "not_arrived": 0,
+        "identity_unreadable": 0,
+        "category_counts": {
+          "ARRIVED_IDENTITY_READ": 50,
+          "ARRIVED_ARRIVAL_ONLY": 0,
+          "ARRIVED_IDENTITY_UNREADABLE": 0,
+          "NOT_ARRIVED_INFRASTRUCTURE": 0,
+          "NOT_ARRIVED_SUT": 0,
+          "NOT_ARRIVED_RUNNER": 0
+        },
+        "not_arrived_reason_counts": {},
+        "attribution_by_category": {
+          "ARRIVED_IDENTITY_READ": {
+            "NONE": 50
+          }
+        }
+      },
+      "android_surface": {
+        "condition_id": "E06-CS007-SUT02-ANDROID",
+        "sut_id": "SUT-02",
+        "surface": "ANDROID",
+        "n_planned": 50,
+        "executions": 50,
+        "arrived": 50,
+        "not_arrived": 0,
+        "identity_unreadable": 0,
+        "category_counts": {
+          "ARRIVED_IDENTITY_READ": 50,
+          "ARRIVED_ARRIVAL_ONLY": 0,
+          "ARRIVED_IDENTITY_UNREADABLE": 0,
+          "NOT_ARRIVED_INFRASTRUCTURE": 0,
+          "NOT_ARRIVED_SUT": 0,
+          "NOT_ARRIVED_RUNNER": 0
+        },
+        "not_arrived_reason_counts": {},
+        "attribution_by_category": {
+          "ARRIVED_IDENTITY_READ": {
+            "NONE": 50
+          }
+        }
+      }
+    }
+  ],
+  "comparison_sut01_vs_sut02": {
+    "id": "SUT-01 vs SUT-02, CS-007, parity proportion (WEB and ANDROID)",
+    "classification": "CONFIRMATORY (H4), cross-platform part, as pre-registered in the campaign configuration; descriptive in weight (one canonical scenario gives one scenario pair per comparison, D-E06-7)",
+    "sut_a": "SUT-01",
+    "sut_b": "SUT-02",
+    "parity_a": 50,
+    "pairs_a": 50,
+    "parity_b": 50,
+    "pairs_b": 50,
+    "table_parity_by_ecosystem": [
+      [
+        50,
+        0
+      ],
+      [
+        50,
+        0
+      ]
+    ],
+    "risk_difference": {
+      "value": 0,
+      "interval": {
+        "lower": -0.07134759913335864,
+        "upper": 0.07134759913335864
+      },
+      "method": "Newcombe hybrid score (method 10), z = 1.959963984540054"
+    },
+    "fisher_exact_two_sided_p": 1,
+    "multiplicity": "this is the only comparison under RQ4 with a p-value: the four candidate comparisons of E07 are not evaluable (decision DP-4), so the Holm-adjusted p-value equals the reported one",
+    "verdict": "none: no support or non-support criterion is frozen for H4, and none is invented"
+  },
+  "comparisons_not_estimable": [
+    {
+      "id": "SUT-01 vs SUT-03",
+      "scenario": "CS-007",
+      "estimable": false,
+      "reason": "SUT-03 is COMPARABLE on WEB only in the frozen mapping record and has no mobile surface: it has no condition and no parity pair"
+    },
+    {
+      "id": "SUT-01 vs SUT-04",
+      "scenario": "CS-007",
+      "estimable": false,
+      "reason": "SUT-04 is COMPARABLE on WEB only and has no mobile surface: no condition, no parity pair; a specialist reference, never a confirmatory comparison"
+    },
+    {
+      "id": "SUT-01 vs SUT-05, SUT-06",
+      "scenario": "CS-007",
+      "estimable": false,
+      "reason": "SUT-05 and SUT-06 are NOT_COMPARABLE in the frozen mapping record: no condition"
+    },
+    {
+      "id": "iOS",
+      "scenario": "CS-007",
+      "estimable": false,
+      "reason": "iOS is deferred and recorded untested (decision D-E06-5, DP-8): no condition, no result"
+    }
+  ],
+  "cells_without_condition": [
+    "SUT-03 (WEB only: no mobile surface)",
+    "SUT-04 (WEB only: no mobile surface)",
+    "SUT-05 (NOT_COMPARABLE)",
+    "SUT-06 (NOT_COMPARABLE)",
+    "iOS (deferred, D-E06-5)"
+  ],
+  "toolchain_drift_confounds": {},
+  "consistency_violations": [],
+  "not_computed": "No pooled rate across ecosystems or surfaces, composite score, latency, ranking or result for iOS: the configuration lists them as not computed."
+}
