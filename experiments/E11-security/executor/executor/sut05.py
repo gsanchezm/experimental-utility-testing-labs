@@ -7,6 +7,7 @@ the matching rules of campaign-configuration-draft.md, section 4b. Payloads, con
 (`source_reading`, `matching_rules`, the `control_endpoint` of a CONTROL cell), which records the source reading V-10; nothing is chosen here.
 """
 import json
+import time
 import urllib.parse
 
 from . import attempt, common, instance, zap
@@ -69,7 +70,25 @@ class Sut05Cell(attempt.Realization):
 
 
 class M1(Sut05Cell):
-    """M1 targeted check: a fixed request sequence, then the `solved` flag of the oracle challenge (SUT05-EV-0011)."""
+    """M1 targeted check: a fixed request sequence, then the `solved` flag of the oracle challenge (SUT05-EV-0011).
+
+    The flag of some challenges is written after the response (the union injection solves it in a follow-up query), so the oracle is read
+    until it reads solved or ORACLE_WAIT_S elapse: the sequence is sent once, only the READ is repeated. The first and the last read are kept as
+    evidence, the polls in between are counted. DRY_RUN round 1 showed the search payload working (every user in the response) with the
+    flag still unsolved on the immediate read."""
+    ORACLE_WAIT_S = 5.0
+    ORACLE_POLL_S = 0.25
+
+    def quiet_solved(self):
+        """One oracle read that leaves no evidence file (an intermediate poll); None when it cannot be read."""
+        try:
+            with common._OPENER.open(common.urllib.request.Request(f'{self.api()}/api/Challenges', headers={'Accept': 'application/json'}), timeout=common.HTTP_TIMEOUT_S) as r:
+                for ch in json.loads(r.read().decode('utf-8')).get('data') or []:
+                    if ch.get('key') == self.key:
+                        return bool(ch.get('solved'))
+        except Exception:  # noqa: BLE001 - an unreadable intermediate poll is not an observation; the last read decides
+            return None
+        return None
 
     def sequence(self):
         sr, mc = self.job.cfg['source_reading'], self.job.cfg['source_reading']['m1_controls']
@@ -92,9 +111,19 @@ class M1(Sut05Cell):
                 r = run.http(m, url, body, label=f'sut05-m1-{i}')
                 rec['evidence'].append(r.evidence)
                 steps.append({'method': m, 'path': urllib.parse.urlsplit(url).path, 'status': r.status, 'error': r.error})
-            r, solved = self.challenge(run, 'sut05-oracle-end')
+            t0, polls = time.monotonic(), 1
+            r, solved = self.challenge(run, 'sut05-oracle-first-read')
             rec['evidence'].append(r.evidence)
-            obs = {'steps': steps, 'oracle_status': r.status, 'oracle_key': self.key, 'solved': solved, 'oracle_error': r.error}
+            while r.status == 200 and solved is False and time.monotonic() - t0 < self.ORACLE_WAIT_S:
+                time.sleep(self.ORACLE_POLL_S)
+                polls += 1
+                if self.quiet_solved():
+                    break
+            if polls > 1:
+                r, solved = self.challenge(run, 'sut05-oracle-last-read')
+                rec['evidence'].append(r.evidence)
+            obs = {'steps': steps, 'oracle_status': r.status, 'oracle_key': self.key, 'solved': solved, 'oracle_error': r.error,
+                   'oracle_polls': polls, 'oracle_waited_s': round(time.monotonic() - t0, 3)}
             rec['observation'] = obs
         return obs
 

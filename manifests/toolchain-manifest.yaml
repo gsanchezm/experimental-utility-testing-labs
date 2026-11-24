@@ -138,10 +138,68 @@ tools:
     notes: null
   security:
     candidate: "OWASP ZAP"
-    version: null
-    install_date: null
-    platform: null
-    notes: null
+    version: "2.17.0"  # a pin, not a permanent installation: the measured job pulls the image below by digest on a GitHub-hosted runner (decision E11-D-8, Route A: manifests/campaign-execution-decisions-v19.yaml; entry approved in manifests/campaign-execution-decisions-v22.yaml; proposal experiments/E11-security/zap-pin-proposal-draft.md)
+    distribution: "container image pulled by digest; a tag is never used (the version tag 2.17.0 is rebuilt, the release-day image has another digest)"
+    image: ghcr.io/zaproxy/zaproxy
+    image_manifest_amd64: "sha256:c2d63bbb2d907a5c5257914fb20e26e969c92b25f265def7f89f08203f912882"
+    image_index: "sha256:9624669db72f54d86c4b46a7064518bd9bf79d8c61a4c31befa9923489f328af"
+    image_created: "2026-11-03T12:25:54Z"  # image configuration
+    source_release: v2.17.0  # published 2025-12-15; tag commit 8a1bff313f4d183dba5aa154ecbe89ad751c9153
+    update_checks: "off: -config start.checkForUpdates=false and no -addonupdate (the installed add-on list is equal before and after every run)"
+    install_date: "2026-11-24"  # first use: the DRY_RUN round 1 pull (manifests/e11-environment-verification-rounds-v1.yaml); the image is ephemeral on each runner
+    platform: "GitHub-hosted runner ubuntu-24.04 (image ubuntu24 20261116.376.1), linux/amd64"
+    scan_settings: "release defaults, never tuned: attackStrength DEFAULT, alertThreshold DEFAULT, targetParamsInjectable 35, targetParamsEnabledRPC 191, no duration limit"
+    addons_observed:  # 49 add-ons read from the running pinned image in round 1 (run 45376285190), identical in the 11 M2 executions that read them
+      - alertFilters@29.0.0
+      - ascanrules@84.0.0
+      - authhelper@0.44.0
+      - automation@0.62.0
+      - bruteforce@21.0.0
+      - callhome@0.23.0
+      - client@0.34.0
+      - commonlib@1.44.0
+      - database@0.9.0
+      - diff@18.0.0
+      - directorylistv1@9.0.0
+      - domxss@24.0.0
+      - encoder@1.9.0
+      - exim@0.22.0
+      - formhandler@6.9.0
+      - fuzz@13.17.0
+      - gettingStarted@20.0.0
+      - graaljs@0.14.0
+      - graphql@0.35.0
+      - help@22.0.0
+      - hud@0.19.0
+      - insights@0.7.0
+      - invoke@17.0.0
+      - network@0.33.0
+      - oast@0.26.0
+      - onlineMenu@15.0.0
+      - openapi@58.0.0
+      - params@0.1.0
+      - postman@0.10.0
+      - pscan@0.6.0
+      - pscanrules@77.0.0
+      - quickstart@60.0.0
+      - replacer@22.0.0
+      - reports@0.46.0
+      - requester@7.10.0
+      - retest@0.11.0
+      - retire@0.68.0
+      - reveal@10.0.0
+      - scanpolicies@0.8.0
+      - scripts@45.20.0
+      - selenium@15.60.0
+      - sequence@10.0.0
+      - soap@32.0.0
+      - spider@0.20.0
+      - spiderAjax@23.33.0
+      - tips@16.0.0
+      - webdriverlinux@231.0.0
+      - websocket@38.0.0
+      - zest@48.14.0
+    notes: "The add-ons are the marketplace state at the image build of 2026-11-03 (derived beforehand as ascanrules 84, pscanrules 77, commonlib 1.44.0 and observed equal). A change of the image digest or of any add-on is a new pin and a new decision. Observed, not installed by hand."
   performance:
     candidate: "TBD between appropriate open-source tools"
     version: null

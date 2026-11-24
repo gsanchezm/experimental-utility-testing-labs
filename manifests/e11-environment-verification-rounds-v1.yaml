@@ -1,0 +1,45 @@
+# manifests/e11-environment-verification-rounds-v1.yaml -- the non-measured DRY_RUN rounds of E11-security (operation OP-PREP-E11-04).
+# ORCHESTRATOR record. Append-only by rounds: a round is added, never edited after its outcome is recorded. A DRY_RUN is never imported into raw-data/ and never measured.
+record_class: "E11_ENVIRONMENT_VERIFICATION_ROUNDS"
+study_id: "EUS-2026-001"
+campaign_id: "E11-security"
+recorded_by_role: "ORCHESTRATOR"
+executes_anything: false
+rounds:
+  - round: 1
+    status: "CONCLUDED"
+    recorded_at_utc: "2026-11-24T10:35:33Z"
+    human_approval: "the human research lead's answer 'Sí, despacha esta línea' to the exact line below, in the ORCHESTRATOR's conversation of 2026-11-24 (UTC)"
+    workflow: ".github/workflows/e11-environment-verification.yml"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    public_main_at_dispatch: "ab7addb48946b9ab190eebbd15ea9be2fe5b124e"
+    canonical_source_of_public_main: "5d0fa0753e3f3abeb9f75fa0972690679a08459a"
+    validation_run_of_public_main: 45375469235
+    inputs:
+      target: "all"
+      executions: "2"
+      executor_prompt_version: "ORCHESTRATOR-E11-security-v1"
+      executor_implementation_sha256: "298b728d1ca273dd15384a7d2550c65a359bc8e6cfb9bb4f0ecef1a100714c90"
+      dry_run: true
+    expected_jobs: 14
+    expected_m2_jobs: 6
+    exact_line: "gh workflow run e11-environment-verification.yml --repo gsanchezm/experimental-utility-testing-labs --ref main -f target=all -f executions=2 -f executor_prompt_version=ORCHESTRATOR-E11-security-v1 -f executor_implementation_sha256=298b728d1ca273dd15384a7d2550c65a359bc8e6cfb9bb4f0ecef1a100714c90 -f dry_run=true"
+    dispatch_clock_before_utc: "2026-11-24T10:35:48Z"
+    dispatch_clock_after_utc: "2026-11-24T10:35:51Z"
+    run_id: 45376285190
+    run_number: 1
+    run_attempt: 1
+    head_sha: "ab7addb48946b9ab190eebbd15ea9be2fe5b124e"
+    run_created_at_utc: "2026-11-24T10:35:50Z"
+    run_url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45376285190"
+    note: "One dispatch, no re-run. The run identity was added after the run started; the outcome is added after it concludes."
+    outcome:
+      concluded_run_conclusion: "failure (one cell job failed the workflow's own check; the other 13 cell jobs, the gate and the plan succeeded)"
+      artifacts_reviewed_not_imported: true
+      cells_failing_the_workflow_check: ["E11-SUT05-SQLI-SEARCH-M2-CTRL (execution 1: ZAP_API_ERROR, ascan/action/scan HTTP 400, attributed TOOLING; execution 2: M2_NO_EXPECTED_ALERT)"]
+      cells_whose_categories_differ_from_the_expected_category: ["E11-SUT05-SQLI-SEARCH-M1 (M1_ORACLE_NOT_FLIPPED in both executions; the UNION response held all users, the flag read unsolved at once)", "E11-SUT05-DIRLIST-FTP-M2 (M2_NO_EXPECTED_ALERT in both executions: rule 0 raised no alert on /ftp/; predicted in V-7; an observation, the expectation is unchanged)"]
+      other_cells: "the categories equal the expected category in both executions (IDOR bypass 200 and blocked 403; SQLI-LOGIN and DIRLIST-FTP M1 flipped and their controls not; SQLI-LOGIN and SQLI-SEARCH M2 expected alert; the three M2 controls no alert, except the one execution above)"
+      zap_observed: "v2.17.0 by digest ghcr.io/zaproxy/zaproxy@sha256:c2d63bbb... ; add-ons ascanrules 84.0.0, pscanrules 77.0.0, commonlib 1.44.0 (49 add-ons), unchanged across a run; attackStrength and alertThreshold DEFAULT; targetParamsInjectable 35; enabledRPC 191; max durations 0"
+      m2_execution_seconds: "10 to 27"
+      harness_corrections_after_the_round: "bounded oracle read (5 s) and bounded wait for the seeded URL, error body in the ZAP API error message (executor revision; round 2 verifies them)"
+    correction_2026_11_24: "outcome.zap_observed first said 51 add-ons; the list observed in round 1 has 49. Corrected by the ORCHESTRATOR on 2026-11-24, before any use of the number (a transcription error; see manifests/campaign-execution-decisions-v22.yaml, question_correction)."

@@ -30,6 +30,7 @@ ZAP_API_PORT = 8090
 READY_TIMEOUT_S = 180
 SCAN_TIMEOUT_S = 300  # to be set from the timing of a DRY_RUN execution (E11-D-14)
 API_TIMEOUT_S = 30
+SEED_WAIT_S = 20  # bounded wait for the seeded URL to be known to ZAP before the scan (a readiness aid, not a retry of the method)
 POLICY_NAME = 'e11-single-rule'
 LOG_TAIL_BYTES = 1 << 18
 
@@ -88,7 +89,13 @@ class Api:
         except common.Watchdog:
             raise  # the per-execution budget is not a failure of ZAP: the attempt loop records it as an interruption
         except urllib.error.HTTPError as e:
-            raise ZapError('ZAP_API_ERROR', f'{component}/{kind}/{name}: HTTP {e.code}') from e
+            try:
+                detail = e.read().decode('utf-8', 'replace')[:300]
+            except Exception:  # noqa: BLE001 - the body is diagnostic only
+                detail = ''
+            finally:
+                e.close()
+            raise ZapError('ZAP_API_ERROR', f'{component}/{kind}/{name}: HTTP {e.code} {detail}'.rstrip()) from e
         except Exception as e:  # noqa: BLE001 - a transport failure of the ZAP API
             raise ZapError('ZAP_API_ERROR', f'{component}/{kind}/{name}: {e.__class__.__name__}: {e}') from e
         try:
@@ -148,7 +155,27 @@ def _scan_settings(api, policy):
     return out
 
 
-def run_scan(run, rec, launcher, spec, ready_timeout_s=READY_TIMEOUT_S, scan_timeout_s=SCAN_TIMEOUT_S, api_factory=Api, sleep=time.sleep):
+def _wait_for_seed(api, url, timeout_s, sleep):
+    """Wait, bounded, until `core/view/urls` lists the seeded URL (compared by path). Returns (seen, polls). Never raises ZapError: a seed that
+    does not appear is recorded and the scan goes on, so that the scan call itself reports what ZAP says."""
+    base = f'{urlsplit(url).scheme}://{urlsplit(url).netloc}'
+    path = urlsplit(url).path
+    deadline, polls = time.monotonic() + timeout_s, 0
+    while True:
+        polls += 1
+        try:
+            urls = api.call('core', 'view', 'urls', baseurl=base).get('urls') or []
+            if any(urlsplit(u).path == path for u in urls):
+                return True, polls
+        except ZapError:
+            pass
+        if time.monotonic() >= deadline:
+            return False, polls
+        sleep(0.5)
+
+
+def run_scan(run, rec, launcher, spec, ready_timeout_s=READY_TIMEOUT_S, scan_timeout_s=SCAN_TIMEOUT_S, api_factory=Api, sleep=time.sleep,
+             seed_wait_s=SEED_WAIT_S):
     """One restricted run. `spec` carries: rule_id, seed_request (method, url, body or None, content_type or None) and the scan target
     (method, url, body or None). Returns the observation dict (alerts, add-ons before and after, versions). Raises ZapError."""
     key = secrets.token_hex(16)
@@ -181,6 +208,7 @@ def run_scan(run, rec, launcher, spec, ready_timeout_s=READY_TIMEOUT_S, scan_tim
         run.mark_stimulus_sent()
         api.call('core', 'action', 'sendRequest', request=raw, followRedirects='false')
         t = spec['scan_target']
+        obs['seed_url_seen'], obs['seed_url_polls'] = _wait_for_seed(api, seed['url'], seed_wait_s, sleep)
         started = api.call('ascan', 'action', 'scan', url=t['url'], recurse='false', inScopeOnly='false', scanPolicyName=POLICY_NAME,
                            method=t['method'], postData=t.get('body'))
         scan_id = started.get('scan')

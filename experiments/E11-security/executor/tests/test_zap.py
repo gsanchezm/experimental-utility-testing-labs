@@ -167,6 +167,25 @@ class SettingsAndWatchdogTests(RunScanTests):
         self.run_scan(fake)
         self.assertEqual(set(fake.called('ascan/action/addScanPolicy')[0]), {'scanPolicyName', 'apikey'})  # release defaults of strength and threshold
 
+    def test_the_scan_starts_only_after_the_seeded_url_is_known_to_zap(self):
+        fake = FakeZap(behavior='url-late')
+        _run, _rec, _l, obs = self.run_scan(fake)
+        self.assertTrue(obs['seed_url_seen'])
+        self.assertEqual(obs['seed_url_polls'], 3)  # two empty answers, then the URL
+
+    def test_a_seed_that_never_appears_is_recorded_and_the_scan_goes_on(self):
+        fake = FakeZap(behavior='url-never')
+        self.addCleanup(fake.close)
+        run, rec, launcher = StubRun(), {'evidence': []}, FakeLauncher(fake)
+        obs = zap.run_scan(run, rec, launcher, SPEC, ready_timeout_s=3, scan_timeout_s=3, sleep=lambda s: None, seed_wait_s=0.2)
+        self.assertFalse(obs['seed_url_seen'])
+        self.assertTrue(fake.called('ascan/action/scan'))
+
+    def test_an_http_error_message_carries_the_body_of_the_answer(self):
+        _run, _rec, _l, err = self.run_scan(FakeZap(behavior='api-error'))
+        self.assertEqual(err.code, 'ZAP_API_ERROR')
+        self.assertIn('internal_error', str(err))
+
     def test_the_watchdog_is_not_turned_into_a_zap_error_and_the_container_is_still_stopped(self):
         fake = FakeZap()
         self.addCleanup(fake.close)

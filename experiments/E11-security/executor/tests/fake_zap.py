@@ -14,6 +14,7 @@ class FakeZap:
         self.alerts, self.behavior, self.calls = list(alerts or []), behavior, []
         self.addon_reads = 0
         self.enabled_ids = []
+        self.seeded, self.url_reads = [], 0
         self.server = http.server.ThreadingHTTPServer(('127.0.0.1', 0), self._handler())
         self.port = self.server.server_address[1]
         self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
@@ -51,6 +52,16 @@ class FakeZap:
             if self.behavior == 'addons-change' and self.addon_reads > 1:
                 rows[0] = {'id': 'ascanrules', 'version': '85'}
             return 200, {'installedAddons': rows}
+        if key == 'core/action/sendRequest':
+            first = (q.get('request') or '').split('\r\n')[0].split(' ')
+            if len(first) >= 2:
+                self.seeded.append(first[1])
+            return 200, {'Result': 'OK'}
+        if key == 'core/view/urls':
+            self.url_reads += 1
+            if self.behavior == 'url-never' or (self.behavior == 'url-late' and self.url_reads <= 2):
+                return 200, {'urls': []}
+            return 200, {'urls': list(self.seeded)}
         if key == 'ascan/action/enableScanners':
             self.enabled_ids = [i for i in q.get('ids', '').split(',') if i]
             return 200, {'Result': 'OK'}

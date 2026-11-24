@@ -169,6 +169,26 @@ class M1Sut05Tests(AttemptCase):
             self.assertEqual(self.categories(results), ['M1_ORACLE_FLIPPED'] * 2, cell)
             self.check_bundles(job, results)
 
+    def test_a_flag_written_after_the_response_is_read_with_a_bounded_wait(self):
+        job, results = self.run_cell('E11-SUT05-SQLI-SEARCH-M1', 2, fake_env={'FAKE_DELAYED_FLIP': '1'})
+        self.assertEqual(self.categories(results), ['M1_ORACLE_FLIPPED'] * 2)
+        step = [s for s in self.attempt_record(job, 1)['steps'] if s['phase'] == 'method'][0]
+        self.assertGreater(step['observation']['oracle_polls'], 1)  # the first read was immediate and unsolved
+        self.assertLess(step['observation']['oracle_waited_s'], sut05.M1.ORACLE_WAIT_S)
+        self.check_bundles(job, results)
+
+    def test_a_control_waits_the_whole_budget_and_keeps_only_the_first_and_last_read(self):
+        original = sut05.M1.ORACLE_WAIT_S
+        sut05.M1.ORACLE_WAIT_S = 1.0
+        self.addCleanup(setattr, sut05.M1, 'ORACLE_WAIT_S', original)
+        job, results = self.run_cell('E11-SUT05-SQLI-SEARCH-M1-CTRL', 1)
+        self.assertEqual(self.categories(results), ['M1_ORACLE_NOT_FLIPPED'])
+        step = [s for s in self.attempt_record(job, 1)['steps'] if s['phase'] == 'method'][0]
+        self.assertGreaterEqual(step['observation']['oracle_waited_s'], 1.0)
+        names = os.listdir(os.path.join(self.bundle(job, 1), 'evidence'))
+        self.assertEqual(sum('oracle-first-read' in n for n in names), 1)
+        self.assertEqual(sum('oracle-last-read' in n for n in names), 1)
+
     def test_the_controls_do_not_flip_the_oracle(self):
         for cell in ('E11-SUT05-SQLI-LOGIN-M1-CTRL', 'E11-SUT05-SQLI-SEARCH-M1-CTRL', 'E11-SUT05-DIRLIST-FTP-M1-CTRL'):
             job, results = self.run_cell(cell, 2)

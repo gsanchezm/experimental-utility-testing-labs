@@ -3,11 +3,12 @@
 python3 -I fake_sut.py <sut01|sut05> <port>. State is in memory, so a restart of the process (as the executor does at the start of every
 execution) clears it, like the real instances. Environment switches: FAKE_SOLVED_AT_START=1 (every challenge starts solved: a reset that did
 not hold), FAKE_NO_FLIP=1 (no request flips a challenge: an oracle that never moves), FAKE_ORACLE_500=1 (GET /api/Challenges answers 500),
-FAKE_IDOR_FIXED=1 (SUT-01 enforces the ownership check for every user)."""
+FAKE_IDOR_FIXED=1 (SUT-01 enforces the ownership check for every user), FAKE_DELAYED_FLIP=1 (the union challenge flips 1 s after the response)."""
 import http.server
 import json
 import os
 import sys
+import threading
 import urllib.parse
 
 KIND, PORT = sys.argv[1], int(sys.argv[2])
@@ -36,8 +37,12 @@ class H(http.server.BaseHTTPRequestHandler):
         return json.loads(self.rfile.read(n) or b'{}') if n else {}
 
     def flip(self, key):
-        if os.environ.get('FAKE_NO_FLIP') != '1':
-            S['challenges'][key] = True
+        if os.environ.get('FAKE_NO_FLIP') == '1':
+            return
+        if os.environ.get('FAKE_DELAYED_FLIP') == '1' and key == 'unionSqlInjectionChallenge':
+            threading.Timer(1.0, lambda: S['challenges'].__setitem__(key, True)).start()  # the real flag is written after the response
+            return
+        S['challenges'][key] = True
 
     def do_GET(self):
         getattr(self, f'get_{KIND}')()

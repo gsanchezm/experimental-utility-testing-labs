@@ -1,0 +1,31 @@
+# manifests/campaign-execution-decisions-v22.yaml -- decision of 2026-11-24 (UTC), round 4 of the E11 preparation (operation OP-PREP-E11-05; CAMPAIGN-EXECUTION-DECISIONS-22): the entry of the ZAP pin in manifests/toolchain-manifest.yaml and the go-ahead to write the export-log entry 83 and to build the public export v84 locally.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing (the go-ahead covers a local build and verification only, no push). Immutable once committed; a correction is a new version file. Earlier rounds: -v2 to -v21 (unchanged).
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-22"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E11-05"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-24"
+recorded_at_utc: "2026-11-24T10:55:42Z"
+executes_anything: false
+protocol_change: false
+supersedes: null
+evidence_basis: "manifests/e11-environment-verification-rounds-v1.yaml, round 1 (run 45376285190): the installed add-ons, the version, the image digest and the platform observed in a real run on a GitHub-hosted runner; manifests/campaign-execution-decisions-v19.yaml (E11-D-8, Route A)."
+human_decision:
+  given_by: the human research lead
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), the fourth of the E11 preparation"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_e11_round_4:
+    transcript_stamp: null
+    transcript_stamp_note: "the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_at_utc above is the system clock when this file was written, after the answer"
+    bytes: 976
+    exact_text_sha256: e4c01e5d826662175bbeac6a62407d63acd491cad9e5f3695f22c497ae5ea812
+    note: the answer of the question dialog, whole; the chosen options are the decisions
+    exact_text: "Your questions have been answered: \"Para hacer la ronda 2 del DRY_RUN de E11 necesito que el ejecutor corregido sea público. ¿Construyo ahora el export v84 localmente, sin push? Incluiría la entrada 83 del registro de exports (la del push de hoy), los registros de la ronda 1 y las correcciones del ejecutor. El push de v84 y el despacho de la ronda 2 serían preguntas aparte, cada una con su línea exacta.\"=\"Sí, entrada 83 y export v84 sin push (Recomendada)\", \"El DRY_RUN ya observó los datos del pin de ZAP: v2.17.0 por digest ghcr.io/zaproxy/zaproxy@sha256:c2d63bbb… (índice 9624669d…), 51 add-ons (ascanrules 84.0.0, pscanrules 77.0.0, commonlib 1.44.0), sin cambios durante la ejecución, fecha de uso 2026-11-24 en runner GitHub-hosted ubuntu-24.04 (linux/amd64). ¿Apruebas que registre esa entrada en manifests/toolchain-manifest.yaml, tools.security (hoy todo null)?\"=\"Sí, registra el pin (Recomendada)\". You can now continue with these answers in mind."
+question_correction: "The question of the dialog above says '51 add-ons'; the list observed in round 1 has 49 add-ons (the same list in the 11 M2 executions that read it, unchanged after each run). The approval is of the entry of the observed list; the number 51 in the question was an error of the ORCHESTRATOR and is not recorded anywhere else."
+decisions:
+  - id: E11-D-8-ENTRY
+    decision: "record the ZAP pin in manifests/toolchain-manifest.yaml, tools.security: release v2.17.0 as the image ghcr.io/zaproxy/zaproxy by digest (amd64 manifest sha256:c2d63bbb2d907a5c5257914fb20e26e969c92b25f265def7f89f08203f912882, index sha256:9624669db72f54d86c4b46a7064518bd9bf79d8c61a4c31befa9923489f328af), the 49 add-ons observed in round 1 (ascanrules 84.0.0, pscanrules 77.0.0, commonlib 1.44.0 among them), install_date 2026-11-24 and platform GitHub-hosted ubuntu-24.04, linux/amd64, with no other change to the manifest."
+  - id: E11-GO-3
+    decision: "write the export-log entry 83 (the push of 2026-11-24T10:30Z) and build the public export v84 locally and verify it, with no push; the push of v84 and the dispatch of DRY_RUN round 2 are separate questions, each with its exact line."
+not_decided_in_this_round: "The push of v84, DRY_RUN round 2, the campaign START, the dispatch authorizations, the freeze, and every other public export: each needs its own explicit human approval."

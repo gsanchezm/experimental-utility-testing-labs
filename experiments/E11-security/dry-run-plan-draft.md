@@ -10,10 +10,10 @@ GitHub Actions evaluates only the public repository (the agent-instructions file
 
 | Input | Value |
 |---|---|
-| target | `all` (fourteen jobs; the seven M2 jobs each pull the ZAP image, about 1.2 GB compressed) |
+| target | `all` (fourteen jobs; the six M2 jobs each pull the ZAP image, about 1.2 GB compressed) |
 | executions | `2` (the check requires exactly this many run manifests per cell) |
 | executor_prompt_version | `ORCHESTRATOR-E11-security-v1` (working copy; the workflow's gate requires it to exist) |
-| executor_implementation_sha256 | sha256 of `experiments/E11-security/executor/run-condition.sh` at the commit that is public at the dispatch; at this draft: `298b728d1ca273dd15384a7d2550c65a359bc8e6cfb9bb4f0ecef1a100714c90` (recomputed at dispatch; it changes with any edit of an executor file because the digests of the files are embedded) |
+| executor_implementation_sha256 | sha256 of `experiments/E11-security/executor/run-condition.sh` at the commit that is public at the dispatch; at this draft: `0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc` (recomputed at dispatch; it changes with any edit of an executor file because the digests of the files are embedded) |
 | dry_run | `true` |
 
 The dispatch line is offered to the human research lead in its exact form, with the then-current hash, before it is made; one dispatch per round, no re-run.
@@ -28,6 +28,10 @@ The dispatch line is offered to the human research lead in its exact form, with 
 6. V-8: whether rule 40018 acts on the JSON login body and on the search query; what the control endpoints answer (`/assets/` in particular).
 7. The timing of an M2 execution (instance restart, container start, scan) from `duration_s` in the attempt records: the basis of E11-D-14 (50 sequential executions must fit the job limit with margin; the verification job limit is 120 minutes and the measured job limit is to be set from this).
 8. The IDOR pair: GET as `security_glitch_user` is 200 and as `standard_user` is 403 (SUT01-EV-0023).
+
+## 3b. Round 1 happened (2026-11-24, run 45376285190)
+
+Its outcome and the harness corrections that followed are in executor/IMPLEMENTATION-NOTES.md, section 3b, and manifests/e11-environment-verification-rounds-v1.yaml. Round 2 needs a public export of the corrected executor and its own approval of the exact dispatch line; its implementation hash is the one above.
 
 ## 4. After round 1
 
