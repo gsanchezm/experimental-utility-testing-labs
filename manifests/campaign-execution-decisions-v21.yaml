@@ -1,0 +1,31 @@
+# manifests/campaign-execution-decisions-v21.yaml -- decision of 2026-11-24 (UTC), round 3 of the E11 preparation (operation OP-PREP-E11-03; CAMPAIGN-EXECUTION-DECISIONS-21): the re-confirmation of the recommended defaults E11-D-1 to E11-D-7, E11-D-2b and E11-D-2c, and the go-ahead to build the public export v83 locally.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing (the go-ahead covers a local build and verification only, no push). Immutable once committed; a correction is a new version file. Earlier rounds: -v2 to -v20 (unchanged).
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-21"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E11-03"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-23"
+recorded_at_utc: "2026-11-24T04:10:07Z"
+executes_anything: false
+protocol_change: false
+supersedes: null
+corrects: "manifests/campaign-execution-decisions-v19.yaml, field earlier_acceptance_not_reproduced. That field states that the acceptance of the recommended defaults of the E11 design brief was recorded in the briefs (commit e2369c28) and in the status commit 5da500da. It was not: the brief (experiments/E11-security/design-brief-draft.md, section 8) lists those decisions as recommended defaults, 5da500da records an update of the agent-instructions file, and the exact text of the earlier acceptance is not available. v19 is not edited; this record states the correction, and the decisions below are given in this record with their exact text."
+evidence_basis: "experiments/E11-security/design-brief-draft.md, section 8 (E11-D-1 to E11-D-7, E11-D-2b, E11-D-2c, as listed in the question of the dialog below)."
+human_decision:
+  given_by: the human research lead
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), the third of the E11 executor preparation"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_e11_round_3:
+    transcript_stamp: null
+    transcript_stamp_note: "the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_at_utc above is the system clock when this file was written, after the answer"
+    bytes: 1299
+    exact_text_sha256: 06f974411a80e865207d0a0c772dc3548364873df8a0d85f2e2ac17422df18b7
+    note: the answer of the question dialog, whole; the chosen options are the decisions
+    exact_text: "Your questions have been answered: \"Reconfirmación de E11 (el texto exacto de tu aceptación anterior no está registrado; esta respuesta quedará en el registro v21 con su hash). Defaults del brief, sección 8: D-1 ecosistemas medidos (SUT-01 y SUT-05; SUT-02/03/04/06 'sin datos'); D-2 condiciones de SUT-05 como referencia exploratoria; D-2b cada condición configurada cuenta una vez, los controles no; D-2c las cuatro condiciones; D-3 métodos M1 y M2 por separado; D-4 detección = regla y URL iguales a lo preregistrado; D-5 N=50; D-6 un URL y una regla por condición, sin spider; D-7 excluir la fuga probabilística y el payload almacenado de SUT-01. ¿Los reconfirmas?\"=\"Reconfirmo todos (Recomendada)\", \"¿Construyo ahora el export público v83 (solo la construcción y verificación local, sin push)? Es lo que hace público el workflow de E11, y GitHub Actions solo ve el repositorio público. El push sería una pregunta aparte con la línea exacta. Riesgo conocido: no tengo actionlint ni shellcheck locales, así que el paso nuevo 'docker pull' del workflow solo se valida en la validación pública. No ofrezco ninguna línea de DRY_RUN hasta que v83 sea público y su validación pase.\"=\"Sí, construye v83 sin push (Recomendada)\". You can now continue with these answers in mind."
+decisions:
+  - id: E11-D-1-to-D-7
+    decision: "reconfirmed as the recommended defaults of the brief, section 8: D-1 (SUT-01 and SUT-05 carry the measured conditions; SUT-02, SUT-03, SUT-04 and SUT-06 are reported as no data), D-2 (the SUT-05 conditions are an EXPLORATORY specialist reference), D-2b (each configured ground-truth condition counts once; controls do not count), D-2c (the four conditions of section 3), D-3 (M1 and M2 reported separately), D-4 (an M2 detection needs the pre-registered rule and target URL), D-5 (N = 50), D-6 (one URL and one rule per condition, no spider), D-7 (the probabilistic leak and the stored payload of SUT-01 are excluded)."
+  - id: E11-GO-2
+    decision: "build the public export v83 locally and verify it, with no push; the push is a separate question with its exact line, and no DRY_RUN dispatch line is offered until v83 is public and its validation run has passed."
+not_decided_in_this_round: "The push of v83, any DRY_RUN dispatch, the campaign START, the dispatch authorizations, the freeze, and the entry in manifests/toolchain-manifest.yaml: each needs its own explicit human approval."

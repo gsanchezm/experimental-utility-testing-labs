@@ -1,0 +1,40 @@
+# manifests/campaign-execution-decisions-v20.yaml -- decision of 2026-11-24 (UTC), round 2 of the E11 preparation (operation OP-PREP-E11-02; CAMPAIGN-EXECUTION-DECISIONS-20): the cell list, the M2 control and the remaining defaults of the E11-security configuration draft, and the go-ahead for the executor draft.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing. Immutable once committed; a correction is a new version file. Earlier rounds: -v2 to -v19 (unchanged).
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-20"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E11-02"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-23"
+recorded_at_utc: "2026-11-24T02:00:17Z"
+executes_anything: false
+protocol_change: false
+supersedes: null
+evidence_basis: "experiments/E11-security/campaign-configuration-draft.md (commit 4e258dcc), sections 2, 4b and 6, and conditions-draft.json; manifests/campaign-execution-decisions-v19.yaml (E11-D-8, E11-D-9)."
+human_decision:
+  given_by: the human research lead
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), the second of the E11 executor preparation"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_e11_round_2:
+    transcript_stamp: null
+    transcript_stamp_note: "the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_at_utc above is the system clock when this file was written, after the answer"
+    bytes: 1632
+    exact_text_sha256: f2960225c8c80c64dc45f3493d59bc79f01409da560df8668b1e107ad99680a7
+    note: the answer of the question dialog, whole; the chosen option is the decision
+    exact_text: "Your questions have been answered: \"Borrador de configuración de E11 (campaign-configuration-draft.md, commit 4e258dcc). Celdas y controles (E11-D-10b): ¿cuántas celdas se configuran? Cada condición tiene control para medir falsos positivos por método.\"=\"14 celdas, 700 ejecuciones (Recomendada)\", \"Cambio respecto al brief que aceptaste: el brief define el control como 'el mismo endpoint sin inyección', pero ZAP genera sus propios ataques, así que eso no tiene sentido para M2. ¿Cómo defino el control de M2 (E11-D-12)? Los controles de M1 sí mantienen la definición del brief.\"=\"Otro endpoint no vulnerable (Recomendada)\", \"Resto de decisiones abiertas con su valor recomendado: E11-D-10 esquema de run-manifest v2; E11-D-11 verificación de entorno propia de E11 en GitHub Actions antes del START; E11-D-13 prompt de despacho congelado ORCHESTRATOR-E11-security-v1 y lock de implementación propio; E11-D-14 un job por celda, condicionado a que un DRY_RUN mida una ejecución M2 y quepan 50 en el límite del job; E11-D-15 IDOR solo con GET (sin PATCH). ¿Las aceptas?\"=\"Aceptar los cinco defaults (Recomendada)\", \"¿Sigo ahora con el borrador del ejecutor de E11? Orden: lectura de código de SUT-05 para payloads y endpoints de control (V-10); copiar los primitivos del ejecutor de E05 bajo un lock propio; escribir zap.py probado contra una API de ZAP falsa. No se descarga ninguna imagen ni se arranca ZAP en local: el primer contacto real es el DRY_RUN en Actions, que sólo despacharé con tu sí a la línea exacta.\"=\"Sí, sigue con el ejecutor (Recomendada)\". You can now continue with these answers in mind."
+decisions:
+  - id: E11-D-10
+    decision: "run-manifest schema v2 (schemas/run-manifest.schema.v2.json); the cell list of E11-D-10b is the 14 cells of the draft, 700 executions (N = 50 per cell): condition and control for M1 and M2 on each of the three SUT-05 conditions, and for M1 on the SUT-01 IDOR condition."
+  - id: E11-D-12
+    decision: "the M2 control is a different endpoint of the same instance that is not vulnerable to the class (for DIRLIST-FTP a path with no directory index), selected by a source reading of the pinned SUT-05 before the lock; the M1 controls keep the brief's definition (a benign request on the same endpoint). Recorded consequence: the M2 control differs from its condition in the endpoint as well as in the vulnerability."
+  - id: E11-D-11
+    decision: "an environment verification of E11's own on GitHub Actions before the START; controlled_instance_available in the SUT manifest is unchanged."
+  - id: E11-D-13
+    decision: "a frozen dispatch prompt ORCHESTRATOR-E11-security-v1 and an implementation lock of E11's own."
+  - id: E11-D-14
+    decision: "one job per cell, N sequential executions each, a fresh instance and a fresh ZAP per execution, CONDITIONAL on a DRY_RUN that times one M2 execution and shows that 50 fit the job time limit with margin; otherwise a smaller chunk per job is decided then."
+  - id: E11-D-15
+    decision: "IDOR-ORDER M1 executes only the GET; the PATCH of SUT01-EV-0023 is not executed."
+  - id: E11-GO-1
+    decision: "proceed with the draft of the E11 executor: the source reading for payloads and control endpoints (V-10), the primitives of the E05 executor under an E11 lock, and zap.py tested against a fake ZAP API; no image is pulled and no ZAP is started locally; the first real contact is a DRY_RUN on GitHub Actions, dispatched only after the human research lead's yes to its exact line."
+not_decided_in_this_round: "The campaign START, the dispatch authorizations, any DRY_RUN dispatch, the campaign freeze, the entry in manifests/toolchain-manifest.yaml, and every public export: each needs its own explicit human approval."

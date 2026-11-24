@@ -1,0 +1,36 @@
+# manifests/campaign-execution-decisions-v19.yaml -- decision of 2026-11-24 (UTC), round 1 of the E11 preparation (operation OP-PREP-E11-01; CAMPAIGN-EXECUTION-DECISIONS-19): the pin route of OWASP ZAP and the expected rule and URL per condition of E11-security.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing. Immutable once committed; a correction is a new version file. Earlier rounds: -v2 to -v18 (unchanged).
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-19"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E11-01"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-23"
+recorded_at_utc: "2026-11-24T01:58:37Z"
+executes_anything: false
+protocol_change: false
+supersedes: null
+evidence_basis: "experiments/E11-security/zap-pin-proposal-draft.md (commit f0482a9e): release v2.17.0 and its source commit, the image digests, the finding that the image version tag is rebuilt (the release-day image has another digest), the add-on set derived and not observed, the rule ids and the static reading of the three SUT-05 conditions (retrieval 2026-11-24T01:33Z to 01:47Z, UTC); experiments/E11-security/design-brief-draft.md, sections 3, 8 and 9."
+earlier_acceptance_not_reproduced: "The acceptance of the recommended defaults of the E08, E10, E11 and E12 design briefs (E11-D-1 to E11-D-7, E11-D-2b, E11-D-2c) and the decision E11-D-2 (SUT-05 conditions as an EXPLORATORY specialist reference) were given by the human research lead in the same single-agent conversation earlier on 2026-11-24 (UTC) and are recorded in the briefs (commit e2369c28) and the status commit 5da500da; the exact text of those answers is not available to the ORCHESTRATOR in this session and is not reconstructed here."
+human_decision:
+  given_by: the human research lead
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), the first of the E11 executor preparation"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_e11_round_1:
+    transcript_stamp: null
+    transcript_stamp_note: "the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_at_utc above is the system clock when this file was written, after the answer"
+    bytes: 810
+    exact_text_sha256: ddce64bb3894f891a77936c5792f8303f7c16695b66149d696f42807f7cba57f
+    note: the answer of the question dialog, whole; the chosen option is the decision
+    exact_text: "Your questions have been answered: \"Propuesta de pin de ZAP (experiments/E11-security/zap-pin-proposal-draft.md, commit f0482a9e). ¿Qué ruta de pin apruebas para E11 (E11-D-8)? Hallazgo clave: la etiqueta de imagen 2.17.0 se re-publica (la imagen del día del release tiene otro digest), así que solo el digest fija algo.\"=\"Ruta A: imagen por digest (Recomendada)\", \"Expectativas por condición (E11-D-9), fijadas por clase y código antes de cualquier DRY_RUN: SQLI-LOGIN y SQLI-SEARCH → regla 40018; DIRLIST-FTP → regla 0 en /ftp/; IDOR-ORDER → M2 no aplicable (ninguna regla del conjunto fijado cubre la clase). La lectura del código predice que DIRLIST-FTP NO será detectado por ZAP. ¿Cómo procedo?\"=\"Aprobar las cuatro tal cual (Recomendada)\". You can now continue with these answers in mind."
+decisions:
+  - id: E11-D-8
+    subject: "pin route of OWASP ZAP for E11-security"
+    decision: "Route A: release v2.17.0 as the container image ghcr.io/zaproxy/zaproxy pulled by digest (amd64 manifest sha256:c2d63bbb2d907a5c5257914fb20e26e969c92b25f265def7f89f08203f912882, index sha256:9624669db72f54d86c4b46a7064518bd9bf79d8c61a4c31befa9923489f328af), update checks off; the installed add-ons are read in the DRY_RUN and recorded."
+    toolchain_manifest_changed: false
+    toolchain_manifest_note: "manifests/toolchain-manifest.yaml, tools.security, stays null until a DRY_RUN has recorded the installed add-on list, the install date and the platform; this record is the decision, not the entry."
+  - id: E11-D-9
+    subject: "expected rule and target URL per condition of E11-security, fixed from class and source before any DRY_RUN"
+    decision: "The four expectations as proposed: E11-SUT05-SQLI-LOGIN and E11-SUT05-SQLI-SEARCH expect rule 40018; E11-SUT05-DIRLIST-FTP expects rule 0 on /ftp/ and is kept although the static reading predicts no alert (a valid outcome; the expectation is not changed after a DRY_RUN); E11-SUT01-IDOR-ORDER has no M2 (no rule of the pinned add-on set targets the class) and is carried by M1."
+    matching_rule_definition: "not part of this decision; defined in experiments/E11-security/campaign-configuration-draft.md before any DRY_RUN"
+not_decided_in_this_round: "The cell list and controls (E11-D-10 to E11-D-14 of experiments/E11-security/campaign-configuration-draft.md), the campaign START, the dispatch authorizations, any DRY_RUN dispatch, the campaign freeze, the entry in manifests/toolchain-manifest.yaml, and every public export: each needs its own explicit human approval."

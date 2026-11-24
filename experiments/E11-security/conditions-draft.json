@@ -1,0 +1,328 @@
+{
+ "record": "E11-security conditions (DRAFT-1, 2026-11-24 UTC)",
+ "state": "DRAFT. Machine-readable mirror of section 2 of experiments/E11-security/campaign-configuration-draft.md. Not locked; not an authorization.",
+ "n_per_cell": 50,
+ "wilson_z": 1.959963984540054,
+ "attribution_labels": [
+  "TOOLING",
+  "SUT"
+ ],
+ "category_sets": {
+  "reset": [
+   "RESET_FAILED",
+   "RESET_STARTING_STATE_NOT_REACHED"
+  ],
+  "m1": [
+   "M1_ORACLE_FLIPPED",
+   "M1_ORACLE_NOT_FLIPPED",
+   "M1_IDOR_BYPASS_OBSERVED",
+   "M1_IDOR_BLOCKED",
+   "M1_RESPONSE_OTHER"
+  ],
+  "m2": [
+   "M2_EXPECTED_ALERT",
+   "M2_NO_EXPECTED_ALERT",
+   "ZAP_START_FAILED",
+   "ZAP_API_ERROR",
+   "ZAP_SCAN_TIMEOUT"
+  ],
+  "any": [
+   "INTERRUPTED_"
+  ]
+ },
+ "pins": {
+  "zap": {
+   "release": "v2.17.0",
+   "route": "A_image_by_digest",
+   "amd64_manifest": "sha256:c2d63bbb2d907a5c5257914fb20e26e969c92b25f265def7f89f08203f912882",
+   "index": "sha256:9624669db72f54d86c4b46a7064518bd9bf79d8c61a4c31befa9923489f328af",
+   "update_checks": "off"
+  },
+  "sut01_commit": "9ca37674d374e9303912e259641ee86baf3aabe1",
+  "sut05_commit": "1618a611b173b4bf114028e6e02549950606e29d",
+  "sut05_release": "v20.2.0"
+ },
+ "cells": [
+  {
+   "cell_id": "E11-SUT01-IDOR-ORDER-M1",
+   "sut_id": "SUT-01",
+   "condition": "IDOR-ORDER",
+   "method": "M1",
+   "kind": "CONDITION",
+   "h5_count": "yes",
+   "n": 50,
+   "surface": "http",
+   "expected_m2_rule_id": null,
+   "expected_m2_target": null,
+   "reset_between_executions": "process_restart",
+   "pending": [],
+   "m2": "NOT_APPLICABLE_NO_RULE_IN_PINNED_SET",
+   "expected_category": "M1_IDOR_BYPASS_OBSERVED",
+   "account": "security_glitch_user",
+   "owner_account": "performance_glitch_user",
+   "requester_account": "security_glitch_user"
+  },
+  {
+   "cell_id": "E11-SUT01-IDOR-ORDER-M1-CTRL",
+   "sut_id": "SUT-01",
+   "condition": "IDOR-ORDER",
+   "method": "M1",
+   "kind": "CONTROL",
+   "h5_count": "no",
+   "n": 50,
+   "surface": "http",
+   "expected_m2_rule_id": null,
+   "expected_m2_target": null,
+   "reset_between_executions": "process_restart",
+   "pending": [],
+   "expected_category": "M1_IDOR_BLOCKED",
+   "account": "standard_user",
+   "owner_account": "performance_glitch_user",
+   "requester_account": "standard_user"
+  },
+  {
+   "cell_id": "E11-SUT05-SQLI-LOGIN-M1",
+   "sut_id": "SUT-05",
+   "condition": "SQLI-LOGIN",
+   "method": "M1",
+   "kind": "CONDITION",
+   "h5_count": "specialist_reference",
+   "n": 50,
+   "surface": "http",
+   "expected_m2_rule_id": null,
+   "expected_m2_target": null,
+   "reset_between_executions": "process_restart",
+   "pending": [],
+   "oracle_challenge_key": "loginAdminChallenge",
+   "expected_category": "M1_ORACLE_FLIPPED"
+  },
+  {
+   "cell_id": "E11-SUT05-SQLI-LOGIN-M1-CTRL",
+   "sut_id": "SUT-05",
+   "condition": "SQLI-LOGIN",
+   "method": "M1",
+   "kind": "CONTROL",
+   "h5_count": "no",
+   "n": 50,
+   "surface": "http",
+   "expected_m2_rule_id": null,
+   "expected_m2_target": null,
+   "reset_between_executions": "process_restart",
+   "pending": [],
+   "oracle_challenge_key": "loginAdminChallenge",
+   "expected_category": "M1_ORACLE_NOT_FLIPPED",
+   "control_endpoint": null,
+   "control_endpoint_status": "M1_CONTROL_SEE_SECTION_4C"
+  },
+  {
+   "cell_id": "E11-SUT05-SQLI-LOGIN-M2",
+   "sut_id": "SUT-05",
+   "condition": "SQLI-LOGIN",
+   "method": "M2",
+   "kind": "CONDITION",
+   "h5_count": "specialist_reference",
+   "n": 50,
+   "surface": "http",
+   "expected_m2_rule_id": "40018",
+   "expected_m2_target": "POST /rest/user/login",
+   "reset_between_executions": "process_restart",
+   "pending": [],
+   "oracle_challenge_key": "loginAdminChallenge",
+   "expected_category": "M2_EXPECTED_ALERT",
+   "static_reading_prediction": null
+  },
+  {
+   "cell_id": "E11-SUT05-SQLI-LOGIN-M2-CTRL",
+   "sut_id": "SUT-05",
+   "condition": "SQLI-LOGIN",
+   "method": "M2",
+   "kind": "CONTROL",
+   "h5_count": "no",
+   "n": 50,
+   "surface": "http",
+   "expected_m2_rule_id": "40018",
+   "expected_m2_target": null,
+   "reset_between_executions": "process_restart",
+   "pending": [],
+   "oracle_challenge_key": "loginAdminChallenge",
+   "expected_category": "M2_NO_EXPECTED_ALERT",
+   "control_endpoint": "POST /api/Users",
+   "control_endpoint_status": "SELECTED_BY_SOURCE_READING_SECTION_4C_FIXED_AT_LOCK"
+  },
+  {
+   "cell_id": "E11-SUT05-SQLI-SEARCH-M1",
+   "sut_id": "SUT-05",
+   "condition": "SQLI-SEARCH",
+   "method": "M1",
+   "kind": "CONDITION",
+   "h5_count": "specialist_reference",
+   "n": 50,
+   "surface": "http",
+   "expected_m2_rule_id": null,
+   "expected_m2_target": null,
+   "reset_between_executions": "process_restart",
+   "pending": [],
+   "oracle_challenge_key": "unionSqlInjectionChallenge",
+   "expected_category": "M1_ORACLE_FLIPPED"
+  },
+  {
+   "cell_id": "E11-SUT05-SQLI-SEARCH-M1-CTRL",
+   "sut_id": "SUT-05",
+   "condition": "SQLI-SEARCH",
+   "method": "M1",
+   "kind": "CONTROL",
+   "h5_count": "no",
+   "n": 50,
+   "surface": "http",
+   "expected_m2_rule_id": null,
+   "expected_m2_target": null,
+   "reset_between_executions": "process_restart",
+   "pending": [],
+   "oracle_challenge_key": "unionSqlInjectionChallenge",
+   "expected_category": "M1_ORACLE_NOT_FLIPPED",
+   "control_endpoint": null,
+   "control_endpoint_status": "M1_CONTROL_SEE_SECTION_4C"
+  },
+  {
+   "cell_id": "E11-SUT05-SQLI-SEARCH-M2",
+   "sut_id": "SUT-05",
+   "condition": "SQLI-SEARCH",
+   "method": "M2",
+   "kind": "CONDITION",
+   "h5_count": "specialist_reference",
+   "n": 50,
+   "surface": "http",
+   "expected_m2_rule_id": "40018",
+   "expected_m2_target": "GET /rest/products/search",
+   "reset_between_executions": "process_restart",
+   "pending": [],
+   "oracle_challenge_key": "unionSqlInjectionChallenge",
+   "expected_category": "M2_EXPECTED_ALERT",
+   "static_reading_prediction": null
+  },
+  {
+   "cell_id": "E11-SUT05-SQLI-SEARCH-M2-CTRL",
+   "sut_id": "SUT-05",
+   "condition": "SQLI-SEARCH",
+   "method": "M2",
+   "kind": "CONTROL",
+   "h5_count": "no",
+   "n": 50,
+   "surface": "http",
+   "expected_m2_rule_id": "40018",
+   "expected_m2_target": null,
+   "reset_between_executions": "process_restart",
+   "pending": [],
+   "oracle_challenge_key": "unionSqlInjectionChallenge",
+   "expected_category": "M2_NO_EXPECTED_ALERT",
+   "control_endpoint": "GET /rest/user/security-question?email=",
+   "control_endpoint_status": "SELECTED_BY_SOURCE_READING_SECTION_4C_FIXED_AT_LOCK"
+  },
+  {
+   "cell_id": "E11-SUT05-DIRLIST-FTP-M1",
+   "sut_id": "SUT-05",
+   "condition": "DIRLIST-FTP",
+   "method": "M1",
+   "kind": "CONDITION",
+   "h5_count": "specialist_reference",
+   "n": 50,
+   "surface": "http",
+   "expected_m2_rule_id": null,
+   "expected_m2_target": null,
+   "reset_between_executions": "process_restart",
+   "pending": [],
+   "oracle_challenge_key": "directoryListingChallenge",
+   "expected_category": "M1_ORACLE_FLIPPED"
+  },
+  {
+   "cell_id": "E11-SUT05-DIRLIST-FTP-M1-CTRL",
+   "sut_id": "SUT-05",
+   "condition": "DIRLIST-FTP",
+   "method": "M1",
+   "kind": "CONTROL",
+   "h5_count": "no",
+   "n": 50,
+   "surface": "http",
+   "expected_m2_rule_id": null,
+   "expected_m2_target": null,
+   "reset_between_executions": "process_restart",
+   "pending": [],
+   "oracle_challenge_key": "directoryListingChallenge",
+   "expected_category": "M1_ORACLE_NOT_FLIPPED",
+   "control_endpoint": null,
+   "control_endpoint_status": "M1_CONTROL_SEE_SECTION_4C"
+  },
+  {
+   "cell_id": "E11-SUT05-DIRLIST-FTP-M2",
+   "sut_id": "SUT-05",
+   "condition": "DIRLIST-FTP",
+   "method": "M2",
+   "kind": "CONDITION",
+   "h5_count": "specialist_reference",
+   "n": 50,
+   "surface": "http",
+   "expected_m2_rule_id": "0",
+   "expected_m2_target": "/ftp/",
+   "reset_between_executions": "process_restart",
+   "pending": [],
+   "oracle_challenge_key": "directoryListingChallenge",
+   "expected_category": "M2_EXPECTED_ALERT",
+   "static_reading_prediction": "NO_ALERT_EXPECTED_V7"
+  },
+  {
+   "cell_id": "E11-SUT05-DIRLIST-FTP-M2-CTRL",
+   "sut_id": "SUT-05",
+   "condition": "DIRLIST-FTP",
+   "method": "M2",
+   "kind": "CONTROL",
+   "h5_count": "no",
+   "n": 50,
+   "surface": "http",
+   "expected_m2_rule_id": "0",
+   "expected_m2_target": null,
+   "reset_between_executions": "process_restart",
+   "pending": [],
+   "oracle_challenge_key": "directoryListingChallenge",
+   "expected_category": "M2_NO_EXPECTED_ALERT",
+   "control_endpoint": "GET /assets/",
+   "control_endpoint_status": "SELECTED_BY_SOURCE_READING_SECTION_4C_FIXED_AT_LOCK"
+  }
+ ],
+ "matching_rules": {
+  "m2": "pluginId equal, method equal, normalized path equal (scheme/host/port replaced by the instance base, query and fragment removed, path exact with the trailing slash); other alerts recorded, not counted",
+  "m1_sut05": "solved field of the challenge key read from GET /api/Challenges",
+  "m1_idor": "the GET /api/orders/{id} status decides: 200 bypass, 403 blocked, other M1_RESPONSE_OTHER; PATCH not executed (E11-D-15 default)",
+  "expected_m2_method": {
+   "SQLI-LOGIN": "POST",
+   "SQLI-SEARCH": "GET",
+   "DIRLIST-FTP": "GET"
+  },
+  "expected_m2_path": {
+   "SQLI-LOGIN": "/rest/user/login",
+   "SQLI-SEARCH": "/rest/products/search",
+   "DIRLIST-FTP": "/ftp/"
+  }
+ },
+ "source_reading": {
+  "v10": "2026-11-24 UTC, static, section 4c of the configuration draft",
+  "payloads": {
+   "SQLI-LOGIN": {
+    "email": "' or 1=1--",
+    "password": "x"
+   },
+   "SQLI-SEARCH": "qwert')) UNION SELECT id, email, password, '4', '5', '6', '7', '8', '9' FROM Users--",
+   "DIRLIST-FTP": [
+    "/ftp/",
+    "/ftp/acquisitions.md"
+   ]
+  },
+  "m1_controls": {
+   "SQLI-LOGIN": {
+    "email": "mc.safesearch@juice-sh.op",
+    "password": "Mr. N00dles"
+   },
+   "SQLI-SEARCH": "apple",
+   "DIRLIST-FTP": "/ftp/legal.md"
+  }
+ }
+}
