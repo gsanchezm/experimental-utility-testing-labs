@@ -1,0 +1,53 @@
+# manifests/e11-campaign-start-v1.yaml -- provenance record of the E11-security campaign START (operation OP-START-E11; protocol/change-control-v1.md, section 7, moment 1; modeled on manifests/e09-campaign-start-v1.yaml). Immutable once committed.
+record_class: "CAMPAIGN_START"
+record_id: "E11-CAMPAIGN-START-01"
+study_id: "EUS-2026-001"
+campaign_id: "E11-security"
+operation_id: "OP-START-E11"
+recorded_by_role: "ORCHESTRATOR"
+start_date: "2026-11-24"
+start_timestamp_utc: "2026-11-24T15:02:10Z"
+authorization_id: "E11-START-AUTH-01"
+binding: "protocol/change-control-v1.md, section 7, moment 1 (campaign NOT_STARTED -> IN_PROGRESS)"
+approval:
+  given_by: the human research lead
+  channel: given directly to the ORCHESTRATOR in its conversation, as the answer to one question dialog that offered the START, its lock values and what it applies (the same dialog also asked about the export v85)
+  question_stamp: null
+  answer_stamp: null
+  stamp_note: "the harness stamps of the dialog are not available to the ORCHESTRATOR in this session; start_timestamp_utc above is the system clock when this record was written, after the answer. The first presentation of the same dialog was rejected by a mistaken click of the human research lead (a submit pressed where it was not meant); the human research lead asked for it to be asked again, and the answer below is the one to the repeated dialog."
+  chosen_option: "Sí, aplica el START"
+  answer_text_bytes: 1862
+  answer_text_sha256: bfb1f770460b5e49af465b82012a1afe2a56148a0827503d115ebdc9dacb6a79
+  answer_text: "Your questions have been answered: \"START de la campaña E11-security (protocol/change-control-v1.md, sección 7, momento 1). Qué haría yo si dices que sí, todo en el repositorio canónico y sin dispatch: (1) bloqueo el texto de 'Campaign configuration' (experiments/E11-security/campaign-configuration-start-text-draft.md) como sección de experiments/E11-security/README.md: 14 celdas, N = 50, 700 ejecuciones, intento 1, hipótesis H5 descriptiva, hashes actuales (ejecutor 0ce7625b…, esquema v2 9a86cf37…, archivo de celdas 48beef74…, workflow medido 3daa31ba…), pin de ZAP v2.17.0 por digest c2d63bbb…, SUT-01 9ca37674… y SUT-05 1618a611… v20.2.0; (2) escribo el registro manifests/e11-campaign-start-v1.yaml con el id de autorización E11-START-AUTH-01 (propuesto por mí; al aprobarlo lo emites tú); (3) congelo prompts/frozen/ORCHESTRATOR-E11-security-v1.md como copia idéntica del prompt de trabajo; (4) agrego la fila 'campaign NOT_STARTED -> IN_PROGRESS' en protocol/CHANGELOG.md y paso E11 a IN_PROGRESS en manifests/study-manifest.yaml. El START no autoriza ningún despacho: las autorizaciones de SUT-01 y SUT-05, cada despacho y el freeze son preguntas aparte. Después de aplicarlo, cualquier cambio de un archivo del ejecutor o del workflow exige recalcular hashes y reverificar. ¿Aplico el START?\"=\"Sí, aplica el START\", \"El workflow de ejecución medida y el registro de rondas aún no son públicos (el público está en v84, main c474dc83). ¿Construyo ahora el export v85 localmente, sin push, como v83 y v84? Incluiría también la entrada 84 del registro de exports. El push de v85 sería una pregunta aparte con su línea exacta. Si apruebas el START arriba, conviene que v85 lo incluya, así que lo construiría después de aplicarlo.\"=\"Sí, construye v85 sin push\". You can now continue with these answers in mind."
+  what_the_question_offered: "the START of E11-security under the authorization id E11-START-AUTH-01 (proposed by the ORCHESTRATOR in the question and issued by the human research lead's approval); the lock of the text of experiments/E11-security/campaign-configuration-start-text-draft.md (at canonical commit fe142a38) as the Campaign configuration section of experiments/E11-security/README.md, with the hashes that the question named by prefix: executor implementation 0ce7625b..., run-manifest schema v2 9a86cf37..., cells file 48beef74..., measured workflow 3daa31ba..., ZAP v2.17.0 by digest c2d63bbb..., SUT-01 9ca37674... and SUT-05 1618a611... v20.2.0; the START record; the freeze of the dispatch procedure prompt as a byte-identical copy; the change-log row and the status IN_PROGRESS; and the statement that the START authorizes no dispatch, no dispatch authorization and no export"
+package:
+  path: experiments/E11-security/campaign-configuration-start-text-draft.md
+  draft_sha256: 4d3dfffced3f08bf04977976da2a5c182167185ad37969a350f30c02ddb72ea8
+  note: "the locked section differs from the draft only by two deletions: the sentence that said the values are recomputed at the START, and the words 'TO BE ISSUED: this id is a proposal until the human research lead issues it' after the START id"
+locked:
+  implementation_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+  executable_cells: "14 (the cells of experiments/E11-security/conditions-draft.json; SUT-01: 2, SUT-05: 12)"
+  sample_size: "N = 50 per cell, EX0001 to EX0050, attempt 1 each (700 executions)"
+  prompt_version: ORCHESTRATOR-E11-security-v1
+  prompt_sha256: 6ed3211ef7c8c0f13a7e6d6d1d8663935bd10cb074dc55c6d8cfa5d0f94ed897
+  cells_file_sha256: 48beef74993b30b326a34c2f3844c38334bf61304f72a357a410f08fe21a5f48
+  measured_workflow_sha256: 3daa31ba8e0f7d93bf9377363a4b24e2f7dce20188cbf33555034c3f817c3bd8
+  schema_sha256: 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757
+  section_inserted_sha256: 5b5e11b5cf7ec48977256c8598c4af16f816ee15355ed9337f26c40d41894a0a
+  zap_image_manifest_amd64: "sha256:c2d63bbb2d907a5c5257914fb20e26e969c92b25f265def7f89f08203f912882"
+  start_authorization_id: E11-START-AUTH-01
+files_written:
+- experiments/E11-security/README.md
+- protocol/CHANGELOG.md
+- manifests/study-manifest.yaml
+- manifests/README.md
+- prompts/frozen/ORCHESTRATOR-E11-security-v1.md
+- manifests/e11-campaign-start-v1.yaml
+- experiments/E11-security/controlled-instance-status.yaml
+does_not:
+- "issue any dispatch authorization (E11-DISPATCH-SUT01-AUTH-01 and E11-DISPATCH-SUT05-AUTH-01 are names, not issued)"
+- "dispatch anything or run any workflow"
+- "export or push anything (the export v85 build was approved in the same dialog and is a local build with no push)"
+- "edit any workflow, executor file, or protocol document other than the change-log row"
+- "edit the agent-instructions file (its update needs the human research lead's yes)"
+next: "the export v85 (local build approved; its push needs the human research lead's yes to the exact line), the gate step re-run on the exported tree, then the dispatch authorizations of SUT-01 and SUT-05 that the human research lead issues under Section 3.7 (one record per SUT, N = 50, attempt 1, with the implementation and prompt SHA-256 values above), their export, and then the dispatches under the frozen procedure."

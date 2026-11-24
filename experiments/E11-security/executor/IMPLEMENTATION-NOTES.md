@@ -33,6 +33,10 @@ Settled (observed): the pinned image pulls and starts by digest on a GitHub-host
 
 Defects found and corrected in the harness (the expectations are untouched): (a) the SQLI-SEARCH M1 payload worked (the response held every user's email and hash) but the immediate oracle read still showed the flag unsolved: the oracle is now read with a bounded wait (sut05.M1.ORACLE_WAIT_S = 5 s, 0.25 s polls); (b) one `ascan/action/scan` answered HTTP 400 in the first execution of E11-SUT05-SQLI-SEARCH-M2-CTRL (ZAP_API_ERROR, TOOLING) and not in the other 11 M2 executions: the error body was not recorded, so the cause is not established; the ZAP client now waits, bounded, until `core/view/urls` lists the seeded URL and records the wait, and an HTTP error message carries the body of the answer. Whether (a) is a timing effect and whether (b) is a seed race is decided by round 2, not by this note.
 
+## 3c. DRY_RUN round 2 (run 45417209148, 2026-11-24, public main c474dc83, implementation sha256 0ce7625b...)
+
+All 14 cell jobs succeeded and all 28 executions equal the expected category of their cell, except E11-SUT05-DIRLIST-FTP-M2 (rule 0 raises no alert on `/ftp/`, the predicted and twice observed non-detection; an observation, the expectation is unchanged). The search M1 now flips (2 oracle reads, about 0.38 s), the M1 controls wait the whole bounded budget (about 5.1 s) without flipping, the seeded URL is known to ZAP on the second read in every M2 execution, and no ZAP_API_ERROR occurred. No harness change followed this round. Details: manifests/e11-environment-verification-rounds-v1.yaml.
+
 ## 4. Deviations from E05 worth knowing
 
 - No establishment or verification block: the starting-state check of SUT-01 also creates the owner's order (it is a precondition of the method, not an action of the study).

@@ -1,0 +1,212 @@
+# experiments/E11-security/controlled-instance-status.yaml -- written by the ORCHESTRATOR from the review of the second environment-verification DRY_RUN of 2026-11-24 (run 45417209148; manifests/e11-environment-verification-rounds-v1.yaml, round 2).
+# The status of a cell is that of the latest environment-verification run that covers it. An entry is VERIFIED only on the recorded result of a run. The runs are DRY_RUN runs and are never measured data. Nothing here is a measurement and nothing here authorizes a dispatch.
+study_id: EUS-2026-001
+campaign_id: E11-security
+updated: '2026-11-24'
+campaign_status: IN_PROGRESS
+measured_execution_prerequisites_common:
+- "campaign START"
+- "locked campaign configuration"
+- "agent-governance-v6 frozen and in force since 2026-11-06 (Section 3.7)"
+- "a dispatch authorization for the assigned SUT (SUT-01 or SUT-05)"
+- "the frozen dispatch procedure prompt ORCHESTRATOR-E11-security-v1"
+- "the implementation hash equal to the locked value (a change of any executor file makes this record stale: re-verify)"
+- "the toolchain entry of ZAP equal to the image digest of the executor (manifests/toolchain-manifest.yaml, tools.security)"
+verification_record: manifests/e11-environment-verification-rounds-v1.yaml
+cells:
+  E11-SUT01-IDOR-ORDER-M1:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 45417209148
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148
+      execution_ids: [DR0001, DR0002]
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+      kind: CONDITION
+      method: M1
+      instance: "SUT-01 api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"
+  E11-SUT01-IDOR-ORDER-M1-CTRL:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 45417209148
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148
+      execution_ids: [DR0001, DR0002]
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+      kind: CONTROL
+      method: M1
+      instance: "SUT-01 api provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"
+  E11-SUT05-SQLI-LOGIN-M1:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 45417209148
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148
+      execution_ids: [DR0001, DR0002]
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+      kind: CONDITION
+      method: M1
+      instance: "SUT-05 api provisioned in the job by the Packaged Distributions route of the pinned release, commit 1618a611b173b4bf114028e6e02549950606e29d, on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"
+  E11-SUT05-SQLI-LOGIN-M1-CTRL:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 45417209148
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148
+      execution_ids: [DR0001, DR0002]
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+      kind: CONTROL
+      method: M1
+      instance: "SUT-05 api provisioned in the job by the Packaged Distributions route of the pinned release, commit 1618a611b173b4bf114028e6e02549950606e29d, on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"
+  E11-SUT05-SQLI-LOGIN-M2:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 45417209148
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148
+      execution_ids: [DR0001, DR0002]
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+      kind: CONDITION
+      method: M2
+      instance: "SUT-05 api provisioned in the job by the Packaged Distributions route of the pinned release, commit 1618a611b173b4bf114028e6e02549950606e29d, on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"
+  E11-SUT05-SQLI-LOGIN-M2-CTRL:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 45417209148
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148
+      execution_ids: [DR0001, DR0002]
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+      kind: CONTROL
+      method: M2
+      instance: "SUT-05 api provisioned in the job by the Packaged Distributions route of the pinned release, commit 1618a611b173b4bf114028e6e02549950606e29d, on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"
+  E11-SUT05-SQLI-SEARCH-M1:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 45417209148
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148
+      execution_ids: [DR0001, DR0002]
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+      kind: CONDITION
+      method: M1
+      instance: "SUT-05 api provisioned in the job by the Packaged Distributions route of the pinned release, commit 1618a611b173b4bf114028e6e02549950606e29d, on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"
+  E11-SUT05-SQLI-SEARCH-M1-CTRL:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 45417209148
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148
+      execution_ids: [DR0001, DR0002]
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+      kind: CONTROL
+      method: M1
+      instance: "SUT-05 api provisioned in the job by the Packaged Distributions route of the pinned release, commit 1618a611b173b4bf114028e6e02549950606e29d, on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"
+  E11-SUT05-SQLI-SEARCH-M2:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 45417209148
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148
+      execution_ids: [DR0001, DR0002]
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+      kind: CONDITION
+      method: M2
+      instance: "SUT-05 api provisioned in the job by the Packaged Distributions route of the pinned release, commit 1618a611b173b4bf114028e6e02549950606e29d, on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"
+  E11-SUT05-SQLI-SEARCH-M2-CTRL:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 45417209148
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148
+      execution_ids: [DR0001, DR0002]
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+      kind: CONTROL
+      method: M2
+      instance: "SUT-05 api provisioned in the job by the Packaged Distributions route of the pinned release, commit 1618a611b173b4bf114028e6e02549950606e29d, on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"
+  E11-SUT05-DIRLIST-FTP-M1:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 45417209148
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148
+      execution_ids: [DR0001, DR0002]
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+      kind: CONDITION
+      method: M1
+      instance: "SUT-05 api provisioned in the job by the Packaged Distributions route of the pinned release, commit 1618a611b173b4bf114028e6e02549950606e29d, on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"
+  E11-SUT05-DIRLIST-FTP-M1-CTRL:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 45417209148
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148
+      execution_ids: [DR0001, DR0002]
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+      kind: CONTROL
+      method: M1
+      instance: "SUT-05 api provisioned in the job by the Packaged Distributions route of the pinned release, commit 1618a611b173b4bf114028e6e02549950606e29d, on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"
+  E11-SUT05-DIRLIST-FTP-M2:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 45417209148
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148
+      execution_ids: [DR0001, DR0002]
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+      kind: CONDITION
+      method: M2
+      instance: "SUT-05 api provisioned in the job by the Packaged Distributions route of the pinned release, commit 1618a611b173b4bf114028e6e02549950606e29d, on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"
+  E11-SUT05-DIRLIST-FTP-M2-CTRL:
+    status: CONTROLLED
+    reverification_required: false
+    github_actions_verification:
+      status: VERIFIED
+      environment_type: SELF_HOSTED
+      run_id: 45417209148
+      run_url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148
+      execution_ids: [DR0001, DR0002]
+      record_class: DRY_RUN
+      implementation_run_condition_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc
+      kind: CONTROL
+      method: M2
+      instance: "SUT-05 api provisioned in the job by the Packaged Distributions route of the pinned release, commit 1618a611b173b4bf114028e6e02549950606e29d, on a GitHub-hosted runner (ubuntu-24.04); never a PUBLIC_HOSTED instance"

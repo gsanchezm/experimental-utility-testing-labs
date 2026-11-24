@@ -109,5 +109,108 @@ class EnvironmentVerificationWorkflowTests(unittest.TestCase):
                 compile('\n'.join(l[cind:] for l in code_lines), f'block-{n}', 'exec')
 
 
+MEASURED = os.path.join(REPO, '.github', 'workflows', 'e11-measured-execution.yml')
+
+
+def mtext():
+    with open(MEASURED, encoding='utf-8') as f:
+        return f.read()
+
+
+def step_texts(t):
+    """name -> text of every step of a workflow (a step ends at the next step or at the next top-level job key)."""
+    lines, out, i = t.split('\n'), {}, 0
+    while i < len(lines):
+        m = re.match(r'^      - name: (.+)$', lines[i])
+        if m:
+            j = i + 1
+            while j < len(lines) and not re.match(r'^(      - name: |      # ---|  [a-z-]+:\s*$)', lines[j]):
+                j += 1
+            out[m.group(1)] = '\n'.join(lines[i:j]).rstrip('\n')
+            i = j
+        else:
+            i += 1
+    return out
+
+
+class MeasuredExecutionWorkflowTests(unittest.TestCase):
+    def test_it_is_dispatch_only_read_only_and_serializes_one_run_per_cell(self):
+        t = mtext()
+        head = t.split('\njobs:')[0]
+        triggers = re.search(r'^on:\n((?:  .*\n|\n)+)', head, re.M).group(1)
+        self.assertEqual(re.findall(r'^  ([a-z_]+):', triggers, re.M), ['workflow_dispatch'])
+        for forbidden in ('push:', 'pull_request', 'schedule:', 'workflow_run'):
+            self.assertNotIn(forbidden, head)
+        self.assertIn('permissions:\n  contents: read\n', head)
+        self.assertIn('group: e11-measured-${{ inputs.cell_id }}\n  cancel-in-progress: false', head)
+        self.assertNotIn('secrets.', t)
+        self.assertIn('RECORD_CLASS: MEASURED_EXPERIMENT', t)
+        self.assertIn('EXPECTED_EXECUTIONS: "50"', t)
+
+    def test_the_cell_options_are_the_cells_of_the_cells_file_and_the_suts_are_the_two_of_e11(self):
+        t = mtext()
+        opts = re.search(r'cell_id:\n(?:.*\n)*?        options:\n((?:          - .*\n)+)', t).group(1)
+        with open(CELLS, encoding='utf-8') as f:
+            ids = [c['cell_id'] for c in json.load(f)['cells']]
+        self.assertEqual(re.findall(r'- (\S+)', opts), ids)
+        self.assertIn('options: [SUT-01, SUT-05]', t)
+
+    def test_no_run_script_carries_an_expression_so_the_21000_character_limit_never_applies_to_it(self):
+        for n, body in enumerate(run_blocks(mtext())):
+            self.assertNotIn('${{', body, f'run block {n}')
+            self.assertLess(len(body), 21000, f'run block {n}')
+
+    def test_every_run_block_parses_and_every_python_heredoc_compiles(self):
+        blocks = run_blocks(mtext())
+        self.assertGreaterEqual(len(blocks), 15)
+        for n, body in enumerate(blocks):
+            lines = body.split('\n')
+            ind = min((len(l) - len(l.lstrip()) for l in lines if l.strip()), default=0)
+            with tempfile.NamedTemporaryFile('w', suffix='.sh', delete=False) as f:
+                f.write('\n'.join(l[ind:] for l in lines))
+                path = f.name
+            try:
+                r = subprocess.run(['bash', '-n', path], capture_output=True, text=True)
+                self.assertEqual(r.returncode, 0, f'block {n}: {r.stderr}')
+            finally:
+                os.unlink(path)
+            for m in re.finditer(r"<<'PY'\n(.*?)\n\s*PY\b", body, re.S):
+                code = m.group(1).split('\n')
+                cind = min((len(l) - len(l.lstrip()) for l in code if l.strip()), default=0)
+                compile('\n'.join(l[cind:] for l in code), f'block-{n}', 'exec')
+
+    def test_the_provisioning_and_zap_steps_are_the_verified_ones_apart_from_the_matrix_references(self):
+        ver, meas = step_texts(text()), step_texts(mtext())
+        shared = [n for n in meas if n in ver and ('SUT-0' in n or 'ZAP image' in n)]
+        self.assertGreaterEqual(len(shared), 9)
+        for n in shared:
+            a = ver[n].replace('matrix.sut_id', 'inputs.assigned_sut').replace("matrix.method == 'M2'", "contains(inputs.cell_id, '-M2')")
+            self.assertEqual(a, meas[n], n)
+
+    def test_the_gate_fails_closed_on_the_inputs_that_do_not_exist_yet(self):
+        t = mtext()
+        for needle in ("START_RECORD = 'manifests/e11-campaign-start-v1.yaml'", "'E11 campaign status IN_PROGRESS'", 'G-E11-A2',
+                       "manifests/e11-dispatch-authorization-{SUT_TAGS.get(sut", "CONTROLLED = 'experiments/E11-security/controlled-instance-status.yaml'",
+                       "ZAP image digest of the executor equals the toolchain entry", "gate('configuration names the H5 hypothesis label'",
+                       "no canonical scenario"):
+            self.assertIn(needle, t)
+        self.assertNotIn('CS-001', t)
+        self.assertNotIn('H3', t.replace('H3-', ''))  # no H3 label in an E11 gate
+        # the START was applied on 2026-11-24 and authorized no dispatch: no dispatch authorization or further-attempt approval exists
+        import glob
+        self.assertEqual(glob.glob(os.path.join(REPO, 'manifests', 'e11-dispatch-authorization-*')), [])
+        self.assertEqual(glob.glob(os.path.join(REPO, 'manifests', 'e11-further-attempt-approval-*')), [])
+
+    def test_the_executor_is_run_only_on_the_locked_hash_with_no_executions_override_and_the_artifact_is_immutable(self):
+        t = mtext()
+        self.assertIn('test "$(sha256sum experiments/E11-security/executor/run-condition.sh | cut -c1-64)" = "$LOCKED_IMPLEMENTATION_SHA256"', t)
+        self.assertNotIn('EXECUTIONS:', t.split('Execute the cell')[1].split('Validate the bundle')[0])
+        self.assertIn('overwrite: false', t)
+        self.assertIn('OUTPUT_DIR: raw-data/E11-security/${{ inputs.assigned_sut }}/${{ inputs.cell_id }}', t)
+
+    def test_neither_workflow_names_the_agent_instructions_file(self):
+        self.assertNotIn(chr(67) + chr(76) + chr(65) + chr(85) + chr(68) + chr(69) + '.md', mtext())
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

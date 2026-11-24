@@ -43,3 +43,41 @@ rounds:
       m2_execution_seconds: "10 to 27"
       harness_corrections_after_the_round: "bounded oracle read (5 s) and bounded wait for the seeded URL, error body in the ZAP API error message (executor revision; round 2 verifies them)"
     correction_2026_11_24: "outcome.zap_observed first said 51 add-ons; the list observed in round 1 has 49. Corrected by the ORCHESTRATOR on 2026-11-24, before any use of the number (a transcription error; see manifests/campaign-execution-decisions-v22.yaml, question_correction)."
+  - round: 2
+    status: "CONCLUDED"
+    recorded_at_utc: "2026-11-24T14:42:46Z"
+    human_approval: "the human research lead's answer 'Sí, despacha esta línea' to the exact line below, in the ORCHESTRATOR's conversation of 2026-11-24 (UTC)"
+    workflow: ".github/workflows/e11-environment-verification.yml"
+    public_repository: "gsanchezm/experimental-utility-testing-labs"
+    public_main_at_dispatch: "c474dc8324a14606887bfdc854e9ec23f497c5a5"
+    canonical_source_of_public_main: "187f37d63582a631bdd16551d5b9d31eea455a5b"
+    validation_run_of_public_main: 45416468100
+    purpose: "verify the harness corrections made after round 1 (bounded oracle read of SQLI-SEARCH M1; wait for the seeded URL and the error body of the ZAP API); no expectation changes"
+    inputs:
+      target: "all"
+      executions: "2"
+      executor_prompt_version: "ORCHESTRATOR-E11-security-v1"
+      executor_implementation_sha256: "0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc"
+      dry_run: true
+    expected_jobs: 14
+    expected_m2_jobs: 6
+    exact_line: "gh workflow run e11-environment-verification.yml --repo gsanchezm/experimental-utility-testing-labs --ref main -f target=all -f executions=2 -f executor_prompt_version=ORCHESTRATOR-E11-security-v1 -f executor_implementation_sha256=0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc -f dry_run=true"
+    dispatch_clock_before_utc: "2026-11-24T14:43:01Z"
+    dispatch_clock_after_utc: "2026-11-24T14:43:03Z"
+    run_id: 45417209148
+    run_number: 2
+    run_attempt: 1
+    head_sha: "c474dc8324a14606887bfdc854e9ec23f497c5a5"
+    run_created_at_utc: "2026-11-24T14:43:03Z"
+    run_url: "https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45417209148"
+    note: "One dispatch, no re-run. The run identity was added after the run started; the outcome is added after it concludes."
+    outcome:
+      concluded_run_conclusion: "success: the gate, the plan and all 14 cell jobs succeeded"
+      artifacts_reviewed_not_imported: true
+      categories: "all 28 executions equal the expected category of their cell, with one pre-declared exception that is an observation and not a defect: E11-SUT05-DIRLIST-FTP-M2 (M2_NO_EXPECTED_ALERT in both executions, rule 0 raised no alert on /ftp/, as predicted in V-7 and observed in round 1; matches_expected false; the expectation is unchanged)"
+      sqli_search_m1: "M1_ORACLE_FLIPPED in both executions after 2 oracle reads and 0.378 s and 0.383 s of wait: the flag of the union challenge is written shortly after the response (round 1 read it at once and saw it unsolved); the other M1 conditions flipped on the first read; the M1 controls waited the whole budget (20 reads, about 5.1 s) and did not flip"
+      m2_seed: "in all 12 M2 executions the seeded URL was seen on the second read of core/view/urls (never on the first), which is consistent with a seed race as the cause of the HTTP 400 of round 1; no ZAP_API_ERROR occurred in round 2 (the error body, now recorded, was never needed)"
+      zero_alerts_on_controls: "the three M2 control cells raised no expected-rule alert in any execution"
+      m2_execution_seconds: "10.8 to 27.3"
+      m1_control_execution_seconds: "7.3 to 7.8 (the bounded oracle wait of about 5 s is included)"
+      harness_corrections_after_the_round: "none"
