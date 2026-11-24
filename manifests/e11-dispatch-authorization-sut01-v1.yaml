@@ -1,0 +1,60 @@
+# manifests/e11-dispatch-authorization-sut01-v1.yaml -- record of the dispatch authorization E11-DISPATCH-SUT01-AUTH-01 (protocol/agent-governance-v6.md, Section 3.7).
+# The human research lead's issuance, for the assigned system under test (SUT) SUT-01, of the authorization under which the ORCHESTRATOR dispatches the frozen measured-execution workflow of E11-security for the 2 executable cells listed below. ORCHESTRATOR record of operation OP-DISPATCH-E11-01. Immutable once committed; a revocation is a new record.
+# The record itself is not a measured experiment and executes nothing; the dispatches it covers are recorded one by one in manifests/e11-measured-dispatch/e11-sut01.jsonl.
+record_id: "E11-DISPATCH-AUTHORIZATION-SUT01-01"
+record_class: "E11_DISPATCH_AUTHORIZATION"
+authorization_id: "E11-DISPATCH-SUT01-AUTH-01"
+version: 1
+study_id: "EUS-2026-001"
+campaign_id: "E11-security"
+operation_id: "OP-DISPATCH-E11-01"
+assigned_sut: "SUT-01"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-24"
+recorded_utc: "2026-11-24T17:50:56Z"
+status: "ISSUED"
+record_validity: "VALID"
+dispatch_eligibility: "ELIGIBLE"
+revoked: false
+attempt: 1
+authorization_date: "2026-11-24"
+issued_by: "human research lead"
+authorizes_dispatches: true  # of exactly the executions listed under scope, within the limits below
+measured_experiment: false  # this record; the executions it covers are MEASURED_EXPERIMENT runs of the frozen GitHub Actions path
+executes_anything: false
+revocable_by_the_human_research_lead: true  # at any time; no revocation exists at the time of this record
+campaign_start_authorization_id: E11-START-AUTH-01
+governing_protocol: protocol/agent-governance-v6.md, Section 3.7
+n_executions: 50  # per cell
+cells:  # in the order of the dispatch fixed by the locked campaign configuration (experiments/E11-security/README.md; experiments/E11-security/conditions-draft.json)
+  - E11-SUT01-IDOR-ORDER-M1
+  - E11-SUT01-IDOR-ORDER-M1-CTRL
+scope:
+  assigned_sut: SUT-01
+  executions_in_all: 100
+  order: "for the cells in the order below, one cell at a time: the single workflow run of a cell (its executions EX0001 to EX0050) is dispatched only after the run before it concluded and was imported; never a second run of a cell while one is in progress; the chains of SUT-01 and SUT-05 are independent and may run concurrently"
+  attempt: 1  # attempt + 1 is dispatched only on a separate explicit instruction that names the cell and the execution
+  dispatches_per_cell: 1  # one workflow run holds the 50 executions of a cell
+  record_of_dispatches: manifests/e11-measured-dispatch/e11-sut01.jsonl  # append-only, committed before each dispatch; the run identity is appended after it
+  no_adaptation: "no decision whether, when, or how to dispatch depends on a measured output of any SUT (Sections 3.5 and 3.7)"
+  not_authorized: [any further attempt, any other cell or SUT, any change of workflow or executor, the freeze of the campaign]
+frozen_inputs:
+  public_repository: gsanchezm/experimental-utility-testing-labs
+  ref: main
+  public_main_when_issued: fa95d9b6c24ee9021ad6933a9d66531d488c67da
+  workflow: .github/workflows/e11-measured-execution.yml
+  workflow_sha256: 3daa31ba8e0f7d93bf9377363a4b24e2f7dce20188cbf33555034c3f817c3bd8
+  executor_prompt_version: ORCHESTRATOR-E11-security-v1
+  executor_implementation_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc  # experiments/E11-security/executor/run-condition.sh
+  executor_prompt_sha256: 6ed3211ef7c8c0f13a7e6d6d1d8663935bd10cb074dc55c6d8cfa5d0f94ed897  # prompts/frozen/ORCHESTRATOR-E11-security-v1.md
+  campaign_start_authorization_id: E11-START-AUTH-01
+human_approval:
+  text_verbatim: "Your questions have been answered: \"¿Emites las autorizaciones de despacho de E11-security? Solo tú puedes emitirlas (gobernanza v6, Sección 3.7). ALCANCE EXACTO. (A) E11-DISPATCH-SUT01-AUTH-01: SUT-01; 2 celdas en este orden, E11-SUT01-IDOR-ORDER-M1 y E11-SUT01-IDOR-ORDER-M1-CTRL; 50 ejecuciones cada una (EX0001 a EX0050), 100 en total. (B) E11-DISPATCH-SUT05-AUTH-01: SUT-05; 12 celdas en este orden, E11-SUT05-SQLI-LOGIN-M1, -M1-CTRL, -M2, -M2-CTRL; luego E11-SUT05-SQLI-SEARCH-M1, -M1-CTRL, -M2, -M2-CTRL; luego E11-SUT05-DIRLIST-FTP-M1, -M1-CTRL, -M2, -M2-CTRL; 50 ejecuciones cada una, 600 en total. Ambas: intento 1, id de START E11-START-AUTH-01, una sola corrida de workflow por celda (las 50 ejecuciones van dentro de ese job, cada una con instancia reiniciada y, en M2, un contenedor ZAP nuevo); dentro de un SUT cada celda se despacha solo después de que la anterior concluyó y se importó; las cadenas de SUT-01 y SUT-05 son independientes y puedo correrlas a la vez; ningún segundo despacho de una celda mientras una está en curso; ningún re-run; ningún intento adicional sin tu aprobación explícita que nombre la celda y la ejecución. Insumos congelados que cada autorización registra: workflow .github/workflows/e11-measured-execution.yml (sha256 3daa31ba8e0f7d93bf9377363a4b24e2f7dce20188cbf33555034c3f817c3bd8), prompt ORCHESTRATOR-E11-security-v1 (sha256 6ed3211ef7c8c0f13a7e6d6d1d8663935bd10cb074dc55c6d8cfa5d0f94ed897), implementación run-condition.sh (sha256 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc), todos en el repositorio público en main fa95d9b6. Registro de despachos: manifests/e11-measured-dispatch/e11-sut01.jsonl y e11-sut05.jsonl, append-only, escrito y confirmado ANTES de cada despacho. Diferencia revelada: bajo esta sección das la aprobación una vez por SUT y ningún despacho espera a que veas el resultado anterior; los controles son la configuración bloqueada, el gate de 38/9 que ya pasa salvo la propia autorización, las condiciones de parada del prompt congelado (gate fallido, conclusión del workflow distinta de success, artefacto sin los 50 manifiestos, insumo distinto del bloqueo, cruce de un límite) y tu revocación en cualquier momento; un defecto que pase todos los gates y no active una parada se repite hasta una parada o una revocación, y todo análisis o publicación de estos resultados lo dice. Una categoría registrada (M1_, M2_, ZAP_, RESET_, INTERRUPTED_) es dato, nunca una parada. Qué NO hace esta emisión: no despacha nada todavía; las autorizaciones se registran verbatim con su sha256 en manifests/e11-dispatch-authorization-sut01-v1.yaml y -sut05-v1.yaml, hay que publicarlas con un export (v86, que construyo en local y cuyo push te pediré aparte con su línea exacta) y el gate debe pasar sobre el árbol público antes del primer despacho; el freeze y el análisis H5 son preguntas aparte.\"=\"APRUEBO ambas autorizaciones (Recomendado)\". You can now continue with these answers in mind."
+  bytes: 3008
+  sha256: c534900b2efe3202d1d4af8170f2cd397268804e96bbb317d55254d4893b1ed8
+  received_utc: null  # the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_utc above is the system clock when this record was written, after the answer
+  question_stamp: null
+  chosen_option: "APRUEBO ambas autorizaciones (Recomendado)"
+  entry_kind: "the answer of the human research lead to one question that offered the issuance of the two authorizations E11-DISPATCH-SUT01-AUTH-01 and E11-DISPATCH-SUT05-AUTH-01 with the exact scope restated in the text above, the frozen inputs with their sha256 values, the disclosed difference (no dispatch waits for the human research lead to see the previous outcome; the controls are the locked configuration, the gate, the stop conditions of the frozen prompt and revocation) and what the issuance does not do; one answer covers both records, so both carry the same text and hash"
+limits_and_stops: "the stop conditions of the frozen dispatch procedure prompts/frozen/ORCHESTRATOR-E11-security-v1.md, section 4; on a stop nothing further is dispatched in this campaign under any authorization until the human research lead instructs a resumption"
+not_in_force_until: "this record is published by an export and the gate step of the measured workflow passes on the public tree; the first dispatch is recorded before it is made"

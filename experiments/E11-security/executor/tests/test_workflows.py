@@ -196,9 +196,10 @@ class MeasuredExecutionWorkflowTests(unittest.TestCase):
             self.assertIn(needle, t)
         self.assertNotIn('CS-001', t)
         self.assertNotIn('H3', t.replace('H3-', ''))  # no H3 label in an E11 gate
-        # the START was applied on 2026-11-24 and authorized no dispatch: no dispatch authorization or further-attempt approval exists
+        # the two dispatch authorizations were issued by the human research lead on 2026-11-24 (one per SUT); a further attempt has no approval
         import glob
-        self.assertEqual(glob.glob(os.path.join(REPO, 'manifests', 'e11-dispatch-authorization-*')), [])
+        names = sorted(os.path.basename(p) for p in glob.glob(os.path.join(REPO, 'manifests', 'e11-dispatch-authorization-*')))
+        self.assertEqual(names, ['e11-dispatch-authorization-sut01-v1.yaml', 'e11-dispatch-authorization-sut05-v1.yaml'])
         self.assertEqual(glob.glob(os.path.join(REPO, 'manifests', 'e11-further-attempt-approval-*')), [])
 
     def test_the_executor_is_run_only_on_the_locked_hash_with_no_executions_override_and_the_artifact_is_immutable(self):
