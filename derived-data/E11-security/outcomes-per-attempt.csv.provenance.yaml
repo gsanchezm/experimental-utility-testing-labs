@@ -1,0 +1,29 @@
+# derived-data/E11-security/outcomes-per-attempt.csv.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (a CSV cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/E11-security/outcomes-per-attempt.csv
+dataset_sha256: da029b630ee0c8970faa3d2141e7fda05747e5acd108482c8d15ea8ff089fe75
+campaign_id: E11-security
+hypothesis_id: H5
+part: "one row per execution of the 700 imported bundles (50 per cell, 14 cells), with the recorded outcome category, the category derived from the evidence file of the bundle, whether the positive category was recorded, the workflow outcome status, the recorded match flag, the attribution, the number of other ZAP alerts not counted (M2 cells) and the evidence file that decided the execution"
+raw_inputs:
+  tree:
+    path: raw-data/E11-security
+    git_tree: cc0de160795c260920e0ac904c39c1838c022ea4
+    pinned_at_commit: c7293c402b23f95238d010a965a5cac544f1c1be
+    campaign_state: FROZEN
+  bundles: 700
+  files_read: the run manifest and the deciding evidence file of each bundle and the cell summary of each cell (the category and the attribution of each run are checked against the cell summary)
+transformation_script:
+  path: analysis/h5-analysis/compute-h5-e11.js
+  version: git-blob-sha 0a737e7c2f974a38a99bd49404715e1f2c933784
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only)
+date_generated: "2026-11-25"
+date_note: local date (America/Mexico_City)
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: experiments/E11-security/README.md, "Campaign configuration" (sha256 5b5e11b5cf7ec48977256c8598c4af16f816ee15355ed9337f26c40d41894a0a)
+notes: >
+  Written by the same script as derived-data/h5-analysis/H5-e11-result.json, from the same bundles. Every column is a recorded field of a bundle or of its cell
+  summary, or the category derived from the evidence file named in the last column; none is interpreted, and no label is re-mapped. Rows follow the order of the
+  cells file and the execution identifier.

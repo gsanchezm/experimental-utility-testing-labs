@@ -1,0 +1,45 @@
+# derived-data/h5-analysis/H5-e11-result.json.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (JSON cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/h5-analysis/H5-e11-result.json
+dataset_sha256: 126725587b0ac9cc0578eb65f1653027a1ed8649a44ff7902fe4f87f9d30a0ca
+campaign_id: E11-security
+hypothesis_id: H5
+part: security (E11) contribution only; the H5 variable spans E08, E09, E10 and E11; E08 and E10 have no data, the E09 contribution is the separate dataset derived-data/h5-analysis/H5-e09-result.json, and the contributions are not summed
+sut_ids: [SUT-01, SUT-05]
+sut_ids_in_confirmatory_comparison: [SUT-01, SUT-02, SUT-03]
+sut_ids_excluded_from_comparison: [SUT-04, SUT-05, SUT-06]
+sut_ids_note: SUT-05 is an EXPLORATORY specialist reference (E11-D-2) reported on its own; SUT-02 and SUT-03 have no cell (count 0, no data); SUT-04 and SUT-06 have no cell and the configuration assigns them no count (null, no data)
+per_run_table:
+  path: derived-data/E11-security/outcomes-per-attempt.csv
+  sha256: da029b630ee0c8970faa3d2141e7fda05747e5acd108482c8d15ea8ff089fe75
+  note: written by the same script run from the same bundles; the result is not computed from it
+raw_inputs:
+  tree:
+    path: raw-data/E11-security
+    git_tree: cc0de160795c260920e0ac904c39c1838c022ea4
+    pinned_at_commit: c7293c402b23f95238d010a965a5cac544f1c1be
+    campaign_state: FROZEN
+  bundles: 700
+  job_directories: 14
+  files_read: the run manifest and the evidence file that decides each execution (the status of the GET of the order for SUT-01; the last oracle read for the M1 cells of SUT-05; the ZAP alerts file for the M2 cells), each evidence file checked against the sha256 that the run manifest lists, and the cell summary and the CI provenance of each cell
+transformation_script:
+  path: analysis/h5-analysis/compute-h5-e11.js
+  version: git-blob-sha 0a737e7c2f974a38a99bd49404715e1f2c933784
+  tests: analysis/h5-analysis/test/h5-e11.test.js (14 tests; node --test)
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only; requires the pure core analysis/h3-analysis/h3-metrics.js, blob 72b1f74949cc76ce907ca2a162e5d5fbd28ef6a0, without modifying it)
+date_generated: "2026-11-25"
+date_note: local date (America/Mexico_City)
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: protocol/statistical-analysis-plan-v1.md, sections 3, 4.3 (H5 row) and 5; experiments/E11-security/README.md, "Campaign configuration" (sha256 5b5e11b5cf7ec48977256c8598c4af16f816ee15355ed9337f26c40d41894a0a); experiments/E11-security/conditions-draft.json (sha256 48beef74993b30b326a34c2f3844c38334bf61304f72a357a410f08fe21a5f48)
+notes: >
+  Deterministic, non-interpretive computation. Implements the descriptive procedure pre-registered in the E11 campaign configuration: per cell the count of each
+  category out of N = 50 with the Wilson 95% interval, the detection rate of each known ground-truth condition and the false-positive rate of each control
+  (M1 and M2 reported separately, never combined), and the H5 count of controlled ground-truth conditions per ecosystem for the E11 contribution (each
+  configured condition counts once, the controls do not; taken from the cells file, never from the outcomes). The classification of the H5 comparisons is
+  written in the script from the configuration and is not derived from the data. No test, p-value, Holm correction, Fisher table, risk difference, pooled
+  rate, composite, ranking or support / non-support determination is computed (none is frozen for H5; SUT-02 and SUT-03 have no condition). The recorded
+  category of every bundle equals the one the script derives from its evidence (listed disagreements: none). The script was run twice and wrote equal bytes
+  (--check), and an independent recomputation in a second language (Python) from the same bundles gave the same positive counts and the same counts of other
+  alerts in each of the 14 cells.
