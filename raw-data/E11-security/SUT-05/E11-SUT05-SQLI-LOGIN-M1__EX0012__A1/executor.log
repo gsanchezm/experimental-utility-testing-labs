@@ -1,0 +1,14 @@
+{"t": "2026-11-24T19:57:11.364Z", "event": "run-start", "condition": "E11-SUT05-SQLI-LOGIN-M1", "run_id": "E11-SUT05-SQLI-LOGIN-M1__EX0012__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-24T19:57:11.364Z", "event": "step-start", "phase": "reset", "description": "restart the SUT process (SIGTERM to the process group, port refused, start in a new session and group, readiness)"}
+{"t": "2026-11-24T19:57:14.011Z", "event": "step-end", "phase": "reset", "outcome": "SUCCESS"}
+{"t": "2026-11-24T19:57:14.011Z", "event": "step-start", "phase": "starting-state", "description": "GET /api/Challenges: the challenge loginAdminChallenge is not solved"}
+{"t": "2026-11-24T19:57:14.054Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/api/Challenges", "status": 200, "error": null, "elapsed_s": 0.04, "evidence": "evidence/005-sut05-oracle-start.json"}
+{"t": "2026-11-24T19:57:14.060Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-24T19:57:14.060Z", "event": "step-start", "phase": "method", "description": "M1 sequence for SQLI-LOGIN, then GET /api/Challenges"}
+{"t": "2026-11-24T19:57:14.060Z", "event": "stimulus-sent"}
+{"t": "2026-11-24T19:57:14.086Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:3000/rest/user/login", "status": 200, "error": null, "elapsed_s": 0.025, "evidence": "evidence/006-sut05-m1-1.json"}
+{"t": "2026-11-24T19:57:14.123Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/api/Challenges", "status": 200, "error": null, "elapsed_s": 0.035, "evidence": "evidence/007-sut05-oracle-first-read.json"}
+{"t": "2026-11-24T19:57:14.124Z", "event": "step-end", "phase": "method", "outcome": "OBSERVED"}
+{"t": "2026-11-24T19:57:14.124Z", "event": "step-start", "phase": "classification", "description": "classify the method observation"}
+{"t": "2026-11-24T19:57:14.124Z", "event": "step-end", "phase": "classification", "outcome": "OBSERVED"}
+{"t": "2026-11-24T19:57:14.124Z", "event": "run-end", "category": "M1_ORACLE_FLIPPED", "attribution": "SUT"}

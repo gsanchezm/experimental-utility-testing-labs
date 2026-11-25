@@ -1,0 +1,126 @@
+# manifests/e11-campaign-freeze-v1.yaml -- provenance record of the E11-security campaign freeze (protocol/change-control-v1.md, section 7, moment 2: IN_PROGRESS -> FROZEN).
+# Modeled on manifests/e06-campaign-freeze-v1.yaml and manifests/e09-campaign-freeze-v1.yaml. A provenance record, not a second campaign-configuration record: the configuration itself stays authoritative and locked in
+# experiments/E11-security/README.md, section "Campaign configuration" (unchanged by this freeze). ORCHESTRATOR record of operation OP-FREEZE-14 (2026-11-24 local, America/Mexico_City; the UTC date at the time of writing was 2026-11-24).
+# Immutable once committed; a correction is a new version file.
+record_class: E11_CAMPAIGN_FREEZE
+record_id: E11-FREEZE-01
+study_id: EUS-2026-001
+campaign_id: E11-security
+operation_id: OP-FREEZE-14
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-24'
+recorded_on_timezone: America/Mexico_City (the UTC date at the time of writing was 2026-11-24)
+status: RECORDED
+transition: IN_PROGRESS -> FROZEN
+previous_status: IN_PROGRESS
+new_status: FROZEN
+freeze_timestamp: "2026-11-24T22:28:58Z"  # one UTC clock reading taken when the edits were written; the commit that carries them follows it
+authorization_id: E11-FREEZE-AUTH-01
+freeze_approved_by: gilbertosanchez
+frozen_by: ORCHESTRATOR
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+human_approval:
+  text_verbatim: "Your questions have been answered: \"El despacho medido de E11-security terminó: 14 de 14 celdas (700 ejecuciones, todas intento 1) importadas byte a byte, con auditoría independiente sin defectos y ya integradas en main de forma local (merge 7920d60a, sin publicar). ¿Aprobas el FREEZE de E11 (E11-FREEZE-AUTH-01)?\"=\"Sí, congela E11 (Recommended)\". You can now continue with these answers in mind."
+  bytes: 401
+  sha256: fb9f6aede6de4fdb688deeeb78ff8d946ecee540db7c76d13bcd791d670dc4f0
+  received_utc: null   # the harness stamps of the dialog are not available to the ORCHESTRATOR in this session; freeze_timestamp above is the system clock when the edits were written, after the answer
+  question_stamp: null
+  chosen_options: ["Sí, congela E11 (Recommended)"]
+  entry_kind: >
+    the answer of the human research lead to one question dialog about the freeze of E11 (the option chosen is listed above); the text above is the whole stored answer. The dialog carried one question only: it did not ask
+    what the freeze record declares about the results (the E04, E06 and E07 freezes had asked it and the human research lead chose workflow conclusions only; this record follows that same choice without asking again) and it did not ask
+    about the live status of the agent-instructions file (not edited by this operation).
+  what_the_question_offered:
+    option_chosen: "Sí, congela E11 (Recommended): Escribo manifests/e11-campaign-freeze-v1.yaml (modelado en el de E09), marco E11 como FROZEN con nota fechada en study-manifest, agrego la fila del change log IN_PROGRESS -> FROZEN y actualizo el estado del README de E11. No analizo resultados, no publico nada y no toco AGENT-INSTRUCTIONS.md en este paso."
+    option_not_chosen: "Todavía no: Dejo E11 en IN_PROGRESS con los datos importados y sin tocar nada más; revisás primero lo que quieras (importaciones, manifiestos, registros de despacho) y me decís cuándo congelar."
+  scope: the freeze of the E11 campaign with its fourteen executable cells on SUT-01 (2) and SUT-05 (12), 700 executions, N = 50 per cell, under the authorization id above
+trigger: >
+  protocol/change-control-v1.md, section 7, moment 2: every planned run of the campaign (all ecosystems, all conditions, the recorded N) has been executed. The locked configuration plans fourteen executable cells,
+  two on SUT-01 (E11-SUT01-IDOR-ORDER-M1 and its control E11-SUT01-IDOR-ORDER-M1-CTRL) and twelve on SUT-05 (the cells M1, M1-CTRL, M2 and M2-CTRL of each of SQLI-LOGIN, SQLI-SEARCH and DIRLIST-FTP), with N = 50 each (EX0001 to EX0050);
+  no other SUT has a cell in the configuration.
+pre_freeze_state:
+  canonical_head: 7920d60a79bea1704e098b1d1e43cce89f421177  # the head before the freeze commit: the merge of the dispatch branch into main
+  merge_commit: 7920d60a79bea1704e098b1d1e43cce89f421177
+  merge_parents: [5b0675f62aacd68f595b0149715155dec00a6a82, 48e3f3c3b4e3c5cf2d6c2609a2640f1e4213916b]
+  dispatch_branch_head: 48e3f3c3b4e3c5cf2d6c2609a2640f1e4213916b   # branch e11-measured-dispatch, in the dispatch worktree, left in place
+  public_main: a166f4ab7d79a6db052144889dca24a04c786924   # export v86; nothing is pushed by the freeze, and the merge is not public
+  e11_status_before: IN_PROGRESS
+  raw_tree_of_main_equals_raw_tree_of_the_dispatch_branch: {path: raw-data/E11-security, tree: cc0de160795c260920e0ac904c39c1838c022ea4}
+  dispatch_records_tree_equals_the_dispatch_branch: {path: manifests/e11-measured-dispatch, tree: 565dd003c1e5834efcd5d89a4b62582bedc7a3eb}
+  configuration_section: {path: experiments/E11-security/README.md, heading: Campaign configuration, sha256: 5b5e11b5cf7ec48977256c8598c4af16f816ee15355ed9337f26c40d41894a0a, unchanged_since_the_start: true}   # slice from the heading to the end of file, read at the START (commit cbf5b8e2) and now: byte-identical
+  start_record: manifests/e11-campaign-start-v1.yaml
+executions:
+  cells: [E11-SUT01-IDOR-ORDER-M1, E11-SUT01-IDOR-ORDER-M1-CTRL, E11-SUT05-SQLI-LOGIN-M1, E11-SUT05-SQLI-LOGIN-M1-CTRL, E11-SUT05-SQLI-LOGIN-M2, E11-SUT05-SQLI-LOGIN-M2-CTRL, E11-SUT05-SQLI-SEARCH-M1, E11-SUT05-SQLI-SEARCH-M1-CTRL, E11-SUT05-SQLI-SEARCH-M2, E11-SUT05-SQLI-SEARCH-M2-CTRL, E11-SUT05-DIRLIST-FTP-M1, E11-SUT05-DIRLIST-FTP-M1-CTRL, E11-SUT05-DIRLIST-FTP-M2, E11-SUT05-DIRLIST-FTP-M2-CTRL]
+  n_per_cell: 50
+  executions_imported: 700   # SUT-01 100, SUT-05 600; attempt 1 for every cell
+  dispatches: 14   # one dispatch per cell (the unit of dispatch that the frozen prompt fixes), each cell's 50 executions in one job
+  first_dispatch_recorded_utc: "2026-11-24T19:54:59Z"   # clock of the first DISPATCH_RECORDED entry (E11-SUT01-IDOR-ORDER-M1)
+  last_import_recorded_utc: "2026-11-24T22:00:01Z"   # dispatch-record event RUN_CONCLUDED_AND_IMPORTED of the last cell (E11-SUT05-DIRLIST-FTP-M2-CTRL)
+  local_dates_of_the_imports: ['2026-11-24']   # America/Mexico_City: from 13:54 to 16:00 local
+  dispatch_authorizations: [E11-DISPATCH-SUT01-AUTH-01, E11-DISPATCH-SUT05-AUTH-01]
+  dispatch_records: manifests/e11-measured-dispatch/e11-sut0N.jsonl   # two records (SUT-01 and SUT-05), append-only, complete: each opens with RECORD_OPENED and has, per cell, DISPATCH_RECORDED (committed before the dispatch), RUN_IDENTITY_RECORDED and RUN_CONCLUDED_AND_IMPORTED
+  dispatch_tool: {operation: OP-DISPATCH-E11-03, chains: "two concurrent chains, one per assigned SUT (SUT-01: 2 cells; SUT-05: 12 cells), one cell at a time within a chain", end_message: "ALL CHAINS ENDED complete", stop_files: none}
+  imports: raw-data/E11-security/<SUT>/<cell id>__<execution id>__A1/   # each with run-manifest.json, the bundle members unchanged and the executor records; the job-level files of each cell and its import-record.yaml in <cell id>__job__A1/; the file raw-data/E11-security/.gitattributes (`* -text`) keeps the bytes unchanged, as in the other campaigns
+  consumed_attempts_without_bundle: []   # none: no attempt left without a bundle
+  further_attempts: []   # none: every cell is attempt 1; no further-attempt approval exists
+  ci_correction: none   # no workflow was edited while the campaign was IN_PROGRESS
+  github_measured_execution_runs: {total: 14, success: 14, failure: 0, event: workflow_dispatch for all, branch: main, run_attempt: 1 for all, run_numbers: 1 to 14}   # read from the workflow's run list at the freeze; no run is in progress or queued
+  runs:
+    E11-SUT01-IDOR-ORDER-M1: {run_id: 45475255998, run_number: 1, import_commit: fdba2a35}
+    E11-SUT01-IDOR-ORDER-M1-CTRL: {run_id: 45476300505, run_number: 4, import_commit: 4aa22592}
+    E11-SUT05-SQLI-LOGIN-M1: {run_id: 45475361005, run_number: 2, import_commit: 916b7c73}
+    E11-SUT05-SQLI-LOGIN-M1-CTRL: {run_id: 45476168363, run_number: 3, import_commit: 59526435}
+    E11-SUT05-SQLI-LOGIN-M2: {run_id: 45477710228, run_number: 5, import_commit: 0d151ea5}
+    E11-SUT05-SQLI-LOGIN-M2-CTRL: {run_id: 45479978319, run_number: 6, import_commit: 2b3b2b7a}
+    E11-SUT05-SQLI-SEARCH-M1: {run_id: 45482061585, run_number: 7, import_commit: 57310609}
+    E11-SUT05-SQLI-SEARCH-M1-CTRL: {run_id: 45482984130, run_number: 8, import_commit: 18d5ebab}
+    E11-SUT05-SQLI-SEARCH-M2: {run_id: 45484561821, run_number: 9, import_commit: e452017e}
+    E11-SUT05-SQLI-SEARCH-M2-CTRL: {run_id: 45486587905, run_number: 10, import_commit: 18d25226}
+    E11-SUT05-DIRLIST-FTP-M1: {run_id: 45488782371, run_number: 11, import_commit: 4943cc52}
+    E11-SUT05-DIRLIST-FTP-M1-CTRL: {run_id: 45489578740, run_number: 12, import_commit: 88e552a4}
+    E11-SUT05-DIRLIST-FTP-M2: {run_id: 45491107906, run_number: 13, import_commit: b1f5c85f}
+    E11-SUT05-DIRLIST-FTP-M2-CTRL: {run_id: 45494779182, run_number: 14, import_commit: 48e3f3c3}
+  workflow_revision_of_all_imported_runs: {file_sha256: 3daa31ba8e0f7d93bf9377363a4b24e2f7dce20188cbf33555034c3f817c3bd8, public_blob: 39398b40551029481d7150840aea6f25fd0905e4, public_main: a166f4ab7d79a6db052144889dca24a04c786924}   # ci-provenance.json workflow.file_sha256 and repository.sha of every run directory: one value each; the locked measured_workflow_sha256 of the START record
+  hashes_stamped_by_the_gates: {e11_configuration_sha256: 0062ef76ab67f8fe6ca19de9f97354fd16fa2a67ccafddf45abe52c381bee82b, executor_implementation_sha256: 0ce7625b72899523ea41b296425e1d0a144fbcf26ec0ea896d85013c5f2670fc, executor_prompt_sha256: 6ed3211ef7c8c0f13a7e6d6d1d8663935bd10cb074dc55c6d8cfa5d0f94ed897, agent_governance_v6_sha256: c890a9d004b2989aa9ae33a54bc68b000c47fc9e3f79d60ad0051de78b3f2a4a, dispatch_authorization_sha256: {SUT-01: 6070940486d3a47d78ff8ff50399f870bf752501a559d7a4c1af8c1055a0a05a, SUT-05: 1511cb15ca6cce298dc74b95d6b67a67f615213115355ef20499e80958cd62ec}}   # frozen_input_hashes of the ci-provenance of every run directory (one value each, per SUT for the authorization)
+  schema_hash_bridge: "frozen_input_hashes.run_manifest_schema_v2_sha256 is 7f4a1c27deb1b0590f2e8fa2a75e18c0f8753817ed7fb10939a2c09cb8f61826 in all 14 provenance records: the exported hash of schemas/run-manifest.schema.v2.json, whose canonical sha256 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757 the START locked (PROVIDER_NEUTRAL_PATH_ALIAS of PUBLIC-EXPORT-MANIFEST.yaml; the same pair as in the E02 and E03 records); not a difference of content"
+audit_of_the_imports:
+  method: >
+    two read-only scripts (untracked scratch, not part of the repository; audit_e11.py and audit_redownload_e11.py of the operator records), the first run on the dispatch worktree (branch head 48e3f3c3b4e3c5cf2d6c2609a2640f1e4213916b, against the base 5b0675f6)
+    and the GitHub run list, the second over the 28 archives with the option that re-downloads them from GitHub (GET only); both before any edit of the freeze
+  checks: >
+    the directories equal the expected set (50 run directories plus the job directory for each of the 14 cells); every import record names its record class, campaign, cell, SUT, attempt, operation and authorization, and is consistent (workflow success, three jobs success,
+    run attempt 1, head sha equal to public main, 50 manifests, both archives verified against the digest GitHub reports at the import, verification flags true); the files each record lists equal the files on disk, with their bytes and sha256; every run manifest names its campaign, SUT, cell, run id,
+    attempt, role, prompt version, protocol version, platform and environment and every file it lists exists with the listed sha256; the run manifests' category counts equal the condition summary of the record (consistency only, no interpretation); the ci-provenance of every run directory is byte-identical to the job-level one
+    and names the run, the workflow hash, the implementation and the prompt; each dispatch record has the events in the locked order under its authorization, the cells in the locked order, each dispatch recorded before its clock reading and after the import of the cell before it,
+    and the run id, clock readings and bundle digest equal those of the import record; in git, each DISPATCH_RECORDED line was committed before the dispatch clock reading of its cell, the dispatch records only ever grew by appended lines, no path was modified, deleted or renamed in the range, the range holds exactly the two record-opening commits and the 14 import commits,
+    and no commit message carries an attribution token; GitHub lists exactly 14 runs of the measured workflow, all success, all workflow_dispatch on main at the pinned head, and the artifact digests equal the recorded ones; the 28 archives were re-downloaded from GitHub, every digest equals the recorded one and every member (9830 in all) equals the committed file
+  result: {run_directories: 700, job_directories: 14, files_listed_and_verified: 9816, archives_redownloaded: 28, archive_members_compared: 9830, defects: 0}
+  note_on_the_first_run: "the first run of audit_e11.py reported one finding: the script expected the workflow run numbers in a wrong sequence (it expected 1 and 2 and then 1 to 12, instead of 1 to 14, the contiguous numbers of the workflow's run list, which is what the 14 import records hold); the expectation of the script was corrected and the second run reported zero findings; no finding was about the data"
+  observed_outcomes: "workflow conclusion success in 14 of 14 runs (700 of 700 executions imported); the one anomaly each import record quotes from the job log is the GitHub notice that the actions in use target Node.js 20 and are run on Node.js 24, the same kind of line in all 14; no tally of the run-manifest outcome or category fields is recorded here, because the frozen dispatch prompt (section 5) forbids summarizing across runs or conditions, as in the E04, E06 and E07 freezes; the outcomes stay in the run manifests, the attempt records and the condition summaries of the import records, unanalyzed"
+effect: >
+  From this moment raw-data/E11-security/ is append-only in the sense of raw-data/README.md: every existing raw file is immutable, and a further run may be appended only with a "run appended after campaign
+  freeze" row in protocol/CHANGELOG.md stating the reason (raw-data/README.md, rule 1). The campaign configuration record is immutable. The measured-execution workflow requires the campaign status IN_PROGRESS (gate G-1),
+  so it refuses every dispatch from the freeze on; a run appended after the freeze would need its own change-log row and a CI correction. Reopening the campaign follows protocol/change-control-v1.md, section 5 in full.
+other_edits_of_the_freeze_commit:
+  - "protocol/CHANGELOG.md: one row for this transition (after the row of the START)"
+  - "manifests/study-manifest.yaml: the E11 status line FROZEN with the transition clock reading, and a note of the operation"
+  - "status lines that the freeze makes out of date, edited with counted replacements: README.md, experiments/README.md, raw-data/README.md, the E11 README (current status, outside the Campaign configuration section)"
+  - "manifests/README.md: the rows of the E11 dispatch records and of this freeze"
+  - "no executor, workflow or prompt file changes, so the implementation hash stays 0ce7625b"
+not_authorized_by_this_record:
+  - any dispatch, re-run, or run appended after the freeze
+  - any export or push, and the publication of raw-data/E11-security/ (a separate decision, made through the export that carries it, which needs the human research lead's yes to its exact line)
+  - any change to a workflow, a protocol document other than the change log, a prompt, a SUT, or a raw file
+  - "any analysis: the E11 contribution to H5 (descriptive in weight, methods M1 and M2 reported separately) is a separate step under protocol/statistical-analysis-plan-v1.md, section 4, and starts only on its own instruction"
+  - any edit of the dashboard; the live status of the agent-instructions file is edited only in a separate commit, on its own approval
+resulting_freeze_commit: null   # a commit cannot name its own id; the commit that adds this file is the freeze commit
+next_steps:
+  - the export that publishes raw-data/E11-security/, the dispatch records, this freeze and the status lines, which needs the human research lead's yes to its exact push line (the bundles carry no host path: to be checked before the export)
+  - the export-log entries and the post-push audit in PUBLIC-EXPORT-MANIFEST.yaml
+  - the refresh of the dashboard research-status.html (standing rule), when asked
+  - the E11 contribution to H5 (descriptive), on a separate instruction
+notes: |
+  The freeze closes the set of E11 runs of this campaign version. It introduces no sample size, exclusion rule, attribution rule, or comparison that was not already in the locked configuration.
+  No E11 result is analyzed or summarized by this record.

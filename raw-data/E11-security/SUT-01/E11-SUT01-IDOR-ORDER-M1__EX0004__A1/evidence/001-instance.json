@@ -1,0 +1,44 @@
+{
+  "interface_version": 1,
+  "sut_id": "SUT-01",
+  "record_class": "MEASURED_EXPERIMENT",
+  "surfaces": {
+    "api": {
+      "base_url": "http://127.0.0.1:8000"
+    }
+  },
+  "provisioning": {
+    "repository": "https://github.com/gsanchezm/OmniPizza",
+    "commit_sha": "9ca37674d374e9303912e259641ee86baf3aabe1",
+    "release": null,
+    "route": "GitHub-hosted runner, provisioned in this job: clone of the pinned commit; api: setup-python 3.11, pip install -r requirements.txt in backend/, uvicorn main:app on 127.0.0.1:8000 in its own session and process group (the web frontend is not provisioned: no E11 cell uses it)",
+    "asset": {
+      "name": null,
+      "sha256": null
+    }
+  },
+  "process": {
+    "pid": 2404,
+    "pgid": 2404,
+    "port": 8000,
+    "start_command": [
+      "/opt/hostedtoolcache/Python/3.11.18/x64/bin/python",
+      "-m",
+      "uvicorn",
+      "main:app",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "8000"
+    ],
+    "cwd": "<instance>/sut/backend",
+    "env": {},
+    "readiness_url": "/health",
+    "readiness_timeout_s": 180,
+    "stop_timeout_s": 30
+  },
+  "logs": [
+    "<instance>/api-stdout.log",
+    "<instance>/api-stderr.log"
+  ]
+}

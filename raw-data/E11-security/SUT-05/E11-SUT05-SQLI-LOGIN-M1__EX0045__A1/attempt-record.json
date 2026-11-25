@@ -1,0 +1,101 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E11-SUT05-SQLI-LOGIN-M1__EX0045__A1",
+  "condition": "E11-SUT05-SQLI-LOGIN-M1",
+  "execution_id": "EX0045",
+  "attempt": 1,
+  "outcome_category": "M1_ORACLE_FLIPPED",
+  "observed": "loginAdminChallenge solved after [('POST', '/rest/user/login', 200)]",
+  "cause": null,
+  "attribution": "SUT",
+  "stimulus_request_sent": true,
+  "last_phase": "classification",
+  "duration_s": 2.748,
+  "steps": [
+    {
+      "phase": "reset",
+      "description": "restart the SUT process (SIGTERM to the process group, port refused, start in a new session and group, readiness)",
+      "mechanisms": [
+        "ENVIRONMENT_RESTART"
+      ],
+      "started_at": "2026-11-24T19:58:42.356Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "stop_signal": "SIGTERM to process group 3964",
+        "stop_sent_at": "2026-11-24T19:58:42.379Z",
+        "port_refused_at": "2026-11-24T19:58:42.879Z",
+        "port_polls": 2,
+        "start_at": "2026-11-24T19:58:42.903Z",
+        "new_pid": 3994,
+        "new_pgid": 3994,
+        "ready_at": "2026-11-24T19:58:44.969Z",
+        "readiness_polls": 3,
+        "last_readiness_status": 200
+      },
+      "evidence": [
+        "evidence/002-process-tree-before-stop.txt",
+        "evidence/003-process-tree-after-stop.txt",
+        "evidence/004-process-tree-after-restart.txt"
+      ],
+      "finished_at": "2026-11-24T19:58:44.995Z"
+    },
+    {
+      "phase": "starting-state",
+      "description": "GET /api/Challenges: the challenge loginAdminChallenge is not solved",
+      "mechanisms": [],
+      "started_at": "2026-11-24T19:58:44.995Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "status": 200,
+        "oracle_key": "loginAdminChallenge",
+        "solved": false
+      },
+      "evidence": [
+        "evidence/005-sut05-oracle-start.json"
+      ],
+      "finished_at": "2026-11-24T19:58:45.040Z"
+    },
+    {
+      "phase": "method",
+      "description": "M1 sequence for SQLI-LOGIN, then GET /api/Challenges",
+      "mechanisms": [],
+      "started_at": "2026-11-24T19:58:45.040Z",
+      "outcome": "OBSERVED",
+      "observation": {
+        "steps": [
+          {
+            "method": "POST",
+            "path": "/rest/user/login",
+            "status": 200,
+            "error": null
+          }
+        ],
+        "oracle_status": 200,
+        "oracle_key": "loginAdminChallenge",
+        "solved": true,
+        "oracle_error": null,
+        "oracle_polls": 1,
+        "oracle_waited_s": 0.037
+      },
+      "evidence": [
+        "evidence/006-sut05-m1-1.json",
+        "evidence/007-sut05-oracle-first-read.json"
+      ],
+      "finished_at": "2026-11-24T19:58:45.103Z"
+    },
+    {
+      "phase": "classification",
+      "description": "classify the method observation",
+      "mechanisms": [],
+      "started_at": "2026-11-24T19:58:45.103Z",
+      "outcome": "OBSERVED",
+      "observation": {
+        "category": "M1_ORACLE_FLIPPED"
+      },
+      "evidence": [],
+      "finished_at": "2026-11-24T19:58:45.103Z"
+    }
+  ],
+  "notes": [],
+  "note": "attribution is mechanical (D-16, D-16b): TOOLING only for an exception before the stimulus request was sent; the label is carried in outcome.outcome_category of run-manifest.json and never changes a rate"
+}

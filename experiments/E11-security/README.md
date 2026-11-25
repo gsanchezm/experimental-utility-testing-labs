@@ -31,7 +31,7 @@ Determine whether each evaluated ecosystem (each a system under test, SUT) provi
 
 ## Current status
 
-IN PROGRESS since the campaign START of 2026-11-24 (human authorization E11-START-AUTH-01; record manifests/e11-campaign-start-v1.yaml). The "Campaign configuration" section below is locked. The START authorized no dispatch and no dispatch authorization.
+FROZEN since the campaign freeze of 2026-11-24 (human authorization E11-FREEZE-AUTH-01; protocol/change-control-v1.md, section 7, moment 2; record manifests/e11-campaign-freeze-v1.yaml), after IN PROGRESS from the campaign START of 2026-11-24 (E11-START-AUTH-01; record manifests/e11-campaign-start-v1.yaml). The "Campaign configuration" section below is locked and immutable. The 700 executions (fourteen cells on SUT-01 (2) and SUT-05 (12), N = 50 each, all attempt 1) were imported unchanged under raw-data/E11-security/ on 2026-11-24 UTC within the two dispatch authorizations E11-DISPATCH-SUT01-AUTH-01 and E11-DISPATCH-SUT05-AUTH-01 (manifests/e11-dispatch-authorization-sut0N-v1.yaml; dispatch records manifests/e11-measured-dispatch/e11-sut0N.jsonl); raw-data/E11-security/ is append-only. The raw data are not yet published and the E11 contribution to H5 has not been analyzed.
 
 Resumed by the human research lead's decision of 2026-11-02 (manifests/campaign-resumption-v1.yaml); the deferral of scope A (manifests/campaign-disposition-v1.yaml) no longer governs the schedule. Preparation record: manifests/campaign-execution-decisions-v19.yaml to -v22.yaml; environment verification: manifests/e11-environment-verification-rounds-v1.yaml (rounds 1 and 2).
 

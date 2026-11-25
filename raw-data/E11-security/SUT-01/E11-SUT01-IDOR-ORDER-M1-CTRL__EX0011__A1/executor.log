@@ -1,0 +1,16 @@
+{"t": "2026-11-24T20:03:02.861Z", "event": "run-start", "condition": "E11-SUT01-IDOR-ORDER-M1-CTRL", "run_id": "E11-SUT01-IDOR-ORDER-M1-CTRL__EX0011__A1", "record_class": "MEASURED_EXPERIMENT"}
+{"t": "2026-11-24T20:03:02.861Z", "event": "step-start", "phase": "reset", "description": "restart the backend process (SIGTERM to the process group, port refused, start in a new session and group, readiness)"}
+{"t": "2026-11-24T20:03:04.431Z", "event": "step-end", "phase": "reset", "outcome": "SUCCESS"}
+{"t": "2026-11-24T20:03:04.431Z", "event": "step-start", "phase": "starting-state", "description": "the owner and the requester log in; the owner creates one order (POST /api/cart, POST /api/checkout)"}
+{"t": "2026-11-24T20:03:04.434Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/auth/login", "status": 200, "error": null, "elapsed_s": 0.003, "evidence": "evidence/005-sut01-login-owner.json"}
+{"t": "2026-11-24T20:03:04.436Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/auth/login", "status": 200, "error": null, "elapsed_s": 0.001, "evidence": "evidence/006-sut01-login-requester.json"}
+{"t": "2026-11-24T20:03:04.438Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/cart", "status": 200, "error": null, "elapsed_s": 0.002, "evidence": "evidence/007-sut01-owner-cart.json"}
+{"t": "2026-11-24T20:03:07.440Z", "event": "http", "method": "POST", "url": "http://127.0.0.1:8000/api/checkout", "status": 200, "error": null, "elapsed_s": 3.002, "evidence": "evidence/008-sut01-owner-checkout.json"}
+{"t": "2026-11-24T20:03:07.441Z", "event": "step-end", "phase": "starting-state", "outcome": null}
+{"t": "2026-11-24T20:03:07.441Z", "event": "step-start", "phase": "method", "description": "GET /api/orders/{order_id} as standard_user"}
+{"t": "2026-11-24T20:03:07.441Z", "event": "stimulus-sent"}
+{"t": "2026-11-24T20:03:07.442Z", "event": "http", "method": "GET", "url": "http://127.0.0.1:8000/api/orders/ORDER-69C9498B", "status": 403, "error": null, "elapsed_s": 0.001, "evidence": "evidence/009-sut01-m1-get-order.json"}
+{"t": "2026-11-24T20:03:07.443Z", "event": "step-end", "phase": "method", "outcome": "OBSERVED"}
+{"t": "2026-11-24T20:03:07.443Z", "event": "step-start", "phase": "classification", "description": "classify the method observation"}
+{"t": "2026-11-24T20:03:07.443Z", "event": "step-end", "phase": "classification", "outcome": "OBSERVED"}
+{"t": "2026-11-24T20:03:07.443Z", "event": "run-end", "category": "M1_IDOR_BLOCKED", "attribution": "SUT"}

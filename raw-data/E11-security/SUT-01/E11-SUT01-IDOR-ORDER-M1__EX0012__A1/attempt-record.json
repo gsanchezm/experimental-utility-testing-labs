@@ -1,0 +1,94 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E11-SUT01-IDOR-ORDER-M1__EX0012__A1",
+  "condition": "E11-SUT01-IDOR-ORDER-M1",
+  "execution_id": "EX0012",
+  "attempt": 1,
+  "outcome_category": "M1_IDOR_BYPASS_OBSERVED",
+  "observed": "HTTP 200 for the order of another user, requested as security_glitch_user",
+  "cause": null,
+  "attribution": "SUT",
+  "stimulus_request_sent": true,
+  "last_phase": "classification",
+  "duration_s": 4.56,
+  "steps": [
+    {
+      "phase": "reset",
+      "description": "restart the backend process (SIGTERM to the process group, port refused, start in a new session and group, readiness)",
+      "mechanisms": [
+        "ENVIRONMENT_RESTART"
+      ],
+      "started_at": "2026-11-24T19:57:05.297Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "stop_signal": "SIGTERM to process group 2527",
+        "stop_sent_at": "2026-11-24T19:57:05.311Z",
+        "port_refused_at": "2026-11-24T19:57:05.812Z",
+        "port_polls": 2,
+        "start_at": "2026-11-24T19:57:05.826Z",
+        "new_pid": 2540,
+        "new_pgid": 2540,
+        "ready_at": "2026-11-24T19:57:06.832Z",
+        "readiness_polls": 2,
+        "last_readiness_status": 200
+      },
+      "evidence": [
+        "evidence/002-process-tree-before-stop.txt",
+        "evidence/003-process-tree-after-stop.txt",
+        "evidence/004-process-tree-after-restart.txt"
+      ],
+      "finished_at": "2026-11-24T19:57:06.846Z"
+    },
+    {
+      "phase": "starting-state",
+      "description": "the owner and the requester log in; the owner creates one order (POST /api/cart, POST /api/checkout)",
+      "mechanisms": [],
+      "started_at": "2026-11-24T19:57:06.846Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "owner_login_status": 200,
+        "requester_login_status": 200,
+        "cart_status": 200,
+        "checkout_status": 200,
+        "order_id_received": true
+      },
+      "evidence": [
+        "evidence/005-sut01-login-owner.json",
+        "evidence/006-sut01-login-requester.json",
+        "evidence/007-sut01-owner-cart.json",
+        "evidence/008-sut01-owner-checkout.json"
+      ],
+      "finished_at": "2026-11-24T19:57:09.855Z"
+    },
+    {
+      "phase": "method",
+      "description": "GET /api/orders/{order_id} as security_glitch_user",
+      "mechanisms": [],
+      "started_at": "2026-11-24T19:57:09.855Z",
+      "outcome": "OBSERVED",
+      "observation": {
+        "status": 200,
+        "error": null,
+        "requester": "security_glitch_user"
+      },
+      "evidence": [
+        "evidence/009-sut01-m1-get-order.json"
+      ],
+      "finished_at": "2026-11-24T19:57:09.857Z"
+    },
+    {
+      "phase": "classification",
+      "description": "classify the method observation",
+      "mechanisms": [],
+      "started_at": "2026-11-24T19:57:09.857Z",
+      "outcome": "OBSERVED",
+      "observation": {
+        "category": "M1_IDOR_BYPASS_OBSERVED"
+      },
+      "evidence": [],
+      "finished_at": "2026-11-24T19:57:09.857Z"
+    }
+  ],
+  "notes": [],
+  "note": "attribution is mechanical (D-16, D-16b): TOOLING only for an exception before the stimulus request was sent; the label is carried in outcome.outcome_category of run-manifest.json and never changes a rate"
+}
