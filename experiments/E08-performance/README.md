@@ -36,6 +36,8 @@ NOT STARTED
 
 Resumed by the human research lead's decision of 2026-11-02 (manifests/campaign-resumption-v1.yaml); the deferral of scope A (manifests/campaign-disposition-v1.yaml) no longer governs the schedule: the status above is unchanged, preparation may begin, and the campaign START needs its own explicit human authorization (protocol/change-control-v1.md, section 7).
 
+Preparation (operation OP-PREP-E08, drafts only, 2026-11-26): the design brief, the campaign configuration draft, the conditions file, the controlled-instance status (every entry NOT_VERIFIED), the DRY_RUN plan, the draft executor under executor/ and the two dispatch-only workflows `e08-environment-verification.yml` and `e08-measured-execution.yml` exist in the working tree. They start, configure, authorize and dispatch nothing: no DRY_RUN has run, the campaign has no START record, no locked configuration and no dispatch authorization, and the status above is unchanged.
+
 ## Warning
 
 Protocol must be finalized (FROZEN-PRE-DATA) before execution. Do not execute without explicit instruction.

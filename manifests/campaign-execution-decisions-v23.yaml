@@ -1,0 +1,43 @@
+# manifests/campaign-execution-decisions-v23.yaml -- decision of 2026-11-26 (UTC), round 1 of the E08 preparation (operation OP-PREP-E08-01; CAMPAIGN-EXECUTION-DECISIONS-23): the scope of the conditions that move the H5 count, the CLS condition of SUT-03, the remaining defaults of E08, the instrument pin, and the go-ahead to build the public export v90 locally.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing (the go-ahead covers a local build and verification only, no push). Immutable once committed; a correction is a new version file. Earlier rounds: -v2 to -v22 (unchanged).
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-23"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E08-01"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-26"
+recorded_at_utc: "2026-11-26T17:26:47Z"
+executes_anything: false
+protocol_change: false
+supersedes: null
+evidence_basis: "experiments/E08-performance/campaign-configuration-draft.md (commits 697f1b9d9 and 626338126, sections 2 to 6), experiments/E08-performance/design-brief-draft.md (sections 8 and 9), experiments/E08-performance/conditions-draft.json, experiments/E08-performance/executor/IMPLEMENTATION-NOTES.md; the static source reading of section 4c of the configuration draft (pinned commits of SUT-01, SUT-02 and SUT-03, files read through the GitHub contents API on 2026-11-26, nothing cloned or executed)."
+earlier_acceptance_not_reproduced: "The acceptance of the recommended defaults of the E08 design brief (E08-D-1 to E08-D-7) was given by the human research lead in the same single-agent conversation earlier on 2026-11-24 (UTC), as manifests/campaign-execution-decisions-v19.yaml records for the briefs of E08, E10, E11 and E12; the exact text of that answer is not available and is not reconstructed here. E08-D-1 to E08-D-7 are accepted again below, with the exact text of the answer."
+human_decision:
+  given_by: the human research lead
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), the first of the E08 preparation"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_e08_round_1:
+    transcript_stamp: null
+    transcript_stamp_note: "the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_at_utc above is the system clock when this file was written, after the answer"
+    bytes: 2801
+    exact_text_sha256: 05a7b8b17191a0dd368828907e735d48f60cc147a87ea924e0442308dca6ada6
+    note: the answer of the question dialog, whole; the chosen options are the decisions
+    exact_text: "Your questions have been answered: \"E08-D-17 (alcance de condiciones que mueven el conteo de H5): el borrador mide 4 condiciones web (conteo SUT-01 1, SUT-02 1, SUT-03 2). El brief también admite el pico aleatorio de latencia de SUT-01 (endpoint de API GET /api/debug/latency-spike, SUT01-EV-0016) y la vista 2G de SUT-03 (SUT03-EV-0015, requiere emulación de red CDP en Chromium). Ninguno es una carga de página de una superficie web, que es lo que mide el instrumento. ¿Cuáles cuentan en E08?\"=\"A: solo las 4 web (Recomendada)\", \"E08-D-8 (CLS de SUT-03): la lectura estática de pages/sut/ui/high-cls.jsx predice que la página NO produce desplazamiento de diseño (el bloque #shift-target crece después de #target-text y es el último bloque, así que ningún elemento visible se mueve). Eso contradice el registro E01 SUT03-EV-0012 (E01 no se toca) y es una predicción por código, no una observación. ¿Mantengo la condición E08-SUT03-WEB-CLS con la expectativa del registro E01?\"=\"Mantener (Recomendada)\", \"Defaults restantes, para reconfirmar con texto exacto: E08-D-1 a D-7 del brief (SUT-01/02/03 web; unidad de conteo; condiciones; Playwright con APIs de rendimiento del navegador; regla y tolerancias de 500 ms; N = 50; resultados casi seguros = evidencia de controlabilidad, no poder discriminante) y los nuevos D-9 (3 cargas por ejecución en contextos nuevos, orden rotatorio, falso positivo línea base contra línea base), D-10 (sin escenario canónico), D-12 (ventana de 8000 ms), D-13 (presupuestos de tiempo, se fijan con los DRY_RUN), D-14 (INCONCLUSIVE_EXTERNAL_IMAGE_NOT_LOADED con atribución EXTERNAL), D-15 (verificación de entorno propia en GitHub Actions), D-16 (prompt congelado y lock de implementación propios), D-18 (denominadores: detección sobre DETECTED + NOT_DETECTED; falso positivo sobre ejecuciones con ambas líneas base válidas) y D-19 (línea base de LCP = /sut/ui/zero-cls). ¿Los aceptas todos tal cual están en campaign-configuration-draft.md?\"=\"Sí, todos como recomendados (Recomendada)\", \"E08-D-11 (instrumento): Playwright for Python 1.63.0 (el pin de tools.web_runner) con el Chromium que esa versión instala (no fijado por digest; su versión queda en cada run), el script de medición e08-probe-v1 y el esquema run-manifest v2; la entrada tools.performance del manifiesto de herramientas se escribe solo después de tu aprobación. Para poder pedirte el primer DRY_RUN, los workflows deben estar en el repositorio público, así que hace falta un export (v90). ¿Apruebas el pin y construyo ahora el export v90 localmente (sin push)? El push y el despacho del DRY_RUN serían preguntas aparte, cada una con su línea exacta.\"=\"Pin como está y construir export v90 local (Recomendada)\". You can now continue with these answers in mind."
+decisions:
+  - id: E08-D-17
+    subject: "scope of the conditions that move the H5 count"
+    decision: "Option A: the four web conditions only (E08-SUT01-WEB-DELAY, E08-SUT02-WEB-BLOCK, E08-SUT03-WEB-LCP, E08-SUT03-WEB-CLS); counts SUT-01 1, SUT-02 1, SUT-03 2. SUT-01's random latency spike (SUT01-EV-0016) and SUT-03's 2G view (SUT03-EV-0015) are not conditions of E08, for the same reason (the instrument measures page loads of a web surface), and neither is excluded for being unfavorable to any SUT; the limit is stated in every report of E08."
+  - id: E08-D-8
+    subject: "the CLS condition of SUT-03"
+    decision: "Keep E08-SUT03-WEB-CLS with the expectation of the E01 record SUT03-EV-0012 (a late layout shift of #target-text), although the static reading of pages/sut/ui/high-cls.jsx predicts none; a NOT_DETECTED is a valid outcome and the expectation is not changed after any DRY_RUN; the count of SUT-03 is 2."
+  - id: E08-DEFAULTS
+    subject: "the remaining defaults of E08"
+    decision: "Accepted as recommended in experiments/E08-performance/campaign-configuration-draft.md, section 6: E08-D-1 to E08-D-7 (design brief, section 8), E08-D-9, E08-D-10, E08-D-12, E08-D-13, E08-D-14, E08-D-15, E08-D-16, E08-D-18 and E08-D-19."
+  - id: E08-D-11
+    subject: "the instrument pin and the run-manifest schema"
+    decision: "Playwright for Python 1.63.0 (the pin of tools.web_runner) with the Chromium build that this version installs (not hash-pinned by the study; its version is recorded in every run), the measurement script probe version e08-probe-v1, and run-manifest schema v2; the entry tools.performance of manifests/toolchain-manifest.yaml is written on this approval as a pin (install_date and platform stay null)."
+    toolchain_manifest_changed: true
+  - id: E08-GO-1
+    subject: "public export v90"
+    decision: "Build the public export v90 locally and verify it, with no push; the push of v90 and the dispatch of the first DRY_RUN round are separate questions, each with its exact line."
+not_decided_in_this_round: "The push of v90, DRY_RUN round 1, the campaign START, the three dispatch authorizations, the freeze, the H5 analysis of the E08 contribution, and every other public export: each needs its own explicit human approval. The time budgets (E08-D-13) are set from the DRY_RUN durations before the START."

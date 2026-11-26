@@ -201,11 +201,15 @@ tools:
       - zest@48.14.0
     notes: "The add-ons are the marketplace state at the image build of 2026-11-03 (derived beforehand as ascanrules 84, pscanrules 77, commonlib 1.44.0 and observed equal). A change of the image digest or of any add-on is a new pin and a new decision. Observed, not installed by hand."
   performance:
-    candidate: "TBD between appropriate open-source tools"
-    version: null
-    install_date: null
+    candidate: "Playwright for Python with the browser's own Performance APIs, read by a PerformanceObserver script (probe version e08-probe-v1)"
+    version: "1.63.0"  # the Playwright pin of tools.web_runner and of experiments/E08-performance/executor/requirements.txt; the gate G-10 of the E08 measured workflow requires the three to be equal
+    probe_version: "e08-probe-v1"  # PROBE_VERSION of experiments/E08-performance/executor/executor/probe.py
+    browser: "Chromium, the build that Playwright 1.63.0 installs with `playwright install chromium`; not hash-pinned by the study; its version is recorded in every run manifest (toolchain.browser)"
+    pinned_by: ORCHESTRATOR
+    pinned_at: "2026-11-26"
+    install_date: null  # a pin, not an install record: install_date and platform stay null until an environment-verification run has recorded the Chromium build
     platform: null
-    notes: null
+    notes: "Pinned on the human research lead's explicit approval of 2026-11-26 (decision E08-D-11 of experiments/E08-performance/campaign-configuration-draft.md, answer recorded in manifests/campaign-execution-decisions-v23.yaml). The pin authorizes no run, no installation, no campaign START and no dispatch."
   api:
     candidate: "Python 3 standard library HTTP client (urllib.request)"
     version: "the runner's python3 (3.12 series on ubuntu-24.04 at preparation; exact version recorded per run in the run manifest toolchain)"

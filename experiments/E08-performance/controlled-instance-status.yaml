@@ -1,0 +1,48 @@
+# experiments/E08-performance/controlled-instance-status.yaml -- written by the ORCHESTRATOR on 2026-11-26 as the DRAFT of the status record of the four E08 conditions.
+# The status of a condition is that of the latest environment-verification run that covers it. An entry becomes VERIFIED only on the recorded result of a run; no E08 environment-verification run exists yet, so every entry below is NOT_VERIFIED and the measured workflow fails closed on it. The runs are DRY_RUN runs and are never measured data. Nothing here is a measurement and nothing here authorizes a dispatch.
+study_id: EUS-2026-001
+campaign_id: E08-performance
+updated: '2026-11-26'
+campaign_status: NOT_STARTED
+measured_execution_prerequisites_common:
+- "campaign START"
+- "locked campaign configuration"
+- "agent-governance-v6 frozen and in force since 2026-11-06 (Section 3.7)"
+- "a dispatch authorization for the assigned SUT"
+- "the frozen dispatch procedure prompt ORCHESTRATOR-E08-performance-v1"
+- "the implementation hash equal to the locked value"
+- "the toolchain entry tools.performance equal to the pins of the implementation (Playwright version and probe version)"
+verification_record: null
+conditions:
+  E08-SUT01-WEB-DELAY:
+    status: NOT_VERIFIED
+    reverification_required: true
+    github_actions_verification:
+      status: NOT_VERIFIED
+      environment_type: null
+      run_id: null
+      instance: "SUT-01 web and api to be provisioned in the job from the pinned commit 9ca37674d374e9303912e259641ee86baf3aabe1 on a GitHub-hosted runner; never a PUBLIC_HOSTED instance"
+  E08-SUT02-WEB-BLOCK:
+    status: NOT_VERIFIED
+    reverification_required: true
+    github_actions_verification:
+      status: NOT_VERIFIED
+      environment_type: null
+      run_id: null
+      instance: "SUT-02 web to be provisioned in the job from the pinned commit 60fdd634bb111c092282fa07977513a0a7765593 on a GitHub-hosted runner; never a PUBLIC_HOSTED instance"
+  E08-SUT03-WEB-LCP:
+    status: NOT_VERIFIED
+    reverification_required: true
+    github_actions_verification:
+      status: NOT_VERIFIED
+      environment_type: null
+      run_id: null
+      instance: "SUT-03 web to be provisioned in the job from the pinned commit 7ab934d733f2f74d4b912e94e86f59ae0f6b7609 on a GitHub-hosted runner (Node.js 14, next start); never a PUBLIC_HOSTED instance; the delayed image comes from the external host picsum.photos"
+  E08-SUT03-WEB-CLS:
+    status: NOT_VERIFIED
+    reverification_required: true
+    github_actions_verification:
+      status: NOT_VERIFIED
+      environment_type: null
+      run_id: null
+      instance: "SUT-03 web to be provisioned in the job from the pinned commit 7ab934d733f2f74d4b912e94e86f59ae0f6b7609 on a GitHub-hosted runner (Node.js 14, next start); never a PUBLIC_HOSTED instance"

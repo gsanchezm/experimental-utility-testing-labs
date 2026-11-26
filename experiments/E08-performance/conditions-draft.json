@@ -1,0 +1,230 @@
+{
+  "record": "E08-performance conditions (DRAFT-1, 2026-11-25)",
+  "state": "DRAFT. Machine-readable mirror of section 3 and section 4 of experiments/E08-performance/campaign-configuration-draft.md; read by the E08 executor and, later, by the analysis. Not locked, not hashed, not an authorization. When the configuration is locked, this file is hashed with it. Every threshold, tolerance, page and account below is written from the E01 evidence records and the static source reading of section 4c of the configuration draft, before any DRY_RUN; no value comes from a measured or DRY_RUN outcome.",
+  "campaign_id": "E08-performance",
+  "n_per_condition": 50,
+  "observe_window_ms": 8000,
+  "load_roles": {
+    "D": "the degraded load (the ground-truth condition)",
+    "Ba": "the paired baseline load that is earlier in time within the execution",
+    "Bb": "the paired baseline load that is later in time within the execution (baseline against baseline: the false-positive check)"
+  },
+  "load_orders": [
+    [
+      "D",
+      "Ba",
+      "Bb"
+    ],
+    [
+      "Ba",
+      "D",
+      "Bb"
+    ],
+    [
+      "Ba",
+      "Bb",
+      "D"
+    ]
+  ],
+  "load_order_rule": "execution index i (absolute, so that a further attempt keeps the schedule) uses load_orders[(i - 1) mod 3]",
+  "category_sets": {
+    "start": [
+      "START_SURFACE_NOT_READY",
+      "START_ACTIVATION_NOT_CONFIRMED"
+    ],
+    "method": [
+      "DETECTED",
+      "NOT_DETECTED",
+      "INCONCLUSIVE_READY_SIGNAL_MISSING",
+      "INCONCLUSIVE_METRIC_ABSENT",
+      "INCONCLUSIVE_EXTERNAL_IMAGE_NOT_LOADED"
+    ],
+    "any": [
+      "INTERRUPTED_",
+      "STUB_NO_BUNDLE"
+    ]
+  },
+  "attribution_labels": [
+    "TOOLING",
+    "SUT",
+    "EXTERNAL"
+  ],
+  "behavior_class_values": [
+    "deterministic",
+    "stochastic",
+    "time-dependent",
+    "external dependency"
+  ],
+  "conditions": [
+    {
+      "condition_id": "E08-SUT01-WEB-DELAY",
+      "sut_id": "SUT-01",
+      "surface": "web",
+      "h5_counted": true,
+      "behavior_class": "deterministic",
+      "related_evidence_ids": [
+        "SUT01-EV-0014",
+        "SUT01-EV-0015"
+      ],
+      "degraded": {
+        "account": "performance_glitch_user",
+        "expected_login_behavior": "performance_glitch",
+        "page": "/catalog"
+      },
+      "baseline": {
+        "account": "standard_user",
+        "page": "/catalog"
+      },
+      "watch": {
+        "first_item": "h2[data-testid^=\"pizza-name-\"]"
+      },
+      "required_ready": [
+        "first_item"
+      ],
+      "metric": "first_item_ms",
+      "metric_definition": "performance.now() of the document of the load at the first attachment of an element matching h2[data-testid^=\"pizza-name-\"] (the first catalogue item)",
+      "unit": "ms",
+      "expected_effect": 3000,
+      "tolerance": 500,
+      "rule": {
+        "comparison": "delta_ge",
+        "threshold": 2500
+      },
+      "ready_timeout_ms": 20000,
+      "expected_category": "DETECTED",
+      "expected_text": "the first catalogue item of the degraded load appears at least 2500 ms later than in the paired baseline load of the same execution (expected effect 3000 ms from SUT01-EV-0015, tolerance 500 ms)",
+      "static_reading_prediction": null,
+      "external_dependency": null
+    },
+    {
+      "condition_id": "E08-SUT02-WEB-BLOCK",
+      "sut_id": "SUT-02",
+      "surface": "web",
+      "h5_counted": true,
+      "behavior_class": "deterministic",
+      "related_evidence_ids": [
+        "SUT02-EV-0001",
+        "SUT02-EV-0011"
+      ],
+      "degraded": {
+        "account": "performance_glitch_user",
+        "page": "/inventory.html"
+      },
+      "baseline": {
+        "account": "standard_user",
+        "page": "/inventory.html"
+      },
+      "watch": {
+        "inventory_list": "[data-test=\"inventory-list\"]",
+        "first_item": "[data-test^=\"add-to-cart-\"]"
+      },
+      "required_ready": [
+        "inventory_list"
+      ],
+      "metric": "longest_longtask_ms",
+      "metric_definition": "the largest duration among the Long Tasks API entries of the document of the load (an observed task of 0 entries is 0 ms)",
+      "unit": "ms",
+      "expected_effect": 5000,
+      "tolerance": 500,
+      "rule": {
+        "comparison": "delta_ge",
+        "threshold": 4500
+      },
+      "ready_timeout_ms": 30000,
+      "expected_category": "DETECTED",
+      "expected_text": "the longest long task of the degraded load of /inventory.html exceeds the one of the paired baseline load of the same execution by at least 4500 ms (expected effect 5000 ms from SUT02-EV-0011, tolerance 500 ms)",
+      "static_reading_prediction": null,
+      "external_dependency": null
+    },
+    {
+      "condition_id": "E08-SUT03-WEB-LCP",
+      "sut_id": "SUT-03",
+      "surface": "web",
+      "h5_counted": true,
+      "behavior_class": "external dependency",
+      "related_evidence_ids": [
+        "SUT03-EV-0013",
+        "SUT03-EV-0014"
+      ],
+      "degraded": {
+        "account": "testuser",
+        "page": "/sut/ui/high-lcp"
+      },
+      "baseline": {
+        "account": "testuser",
+        "page": "/sut/ui/zero-cls"
+      },
+      "watch": {
+        "content": "h2[id$=\"-title\"]",
+        "image": "#image-container img"
+      },
+      "required_ready": [
+        "content"
+      ],
+      "metric": "lcp_ms",
+      "metric_definition": "startTime of the last Largest Contentful Paint entry observed within the observation window of the load",
+      "unit": "ms",
+      "expected_effect": 3000,
+      "tolerance": 500,
+      "rule": {
+        "comparison": "delta_ge",
+        "threshold": 2500
+      },
+      "ready_timeout_ms": null,
+      "expected_category": "DETECTED",
+      "expected_text": "the largest paint of the degraded load of /sut/ui/high-lcp occurs at least 2500 ms later than the one of the paired baseline load of /sut/ui/zero-cls of the same execution (expected effect 3000 ms from SUT03-EV-0013, tolerance 500 ms)",
+      "static_reading_prediction": "The delayed element is an image of an external host (https://picsum.photos/1000/600, SUT03-EV-0013). When that image does not load, the degraded load cannot show the delayed largest paint and the execution is INCONCLUSIVE_EXTERNAL_IMAGE_NOT_LOADED (attribution EXTERNAL), never NOT_DETECTED.",
+      "external_dependency": {
+        "host": "picsum.photos",
+        "evidence_id": "SUT03-EV-0013",
+        "url_contains": "picsum.photos"
+      }
+    },
+    {
+      "condition_id": "E08-SUT03-WEB-CLS",
+      "sut_id": "SUT-03",
+      "surface": "web",
+      "h5_counted": true,
+      "behavior_class": "deterministic",
+      "related_evidence_ids": [
+        "SUT03-EV-0012",
+        "SUT03-EV-0014"
+      ],
+      "degraded": {
+        "account": "testuser",
+        "page": "/sut/ui/high-cls"
+      },
+      "baseline": {
+        "account": "testuser",
+        "page": "/sut/ui/zero-cls"
+      },
+      "watch": {
+        "content": "h2[id$=\"-title\"]",
+        "banner": "#shift-target h3"
+      },
+      "required_ready": [
+        "content"
+      ],
+      "metric": "cls",
+      "metric_definition": "the largest session-window sum of the values of the Layout Instability entries without recent input (the web.dev definition of Cumulative Layout Shift; windows end after a 1 s gap or at 5 s)",
+      "unit": "score",
+      "expected_effect": null,
+      "tolerance": null,
+      "rule": {
+        "comparison": "delta_gt",
+        "threshold": 0,
+        "also": {
+          "late_shift": {
+            "min_start_ms": 3500,
+            "target_element_id": "target-text"
+          }
+        }
+      },
+      "ready_timeout_ms": null,
+      "expected_category": "DETECTED",
+      "expected_text": "the degraded load of /sut/ui/high-cls records a layout shift at or after 3500 ms whose sources include the element #target-text, and its CLS is above the CLS of the paired baseline load of /sut/ui/zero-cls of the same execution (SUT03-EV-0012: a layout shift at exactly 4000 ms)",
+      "static_reading_prediction": "The static reading of pages/sut/ui/high-cls.jsx at the pinned commit (section 4c of the configuration draft) predicts NO layout shift of #target-text: the element that grows at 4000 ms (#shift-target) follows #target-text in the document, and the card is the last block of the page, so no element that was visible before moves. The expectation above is the one of the E01 evidence record and is kept (HUMAN DECISION E08-D-8); a NOT_DETECTED result is then a valid outcome and the expectation is not changed after a DRY_RUN.",
+      "external_dependency": null
+    }
+  ]
+}
