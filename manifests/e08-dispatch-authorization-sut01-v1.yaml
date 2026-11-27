@@ -1,0 +1,59 @@
+# manifests/e08-dispatch-authorization-sut01-v1.yaml -- record of the dispatch authorization E08-DISPATCH-SUT01-AUTH-01 (protocol/agent-governance-v6.md, Section 3.7).
+# The human research lead's issuance, for the assigned system under test (SUT) SUT-01, of the authorization under which the ORCHESTRATOR dispatches the frozen measured-execution workflow of E08-performance for the 1 executable condition listed below. ORCHESTRATOR record of operation OP-DISPATCH-E08-01. Immutable once committed; a revocation is a new record.
+# The record itself is not a measured experiment and executes nothing; the dispatches it covers are recorded one by one in manifests/e08-measured-dispatch/e08-sut01.jsonl.
+record_id: "E08-DISPATCH-AUTHORIZATION-SUT01-01"
+record_class: "E08_DISPATCH_AUTHORIZATION"
+authorization_id: "E08-DISPATCH-SUT01-AUTH-01"
+version: 1
+study_id: "EUS-2026-001"
+campaign_id: "E08-performance"
+operation_id: "OP-DISPATCH-E08-01"
+assigned_sut: "SUT-01"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-27"
+recorded_utc: "2026-11-27T12:32:30Z"
+status: "ISSUED"
+record_validity: "VALID"
+dispatch_eligibility: "ELIGIBLE"
+revoked: false
+attempt: 1
+authorization_date: "2026-11-27"
+issued_by: "human research lead"
+authorizes_dispatches: true  # of exactly the executions listed under scope, within the limits below
+measured_experiment: false  # this record; the executions it covers are MEASURED_EXPERIMENT runs of the frozen GitHub Actions path
+executes_anything: false
+revocable_by_the_human_research_lead: true  # at any time; no revocation exists at the time of this record
+campaign_start_authorization_id: E08-START-AUTH-01
+governing_protocol: protocol/agent-governance-v6.md, Section 3.7
+n_executions: 50  # per condition
+conditions:  # in the order of the dispatch fixed by the locked campaign configuration (experiments/E08-performance/README.md; experiments/E08-performance/conditions-draft.json)
+  - E08-SUT01-WEB-DELAY
+scope:
+  assigned_sut: SUT-01
+  executions_in_all: 50
+  order: "for the conditions in the order above, one condition at a time: the single workflow run of a condition (its executions EX0001 to EX0050) is dispatched only after the run before it concluded and was imported; never a second run of a condition while one is in progress; the chains of SUT-01, SUT-02 and SUT-03 are independent and may run concurrently"
+  attempt: 1  # attempt + 1 is dispatched only on a separate explicit instruction that names the condition and the execution
+  dispatches_per_condition: 1  # one workflow run holds the 50 executions of a condition
+  record_of_dispatches: manifests/e08-measured-dispatch/e08-sut01.jsonl  # append-only, committed before each dispatch; the run identity is appended after it
+  no_adaptation: "no decision whether, when, or how to dispatch depends on a measured output of any SUT (Sections 3.5 and 3.7)"
+  not_authorized: [any further attempt, any other condition or SUT, any change of workflow or executor, the freeze of the campaign]
+frozen_inputs:
+  public_repository: gsanchezm/experimental-utility-testing-labs
+  ref: main
+  public_main_when_issued: 5ffc01f6fd01419c33a2b45daae0b88e545a0d19
+  workflow: .github/workflows/e08-measured-execution.yml
+  workflow_sha256: 32696fafa7e9a9b85bd907aa6b8379721671bc3b9ead082a8eabddef687a546a
+  executor_prompt_version: ORCHESTRATOR-E08-performance-v1
+  executor_implementation_sha256: da24b1326d8ef55711fe077ac7363efccbf4c9d0277e6943e19649b9b1d7e4b2  # experiments/E08-performance/executor/run-condition.sh
+  executor_prompt_sha256: eaa751fc75a160f7fec89d4dbf5775f894ce99bc4f057b19c6190c792213a044  # prompts/frozen/ORCHESTRATOR-E08-performance-v1.md
+  campaign_start_authorization_id: E08-START-AUTH-01
+human_approval:
+  text_verbatim: "Your questions have been answered: \"¿Emites las autorizaciones de despacho de E08-performance? Solo tú puedes emitirlas (gobernanza v6, Sección 3.7). ALCANCE EXACTO. (A) E08-DISPATCH-SUT01-AUTH-01: SUT-01; 1 condición, E08-SUT01-WEB-DELAY; 50 ejecuciones (EX0001 a EX0050). (B) E08-DISPATCH-SUT02-AUTH-01: SUT-02; 1 condición, E08-SUT02-WEB-BLOCK; 50 ejecuciones. (C) E08-DISPATCH-SUT03-AUTH-01: SUT-03; 2 condiciones en este orden, E08-SUT03-WEB-LCP y luego E08-SUT03-WEB-CLS; 50 ejecuciones cada una, 100 en total. En conjunto 4 despachos y 200 ejecuciones. Las tres: intento 1, id de START E08-START-AUTH-01, una sola corrida de workflow por condición (las 50 ejecuciones van dentro de ese job, cada una con tres cargas de página en contextos de navegador nuevos); dentro de un SUT cada condición se despacha solo después de que la anterior concluyó y se importó; las cadenas de SUT-01, SUT-02 y SUT-03 son independientes y puedo correrlas a la vez; ningún segundo despacho de una condición mientras una está en curso; ningún re-run; ningún intento adicional sin tu aprobación explícita que nombre la condición y la ejecución. Insumos congelados que cada autorización registra: workflow .github/workflows/e08-measured-execution.yml (sha256 32696fafa7e9a9b85bd907aa6b8379721671bc3b9ead082a8eabddef687a546a), prompt ORCHESTRATOR-E08-performance-v1 (sha256 eaa751fc75a160f7fec89d4dbf5775f894ce99bc4f057b19c6190c792213a044), implementación run-condition.sh (sha256 da24b1326d8ef55711fe077ac7363efccbf4c9d0277e6943e19649b9b1d7e4b2), main público al emitir 5ffc01f6fd01419c33a2b45daae0b88e545a0d19 (export v91). Registro de despachos: manifests/e08-measured-dispatch/e08-sut01.jsonl, e08-sut02.jsonl y e08-sut03.jsonl, append-only, escrito y confirmado ANTES de cada despacho. Diferencia revelada: bajo esta sección das la aprobación una vez por SUT y ningún despacho espera a que veas el resultado anterior; los controles son la configuración bloqueada, el gate de 47 comprobaciones que ya pasa salvo la propia autorización, las condiciones de parada del prompt congelado (gate fallido, conclusión del workflow distinta de success, artefacto sin los 50 manifiestos, insumo distinto del bloqueo, cruce de un límite) y tu revocación en cualquier momento; un defecto que pase todos los gates y no active una parada se repite hasta una parada o una revocación, y todo análisis o publicación de estos resultados lo dice. Una categoría registrada (DETECTED, NOT_DETECTED, INCONCLUSIVE_, START_, INTERRUPTED_, STUB_NO_BUNDLE) es dato, nunca una parada. Tres cosas de E08 que te recuerdo: (1) E08-SUT03-WEB-CLS espera un desplazamiento tardío de #target-text que la lectura estática y la ronda 1 NO observaron; un NOT_DETECTED en las 50 es un resultado válido y la expectativa no se cambia (E08-D-8); (2) E08-SUT03-WEB-LCP depende del host externo picsum.photos: si la imagen no carga, la ejecución es INCONCLUSIVE_EXTERNAL_IMAGE_NOT_LOADED con atribución EXTERNAL, dato y no parada; (3) solo hubo una ronda de DRY_RUN. ESTADO QUE DEBES SABER: la validación del push de v91 en el repositorio público está en ROJO por un error mío (la fila del START en protocol/CHANGELOG.md tenía 6 de las 8 columnas de la tabla y no la atrapé antes del push, aunque la salida local la marcaba); ya está corregida en el canónico (commit d3f25de4c, local) y sigue roja en el público hasta el siguiente export. Qué NO hace esta emisión: no despacha nada todavía; las autorizaciones se registran verbatim con su sha256 en manifests/e08-dispatch-authorization-sut01-v1.yaml, -sut02-v1.yaml y -sut03-v1.yaml, hay que publicarlas con un export (v92, que construyo en local y cuyo push te pediré aparte con su línea exacta; llevará también la corrección del CHANGELOG) y el gate debe pasar sobre el árbol público (47 de 47 por condición) antes del primer despacho; el freeze y el análisis H5 son preguntas aparte.\"=\"APRUEBO las tres autorizaciones (Recomendada)\", \"Export público v92: ¿construyo en local el export v92 y lo verifico, sin push? Llevaría la corrección de la fila del CHANGELOG (para que la validación vuelva a verde), la entrada 91 del log de exports y, si las apruebas, las tres autorizaciones. Esta vez comparo la lista COMPLETA de pasos de validación contra la de v91 y v90, no solo la cola. El push de v92 es otra pregunta con su línea exacta.\"=\"Sí, construye v92 en local (Recomendada)\". You can now continue with these answers in mind."
+  bytes: 4491
+  sha256: a7d4359bd49ecaf8bb32e5e236414b08e5b8cb4d9e370ddac599a63fae9dafbe
+  received_utc: null  # the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_utc above is the system clock when this record was written, after the answer
+  question_stamp: null
+  chosen_option: "APRUEBO las tres autorizaciones (Recomendada)"
+  entry_kind: "the answer of the human research lead to one question that offered the issuance of the three authorizations E08-DISPATCH-SUT01-AUTH-01, E08-DISPATCH-SUT02-AUTH-01 and E08-DISPATCH-SUT03-AUTH-01 with the exact scope restated in the text above, the frozen inputs with their sha256 values, the disclosed difference (no dispatch waits for the human research lead to see the previous outcome; the controls are the locked configuration, the gate, the stop conditions of the frozen prompt and revocation) and what the issuance does not do; one answer covers the three records, so each carries the same text and hash"
+limits_and_stops: "the stop conditions of the frozen dispatch procedure prompts/frozen/ORCHESTRATOR-E08-performance-v1.md, section 4; on a stop nothing further is dispatched in this campaign under any authorization until the human research lead instructs a resumption"
+not_in_force_until: "this record is published by an export and the gate step of the measured workflow passes on the public tree; the first dispatch is recorded before it is made"
