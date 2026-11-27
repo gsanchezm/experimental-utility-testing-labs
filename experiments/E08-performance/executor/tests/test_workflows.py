@@ -190,8 +190,9 @@ class MeasuredWorkflowTests(unittest.TestCase):
                        "gate('configuration names the H5 hypothesis label'", 'no canonical scenario', 'G-10', 'tools.performance'):
             self.assertIn(needle, t)
         self.assertNotIn('CS-001', t)
-        for pattern in ('manifests/e08-campaign-start-*', 'manifests/e08-dispatch-authorization-*', 'manifests/e08-further-attempt-approval-*'):
-            self.assertEqual(glob.glob(os.path.join(REPO, pattern)), [], pattern)  # E08 is NOT_STARTED: none of these exists
+        # the START was applied on 2026-11-26 and authorized no dispatch: no dispatch authorization or further-attempt approval exists
+        for pattern in ('manifests/e08-dispatch-authorization-*', 'manifests/e08-further-attempt-approval-*'):
+            self.assertEqual(glob.glob(os.path.join(REPO, pattern)), [], pattern)
 
     def test_the_executor_is_run_only_on_the_locked_hash_with_no_executions_override_and_the_artifact_is_immutable(self):
         t = read(MEASURED)

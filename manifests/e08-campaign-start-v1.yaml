@@ -1,0 +1,58 @@
+# manifests/e08-campaign-start-v1.yaml -- provenance record of the E08-performance campaign START (operation OP-START-E08; protocol/change-control-v1.md, section 7, moment 1; modeled on manifests/e11-campaign-start-v1.yaml). Immutable once committed.
+record_class: "CAMPAIGN_START"
+record_id: "E08-CAMPAIGN-START-01"
+study_id: "EUS-2026-001"
+campaign_id: "E08-performance"
+operation_id: "OP-START-E08"
+recorded_by_role: "ORCHESTRATOR"
+start_date: "2026-11-26"
+start_date_note: "local date (America/Mexico_City), the convention of the E06 and E07 records; start_timestamp_utc is the same instant in UTC and falls on the following calendar day"
+start_timestamp_utc: "2026-11-27T00:21:24Z"
+authorization_id: "E08-START-AUTH-01"
+binding: "protocol/change-control-v1.md, section 7, moment 1 (campaign NOT_STARTED -> IN_PROGRESS)"
+approval:
+  given_by: the human research lead
+  channel: given directly to the ORCHESTRATOR in its conversation, as the answer to one question dialog of three questions (the time budgets E08-D-13, the START, the local build of the export v91)
+  question_stamp: null
+  answer_stamp: null
+  stamp_note: "the harness stamps of the dialog are not available to the ORCHESTRATOR in this session; the clock reading below is the system clock when the record was written, after the answer. answer_text restates the answer as it was returned, assembled from the three question strings that were sent and the three options chosen, in the format of the answer; its sha256 is that of the restated text, UTF-8, without a trailing line feed."
+  answer_text_bytes: 3237
+  answer_text_sha256: 9da9730b408313db01d134672c4d4d991dbddcc7236d16ed7c164ba3ad1ea11d
+  answer_text: "Your questions have been answered: \"E08-D-13, presupuestos de tiempo de E08. Hoy: watchdog del ejecutor 420 s por ejecución y límite de 120 min para el job medido. La ronda 1 de DRY_RUN observó unos 7 s (SUT-01), 14 s (SUT-02) y 25 s (SUT-03) por ejecución; las 50 ejecuciones de la condición más lenta tardan unos 21 min, así que son techos, no parámetros medidos. Cambiar cualquiera de los dos cambia el hash de implementación o el workflow, exige otra ronda DRY_RUN y una versión 2 del paquete de START. ¿Los mantengo?\"=\"Mantener (Recomendada)\", \"START de la campaña E08-performance (protocol/change-control-v1.md, sección 7, momento 1). Qué haría yo si dices que sí, todo en el repositorio canónico y sin despachar nada: (1) bloqueo el texto de 'Campaign configuration' (experiments/E08-performance/campaign-configuration-start-text-draft.md, sha256 dd95d4b2…) como sección de experiments/E08-performance/README.md: 4 condiciones web (SUT-01 una, SUT-02 una, SUT-03 dos), N = 50 cada una, 200 ejecuciones, intento 1, hipótesis H5 descriptiva, ejecutor da24b132…, esquema v2 9a86cf37…, archivo de condiciones e4aaf356…, workflow medido 32696faf…, commits fijados de SUT-01 9ca37674…, SUT-02 60fdd634…, SUT-03 7ab934d7…, Playwright 1.63.0 y sonda e08-probe-v1; (2) escribo manifests/e08-campaign-start-v1.yaml con el id E08-START-AUTH-01 (propuesto por mí; al aprobarlo lo emites tú); (3) congelo prompts/frozen/ORCHESTRATOR-E08-performance-v1.md como copia idéntica del prompt de trabajo (sha256 eaa751fc…); (4) agrego la fila 'campaign NOT_STARTED -> IN_PROGRESS' en protocol/CHANGELOG.md y paso E08 a IN_PROGRESS en manifests/study-manifest.yaml. El START no autoriza ningún despacho: las autorizaciones de SUT-01, SUT-02 y SUT-03, cada despacho, el freeze y el análisis H5 son preguntas aparte. Ensayo del gate del workflow medido sobre una copia temporal con esas ediciones: 47 de 47 gates en cada una de las 4 condiciones; sobre el árbol actual falla cerrado; 6 mutaciones fallan donde deben; 58 pruebas del ejecutor pasan. Te divulgo tres cosas: (a) solo hubo UNA ronda de DRY_RUN (E09 tuvo tres, E11 dos), limpia en las 4 condiciones; si prefieres otra antes del START, di que no; (b) el workflow medido que se bloquearía difiere del público (export v90) por una sola cadena de entorno (TIMEOUT_POLICY) y GitHub aún no lo ha leído; se verá en el push del export; (c) corregí dentro de un commit nuevo (305c73a18) el paquete aún no publicado (quité la cita de una ruta local y narrow de una aserción de prueba) en vez de crear un paquete v2. Solo aplica si en la pregunta anterior eliges 'Mantener'. ¿Aplico el START?\"=\"Sí, aplica el START (Recomendada)\", \"Export público v91: ¿construyo ahora en local el export v91 y lo verifico, sin push? Contendría el estado START de E08 (si lo aplicas), el workflow medido corregido, el registro de la ronda 1, el estado VERIFIED de las 4 condiciones y los registros de decisiones. El push del v91 es otra pregunta con su línea exacta y espera tu sí; después vendrían las tres autorizaciones de despacho, que también son solo tuyas.\"=\"Sí, construye v91 en local (Recomendada)\". You can now continue with these answers in mind."
+  chosen_option: "Sí, aplica el START (Recomendada)"
+  what_the_question_offered: "the START of E08-performance under the authorization id E08-START-AUTH-01 (proposed by the ORCHESTRATOR in the question and issued by the human research lead's approval); the lock of the text of experiments/E08-performance/campaign-configuration-start-text-draft.md (sha256 dd95d4b2d7ef25b616eb03bd73b5d203d7e8729370f727990c5b50449fa2e455) as the Campaign configuration section of experiments/E08-performance/README.md, with the hashes that the question named by prefix (executor implementation da24b132..., run-manifest schema v2 9a86cf37..., conditions file e4aaf356..., measured workflow 32696faf..., prompt eaa751fc..., the three pinned SUT commits); the START record; the freeze of the dispatch procedure prompt as a byte-identical copy; the change-log row and the status IN_PROGRESS; and the statement that the START authorizes no dispatch; it disclosed three things (one environment-verification round only; the measured workflow differs from the public export v90 by one environment string that GitHub has not read; the in-place correction of the unpublished package in commit 305c73a18), and was valid only if the time budgets were kept, which the first question of the same dialog answered with 'Mantener (Recomendada)' (manifests/campaign-execution-decisions-v24.yaml)"
+package:
+  path: experiments/E08-performance/campaign-configuration-start-text-draft.md
+  draft_sha256: dd95d4b2d7ef25b616eb03bd73b5d203d7e8729370f727990c5b50449fa2e455
+  package_record: manifests/e08-campaign-start-package-v1.yaml
+  note: "the locked section differs from the draft only by two deletions: the sentence that said the values are recomputed at the START ('DRAFT text: ...'), and the words 'TO BE ISSUED: this id is a proposal until the human research lead issues it' after the START id"
+locked:
+  implementation_sha256: da24b1326d8ef55711fe077ac7363efccbf4c9d0277e6943e19649b9b1d7e4b2
+  executable_conditions: "4 (the conditions of experiments/E08-performance/conditions-draft.json; SUT-01: 1, SUT-02: 1, SUT-03: 2)"
+  sample_size: "N = 50 per condition, EX0001 to EX0050, attempt 1 each (200 executions)"
+  prompt_version: ORCHESTRATOR-E08-performance-v1
+  prompt_sha256: eaa751fc75a160f7fec89d4dbf5775f894ce99bc4f057b19c6190c792213a044
+  conditions_file_sha256: e4aaf35651d3b8e0d1abd6c29b9716b733756f2af0332ef90713ccc75b499a98
+  measured_workflow_sha256: 32696fafa7e9a9b85bd907aa6b8379721671bc3b9ead082a8eabddef687a546a
+  schema_sha256: 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757
+  section_inserted_sha256: 240fa46e95cf4733c9c843983869a4ea80758cd659b8e8e1f6ae3e351d3e7ef2
+  time_budgets: "kept (E08-D-13, manifests/campaign-execution-decisions-v24.yaml): watchdog 420 s per execution, measured job 120 minutes"
+  start_authorization_id: E08-START-AUTH-01
+files_written:
+- experiments/E08-performance/README.md
+- protocol/CHANGELOG.md
+- manifests/study-manifest.yaml
+- manifests/README.md
+- prompts/frozen/ORCHESTRATOR-E08-performance-v1.md
+- manifests/e08-campaign-start-v1.yaml
+- manifests/campaign-execution-decisions-v24.yaml
+- experiments/E08-performance/controlled-instance-status.yaml
+- experiments/E08-performance/executor/tests/test_workflows.py
+- experiments/E08-performance/executor/tests/test_gates.py
+does_not:
+- "issue any dispatch authorization (E08-DISPATCH-SUT01-AUTH-01, E08-DISPATCH-SUT02-AUTH-01 and E08-DISPATCH-SUT03-AUTH-01 are names, not issued)"
+- "dispatch anything or run any workflow"
+- "export or push anything (the export v91 build was approved in the same dialog and is a local build with no push)"
+- "edit any workflow, executor file, or protocol document other than the change-log row"
+- "edit the agent-instructions file (its update needs the human research lead's yes)"
+next: "the export v91 (local build approved; its push needs the human research lead's yes to the exact line), the gate step re-run on the exported tree, then the dispatch authorizations of SUT-01, SUT-02 and SUT-03 that the human research lead issues under Section 3.7 (one record per SUT, N = 50, attempt 1, with the implementation and prompt SHA-256 values above), their export, and then the dispatches under the frozen procedure."

@@ -4,7 +4,7 @@ The gate script is extracted from the workflow file (step id "gates", the python
 directory set to a fake tree and the GATE_* inputs set in its environment. The must-pass tree is complete and fictitious (fixture identifiers
 only, not issued authorizations); every must-fail case changes exactly one thing and must fail on the gate it names. The "as-is" case runs
 against the files of this repository as they are and must fail closed, because E08 has no START, no configuration, no dispatch authorization,
-no controlled instance and no frozen prompt (the instrument pin of the toolchain manifest was approved on 2026-11-26 and its gates pass).
+no frozen prompt (the instrument pin was approved and the four conditions were verified by the DRY_RUN round of 2026-11-26, so those gates pass).
 """
 import hashlib
 import json
@@ -228,8 +228,9 @@ class GateTests(unittest.TestCase):
                 self.assertFailsOn(state, label, fragment)
 
     def test_as_is_repository_state_fails_closed(self):
-        """Run the gate against this repository as it is: E08 has none of the frozen inputs, so it must fail on the START, the configuration,
-        the dispatch authorization, the controlled instance, the frozen prompt and the instrument entry."""
+        """Run the gate against this repository as it is: the START was applied on 2026-11-26 (E08-START-AUTH-01) and no dispatch authorization was issued, so with
+        placeholder ids the gate must fail on the START id, the dispatch authorization and the frozen prompt of the placeholder, while the START status and the
+        locked configuration hold."""
         state = base_state()
         proc = subprocess.run([sys.executable, '-c', 'pass'])
         self.assertEqual(proc.returncode, 0)
@@ -244,12 +245,15 @@ class GateTests(unittest.TestCase):
         r = subprocess.run([sys.executable, script], cwd=REPO, env=env, capture_output=True, text=True, timeout=120)
         self.assertNotEqual(r.returncode, 0, r.stdout)
         fails = [l for l in r.stdout.splitlines() if l.startswith('FAIL ')]
-        for fragment in ('E08 campaign status IN_PROGRESS', 'locked "Campaign configuration" record exists', 'exactly one dispatch authorization record',
-                         'controlled instance status CONTROLLED', 'executor prompt frozen file exists'):
+        for fragment in ('START row carries the campaign START authorization id', 'exactly one dispatch authorization record', 'executor prompt frozen file exists'):
             self.assertTrue(any(fragment in l for l in fails), fragment + '\n' + r.stdout)
-        # the instrument pin was approved on 2026-11-26 (decisions v23): its three gates hold on the repository as it is
+        passes_start = [l for l in r.stdout.splitlines() if l.startswith('PASS ')]
+        for fragment in ('E08 campaign status IN_PROGRESS', 'locked "Campaign configuration" record exists'):
+            self.assertTrue(any(fragment in l for l in passes_start), fragment + '\n' + r.stdout)
+        # the instrument pin was approved on 2026-11-26 (decisions v23) and the first DRY_RUN round verified the four conditions: their gates hold on the repository as it is
         passes = [l for l in r.stdout.splitlines() if l.startswith('PASS ')]
-        for fragment in ('toolchain entry tools.performance names the instrument', 'tools.performance version equals the Playwright pin', 'tools.performance names the measurement script version'):
+        for fragment in ('toolchain entry tools.performance names the instrument', 'tools.performance version equals the Playwright pin', 'tools.performance names the measurement script version',
+                         'controlled instance status CONTROLLED', 'GitHub Actions environment verification VERIFIED', 'environment_type SELF_HOSTED'):
             self.assertTrue(any(fragment in l for l in passes), fragment + '\n' + r.stdout)
 
 

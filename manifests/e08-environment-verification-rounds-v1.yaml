@@ -1,0 +1,39 @@
+# manifests/e08-environment-verification-rounds-v1.yaml -- the non-measured environment-verification (DRY_RUN) rounds of E08-performance.
+# ORCHESTRATOR record. A DRY_RUN is never measured, never imported into raw-data/ and never changes an expectation. Each round is written before its dispatch and completed after the run; a correction is a new round.
+record_class: "ENVIRONMENT_VERIFICATION_ROUNDS"
+study_id: "EUS-2026-001"
+campaign_id: "E08-performance"
+workflow: ".github/workflows/e08-environment-verification.yml"
+rounds:
+  - round: 1
+    status: COMPLETED
+    recorded_before_dispatch_at_utc: "2026-11-26T18:48:07Z"
+    human_approval: "the human research lead's answer 'Sí, despacha esta línea (Recomendada)' to the exact line below, in the ORCHESTRATOR's conversation of 2026-11-26 (UTC)"
+    public_head_at_dispatch: "ab2757f24f29aec2b8280181bb7ad36617bc43c2"
+    exact_line: "gh workflow run e08-environment-verification.yml --repo gsanchezm/experimental-utility-testing-labs --ref main -f target=all -f executions=3 -f executor_prompt_version=ORCHESTRATOR-E08-performance-v1 -f executor_implementation_sha256=da24b1326d8ef55711fe077ac7363efccbf4c9d0277e6943e19649b9b1d7e4b2 -f dry_run=true"
+    inputs: {target: all, executions: 3, executor_prompt_version: ORCHESTRATOR-E08-performance-v1, executor_implementation_sha256: da24b1326d8ef55711fe077ac7363efccbf4c9d0277e6943e19649b9b1d7e4b2, dry_run: true}
+    rules: "one dispatch, no re-run, no cancel; the bundles are reviewed and never imported; nothing is measured; no expectation changes after the observation (E08-D-8)"
+    dispatched_at_utc: "2026-11-26T18:48:10Z"
+    dispatch_clock_reading: "read in the same shell as the dispatch: 2026-11-26T18:48:07Z (before the record commit) and 2026-11-26T18:48:10Z (after the dispatch); gh workflow run returned rc 0"
+    run:
+      run_id: 45878792738
+      url: https://github.com/gsanchezm/experimental-utility-testing-labs/actions/runs/45878792738
+      run_number: 1
+      run_attempt: 1
+      head_sha: ab2757f24f29aec2b8280181bb7ad36617bc43c2
+      created_at: "2026-11-26T18:48:10Z"
+      updated_at: "2026-11-26T18:52:21Z"
+      conclusion: success
+      jobs: {gate: success, plan: success, E08-SUT01-WEB-DELAY: success, E08-SUT02-WEB-BLOCK: success, E08-SUT03-WEB-LCP: success, E08-SUT03-WEB-CLS: success}
+      artifacts: [E08-DRY_RUN-E08-SUT01-WEB-DELAY-1, E08-DRY_RUN-E08-SUT02-WEB-BLOCK-1, E08-DRY_RUN-E08-SUT03-WEB-LCP-1, E08-DRY_RUN-E08-SUT03-WEB-CLS-1]
+    record_class_of_executions: DRY_RUN
+    execution_ids: [DR0001, DR0002, DR0003]
+    tool_versions_observed: {python: "3.12.16", bash: "5.2.21(1)-release", playwright_for_python: "1.63.0", chromium: "153.0.8010.12", probe_version: e08-probe-v1}
+    stderr_of_all_four_jobs: "empty"
+    outcome_counts_as_recorded: "the 12 executions (3 per condition) were recorded as: E08-SUT01-WEB-DELAY DETECTED 3; E08-SUT02-WEB-BLOCK DETECTED 3; E08-SUT03-WEB-LCP DETECTED 3; E08-SUT03-WEB-CLS NOT_DETECTED 3; every attribution SUT; no ERROR, ABORTED or INCONCLUSIVE execution; the baseline-against-baseline record is false in all 12. DRY_RUN outcomes are not data, not a rate and not a basis to change an expectation."
+    observations:
+      E08-SUT01-WEB-DELAY: "first_item_ms of D 3053.4 to 3065.7, of Ba 53.4 to 71.8, of Bb 61.4 to 70.4; D minus Ba 2990.6 to 3000.0 (threshold 2500); in the first execution the response of GET /api/pizzas ended at 3055 ms in D and at 57 and 59 ms in the baseline loads; the login of performance_glitch_user answered behavior performance_glitch and that of standard_user behavior standard; 6.7 to 6.8 s per execution, executor 23 s."
+      E08-SUT02-WEB-BLOCK: "the Long Tasks API is among the supported entry types of the Chromium used; D recorded one long task of 5005 ms starting at 40 ms; Ba and Bb recorded none (0.0 ms); the inventory list appeared at 5046 ms in D and at 30 and 33 ms in the baseline loads; the session cookie named the account in every load; 13.9 to 14.1 s per execution, executor 44 s."
+      E08-SUT03-WEB-LCP: "the largest paint of D was at 3412, 4220 and 4436 ms in the three executions, that of Ba and Bb at 100 to 116 ms (Ba equal to Bb); the image request of D started at about 3094 ms, was answered 302 by picsum.photos and then 200 by fastly.picsum.photos; the url of the largest-paint entry was recorded literally as https://picsum.photos/1000/600; the login form was hydrated before the click in every load; 24.8 to 24.9 s per execution, executor 77 s."
+      E08-SUT03-WEB-CLS: "the CLS metric is 0.03125 in all nine loads, degraded and baseline alike; in the loads of the first execution it comes from one shift entry of the element body (y from 0 to 40) at 94.5 to 110.1 ms, and the three executions record one entry per load at 94.6 to 111.5 ms; the banner of the high-CLS page was attached at 4092.2 to 4098.0 ms and no shift entry follows it (late_target_shift_entries 0 in the three executions), so the rule was not satisfied; 24.7 to 24.8 s per execution, executor 76 s. The predicted absence of a late shift of #target-text was observed; the statement 'cls 0' of the configuration draft (V-4b) was not exact, because every page of the area shows a hydration-time shift of 0.03125 (the rule compares D with Ba, so it is not affected)."
+    open_items_after_round: "E08-D-13 (time budgets): the observed durations are about 7 s (SUT-01), 14 s (SUT-02) and 25 s (SUT-03) per execution against a watchdog of 420 s and a measured-job limit of 120 min; changing either changes the implementation or the workflow and needs its own approval and a further round. The expectation of E08-SUT03-WEB-CLS is not changed (E08-D-8). Not observed by this round: the variation of the external image over 50 executions, the spread of the baselines over 50 executions, and any execution on the measured path."

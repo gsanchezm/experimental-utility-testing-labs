@@ -86,7 +86,7 @@ env:
   RECORD_CLASS: MEASURED_EXPERIMENT
   ARTIFACT_RETENTION_DAYS: "90"
   EXPECTED_EXECUTIONS: "50"
-  TIMEOUT_POLICY: "job timeout-minutes as declared (120, to be set from the measured DRY_RUN durations before the START; see the measured-execution job); no step retry; no automatic re-run"
+  TIMEOUT_POLICY: "job timeout-minutes as declared (measured-execution job 120 minutes, gate and provenance jobs 10 minutes); executor watchdog 420 s per execution; no step retry; no automatic re-run"
   RETRY_POLICY: "none: one job per dispatch; attempt 1 under the dispatch authorization; a further attempt only under a further-attempt approval record (G-E08-A2); github.run_attempt must be 1"
   CONCURRENCY_POLICY: "one run per condition at a time; never cancel in progress"
 

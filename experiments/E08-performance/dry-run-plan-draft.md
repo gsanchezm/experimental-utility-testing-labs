@@ -28,6 +28,10 @@ The dispatch line is offered to the human research lead in its exact form, with 
 6. The durations of an execution of each condition, from `duration_s` in the attempt records: the basis of E08-D-13 (the measured job limit and the watchdog are set from them).
 7. The version strings of Playwright and Chromium in the run manifests, for the entry of `tools.performance` (E08-D-11).
 
+## 3b. Round 1 happened (2026-11-26, run 45878792738)
+
+Its outcome is in manifests/e08-environment-verification-rounds-v1.yaml (all jobs success; 12 executions; four conditions VERIFIED in experiments/E08-performance/controlled-instance-status.yaml). Whether round 1 can serve as the START candidate depends on whether the implementation or the workflows change before the START (E08-D-13 time budgets are the open item): an unchanged implementation hash `da24b1326d8ef55711fe077ac7363efccbf4c9d0277e6943e19649b9b1d7e4b2` keeps the verification valid, a change needs a further round.
+
 ## 4. After round 1
 
 A red job is information, not a failure of the study: the bundle is uploaded with `if: always()`. The corrections are executor, workflow or configuration changes; each is a commit, a new public export and a new round (a third round is the START candidate, as for E05, E09 and E11). A START, the dispatch authorizations, the frozen prompt, the lock of the configuration and the freeze each need the human research lead's explicit approval.
