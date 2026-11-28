@@ -16,7 +16,7 @@ os.environ.setdefault('PYTHONDONTWRITEBYTECODE', '1')
 from executor import classify, common, config  # noqa: E402
 
 CFG = config.load()
-W, H = 1280, 800
+W, H = 1280, 900
 N = W * H
 THR = {'T_R': 0.0005, 'T_e': 0.01, 'provisional': True, 'source': 'floors (no calibration record)'}
 
@@ -78,16 +78,16 @@ FULL = mask_of(rects(*PRICES, *IMAGES))
 
 class GeometryTests(unittest.TestCase):
     def test_wholly_inside(self):
-        self.assertTrue(classify.wholly_inside(box(0, 0, 1280, 800), W, H))
-        self.assertTrue(classify.wholly_inside(box(10, 790, 20, 10), W, H))
-        self.assertFalse(classify.wholly_inside(box(10, 791, 20, 10), W, H))
+        self.assertTrue(classify.wholly_inside(box(0, 0, 1280, 900), W, H))
+        self.assertTrue(classify.wholly_inside(box(10, 890, 20, 10), W, H))
+        self.assertFalse(classify.wholly_inside(box(10, 891, 20, 10), W, H))
         self.assertFalse(classify.wholly_inside(box(-1, 5, 20, 10), W, H))
         self.assertTrue(classify.wholly_inside(box(40, 200, 700, 0), W, H))  # a zero-area box (a block of zero height) counts when its position is inside
 
     def test_box_to_rect_clips_and_drops_empty_boxes(self):
         self.assertEqual(classify.box_to_rect(box(10.2, 20.7, 30.1, 5.4), W, H), (10, 20, 41, 27))
         self.assertEqual(classify.box_to_rect(box(-5, -5, 20, 20), W, H), (0, 0, 15, 15))
-        self.assertEqual(classify.box_to_rect(box(1270, 790, 50, 50), W, H), (1270, 790, 1280, 800))
+        self.assertEqual(classify.box_to_rect(box(1270, 890, 50, 50), W, H), (1270, 890, 1280, 900))
         self.assertIsNone(classify.box_to_rect(box(40, 200, 700, 0), W, H))
         self.assertIsNone(classify.box_to_rect(None, W, H))
 
@@ -185,7 +185,7 @@ class RuleTests(unittest.TestCase):
         self.assertEqual((el['empty_region'], el['present_in_b'], el['detected'], res['detected']), (True, False, False, False))
 
     def test_elements_not_wholly_inside_the_viewport_in_a_are_not_considered(self):
-        a = cap({'price': [(PRICES[0], None), (box(100, 790, 60, 30), None)], 'image': [(IMAGES[0], img())]})
+        a = cap({'price': [(PRICES[0], None), (box(100, 890, 60, 30), None)], 'image': [(IMAGES[0], img())]})
         label, d = self.evaluate(mask_of(rects(PRICES[0], IMAGES[0])), a=a, b=a, a2=a)
         self.assertEqual(label, 'DETECTED')
         self.assertEqual(len(d['views'][0]['AB']['elements']), 2)
@@ -209,8 +209,8 @@ class FalsePositiveTests(unittest.TestCase):
         return classify.evaluate(self.c, CFG, THR, [view_data(self.c, cmp_of(FULL), cmp_of(m))])[1]
 
     def test_the_baseline_record_at_one_pixel_below_and_at_the_floor(self):
-        self.assertFalse(self.fp(511)['baseline_false_positive'])  # 511 / 1024000 < 0.0005
-        d = self.fp(512)  # 512 / 1024000 == 0.0005
+        self.assertFalse(self.fp(575)['baseline_false_positive'])  # 575 / 1152000 < 0.0005
+        d = self.fp(576)  # 576 / 1152000 == 0.0005
         self.assertTrue(d['baseline_false_positive'])
         self.assertTrue(d['views'][0]['false_positive'])
 
@@ -265,7 +265,7 @@ class ViewsAndCategoriesTests(unittest.TestCase):
     def test_the_strongest_inconclusive_view_decides_the_label(self):
         c = cond('E10-SUT02-WEB-VISUAL')
         views = self.three_views(c, (True, True, True))
-        views[1]['AB'] = {'dimension_mismatch': True, 'size_a': [1280, 800], 'size_b': [1280, 600]}
+        views[1]['AB'] = {'dimension_mismatch': True, 'size_a': [1280, 900], 'size_b': [1280, 600]}
         label, d = classify.evaluate(c, CFG, THR, views)
         self.assertEqual(label, 'INCONCLUSIVE_CAPTURE_DIMENSION_MISMATCH')
         views[2]['captures']['B']['ready_ok'] = False

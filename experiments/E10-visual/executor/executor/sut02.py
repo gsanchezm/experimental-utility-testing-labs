@@ -4,7 +4,7 @@ The ground-truth condition is the documented account `visual_user` (SUT02-EV-000
 HeaderContainer.jsx, DrawerMenu.jsx and src/pages/Cart.jsx at the pinned commit): for that account the cart icon container, the burger and
 close icons of the drawer and the checkout button receive the classes visual_failure and btn_visual_failure. The checkout button is on the
 cart page (route /cart.html) and the close icon exists only in the open drawer, so the condition has three views (E10-D-9): `inventory`
-(cart icon container and burger icon), `cart` (checkout button) and `menu_open` (close icon, after a click on the burger icon).
+(cart icon container and burger icon), `cart` (checkout button) and `menu_open` (close icon, after a click on the button `#react-burger-menu-btn` that covers the burger icon: a click on the icon itself is intercepted by that button, DRY_RUN round 1).
 
 Blocks per execution: starting-state = the web surface answers 200; method = for each view three captures A (standard_user), B
 (visual_user) and A2 (standard_user), each in a fresh context: the account logs in through the login form of the application (documented

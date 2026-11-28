@@ -1,0 +1,35 @@
+# manifests/campaign-execution-decisions-v26.yaml -- decision of 2026-11-28 (UTC), the review of DRY_RUN round 1 of E10 (operation OP-PREP-E10-02; CAMPAIGN-EXECUTION-DECISIONS-26): the viewport of the campaign, the correction of the SUT-02 harness click, and the go-ahead to build the public export v96 locally.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing (the go-ahead covers a local build and verification only, no push). Immutable once committed; a correction is a new version file. Earlier rounds: -v2 to -v25 (unchanged).
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-26"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E10-02"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-28"
+recorded_at_utc: "2026-11-28T13:20:18Z"
+executes_anything: false
+protocol_change: false
+supersedes: null
+evidence_basis: "manifests/e10-environment-verification-rounds-v1.yaml (round 1, run 46148003422, findings), the four DRY_RUN artifacts of that run read by the ORCHESTRATOR (never imported), experiments/E10-visual/campaign-configuration-draft.md (E10-D-4, E10-D-17), manifests/campaign-execution-decisions-v25.yaml."
+human_decision:
+  given_by: the human research lead
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), the second of the E10 preparation"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_e10_round_2:
+    transcript_stamp: null
+    transcript_stamp_note: "the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_at_utc above is the system clock when this file was written, after the answer"
+    bytes: 2948
+    exact_text_sha256: f46ce1ec7fb61ac4375212c257b9edaaa0dd1696e48124e4b931f14fbc3a94e9
+    note: the answer of the question dialog, whole; the chosen options are the decisions
+    exact_text: "Your questions have been answered: \"Resultado de la ronda 1 de DRY_RUN de E10 (corrida 46148003422, duró 3 minutos; todo es DRY_RUN, nada medido, ninguna expectativa, vista, elemento ni piso se cambia). Trabajos: SUT-01, SUT-03 IMAGE y SUT-03 SHIFT en verde; SUT-02 en rojo. Observado: (1) SUT-03 IMAGE y SHIFT corrieron completos (3/3 cada uno, con los pisos provisionales); las capturas de A y A2 coinciden píxel a píxel (R = 0), un src vacío se ve como ícono de imagen rota con el texto alternativo, #shift-target mide 710×0 a los 2078 ms y 710×300 a los 5579 ms. (2) SUT-02 es un defecto del arnés: el clic en el ícono de hamburguesa lo intercepta un botón invisible (react-burger-menu-btn); la vista del menú abierto se interrumpió (el arreglo es hacer clic en ese botón; no cambia vistas ni elementos). La perturbación de SUT-02 sí es visible: el contenedor del carrito se mueve de (1220,10) a (1034,39), el ícono rotado 3° pasa de 20×20 a 21×21 px y el botón de checkout se mueve. (3) SUT-01: en 1280×800 las 3 imágenes de la primera fila caben (y 513–697) pero los precios quedan DEBAJO del borde (y 803–831), así que ningún precio cae entero en la primera pantalla y la ejecución sale INCONCLUSIVE; es un hecho de diseño de la página, independiente del estado B. Además, en B la imagen de reemplazo de Wikimedia falló (net::ERR_BLOCKED_BY_ORB, el manejador onError de la propia SUT reintenta 46 veces) y la imagen rota (broken-image-url.com) no resuelve: B queda con círculos en blanco, y las 12 imágenes estándar de A cargaron bien (E10-D-12: el estado de imagen de B se registra, no invalida). Tamaño: ~0.15–1.2 MB por ejecución (proyección ~175 MB para las 200); duración ~3–30 s por ejecución. Versiones: Playwright 1.63.0, Chromium 153.0.8010.12, Node.js v24.22.3 en los cuatro trabajos. ¿Qué viewport uso, dado que los precios de SUT-01 no caben en 1280×800? (Las rondas que cuentan para la calibración son las posteriores al hash final, así que cambiarlo ahora no cuesta rondas extra: hay que repetirlas por la corrección de SUT-02.)\"=\"1280×900 para toda la campaña (Recomendada)\", \"¿Qué autorizas ahora (marca las que apliquen)? Todo se queda en commits locales; publicar, y cada nueva ronda de DRY_RUN, son preguntas aparte con su línea exacta. Próximos pasos si lo autorizas: ronda 2 y ronda 3 (3 ejecuciones cada una) bajo el hash final para tener ≥ 6 pares baseline por vista, luego el registro de calibración (los pisos 0.0005 y 0.01 si todos los pares siguen en 0) y una ronda de confirmación; después te propongo D-19 (presupuestos de tiempo: ejecuciones de 3–30 s, trabajos de 1.5–3 min con 3 ejecuciones) y D-20 (conservar todas las imágenes, ~175 MB). Ningún START sin tu sí.\"=\"Corregir el ejecutor (clic de SUT-02 + viewport elegido), Construir en local el export v96 con esas correcciones (sin push)\". You can now continue with these answers in mind."
+decisions:
+  - id: E10-D-4-AND-E10-D-17
+    subject: "viewport of the campaign"
+    decision: "One viewport of 1280 x 900 CSS pixels for every condition (it replaces 1280 x 800 of E10-D-4 and E10-D-17), first screen at scroll position 0. Reason: at 1280 x 800 the price elements of the first row of the SUT-01 catalogue lie at y 803 to 831, below the viewport edge, so no price lies wholly inside the viewport in State A (a layout fact observed in DRY_RUN round 1, independent of State B). The floors, the rule, the views and the expected elements are unchanged; the area of the capture is 1152000 pixels, so the floor of T_R is 576 pixels."
+  - id: E10-HARNESS-FIX-1
+    subject: "the click of the menu_open view of E10-SUT02-WEB-VISUAL"
+    decision: "The step clicks the button #react-burger-menu-btn that covers the burger icon, instead of the icon [data-test=open-menu] (a click on the icon is intercepted by that button; DRY_RUN round 1). The expected elements of the views are unchanged. The implementation hash changes with the executor digests: 94ded1d27d1e52daea84496028987d2404d2ea48e84762055f60adee3d75db82 (run-condition.sh), so the rounds under the previous hash (round 1) are not used for the calibration."
+  - id: E10-GO-2
+    subject: "public export v96"
+    decision: "Build the public export v96 locally and verify it (the E10 tests, the digests and the as-is gate on the exported tree included), with no push; the push of v96 and every further DRY_RUN round are separate questions, each with its exact line."
+not_decided_in_this_round: "The push of v96, DRY_RUN rounds 2 and 3, the calibration record, the confirming round, the time budgets (E10-D-19), the retention of the images (E10-D-20), the campaign START of E10, the three dispatch authorizations, the freeze, the H5 analysis of the E10 contribution, the START of E12, and every other public export: each needs its own explicit human approval or instruction."

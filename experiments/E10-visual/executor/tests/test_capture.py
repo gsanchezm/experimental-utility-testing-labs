@@ -45,7 +45,7 @@ class FakePage:
         self.calls = []
         self.ready = ready
         self.now_after = now_after
-        self.elements = elements or {'scroll_x': 0, 'scroll_y': 0, 'inner_width': 1280, 'inner_height': 800, 'device_pixel_ratio': 1,
+        self.elements = elements or {'scroll_x': 0, 'scroll_y': 0, 'inner_width': 1280, 'inner_height': 900, 'device_pixel_ratio': 1,
                                      'effective_type': '4g', 'groups': {'shift_target': {'error': None, 'elements': [
                                          {'index': 0, 'tag': 'div', 'box': {'x': 40, 'y': 200, 'w': 700, 'h': 320}, 'img': None}]}}}
 
@@ -79,7 +79,7 @@ class HelperTests(unittest.TestCase):
     def test_the_interface_constant_and_the_settings(self):
         with open(os.path.join(HERE, '..', 'executor', 'capture.py'), encoding='utf-8') as f:
             self.assertRegex(f.read(), r"(?m)^CAPTURE_VERSION = 'e10-capture-v1'$")
-        self.assertEqual(capture.context_options(), {'viewport': {'width': 1280, 'height': 800}, 'device_scale_factor': 1, 'locale': 'en-US',
+        self.assertEqual(capture.context_options(), {'viewport': {'width': 1280, 'height': 900}, 'device_scale_factor': 1, 'locale': 'en-US',
                                                       'timezone_id': 'UTC', 'reduced_motion': 'reduce'})
         self.assertEqual(capture.SCREENSHOT_OPTIONS, {'type': 'png', 'full_page': False, 'animations': 'disabled', 'caret': 'hide', 'scale': 'css'})
         self.assertEqual(CFG['capture']['viewport'], capture.VIEWPORT)
@@ -100,9 +100,9 @@ class HelperTests(unittest.TestCase):
         self.assertFalse(capture.timed_capture_ok(5500, None))
 
     def test_parse_elements_marks_the_boxes_wholly_inside_the_viewport(self):
-        raw = {'scroll_y': 0, 'groups': {'g': {'error': None, 'elements': [{'index': 0, 'box': {'x': 0, 'y': 0, 'w': 1280, 'h': 800}, 'img': None},
-                                                                          {'index': 1, 'box': {'x': 0, 'y': 700, 'w': 100, 'h': 101}, 'img': None}]}}}
-        out = capture.parse_elements(raw, 1280, 800)
+        raw = {'scroll_y': 0, 'groups': {'g': {'error': None, 'elements': [{'index': 0, 'box': {'x': 0, 'y': 0, 'w': 1280, 'h': 900}, 'img': None},
+                                                                          {'index': 1, 'box': {'x': 0, 'y': 800, 'w': 100, 'h': 101}, 'img': None}]}}}
+        out = capture.parse_elements(raw, 1280, 900)
         self.assertEqual([e['wholly_inside'] for e in out['groups']['g']['elements']], [True, False])
         self.assertEqual(out['scroll_y'], 0)
 
@@ -110,7 +110,7 @@ class HelperTests(unittest.TestCase):
         page = FakePage()
         steps = config.condition(CFG, 'E10-SUT02-WEB-VISUAL')['views'][2]['steps']
         done = capture.run_steps(page, steps)
-        self.assertEqual(page.calls, [('click', '[data-test="open-menu"]', capture.ACTION_TIMEOUT_MS),
+        self.assertEqual(page.calls, [('click', '#react-burger-menu-btn', capture.ACTION_TIMEOUT_MS),
                                       ('wait_for', '[data-test="close-menu"]', 'visible', capture.ACTION_TIMEOUT_MS)])
         self.assertEqual([d['action'] for d in done], ['click', 'wait_visible'])
         with self.assertRaises(ValueError):
@@ -192,10 +192,10 @@ const doc = {
   querySelectorAll: (sel) => { if (sel === 'bad[') { const e = new Error('bad selector'); e.name = 'SyntaxError'; throw e; } if (sel === '.moving') { return [movingEl]; } if (sel === '.always') { return [alwaysEl]; } return sel === '.card' ? [mk('c1', inside, images[0]), mk('c2', outside, null)] : []; },
   querySelector: (sel) => (sel === '#there' ? {} : null),
 };
-const ctx = { document: doc, window: { scrollX: 0, scrollY: 0, innerWidth: 1280, innerHeight: 800, devicePixelRatio: 1 },
+const ctx = { document: doc, window: { scrollX: 0, scrollY: 0, innerWidth: 1280, innerHeight: 900, devicePixelRatio: 1 },
   navigator: { connection: { effectiveType: '4g' } }, location: { href: 'http://127.0.0.1:3000/' }, URL, setTimeout, performance: { now: () => Date.now() },
   requestAnimationFrame: (cb) => { framesRun++; setTimeout(cb, 1); }, Promise, Error };
-ctx.window.innerWidth = 1280; ctx.window.innerHeight = 800;
+ctx.window.innerWidth = 1280; ctx.window.innerHeight = 900;
 vm.createContext(ctx);
 const get = (name) => vm.runInContext('(' + scripts[name] + ')', ctx);
 (async () => {

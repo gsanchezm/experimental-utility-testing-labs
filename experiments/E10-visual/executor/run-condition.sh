@@ -18,7 +18,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DIGESTS='
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  executor/__init__.py
 dee6bfd191476bfb20c532e6254bb6cd22637d71ec73130e03c27fd5b9898241  executor/attempt.py
-5251cc912590819a99c34d47211da1776b38b4c2de1a3a871dabe5bb728fa1e3  executor/capture.py
+43560720ccc5db66984e962d3a358fccc4732e04a53528566edd16a292d94ba0  executor/capture.py
 305b1ea24e5706cd2e2cee2223f9e29b233b5612be9f516bda5fa77a1f0cda55  executor/classify.py
 7f70d8b7709b0527931fbcce2c225fe4babbf09cde14bc5a7459f4d9b4b71045  executor/common.py
 4b0e2470ef93d35c8ae33daee8786a0907dadf15b57567ab8e8f86f2de25c239  executor/compare.py
@@ -26,9 +26,9 @@ dee6bfd191476bfb20c532e6254bb6cd22637d71ec73130e03c27fd5b9898241  executor/attem
 843e2ffdc3a0a01268cc920ba01f8f15cfa8a0cc4ec4505f5787fa9416b62b66  executor/instance.py
 2b940fcfa70268d12c5735c936749bd510d236125e2cf102d8658e89b44afd0d  executor/run.py
 34e6a52a4255bf3447d0b1c9ae3c7572d8dc75972bb69541fcd6388ad237b302  executor/sut01.py
-fc456a5e22d7e678bc5f8cf1aa960cbdbfe30d3afcdfdd229e5dfda012c348de  executor/sut02.py
+7ef7197409393a4ea2ab2acd35c22543950b249b3de835499fd9c9af10be6eec  executor/sut02.py
 0f4c061e2a7d8db0afb2a423a90e7efd25fcd068ca47d6d5389669198c73209f  executor/sut03.py
-ffc40d1a478b3941235074fad987f2c825077484ce12607a179cf32814f0c491  executor/web.py
+62ad303f380dd4c47c9cdc143652f72e3ad8d13901384e40a781df5251e00097  executor/web.py
 dfd8851ef1cd8c3edc4b2549c5575cf2c95d90583fdb72512d6514dd7e60a598  requirements.txt
 '
 

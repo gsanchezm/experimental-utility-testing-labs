@@ -1,7 +1,7 @@
 """E10-visual executor: Playwright for Python helpers.
 
 DRAFT (operation OP-PREP-E10; the browser settings of the E05, E08 and E09 executors). One headless Chromium per job; every capture of every
-execution runs in its own fresh browser context (cold: no cache, no storage, no cookies; viewport 1280 x 800, device scale factor 1, en-US,
+execution runs in its own fresh browser context (cold: no cache, no storage, no cookies; viewport 1280 x 900, device scale factor 1, en-US,
 UTC, reduced motion), so that no capture can warm another and the captures of one view differ only in what the condition varies. No
 instrumentation script is injected into the pages: the capture helpers of capture.py only read the page. No implicit retry beyond
 Playwright's own actionability waits, each with an explicit timeout.

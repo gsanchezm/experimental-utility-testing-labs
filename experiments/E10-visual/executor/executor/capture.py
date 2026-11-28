@@ -15,7 +15,7 @@ import hashlib
 from . import classify, compare
 
 CAPTURE_VERSION = 'e10-capture-v1'
-VIEWPORT = {'width': 1280, 'height': 800}
+VIEWPORT = {'width': 1280, 'height': 900}
 BROWSER_LOCALE = 'en-US'
 TIMEZONE = 'UTC'
 NAV_TIMEOUT_MS = 30000

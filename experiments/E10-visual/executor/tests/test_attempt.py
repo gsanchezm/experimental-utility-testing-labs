@@ -20,7 +20,7 @@ import mini_jsonschema  # noqa: E402
 
 SCHEMA = os.path.join(REPO, 'schemas', 'run-manifest.schema.v2.json')
 SECRET = 'ey' + 'JhbGciOiJIUzI1NiJ9.' + 'ey' + 'JzdWIiOiJ4In0.c2lnbmF0dXJl'  # a fake token, built by concatenation so that no literal token prefix sits in the file
-W, H = 1280, 800
+W, H = 1280, 900
 N = W * H
 BOXES = {'price': [(100, 300, 60, 20), (400, 300, 60, 20)], 'image': [(80, 100, 200, 200), (380, 100, 200, 200)]}
 PNG = compare.encode_png_rgba(4, 3, bytes(range(48)))
