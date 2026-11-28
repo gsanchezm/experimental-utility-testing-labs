@@ -1,0 +1,220 @@
+{
+  "record": "E10-visual conditions (DRAFT-1, 2026-11-28)",
+  "state": "DRAFT. Machine-readable mirror of sections 2 and 3 of experiments/E10-visual/campaign-configuration-draft.md; read by the E10 executor and, later, by the analysis. Not locked, not hashed, not an authorization. When the configuration is locked, this file is hashed with it. Every page, account, element and rule below is written from the E01 evidence records and the static source reading of section 4 of the configuration draft, before any DRY_RUN; no value comes from a measured or DRY_RUN outcome. The thresholds T_R and T_e of each condition are null here on purpose (conditions[].thresholds): they come from the calibration record (calibration rule of the configuration draft, section 3), which does not exist yet; until it does, a DRY_RUN classifies with the floors and labels the result provisional, and a measured run is refused.",
+  "campaign_id": "E10-visual",
+  "n_per_condition": 50,
+  "capture": {
+    "viewport": {"width": 1280, "height": 800},
+    "device_scale_factor": 1,
+    "locale": "en-US",
+    "timezone": "UTC",
+    "reduced_motion": true,
+    "animations": "disabled",
+    "caret": "hide",
+    "scroll_position": 0,
+    "type": "viewport screenshot (never full page, never element scoped)",
+    "settle": {
+      "fonts_ready": true,
+      "images_inside_viewport_complete": true,
+      "animation_frames": 2,
+      "timeout_ms": 20000
+    }
+  },
+  "comparison": {
+    "tool": "pixelmatch",
+    "version": "8.0.0",
+    "route": "registry tarball by digest, package/index.js run by the runner's Node.js on raw RGBA buffers; PNG decoded and encoded with the Python standard library",
+    "options": {"threshold": 0.1, "includeAA": false, "alpha": 0.1},
+    "options_note": "the library defaults, recorded and never tuned"
+  },
+  "capture_roles": {
+    "A": "State A, the baseline of the view",
+    "B": "State B, the perturbed state of the view",
+    "A2": "State A captured again from a fresh page load (baseline against baseline: the false-positive record)"
+  },
+  "capture_order": ["A", "B", "A2"],
+  "capture_order_rule": "fixed, per view, in the order of the views of the condition (E10-D-16)",
+  "rule": {
+    "type": "ratio_and_boxes",
+    "description": "a view is detected when R >= T_R and r(e) >= T_e for every expected element considered; an execution is DETECTED when every view of the condition is detected",
+    "R": "differing pixels of A against B divided by compared pixels",
+    "r_e": "differing pixels inside the region of the element divided by the pixels of that region; the region is the union of the element's box in A and in B, clipped to the capture",
+    "elements_considered": "the elements found wholly inside the viewport in A",
+    "false_positive": "R of A against A2 >= T_R, per view; the box clause is not applied to A against A2",
+    "floors": {"T_R": 0.0005, "T_e": 0.01},
+    "calibration_factor": 2,
+    "calibration": "T_R = max(floors.T_R, factor x max R of A against A2 over the DRY_RUN rounds of the condition); T_e = max(floors.T_e, factor x max r(e) of A against A2 over the same pairs and the expected elements); never from A against B",
+    "thresholds_location": "per condition: conditions[].thresholds {T_R, T_e}, null until the calibration record exists; at the configuration lock they are written here, in the Campaign configuration section of the README and in manifests/e10-calibration-v1.yaml, and the measured gate requires the three to agree"
+  },
+  "category_sets": {
+    "start": [
+      "START_SURFACE_NOT_READY",
+      "START_ACTIVATION_NOT_CONFIRMED"
+    ],
+    "method": [
+      "DETECTED",
+      "NOT_DETECTED",
+      "INCONCLUSIVE_READY_SIGNAL_MISSING",
+      "INCONCLUSIVE_CAPTURE_DIMENSION_MISMATCH",
+      "INCONCLUSIVE_EXTERNAL_IMAGE_NOT_LOADED"
+    ],
+    "any": [
+      "INTERRUPTED_",
+      "STUB_NO_BUNDLE"
+    ]
+  },
+  "attribution_labels": ["TOOLING", "SUT", "EXTERNAL"],
+  "behavior_class_values": ["deterministic", "stochastic", "time-dependent", "external dependency"],
+  "conditions": [
+    {
+      "condition_id": "E10-SUT01-WEB-PROBLEM",
+      "sut_id": "SUT-01",
+      "surface": "web",
+      "h5_counted": true,
+      "behavior_class": "external dependency",
+      "related_evidence_ids": ["SUT01-EV-0020", "SUT01-EV-0021"],
+      "state_a": {"account": "standard_user", "expected_login_behavior": "standard"},
+      "state_b": {"account": "problem_user", "expected_login_behavior": "problem"},
+      "views": [
+        {
+          "view_id": "catalog",
+          "route": "/catalog",
+          "steps": [],
+          "ready": {"first_item": "h2[data-testid^=\"pizza-name-\"]"},
+          "required_ready": ["first_item"],
+          "ready_timeout_ms": 20000,
+          "capture_at_ms": null,
+          "expected_elements": [
+            {"group": "price", "selector": "[data-testid^=\"pizza-price-\"]"},
+            {"group": "image", "selector": "[data-testid^=\"pizza-image-\"]", "image": true}
+          ]
+        }
+      ],
+      "expected_category": "DETECTED",
+      "thresholds": {"T_R": null, "T_e": null},
+      "expected_text": "on the first screen of /catalog, every item price and every item image wholly inside the viewport differs between the standard_user capture and the problem_user capture (SUT01-EV-0020: price 0.0 and a broken or placeholder image on every item)",
+      "static_reading_prediction": "All 12 images of the standard catalogue are 500 px thumbnails of upload.wikimedia.org; for the problem behavior the source forces the broken address https://broken-image-url.com/404.jpg and the card's onError handler then replaces a failed source with another image of upload.wikimedia.org (Pizza_on_stone.jpg, not among the 12). Prices differ on every card; images differ on every card when the baseline photos loaded. The expectation is the evidence record's (E10-D-12).",
+      "external_dependency": {
+        "hosts": ["upload.wikimedia.org", "broken-image-url.com"],
+        "evidence_id": "SUT01-EV-0020",
+        "category_when_baseline_image_not_loaded": "INCONCLUSIVE_EXTERNAL_IMAGE_NOT_LOADED"
+      }
+    },
+    {
+      "condition_id": "E10-SUT02-WEB-VISUAL",
+      "sut_id": "SUT-02",
+      "surface": "web",
+      "h5_counted": true,
+      "behavior_class": "deterministic",
+      "related_evidence_ids": ["SUT02-EV-0001", "SUT02-EV-0015"],
+      "state_a": {"account": "standard_user"},
+      "state_b": {"account": "visual_user"},
+      "views": [
+        {
+          "view_id": "inventory",
+          "route": "/inventory.html",
+          "steps": [],
+          "ready": {"inventory_list": "[data-test=\"inventory-list\"]"},
+          "required_ready": ["inventory_list"],
+          "ready_timeout_ms": 30000,
+          "capture_at_ms": null,
+          "expected_elements": [
+            {"group": "cart_icon_container", "selector": "#shopping_cart_container"},
+            {"group": "burger_icon", "selector": "[data-test=\"open-menu\"]"}
+          ]
+        },
+        {
+          "view_id": "cart",
+          "route": "/cart.html",
+          "steps": [],
+          "ready": {"cart_contents": "[data-test=\"cart-contents-container\"]"},
+          "required_ready": ["cart_contents"],
+          "ready_timeout_ms": 30000,
+          "capture_at_ms": null,
+          "expected_elements": [
+            {"group": "checkout_button", "selector": "[data-test=\"checkout\"]"}
+          ]
+        },
+        {
+          "view_id": "menu_open",
+          "route": "/inventory.html",
+          "steps": [
+            {"action": "click", "selector": "[data-test=\"open-menu\"]"},
+            {"action": "wait_visible", "selector": "[data-test=\"close-menu\"]"}
+          ],
+          "ready": {"inventory_list": "[data-test=\"inventory-list\"]", "close_icon": "[data-test=\"close-menu\"]"},
+          "required_ready": ["inventory_list", "close_icon"],
+          "ready_timeout_ms": 30000,
+          "capture_at_ms": null,
+          "expected_elements": [
+            {"group": "close_icon", "selector": "[data-test=\"close-menu\"]"}
+          ]
+        }
+      ],
+      "expected_category": "DETECTED",
+      "thresholds": {"T_R": null, "T_e": null},
+      "expected_text": "the cart icon container and the burger icon of the inventory page, the checkout button of the cart page and the close icon of the open drawer each differ between the standard_user capture and the visual_user capture (SUT02-EV-0015: the visual_failure and btn_visual_failure classes on those elements); the random prices of the visual_user inventory are outside the expectation",
+      "static_reading_prediction": "visual_failure moves the cart icon container to top 40 px, right 205 px (from top 10 px, right 20 px), rotates the burger and close icons by 3 degrees, and btn_visual_failure positions the checkout button at right 0, top 0. The inventory page also shows effects that the evidence record does not name (first image sl-404.jpg, random prices, items 3 and 4 right-aligned, button of item 6 misaligned); they are unlisted differences, recorded and never counted as a detection. Whether the checkout button and the close icon lie wholly inside the viewport in State A is read in round 1. Whether the 3 degree rotation of the burger and close icons changes at least T_e of their regions is uncertain (edges move by less than a pixel and anti-aliased pixels are ignored): the rule is a conjunction over all the elements, so the condition may be NOT_DETECTED because of its weakest element; the floors and the elements are not changed after a DRY_RUN.",
+      "external_dependency": null
+    },
+    {
+      "condition_id": "E10-SUT03-WEB-IMAGE",
+      "sut_id": "SUT-03",
+      "surface": "web",
+      "h5_counted": true,
+      "behavior_class": "deterministic",
+      "related_evidence_ids": ["SUT03-EV-0001", "SUT03-EV-0021"],
+      "state_a": {"account": "demouser"},
+      "state_b": {"account": "image_not_loading_user"},
+      "views": [
+        {
+          "view_id": "shelf",
+          "route": "/",
+          "steps": [],
+          "ready": {"shelf_item": ".shelf-item"},
+          "required_ready": ["shelf_item"],
+          "ready_timeout_ms": 30000,
+          "capture_at_ms": null,
+          "expected_elements": [
+            {"group": "thumbnail", "selector": ".shelf-item__thumb", "image": false}
+          ]
+        }
+      ],
+      "expected_category": "DETECTED",
+      "thresholds": {"T_R": null, "T_e": null},
+      "expected_text": "on the first screen of the shelf, every product thumbnail wholly inside the viewport differs between the demouser capture and the image_not_loading_user capture (SUT03-EV-0021: the thumbnail source is forced to an empty string)",
+      "static_reading_prediction": "Thumb renders an img with src empty and the product title as alt text for image_not_loading_user; what Chromium paints for it is read in round 1. The header shows the signed-in user, which differs between the states (an unlisted difference).",
+      "external_dependency": null
+    },
+    {
+      "condition_id": "E10-SUT03-WEB-SHIFT",
+      "sut_id": "SUT-03",
+      "surface": "web",
+      "h5_counted": true,
+      "behavior_class": "deterministic",
+      "related_evidence_ids": ["SUT03-EV-0012", "SUT03-EV-0014", "SUT03-EV-0023"],
+      "state_a": {"account": "testuser", "capture_at_ms": 2000},
+      "state_b": {"account": "testuser", "capture_at_ms": 5500},
+      "views": [
+        {
+          "view_id": "high_cls",
+          "route": "/sut/ui/high-cls",
+          "steps": [],
+          "ready": {"content": "h2[id$=\"-title\"]"},
+          "required_ready": ["content"],
+          "ready_timeout_ms": 30000,
+          "capture_at_ms": {"A": 2000, "A2": 2000, "B": 5500},
+          "capture_at_note": "milliseconds after the document commit, read as performance.now() of the document; 2000 is before the 4000 ms mutation and 5500 is after the end of its 0.5 s transition",
+          "expected_elements": [
+            {"group": "shift_target", "selector": "#shift-target"}
+          ]
+        }
+      ],
+      "expected_category": "DETECTED",
+      "thresholds": {"T_R": null, "T_e": null},
+      "expected_text": "on the same page /sut/ui/high-cls, the region of #shift-target differs between the capture 2000 ms after the document commit and the capture 5500 ms after it (SUT03-EV-0012: a timer at 4000 ms mutates the height and the content of #shift-target; SUT03-EV-0023: the same page before and after the 4 s mark)",
+      "static_reading_prediction": "#shift-target has zero height before the mutation and about 320 px after it (height 300 px, padding 10 px, the text '--- UNEXPECTED BANNER LOADED ---', a pink background), inside the 1280 x 800 viewport. E08 observed that #target-text does not move; the expected element here is #shift-target, as the mechanism of SUT03-EV-0012 names it (E10-D-11).",
+      "external_dependency": null
+    }
+  ]
+}

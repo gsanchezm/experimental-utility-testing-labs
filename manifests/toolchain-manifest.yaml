@@ -131,11 +131,30 @@ tools:
     platform: null
     notes: "Pinned on the human research lead's explicit approval of 2026-11-12 (HUMAN DECISION HD-16 of experiments/E09-accessibility/design-brief-draft.md, option 4.14.0 as recommended; answer to the question on the E09 axe-core pin). On the pin date the registry showed dist-tag latest = 4.14.0, the same integrity and shasum as the proposal, no deprecation, no gitHead. The pin authorizes no run, no installation, no campaign START, and decides no other HUMAN DECISION of the E09 brief (HD-1 to HD-15, HD-17 to HD-20); the scanner loading route (HD-12), the rule set (HD-3, HD-4) and the scan options stay as drafted until the configuration is locked."
   visual:
-    candidate: "Playwright screenshots + Pixelmatch"
-    version: null
-    install_date: null
+    candidate: "Playwright for Python viewport screenshots compared by the reference Pixelmatch module (npm), run by the runner's Node.js on raw RGBA buffers"
+    version: "8.0.0"  # the Pixelmatch pin; the gate G-10 of the E10 measured workflow requires it to equal PIXELMATCH_VERSION of experiments/E10-visual/executor/executor/compare.py
+    playwright_version: "1.63.0"  # the Playwright pin of tools.web_runner and of experiments/E10-visual/executor/requirements.txt; G-10 requires the three to be equal
+    capture_version: "e10-capture-v1"  # CAPTURE_VERSION of experiments/E10-visual/executor/executor/capture.py
+    distribution: "registry tarball by digest; only the member package/index.js is read, in memory, and written as pixelmatch.mjs; the executor downloads it at run time and refuses any digest mismatch"
+    tarball_url: https://registry.npmjs.org/pixelmatch/-/pixelmatch-8.0.0.tgz
+    tarball_sha256: ab59d4c4ec73fbf456c72cbd8200b1529a76142fd9291de72a62ba6e3a845e75  # computed from the tarball on 2026-11-28; equals PIXELMATCH_TARBALL_SHA256 in compare.py
+    registry_integrity: "sha512-cIqOLfh5k52us715qf3B3+kTOxZv+WDv77HN7xokLScYQGYQHi4m/ynoDIPpvF2LvCyUJGyvzY64i0QCXtzu1g=="  # registry `dist.integrity`
+    registry_shasum: e1aeaa0b6e52b87603e0a6e8ae35687e1550a143  # registry `dist.shasum`
+    index_member: package/index.js
+    index_sha256: 5b8583627704b4e1fe4fea472c283c8ca03d10ae4c94e5e029ea3b271a998ee6  # equals PIXELMATCH_INDEX_SHA256 in compare.py
+    license: ISC
+    published_at: "2026-10-06T09:14:23.921Z"  # registry `time`
+    retrieved_at: "2026-11-28T07:39Z"  # registry data; dist-tag latest = 8.0.0 on that date, not deprecated
+    source_repository: https://github.com/mapbox/pixelmatch.git
+    source_commit: bddb61314b2db3ad7e6f1ec57b38bf2dbae81184  # registry `gitHead` of 8.0.0
+    comparison_options: "threshold 0.1, includeAA false, alpha 0.1 (the library defaults, recorded and never tuned)"
+    comparison_runtime: "the Node.js of the GitHub-hosted runner, minimum major 20 enforced by both E10 workflows; its version is recorded in every run (runtime-environment.json, comparison_runtime, and the run manifest toolchain)"
+    browser: "Chromium, the build that Playwright 1.63.0 installs with `playwright install chromium`; not hash-pinned by the study; its version is recorded in every run manifest (toolchain.browser)"
+    pinned_by: ORCHESTRATOR
+    pinned_at: "2026-11-28"
+    install_date: null  # a pin, not an install record: install_date and platform stay null until an environment-verification run has recorded the versions
     platform: null
-    notes: null
+    notes: "Pinned on the human research lead's explicit approval of 2026-11-28 (decisions E10-D-12 to E10-D-14 of experiments/E10-visual/campaign-configuration-draft.md, answer recorded in manifests/campaign-execution-decisions-v25.yaml). The pin authorizes no run, no installation, no campaign START and no dispatch. The alternative that was offered, the Python port `pixelmatch` 0.4.0 from PyPI, was not chosen."
   security:
     candidate: "OWASP ZAP"
     version: "2.17.0"  # a pin, not a permanent installation: the measured job pulls the image below by digest on a GitHub-hosted runner (decision E11-D-8, Route A: manifests/campaign-execution-decisions-v19.yaml; entry approved in manifests/campaign-execution-decisions-v22.yaml; proposal experiments/E11-security/zap-pin-proposal-draft.md)
