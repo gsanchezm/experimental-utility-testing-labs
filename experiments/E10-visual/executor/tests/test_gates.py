@@ -381,22 +381,22 @@ class GateTests(unittest.TestCase):
         for fragment in ('E10 campaign status IN_PROGRESS: NOT_STARTED', 'exactly one E10 campaign START change-log row', 'START record exists',
                          'locked "Campaign configuration" record exists', 'exactly one dispatch authorization record', 'executor prompt frozen file exists',
                          'controlled instance status CONTROLLED', 'GitHub Actions environment verification VERIFIED',
-                         # the calibration record: no record exists and the configuration states no thresholds
-                         'calibration record exists, is an E10_CALIBRATION_RECORD of E10-visual and is LOCKED', 'calibration record covers every condition of the assigned SUT',
-                         'calibration thresholds of the condition are positive numbers at or above the floors', 'names the DRY_RUN runs of the condition',
-                         'states T_R and T_e of the condition once, equal to the calibration record', 'configuration names the sha256 of the calibration record',
-                         # the as-is conditions file has null thresholds, so the per-condition thresholds gate fails as well
-                         'the conditions file states T_R and T_e of the condition'):
+                         # the calibration record exists, but no locked configuration states its thresholds or names its sha256
+                         'states T_R and T_e of the condition once, equal to the calibration record', 'configuration names the sha256 of the calibration record'):
             self.assertTrue(any(fragment in l for l in fails), fragment + '\n' + r.stdout)
         for fragment in ('condition is one of the four E10 conditions of the conditions file', 'condition belongs to the assigned SUT', 'condition is a web condition',
                          'agent-governance-v6 is FROZEN-PRE-DATA or AMENDED', 'run-manifest schema v2 present',
                          # G-10: the instrument pin of manifests/toolchain-manifest.yaml agrees with the executor
                          'toolchain entry tools.visual names the instrument and a version', 'tools.visual version equals PIXELMATCH_VERSION',
                          'tools.visual tarball_sha256 equals', 'tools.visual index_sha256 equals', 'tools.visual playwright_version equals',
-                         'tools.visual capture_version equals'):
+                         'tools.visual capture_version equals',
+                         # G-11: the calibration record of 2026-11-28 exists, covers the condition, and the conditions file carries the same thresholds
+                         'calibration record exists, is an E10_CALIBRATION_RECORD of E10-visual and is LOCKED', 'calibration record covers every condition of the assigned SUT',
+                         'calibration thresholds of the condition are positive numbers at or above the floors', 'names the DRY_RUN runs of the condition',
+                         'the conditions file states T_R and T_e of the condition (conditions[cond].thresholds), equal to the calibration record'):
             self.assertTrue(any(fragment in l for l in passes), fragment + '\n' + r.stdout)
         # nothing of the repository is changed by the gate
-        self.assertFalse(os.path.exists(os.path.join(REPO, 'manifests', 'e10-calibration-v1.yaml')))
+        self.assertTrue(os.path.exists(os.path.join(REPO, 'manifests', 'e10-calibration-v1.yaml')))  # read, never written, by the gate
 
 
 if __name__ == '__main__':

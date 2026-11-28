@@ -1,0 +1,35 @@
+# manifests/campaign-execution-decisions-v27.yaml -- decision of 2026-11-28 (UTC), the review of DRY_RUN round 2 of E10 (operation OP-PREP-E10-03; CAMPAIGN-EXECUTION-DECISIONS-27): the dispatch of round 3, the time budgets (E10-D-19) and the retention of the images (E10-D-20).
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing (the dispatch of round 3 is recorded in manifests/e10-environment-verification-rounds-v1.yaml). Immutable once committed; a correction is a new version file. Earlier rounds: -v2 to -v26 (unchanged).
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-27"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E10-03"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-28"
+recorded_at_utc: "2026-11-28T15:33:56Z"
+executes_anything: false
+protocol_change: false
+supersedes: null
+evidence_basis: "manifests/e10-environment-verification-rounds-v1.yaml (round 2, run 46153103792, findings: durations of an execution 3.5 to 21 s, folder sizes 0.15 to 2.2 MB, about 220 MB for the 200 executions), the four DRY_RUN artifacts of that run read by the ORCHESTRATOR (never imported), manifests/campaign-execution-decisions-v26.yaml."
+human_decision:
+  given_by: the human research lead
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), the third of the E10 preparation"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_e10_round_3:
+    transcript_stamp: null
+    transcript_stamp_note: "the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_at_utc above is the system clock when this file was written, after the answer"
+    bytes: 2714
+    exact_text_sha256: 0d619ecb3af2d6db5433f2d51a245a0f2acea332d5071d72b32503f088a3ea4b
+    note: the answer of the question dialog, whole; the chosen options are the decisions
+    exact_text: "Your questions have been answered: \"Resultado de la ronda 2 de DRY_RUN de E10 (corrida 46153103792, 3 min 46 s, todo DRY_RUN; nada medido y ninguna expectativa, vista, elemento ni piso cambia). Los seis trabajos terminaron en verde y las 12 ejecuciones llegaron a clasificarse (DETECTED 3/3 en cada condición, con los pisos provisionales); todas las capturas estuvieron listas y estables y miden 1280×900. SUT-01: ahora caben 3 precios y 3 imágenes enteros en la primera pantalla (6 elementos), las imágenes de A cargaron, y en B el reemplazo de Wikimedia sigue bloqueado (ERR_BLOCKED_BY_ORB; la propia SUT reintenta sin límite, 451 peticiones en una captura). SUT-02: las tres vistas se completaron (clic corregido); elementos considerados 2/1/1. Pares baseline A vs A2: R = 0 y todos los r(e) = 0 en todos los pares (3 por vista en esta ronda), así que la calibración da los pisos 0.0005 y 0.01; hacen falta ≥ 6 pares por vista bajo este hash: falta la ronda 3. Una observación que debes conocer (no cambia nada): las razones de A contra B del elemento más débil de SUT-02 fueron 0.0165 (ícono de hamburguesa) y 0.0103 (ícono de cerrar) frente al piso T_e = 0.01, es decir, el ícono de cerrar pasa por solo 3 %; con la regla conjuntiva, una variación de renderizado podría dar NOT_DETECTED en esa condición y ese sería un resultado válido (E10-D-9, E10-D-14: no se tocan vistas, elementos ni pisos). Versiones iguales a la ronda 1. ¿Despacho la ronda 3 (misma línea, mismo hash 94ded1d2..., el público no cambió: sigue en 1f6f19b9)? Primero la registro como ronda 3 antes de despachar; un solo despacho; paquetes DRY_RUN que nunca se importan; no es el START. La línea exacta es:\n\ngh workflow run e10-environment-verification.yml --repo gsanchezm/experimental-utility-testing-labs --ref main -f target=all -f executions=3 -f executor_prompt_version=ORCHESTRATOR-E10-visual-v1 -f executor_implementation_sha256=94ded1d27d1e52daea84496028987d2404d2ea48e84762055f60adee3d75db82 -f dry_run=true\"=\"Sí, despacha esta línea (Recomendada)\", \"Dos decisiones abiertas que ya tienen datos (E10-D-19 y E10-D-20). D-19 (presupuestos de tiempo): una ejecución duró de 3.5 a 21 s y un trabajo de 3 ejecuciones de 14 a 50 s; el vigilante por ejecución del ejecutor es 1500 s provisional y el límite de trabajo 120 min. Cambiar cualquiera cambia el hash de implementación o el flujo y exigiría repetir las rondas de calibración (precedente E08-D-13). D-20 (retención de imágenes): una ejecución pesa 0.15–2.2 MB (SUT-02 la mayor); las 200 ejecuciones suman ~220 MB.\"=\"Mantener 1500 s / 120 min y conservar todas las imágenes (Recomendada)\". You can now continue with these answers in mind."
+decisions:
+  - id: E10-ROUND-3
+    subject: "DRY_RUN round 3 of E10"
+    decision: "Dispatch the exact line shown (target all, executions 3, prompt ORCHESTRATOR-E10-visual-v1, implementation sha256 94ded1d27d1e52daea84496028987d2404d2ea48e84762055f60adee3d75db82, dry_run true) once; the round is recorded before the dispatch and its run identity after it in manifests/e10-environment-verification-rounds-v1.yaml. Together with round 2 it gives six baseline-against-baseline pairs per view under the implementation hash 94ded1d2."
+  - id: E10-D-19
+    subject: "time budgets"
+    decision: "Keep the executor watchdog of 1500 s per execution and the job limit of 120 minutes as they are (far above the longest execution observed, 21 s), so that neither the implementation hash nor the workflows change and the rounds under the hash 94ded1d2 remain the basis of the calibration."
+  - id: E10-D-20
+    subject: "retention of the images"
+    decision: "Keep every PNG of every execution (the captures A, B and A2 of every view and the comparison images), as the README of E10 requires; about 220 MB for the 200 executions."
+not_decided_in_this_round: "The calibration record, the confirming round, the push of any further export, the campaign START of E10, the three dispatch authorizations, the freeze, the H5 analysis of the E10 contribution, the START of E12, and every other public export: each needs its own explicit human approval or instruction."

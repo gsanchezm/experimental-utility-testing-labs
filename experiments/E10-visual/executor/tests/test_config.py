@@ -30,15 +30,22 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(self.cfg['comparison']['version'], compare.PIXELMATCH_VERSION)
         self.assertEqual(self.cfg['capture']['settle']['timeout_ms'], 20000)
 
-    def test_thresholds_are_null_in_the_draft_and_the_floors_are_used_provisionally(self):
+    def test_the_conditions_file_carries_the_calibrated_thresholds_and_null_means_the_floors_provisionally(self):
+        # the pair of every condition is the one of manifests/e10-calibration-v1.yaml (every baseline pair gave the floors)
         for c in self.cfg['conditions']:
             thr = config.thresholds(self.cfg, c)
+            self.assertEqual(thr, {'T_R': 0.0005, 'T_e': 0.01, 'provisional': False, 'source': 'calibration record'}, c['condition_id'])
+        nulled = copy.deepcopy(self.cfg)
+        for c in nulled['conditions']:
+            c['thresholds'] = {'T_R': None, 'T_e': None}
+            thr = config.thresholds(nulled, c)
             self.assertTrue(thr['provisional'], c['condition_id'])
-            self.assertEqual((thr['T_R'], thr['T_e']), (self.cfg['rule']['floors']['T_R'], self.cfg['rule']['floors']['T_e']))
+            self.assertEqual((thr['T_R'], thr['T_e']), (nulled['rule']['floors']['T_R'], nulled['rule']['floors']['T_e']))
 
     def test_a_per_condition_pair_is_used_and_null_means_floors(self):
         cfg = copy.deepcopy(self.cfg)
         cfg['conditions'][0]['thresholds'] = {'T_R': 0.003, 'T_e': 0.05}
+        cfg['conditions'][1]['thresholds'] = {'T_R': None, 'T_e': None}
         config.validate(cfg)
         self.assertEqual(config.thresholds(cfg, cfg['conditions'][0]), {'T_R': 0.003, 'T_e': 0.05, 'provisional': False, 'source': 'calibration record'})
         other = config.thresholds(cfg, cfg['conditions'][1])

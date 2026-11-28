@@ -107,6 +107,8 @@ def make_job(executions, script, first=1, attempt_no=1, record_class='DEVELOPMEN
                        'EXECUTOR_BASH_VERSION': '5.2.0'})
     env = common.Env()
     cfg = config.load()
+    for _c in cfg['conditions']:
+        _c['thresholds'] = {'T_R': None, 'T_e': None}  # these tests exercise the provisional path (the floors), whatever the conditions file now carries
     job = common.Job(env, cfg, config.condition(cfg, 'E10-SUT01-WEB-PROBLEM'))
     job.tools.update({'executor_runtime': {'tool': 'python3', 'version': '3.12.0'}, 'visual': {'tool': 'Playwright viewport screenshots compared with Pixelmatch', 'version': '8.0.0'}})
     instance.load(job)

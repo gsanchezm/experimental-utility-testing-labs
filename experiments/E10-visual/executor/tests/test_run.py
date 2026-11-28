@@ -49,8 +49,15 @@ class CheckTests(unittest.TestCase):
         os.environ['GITHUB_WORKFLOW_REF'] = 'o/r/.github/workflows/e10-measured-execution.yml@refs/heads/main'
         try:
             self.assertIn('N = 50', self.check('E10-SUT01-WEB-PROBLEM', 'SUT-01', 'MEASURED_EXPERIMENT', executions=10)[1])
-            # the draft has no calibration record: a measured run fails closed
-            self.assertIn('calibrated thresholds', self.check('E10-SUT01-WEB-PROBLEM', 'SUT-01', 'MEASURED_EXPERIMENT')[1])
+            # a configuration whose thresholds are null (no calibration written): a measured run fails closed
+            uncal = copy.deepcopy(CFG)
+            for cond in uncal['conditions']:
+                cond['thresholds'] = {'T_R': None, 'T_e': None}
+            env = env_for('E10-SUT01-WEB-PROBLEM', 'SUT-01', 'MEASURED_EXPERIMENT')
+            self.assertIn('calibrated thresholds', run.check(env, uncal)[1])
+            # the conditions file now carries the thresholds of the calibration record, so the real configuration passes this check
+            env = env_for('E10-SUT01-WEB-PROBLEM', 'SUT-01', 'MEASURED_EXPERIMENT')
+            self.assertIsNone(run.check(env, CFG)[1])
             calibrated = copy.deepcopy(CFG)
             for cond in calibrated['conditions']:
                 cond['thresholds'] = {'T_R': 0.001, 'T_e': 0.02}
@@ -58,7 +65,7 @@ class CheckTests(unittest.TestCase):
             self.assertIsNone(run.check(env, calibrated)[1])
             env = env_for('E10-SUT01-WEB-PROBLEM', 'SUT-01', 'MEASURED_EXPERIMENT', first=4, attempt=2)
             self.assertIsNone(run.check(env, calibrated)[1])
-            # a DRY_RUN and a DEVELOPMENT run need no calibration (the floors are used and the result is labeled provisional)
+            # a DRY_RUN and a DEVELOPMENT run need no calibration (with null thresholds the floors are used and the result is labeled provisional)
             self.assertIsNone(self.check('E10-SUT01-WEB-PROBLEM', 'SUT-01', 'DEVELOPMENT', executions=5)[1])
         finally:
             del os.environ['GITHUB_WORKFLOW_REF']

@@ -1,0 +1,24 @@
+# manifests/e10-calibration-v1.yaml -- the calibration of the thresholds T_R and T_e of the detection rule of E10-visual (decision E10-D-14, manifests/campaign-execution-decisions-v25.yaml).
+# ORCHESTRATOR record. Computed mechanically by the rule written before any DRY_RUN (experiments/E10-visual/campaign-configuration-draft.md, section 3): T_R = max(0.0005, 2 x the largest R of A against A2) and T_e = max(0.01, 2 x the largest r(e) of A against A2), from the baseline-against-baseline pairs of the DRY_RUN rounds under one implementation hash only, never from an A-against-B comparison. It starts, authorizes, dispatches and freezes nothing. Immutable once committed; a recalibration is a new version file.
+record_class: "E10_CALIBRATION_RECORD"
+record_id: "E10-CALIBRATION-1"
+study_id: "EUS-2026-001"
+campaign_id: "E10-visual"
+status: LOCKED
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-28"
+implementation_sha256: "94ded1d27d1e52daea84496028987d2404d2ea48e84762055f60adee3d75db82"
+implementation_note: "sha256 of experiments/E10-visual/executor/run-condition.sh, which embeds the digests of every executor file; the rounds below ran under it (round 1, run 46148003422, ran under the previous hash and is not used)"
+rule: {floors: {T_R: 0.0005, T_e: 0.01}, calibration_factor: 2, inputs: "the A-against-A2 comparison records (*-AA2-comparison.json) of the executions of the rounds below; one pair per execution and view"}
+rounds_used:
+  - {round: 2, run_id: "46153103792", artifacts_github_digests: {E10-DRY_RUN-E10-SUT01-WEB-PROBLEM-2: "sha256:ac72dddefb5a8520dddad2ba397faf3ed076aadba2cf9fc4b1ea09884aba094f", E10-DRY_RUN-E10-SUT02-WEB-VISUAL-2: "sha256:6849b2985337c0abf9f1f44f6cf29d5e40f8ed11014d5b0bee26d93c15ba8733", E10-DRY_RUN-E10-SUT03-WEB-IMAGE-2: "sha256:b7ce6bbca622192e5f10f15301e409370639223bdeac0e0b249a3a9d7b36ddbe", E10-DRY_RUN-E10-SUT03-WEB-SHIFT-2: "sha256:def0016e8b07555c305b864e4a4d0086e23f95b84e968daff222d0e2763fa17e"}}
+  - {round: 3, run_id: "46160447386", artifacts_github_digests: {E10-DRY_RUN-E10-SUT01-WEB-PROBLEM-3: "sha256:f74cf52279fa06203713eca122c96d4aceb9277183b70636b0f88985ce9f702a", E10-DRY_RUN-E10-SUT02-WEB-VISUAL-3: "sha256:fade90735b803b85a6a7b39038d864c00f6c86a7e021245c6a34b34185c3600d", E10-DRY_RUN-E10-SUT03-WEB-IMAGE-3: "sha256:0b111a0b07ac060de13c713200347aa73cb2358e6255e747d35a8e2d68668cd9", E10-DRY_RUN-E10-SUT03-WEB-SHIFT-3: "sha256:1c47c1167b13d0763ba4b117e0cbcebd2974ad7ea5e4d527c4a36dd2683f1487"}}
+pairs_per_view: {E10-SUT01-WEB-PROBLEM/catalog: 6, E10-SUT02-WEB-VISUAL/inventory: 6, E10-SUT02-WEB-VISUAL/cart: 6, E10-SUT02-WEB-VISUAL/menu_open: 6, E10-SUT03-WEB-IMAGE/shelf: 6, E10-SUT03-WEB-SHIFT/high_cls: 6}
+computation: "experiments/E10-visual/calibration/calibrate-e10.py (sha256 30aa1c6ad971bd0bb0d5a6c1047490348cc86c1f3f4031f8cee31a1cd124547e), which uses calibrate() of the executor, over the downloaded artifacts of the two rounds; its output is experiments/E10-visual/calibration/calibration-rounds-2-3.json (sha256 3e57085c6d105b0452080b20f75d8112a5e45863eb4679fded2cb1abe7585ece). The DRY_RUN artifacts themselves are not kept in the repository (their GitHub digests are above; GitHub retains them for 90 days)."
+conditions:
+  E10-SUT01-WEB-PROBLEM: {T_R: 0.0005, T_e: 0.01, n_pairs: 6, max_R_AA2: 0.0, max_r_AA2: 0.0, dry_run_run_ids: ["46153103792", "46160447386"]}
+  E10-SUT02-WEB-VISUAL: {T_R: 0.0005, T_e: 0.01, n_pairs: 18, max_R_AA2: 3.4722222222222224e-06, max_r_AA2: 0.00013368983957219252, dry_run_run_ids: ["46153103792", "46160447386"]}
+  E10-SUT03-WEB-IMAGE: {T_R: 0.0005, T_e: 0.01, n_pairs: 6, max_R_AA2: 0.0, max_r_AA2: 0.0, dry_run_run_ids: ["46153103792", "46160447386"]}
+  E10-SUT03-WEB-SHIFT: {T_R: 0.0005, T_e: 0.01, n_pairs: 6, max_R_AA2: 0.0, max_r_AA2: 0.0, dry_run_run_ids: ["46153103792", "46160447386"]}
+result_note: "every pair of A against A2 is identical or differs by at most 4 pixels (the largest R is 3.47e-06 and the largest r(e) 1.34e-04, both in E10-SUT02-WEB-VISUAL), so twice the largest baseline value is below the floors in every condition and the thresholds are the floors. The perturbed ratios were not an input."
+used_by: "the conditions file (conditions[].thresholds of experiments/E10-visual/conditions-draft.json), the Campaign configuration section of experiments/E10-visual/README.md at the START, and the gate G-11 of the measured workflow, which require the three to agree."

@@ -241,7 +241,8 @@ class MeasuredWorkflowTests(unittest.TestCase):
                        "PROV_CALIBRATION_SHA256: ${{ needs.gate.outputs.calibration_record_sha256 }}", "'calibration_record_sha256': e['PROV_CALIBRATION_SHA256']"):
             self.assertIn(needle, t)
         # nothing that the START and the human research lead will create exists in this draft state
-        for pattern in ('e10-campaign-start-*', 'e10-dispatch-authorization-*', 'e10-further-attempt-approval-*', 'e10-calibration-*'):
+        # (the calibration record exists since the calibration of 2026-11-28; it is an input of the START, not something the START creates)
+        for pattern in ('e10-campaign-start-*', 'e10-dispatch-authorization-*', 'e10-further-attempt-approval-*'):
             self.assertEqual(glob.glob(os.path.join(REPO, 'manifests', pattern)), [], pattern)
 
     def test_the_executor_is_run_only_on_the_locked_hash_with_no_executions_override_and_the_artifact_is_immutable(self):

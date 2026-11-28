@@ -1,6 +1,6 @@
 {
   "record": "E10-visual conditions (DRAFT-1, 2026-11-28)",
-  "state": "DRAFT. Machine-readable mirror of sections 2 and 3 of experiments/E10-visual/campaign-configuration-draft.md; read by the E10 executor and, later, by the analysis. Not locked, not hashed, not an authorization. When the configuration is locked, this file is hashed with it. Every page, account, element and rule below is written from the E01 evidence records and the static source reading of section 4 of the configuration draft, before any DRY_RUN; no value comes from a measured or DRY_RUN outcome. The thresholds T_R and T_e of each condition are null here on purpose (conditions[].thresholds): they come from the calibration record (calibration rule of the configuration draft, section 3), which does not exist yet; until it does, a DRY_RUN classifies with the floors and labels the result provisional, and a measured run is refused.",
+  "state": "DRAFT. Machine-readable mirror of sections 2 and 3 of experiments/E10-visual/campaign-configuration-draft.md; read by the E10 executor and, later, by the analysis. Not locked, not hashed, not an authorization. When the configuration is locked, this file is hashed with it. Every page, account, element and rule below is written from the E01 evidence records and the static source reading of section 4 of the configuration draft, before any DRY_RUN; no value comes from a measured or DRY_RUN outcome. The thresholds T_R and T_e of each condition (conditions[].thresholds) are those of the calibration record manifests/e10-calibration-v1.yaml (calibrated on 2026-11-28 from the baseline-against-baseline pairs of DRY_RUN rounds 2 and 3, which ran under the implementation hash 94ded1d2; every pair gave the floors); a measured run refuses null thresholds.",
   "campaign_id": "E10-visual",
   "n_per_condition": 50,
   "capture": {
@@ -44,7 +44,7 @@
     "floors": {"T_R": 0.0005, "T_e": 0.01},
     "calibration_factor": 2,
     "calibration": "T_R = max(floors.T_R, factor x max R of A against A2 over the DRY_RUN rounds of the condition); T_e = max(floors.T_e, factor x max r(e) of A against A2 over the same pairs and the expected elements); never from A against B",
-    "thresholds_location": "per condition: conditions[].thresholds {T_R, T_e}, null until the calibration record exists; at the configuration lock they are written here, in the Campaign configuration section of the README and in manifests/e10-calibration-v1.yaml, and the measured gate requires the three to agree"
+    "thresholds_location": "per condition: conditions[].thresholds {T_R, T_e}, null before the calibration record existed; written here from manifests/e10-calibration-v1.yaml; at the configuration lock they are also written in the Campaign configuration section of the README, and the measured gate requires the three to agree"
   },
   "category_sets": {
     "start": [
@@ -91,7 +91,7 @@
         }
       ],
       "expected_category": "DETECTED",
-      "thresholds": {"T_R": null, "T_e": null},
+      "thresholds": {"T_R": 0.0005, "T_e": 0.01},
       "expected_text": "on the first screen of /catalog, every item price and every item image wholly inside the viewport differs between the standard_user capture and the problem_user capture (SUT01-EV-0020: price 0.0 and a broken or placeholder image on every item)",
       "static_reading_prediction": "All 12 images of the standard catalogue are 500 px thumbnails of upload.wikimedia.org; for the problem behavior the source forces the broken address https://broken-image-url.com/404.jpg and the card's onError handler then replaces a failed source with another image of upload.wikimedia.org (Pizza_on_stone.jpg, not among the 12). Prices differ on every card; images differ on every card when the baseline photos loaded. The expectation is the evidence record's (E10-D-12).",
       "external_dependency": {
@@ -152,7 +152,7 @@
         }
       ],
       "expected_category": "DETECTED",
-      "thresholds": {"T_R": null, "T_e": null},
+      "thresholds": {"T_R": 0.0005, "T_e": 0.01},
       "expected_text": "the cart icon container and the burger icon of the inventory page, the checkout button of the cart page and the close icon of the open drawer each differ between the standard_user capture and the visual_user capture (SUT02-EV-0015: the visual_failure and btn_visual_failure classes on those elements); the random prices of the visual_user inventory are outside the expectation",
       "static_reading_prediction": "visual_failure moves the cart icon container to top 40 px, right 205 px (from top 10 px, right 20 px), rotates the burger and close icons by 3 degrees, and btn_visual_failure positions the checkout button at right 0, top 0. The inventory page also shows effects that the evidence record does not name (first image sl-404.jpg, random prices, items 3 and 4 right-aligned, button of item 6 misaligned); they are unlisted differences, recorded and never counted as a detection. Whether the checkout button and the close icon lie wholly inside the viewport in State A is read in round 1. Whether the 3 degree rotation of the burger and close icons changes at least T_e of their regions is uncertain (edges move by less than a pixel and anti-aliased pixels are ignored): the rule is a conjunction over all the elements, so the condition may be NOT_DETECTED because of its weakest element; the floors and the elements are not changed after a DRY_RUN.",
       "external_dependency": null
@@ -181,7 +181,7 @@
         }
       ],
       "expected_category": "DETECTED",
-      "thresholds": {"T_R": null, "T_e": null},
+      "thresholds": {"T_R": 0.0005, "T_e": 0.01},
       "expected_text": "on the first screen of the shelf, every product thumbnail wholly inside the viewport differs between the demouser capture and the image_not_loading_user capture (SUT03-EV-0021: the thumbnail source is forced to an empty string)",
       "static_reading_prediction": "Thumb renders an img with src empty and the product title as alt text for image_not_loading_user; what Chromium paints for it is read in round 1. The header shows the signed-in user, which differs between the states (an unlisted difference).",
       "external_dependency": null
@@ -211,7 +211,7 @@
         }
       ],
       "expected_category": "DETECTED",
-      "thresholds": {"T_R": null, "T_e": null},
+      "thresholds": {"T_R": 0.0005, "T_e": 0.01},
       "expected_text": "on the same page /sut/ui/high-cls, the region of #shift-target differs between the capture 2000 ms after the document commit and the capture 5500 ms after it (SUT03-EV-0012: a timer at 4000 ms mutates the height and the content of #shift-target; SUT03-EV-0023: the same page before and after the 4 s mark)",
       "static_reading_prediction": "#shift-target has zero height before the mutation and about 320 px after it (height 300 px, padding 10 px, the text '--- UNEXPECTED BANNER LOADED ---', a pink background), inside the 1280 x 900 viewport. E08 observed that #target-text does not move; the expected element here is #shift-target, as the mechanism of SUT03-EV-0012 names it (E10-D-11).",
       "external_dependency": null
