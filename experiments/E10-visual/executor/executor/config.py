@@ -67,6 +67,8 @@ def validate(cfg):
     settle = cap.get('settle') or {}
     if not (_positive(settle.get('timeout_ms')) and isinstance(settle.get('animation_frames'), int) and settle['animation_frames'] >= 1):
         raise ConfigError('capture.settle needs timeout_ms and animation_frames')
+    if not (_positive(settle.get('image_timeout_ms')) and settle['image_timeout_ms'] <= settle['timeout_ms']):
+        raise ConfigError('capture.settle needs image_timeout_ms, positive and not above timeout_ms')
     cmpr = cfg['comparison']
     opts = cmpr.get('options') or {}
     if cmpr.get('tool') != 'pixelmatch' or set(opts) != {'threshold', 'includeAA', 'alpha'} or not isinstance(opts['includeAA'], bool):

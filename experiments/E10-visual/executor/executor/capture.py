@@ -26,7 +26,7 @@ TIMED_WAIT_EXTRA_MS = 20000
 SCREENSHOT_OPTIONS = {'type': 'png', 'full_page': False, 'animations': 'disabled', 'caret': 'hide', 'scale': 'css'}
 
 SETTLE_JS = r"""
-async ({ frames, timeout_ms, selectors }) => {
+async ({ frames, timeout_ms, image_timeout_ms, selectors }) => {
   const started = performance.now();
   const deadline = started + timeout_ms;
   const out = { fonts_ready: null, images_complete: null, boxes_stable: false, stable_frames: 0, frames: 0, pending_images: 0, waited_ms: 0 };
@@ -41,7 +41,10 @@ async ({ frames, timeout_ms, selectors }) => {
     out.fonts_ready = true;
   } catch (e) { out.fonts_ready = false; }
   const pending = () => Array.from(document.images).filter((img) => inView(img) && !img.complete);
-  while (pending().length > 0 && performance.now() < deadline) { await new Promise((resolve) => setTimeout(resolve, 50)); }
+  // the wait for the images has a bound of its own: a page whose images never are all complete at once (an error handler that requests again without limit)
+  // must not use the whole budget, because the layout check below always runs; the images still pending are recorded
+  const imageDeadline = performance.now() + Math.min(image_timeout_ms || timeout_ms, timeout_ms);
+  while (pending().length > 0 && performance.now() < imageDeadline) { await new Promise((resolve) => setTimeout(resolve, 50)); }
   out.pending_images = pending().length;
   out.images_complete = out.pending_images === 0;
   // the layout is stable when the boxes of the expected elements are equal over `frames` consecutive frames (a drawer or a banner in a transition is not a state)
@@ -50,9 +53,10 @@ async ({ frames, timeout_ms, selectors }) => {
     try { nodes = Array.from(document.querySelectorAll(s)); } catch (e) { nodes = []; }
     return nodes.map((el) => { const r = el.getBoundingClientRect(); return [r.x, r.y, r.width, r.height]; });
   }));
+  const stableDeadline = performance.now() + timeout_ms;
   let last = boxesKey();
   let same = 0;
-  while (performance.now() < deadline) {
+  while (performance.now() < stableDeadline) {
     await new Promise((resolve) => requestAnimationFrame(() => resolve()));
     out.frames += 1;
     const now = boxesKey();
@@ -111,9 +115,10 @@ def elements_request(view):
 
 
 def settle_argument(cfg, view=None):
-    """The argument of SETTLE_JS: the frames, the timeout and the selectors whose boxes must stop moving (the expected elements of the view)."""
+    """The argument of SETTLE_JS: the frames, the budget of the layout wait, the bound of the image wait and the selectors whose boxes must stop moving (the expected elements of the view)."""
     s = cfg['capture']['settle']
-    return {'frames': s['animation_frames'], 'timeout_ms': s['timeout_ms'], 'selectors': [e['selector'] for e in (view or {}).get('expected_elements', [])]}
+    return {'frames': s['animation_frames'], 'timeout_ms': s['timeout_ms'], 'image_timeout_ms': s['image_timeout_ms'],
+            'selectors': [e['selector'] for e in (view or {}).get('expected_elements', [])]}
 
 
 def timed_capture_ok(target_ms, after_ms):

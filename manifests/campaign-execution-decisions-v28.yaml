@@ -1,0 +1,32 @@
+# manifests/campaign-execution-decisions-v28.yaml -- decision of 2026-11-28 (UTC), the review of the confirming round 4 of E10 (operation OP-PREP-E10-04; CAMPAIGN-EXECUTION-DECISIONS-28): the correction of the image wait of the settle of the capture and the recalibration under the new implementation hash.
+# ORCHESTRATOR record. It starts, configures, authorizes, dispatches, freezes, and exports nothing. Immutable once committed; a correction is a new version file. Earlier rounds: -v2 to -v27 (unchanged).
+record_class: "CAMPAIGN_EXECUTION_DECISIONS"
+record_id: "CAMPAIGN-EXECUTION-DECISIONS-28"
+study_id: "EUS-2026-001"
+operation_id: "OP-PREP-E10-04"
+recorded_by_role: "ORCHESTRATOR"
+recorded_on: "2026-11-28"
+recorded_at_utc: "2026-11-28T19:00:17Z"
+executes_anything: false
+protocol_change: false
+supersedes: null
+evidence_basis: "manifests/e10-environment-verification-rounds-v1.yaml (round 4, run 46175822110, the harness finding on E10-SUT01-WEB-PROBLEM), the four DRY_RUN artifacts of that run read by the ORCHESTRATOR (never imported), manifests/e10-calibration-v1.yaml, manifests/campaign-execution-decisions-v27.yaml."
+human_decision:
+  given_by: the human research lead
+  channel: "answers of one question dialog in the ORCHESTRATOR's conversation (single-agent operating model of 2026-10-24 and 2026-10-25), the fourth of the E10 preparation"
+  sha256_convention: UTF-8 text exactly as stored, without a trailing line feed
+  question_dialog_e10_round_4:
+    transcript_stamp: null
+    transcript_stamp_note: "the harness stamp of the answer is not available to the ORCHESTRATOR in this session; recorded_at_utc above is the system clock when this file was written, after the answer"
+    bytes: 2313
+    exact_text_sha256: 374d4ba6214936c127c70c0544dbfe1ee951157402b35c563cd7374e9957dc5e
+    note: the answer of the question dialog, whole; the chosen option is the decision
+    exact_text: "Your questions have been answered: \"Resultado de la ronda 4 de DRY_RUN de E10 (corrida 46175822110, 3 min 27 s, todo DRY_RUN; nada medido). La ruta no provisional QUEDA CONFIRMADA: en las 12 ejecuciones los umbrales son T_R 0.0005 y T_e 0.01, provisional = false y fuente = registro de calibración; SUT-02, SUT-03 IMAGE y SUT-03 SHIFT dieron DETECTED 3/3 (el ícono de cerrar de SUT-02 sigue en 0.0103 frente al piso 0.01) y los 18 pares A vs A2 son idénticos. PERO apareció un defecto del arnés en SUT-01: en 2 de 3 ejecuciones la captura del estado B gastó sus 20 s de espera en el paso de imágenes (la propia SUT reintenta sin límite la imagen de reemplazo, cada petición bloqueada por ORB, así que sus 3 imágenes de la primera pantalla nunca están completas a la vez), el chequeo de estabilidad de diseño que viene después no llegó a correr y la ejecución quedó INCONCLUSIVE_READY_SIGNAL_MISSING con el motivo LAYOUT_NOT_STABLE, que no describe la causa (el diseño no se mostró inestable). En las rondas 2 y 3 esa misma captura se asentó siempre; en la ronda 4 solo 1 de 3. Si no se corrige, en la medición una fracción de las 50 ejecuciones de SUT-01 saldría inconclusa por el arnés (se excluye del denominador de detección y se reporta, E10-D-18), con menos información y un intervalo más ancho. La corrección no toca expectativas, vistas, elementos ni pisos: acotar la espera de imágenes (5 s) y correr siempre después la espera de estabilidad de diseño con su propio presupuesto; las imágenes de A/A2 siguen exigiendo carga (regla externa) y el estado de imágenes de B se registra. Cuesta: cambia el ejecutor, así que cambia su hash de implementación y las rondas 2 y 3 dejan de servir para la calibración (la regla pide rondas bajo el hash final). Camino propuesto: corrección + pruebas, export v98 (publicarlo requiere tu sí a su línea), dos rondas nuevas (cada una con su línea exacta; correrían ya con los umbrales del archivo de condiciones, que son los pisos, así que también sirven de ronda de confirmación), recalibración como registro v2 (el v1 es inmutable; hay que apuntar la compuerta G-11 al v2) y export v99; luego el paquete de START. ¿Qué hago?\"=\"Corregir el arnés y recalibrar (Recomendada)\". You can now continue with these answers in mind."
+decisions:
+  - id: E10-HARNESS-FIX-2
+    subject: "the image wait of the settle of the capture"
+    decision: "Correct the harness: the wait for the images inside the viewport has a bound of its own (new key capture.settle.image_timeout_ms of the conditions file, 5000 ms), the layout-stability wait always runs after it with its own budget, and the images still pending are recorded; the rule on the images of State A and A2 (an expected image that did not load makes the execution INCONCLUSIVE_EXTERNAL_IMAGE_NOT_LOADED) and the recording of the image state of State B are unchanged. No expectation, view, element, floor or threshold changes. The implementation hash changes with the executor digests (run-condition.sh sha256 ac56ac6549b5bb478b584cc17efca415b2c8a9dcd9730cdc2621094c0776a0e0); the rounds 2 and 3, run under the hash 94ded1d2, are no longer inputs of a calibration."
+  - id: E10-RECALIBRATION-PATH
+    subject: "the way back to a calibrated configuration"
+    decision: "After the correction: a local build of the public export v98 (no push; the push is a separate question with its exact line), two new DRY_RUN rounds under the new hash, each with its exact line (they run on the thresholds already in the conditions file, 0.0005 and 0.01, so they also serve as the confirming round), a recalibration written as a new record manifests/e10-calibration-v2.yaml (the record v1 is immutable) with the gate G-11 of the measured workflow pointing at it, and a public export v99; then the START package."
+not_decided_in_this_round: "The push of v98 and of v99, the two new DRY_RUN rounds, the recalibration record v2, the campaign START of E10, the three dispatch authorizations, the freeze, the H5 analysis of the E10 contribution, the START of E12, and every other public export: each needs its own explicit human approval or instruction."

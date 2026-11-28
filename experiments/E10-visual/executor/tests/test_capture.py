@@ -88,8 +88,8 @@ class HelperTests(unittest.TestCase):
         view = config.condition(CFG, 'E10-SUT02-WEB-VISUAL')['views'][2]
         self.assertEqual(capture.ready_selectors(view), {'inventory_list': '[data-test="inventory-list"]', 'close_icon': '[data-test="close-menu"]'})
         self.assertEqual(capture.elements_request(view), [{'group': 'close_icon', 'selector': '[data-test="close-menu"]'}])
-        self.assertEqual(capture.settle_argument(CFG), {'frames': 2, 'timeout_ms': 20000, 'selectors': []})
-        self.assertEqual(capture.settle_argument(CFG, view), {'frames': 2, 'timeout_ms': 20000, 'selectors': ['[data-test="close-menu"]']})
+        self.assertEqual(capture.settle_argument(CFG), {'frames': 2, 'timeout_ms': 20000, 'image_timeout_ms': 5000, 'selectors': []})
+        self.assertEqual(capture.settle_argument(CFG, view), {'frames': 2, 'timeout_ms': 20000, 'image_timeout_ms': 5000, 'selectors': ['[data-test="close-menu"]']})
 
     def test_the_timing_check(self):
         self.assertIsNone(capture.timed_capture_ok(None, 123.0))
@@ -205,6 +205,9 @@ const get = (name) => vm.runInContext('(' + scripts[name] + ')', ctx);
   const t0 = Date.now();
   out.settle_blocked = await get('SETTLE_JS')({ frames: 2, timeout_ms: 200 });
   out.settle_blocked_took_ms = Date.now() - t0;
+  const t1 = Date.now();
+  out.settle_bounded = await get('SETTLE_JS')({ frames: 2, timeout_ms: 2000, image_timeout_ms: 100 });
+  out.settle_bounded_took_ms = Date.now() - t1;
   images[1].complete = true;
   out.settle_ready = await get('SETTLE_JS')({ frames: 2, timeout_ms: 200 });
   out.settle_moving = await get('SETTLE_JS')({ frames: 2, timeout_ms: 2000, selectors: ['.moving'] });
@@ -242,6 +245,11 @@ const get = (name) => vm.runInContext('(' + scripts[name] + ')', ctx);
         self.assertFalse(out['settle_blocked']['images_complete'])
         self.assertEqual(out['settle_blocked']['pending_images'], 1)  # the lazy image outside the viewport is not counted
         self.assertGreaterEqual(out['settle_blocked_took_ms'], 150)
+        # the image wait has a bound of its own: with an image that never completes, the layout check still runs and the call ends long before the whole budget
+        self.assertFalse(out['settle_bounded']['images_complete'])
+        self.assertEqual(out['settle_bounded']['pending_images'], 1)
+        self.assertTrue(out['settle_bounded']['boxes_stable'])
+        self.assertLess(out['settle_bounded_took_ms'], 1000)
         self.assertTrue(out['settle_ready']['images_complete'])
         self.assertTrue(out['settle_ready']['fonts_ready'])
         self.assertEqual(out['settle_ready']['frames'], 2)

@@ -29,6 +29,7 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(self.cfg['comparison']['options'], compare.PIXELMATCH_OPTIONS)
         self.assertEqual(self.cfg['comparison']['version'], compare.PIXELMATCH_VERSION)
         self.assertEqual(self.cfg['capture']['settle']['timeout_ms'], 20000)
+        self.assertEqual(self.cfg['capture']['settle']['image_timeout_ms'], 5000)
 
     def test_the_conditions_file_carries_the_calibrated_thresholds_and_null_means_the_floors_provisionally(self):
         # the pair of every condition is the one of manifests/e10-calibration-v1.yaml (every baseline pair gave the floors)
@@ -66,6 +67,9 @@ class ConfigTests(unittest.TestCase):
 
     def test_validation_refuses_inconsistent_files(self):
         self.mutate(lambda c: c['conditions'][0].update(condition_id='E10-SUT02-WEB-PROBLEM'))  # SUT does not match the id
+        self.mutate(lambda c: c['capture']['settle'].update(image_timeout_ms=0))
+        self.mutate(lambda c: c['capture']['settle'].update(image_timeout_ms=20001))  # above the layout budget
+        self.mutate(lambda c: c['capture']['settle'].pop('image_timeout_ms'))
         self.mutate(lambda c: c['conditions'][1].update(condition_id=c['conditions'][0]['condition_id']))  # duplicate
         self.mutate(lambda c: c['conditions'][0].update(surface='api'))
         self.mutate(lambda c: c['conditions'][0].update(expected_category='NOT_DETECTED'))
