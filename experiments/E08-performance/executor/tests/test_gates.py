@@ -228,9 +228,9 @@ class GateTests(unittest.TestCase):
                 self.assertFailsOn(state, label, fragment)
 
     def test_as_is_repository_state_fails_closed(self):
-        """Run the gate against this repository as it is: the START was applied on 2026-11-26 (E08-START-AUTH-01) and no dispatch authorization was issued, so with
-        placeholder ids the gate must fail on the START id, the dispatch authorization and the frozen prompt of the placeholder, while the START status and the
-        locked configuration hold."""
+        """Run the gate against this repository as it is: the START was applied on 2026-11-26 (E08-START-AUTH-01) and the campaign was FROZEN on 2026-11-27
+        (E08-FREEZE-AUTH-01), so with placeholder ids the gate must fail on the START id, the dispatch authorization and the frozen prompt of the placeholder,
+        and, by design, on the status check (gate G-1: a FROZEN campaign refuses every dispatch), while the locked configuration holds."""
         state = base_state()
         proc = subprocess.run([sys.executable, '-c', 'pass'])
         self.assertEqual(proc.returncode, 0)
@@ -247,8 +247,9 @@ class GateTests(unittest.TestCase):
         fails = [l for l in r.stdout.splitlines() if l.startswith('FAIL ')]
         for fragment in ('START row carries the campaign START authorization id', 'exactly one dispatch authorization record', 'executor prompt frozen file exists'):
             self.assertTrue(any(fragment in l for l in fails), fragment + '\n' + r.stdout)
+        self.assertIn('FAIL E08 campaign status IN_PROGRESS: FROZEN', fails, r.stdout)   # since the campaign freeze of 2026-11-27 the status check fails by design
         passes_start = [l for l in r.stdout.splitlines() if l.startswith('PASS ')]
-        for fragment in ('E08 campaign status IN_PROGRESS', 'locked "Campaign configuration" record exists'):
+        for fragment in ('locked "Campaign configuration" record exists',):
             self.assertTrue(any(fragment in l for l in passes_start), fragment + '\n' + r.stdout)
         # the instrument pin was approved on 2026-11-26 (decisions v23) and the first DRY_RUN round verified the four conditions: their gates hold on the repository as it is
         passes = [l for l in r.stdout.splitlines() if l.startswith('PASS ')]

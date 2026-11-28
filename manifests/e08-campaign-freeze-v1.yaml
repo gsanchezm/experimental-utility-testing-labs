@@ -1,0 +1,115 @@
+# manifests/e08-campaign-freeze-v1.yaml -- provenance record of the E08-performance campaign freeze (protocol/change-control-v1.md, section 7, moment 2: IN_PROGRESS -> FROZEN).
+# Modeled on manifests/e11-campaign-freeze-v1.yaml and manifests/e09-campaign-freeze-v1.yaml. A provenance record, not a second campaign-configuration record: the configuration itself stays authoritative and locked in
+# experiments/E08-performance/README.md, section "Campaign configuration" (unchanged by this freeze). ORCHESTRATOR record of operation OP-FREEZE-15 (2026-11-27 local, America/Mexico_City; the UTC date at the time of writing was 2026-11-27).
+# Immutable once committed; a correction is a new version file.
+record_class: E08_CAMPAIGN_FREEZE
+record_id: E08-FREEZE-01
+study_id: EUS-2026-001
+campaign_id: E08-performance
+operation_id: OP-FREEZE-15
+recorded_by_role: ORCHESTRATOR
+recorded_on: '2026-11-27'
+recorded_on_timezone: America/Mexico_City (the UTC date at the time of writing was 2026-11-27)
+status: RECORDED
+transition: IN_PROGRESS -> FROZEN
+previous_status: IN_PROGRESS
+new_status: FROZEN
+freeze_timestamp: "2026-11-27T19:43:33Z"  # one UTC clock reading taken when the edits were written; the commit that carries them follows it
+authorization_id: E08-FREEZE-AUTH-01
+freeze_approved_by: gilbertosanchez
+frozen_by: ORCHESTRATOR
+measured_experiment: false
+executes_anything: false
+protocol_change: false
+human_approval:
+  text_verbatim: "Your questions have been answered: \"E08-performance terminó su despacho: 4 de 4 condiciones, 200 ejecuciones, intento 1, todas importadas sin cambios, auditadas (4 x 50 manifiestos, digests = GitHub, 4250 miembros re-descargados byte a byte, 0 problemas) y fusionadas en main (merge d379986b7; HEAD 3a3e62fe1, local). Public main sigue en 4c865309 (nada de esto es público). Reporte por condición, solo lo que permite el prompt congelado §5: (1) E08-SUT01-WEB-DELAY, run 46037824189 (n.º 1), despachado 16:56:48Z; jobs gate/provenance/measured = success; ejecutor exit 0; artefacto 15219821884, 17 817 527 bytes, sha256:33a42b0e...; 50 manifiestos; condition-summary categories {\"DETECTED\": 50}. (2) E08-SUT02-WEB-BLOCK, run 46037895699 (n.º 2), 16:57:21Z; 3 jobs success; exit 0; artefacto 15219748420, 13 529 999 bytes, sha256:956c9886...; 50 manifiestos; {\"DETECTED\": 50}. (3) E08-SUT03-WEB-LCP, run 46037974864 (n.º 3), 16:57:58Z; 3 jobs success; exit 0; artefacto 15218904701, 19 946 162 bytes, sha256:bd704321...; 50 manifiestos; {\"DETECTED\": 50}. (4) E08-SUT03-WEB-CLS, run 46041326543 (n.º 4), 17:22:31Z; 3 jobs success; exit 0; artefacto 15220964177, 1 960 421 bytes, sha256:0c60fc7a...; 50 manifiestos; {\"NOT_DETECTED\": 50}. environment_type tal como se registró: SELF_HOSTED. Anomalía citada del log de cada job (igual en las 4): \"##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, ...\". Diferencia declarada (igual que E11): la identidad de cada run se commiteó al importar, no antes del siguiente despacho. No calculo tasas, no comparo entre condiciones ni SUT, no interpreto. ¿Apruebas el congelamiento E08-FREEZE-AUTH-01 (protocolo change-control-v1 §7, momento 2)? Efecto: raw-data/E08-performance/ pasa a append-only y la configuración queda inmutable. NO autoriza análisis, NO exporta nada (el export v93 con los datos crudos y el análisis de H5 son pasos aparte que pedirán su propio sí). Mecánica: copio el modelo del commit c7293c402 (E11) en 8 archivos (README raíz, README de E08, experiments/README, manifests/README, manifests/e08-campaign-freeze-v1.yaml con tu respuesta literal y sha256, study-manifest, protocol/CHANGELOG con 1 fila de 8 columnas, raw-data/README), y antes de aplicar corro localmente las réplicas de los pasos de validación.\"=\"Sí, congela E08 (Recomendada)\". You can now continue with these answers in mind."
+  bytes: 2466
+  sha256: e75363a5dab89fe2ae2c988e655a094be50d281e678666f73e6686b037565981
+  received_utc: null   # the harness stamps of the dialog are not available to the ORCHESTRATOR in this session; freeze_timestamp above is the system clock when the edits were written, after the answer
+  question_stamp: null
+  chosen_options: ["Sí, congela E08 (Recomendada)"]
+  entry_kind: >
+    the answer of the human research lead to one question dialog about the freeze of E08 (the option chosen is listed above); the text above is the whole stored answer. The dialog carried one question only. Unlike the E11 dialog, its question
+    quoted, for each of the four conditions, the counts-only condition summary of the import record verbatim (the categories object, nothing else), because the frozen dispatch prompt (section 5) allows exactly that in the report of a concluded
+    condition; those strings are part of the approval text above and of nothing else in this record, which tallies no outcome (see observed_outcomes). The dialog did not ask about the live status of the agent-instructions file (not edited by this operation).
+  what_the_question_offered:
+    option_chosen: "Sí, congela E08 (Recomendada): Registra E08-FREEZE-AUTH-01 con tu respuesta literal y aplica el congelamiento en un commit local; no exporta, no analiza."
+    option_not_chosen: "No congeles todavía: Dejo E08 en IN_PROGRESS con los 200 bundles importados y fusionados; revisas algo antes."
+  scope: the freeze of the E08 campaign with its four executable conditions on SUT-01 (1), SUT-02 (1) and SUT-03 (2), 200 executions, N = 50 per condition, under the authorization id above
+trigger: >
+  protocol/change-control-v1.md, section 7, moment 2: every planned run of the campaign (all ecosystems, all conditions, the recorded N) has been executed. The locked configuration plans four executable conditions,
+  one on SUT-01 (E08-SUT01-WEB-DELAY), one on SUT-02 (E08-SUT02-WEB-BLOCK) and two on SUT-03 (E08-SUT03-WEB-LCP and E08-SUT03-WEB-CLS), with N = 50 each (EX0001 to EX0050);
+  no other SUT has a condition in the configuration.
+pre_freeze_state:
+  canonical_head: 3a3e62fe1984467f03b2c08bed89906f09201d3f  # the head before the freeze commit: the export-log entry 92, one commit after the merge of the dispatch branch into main
+  merge_commit: d379986b798b0b8515b2aa167357a7b42176620b
+  merge_parents: [24e84b057dddc7036676f901ba199b5b29419821, 98cc39cd4863c828e99de6f456e609e600697f1c]
+  dispatch_branch_head: 98cc39cd4863c828e99de6f456e609e600697f1c   # branch e08-measured-dispatch, in the dispatch worktree, left in place
+  public_main: 4c86530938a68da21a6e91de335cab09c0e60a50   # export v92; nothing is pushed by the freeze, and the merge is not public
+  e08_status_before: IN_PROGRESS
+  raw_tree_of_main_equals_raw_tree_of_the_dispatch_branch: {path: raw-data/E08-performance, tree: 021c4d7bf687dcc466abb9b0cb210dcb834ddf6f}
+  dispatch_records_tree_equals_the_dispatch_branch: {path: manifests/e08-measured-dispatch, tree: 4cf770bee023ce7f1e750da6b940156685adbbb0}
+  configuration_section: {path: experiments/E08-performance/README.md, heading: Campaign configuration, sha256: f3b081a66559e4f806754e576cbbd5885ed050d191fc7a4a3cf006910cfb8cd5, unchanged_since_the_start: true}   # slice from the heading to the end of file, read at the START (commit 0607f9a39) and now: byte-identical
+  start_record: manifests/e08-campaign-start-v1.yaml
+executions:
+  conditions: [E08-SUT01-WEB-DELAY, E08-SUT02-WEB-BLOCK, E08-SUT03-WEB-LCP, E08-SUT03-WEB-CLS]
+  n_per_condition: 50
+  executions_imported: 200   # SUT-01 50, SUT-02 50, SUT-03 100; attempt 1 for every condition
+  dispatches: 4   # one dispatch per condition (the unit of dispatch that the frozen prompt fixes), each condition's 50 executions in one job
+  first_dispatch_recorded_utc: "2026-11-27T16:56:38Z"   # clock of the first DISPATCH_RECORDED entry (E08-SUT01-WEB-DELAY)
+  last_import_recorded_utc: "2026-11-27T17:47:27Z"   # dispatch-record event RUN_CONCLUDED_AND_IMPORTED of the last condition (E08-SUT03-WEB-CLS)
+  local_dates_of_the_imports: ['2026-11-27']   # America/Mexico_City: from 10:56 to 11:47 local
+  dispatch_authorizations: [E08-DISPATCH-SUT01-AUTH-01, E08-DISPATCH-SUT02-AUTH-01, E08-DISPATCH-SUT03-AUTH-01]
+  dispatch_records: manifests/e08-measured-dispatch/e08-sut0N.jsonl   # three records (SUT-01, SUT-02 and SUT-03), append-only, complete: each opens with RECORD_OPENED and has, per condition, DISPATCH_RECORDED (committed before the dispatch), RUN_IDENTITY_RECORDED and RUN_CONCLUDED_AND_IMPORTED
+  dispatch_tool: {operation: OP-DISPATCH-E08-04, chains: "three concurrent chains, one per assigned SUT (SUT-01: 1 condition; SUT-02: 1 condition; SUT-03: 2 conditions, LCP then CLS), one condition at a time within a chain", end_message: "ALL CHAINS ENDED complete", stop_files: none}
+  imports: raw-data/E08-performance/<SUT>/<condition id>__<execution id>__A1/   # each with run-manifest.json, the bundle members unchanged and the executor records; the job-level files of each condition and its import-record.yaml in <condition id>__job__A1/; the file raw-data/E08-performance/.gitattributes (`* -text`) keeps the bytes unchanged, as in the other campaigns
+  consumed_attempts_without_bundle: []   # none: no attempt left without a bundle
+  further_attempts: []   # none: every condition is attempt 1; no further-attempt approval exists
+  ci_correction: none   # no workflow was edited while the campaign was IN_PROGRESS
+  github_measured_execution_runs: {total: 4, success: 4, failure: 0, event: workflow_dispatch for all, branch: main, run_attempt: 1 for all, run_numbers: 1 to 4}   # read from the workflow's run list at the freeze; no run is in progress or queued
+  runs:
+    E08-SUT01-WEB-DELAY: {run_id: 46037824189, run_number: 1, import_commit: 745b19cab}
+    E08-SUT02-WEB-BLOCK: {run_id: 46037895699, run_number: 2, import_commit: cb958b32e}
+    E08-SUT03-WEB-LCP: {run_id: 46037974864, run_number: 3, import_commit: 9f8ba9fa1}
+    E08-SUT03-WEB-CLS: {run_id: 46041326543, run_number: 4, import_commit: 98cc39cd4}
+  workflow_revision_of_all_imported_runs: {file_sha256: 32696fafa7e9a9b85bd907aa6b8379721671bc3b9ead082a8eabddef687a546a, public_blob: aa87a452e814a24dbc8a2b6119fe42fddd1a301c, public_main: 4c86530938a68da21a6e91de335cab09c0e60a50}   # ci-provenance.json workflow.file_sha256 and repository.sha of the 200 run directories: one value each; the locked measured_workflow_sha256 of the START record
+  hashes_stamped_by_the_gates: {e08_configuration_sha256: 8217cae556670ffe8b1674383650c8b2bd0a7d2ba9cf438b60f87646b2a9f957, executor_implementation_sha256: da24b1326d8ef55711fe077ac7363efccbf4c9d0277e6943e19649b9b1d7e4b2, executor_prompt_sha256: eaa751fc75a160f7fec89d4dbf5775f894ce99bc4f057b19c6190c792213a044, agent_governance_v6_sha256: c890a9d004b2989aa9ae33a54bc68b000c47fc9e3f79d60ad0051de78b3f2a4a, dispatch_authorization_sha256: {SUT-01: 53207a8a17308d785cca3af8f4a1df055b18ded0326a4c389aeded41920b57dc, SUT-02: 3756bb08fc9576c39d2cc5ad4b69827bda941bc0e5d7d8a1336fc30496f08a14, SUT-03: 6dac0dc3c88762334a2c052cd82679636d96aadae88d13fdaa13c28b0a52be3a}}   # frozen_input_hashes of the ci-provenance of every run directory (one value each, per SUT for the authorization)
+  schema_hash_bridge: "frozen_input_hashes.run_manifest_schema_v2_sha256 is 7f4a1c27deb1b0590f2e8fa2a75e18c0f8753817ed7fb10939a2c09cb8f61826 in all 200 provenance records: the exported hash of schemas/run-manifest.schema.v2.json, whose canonical sha256 9a86cf37c4ccd2abe3368866309e18a9f9554a2330f5dceeacda6d02a2932757 the START locked (PROVIDER_NEUTRAL_PATH_ALIAS of PUBLIC-EXPORT-MANIFEST.yaml; the same pair as in the E02, E03 and E11 records); not a difference of content"
+  disclosed_difference_of_the_dispatch_records: "the RUN_IDENTITY_RECORDED line of each run was committed in the import commit of that run, after the run concluded (as in the E11 records), not at the moment the run started; every DISPATCH_RECORDED line was committed before the dispatch clock reading of its condition (the git check below), and the identity line of each condition was committed no later than the dispatch line of the next condition of its SUT or at the close of the last one, which is the rule that the dispatch record states"
+audit_of_the_imports:
+  method: >
+    two read-only scripts (untracked scratch, not part of the repository; audit_e08.py of the operator records, and a read-only git check run in this operation), the first run on the dispatch worktree (branch head 98cc39cd4863c828e99de6f456e609e600697f1c, against the base 24e84b05)
+    and the GitHub run and artifact lists, including the re-download of the 8 archives from GitHub (GET only); both before any edit of the freeze
+  checks: >
+    the directories equal the expected set (50 run directories plus the job directory for each of the 4 conditions); every run manifest names campaign E08-performance, its SUT, attempt 1, environment_type, the prompt version ORCHESTRATOR-E08-performance-v1 and agent_role ORCHESTRATOR (one value each per condition),
+    and its run id equals its directory; every archive equals the digest GitHub reports and every member of the 8 archives (4250 in all) equals the committed file or, for the provenance archive, is the provenance record; the files each import record lists (4246 in all) equal the files imported;
+    the ci-provenance of the 200 run directories carries one workflow hash, one repository sha and one value of each frozen input hash (the per-SUT authorization hash differs between SUTs only); in git, the range between the base and the branch head holds exactly the three record-opening commits and the four import commits,
+    no path in it was modified, deleted or renamed except the appended dispatch records, the dispatch records only ever grew by appended lines (each commit's file starts with the previous commit's bytes), each DISPATCH_RECORDED line was committed before the dispatch clock reading of its condition,
+    and no commit message carries an attribution token; GitHub lists exactly 4 runs of the measured workflow, all success, all workflow_dispatch on main at the pinned head, run attempt 1
+  result: {run_directories: 200, job_directories: 4, files_listed_and_verified: 4246, archives_redownloaded: 8, archive_members_compared: 4250, defects: 0}
+  observed_outcomes: "workflow conclusion success in 4 of 4 runs (200 of 200 executions imported); the one anomaly each import record quotes from the job log is the GitHub notice that the actions in use target Node.js 20 and are run on Node.js 24, the same line in all 4; no tally of the run-manifest outcome or category fields is recorded here, because the frozen dispatch prompt (section 5) forbids summarizing across runs or conditions, as in the E04, E06, E07 and E11 freezes (the counts-only condition summaries appear only inside the verbatim question of the approval text above, quoted as section 5 allows); the outcomes stay in the run manifests, the attempt records and the condition summaries of the import records, unanalyzed"
+effect: >
+  From this moment raw-data/E08-performance/ is append-only in the sense of raw-data/README.md: every existing raw file is immutable, and a further run may be appended only with a "run appended after campaign
+  freeze" row in protocol/CHANGELOG.md stating the reason (raw-data/README.md, rule 1). The campaign configuration record is immutable. The measured-execution workflow requires the campaign status IN_PROGRESS (gate G-1),
+  so it refuses every dispatch from the freeze on; a run appended after the freeze would need its own change-log row and a CI correction. Reopening the campaign follows protocol/change-control-v1.md, section 5 in full.
+other_edits_of_the_freeze_commit:
+  - "protocol/CHANGELOG.md: one row for this transition (after the row of the START)"
+  - "manifests/study-manifest.yaml: the E08 status line FROZEN with the transition clock reading, and a note of the operation"
+  - "status lines that the freeze makes out of date, edited with counted replacements: README.md, experiments/README.md, raw-data/README.md, the E08 README (current status, outside the Campaign configuration section)"
+  - "manifests/README.md: the rows of the E08 dispatch records and of this freeze"
+  - "no executor, workflow or prompt file changes, so the implementation hash stays da24b132"
+not_authorized_by_this_record:
+  - any dispatch, re-run, or run appended after the freeze
+  - any export or push, and the publication of raw-data/E08-performance/ (a separate decision, made through the export that carries it, which needs the human research lead's yes to its exact line)
+  - any change to a workflow, a protocol document other than the change log, a prompt, a SUT, or a raw file
+  - "any analysis: the E08 contribution to H5 (descriptive in weight, one dataset beside those of E09 and E11, never summed) is a separate step under protocol/statistical-analysis-plan-v1.md, section 4, and starts only on its own instruction"
+  - any edit of the dashboard; the live status of the agent-instructions file is edited only in a separate commit, on its own approval
+resulting_freeze_commit: null   # a commit cannot name its own id; the commit that adds this file is the freeze commit
+next_steps:
+  - the export that publishes raw-data/E08-performance/, the dispatch records, this freeze and the status lines, which needs the human research lead's yes to its exact push line (the bundles carry no host path: to be checked before the export; the first publication of runtime identifiers is classified by the pre-push gate as in the E05 and E11 exports)
+  - the export-log entries and the post-push audit in PUBLIC-EXPORT-MANIFEST.yaml
+  - the refresh of the dashboard research-status.html (standing rule), when asked
+  - the E08 contribution to H5 (descriptive), on a separate instruction
+notes: |
+  The freeze closes the set of E08 runs of this campaign version. It introduces no sample size, exclusion rule, attribution rule, or comparison that was not already in the locked configuration.
+  No E08 result is analyzed or summarized by this record.

@@ -1,0 +1,93 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E08-SUT03-WEB-LCP__EX0009__A1",
+  "condition": "E08-SUT03-WEB-LCP",
+  "execution_id": "EX0009",
+  "attempt": 1,
+  "outcome_category": "DETECTED",
+  "observed": "lcp_ms (ms): D=3288, Ba=100, Bb=104; delta D-Ba=3188; rule delta_ge 2500; detected=True; baseline_false_positive=False; order=Ba>Bb>D",
+  "cause": null,
+  "attribution": "SUT",
+  "stimulus_request_sent": true,
+  "last_phase": "classification",
+  "duration_s": 24.787,
+  "steps": [
+    {
+      "phase": "starting-state",
+      "description": "the web surface answers 200",
+      "mechanisms": [],
+      "started_at": "2026-11-27T17:03:54.450Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "web_status": 200
+      },
+      "evidence": [],
+      "finished_at": "2026-11-27T17:03:54.470Z"
+    },
+    {
+      "phase": "method",
+      "description": "three page loads in the order Ba>Bb>D",
+      "mechanisms": [],
+      "started_at": "2026-11-27T17:03:54.470Z",
+      "outcome": "OBSERVED",
+      "observation": {
+        "order": [
+          "Ba",
+          "Bb",
+          "D"
+        ],
+        "loads": {
+          "Ba": {
+            "role": "Ba",
+            "label": "load1-Ba",
+            "account": "testuser",
+            "page": "/sut/ui/zero-cls",
+            "navigation_status": 200,
+            "final_url": "http://127.0.0.1:3000/sut/ui/zero-cls",
+            "probe_evidence": "evidence/003-load1-Ba-probe.json",
+            "screenshot": null,
+            "observe_window_ms": 8000
+          },
+          "Bb": {
+            "role": "Bb",
+            "label": "load2-Bb",
+            "account": "testuser",
+            "page": "/sut/ui/zero-cls",
+            "navigation_status": 200,
+            "final_url": "http://127.0.0.1:3000/sut/ui/zero-cls",
+            "probe_evidence": "evidence/007-load2-Bb-probe.json",
+            "screenshot": null,
+            "observe_window_ms": 8000
+          },
+          "D": {
+            "role": "D",
+            "label": "load3-D",
+            "account": "testuser",
+            "page": "/sut/ui/high-lcp",
+            "navigation_status": 200,
+            "final_url": "http://127.0.0.1:3000/sut/ui/high-lcp",
+            "probe_evidence": "evidence/011-load3-D-probe.json",
+            "screenshot": "evidence/012-load3-D-screenshot.png",
+            "observe_window_ms": 8000
+          }
+        }
+      },
+      "evidence": [],
+      "finished_at": "2026-11-27T17:04:19.236Z"
+    },
+    {
+      "phase": "classification",
+      "description": "classify the three snapshots by the rule of the condition",
+      "mechanisms": [],
+      "started_at": "2026-11-27T17:04:19.236Z",
+      "outcome": "OBSERVED",
+      "observation": {
+        "category": "DETECTED"
+      },
+      "evidence": [],
+      "finished_at": "2026-11-27T17:04:19.236Z"
+    }
+  ],
+  "notes": [],
+  "note": "attribution is mechanical (D-16, D-16b): TOOLING only for an exception before the stimulus request was sent; the label is carried in outcome.outcome_category of run-manifest.json and never changes a rate"
+}

@@ -1,0 +1,93 @@
+{
+  "record_class": "MEASURED_EXPERIMENT",
+  "run_id": "E08-SUT02-WEB-BLOCK__EX0006__A1",
+  "condition": "E08-SUT02-WEB-BLOCK",
+  "execution_id": "EX0006",
+  "attempt": 1,
+  "outcome_category": "DETECTED",
+  "observed": "longest_longtask_ms (ms): D=5005, Ba=0.0, Bb=0.0; delta D-Ba=5005.0; rule delta_ge 4500; detected=True; baseline_false_positive=False; order=Ba>Bb>D",
+  "cause": null,
+  "attribution": "SUT",
+  "stimulus_request_sent": true,
+  "last_phase": "classification",
+  "duration_s": 14.148,
+  "steps": [
+    {
+      "phase": "starting-state",
+      "description": "the web surface answers 200",
+      "mechanisms": [],
+      "started_at": "2026-11-27T16:59:53.544Z",
+      "outcome": "SUCCESS",
+      "observation": {
+        "web_status": 200
+      },
+      "evidence": [],
+      "finished_at": "2026-11-27T16:59:53.558Z"
+    },
+    {
+      "phase": "method",
+      "description": "three page loads in the order Ba>Bb>D",
+      "mechanisms": [],
+      "started_at": "2026-11-27T16:59:53.558Z",
+      "outcome": "OBSERVED",
+      "observation": {
+        "order": [
+          "Ba",
+          "Bb",
+          "D"
+        ],
+        "loads": {
+          "Ba": {
+            "role": "Ba",
+            "label": "load1-Ba",
+            "account": "standard_user",
+            "page": "/inventory.html",
+            "navigation_status": 200,
+            "final_url": "http://127.0.0.1:3000/inventory.html",
+            "probe_evidence": "evidence/003-load1-Ba-probe.json",
+            "screenshot": null,
+            "ready_within_budget": true
+          },
+          "Bb": {
+            "role": "Bb",
+            "label": "load2-Bb",
+            "account": "standard_user",
+            "page": "/inventory.html",
+            "navigation_status": 200,
+            "final_url": "http://127.0.0.1:3000/inventory.html",
+            "probe_evidence": "evidence/007-load2-Bb-probe.json",
+            "screenshot": null,
+            "ready_within_budget": true
+          },
+          "D": {
+            "role": "D",
+            "label": "load3-D",
+            "account": "performance_glitch_user",
+            "page": "/inventory.html",
+            "navigation_status": 200,
+            "final_url": "http://127.0.0.1:3000/inventory.html",
+            "probe_evidence": "evidence/011-load3-D-probe.json",
+            "screenshot": "evidence/012-load3-D-screenshot.png",
+            "ready_within_budget": true
+          }
+        }
+      },
+      "evidence": [],
+      "finished_at": "2026-11-27T17:00:07.691Z"
+    },
+    {
+      "phase": "classification",
+      "description": "classify the three snapshots by the rule of the condition",
+      "mechanisms": [],
+      "started_at": "2026-11-27T17:00:07.691Z",
+      "outcome": "OBSERVED",
+      "observation": {
+        "category": "DETECTED"
+      },
+      "evidence": [],
+      "finished_at": "2026-11-27T17:00:07.691Z"
+    }
+  ],
+  "notes": [],
+  "note": "attribution is mechanical (D-16, D-16b): TOOLING only for an exception before the stimulus request was sent; the label is carried in outcome.outcome_category of run-manifest.json and never changes a rate"
+}
