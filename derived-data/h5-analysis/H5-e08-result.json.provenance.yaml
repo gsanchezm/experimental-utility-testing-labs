@@ -1,0 +1,46 @@
+# derived-data/h5-analysis/H5-e08-result.json.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (JSON cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/h5-analysis/H5-e08-result.json
+dataset_sha256: 6765419bd70c9c884af4429e07db8abc99c40089e5d3bc365f873a1fa6a3c92d
+campaign_id: E08-performance
+hypothesis_id: H5
+part: performance (E08) contribution only; the H5 variable spans E08, E09, E10 and E11; E10 has not been started, the E09 and E11 contributions are the separate datasets derived-data/h5-analysis/H5-e09-result.json and derived-data/h5-analysis/H5-e11-result.json, and the contributions are not summed
+sut_ids: [SUT-01, SUT-02, SUT-03]
+sut_ids_in_confirmatory_comparison: [SUT-01, SUT-02, SUT-03]
+sut_ids_excluded_from_comparison: [SUT-04, SUT-05, SUT-06]
+sut_ids_note: SUT-04, SUT-05 and SUT-06 have no condition (no data, no ground-truth condition available; the configuration assigns them no count, so null)
+per_run_table:
+  path: derived-data/E08-performance/outcomes-per-attempt.csv
+  sha256: 463205cde590c1757f444b0aa16b7fe076896157e12b5e21fa1c5271abaf73f5
+  note: written by the same script run from the same bundles; the result is not computed from it
+raw_inputs:
+  tree:
+    path: raw-data/E08-performance
+    git_tree: 021c4d7bf687dcc466abb9b0cb210dcb834ddf6f
+    pinned_at_commit: b7ced46bd74d4228aaaafb1a42459bb551dfe538
+    campaign_state: FROZEN
+  bundles: 200
+  job_directories: 4
+  files_read: the run manifest, the attempt record and the detection evidence file of each bundle (the last two each checked against the sha256 that the run manifest lists), and the condition summary and the CI provenance of each condition (608 files in all)
+transformation_script:
+  path: analysis/h5-analysis/compute-h5-e08.js
+  version: git-blob-sha 3ed25771a6b196b0450f6fcf96e424493a99b091
+  tests: analysis/h5-analysis/test/h5-e08.test.js (13 tests; node --test)
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only; requires the pure core analysis/h3-analysis/h3-metrics.js, blob 72b1f74949cc76ce907ca2a162e5d5fbd28ef6a0, without modifying it)
+date_generated: "2026-11-27"
+date_note: local date (America/Mexico_City)
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: protocol/statistical-analysis-plan-v1.md, sections 3, 4.3 (H5 row) and 5; experiments/E08-performance/README.md, "Campaign configuration" (sha256 f3b081a66559e4f806754e576cbbd5885ed050d191fc7a4a3cf006910cfb8cd5); experiments/E08-performance/conditions-draft.json (sha256 e4aaf35651d3b8e0d1abd6c29b9716b733756f2af0332ef90713ccc75b499a98)
+notes: >
+  Deterministic, non-interpretive computation. Implements the descriptive procedure pre-registered in the E08 campaign configuration: per condition the count
+  of each category out of N = 50, the detection proportion over the valid measurements (DETECTED or NOT_DETECTED, E08-D-18) and the baseline-against-baseline
+  false-positive proportion over the executions that have such a record, each with the Wilson 95% interval, the medians of the three metric values and of the
+  two differences (descriptive), and the H5 count of ground-truth conditions per ecosystem for E08 only (each configured condition counts once whatever its
+  detection result, E08-D-2; taken from the conditions file, never from the outcomes). The classification of the H5 comparisons is written in the script from
+  the configuration and is not derived from the data. No test, p-value, Holm correction, Fisher table, risk difference, pooled rate, composite, ranking or
+  support / non-support determination is computed (none is frozen for H5). The recorded category of every bundle equals the one the script derives from its
+  detection evidence, and equals the category of its attempt record and of its condition summary (listed disagreements: none); the order of the three loads of
+  every execution equals the rotation rule of the conditions file. The script was run twice and wrote equal bytes (--check), and an independent recomputation in
+  a second language (Python) from the same bundles gave the same category counts, detection and false-positive counts and medians in each of the four conditions.

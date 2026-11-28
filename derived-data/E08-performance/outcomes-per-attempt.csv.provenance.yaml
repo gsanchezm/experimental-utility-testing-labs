@@ -1,0 +1,29 @@
+# derived-data/E08-performance/outcomes-per-attempt.csv.provenance.yaml
+# Provenance sidecar per derived-data/README.md, rule 3 (a CSV cannot carry a leading comment block).
+# Editable by ORCHESTRATOR only (protocol/agent-governance-v6.md).
+dataset: derived-data/E08-performance/outcomes-per-attempt.csv
+dataset_sha256: 463205cde590c1757f444b0aa16b7fe076896157e12b5e21fa1c5271abaf73f5
+campaign_id: E08-performance
+hypothesis_id: H5
+part: "one row per execution of the 200 imported bundles (50 per condition, 4 conditions), with the recorded outcome category, the category derived from the detection evidence of the bundle, the workflow outcome status, the recorded match flag, the attribution, the order of the three loads, the metric value of each load (D, Ba, Bb), the two differences, the recorded detection and baseline false-positive flags, the number of late shift entries on the target element (the CLS rule only) and the evidence file that decided the execution"
+raw_inputs:
+  tree:
+    path: raw-data/E08-performance
+    git_tree: 021c4d7bf687dcc466abb9b0cb210dcb834ddf6f
+    pinned_at_commit: b7ced46bd74d4228aaaafb1a42459bb551dfe538
+    campaign_state: FROZEN
+  bundles: 200
+  files_read: the run manifest, the attempt record and the detection evidence file of each bundle and the condition summary of each condition (the category and the attribution of each run are checked against the condition summary)
+transformation_script:
+  path: analysis/h5-analysis/compute-h5-e08.js
+  version: git-blob-sha 3ed25771a6b196b0450f6fcf96e424493a99b091
+  runtime: Node.js v23.6.1 (manifests/toolchain-manifest.yaml, scripting_runtime; standard library only)
+date_generated: "2026-11-27"
+date_note: local date (America/Mexico_City)
+protocol_version: v1
+correction_records_applied: []
+frozen_procedure_source: experiments/E08-performance/README.md, "Campaign configuration" (sha256 f3b081a66559e4f806754e576cbbd5885ed050d191fc7a4a3cf006910cfb8cd5)
+notes: >
+  Written by the same script as derived-data/h5-analysis/H5-e08-result.json, from the same bundles. Every column is a recorded field of a bundle or of its
+  condition summary, or the category derived from the evidence file named in the last column; none is interpreted, and no label is re-mapped. Rows follow the
+  order of the conditions file and the execution identifier. An empty cell means that the field is not recorded for that execution.
